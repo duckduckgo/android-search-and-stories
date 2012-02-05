@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <style name="MainFeedText">
-        <item name="android:textColor">#AFAFAF</item>
+        <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">20dp</item>
         <item name="android:background">@color/translucent_grey</item>
     </style>

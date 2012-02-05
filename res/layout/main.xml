@@ -36,15 +36,24 @@
     </LinearLayout>
 
     <!-- Main View Area -->
-    <LinearLayout android:layout_width="fill_parent"
-        		  android:layout_height="wrap_content"
-        		  android:layout_weight="1"
-        		  android:id="@+id/mainViewArea">
+    <RelativeLayout android:layout_width="fill_parent"
+        		    android:layout_height="wrap_content"
+        		    android:layout_weight="1"
+        		    android:id="@+id/mainViewArea">
         
-        <ListView android:layout_width="match_parent"
+        <com.duckduckgo.mobile.android.views.MainFeedListView
+            	  android:layout_width="match_parent"
                   android:layout_height="match_parent"
+                  android:background="@android:color/transparent"
                   android:id="@+id/mainFeedItems" />
 
-    </LinearLayout>
+        <ProgressBar android:layout_width="wrap_content"
+    		 		 android:layout_height="wrap_content"
+    		 		 android:indeterminateOnly="true"
+    		 		 android:layout_centerInParent="true"
+    		 		 style="@android:style/Widget.ProgressBar.Large"
+    		 		 android:id="@+id/feedLoadingProgress" />
+        
+    </RelativeLayout>
         		  
 </LinearLayout>
