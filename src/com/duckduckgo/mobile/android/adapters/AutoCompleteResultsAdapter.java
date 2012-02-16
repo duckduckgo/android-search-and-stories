@@ -15,20 +15,36 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.duckduckgo.mobile.android.DDGConstants;
+import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.download.ImageCache;
+import com.duckduckgo.mobile.android.download.ImageDownloader;
+import com.duckduckgo.mobile.android.objects.SuggestObject;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements Filterable {
-
-	protected final String TAG = "AutoCompleteResultsAdapter";
-	public List<String> mResultList = Collections.synchronizedList(new ArrayList<String>());
+	private final LayoutInflater inflater;
 	
-	public AutoCompleteResultsAdapter(Context context, int textViewResourceId) {
-		super(context, textViewResourceId);
+	protected final String TAG = "AutoCompleteResultsAdapter";
+	public List<SuggestObject> mResultList = Collections.synchronizedList(new ArrayList<SuggestObject>());
+	
+	//TODO: We need an image downloader & cache that is held globally for the application
+	// Should this be a singleton or part of ApplicationContext? probably AppContext...
+	protected final ImageDownloader imageDownloader = new ImageDownloader(new ImageCache());
+	
+	public AutoCompleteResultsAdapter(Context context) {
+		super(context, 0);
+		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	}
 	
 	@Override
@@ -38,7 +54,48 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 	
 	@Override
 	public String getItem(int index) {
+		SuggestObject obj = getSuggestionObject(index);
+		if (obj != null) {
+			return obj.getPhrase();
+		} else {
+			return null;
+		}
+	}
+	
+	public SuggestObject getSuggestionObject(int index) {
 		return mResultList.get(index);
+	}
+	
+	@Override
+	public View getView(int position, View cv, ViewGroup parent) {
+		if (cv == null) {
+			cv = inflater.inflate(R.layout.autocomplete_list_layout, null);
+			cv.setTag(new Holder((AsyncImageView)cv.findViewById(R.id.autoCompleteImage), (TextView)cv.findViewById(R.id.autoCompleteResultText), (TextView)cv.findViewById(R.id.autoCompleteDetailText)));
+		}
+		
+		SuggestObject suggestion = getSuggestionObject(position);
+		
+		final Holder holder = (Holder) cv.getTag();
+		
+		if (suggestion != null) {
+			holder.autoCompleteResult.setText(suggestion.getPhrase());
+			holder.autoCompleteDetail.setText(suggestion.getSnippet());
+			imageDownloader.download(suggestion.getImageUrl(), holder.autoCompleteImage);
+		}
+		
+		return cv;
+	}
+	
+	class Holder {
+		final AsyncImageView autoCompleteImage;
+		final TextView autoCompleteResult;
+		final TextView autoCompleteDetail;
+		
+		public Holder(final AsyncImageView autoCompleteImage, final TextView autoCompleteResult, final TextView autoCompleteDetail) {
+			this.autoCompleteImage = autoCompleteImage;
+			this.autoCompleteResult = autoCompleteResult;
+			this.autoCompleteDetail = autoCompleteDetail;
+		}
 	}
 
 	@Override
@@ -49,7 +106,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 			protected FilterResults performFiltering(CharSequence constraint) {
 				FilterResults results = new FilterResults();
 
-				ArrayList<String> newResults = new ArrayList<String>();
+				ArrayList<SuggestObject> newResults = new ArrayList<SuggestObject>();
 				
 				if (constraint != null) {
 
@@ -59,7 +116,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 					for (int i = 0; i < json.length(); i++) {
 						try {
 							JSONObject nextObj = json.getJSONObject(i);
-							String item = nextObj.getString("phrase");
+							SuggestObject item = new SuggestObject(nextObj);
 							if (item != null) {
 								newResults.add(item);
 							}
@@ -82,7 +139,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 				mResultList.clear();
 				if (results != null && results.count > 0) {
 					@SuppressWarnings("unchecked")
-					ArrayList<String> newResults = (ArrayList<String>)results.values;
+					ArrayList<SuggestObject> newResults = (ArrayList<SuggestObject>)results.values;
 					mResultList.addAll(newResults);
 					notifyDataSetChanged();
 				} else {

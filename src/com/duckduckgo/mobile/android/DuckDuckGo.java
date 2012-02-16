@@ -11,12 +11,12 @@ import com.duckduckgo.mobile.android.views.MainFeedListView;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.AutoCompleteTextView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -31,8 +31,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private MainFeedListView feedView = null;
 	private MainFeedAdapter feedAdapter = null;
 	private MainFeedTask mainFeedTask = null;
+	private WebView mainWebView = null;
 	
 	boolean hasUpdatedFeed = false;
+	
+	boolean webviewShowing = false;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,12 +43,22 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         setContentView(R.layout.main);
         
         searchField = (AutoCompleteTextView) findViewById(R.id.searchEditText);
-        searchField.setAdapter(new AutoCompleteResultsAdapter(this, android.R.layout.simple_dropdown_item_1line));
+        searchField.setAdapter(new AutoCompleteResultsAdapter(this));
         searchField.setOnEditorActionListener(this);
         
         feedAdapter = new MainFeedAdapter(this);
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
         feedView.setAdapter(feedAdapter);
+        
+        mainWebView = (WebView) findViewById(R.id.mainWebView);
+        mainWebView.getSettings().setJavaScriptEnabled(true);
+        mainWebView.setWebViewClient(new WebViewClient() {
+        	@Override
+        	public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        		view.loadUrl(url);
+        		return true;
+        	}
+        });
         
         feedProgressBar = (ProgressBar) findViewById(R.id.feedLoadingProgress);
     }
@@ -68,6 +81,22 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 	}
 	
+	@Override
+	public void onBackPressed() {
+		if (webviewShowing) {
+			if (mainWebView.canGoBack()) {
+				mainWebView.goBack();
+			} else {
+				//TODO: Change the button from HOME to SETTINGS
+				feedView.setVisibility(View.VISIBLE);
+				mainWebView.setVisibility(View.GONE);
+				webviewShowing = false;
+			}
+		} else {
+			super.onBackPressed();
+		}
+	}
+	
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		if (v == searchField) {
 			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -85,9 +114,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void searchWebTerm(String term) {
-		 Uri uri = Uri.parse(DDGConstants.SEARCH_URL + term);
-		 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-		 startActivity(intent);
+		if (!webviewShowing) {
+			//TODO: Change the button from settings gear to HOME
+			feedView.setVisibility(View.GONE);
+			mainWebView.setVisibility(View.VISIBLE);
+			webviewShowing = true;
+		}
+		
+		mainWebView.loadUrl(DDGConstants.SEARCH_URL + term + DDGConstants.NO_REDIRECT);
 	}
 
 	public void onFeedRetrieved(List<FeedObject> feed) {

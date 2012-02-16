@@ -41,6 +41,11 @@
         		    android:layout_weight="1"
         		    android:id="@+id/mainViewArea">
         
+        <WebView android:layout_width="match_parent"
+            	 android:layout_height="match_parent"
+            	 android:visibility="gone"
+            	 android:id="@+id/mainWebView" />
+        
         <com.duckduckgo.mobile.android.views.MainFeedListView
             	  android:layout_width="match_parent"
                   android:layout_height="match_parent"
