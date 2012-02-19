@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.adapters;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -122,6 +123,8 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 							}
 						} catch (JSONException e) {
 							Log.e(TAG, "No JSON Object at index " + i);
+							Log.e(TAG, "Exception: " + e.getMessage());
+							e.printStackTrace();
 						}
 					}
 					//TODO: Cache the results for later
@@ -156,7 +159,8 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 				try {
 					HttpClient client = new HttpClient();
 					client.getParams().setParameter(HttpMethodParams.USER_AGENT, DDGConstants.USER_AGENT);
-					HttpMethod get = new GetMethod(DDGConstants.AUTO_COMPLETE_URL + constraint);
+					String query = URLEncoder.encode(constraint.toString());
+					HttpMethod get = new GetMethod(DDGConstants.AUTO_COMPLETE_URL + query);
 
 					int result = client.executeMethod(get);
 

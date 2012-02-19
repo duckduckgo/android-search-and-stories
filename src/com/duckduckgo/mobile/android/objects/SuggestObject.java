@@ -4,16 +4,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class SuggestObject {
-	private final String phrase;
-	private final int score;
-	private final String snippet;
-	private final String imageUrl;
+	private String phrase;
+	private int score;
+	private String snippet;
+	private String imageUrl;
 	
 	public SuggestObject(JSONObject obj) throws JSONException {
 		this.phrase = obj.getString("phrase");
-		this.score = obj.getInt("score");
-		this.snippet = obj.getString("snippet");
-		this.imageUrl = obj.getString("image");
+		this.score = obj.optInt("score", 0); //Optional Field
+		this.snippet = obj.optString("snippet", null); //Optional Field
+		this.imageUrl = obj.optString("image", null); //Optional Field
 	}
 	
 	public String getPhrase() {

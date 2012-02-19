@@ -14,15 +14,19 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-public class DuckDuckGo extends Activity implements OnEditorActionListener, FeedListener {
+public class DuckDuckGo extends Activity implements OnEditorActionListener, FeedListener, OnClickListener, OnItemClickListener {
 
 	protected final String TAG = "DuckDuckGo";
 	
@@ -32,6 +36,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private MainFeedAdapter feedAdapter = null;
 	private MainFeedTask mainFeedTask = null;
 	private WebView mainWebView = null;
+	private ImageButton homeSettingsButton = null;
 	
 	boolean hasUpdatedFeed = false;
 	
@@ -42,14 +47,22 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
+        homeSettingsButton = (ImageButton) findViewById(R.id.settingsButton);
+        homeSettingsButton.setOnClickListener(this);
+        
         searchField = (AutoCompleteTextView) findViewById(R.id.searchEditText);
         searchField.setAdapter(new AutoCompleteResultsAdapter(this));
         searchField.setOnEditorActionListener(this);
-        
+        searchField.setOnItemClickListener(this);
         feedAdapter = new MainFeedAdapter(this);
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
         feedView.setAdapter(feedAdapter);
         
+        // NOTE: After loading url multiple times on the device, it may crash
+        // Related to android bug report 21266 - Watch this ticket for possible resolutions
+        // http://code.google.com/p/android/issues/detail?id=21266
+        // Possibly also related to CSS Transforms (bug 21305)
+        // http://code.google.com/p/android/issues/detail?id=21305
         mainWebView = (WebView) findViewById(R.id.mainWebView);
         mainWebView.getSettings().setJavaScriptEnabled(true);
         mainWebView.setWebViewClient(new WebViewClient() {
@@ -87,9 +100,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			if (mainWebView.canGoBack()) {
 				mainWebView.goBack();
 			} else {
-				//TODO: Change the button from HOME to SETTINGS
 				feedView.setVisibility(View.VISIBLE);
 				mainWebView.setVisibility(View.GONE);
+				mainWebView.clearView();
+				homeSettingsButton.setImageResource(R.drawable.settings_button);
 				webviewShowing = false;
 			}
 		} else {
@@ -100,7 +114,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		if (v == searchField) {
 			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
 
 			String text = searchField.getText().toString();
 			text.trim();
@@ -115,13 +129,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	public void searchWebTerm(String term) {
 		if (!webviewShowing) {
-			//TODO: Change the button from settings gear to HOME
 			feedView.setVisibility(View.GONE);
 			mainWebView.setVisibility(View.VISIBLE);
+			homeSettingsButton.setImageResource(R.drawable.home_button);
 			webviewShowing = true;
 		}
 		
-		mainWebView.loadUrl(DDGConstants.SEARCH_URL + term + DDGConstants.NO_REDIRECT);
+		mainWebView.loadUrl(DDGConstants.SEARCH_URL + term);
 	}
 
 	public void onFeedRetrieved(List<FeedObject> feed) {
@@ -129,5 +143,34 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		feedAdapter.setList(feed);
 		feedAdapter.notifyDataSetChanged();
 		hasUpdatedFeed = true;
+	}
+
+	public void onClick(View v) {
+		if (v.equals(homeSettingsButton)) {
+			//This is our button
+			if (webviewShowing) {
+				//We are going home!
+				feedView.setVisibility(View.VISIBLE);
+				mainWebView.setVisibility(View.GONE);
+				mainWebView.clearHistory();
+				mainWebView.clearView();
+				homeSettingsButton.setImageResource(R.drawable.settings_button);
+				webviewShowing = false;
+			}
+		}
+		
+	}
+
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		//Hide the keyboard and perform a search
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+
+		String text = (String)parent.getAdapter().getItem(position);
+		if (text != null) text.trim();
+		
+		if (text != null && text.length() > 0) {
+			searchWebTerm(text);
+		}
 	}
 }

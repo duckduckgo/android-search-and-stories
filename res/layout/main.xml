@@ -17,10 +17,11 @@
    	        		 android:layout_height="wrap_content"
    	        		 android:scaleType="fitCenter"
    	        		 android:layout_marginTop="5dp"
+   	        		 android:layout_marginBottom="5dp"
    	        		 android:layout_marginLeft="5dp"
    	        		 android:id="@+id/settingsButton"
    	        		 android:background="@android:color/transparent"
-   	        		 android:src="@drawable/gear40x37" />
+   	        		 android:src="@drawable/settings_button" />
  
    	    <AutoCompleteTextView android:layout_width="0dip"
 			   	        	  android:layout_height="match_parent"

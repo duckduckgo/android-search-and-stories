@@ -51,6 +51,8 @@ public class ImageCache {
 	
 	public Bitmap getBitmapFromCache(String url) {
 		resetPurgeTimer();
+		if (url == null) return null;
+		
 		synchronized(hardBitmapCache) {
 			final Bitmap bitmap = hardBitmapCache.get(url);
 			if (bitmap != null) {
