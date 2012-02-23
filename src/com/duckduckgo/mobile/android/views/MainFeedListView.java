@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.views;
 
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.DDGConstants;
 
 import android.content.Context;
 import android.content.Intent;
@@ -24,7 +25,7 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		if (obj != null) {
 			String url = obj.getUrl();
 			if (url != null) {
-				Uri uri = Uri.parse(url);
+				Uri uri = Uri.parse(DDGConstants.READABILITY_URL + url);
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 				view.getContext().startActivity(intent);
 			}
