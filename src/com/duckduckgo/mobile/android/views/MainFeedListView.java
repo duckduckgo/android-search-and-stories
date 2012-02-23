@@ -25,6 +25,8 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		if (obj != null) {
 			String url = obj.getUrl();
 			if (url != null) {
+				// TODO (caine): remove for production; readability tracks with cookies.
+				// Will make backend service.
 				Uri uri = Uri.parse(DDGConstants.READABILITY_URL + url);
 				Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 				view.getContext().startActivity(intent);
