@@ -2,7 +2,7 @@
 <resources>
     <style name="MainFeedText">
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">14dp</item>
         <item name="android:background">@color/translucent_grey</item>
     </style>
 </resources>
