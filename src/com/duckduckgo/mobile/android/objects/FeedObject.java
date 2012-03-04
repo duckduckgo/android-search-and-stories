@@ -24,6 +24,22 @@ public class FeedObject {
 		this.category = obj.getString("category");
 	}
 	
+	@Override
+	public String toString() {
+		String string = "{";
+		
+		string = string.concat("feed:" + this.feed + "\n");
+		string = string.concat("favicon:" + this.favicon + "\n");
+		string = string.concat("description:" + this.description + "\n");
+		string = string.concat("timestamp:" + this.timestamp + "\n");
+		string = string.concat("url:" + this.url + "\n");
+		string = string.concat("title:" + this.title + "\n");
+		string = string.concat("id:" + this.id + "\n");
+		string = string.concat("category:" + this.category + "}");
+		
+		return string;
+	}
+	
 	public String getFeed() {
 		return feed;
 	}

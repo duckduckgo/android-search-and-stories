@@ -1,7 +1,7 @@
 package com.duckduckgo.mobile.android.views;
 
-import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.DDGConstants;
+import com.duckduckgo.mobile.android.objects.FeedObject;
 
 import android.content.Context;
 import android.content.Intent;

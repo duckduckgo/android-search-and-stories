@@ -9,8 +9,8 @@
 
     <application
         android:icon="@drawable/icon"
-        android:label="@string/AppName" 
-		android:theme="@android:style/Theme.NoTitleBar" >
+        android:theme="@android:style/Theme.NoTitleBar"
+        android:label="@string/AppName" >
         <activity
             android:name=".DuckDuckGo"
             android:label="@string/AppName" >
