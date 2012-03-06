@@ -5,6 +5,7 @@ import java.lang.ref.WeakReference;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
@@ -12,6 +13,7 @@ import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
 //TODO: Instead of using DownloadDrawable, we can just subclass ImageView with an AsyncImageView or some such...
 public class AsyncImageView extends ImageView implements DownloadableImage {
 	private WeakReference<DownloadBitmapTask> downloadTaskReference;
+	private boolean hideOnDefault = false;
 	
 	public AsyncImageView(Context context, AttributeSet attr) {
 		super (context, attr);
@@ -33,6 +35,10 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 	}
 	
 	public void setBitmap(Bitmap bitmap) {
+		if (this.getVisibility() == View.GONE && this.hideOnDefault) {
+			this.setVisibility(View.VISIBLE);
+		}
+		
 		if (bitmap != null) {
 			setImageBitmap(bitmap);
 		} else {
@@ -42,5 +48,18 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 	
 	public void setDefault() {
 		setImageBitmap(null);
+		if (hideOnDefault) {
+			this.setVisibility(View.GONE);
+		}
+	}
+	
+	public boolean shouldHideOnDefault() {
+		return this.hideOnDefault;
+	}
+	
+	//NOTE: Setting Hide on default gives visibility control to this ImageView
+	//		It may then override other visibility settings given externally
+	public void setShouldHideOnDefault(boolean hideOnDefault) {
+		this.hideOnDefault = hideOnDefault;
 	}
 }

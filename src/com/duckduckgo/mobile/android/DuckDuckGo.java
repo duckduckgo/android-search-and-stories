@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
@@ -38,9 +40,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private WebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
 	
-	boolean hasUpdatedFeed = false;
-	
-	boolean webviewShowing = false;
+	private boolean hasUpdatedFeed = false;
+	private boolean webviewShowing = false;
+	private String lastSearchString = null;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +72,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	public boolean shouldOverrideUrlLoading(WebView view, String url) {
         		view.loadUrl(url);
         		return true;
+        	}
+        	
+        	@Override
+        	public void onPageFinished (WebView view, String url) {
+        		if (url.contains("duckduckgo.com")) {
+        			searchField.setText(lastSearchString);
+        			//Show the latest search term
+        		} else {
+        			searchField.setText(url);
+        		}
         	}
         });
         
@@ -105,6 +117,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mainWebView.clearView();
 				homeSettingsButton.setImageResource(R.drawable.settings_button);
 				webviewShowing = false;
+				searchField.setText(lastSearchString);
 			}
 		} else {
 			super.onBackPressed();
@@ -119,15 +132,47 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			String text = searchField.getText().toString();
 			text.trim();
 			
-			if (text.length() > 0) {
-				searchWebTerm(text);
-			}
+			searchOrGoToUrl(text);
 		}
 		
 		return false;
 	}
 	
+	public void searchOrGoToUrl(String text) {
+		if (text.length() > 0) {
+			URL searchAsUrl = null;
+			String modifiedText = null;
+			try {
+				searchAsUrl = new URL(text);
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+			
+			if (searchAsUrl == null) {
+				modifiedText = "http://" + text;
+				try {
+					searchAsUrl = new URL(modifiedText);
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (searchAsUrl != null) {
+				if (modifiedText != null) {
+					//Show the modified url text
+					showWebUrl(modifiedText);
+				} else {
+					//Show the url text
+					showWebUrl(text);
+				}
+			} else {
+				searchWebTerm(text);
+			}
+		}
+	}
+	
 	public void searchWebTerm(String term) {
+		lastSearchString = term;
 		if (!webviewShowing) {
 			feedView.setVisibility(View.GONE);
 			mainWebView.setVisibility(View.VISIBLE);
@@ -136,6 +181,17 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		
 		mainWebView.loadUrl(DDGConstants.SEARCH_URL + term);
+	}
+	
+	public void showWebUrl(String url) {
+		if (!webviewShowing) {
+			feedView.setVisibility(View.GONE);
+			mainWebView.setVisibility(View.VISIBLE);
+			homeSettingsButton.setImageResource(R.drawable.home_button);
+			webviewShowing = true;
+		}
+		
+		mainWebView.loadUrl(url);
 	}
 
 	public void onFeedRetrieved(List<FeedObject> feed) {
@@ -155,10 +211,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mainWebView.clearHistory();
 				mainWebView.clearView();
 				homeSettingsButton.setImageResource(R.drawable.settings_button);
+				searchField.setText("");
+				lastSearchString = null;
 				webviewShowing = false;
 			}
 		}
-		
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -167,10 +224,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
 
 		String text = (String)parent.getAdapter().getItem(position);
-		if (text != null) text.trim();
-		
-		if (text != null && text.length() > 0) {
-			searchWebTerm(text);
+		if (text != null) {
+			text.trim();
+			searchOrGoToUrl(text);
 		}
 	}
 }

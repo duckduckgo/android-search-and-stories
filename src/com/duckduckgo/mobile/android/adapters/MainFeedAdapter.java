@@ -46,25 +46,21 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		
 		if (feed != null) {
 			holder.textViewTitle.setText(feed.getTitle());
-			if (feed.getFavicon() == null || feed.getFavicon().equals("null")) {
-				if (feed.getFeed() == null) {
-					holder.imageViewFeedIcon.setVisibility(View.GONE); //Hide this item since it doesn't exist
-				} else {
-					//TODO: get the icon (or attempt to through resolution of the url)
-					holder.imageViewFeedIcon.setVisibility(View.GONE);
-				}
-			} else {
-				//Use this url to populate the icon
-				//TODO: We need a way to set the default icon for the image view
+			if (feed.getFavicon() != null && !feed.getFavicon().equals("null")) {
+				//attempt to show based on favicon
 				imageDownloader.download(feed.getFavicon(), holder.imageViewFeedIcon);
-				holder.imageViewFeedIcon.setVisibility(View.VISIBLE);
+			} else if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
+				//TODO: attempt to show based on feed url lookup
+				imageDownloader.download(null, holder.imageViewFeedIcon);
+			} else {
+				imageDownloader.download(null, holder.imageViewFeedIcon);
 			}
 			
-			if (feed.getUrl() != null) {
+			if (feed.getUrl() != null && !feed.getUrl().equals("null")) {
 				//TODO: Get the icon from the url and then use it to display...
-				holder.imageViewUrlIcon.setVisibility(View.GONE);
+				imageDownloader.download(null, holder.imageViewUrlIcon);
 			} else {
-				holder.imageViewUrlIcon.setVisibility(View.GONE);
+				imageDownloader.download(null, holder.imageViewUrlIcon);
 			}
 			
 			//TODO: Feed object needs to have a background image url to tell us, or we can't go there
@@ -86,7 +82,9 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			this.textViewTitle = textViewTitle;
 			this.imageViewBackground = imageViewBackground;
 			this.imageViewFeedIcon = imageViewFeedIcon;
+			this.imageViewFeedIcon.setShouldHideOnDefault(true);
 			this.imageViewUrlIcon = imageViewUrlIcon;
+			this.imageViewUrlIcon.setShouldHideOnDefault(true);
 		}
 	}
 
