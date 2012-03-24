@@ -12,6 +12,7 @@ public class FeedObject {
 	private final String title;
 	private final String id;
 	private final String category;
+	private final String imageUrl;
 	
 	public FeedObject(JSONObject obj) throws JSONException {
 		this.feed = obj.getString("feed");
@@ -22,6 +23,7 @@ public class FeedObject {
 		this.title = obj.getString("title");
 		this.id = obj.getString("id");
 		this.category = obj.getString("category");
+		this.imageUrl = obj.optString("image");
 	}
 	
 	@Override
@@ -35,7 +37,8 @@ public class FeedObject {
 		string = string.concat("url:" + this.url + "\n");
 		string = string.concat("title:" + this.title + "\n");
 		string = string.concat("id:" + this.id + "\n");
-		string = string.concat("category:" + this.category + "}");
+		string = string.concat("category:" + this.category + "\n");
+		string = string.concat("image: " + this.imageUrl + "}");
 		
 		return string;
 	}
@@ -70,5 +73,9 @@ public class FeedObject {
 	
 	public String getCategory() {
 		return category;
+	}
+	
+	public String getImageUrl() {
+		return imageUrl;
 	}
 }

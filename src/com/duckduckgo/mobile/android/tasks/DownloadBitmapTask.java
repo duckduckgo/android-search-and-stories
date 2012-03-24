@@ -46,7 +46,15 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 			bitmap = null;
 			return;
 		}
-		
+
+		if (bitmap != null) {
+			if (bitmap.getHeight()<=1 && bitmap.getWidth()<=1) {
+				Log.d(TAG, "URL: " + url);
+				Log.d(TAG, "Got Image that was too small!");
+				bitmap = null;
+			}
+		}
+
 		imageCache.addBitmapToCache(url, bitmap);
 		
 		if (imageViewReference != null) {
@@ -70,7 +78,8 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 			if (isCancelled()) return null;
 		
 			if (result != HttpStatus.SC_OK) {
-				throw new Exception("Unable to execute query");
+				Log.e(TAG, "Http Call Returned Bad Status: " + result);
+				return null;
 			}
 			InputStream inputStream = null;
 			try {

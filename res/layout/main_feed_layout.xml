@@ -9,38 +9,42 @@
                android:scaleType="centerCrop"
                android:src="@drawable/testbackground" 
                android:id="@+id/feedItemBackground" />
-	
-	<com.duckduckgo.mobile.android.download.AsyncImageView android:layout_width="25dp"
-	    	   android:layout_height="25dp"
-	    	   android:layout_alignRight="@+id/feedItemBackground"
-	    	   android:paddingTop="5dp"
-	    	   android:paddingRight="5dp"
-	    	   android:scaleType="fitCenter"
-	    	   android:src="@drawable/settings_button"
-	    	   android:id="@+id/feedItemSourceIcon" />
 				
-	<TextView android:layout_width="match_parent"
-	    	  android:layout_height="wrap_content"
-	    	  android:paddingLeft="5dp"
-	    	  android:paddingTop="5dp"
-	    	  android:paddingBottom="5dp"
-	    	  style="@style/MainFeedText"
-	    	  android:text="This is a Test String!"
-	    	  android:singleLine="true"
-	    	  android:layout_alignParentBottom="true"
-	    	  android:layout_toRightOf="@+id/feedItemUrlIcon"
-	    	  android:id="@+id/feedTitleTextView" />
+	<LinearLayout android:layout_width="match_parent"
+	    		  android:layout_height="wrap_content"
+	    		  android:layout_alignParentBottom="true"
+	    		  android:orientation="horizontal" >
 	
-	<com.duckduckgo.mobile.android.download.AsyncImageView style="@style/MainFeedText"
-	    	   android:layout_width="25dp"
-	    	   android:layout_height="25dp"
-	    	   android:layout_alignParentBottom="true"
-	    	   android:layout_alignTop="@+id/feedTitleTextView"
-	    	   android:paddingBottom="5dp"
-	    	   android:paddingTop="5dp"
-	    	   android:paddingLeft="5dp"
-	    	   android:scaleType="fitCenter"
-	    	   android:src="@drawable/home_button"
-	    	   android:id="@+id/feedItemUrlIcon" />
+		<com.duckduckgo.mobile.android.download.AsyncImageView style="@style/MainFeedText"
+	    		   android:layout_width="25dp"
+	    		   android:layout_height="30dp"
+		    	   android:paddingBottom="5dp"
+	    		   android:paddingTop="5dp"
+	    		   android:paddingLeft="5dp"
+		    	   android:scaleType="fitCenter"
+		    	   android:src="@drawable/home_button"
+	    		   android:id="@+id/feedItemUrlIcon" />
+	    	    		  
+		<TextView android:layout_width="wrap_content"
+		    	  android:layout_height="30dp"
+		    	  android:layout_weight="1"
+	    		  android:paddingLeft="5dp"
+	    		  android:paddingTop="5dp"
+	    	      android:paddingBottom="5dp"
+	    	  	  style="@style/MainFeedText"
+	    	  	  android:text="This is a Test String!"
+	    	  	  android:singleLine="true"
+		    	  android:id="@+id/feedTitleTextView" />
 	
+		<com.duckduckgo.mobile.android.download.AsyncImageView style="@style/MainFeedText" 
+		    	   android:layout_width="25dp"
+		    	   android:layout_height="30dp"
+		    	   android:paddingBottom="5dp"
+		    	   android:paddingTop="5dp"
+		    	   android:paddingRight="5dp"
+		    	   android:scaleType="fitCenter"
+		    	   android:src="@drawable/settings_button"
+		    	   android:id="@+id/feedItemSourceIcon" />
+
+		</LinearLayout>
 </RelativeLayout>

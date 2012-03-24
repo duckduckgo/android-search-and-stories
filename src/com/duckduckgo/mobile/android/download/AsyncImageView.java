@@ -35,15 +35,16 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 	}
 	
 	public void setBitmap(Bitmap bitmap) {
+		//Don't show a null bitmap
+		if (bitmap == null) {
+			setDefault();
+			return;
+		}
 		if (this.getVisibility() == View.GONE && this.hideOnDefault) {
 			this.setVisibility(View.VISIBLE);
 		}
 		
-		if (bitmap != null) {
-			setImageBitmap(bitmap);
-		} else {
-			setImageBitmap(null);
-		}
+		setImageBitmap(bitmap);
 	}
 	
 	public void setDefault() {

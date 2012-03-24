@@ -38,16 +38,18 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 			client.getParams().setParameter(HttpMethodParams.USER_AGENT, DDGConstants.USER_AGENT);
 			HttpMethod get = new GetMethod(DDGConstants.MAIN_FEED_URL);
 
-			if (isCancelled()) return returnFeed;
+			if (isCancelled()) return null;
 			
 			int result = client.executeMethod(get);
 
-			if (isCancelled()) return returnFeed;
+			if (isCancelled()) return null;
 			
 			if (result != HttpStatus.SC_OK) {
-				throw new Exception("Unable to execute query");
+				Log.e(TAG, "Unable to execute Query with result: " + result);
+				return null;
 			}
 			String body = get.getResponseBodyAsString();
+			Log.e(TAG, body);
 			json = new JSONArray(body);
 		} catch (JSONException jex) {
 			Log.e(TAG, jex.getMessage(), jex);
@@ -80,11 +82,16 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	@Override
 	protected void onPostExecute(List<FeedObject> feed) {
 		if (this.listener != null) {
-			this.listener.onFeedRetrieved(feed);
+			if (feed != null) {
+				this.listener.onFeedRetrieved(feed);
+			} else {
+				this.listener.onFeedRetrievalFailed();
+			}
 		}
 	}
 	
 	public static interface FeedListener {
 		public void onFeedRetrieved(List<FeedObject> feed);
+		public void onFeedRetrievalFailed();
 	}
 }

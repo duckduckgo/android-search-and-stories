@@ -15,10 +15,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 
@@ -41,11 +41,12 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 	
 	//TODO: We need an image downloader & cache that is held globally for the application
 	// Should this be a singleton or part of ApplicationContext? probably AppContext...
-	protected final ImageDownloader imageDownloader = new ImageDownloader(new ImageCache());
+	protected final ImageDownloader imageDownloader;
 	
 	public AutoCompleteResultsAdapter(Context context) {
 		super(context, 0);
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		imageDownloader = DDGApplication.getImageDownloader();
 	}
 	
 	@Override

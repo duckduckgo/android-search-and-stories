@@ -12,7 +12,13 @@ import android.os.Handler;
 
 public class ImageCache {
 	private static final int CACHE_CAPACITY = 50; //How many items we can have that the GC won't touch (we still purge it though)
-	private static final int PURGE_DELAY = 30000; //milliseconds before we purge all items (30 seconds)
+	private static final int PURGE_DELAY = 60000; //milliseconds before we purge all items (60 seconds)
+
+	private FileCache fileCache = null;
+	
+	public ImageCache(FileCache fileCache) {
+		this.fileCache = fileCache;
+	}
 	
 	//The hard cache will hold references that we don't want to lose (in our case the 50 most recent)
 	@SuppressWarnings("serial")
@@ -46,6 +52,11 @@ public class ImageCache {
 			synchronized(hardBitmapCache) {
 				hardBitmapCache.put(url, bitmap);
 			}
+			
+			//Save the bitmap to the file cache as well
+			if (fileCache != null) {
+				fileCache.saveBitmapAsFile(url.substring(url.lastIndexOf("/")+1), bitmap);
+			}			
 		}
 	}
 	
@@ -74,6 +85,16 @@ public class ImageCache {
 			}
 		}
 		
+		if (fileCache != null) {
+			Bitmap bitmap = fileCache.getBitmapFromImageFile(url.substring(url.lastIndexOf("/")+ 1));
+			if (bitmap != null) {
+				synchronized(hardBitmapCache) {
+					hardBitmapCache.put(url, bitmap);
+				}
+			}
+			return bitmap;
+		}
+		
 		return null;		
 	}
 	
@@ -85,5 +106,9 @@ public class ImageCache {
 	private void clearCache() {
 		hardBitmapCache.clear();
 		softBitmapCache.clear();
+	}
+	
+	public void setFileCache(FileCache fileCache) {
+		this.fileCache = fileCache;
 	}
 }

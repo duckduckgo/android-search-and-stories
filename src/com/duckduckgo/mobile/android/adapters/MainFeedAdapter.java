@@ -1,20 +1,21 @@
 package com.duckduckgo.mobile.android.adapters;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
+import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
@@ -23,11 +24,12 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	private final LayoutInflater inflater;
 	
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
-	protected final ImageDownloader imageDownloader = new ImageDownloader(new ImageCache());
+	protected final ImageDownloader imageDownloader;
 	
 	public MainFeedAdapter(Context context) {
 		super(context, 0);
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		imageDownloader = DDGApplication.getImageDownloader();
 	}
 	
 	@Override
@@ -43,29 +45,76 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		FeedObject feed = getItem(position);
 		
 		final Holder holder = (Holder) cv.getTag();
-		
+		URL iconUrl = null;
+		URL feedUrl = null;
 		if (feed != null) {
+			//Download the background image
+			if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
+				imageDownloader.download(feed.getImageUrl(), holder.imageViewBackground);
+			} else {
+				imageDownloader.download(null, holder.imageViewBackground);
+			}
+
+			//Set the Title
 			holder.textViewTitle.setText(feed.getTitle());
-			if (feed.getFavicon() != null && !feed.getFavicon().equals("null")) {
-				//attempt to show based on favicon
-				imageDownloader.download(feed.getFavicon(), holder.imageViewFeedIcon);
-			} else if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
-				//TODO: attempt to show based on feed url lookup
-				imageDownloader.download(null, holder.imageViewFeedIcon);
-			} else {
-				imageDownloader.download(null, holder.imageViewFeedIcon);
-			}
 			
+			//Set the URL Icon on the Left Hand Side
 			if (feed.getUrl() != null && !feed.getUrl().equals("null")) {
-				//TODO: Get the icon from the url and then use it to display...
-				imageDownloader.download(null, holder.imageViewUrlIcon);
+				try {
+					iconUrl = new URL(feed.getUrl());
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+				
+				if (iconUrl != null) {
+					String host = iconUrl.getHost();
+					if (host.indexOf(".") != host.lastIndexOf(".")) {
+						//Cut off the beginning, because we don't want/need it
+						host = host.substring(host.indexOf(".")+1);
+					}
+					imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewUrlIcon);
+				} else {
+					imageDownloader.download(null, holder.imageViewUrlIcon);
+				}
 			} else {
 				imageDownloader.download(null, holder.imageViewUrlIcon);
 			}
-			
-			//TODO: Feed object needs to have a background image url to tell us, or we can't go there
-			//TODO: For now, implement the iPhone version of grabbing a random image
-			//holder.imageViewBackground.setBackgroundResource(R.drawable.testbackground);
+
+			if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
+				try {
+					feedUrl = new URL(feed.getFeed());
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+				
+				if (feedUrl != null) {
+					if (iconUrl != null) {
+						if (iconUrl.getHost().equals(feedUrl.getHost())) {
+							//They are the same, don't show it
+							imageDownloader.download(null, holder.imageViewFeedIcon);
+						} else {
+							String host = feedUrl.getHost();
+							if (host.indexOf(".") != host.lastIndexOf(".")) {
+								//Cut off the beginning, because we don't want/need it
+								host = host.substring(host.indexOf(".")+1);
+							}							
+							//They are different, so show it
+							imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon);
+						}
+					} else {
+						String host = feedUrl.getHost();
+						if (host.indexOf(".") != host.lastIndexOf(".")) {
+							//Cut off the beginning, because we don't want/need it
+							host = host.substring(host.indexOf(".")+1);
+						}
+						imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon);
+					}
+				} else {
+					imageDownloader.download(null, holder.imageViewFeedIcon);
+				}
+			} else {
+				imageDownloader.download(null, holder.imageViewFeedIcon);
+			}
 		}
 		
 		return cv;
@@ -82,9 +131,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			this.textViewTitle = textViewTitle;
 			this.imageViewBackground = imageViewBackground;
 			this.imageViewFeedIcon = imageViewFeedIcon;
-			this.imageViewFeedIcon.setShouldHideOnDefault(true);
 			this.imageViewUrlIcon = imageViewUrlIcon;
-			this.imageViewUrlIcon.setShouldHideOnDefault(true);
 		}
 	}
 

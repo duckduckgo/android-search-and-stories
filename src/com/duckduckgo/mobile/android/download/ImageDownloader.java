@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.download;
 import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 //TODO: Any way we can limit the number of simultaneous downloads? Do we need to?
 //TODO: Any way we can find out that multiple objects are attempting to get the same item?
@@ -19,7 +20,7 @@ public class ImageDownloader {
 	
 	//TODO: Should take a Downloadable object
 	public void download(String url, DownloadableImage image) {
-		if (url == null) {
+		if (url == null || url.isEmpty()) {
 			//Cancel anything downloading, set the image to default, and return
 			cancelPreviousDownload(url, image);
 			image.setDefault();
@@ -29,8 +30,10 @@ public class ImageDownloader {
 		Bitmap bitmap = cache.getBitmapFromCache(url);
 		
 		if (bitmap == null) {
+			Log.d(TAG, "Attempting download of URL: " + url);
 			attemptDownload(url, image);
 		} else {
+			Log.d(TAG, "Using Cached Image for URL: " + url);
 			cancelPreviousDownload(url, image);
 			image.setBitmap(bitmap);
 		}
@@ -45,6 +48,7 @@ public class ImageDownloader {
 		}
 		
 		if (!cancelPreviousDownload(url, image)) {
+			Log.d(TAG, "Already downloading URL: " + url);
 			//We are already downloading that exact image
 			return;
 		}

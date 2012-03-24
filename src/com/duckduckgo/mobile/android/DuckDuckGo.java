@@ -1,7 +1,10 @@
 package com.duckduckgo.mobile.android;
 
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
@@ -10,10 +13,14 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask.FeedListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
+import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,7 +49,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private boolean hasUpdatedFeed = false;
 	private boolean webviewShowing = false;
-	private String lastSearchString = null;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +65,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         feedAdapter = new MainFeedAdapter(this);
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
         feedView.setAdapter(feedAdapter);
+        feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
+			public void onMainFeedItemSelected(FeedObject feedObject) {
+				String url = feedObject.getUrl();
+				if (url != null) {
+					searchOrGoToUrl(url);
+				}
+			}
+        });
         
         // NOTE: After loading url multiple times on the device, it may crash
         // Related to android bug report 21266 - Watch this ticket for possible resolutions
@@ -77,16 +91,53 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	@Override
         	public void onPageFinished (WebView view, String url) {
         		if (url.contains("duckduckgo.com")) {
-        			searchField.setText(lastSearchString);
-        			//Show the latest search term
+        			URL fullURL = null;
+        			try {
+						fullURL = new URL(url);
+					} catch (MalformedURLException e) {
+						e.printStackTrace();
+					}
+
+        			if (fullURL != null) {
+        				//Okay, it's a valid url, which we already knew...
+        				String query = fullURL.getQuery();
+        				if (query != null) {
+        					//Get the actual query string now...
+        					int index = query.indexOf("q=");
+        					if (index != -1) {
+            					String text = query.substring(query.indexOf("q=") + 2);
+            					if (text.contains("&")) {
+            						text = text.substring(0, text.indexOf("&"));
+            					}
+            					String realText = URLDecoder.decode(text);
+            					setSearchBarText(realText);
+        					} else {
+        						setSearchBarText(url);
+        					}
+        				} else {
+        					setSearchBarText(url);
+        				}
+        			} else {
+        				//Just in case...
+        				setSearchBarText(url);
+        			}
         		} else {
-        			searchField.setText(url);
+        			//This isn't duckduck go...
+        			setSearchBarText(url);
         		}
         	}
         });
         
         feedProgressBar = (ProgressBar) findViewById(R.id.feedLoadingProgress);
     }
+	
+	public void setSearchBarText(String text) {
+		searchField.setFocusable(false);
+		searchField.setFocusableInTouchMode(false);
+		searchField.setText(text);            
+		searchField.setFocusable(true);
+		searchField.setFocusableInTouchMode(true);
+	}
 	
 	@Override
 	public void onResume() {
@@ -117,7 +168,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mainWebView.clearView();
 				homeSettingsButton.setImageResource(R.drawable.settings_button);
 				webviewShowing = false;
-				searchField.setText(lastSearchString);
+				searchField.setText("");
 			}
 		} else {
 			super.onBackPressed();
@@ -128,6 +179,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		if (v == searchField) {
 			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+			searchField.dismissDropDown();
 
 			String text = searchField.getText().toString();
 			text.trim();
@@ -142,28 +194,47 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		if (text.length() > 0) {
 			URL searchAsUrl = null;
 			String modifiedText = null;
+
 			try {
 				searchAsUrl = new URL(text);
+				searchAsUrl.toURI();
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+				searchAsUrl = null;
 			}
 			
 			if (searchAsUrl == null) {
 				modifiedText = "http://" + text;
 				try {
 					searchAsUrl = new URL(modifiedText);
+					searchAsUrl.toURI();
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
+				} catch (URISyntaxException e) {
+					e.printStackTrace();
+					searchAsUrl = null;
 				}
 			}
 
+			//We use the . check to determine if this is a single word or not... 
+			//if it doesn't contain a . plus domain (2 more characters) it won't be a URL, even if it's valid, like http://test
 			if (searchAsUrl != null) {
 				if (modifiedText != null) {
 					//Show the modified url text
-					showWebUrl(modifiedText);
+					if (modifiedText.contains(".") && modifiedText.length() > (modifiedText.indexOf(".") + 2)) {
+						showWebUrl(modifiedText);
+					} else {
+						searchWebTerm(text);
+					}
 				} else {
-					//Show the url text
-					showWebUrl(text);
+					if (text.contains(".") && text.length() > (text.indexOf(".") + 2)) {
+						//Show the url text
+						showWebUrl(text);
+					} else {
+						searchWebTerm(text);
+					}
 				}
 			} else {
 				searchWebTerm(text);
@@ -172,7 +243,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void searchWebTerm(String term) {
-		lastSearchString = term;
 		if (!webviewShowing) {
 			feedView.setVisibility(View.GONE);
 			mainWebView.setVisibility(View.VISIBLE);
@@ -180,7 +250,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			webviewShowing = true;
 		}
 		
-		mainWebView.loadUrl(DDGConstants.SEARCH_URL + term);
+		mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
 	}
 	
 	public void showWebUrl(String url) {
@@ -200,6 +270,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		feedAdapter.notifyDataSetChanged();
 		hasUpdatedFeed = true;
 	}
+	
+	public void onFeedRetrievalFailed() {
+		//If the mainFeedTask is null, we are currently paused
+		//Otherwise, we can try again
+		if (mainFeedTask != null) {
+			mainFeedTask = new MainFeedTask(this);
+			mainFeedTask.execute();
+		}
+	}
 
 	public void onClick(View v) {
 		if (v.equals(homeSettingsButton)) {
@@ -212,7 +291,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mainWebView.clearView();
 				homeSettingsButton.setImageResource(R.drawable.settings_button);
 				searchField.setText("");
-				lastSearchString = null;
 				webviewShowing = false;
 			}
 		}
@@ -222,7 +300,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		//Hide the keyboard and perform a search
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-
+		searchField.dismissDropDown();
+		
 		String text = (String)parent.getAdapter().getItem(position);
 		if (text != null) {
 			text.trim();
