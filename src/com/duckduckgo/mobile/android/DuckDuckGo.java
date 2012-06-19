@@ -18,13 +18,19 @@ import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelect
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
@@ -62,6 +68,41 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         searchField.setAdapter(new AutoCompleteResultsAdapter(this));
         searchField.setOnEditorActionListener(this);
         searchField.setOnItemClickListener(this);
+
+        final Drawable x = getResources().getDrawable(android.R.drawable.presence_offline);//.presence_offline);//your x image, this one from standard android images looks pretty good actually
+        x.setBounds(0, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
+        searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : x, null);
+
+        searchField.setOnTouchListener(new OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (searchField.getCompoundDrawables()[2] == null) {
+                    return false;
+                }
+                if (event.getAction() != MotionEvent.ACTION_UP) {
+                    return false;
+                }
+                if (event.getX() > searchField.getWidth() - searchField.getPaddingRight() - x.getIntrinsicWidth()) {
+                	searchField.setText("");
+                	searchField.setCompoundDrawables(null, null, null, null);
+                }
+                return false;
+            }
+
+        });
+
+        searchField.addTextChangedListener(new TextWatcher() {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            	searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : x, null);
+            }
+
+            public void afterTextChanged(Editable arg0) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+        });
+        
+        
         feedAdapter = new MainFeedAdapter(this);
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
         feedView.setAdapter(feedAdapter);
@@ -91,6 +132,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	@Override
         	public void onPageFinished (WebView view, String url) {
         		if (url.contains("duckduckgo.com")) {
+        	        mainWebView.getSettings().setSupportZoom(true);
+        	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
+        	        mainWebView.getSettings().setEnableSmoothTransition(false);
+        	        mainWebView.getSettings().setBuiltInZoomControls(false);
+        	        mainWebView.getSettings().setDisplayZoomControls(false);
+        	        mainWebView.getSettings().setUseWideViewPort(false);
+        	        mainWebView.getSettings().setLoadWithOverviewMode(false);
+        	        //mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        	        //mainWebView.getSettings().setPluginsEnabled(true); 
         			URL fullURL = null;
         			try {
 						fullURL = new URL(url);
@@ -123,6 +173,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         			}
         		} else {
         			//This isn't duckduck go...
+        	        mainWebView.getSettings().setSupportZoom(true);
+        	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
+        	        mainWebView.getSettings().setEnableSmoothTransition(true);
+        	        mainWebView.getSettings().setBuiltInZoomControls(true);
+        	        mainWebView.getSettings().setDisplayZoomControls(false);
+        	        mainWebView.getSettings().setUseWideViewPort(true);
+        	        mainWebView.getSettings().setLoadWithOverviewMode(true);
+        	        //mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        	        //mainWebView.getSettings().setPluginsEnabled(true); 
         			setSearchBarText(url);
         		}
         	}
