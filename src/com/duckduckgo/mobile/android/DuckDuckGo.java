@@ -69,7 +69,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         searchField.setOnEditorActionListener(this);
         searchField.setOnItemClickListener(this);
 
-        final Drawable x = getResources().getDrawable(android.R.drawable.presence_offline);//.presence_offline);//your x image, this one from standard android images looks pretty good actually
+        // This makes a little (X) to clear the search bar.
+        final Drawable x = getResources().getDrawable(android.R.drawable.presence_offline);
         x.setBounds(0, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
         searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : x, null);
 
@@ -101,8 +102,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
         });
-        
-        
+
+
         feedAdapter = new MainFeedAdapter(this);
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
         feedView.setAdapter(feedAdapter);
