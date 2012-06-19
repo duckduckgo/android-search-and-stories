@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="AppName">DuckDuckGov2</string>
+    <string name="AppName">DuckDuckGo</string>
     <string name="SearchString">Search DuckDuckGo...</string>
     <string name="SettingsButtonContentDescription">Settings</string>
     <string name="HomeButtonContentDescription">Home</string>
