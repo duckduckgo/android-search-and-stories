@@ -3,15 +3,17 @@ package com.duckduckgo.mobile.android.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.HttpStatus;
+import ch.boye.httpclientandroidlib.client.HttpClient;
+import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
+import ch.boye.httpclientandroidlib.util.EntityUtils;
 
 import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
@@ -24,37 +26,35 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	private static String TAG = "MainFeedTask";
 	
 	private FeedListener listener = null;
-	
+		
 	public MainFeedTask(FeedListener listener) {
 		this.listener = listener;
 	}
 	
 	@Override
-	protected List<FeedObject> doInBackground(Void... arg0) {
+	protected List<FeedObject> doInBackground(Void... arg0) {		
 		JSONArray json = null;
 		List<FeedObject> returnFeed = new ArrayList<FeedObject>();
 		try {
-			HttpClient client = new HttpClient();
-			client.getParams().setParameter(HttpMethodParams.USER_AGENT, DDGConstants.USER_AGENT);
-			HttpMethod get = new GetMethod(DDGConstants.MAIN_FEED_URL);
+			HttpClient client = new DefaultHttpClient();
+			client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, DDGConstants.USER_AGENT);
+			HttpGet get = new HttpGet(DDGConstants.MAIN_FEED_URL);
 
 			if (isCancelled()) return null;
 			
-			int result = client.executeMethod(get);
+			HttpResponse result = client.execute(get);
 
 			if (isCancelled()) return null;
 			
-			if (result != HttpStatus.SC_OK) {
+			if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
 				Log.e(TAG, "Unable to execute Query with result: " + result);
 				return null;
 			}
-			String body = get.getResponseBodyAsString();
+			String body = EntityUtils.toString(result.getEntity());
 			Log.e(TAG, body);
 			json = new JSONArray(body);
 		} catch (JSONException jex) {
 			Log.e(TAG, jex.getMessage(), jex);
-		} catch (HttpException httpException) {
-			Log.e(TAG, httpException.getMessage(), httpException);
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		}
@@ -80,7 +80,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	}
 	
 	@Override
-	protected void onPostExecute(List<FeedObject> feed) {
+	protected void onPostExecute(List<FeedObject> feed) {	
 		if (this.listener != null) {
 			if (feed != null) {
 				this.listener.onFeedRetrieved(feed);

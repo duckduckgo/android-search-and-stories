@@ -5,17 +5,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
+
+import ch.boye.httpclientandroidlib.HttpException;
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.HttpStatus;
+import ch.boye.httpclientandroidlib.client.HttpClient;
+import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
 
 import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.download.DownloadableImage;
@@ -67,23 +69,23 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 	
 	private Bitmap downloadBitmap(String url) {
 		try {
-			HttpClient client = new HttpClient();
-			client.getParams().setParameter(HttpMethodParams.USER_AGENT, DDGConstants.USER_AGENT);
-			HttpMethod get = new GetMethod(url);
+			HttpClient client = new DefaultHttpClient();
+			client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, DDGConstants.USER_AGENT);
+			HttpGet get = new HttpGet(url);
 
 			if (isCancelled()) return null;
 		
-			int result = client.executeMethod(get);
+			HttpResponse result = client.execute(get);
 
 			if (isCancelled()) return null;
 		
-			if (result != HttpStatus.SC_OK) {
+			if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
 				Log.e(TAG, "Http Call Returned Bad Status: " + result);
 				return null;
 			}
 			InputStream inputStream = null;
 			try {
-				inputStream = get.getResponseBodyAsStream();
+				inputStream = result.getEntity().getContent();
 				if (inputStream != null) {
 					return BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
 				}
@@ -92,8 +94,6 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 					inputStream.close();
 				}
 			}
-		} catch (HttpException httpException) {
-			Log.e(TAG, httpException.getMessage(), httpException);
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		}

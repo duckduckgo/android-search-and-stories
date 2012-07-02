@@ -5,15 +5,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import ch.boye.httpclientandroidlib.HttpException;
+import ch.boye.httpclientandroidlib.HttpResponse;
+import ch.boye.httpclientandroidlib.HttpStatus;
+import ch.boye.httpclientandroidlib.client.HttpClient;
+import ch.boye.httpclientandroidlib.client.methods.HttpGet;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
+import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
+import ch.boye.httpclientandroidlib.util.EntityUtils;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.DDGConstants;
@@ -113,8 +116,9 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 				if (constraint != null) {
 
 					//TODO: Check if this constraint is already in the cache
-					
+										
 					JSONArray json = getJSONResultForConstraint(constraint);
+								
 					for (int i = 0; i < json.length(); i++) {
 						try {
 							JSONObject nextObj = json.getJSONObject(i);
@@ -158,18 +162,18 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 				JSONArray json = null;
 				String body = null;
 				try {
-					HttpClient client = new HttpClient();
-					client.getParams().setParameter(HttpMethodParams.USER_AGENT, DDGConstants.USER_AGENT);
+					HttpClient client = new DefaultHttpClient();
+					client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, DDGConstants.USER_AGENT);
 					String query = URLEncoder.encode(constraint.toString());
-					HttpMethod get = new GetMethod(DDGConstants.AUTO_COMPLETE_URL + query);
+					HttpGet get = new HttpGet(DDGConstants.AUTO_COMPLETE_URL + query);
 
-					int result = client.executeMethod(get);
+					HttpResponse result = client.execute(get);
 
-					if (result != HttpStatus.SC_OK) {
+					if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
 						throw new Exception("Unable to execute query");
 					}
 
-					body = get.getResponseBodyAsString();
+					body = EntityUtils.toString(result.getEntity());
 
 					json = new JSONArray(body);
 				} catch (JSONException jex) {
