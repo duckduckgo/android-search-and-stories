@@ -23,6 +23,8 @@ import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
+import com.duckduckgo.mobile.android.network.DDGHttpException;
+import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 
 import android.content.Context;
@@ -162,24 +164,13 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 				JSONArray json = null;
 				String body = null;
 				try {
-					HttpClient client = new DefaultHttpClient();
-					client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, DDGConstants.USER_AGENT);
 					String query = URLEncoder.encode(constraint.toString());
-					HttpGet get = new HttpGet(DDGConstants.AUTO_COMPLETE_URL + query);
-
-					HttpResponse result = client.execute(get);
-
-					if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-						throw new Exception("Unable to execute query");
-					}
-
-					body = EntityUtils.toString(result.getEntity());
-
+					body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.AUTO_COMPLETE_URL + query);
 					json = new JSONArray(body);
 				} catch (JSONException jex) {
 					Log.e(TAG, jex.getMessage(), jex);
-				} catch (HttpException httpException) {
-					Log.e(TAG, httpException.getMessage(), httpException);
+				} catch (DDGHttpException conException) {
+					Log.e(TAG, "Unable to execute query" + conException.getMessage(), conException);
 				} catch (Exception e) {
 					Log.e(TAG, e.getMessage(), e);
 				}

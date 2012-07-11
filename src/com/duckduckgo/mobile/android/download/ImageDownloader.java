@@ -1,5 +1,9 @@
 package com.duckduckgo.mobile.android.download;
 
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
+
 import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
 
 import android.graphics.Bitmap;
@@ -14,9 +18,18 @@ public class ImageDownloader {
 	
 	private final ImageCache cache;
 	
+    private Map<DownloadableImage, String> imageViews=Collections.synchronizedMap(new WeakHashMap<DownloadableImage, String>());
+	
 	public ImageDownloader(ImageCache cache) {
 		this.cache = cache;
 	}
+	
+    boolean imageViewReused(DownloadableImage image, String url){
+        String tag=imageViews.get(image);
+        if(tag==null || !tag.equals(url))
+            return true;
+        return false;
+    }
 	
 	//TODO: Should take a Downloadable object
 	public void download(String url, DownloadableImage image) {
@@ -25,10 +38,16 @@ public class ImageDownloader {
 			cancelPreviousDownload(url, image);
 			image.setDefault();
 			return;
-			
+
 		}
+		imageViews.put(image, url);
+
 		Bitmap bitmap = cache.getBitmapFromCache(url);
 		
+		if(cache.checkFail(url)){
+			url = null;
+		}
+
 		if (bitmap == null) {
 			Log.d(TAG, "Attempting download of URL: " + url);
 			attemptDownload(url, image);
@@ -52,6 +71,9 @@ public class ImageDownloader {
 			//We are already downloading that exact image
 			return;
 		}
+		
+		if(imageViewReused(image,url))
+            return;
 		
 		DownloadBitmapTask task = new DownloadBitmapTask(image, cache);
 		image.setDownloadBitmapTask(task);

@@ -5,23 +5,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import ch.boye.httpclientandroidlib.HttpException;
-import ch.boye.httpclientandroidlib.HttpResponse;
-import ch.boye.httpclientandroidlib.HttpStatus;
-import ch.boye.httpclientandroidlib.client.HttpClient;
-import ch.boye.httpclientandroidlib.client.methods.HttpGet;
-import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
-import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
-
-import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.download.DownloadableImage;
 import com.duckduckgo.mobile.android.download.ImageCache;
+import com.duckduckgo.mobile.android.network.DDGHttpException;
+import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 
 //TODO: Eventually, don't take an ImageView, take a Downloadable object
 public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
@@ -69,31 +61,30 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 	
 	private Bitmap downloadBitmap(String url) {
 		try {
-			HttpClient client = new DefaultHttpClient();
-			client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, DDGConstants.USER_AGENT);
-			HttpGet get = new HttpGet(url);
 
 			if (isCancelled()) return null;
-		
-			HttpResponse result = client.execute(get);
-
-			if (isCancelled()) return null;
-		
-			if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-				Log.e(TAG, "Http Call Returned Bad Status: " + result);
-				return null;
-			}
+				
 			InputStream inputStream = null;
 			try {
-				inputStream = result.getEntity().getContent();
+				inputStream = DDGNetworkConstants.mainClient.doGetStream(url);
 				if (inputStream != null) {
-					return BitmapFactory.decodeStream(new FlushedInputStream(inputStream));
+					// FIXME large bitmaps cause OutOfMemoryErrors
+					// see: http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+					return BitmapFactory.decodeStream(inputStream);
 				}
-			} finally {
+			} 
+			catch(DDGHttpException conex) {
+				Log.e(TAG, "Http Call Returned Bad Status. " + conex.getHttpStatus());
+				imageCache.addFailedUrl(url);
+				throw conex;
+			}
+			finally {
 				if (inputStream != null) {
 					inputStream.close();
 				}
 			}
+		} catch (DDGHttpException conException) {
+			Log.e(TAG, conException.getMessage(), conException);
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		}

@@ -2,7 +2,10 @@ package com.duckduckgo.mobile.android.adapters;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.DDGConstants;
@@ -12,6 +15,7 @@ import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +29,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
 	protected final ImageDownloader imageDownloader;
-	
+			
 	public MainFeedAdapter(Context context) {
 		super(context, 0);
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -47,6 +51,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		final Holder holder = (Holder) cv.getTag();
 		URL iconUrl = null;
 		URL feedUrl = null;
+
 		if (feed != null) {
 			//Download the background image
 			if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
@@ -57,7 +62,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 
 			//Set the Title
 			holder.textViewTitle.setText(feed.getTitle());
-			
+
 			//Set the URL Icon on the Left Hand Side
 			if (feed.getUrl() != null && !feed.getUrl().equals("null")) {
 				try {
@@ -65,7 +70,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
-				
+
 				if (iconUrl != null) {
 					String host = iconUrl.getHost();
 					if (host.indexOf(".") != host.lastIndexOf(".")) {
@@ -86,7 +91,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
-				
+
 				if (feedUrl != null) {
 					if (iconUrl != null) {
 						if (iconUrl.getHost().equals(feedUrl.getHost())) {
@@ -116,7 +121,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 				imageDownloader.download(null, holder.imageViewFeedIcon);
 			}
 		}
-		
+
 		return cv;
 	}
 	

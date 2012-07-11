@@ -16,6 +16,8 @@ import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 
 import com.duckduckgo.mobile.android.DDGConstants;
+import com.duckduckgo.mobile.android.network.DDGHttpException;
+import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 
 import android.os.AsyncTask;
@@ -32,29 +34,19 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	}
 	
 	@Override
-	protected List<FeedObject> doInBackground(Void... arg0) {		
+	protected List<FeedObject> doInBackground(Void... arg0) {
 		JSONArray json = null;
 		List<FeedObject> returnFeed = new ArrayList<FeedObject>();
 		try {
-			HttpClient client = new DefaultHttpClient();
-			client.getParams().setParameter(CoreProtocolPNames.USER_AGENT, DDGConstants.USER_AGENT);
-			HttpGet get = new HttpGet(DDGConstants.MAIN_FEED_URL);
-
 			if (isCancelled()) return null;
 			
-			HttpResponse result = client.execute(get);
-
-			if (isCancelled()) return null;
-			
-			if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-				Log.e(TAG, "Unable to execute Query with result: " + result);
-				return null;
-			}
-			String body = EntityUtils.toString(result.getEntity());
+			String body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.MAIN_FEED_URL);
 			Log.e(TAG, body);
 			json = new JSONArray(body);
 		} catch (JSONException jex) {
 			Log.e(TAG, jex.getMessage(), jex);
+		} catch (DDGHttpException conException) {
+			Log.e(TAG, "Unable to execute Query: " + conException.getMessage(), conException);
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
 		}
