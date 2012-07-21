@@ -37,12 +37,19 @@
 			   	        	  android:completionThreshold="1"
 			   	        	  android:inputType="textAutoComplete"
 			   	        	  android:hint="@string/SearchString"
-			   	        	  android:id="@+id/searchEditText" />        		  
+			   	        	  android:id="@+id/searchEditText" />
+   	    		  
     </LinearLayout>
+    
+    <ProgressBar android:layout_width="fill_parent"
+    		 	 android:layout_height="5dp"
+    		 	 android:visibility="gone"
+    		 	 style="@android:style/Widget.ProgressBar.Horizontal"
+    		 	 android:id="@+id/pageLoadingProgress" />
 
     <!-- Main View Area -->
     <RelativeLayout android:layout_width="fill_parent"
-        		    android:layout_height="wrap_content"
+        		    android:layout_height="0dip"
         		    android:layout_weight="1"
         		    android:id="@+id/mainViewArea">
         

@@ -7,29 +7,21 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.List;
 
-import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
-import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
-import com.duckduckgo.mobile.android.objects.FeedObject;
-import com.duckduckgo.mobile.android.tasks.MainFeedTask;
-import com.duckduckgo.mobile.android.tasks.MainFeedTask.FeedListener;
-import com.duckduckgo.mobile.android.views.MainFeedListView;
-import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
-
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -40,6 +32,14 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+
+import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
+import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
+import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.tasks.MainFeedTask;
+import com.duckduckgo.mobile.android.tasks.MainFeedTask.FeedListener;
+import com.duckduckgo.mobile.android.views.MainFeedListView;
+import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 
 public class DuckDuckGo extends Activity implements OnEditorActionListener, FeedListener, OnClickListener, OnItemClickListener {
 
@@ -52,6 +52,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private MainFeedTask mainFeedTask = null;
 	private WebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
+	private ProgressBar pageProgressBar = null;
 	
 	private boolean hasUpdatedFeed = false;
 	private boolean webviewShowing = false;
@@ -59,6 +60,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_PROGRESS);
+        
         setContentView(R.layout.main);
         
         homeSettingsButton = (ImageButton) findViewById(R.id.settingsButton);
@@ -116,6 +119,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			}
         });
         
+        pageProgressBar = (ProgressBar) findViewById(R.id.pageLoadingProgress);
+        
         // NOTE: After loading url multiple times on the device, it may crash
         // Related to android bug report 21266 - Watch this ticket for possible resolutions
         // http://code.google.com/p/android/issues/detail?id=21266
@@ -131,7 +136,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	}
         	
         	@Override
+        	public void onPageStarted(WebView view, String url, Bitmap favicon) {
+        		super.onPageStarted(view, url, favicon);
+        		pageProgressBar.setProgress(0);
+            	pageProgressBar.setVisibility(View.VISIBLE);
+        	}
+        	
+        	@Override
         	public void onPageFinished (WebView view, String url) {
+        		pageProgressBar.setVisibility(View.GONE);
+        		
         		if (url.contains("duckduckgo.com")) {
         	        mainWebView.getSettings().setSupportZoom(true);
         	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
@@ -187,6 +201,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		}
         	}
         });
+                
+        mainWebView.setWebChromeClient(new WebChromeClient(){
+        	@Override
+        	public void onProgressChanged(WebView view, int newProgress) {
+        		super.onProgressChanged(view, newProgress);
+        		pageProgressBar.setProgress(newProgress);
+        	}
+        });
         
         feedProgressBar = (ProgressBar) findViewById(R.id.feedLoadingProgress);
     }
@@ -224,6 +246,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mainWebView.goBack();
 			} else {
 				feedView.setVisibility(View.VISIBLE);
+				pageProgressBar.setVisibility(View.GONE);
 				mainWebView.setVisibility(View.GONE);
 				mainWebView.clearView();
 				homeSettingsButton.setImageResource(R.drawable.settings_button);
@@ -346,6 +369,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			if (webviewShowing) {
 				//We are going home!
 				feedView.setVisibility(View.VISIBLE);
+				pageProgressBar.setVisibility(View.GONE);
 				mainWebView.setVisibility(View.GONE);
 				mainWebView.clearHistory();
 				mainWebView.clearView();
