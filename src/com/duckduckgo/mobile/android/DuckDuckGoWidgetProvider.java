@@ -23,6 +23,7 @@ public class DuckDuckGoWidgetProvider extends AppWidgetProvider {
             // Get the layout for the App Widget and attach an on-click listener to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
             views.setOnClickPendingIntent(R.id.widget_go_btn, pendingIntent);
+            views.setOnClickPendingIntent(R.id.widget_search_text, pendingIntent);
             //views.setOnClickPendingIntent(R.id.widget_voice_btn, pendingIntent);
 
             // Tell the AppWidgetManager to perform an update on the current App Widget

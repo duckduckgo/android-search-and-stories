@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.network;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -17,18 +16,14 @@ import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.HttpResponseInterceptor;
 import ch.boye.httpclientandroidlib.HttpStatus;
 import ch.boye.httpclientandroidlib.NameValuePair;
-import ch.boye.httpclientandroidlib.ParseException;
 import ch.boye.httpclientandroidlib.ProtocolException;
-import ch.boye.httpclientandroidlib.client.RedirectStrategy;
 import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.client.methods.HttpPost;
-import ch.boye.httpclientandroidlib.client.methods.HttpUriRequest;
 import ch.boye.httpclientandroidlib.client.params.HttpClientParams;
 import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.entity.HttpEntityWrapper;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
-import ch.boye.httpclientandroidlib.impl.client.DefaultRedirectHandler;
 import ch.boye.httpclientandroidlib.impl.client.DefaultRedirectStrategy;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;

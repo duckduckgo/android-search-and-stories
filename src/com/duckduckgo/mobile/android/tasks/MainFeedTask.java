@@ -7,21 +7,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import ch.boye.httpclientandroidlib.HttpResponse;
-import ch.boye.httpclientandroidlib.HttpStatus;
-import ch.boye.httpclientandroidlib.client.HttpClient;
-import ch.boye.httpclientandroidlib.client.methods.HttpGet;
-import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
-import ch.boye.httpclientandroidlib.params.CoreProtocolPNames;
-import ch.boye.httpclientandroidlib.util.EntityUtils;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
-
-import android.os.AsyncTask;
-import android.util.Log;
 
 public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
