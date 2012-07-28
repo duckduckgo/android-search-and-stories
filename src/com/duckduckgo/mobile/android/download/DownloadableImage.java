@@ -9,4 +9,6 @@ public interface DownloadableImage {
 	public DownloadBitmapTask getDownloadBitmapTask();
 	public void setBitmap(Bitmap bitmap);
 	public void setDefault();
+	public void setMemCacheDrawn(boolean flag);
+	public boolean getMemCacheDrawn();
 }

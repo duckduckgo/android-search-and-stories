@@ -2,17 +2,7 @@ package com.duckduckgo.mobile.android.adapters;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
-import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.DDGConstants;
-import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.download.ImageDownloader;
-import com.duckduckgo.mobile.android.objects.FeedObject;
 
 import android.content.Context;
 import android.util.Log;
@@ -22,10 +12,21 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.DDGConstants;
+import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.download.Holder;
+import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.download.ImageDownloader;
+import com.duckduckgo.mobile.android.objects.FeedObject;
+
+
 public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	private static final String TAG = "MainFeedAdapter";
 	
 	private final LayoutInflater inflater;
+	
+	public boolean scrolling = false;
 	
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
 	protected final ImageDownloader imageDownloader;
@@ -53,11 +54,21 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		URL feedUrl = null;
 
 		if (feed != null) {
+//			if(scrolling){
+//				Log.v("SCROLL","scrolling..");
+//				holder.imageViewBackground.setImageResource(R.drawable.testbackground);
+//				holder.imageViewFeedIcon.setDefault();
+//				holder.imageViewUrlIcon.setDefault();
+//				holder.textViewTitle.setText(feed.getTitle());
+//				return cv;
+//			}
+			
+			
 			//Download the background image
 			if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
-				imageDownloader.download(feed.getImageUrl(), holder.imageViewBackground);
+				imageDownloader.download(feed.getImageUrl(), holder.imageViewBackground, scrolling);
 			} else {
-				imageDownloader.download(null, holder.imageViewBackground);
+				imageDownloader.download(null, holder.imageViewBackground, scrolling);
 			}
 
 			//Set the Title
@@ -77,12 +88,12 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 						//Cut off the beginning, because we don't want/need it
 						host = host.substring(host.indexOf(".")+1);
 					}
-					imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewUrlIcon);
+					imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewUrlIcon, scrolling);
 				} else {
-					imageDownloader.download(null, holder.imageViewUrlIcon);
+					imageDownloader.download(null, holder.imageViewUrlIcon, scrolling);
 				}
 			} else {
-				imageDownloader.download(null, holder.imageViewUrlIcon);
+				imageDownloader.download(null, holder.imageViewUrlIcon, scrolling);
 			}
 
 			if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
@@ -96,7 +107,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 					if (iconUrl != null) {
 						if (iconUrl.getHost().equals(feedUrl.getHost())) {
 							//They are the same, don't show it
-							imageDownloader.download(null, holder.imageViewFeedIcon);
+							imageDownloader.download(null, holder.imageViewFeedIcon, scrolling);
 						} else {
 							String host = feedUrl.getHost();
 							if (host.indexOf(".") != host.lastIndexOf(".")) {
@@ -104,7 +115,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 								host = host.substring(host.indexOf(".")+1);
 							}							
 							//They are different, so show it
-							imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon);
+							imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon, scrolling);
 						}
 					} else {
 						String host = feedUrl.getHost();
@@ -112,33 +123,19 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 							//Cut off the beginning, because we don't want/need it
 							host = host.substring(host.indexOf(".")+1);
 						}
-						imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon);
+						imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon, scrolling);
 					}
 				} else {
-					imageDownloader.download(null, holder.imageViewFeedIcon);
+					imageDownloader.download(null, holder.imageViewFeedIcon, scrolling);
 				}
 			} else {
-				imageDownloader.download(null, holder.imageViewFeedIcon);
+				imageDownloader.download(null, holder.imageViewFeedIcon, scrolling);
 			}
 		}
 
 		return cv;
 	}
 	
-	class Holder {
-		final TextView textViewTitle;
-		final AsyncImageView imageViewBackground;
-		final AsyncImageView imageViewFeedIcon; //Top Right Icon (Feed Source)
-		final AsyncImageView imageViewUrlIcon; //Bottom Left Icon (Icon for linked page)
-		
-		public Holder(final TextView textViewTitle, final AsyncImageView imageViewBackground,
-					  final AsyncImageView imageViewFeedIcon, final AsyncImageView imageViewUrlIcon) {
-			this.textViewTitle = textViewTitle;
-			this.imageViewBackground = imageViewBackground;
-			this.imageViewFeedIcon = imageViewFeedIcon;
-			this.imageViewUrlIcon = imageViewUrlIcon;
-		}
-	}
 
 	public void setList(List<FeedObject> feed) {
 		this.clear();

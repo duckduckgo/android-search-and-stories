@@ -32,7 +32,7 @@ public class ImageDownloader {
     }
 	
 	//TODO: Should take a Downloadable object
-	public void download(String url, DownloadableImage image) {
+	public void download(String url, DownloadableImage image, boolean onlyUseMemCache) {
 		if (url == null || url.isEmpty()) {
 			//Cancel anything downloading, set the image to default, and return
 			cancelPreviousDownload(url, image);
@@ -42,19 +42,30 @@ public class ImageDownloader {
 		}
 		imageViews.put(image, url);
 
-		Bitmap bitmap = cache.getBitmapFromCache(url);
+		Bitmap bitmap = cache.getBitmapFromCache(url, onlyUseMemCache);
 		
 		if(cache.checkFail(url)){
 			url = null;
 		}
+		
 
 		if (bitmap == null) {
 			Log.d(TAG, "Attempting download of URL: " + url);
+			
+			if(onlyUseMemCache){
+				image.setBitmap(null);
+				image.setMemCacheDrawn(false);
+			}
+			
 			attemptDownload(url, image);
 		} else {
 			Log.d(TAG, "Using Cached Image for URL: " + url);
 			cancelPreviousDownload(url, image);
 			image.setBitmap(bitmap);
+			
+			if(onlyUseMemCache){
+				image.setMemCacheDrawn(true);
+			}
 		}
 	}
 	

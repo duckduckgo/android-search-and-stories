@@ -14,6 +14,7 @@ import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
 public class AsyncImageView extends ImageView implements DownloadableImage {
 	private WeakReference<DownloadBitmapTask> downloadTaskReference;
 	private boolean hideOnDefault = false;
+	public boolean cachedrawn = false;
 	
 	public AsyncImageView(Context context, AttributeSet attr) {
 		super (context, attr);
@@ -62,5 +63,15 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 	//		It may then override other visibility settings given externally
 	public void setShouldHideOnDefault(boolean hideOnDefault) {
 		this.hideOnDefault = hideOnDefault;
+	}
+
+	@Override
+	public void setMemCacheDrawn(boolean flag) {
+		cachedrawn = flag;		
+	}
+
+	@Override
+	public boolean getMemCacheDrawn() {
+		return cachedrawn;
 	}
 }

@@ -93,16 +93,14 @@ public class ImageCache {
 		return failedUrlSet.contains(url);
 	}
 	
-	public Bitmap getBitmapFromCache(String url) {
+	public Bitmap getBitmapFromCache(String url, boolean onlyUseMemCache) {
 		resetPurgeTimer();
 		if (url == null) return null;
 		
 		synchronized(hardBitmapCache) {
+			// get() is enough for access-order
 			final Bitmap bitmap = hardBitmapCache.get(url);
 			if (bitmap != null) {
-				//Move to the top of the cache
-				hardBitmapCache.remove(url);
-				hardBitmapCache.put(url, bitmap);
 				return bitmap;
 			}
 		}
@@ -116,6 +114,10 @@ public class ImageCache {
 				//Remove the url key since the reference no longer exists
 				softBitmapCache.remove(url);
 			}
+		}
+		
+		if(onlyUseMemCache){
+			return null;
 		}
 		
 		if (fileCache != null) {

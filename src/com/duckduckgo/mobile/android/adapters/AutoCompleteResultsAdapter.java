@@ -87,7 +87,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 		if (suggestion != null) {
 			holder.autoCompleteResult.setText(suggestion.getPhrase());
 			holder.autoCompleteDetail.setText(suggestion.getSnippet());
-			imageDownloader.download(suggestion.getImageUrl(), holder.autoCompleteImage);
+			imageDownloader.download(suggestion.getImageUrl(), holder.autoCompleteImage, false);
 		}
 		
 		return cv;

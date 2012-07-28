@@ -25,8 +25,10 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AbsListView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -35,6 +37,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
+import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask.FeedListener;
@@ -56,7 +59,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private boolean hasUpdatedFeed = false;
 	private boolean webviewShowing = false;
-	
+		
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,6 +121,37 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				}
 			}
         });
+        feedView.setOnScrollListener(new OnScrollListener() {
+			
+        	int firstVisibleItem;
+        	
+        	@Override
+        	public void onScroll(AbsListView view, int firstVisibleItem,
+        			int visibleItemCount, int totalItemCount) {
+//        		feedAdapter.scrolling = true;   
+        		this.firstVisibleItem = firstVisibleItem;
+        	}
+
+        	@Override
+        	public void onScrollStateChanged(AbsListView view, int scrollState) {
+        		Holder holder;
+        		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+        				feedAdapter.scrolling = false;
+        				int count = view.getChildCount();
+        				for(int i=0;i<count;++i){
+        					View cv = view.getChildAt(i);
+        					holder = (Holder) cv.getTag();
+        					if(!holder.imageViewBackground.getMemCacheDrawn()){
+        						feedAdapter.getView(firstVisibleItem+i, cv, view);
+        					}
+        				}
+        	    }
+        		else {
+        			feedAdapter.scrolling = true;
+        		}
+        		
+        	}
+		});
         
         pageProgressBar = (ProgressBar) findViewById(R.id.pageLoadingProgress);
         
