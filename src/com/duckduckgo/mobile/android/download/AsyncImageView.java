@@ -65,12 +65,10 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 		this.hideOnDefault = hideOnDefault;
 	}
 
-	@Override
 	public void setMemCacheDrawn(boolean flag) {
 		cachedrawn = flag;		
 	}
 
-	@Override
 	public boolean getMemCacheDrawn() {
 		return cachedrawn;
 	}

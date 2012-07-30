@@ -125,14 +125,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			
         	int firstVisibleItem;
         	
-        	@Override
         	public void onScroll(AbsListView view, int firstVisibleItem,
         			int visibleItemCount, int totalItemCount) {
-//        		feedAdapter.scrolling = true;   
+        		feedAdapter.scrolling = true;   
         		this.firstVisibleItem = firstVisibleItem;
         	}
 
-        	@Override
         	public void onScrollStateChanged(AbsListView view, int scrollState) {
         		Holder holder;
         		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {

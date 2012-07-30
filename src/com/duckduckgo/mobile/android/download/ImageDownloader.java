@@ -55,6 +55,7 @@ public class ImageDownloader {
 			if(onlyUseMemCache){
 				image.setBitmap(null);
 				image.setMemCacheDrawn(false);
+				return;
 			}
 			
 			attemptDownload(url, image);

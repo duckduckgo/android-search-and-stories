@@ -53,16 +53,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		URL iconUrl = null;
 		URL feedUrl = null;
 
-		if (feed != null) {
-//			if(scrolling){
-//				Log.v("SCROLL","scrolling..");
-//				holder.imageViewBackground.setImageResource(R.drawable.testbackground);
-//				holder.imageViewFeedIcon.setDefault();
-//				holder.imageViewUrlIcon.setDefault();
-//				holder.textViewTitle.setText(feed.getTitle());
-//				return cv;
-//			}
-			
+		if (feed != null) {			
 			
 			//Download the background image
 			if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
