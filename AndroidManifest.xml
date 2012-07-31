@@ -14,7 +14,7 @@
         android:theme="@android:style/Theme.NoTitleBar"
         android:label="@string/AppName" android:name="DDGApplication">
         <activity
-            android:name=".DuckDuckGo"
+            android:name=".activity.DuckDuckGo"
             android:label="@string/AppName" android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -30,6 +30,11 @@
 		    <meta-data android:name="android.appwidget.provider"
 		        	   android:resource="@xml/widget_info" />
 		</receiver>
+		
+        <activity 
+            android:name=".activity.Preferences" 
+            android:label="@string/SettingsButtonContentDescription" />
+        
         
     </application>
 

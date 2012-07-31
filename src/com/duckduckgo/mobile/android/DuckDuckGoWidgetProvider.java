@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android;
 
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;

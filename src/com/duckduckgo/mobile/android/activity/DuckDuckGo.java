@@ -1,4 +1,4 @@
-package com.duckduckgo.mobile.android;
+package com.duckduckgo.mobile.android.activity;
 
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
@@ -9,6 +9,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -25,16 +26,20 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AbsListView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.duckduckgo.mobile.android.DDGConstants;
+import com.duckduckgo.mobile.android.DDGControlVar;
+import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.SCREEN;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.download.Holder;
@@ -112,7 +117,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
         feedAdapter = new MainFeedAdapter(this);
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
-        feedView.setAdapter(feedAdapter);
         feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
 			public void onMainFeedItemSelected(FeedObject feedObject) {
 				String url = feedObject.getUrl();
@@ -150,6 +154,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		
         	}
 		});
+        
+        if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
+            feedView.setAdapter(feedAdapter);
+        }
         
         pageProgressBar = (ProgressBar) findViewById(R.id.pageLoadingProgress);
         
@@ -256,6 +264,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	@Override
 	public void onResume() {
 		super.onResume();
+		if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
+            feedView.setAdapter(feedAdapter);
+			feedView.setVisibility(View.VISIBLE);
+		}
+		else {
+            feedView.setAdapter(null);
+			feedView.setVisibility(View.GONE);
+			return;
+		}
+		
 		if (!hasUpdatedFeed) {
 			mainFeedTask = new MainFeedTask(this);
 			mainFeedTask.execute();
@@ -408,6 +426,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				homeSettingsButton.setImageResource(R.drawable.settings_button);
 				searchField.setText("");
 				webviewShowing = false;
+			}
+			else {
+				// test this part
+
+		        Intent intent = new Intent(getBaseContext(), Preferences.class);
+		        startActivity(intent);
 			}
 		}
 	}
