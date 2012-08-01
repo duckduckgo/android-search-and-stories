@@ -9,7 +9,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -32,6 +31,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -61,9 +61,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private WebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
 	private ProgressBar pageProgressBar = null;
+	private LinearLayout prefLayout = null;
 	
 	private boolean hasUpdatedFeed = false;
 	private boolean webviewShowing = false;
+	private boolean prefShowing = false;
 		
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -154,10 +156,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		
         	}
 		});
-        
-        if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
-            feedView.setAdapter(feedAdapter);
-        }
         
         pageProgressBar = (ProgressBar) findViewById(R.id.pageLoadingProgress);
         
@@ -251,6 +249,17 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         });
         
         feedProgressBar = (ProgressBar) findViewById(R.id.feedLoadingProgress);
+        
+        prefLayout = (LinearLayout) findViewById(R.id.prefLayout);
+        
+        // control which start screen is shown & configure related views
+        if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
+            feedView.setAdapter(feedAdapter);
+            feedProgressBar.setVisibility(View.VISIBLE);
+        }
+        else {
+        	feedProgressBar.setVisibility(View.GONE);
+        }
     }
 	
 	public void setSearchBarText(String text) {
@@ -298,12 +307,18 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				feedView.setVisibility(View.VISIBLE);
 				pageProgressBar.setVisibility(View.GONE);
 				mainWebView.setVisibility(View.GONE);
+				prefLayout.setVisibility(View.GONE);
 				mainWebView.clearView();
 				homeSettingsButton.setImageResource(R.drawable.settings_button);
 				webviewShowing = false;
 				searchField.setText("");
 			}
-		} else {
+		}
+		else if(prefShowing){
+			prefLayout.setVisibility(View.GONE);
+			prefShowing = false;
+		}
+		else {
 			super.onBackPressed();
 		}
 	}
@@ -421,6 +436,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				feedView.setVisibility(View.VISIBLE);
 				pageProgressBar.setVisibility(View.GONE);
 				mainWebView.setVisibility(View.GONE);
+				prefLayout.setVisibility(View.GONE);
 				mainWebView.clearHistory();
 				mainWebView.clearView();
 				homeSettingsButton.setImageResource(R.drawable.settings_button);
@@ -430,8 +446,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			else {
 				// test this part
 
-		        Intent intent = new Intent(getBaseContext(), Preferences.class);
-		        startActivity(intent);
+//		        Intent intent = new Intent(getBaseContext(), Preferences.class);
+//		        startActivity(intent);
+				
+				feedView.setVisibility(View.GONE);
+				pageProgressBar.setVisibility(View.GONE);
+				mainWebView.setVisibility(View.GONE);
+				prefLayout.setVisibility(View.VISIBLE);
+				prefShowing = true;
 			}
 		}
 	}

@@ -6,6 +6,8 @@ import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class DDGApplication extends Application {
 
@@ -18,6 +20,10 @@ public class DDGApplication extends Application {
 		imageCache.setFileCache(new FileCache(this.getApplicationContext()));
 		
 		DDGNetworkConstants.initialize();
+		
+		SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString("startScreenPref", "0")));
+     
 	}
 	
 	public static ImageDownloader getImageDownloader() {

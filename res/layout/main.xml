@@ -71,6 +71,19 @@
     		 		 style="@android:style/Widget.ProgressBar.Large"
     		 		 android:id="@+id/feedLoadingProgress" />
         
+        <LinearLayout 	  
+            android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:visibility="gone"
+			android:id="@+id/prefLayout">  
+			                  
+	        <fragment android:name="com.duckduckgo.mobile.android.activity.Preferences"
+			android:id="@+id/prefFragment"
+	       	android:layout_height="fill_parent"
+			android:layout_width="fill_parent" />
+	        
+    	</LinearLayout>
+        
     </RelativeLayout>
         		  
 </LinearLayout>
