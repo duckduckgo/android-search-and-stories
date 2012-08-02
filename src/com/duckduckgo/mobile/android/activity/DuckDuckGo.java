@@ -133,7 +133,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	
         	public void onScroll(AbsListView view, int firstVisibleItem,
         			int visibleItemCount, int totalItemCount) {
-        		feedAdapter.scrolling = true;   
+        		if(visibleItemCount > 0){
+        			feedAdapter.scrolling = true;
+        		}
         		this.firstVisibleItem = firstVisibleItem;
         	}
 
