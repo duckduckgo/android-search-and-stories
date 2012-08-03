@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clip
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/loadbar_blue"
+    android:clipOrientation="horizontal"
+    android:gravity= "left|center_vertical" />

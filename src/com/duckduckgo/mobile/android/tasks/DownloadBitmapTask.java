@@ -22,6 +22,7 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 	public String url;
 	private final WeakReference<DownloadableImage> imageViewReference;
 	private final ImageCache imageCache;
+	public boolean isCompleted = false;
 	
 	public DownloadBitmapTask(DownloadableImage image, ImageCache imageCache) {
 		imageViewReference = new WeakReference<DownloadableImage>(image);
@@ -38,6 +39,7 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 	protected void onPostExecute(Bitmap bitmap) {
 		if (isCancelled()) {
 			bitmap = null;
+			isCompleted = true;
 			return;
 		}
 
@@ -57,6 +59,8 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 				image.setBitmap(bitmap);
 			}
 		}
+		
+		isCompleted = true; 
 	}
 	
 	private Bitmap downloadBitmap(String url) {

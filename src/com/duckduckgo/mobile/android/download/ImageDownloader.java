@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.download;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.WeakHashMap;
 
@@ -105,5 +106,22 @@ public class ImageDownloader {
 			}
 		}
 		return true;
+	}
+	
+	public void clearAllDownloads() {
+		HashSet<DownloadableImage> removeList = new HashSet<DownloadableImage>();
+		for(DownloadableImage image : imageViews.keySet()){
+			DownloadBitmapTask task = image.getDownloadBitmapTask();
+			
+				if(task != null && !task.isCompleted){
+					task.cancel(true);
+					removeList.add(image);
+				}
+
+		}
+		
+		for(DownloadableImage image : removeList){
+			imageViews.remove(image);
+		}
 	}
 }

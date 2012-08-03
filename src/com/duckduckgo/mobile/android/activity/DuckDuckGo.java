@@ -10,6 +10,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -19,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
@@ -36,6 +38,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.DDGControlVar;
 import com.duckduckgo.mobile.android.R;
@@ -66,6 +69,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private boolean hasUpdatedFeed = false;
 	private boolean webviewShowing = false;
 	private boolean prefShowing = false;
+	
+	private Drawable progressDrawable;
+	
+	private ViewTreeObserver vto;
 		
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -154,12 +161,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	    }
         		else {
         			feedAdapter.scrolling = true;
+        			DDGApplication.getImageDownloader().clearAllDownloads();
         		}
         		
         	}
 		});
         
         pageProgressBar = (ProgressBar) findViewById(R.id.pageLoadingProgress);
+        progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
         
         // NOTE: After loading url multiple times on the device, it may crash
         // Related to android bug report 21266 - Watch this ticket for possible resolutions
@@ -171,6 +180,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         mainWebView.setWebViewClient(new WebViewClient() {
         	@Override
         	public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            	progressDrawable.setLevel(0);
+            	searchField.setBackgroundDrawable(progressDrawable);
+            	
         		view.loadUrl(url);
         		return true;
         	}
@@ -179,13 +191,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	public void onPageStarted(WebView view, String url, Bitmap favicon) {
         		super.onPageStarted(view, url, favicon);
         		pageProgressBar.setProgress(0);
-            	pageProgressBar.setVisibility(View.VISIBLE);
+            	pageProgressBar.setVisibility(View.VISIBLE);            	
         	}
         	
         	@Override
         	public void onPageFinished (WebView view, String url) {
         		pageProgressBar.setVisibility(View.GONE);
-        		
+        		        		
         		if (url.contains("duckduckgo.com")) {
         	        mainWebView.getSettings().setSupportZoom(true);
         	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
@@ -239,6 +251,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	        //mainWebView.getSettings().setPluginsEnabled(true); 
         			setSearchBarText(url);
         		}
+        		
+				searchField.setBackgroundDrawable(null);
+
         	}
         });
                 
@@ -247,6 +262,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	public void onProgressChanged(WebView view, int newProgress) {
         		super.onProgressChanged(view, newProgress);
         		pageProgressBar.setProgress(newProgress);
+        		
+        		if(newProgress == 100){
+	            	searchField.setBackgroundDrawable(null);
+        		}
+        		else {
+	        		progressDrawable.setLevel(newProgress*100);
+	            	searchField.setBackgroundDrawable(progressDrawable);
+        		}
+
         	}
         });
         
@@ -262,6 +286,20 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         else {
         	feedProgressBar.setVisibility(View.GONE);
         }
+        
+        
+        vto = searchField.getViewTreeObserver();
+        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+				// TRICK: setting progress drawable height by referencing homeSettingsButton
+				final int settingsHeight = homeSettingsButton.getBottom() - homeSettingsButton.getTop();
+				Rect r = progressDrawable.getBounds();
+				r.bottom = r.top + settingsHeight;
+				progressDrawable.setBounds(r);
+                
+                return true;
+            }
+        });
     }
 	
 	public void setSearchBarText(String text) {
@@ -306,6 +344,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			if (mainWebView.canGoBack()) {
 				mainWebView.goBack();
 			} else {
+				mainWebView.stopLoading();
+				
 				feedView.setVisibility(View.VISIBLE);
 				pageProgressBar.setVisibility(View.GONE);
 				mainWebView.setVisibility(View.GONE);
@@ -314,6 +354,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				homeSettingsButton.setImageResource(R.drawable.settings_button);
 				webviewShowing = false;
 				searchField.setText("");
+				
+				searchField.setBackgroundDrawable(null);
+
 			}
 		}
 		else if(prefShowing){
@@ -444,6 +487,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				homeSettingsButton.setImageResource(R.drawable.settings_button);
 				searchField.setText("");
 				webviewShowing = false;
+				
+				searchField.setBackgroundDrawable(null);
 			}
 			else {
 				// test this part
@@ -456,6 +501,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mainWebView.setVisibility(View.GONE);
 				prefLayout.setVisibility(View.VISIBLE);
 				prefShowing = true;
+				
+				searchField.setBackgroundDrawable(null);
 			}
 		}
 	}
