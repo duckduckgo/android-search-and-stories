@@ -10,7 +10,6 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,7 +19,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
@@ -63,17 +61,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private MainFeedTask mainFeedTask = null;
 	private WebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
-	private ProgressBar pageProgressBar = null;
 	private LinearLayout prefLayout = null;
 	
 	private boolean hasUpdatedFeed = false;
 	private boolean webviewShowing = false;
 	private boolean prefShowing = false;
 	
-	private Drawable progressDrawable;
-	
-	private ViewTreeObserver vto;
-		
+	private Drawable progressDrawable, searchFieldDrawable;
+			
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -167,8 +162,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	}
 		});
         
-        pageProgressBar = (ProgressBar) findViewById(R.id.pageLoadingProgress);
         progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
+        searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
+        searchFieldDrawable.setAlpha(150);
         
         // NOTE: After loading url multiple times on the device, it may crash
         // Related to android bug report 21266 - Watch this ticket for possible resolutions
@@ -179,24 +175,18 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         mainWebView.getSettings().setJavaScriptEnabled(true);
         mainWebView.setWebViewClient(new WebViewClient() {
         	@Override
-        	public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            	progressDrawable.setLevel(0);
-            	searchField.setBackgroundDrawable(progressDrawable);
-            	
+        	public boolean shouldOverrideUrlLoading(WebView view, String url) {            	
         		view.loadUrl(url);
         		return true;
         	}
         	
         	@Override
         	public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        		super.onPageStarted(view, url, favicon);
-        		pageProgressBar.setProgress(0);
-            	pageProgressBar.setVisibility(View.VISIBLE);            	
+        		super.onPageStarted(view, url, favicon);          	
         	}
         	
         	@Override
         	public void onPageFinished (WebView view, String url) {
-        		pageProgressBar.setVisibility(View.GONE);
         		        		
         		if (url.contains("duckduckgo.com")) {
         	        mainWebView.getSettings().setSupportZoom(true);
@@ -252,7 +242,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         			setSearchBarText(url);
         		}
         		
-				searchField.setBackgroundDrawable(null);
+				searchField.setBackgroundDrawable(searchFieldDrawable);
 
         	}
         });
@@ -261,14 +251,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	@Override
         	public void onProgressChanged(WebView view, int newProgress) {
         		super.onProgressChanged(view, newProgress);
-        		pageProgressBar.setProgress(newProgress);
         		
         		if(newProgress == 100){
-	            	searchField.setBackgroundDrawable(null);
+        			searchField.setBackgroundDrawable(searchFieldDrawable);
         		}
         		else {
 	        		progressDrawable.setLevel(newProgress*100);
-	            	searchField.setBackgroundDrawable(progressDrawable);
+	        		searchField.setBackgroundDrawable(progressDrawable);
         		}
 
         	}
@@ -287,19 +276,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	feedProgressBar.setVisibility(View.GONE);
         }
         
-        
-        vto = searchField.getViewTreeObserver();
-        vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
-            public boolean onPreDraw() {
-				// TRICK: setting progress drawable height by referencing homeSettingsButton
-				final int settingsHeight = homeSettingsButton.getBottom() - homeSettingsButton.getTop();
-				Rect r = progressDrawable.getBounds();
-				r.bottom = r.top + settingsHeight;
-				progressDrawable.setBounds(r);
-                
-                return true;
-            }
-        });
     }
 	
 	public void setSearchBarText(String text) {
@@ -347,7 +323,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mainWebView.stopLoading();
 				
 				feedView.setVisibility(View.VISIBLE);
-				pageProgressBar.setVisibility(View.GONE);
 				mainWebView.setVisibility(View.GONE);
 				prefLayout.setVisibility(View.GONE);
 				mainWebView.clearView();
@@ -355,7 +330,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				webviewShowing = false;
 				searchField.setText("");
 				
-				searchField.setBackgroundDrawable(null);
+				searchField.setBackgroundDrawable(searchFieldDrawable);
 
 			}
 		}
@@ -479,7 +454,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			if (webviewShowing) {
 				//We are going home!
 				feedView.setVisibility(View.VISIBLE);
-				pageProgressBar.setVisibility(View.GONE);
 				mainWebView.setVisibility(View.GONE);
 				prefLayout.setVisibility(View.GONE);
 				mainWebView.clearHistory();
@@ -488,7 +462,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				searchField.setText("");
 				webviewShowing = false;
 				
-				searchField.setBackgroundDrawable(null);
+				searchField.setBackgroundDrawable(searchFieldDrawable);
 			}
 			else {
 				// test this part
@@ -497,12 +471,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 //		        startActivity(intent);
 				
 				feedView.setVisibility(View.GONE);
-				pageProgressBar.setVisibility(View.GONE);
 				mainWebView.setVisibility(View.GONE);
 				prefLayout.setVisibility(View.VISIBLE);
 				prefShowing = true;
 				
-				searchField.setBackgroundDrawable(null);
+				searchField.setBackgroundDrawable(searchFieldDrawable);
 			}
 		}
 	}
