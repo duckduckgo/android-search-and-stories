@@ -9,9 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.duckduckgo.mobile.android.DDGControlVar;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.SCREEN;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.SCREEN;
 
 public class Preferences extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 

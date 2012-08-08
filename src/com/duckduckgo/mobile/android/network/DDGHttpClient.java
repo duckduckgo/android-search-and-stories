@@ -32,7 +32,7 @@ import ch.boye.httpclientandroidlib.protocol.HTTP;
 import ch.boye.httpclientandroidlib.protocol.HttpContext;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 
-import com.duckduckgo.mobile.android.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGConstants;
 
 
 public class DDGHttpClient extends DefaultHttpClient {

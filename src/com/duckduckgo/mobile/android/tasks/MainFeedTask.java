@@ -10,10 +10,10 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.util.DDGConstants;
 
 public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 

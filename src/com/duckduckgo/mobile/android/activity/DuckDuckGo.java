@@ -5,10 +5,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -29,6 +34,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -37,18 +43,20 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.DDGConstants;
-import com.duckduckgo.mobile.android.DDGControlVar;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.SCREEN;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask.FeedListener;
+import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
+import com.duckduckgo.mobile.android.views.RecentSearchListView;
+import com.duckduckgo.mobile.android.views.RecentSearchListView.OnRecentSearchItemSelectedListener;
 
 public class DuckDuckGo extends Activity implements OnEditorActionListener, FeedListener, OnClickListener, OnItemClickListener {
 
@@ -59,6 +67,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private MainFeedListView feedView = null;
 	private MainFeedAdapter feedAdapter = null;
 	private MainFeedTask mainFeedTask = null;
+	
+	private RecentSearchListView recentSearchView = null;
+	private ArrayAdapter<String> recentSearchAdapter = null;
+	private Set<String> recentSearchSet = null;
+	
 	private WebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
 	private LinearLayout prefLayout = null;
@@ -68,6 +81,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private boolean prefShowing = false;
 	
 	private Drawable progressDrawable, searchFieldDrawable;
+	
+	private SharedPreferences sharedPreferences;
 			
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +90,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         requestWindowFeature(Window.FEATURE_PROGRESS);
         
         setContentView(R.layout.main);
+        
+        sharedPreferences = DDGApplication.getSharedPreferences();
         
         homeSettingsButton = (ImageButton) findViewById(R.id.settingsButton);
         homeSettingsButton.setOnClickListener(this);
@@ -118,9 +135,28 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             }
         });
 
+        recentSearchSet = sharedPreferences.getStringSet("recentsearch", new HashSet<String>());
 
+        recentSearchAdapter = new ArrayAdapter<String>(this, 
+        		R.layout.recentsearch_list_layout, R.id.recentSearchText, 
+        		new ArrayList<String>(recentSearchSet));
+        recentSearchView = (RecentSearchListView) findViewById(R.id.recentSearchItems);
+        View header = getLayoutInflater().inflate(R.layout.recentsearch_header, null);
+        recentSearchView.addHeaderView(header);
+        recentSearchView.setAdapter(recentSearchAdapter);
+        recentSearchView.setOnRecentSearchItemSelectedListener(new OnRecentSearchItemSelectedListener() {
+			
+			public void onRecentSearchItemSelected(String recentQuery) {
+				if(recentQuery != null){
+					searchWebTerm(recentQuery);
+				}				
+			}
+		});
+        
+        
         feedAdapter = new MainFeedAdapter(this);
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
+        feedView.setAdapter(feedAdapter);
         feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
 			public void onMainFeedItemSelected(FeedObject feedObject) {
 				String url = feedObject.getUrl();
@@ -267,15 +303,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         prefLayout = (LinearLayout) findViewById(R.id.prefLayout);
         
-        // control which start screen is shown & configure related views
-        if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
-            feedView.setAdapter(feedAdapter);
-            feedProgressBar.setVisibility(View.VISIBLE);
-        }
-        else {
-        	feedProgressBar.setVisibility(View.GONE);
-        }
-        
     }
 	
 	public void setSearchBarText(String text) {
@@ -286,18 +313,27 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		searchField.setFocusableInTouchMode(true);
 	}
 	
+	private void switchScreens(){
+        // control which start screen is shown & configure related views
+        if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
+        	recentSearchView.setVisibility(View.GONE);
+        	feedView.setVisibility(View.VISIBLE);
+        	if(!hasUpdatedFeed){
+        		feedProgressBar.setVisibility(View.VISIBLE);
+        	}
+        }
+        else if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
+        	feedView.setVisibility(View.GONE);
+        	feedProgressBar.setVisibility(View.GONE);
+        	recentSearchView.setVisibility(View.VISIBLE);
+        }
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();
-		if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
-            feedView.setAdapter(feedAdapter);
-			feedView.setVisibility(View.VISIBLE);
-		}
-		else {
-            feedView.setAdapter(null);
-			feedView.setVisibility(View.GONE);
-			return;
-		}
+		
+		switchScreens();
 		
 		if (!hasUpdatedFeed) {
 			mainFeedTask = new MainFeedTask(this);
@@ -337,6 +373,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		else if(prefShowing){
 			prefLayout.setVisibility(View.GONE);
 			prefShowing = false;
+			
+			switchScreens();
 		}
 		else {
 			super.onBackPressed();
@@ -413,12 +451,23 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void searchWebTerm(String term) {
 		if (!webviewShowing) {
 			feedView.setVisibility(View.GONE);
+			recentSearchView.setVisibility(View.GONE);
 			mainWebView.setVisibility(View.VISIBLE);
 			homeSettingsButton.setImageResource(R.drawable.home_button);
 			webviewShowing = true;
 		}
 		
 		mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
+		if(!recentSearchSet.contains(term)){
+			recentSearchSet.add(term);
+			recentSearchAdapter.add(term);
+			
+			Editor editor = sharedPreferences.edit();
+			Set<String> recentSearchSet = sharedPreferences.getStringSet("recentsearch", new HashSet<String>());
+			recentSearchSet.add(term);
+			editor.putStringSet("recentsearch", recentSearchSet);
+			editor.commit();
+		}
 	}
 	
 	public void showWebUrl(String url) {
@@ -453,7 +502,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			//This is our button
 			if (webviewShowing) {
 				//We are going home!
-				feedView.setVisibility(View.VISIBLE);
+				switchScreens();
 				mainWebView.setVisibility(View.GONE);
 				prefLayout.setVisibility(View.GONE);
 				mainWebView.clearHistory();
@@ -472,6 +521,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				
 				feedView.setVisibility(View.GONE);
 				mainWebView.setVisibility(View.GONE);
+				recentSearchView.setVisibility(View.GONE);
 				prefLayout.setVisibility(View.VISIBLE);
 				prefShowing = true;
 				

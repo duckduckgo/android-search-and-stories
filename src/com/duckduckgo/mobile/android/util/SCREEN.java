@@ -1,4 +1,4 @@
-package com.duckduckgo.mobile.android;
+package com.duckduckgo.mobile.android.util;
 
 public enum SCREEN {
 	SCR_NEWS_FEED(0), SCR_RECENT_SEARCH(1);

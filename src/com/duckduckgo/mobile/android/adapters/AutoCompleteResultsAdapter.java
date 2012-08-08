@@ -20,13 +20,13 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
+import com.duckduckgo.mobile.android.util.DDGConstants;
 
 public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements Filterable {
 	private final LayoutInflater inflater;

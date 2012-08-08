@@ -13,12 +13,12 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.DDGConstants;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.util.DDGConstants;
 
 
 public class MainFeedAdapter extends ArrayAdapter<FeedObject> {

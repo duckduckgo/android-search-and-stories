@@ -1,4 +1,4 @@
-package com.duckduckgo.mobile.android;
+package com.duckduckgo.mobile.android.util;
 
 public class DDGControlVar {
 	

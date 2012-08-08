@@ -1,4 +1,4 @@
-package com.duckduckgo.mobile.android;
+package com.duckduckgo.mobile.android.util;
 
 public class DDGConstants {
 	public static final String USER_AGENT = "DDG-Android-2.0.0a";
