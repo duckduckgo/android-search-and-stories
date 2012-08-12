@@ -87,11 +87,12 @@
 			android:layout_width="match_parent"
 			android:visibility="gone"
 			android:id="@+id/prefLayout">  
-			                  
-	        <fragment android:name="com.duckduckgo.mobile.android.activity.Preferences"
-			android:id="@+id/prefFragment"
-	       	android:layout_height="fill_parent"
-			android:layout_width="fill_parent" />
+			
+            <!-- placeholder layout for DDGPreferenceFragment -->
+            <FrameLayout android:id="@+id/prefFragment" android:layout_weight="1"
+        				 android:layout_width="0px"
+        				 android:layout_height="match_parent" />
+
 	        
     	</LinearLayout>
         

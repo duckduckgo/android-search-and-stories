@@ -6,16 +6,17 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -52,6 +53,7 @@ import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask.FeedListener;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
@@ -135,7 +137,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             }
         });
 
-        recentSearchSet = sharedPreferences.getStringSet("recentsearch", new HashSet<String>());
+        recentSearchSet = DDGUtils.loadSet(sharedPreferences, "recentsearch");
 
         recentSearchAdapter = new ArrayAdapter<String>(this, 
         		R.layout.recentsearch_list_layout, R.id.recentSearchText, 
@@ -225,11 +227,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	public void onPageFinished (WebView view, String url) {
         		        		
         		if (url.contains("duckduckgo.com")) {
+        			// FIXME api level
         	        mainWebView.getSettings().setSupportZoom(true);
         	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
-        	        mainWebView.getSettings().setEnableSmoothTransition(false);
+        	        //mainWebView.getSettings().setEnableSmoothTransition(false);
         	        mainWebView.getSettings().setBuiltInZoomControls(false);
-        	        mainWebView.getSettings().setDisplayZoomControls(false);
+        	        //mainWebView.getSettings().setDisplayZoomControls(false);
         	        mainWebView.getSettings().setUseWideViewPort(false);
         	        mainWebView.getSettings().setLoadWithOverviewMode(false);
         	        //mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
@@ -266,11 +269,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         			}
         		} else {
         			//This isn't duckduck go...
+        			// FIXME api level
         	        mainWebView.getSettings().setSupportZoom(true);
         	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-        	        mainWebView.getSettings().setEnableSmoothTransition(true);
+        	        //mainWebView.getSettings().setEnableSmoothTransition(true);
         	        mainWebView.getSettings().setBuiltInZoomControls(true);
-        	        mainWebView.getSettings().setDisplayZoomControls(false);
+        	        //mainWebView.getSettings().setDisplayZoomControls(false);
         	        mainWebView.getSettings().setUseWideViewPort(true);
         	        mainWebView.getSettings().setLoadWithOverviewMode(true);
         	        //mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
@@ -358,7 +362,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			} else {
 				mainWebView.stopLoading();
 				
-				feedView.setVisibility(View.VISIBLE);
+				switchScreens();
+				
 				mainWebView.setVisibility(View.GONE);
 				prefLayout.setVisibility(View.GONE);
 				mainWebView.clearView();
@@ -373,6 +378,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		else if(prefShowing){
 			prefLayout.setVisibility(View.GONE);
 			prefShowing = false;
+			
+			homeSettingsButton.setImageResource(R.drawable.settings_button);
 			
 			switchScreens();
 		}
@@ -462,11 +469,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			recentSearchSet.add(term);
 			recentSearchAdapter.add(term);
 			
-			Editor editor = sharedPreferences.edit();
-			Set<String> recentSearchSet = sharedPreferences.getStringSet("recentsearch", new HashSet<String>());
+			Set<String> recentSearchSet = DDGUtils.loadSet(sharedPreferences, "recentsearch");
 			recentSearchSet.add(term);
-			editor.putStringSet("recentsearch", recentSearchSet);
-			editor.commit();
+			DDGUtils.saveSet(sharedPreferences, recentSearchSet, "recentsearch");
 		}
 	}
 	
@@ -496,6 +501,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mainFeedTask.execute();
 		}
 	}
+	
+	@TargetApi(11)
+	private void showPrefFragment(){
+      	getFragmentManager().beginTransaction().replace(R.id.prefFragment,
+                new DDGPreferenceFragment()).commit();
+	}
 
 	public void onClick(View v) {
 		if (v.equals(homeSettingsButton)) {
@@ -516,16 +527,25 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			else {
 				// test this part
 
-//		        Intent intent = new Intent(getBaseContext(), Preferences.class);
-//		        startActivity(intent);
+				if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
+			        Intent intent = new Intent(getBaseContext(), Preferences.class);
+			        startActivity(intent);
+				}
+				else {
+					showPrefFragment();
+					
+					feedView.setVisibility(View.GONE);
+					mainWebView.setVisibility(View.GONE);
+					recentSearchView.setVisibility(View.GONE);
+					prefLayout.setVisibility(View.VISIBLE);
+					prefShowing = true;
+					
+					homeSettingsButton.setImageResource(R.drawable.home_button);
+					
+					searchField.setBackgroundDrawable(searchFieldDrawable);
+				}
 				
-				feedView.setVisibility(View.GONE);
-				mainWebView.setVisibility(View.GONE);
-				recentSearchView.setVisibility(View.GONE);
-				prefLayout.setVisibility(View.VISIBLE);
-				prefShowing = true;
-				
-				searchField.setBackgroundDrawable(searchFieldDrawable);
+
 			}
 		}
 	}
@@ -542,4 +562,5 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			searchOrGoToUrl(text);
 		}
 	}
+	
 }

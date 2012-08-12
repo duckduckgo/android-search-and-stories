@@ -34,7 +34,7 @@ public class ImageDownloader {
 	
 	//TODO: Should take a Downloadable object
 	public void download(String url, DownloadableImage image, boolean onlyUseMemCache) {
-		if (url == null || url.isEmpty()) {
+		if (url == null || url.length() == 0) {
 			//Cancel anything downloading, set the image to default, and return
 			cancelPreviousDownload(url, image);
 			image.setDefault();
