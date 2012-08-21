@@ -9,5 +9,6 @@
     <string name="PrefStartScreen">Main Screen</string>
     <string name="PrefNewsFeed">News Feed</string>
     <string name="PrefRecentSearch">Recent Searches</string>
+    <string name="send_to">sharin\' stuff.</string>
 
 </resources>
