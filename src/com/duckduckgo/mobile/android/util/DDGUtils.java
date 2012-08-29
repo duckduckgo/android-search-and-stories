@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 
 public final class DDGUtils {
 	public static boolean saveArray(SharedPreferences prefs, String[] array, String arrayName) {   
@@ -41,4 +42,14 @@ public final class DDGUtils {
 	        set.add(prefs.getString(setName + "_" + i, null));  
 	    return set;  
 	}  
+	
+	public static void deleteSet(SharedPreferences prefs, String setName) {  
+	    final int size = prefs.getInt(setName + "_size", 0);  
+	    Editor editor = prefs.edit();
+	    Set<String> set = new HashSet<String>(size);
+	    for(int i=0;i<size;i++)  
+	    	editor.remove(setName + "_" + i);  
+	    editor.remove(setName + "_size");
+	    editor.commit();  
+	} 
 }

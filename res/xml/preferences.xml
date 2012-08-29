@@ -10,4 +10,14 @@
     android:entryValues="@array/startScreenValues">
 	</ListPreference>
 </PreferenceCategory>
+<PreferenceCategory android:title="@string/PrefGroupPrivacy">
+	<CheckBoxPreference 
+	android:title="@string/PrefRecordHistory"
+	android:key="recordHistoryPref"
+	android:defaultValue="false" />
+	<Preference 
+	android:title="@string/PrefClearHistory"
+	android:key="clearHistoryPref"
+	android:defaultValue="" />
+</PreferenceCategory>
 </PreferenceScreen>

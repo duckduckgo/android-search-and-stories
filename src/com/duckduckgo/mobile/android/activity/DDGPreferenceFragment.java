@@ -2,16 +2,21 @@ package com.duckduckgo.mobile.android.activity;
 
 import android.annotation.TargetApi;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
 
 @TargetApi(11)
@@ -24,6 +29,20 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		addPreferencesFromResource(R.xml.preferences);
 		
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+		
+		Preference clearHistoryPref = (Preference) findPreference("clearHistoryPref");
+		clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+		    public boolean onPreferenceClick(Preference preference) {
+    			DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "recentsearch");
+		    	
+		    	if(getActivity().getClass() == DuckDuckGo.class){
+		    		DuckDuckGo ddgParent = (DuckDuckGo) getActivity();
+		    		ddgParent.clearRecentSearch();
+		    	}
+		    	
+		    	return true;
+		    }
+		});
 	}
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

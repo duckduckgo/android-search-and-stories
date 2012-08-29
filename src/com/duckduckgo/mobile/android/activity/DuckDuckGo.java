@@ -465,14 +465,24 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		
 		mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
-		if(!recentSearchSet.contains(term)){
-			recentSearchSet.add(term);
-			recentSearchAdapter.add(term);
-			
-			Set<String> recentSearchSet = DDGUtils.loadSet(sharedPreferences, "recentsearch");
-			recentSearchSet.add(term);
-			DDGUtils.saveSet(sharedPreferences, recentSearchSet, "recentsearch");
+		
+		// save recent query if "record history" is enabled
+		if(sharedPreferences.getBoolean("recordHistoryPref", false)){
+			if(!recentSearchSet.contains(term)){
+				recentSearchSet.add(term);
+				recentSearchAdapter.add(term);
+				
+				Set<String> recentSearchSet = DDGUtils.loadSet(sharedPreferences, "recentsearch");
+				recentSearchSet.add(term);
+				DDGUtils.saveSet(sharedPreferences, recentSearchSet, "recentsearch");
+			}
 		}
+	}
+	
+	public void clearRecentSearch() {
+		recentSearchSet.clear();
+		recentSearchAdapter.clear();
+		recentSearchView.invalidate();
 	}
 	
 	public void showWebUrl(String url) {

@@ -6,8 +6,11 @@
     <string name="HomeButtonContentDescription">Home</string>
     
     <string name="PrefGroupAppFlow">Application Flow</string>
+    <string name="PrefGroupPrivacy">Privacy</string>
     <string name="PrefStartScreen">Main Screen</string>
     <string name="PrefNewsFeed">News Feed</string>
     <string name="PrefRecentSearch">Recent Searches</string>
+    <string name="PrefRecordHistory">Record History</string>
+    <string name="PrefClearHistory">Clear History</string>
 
 </resources>
