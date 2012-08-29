@@ -35,6 +35,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
@@ -57,6 +58,7 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
+import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView.OnRecentSearchItemSelectedListener;
 
@@ -165,6 +167,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				if (url != null) {
 					searchOrGoToUrl(url);
 				}
+			}
+        });
+        feedView.setOnMainFeedItemLongClickListener(new OnMainFeedItemLongClickListener() {
+			public void onMainFeedItemLongClick(FeedObject feedObject) {
+				Intent sendIntent = new Intent();
+				sendIntent.setAction(Intent.ACTION_SEND);
+				sendIntent.putExtra(Intent.EXTRA_TEXT, "WatrCoolr URL: "+feedObject.getUrl());
+				sendIntent.putExtra(Intent.EXTRA_SUBJECT, feedObject.getTitle());
+				sendIntent.setType("text/plain");
+				startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
 			}
         });
         feedView.setOnScrollListener(new OnScrollListener() {
@@ -572,5 +584,5 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			searchOrGoToUrl(text);
 		}
 	}
-	
+
 }

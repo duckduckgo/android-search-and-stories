@@ -12,5 +12,7 @@
     <string name="PrefRecentSearch">Recent Searches</string>
     <string name="PrefRecordHistory">Record History</string>
     <string name="PrefClearHistory">Clear History</string>
+    
+    <string name="send_to">sharin\' stuff.</string>
 
 </resources>
