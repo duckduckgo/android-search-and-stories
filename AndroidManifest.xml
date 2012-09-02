@@ -35,6 +35,10 @@
             android:name=".activity.Preferences" 
             android:label="@string/SettingsButtonContentDescription" />
         
+        <activity 
+            android:name=".activity.SourcePreferences" 
+            android:label="@string/PrefSources" />
+        
         
     </application>
 

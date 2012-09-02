@@ -20,6 +20,7 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -53,6 +54,28 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
     			return true;
     		}
     	});
+    	
+		Preference sourcesPref = (Preference) findPreference("sourcesPref");
+		sourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(getBaseContext(), SourcePreferences.class);
+		        startActivity(intent);
+				
+				return true;
+			}
+		});
+
+		Preference resetSourcesPref = (Preference) findPreference("resetSourcesPref");
+		resetSourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			public boolean onPreferenceClick(Preference preference) {
+				DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "sourceset");
+				
+				return true;
+			}
+		});
+		
     }
   }
   

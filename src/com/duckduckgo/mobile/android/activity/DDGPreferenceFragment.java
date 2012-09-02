@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.activity;
 
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -43,6 +44,27 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		    	return true;
 		    }
 		});
+		
+		Preference sourcesPref = (Preference) findPreference("sourcesPref");
+		sourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(getActivity(), SourcePreferences.class);
+		        startActivity(intent);
+				
+				return true;
+			}
+		});
+		
+		Preference resetSourcesPref = (Preference) findPreference("resetSourcesPref");
+		resetSourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			public boolean onPreferenceClick(Preference preference) {
+				DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "sourceset");
+				
+				return true;
+			}
+		});
 	}
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -62,4 +84,5 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	    }
 	    return v;
 	}
+	
 }

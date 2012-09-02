@@ -15,7 +15,7 @@ public final class DDGUtils {
 	    return editor.commit();  
 	} 
 	
-	public static boolean saveSet(SharedPreferences prefs, Set<String> set, String setName) {   
+	public static boolean saveSet(SharedPreferences prefs, Set<String> set, String setName) {   		
 	    SharedPreferences.Editor editor = prefs.edit();  
 	    final int setSize = set.size();
 	    editor.putInt(setName +"_size", setSize);  
@@ -46,7 +46,6 @@ public final class DDGUtils {
 	public static void deleteSet(SharedPreferences prefs, String setName) {  
 	    final int size = prefs.getInt(setName + "_size", 0);  
 	    Editor editor = prefs.edit();
-	    Set<String> set = new HashSet<String>(size);
 	    for(int i=0;i<size;i++)  
 	    	editor.remove(setName + "_" + i);  
 	    editor.remove(setName + "_size");

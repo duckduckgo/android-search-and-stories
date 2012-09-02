@@ -9,6 +9,16 @@
 	android:entries="@array/startScreenArray"
     android:entryValues="@array/startScreenValues">
 	</ListPreference>
+	<Preference 
+	android:title="@string/PrefSources"
+	android:key="sourcesPref"
+	android:defaultValue="">
+	</Preference>
+	<Preference 
+	android:title="@string/PrefResetSources"
+	android:key="resetSourcesPref"
+	android:defaultValue="">
+	</Preference>
 </PreferenceCategory>
 <PreferenceCategory android:title="@string/PrefGroupPrivacy">
 	<CheckBoxPreference 

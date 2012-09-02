@@ -12,6 +12,8 @@
     <string name="PrefRecentSearch">Recent Searches</string>
     <string name="PrefRecordHistory">Record History</string>
     <string name="PrefClearHistory">Clear History</string>
+    <string name="PrefSources">Change Sources</string>
+    <string name="PrefResetSources">Reset Sources to Defaults</string>
     
     <string name="send_to">sharin\' stuff.</string>
 

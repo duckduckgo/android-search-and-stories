@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+        		android:layout_width="match_parent"
+        		android:layout_height="50dp"
+        		android:paddingTop="2dp"
+        		android:paddingBottom="2dp">
+        
+	<com.duckduckgo.mobile.android.download.AsyncImageView android:layout_width="wrap_content"
+               android:layout_height="50dp"
+               android:scaleType="fitStart"
+               android:src="@drawable/testbackground" 
+               android:id="@+id/sourceItemBackground"
+               android:layout_weight="1"
+               />
+	    	    		  
+		<TextView android:layout_width="fill_parent"
+		    	  android:layout_height="30dp"
+		    	  android:layout_weight="1"
+		    	  android:paddingTop="5dp"
+		    	  android:paddingBottom="5dp"
+		    	  android:paddingLeft="5dp"
+	    	  	  style="@style/MainFeedText"
+	    	  	  android:text="This is a Test String!"
+	    	  	  android:singleLine="true"
+		    	  android:id="@+id/sourceTitleTextView" />
+		
+	<CheckBox android:layout_width="wrap_content" android:layout_height="wrap_content"
+	    android:id="@+id/sourceCheckbox" android:layout_gravity="right" />
+		
+</LinearLayout>

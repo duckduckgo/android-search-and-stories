@@ -548,25 +548,38 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			}
 			else {
 				// test this part
+				
+				if(!prefShowing){
 
-				if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
-			        Intent intent = new Intent(getBaseContext(), Preferences.class);
-			        startActivity(intent);
+					if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
+				        Intent intent = new Intent(getBaseContext(), Preferences.class);
+				        startActivity(intent);
+					}
+					else {
+						showPrefFragment();
+						
+						feedView.setVisibility(View.GONE);
+						mainWebView.setVisibility(View.GONE);
+						recentSearchView.setVisibility(View.GONE);
+						prefLayout.setVisibility(View.VISIBLE);
+						prefShowing = true;
+						
+						homeSettingsButton.setImageResource(R.drawable.home_button);
+						
+						searchField.setBackgroundDrawable(searchFieldDrawable);
+					}
+				
 				}
 				else {
-					showPrefFragment();
+					// we are in preference screen, pressed home
 					
-					feedView.setVisibility(View.GONE);
-					mainWebView.setVisibility(View.GONE);
-					recentSearchView.setVisibility(View.GONE);
-					prefLayout.setVisibility(View.VISIBLE);
-					prefShowing = true;
+					prefLayout.setVisibility(View.GONE);
+					prefShowing = false;
 					
-					homeSettingsButton.setImageResource(R.drawable.home_button);
+					homeSettingsButton.setImageResource(R.drawable.settings_button);
 					
-					searchField.setBackgroundDrawable(searchFieldDrawable);
+					switchScreens();
 				}
-				
 
 			}
 		}
