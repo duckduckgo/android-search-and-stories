@@ -12,10 +12,13 @@
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
         android:theme="@android:style/Theme.NoTitleBar"
-        android:label="@string/AppName" android:name="DDGApplication">
+        android:label="@string/AppName"
+        android:name="DDGApplication">
         <activity
             android:name=".activity.DuckDuckGo"
-            android:label="@string/AppName" android:windowSoftInputMode="stateHidden">
+            android:label="@string/AppName"
+            android:windowSoftInputMode="stateHidden"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
