@@ -8,16 +8,16 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.SourcesAdapter;
+import com.duckduckgo.mobile.android.container.SourcePreferencesContainer;
 import com.duckduckgo.mobile.android.objects.SourcesObject;
 import com.duckduckgo.mobile.android.tasks.SourcesTask;
 import com.duckduckgo.mobile.android.tasks.SourcesTask.SourcesListener;
 
 public class SourcePreferences extends Activity implements SourcesListener {
 
-	private SourcesTask sourcesTask = null;
+	SourcePreferencesContainer sourcePrefContainer;
 	
 	private ListView sourcesView = null;
-	private SourcesAdapter sourcesAdapter = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -25,33 +25,44 @@ public class SourcePreferences extends Activity implements SourcesListener {
 		
 		setContentView(R.layout.sources);
 		
+		sourcePrefContainer = (SourcePreferencesContainer) getLastNonConfigurationInstance();
+		if(sourcePrefContainer == null){
+			sourcePrefContainer = new SourcePreferencesContainer();
+			sourcePrefContainer.sourcesAdapter = new SourcesAdapter(this);
+		}
+		
 		sourcesView = (ListView) findViewById(R.id.sourceItems);
-		sourcesAdapter = new SourcesAdapter(this);
-		sourcesView.setAdapter(sourcesAdapter);
+		sourcesView.setAdapter(sourcePrefContainer.sourcesAdapter);
 	}
 	
 	@Override
 	protected void onResume() {
 		super.onResume();
 		
-		sourcesTask = new SourcesTask(this);
-		sourcesTask.execute();
+		sourcePrefContainer.sourcesTask = new SourcesTask(this);
+		sourcePrefContainer.sourcesTask.execute();
 	}
 
 	public void onSourcesRetrieved(List<SourcesObject> feed) {
-		sourcesAdapter.setList(feed);
-		sourcesAdapter.notifyDataSetChanged();
+		sourcePrefContainer.sourcesAdapter.setList(feed);
+		sourcePrefContainer.sourcesAdapter.notifyDataSetChanged();
 		
 	}
 
 	public void onSourcesRetrievalFailed() {
 		//If the sourcesTask is null, we are currently paused
 		//Otherwise, we can try again
-		if (sourcesTask != null) {
-			sourcesTask = new SourcesTask(this);
-			sourcesTask.execute();
+		if (sourcePrefContainer.sourcesTask != null) {
+			sourcePrefContainer.sourcesTask = new SourcesTask(this);
+			sourcePrefContainer.sourcesTask.execute();
 		}
 		
 	}
+	
+	@Override
+    public Object onRetainNonConfigurationInstance() {
+    	// return page container, holding all non-view data
+    	return sourcePrefContainer;
+    }
 	
 }
