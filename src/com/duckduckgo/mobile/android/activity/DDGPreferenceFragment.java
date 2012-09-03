@@ -1,9 +1,9 @@
 package com.duckduckgo.mobile.android.activity;
 
 import android.annotation.TargetApi;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -85,5 +85,16 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	    }
 	    return v;
 	}
+	
+	
+	@Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if(getActivity() instanceof DuckDuckGo){
+        	((DuckDuckGo) getActivity()).showPrefFragment();
+        }
+        
+    }
 	
 }
