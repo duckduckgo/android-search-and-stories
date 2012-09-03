@@ -80,6 +80,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private LinearLayout prefLayout = null;
 	
 	private SharedPreferences sharedPreferences;
+	
+	private boolean savedState = false;
 			
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,6 +89,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         requestWindowFeature(Window.FEATURE_PROGRESS);
         
         setContentView(R.layout.main);
+        
+        if(savedInstanceState != null)
+        	savedState = true;
         
         sharedPreferences = DDGApplication.getSharedPreferences();
         
@@ -174,6 +179,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
         feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
 			public void onMainFeedItemSelected(FeedObject feedObject) {
+				savedState = false;
 				String url = feedObject.getUrl();
 				if (url != null) {
 					searchOrGoToUrl(url);
@@ -232,8 +238,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         mainWebView.getSettings().setJavaScriptEnabled(true);
         mainWebView.setWebViewClient(new WebViewClient() {
         	@Override
-        	public boolean shouldOverrideUrlLoading(WebView view, String url) {            	
-        		view.loadUrl(url);
+        	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
+        		if(!savedState)
+        			view.loadUrl(url);
         		return true;
         	}
         	
@@ -356,7 +363,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onResume() {
 		super.onResume();
 		
-		if(!mDuckDuckGoContainer.prefShowing){
+		if(mDuckDuckGoContainer.webviewShowing){
+				feedView.setVisibility(View.GONE);
+				mainWebView.setVisibility(View.VISIBLE);
+				homeSettingsButton.setImageResource(R.drawable.home_button);
+		}	
+		else if(!mDuckDuckGoContainer.prefShowing){
 			switchScreens();
 			
 			if (!DDGControlVar.hasUpdatedFeed) {
@@ -490,7 +502,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mDuckDuckGoContainer.webviewShowing = true;
 		}
 		
-		mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
+		if(!savedState)
+			mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
 		
 		// save recent query if "record history" is enabled
 		if(sharedPreferences.getBoolean("recordHistoryPref", false)){
@@ -519,7 +532,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mDuckDuckGoContainer.webviewShowing = true;
 		}
 		
-		mainWebView.loadUrl(url);
+		if(!savedState)
+			mainWebView.loadUrl(url);
 	}
 
 	public void onFeedRetrieved(List<FeedObject> feed) {
@@ -635,5 +649,23 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	// return page container, holding all non-view data
     	return mDuckDuckGoContainer;
     }
+    
+	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{
+		super.onSaveInstanceState(outState);
+
+		// Save the state of the WebView
+		mainWebView.saveState(outState);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState)
+	{
+		super.onRestoreInstanceState(savedInstanceState);
+
+		// Restore the state of the WebView
+		mainWebView.restoreState(savedInstanceState);
+	}
 
 }
