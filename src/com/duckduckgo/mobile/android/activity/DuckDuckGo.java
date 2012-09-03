@@ -35,7 +35,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
@@ -80,7 +79,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private ImageButton homeSettingsButton = null;
 	private LinearLayout prefLayout = null;
 	
-	private boolean hasUpdatedFeed = false;
 	private boolean webviewShowing = false;
 	private boolean prefShowing = false;
 	
@@ -334,7 +332,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
         	recentSearchView.setVisibility(View.GONE);
         	feedView.setVisibility(View.VISIBLE);
-        	if(!hasUpdatedFeed){
+        	if(!DDGControlVar.hasUpdatedFeed){
         		feedProgressBar.setVisibility(View.VISIBLE);
         	}
         }
@@ -349,11 +347,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onResume() {
 		super.onResume();
 		
-		switchScreens();
-		
-		if (!hasUpdatedFeed) {
-			mainFeedTask = new MainFeedTask(this);
-			mainFeedTask.execute();
+		if(!prefShowing){
+			switchScreens();
+			
+			if (!DDGControlVar.hasUpdatedFeed) {
+				mainFeedTask = new MainFeedTask(this);
+				mainFeedTask.execute();
+			}
 		}
 	}
 
@@ -394,6 +394,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			homeSettingsButton.setImageResource(R.drawable.settings_button);
 			
 			switchScreens();
+			
+			if (!DDGControlVar.hasUpdatedFeed) {
+				mainFeedTask = new MainFeedTask(this);
+				mainFeedTask.execute();
+			}
 		}
 		else {
 			super.onBackPressed();
@@ -510,9 +515,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
 	public void onFeedRetrieved(List<FeedObject> feed) {
 		feedProgressBar.setVisibility(View.GONE);
+		feedAdapter.scrolling = false;
 		feedAdapter.setList(feed);
 		feedAdapter.notifyDataSetChanged();
-		hasUpdatedFeed = true;
+		DDGControlVar.hasUpdatedFeed = true;
 	}
 	
 	public void onFeedRetrievalFailed() {

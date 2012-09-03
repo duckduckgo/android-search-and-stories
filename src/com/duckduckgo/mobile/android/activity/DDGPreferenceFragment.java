@@ -61,6 +61,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 			
 			public boolean onPreferenceClick(Preference preference) {
 				DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "sourceset");
+				DDGControlVar.hasUpdatedFeed = false;
 				
 				return true;
 			}

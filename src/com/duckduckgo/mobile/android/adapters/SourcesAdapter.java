@@ -20,6 +20,7 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.download.SourceHolder;
 import com.duckduckgo.mobile.android.objects.SourcesObject;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
 
@@ -102,6 +103,8 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 						sourceSet.remove(holder.id);
 						DDGUtils.saveSet(sharedPreferences, sourceSet, "sourceset");
 					}
+					
+					DDGControlVar.hasUpdatedFeed = false;
 				}
 			});
 		}
