@@ -517,6 +517,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mainWebView.setVisibility(View.VISIBLE);
 			homeSettingsButton.setImageResource(R.drawable.home_button);
 			mDuckDuckGoContainer.webviewShowing = true;
+			mDuckDuckGoContainer.prefShowing = false;
+			prefLayout.setVisibility(View.GONE);
 		}
 		
 		if(!savedState){
@@ -553,6 +555,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mainWebView.setVisibility(View.VISIBLE);
 			homeSettingsButton.setImageResource(R.drawable.home_button);
 			mDuckDuckGoContainer.webviewShowing = true;
+			mDuckDuckGoContainer.prefShowing = false;
+			prefLayout.setVisibility(View.GONE);
 		}
 		
 		if(!savedState)
