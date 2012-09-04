@@ -19,8 +19,10 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -89,6 +91,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         requestWindowFeature(Window.FEATURE_PROGRESS);
         
         setContentView(R.layout.main);
+        
+//        TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
+//        String countryCode = tm.getSimCountryIso();
+//        String lang = getResources().getConfiguration().locale.getLanguage();
+//        Log.v("COUNLANG",countryCode + " " + lang);
+        
         
         if(savedInstanceState != null)
         	savedState = true;
@@ -511,8 +519,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mDuckDuckGoContainer.webviewShowing = true;
 		}
 		
-		if(!savedState)
-			mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
+		if(!savedState){
+			if(DDGControlVar.regionString == "wt-wt"){	// default
+				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
+			}
+			else {
+				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString));
+			}
+		}
 		
 		// save recent query if "record history" is enabled
 		if(sharedPreferences.getBoolean("recordHistoryPref", false)){

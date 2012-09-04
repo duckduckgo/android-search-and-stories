@@ -26,6 +26,7 @@ public class DDGApplication extends Application {
 		
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString("startScreenPref", "0")));
+		DDGControlVar.regionString = sharedPreferences.getString("regionPref", "wt-wt");
      
 	}
 	

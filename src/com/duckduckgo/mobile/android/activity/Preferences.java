@@ -83,6 +83,9 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 		if(key.equals("startScreenPref")){
 			DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString(key, "0")));
 		}
+		else if(key.equals("regionPref")){
+			DDGControlVar.regionString = sharedPreferences.getString(key, "wt-wt");
+		}
 
 	}
 	

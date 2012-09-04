@@ -19,6 +19,13 @@
 	android:key="resetSourcesPref"
 	android:defaultValue="">
 	</Preference>
+	<ListPreference 
+	android:title="@string/PrefRegion"
+	android:key="regionPref"
+	android:defaultValue="wt-wt"
+	android:entries="@array/regionArray"
+    android:entryValues="@array/regionValues">
+	</ListPreference>	
 </PreferenceCategory>
 <PreferenceCategory android:title="@string/PrefGroupPrivacy">
 	<CheckBoxPreference 

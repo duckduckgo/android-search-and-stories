@@ -1,7 +1,6 @@
 package com.duckduckgo.mobile.android.activity;
 
 import android.annotation.TargetApi;
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -71,6 +70,9 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if(key.equals("startScreenPref")){
 			DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString(key, "0")));
+		}
+		else if(key.equals("regionPref")){
+			DDGControlVar.regionString = sharedPreferences.getString(key, "wt-wt");
 		}
 
 	}
