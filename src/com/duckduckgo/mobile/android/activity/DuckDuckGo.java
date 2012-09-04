@@ -116,6 +116,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		
     		mDuckDuckGoContainer.mainFeedTask = null;
     		
+    		mDuckDuckGoContainer.feedItemLoading = false;
+    		
     	}
         
         homeSettingsButton = (ImageButton) findViewById(R.id.settingsButton);
@@ -182,6 +184,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				savedState = false;
 				String url = feedObject.getUrl();
 				if (url != null) {
+					mDuckDuckGoContainer.feedItemLoading = true;
 					searchOrGoToUrl(url);
 				}
 			}
@@ -306,6 +309,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	        //mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
         	        //mainWebView.getSettings().setPluginsEnabled(true); 
         			setSearchBarText(url);
+        		}
+        		
+        		if(mDuckDuckGoContainer.feedItemLoading){
+        			mainWebView.clearHistory();
+        			mDuckDuckGoContainer.feedItemLoading = false;
         		}
         		
 				searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
