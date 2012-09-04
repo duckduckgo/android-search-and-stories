@@ -423,6 +423,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		else {
 			super.onBackPressed();
+			DDGControlVar.hasUpdatedFeed = false;
 		}
 	}
 	
