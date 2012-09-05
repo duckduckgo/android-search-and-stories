@@ -17,8 +17,7 @@
         <activity
             android:name=".activity.DuckDuckGo"
             android:label="@string/AppName"
-            android:windowSoftInputMode="stateHidden"
-            android:screenOrientation="portrait">
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
