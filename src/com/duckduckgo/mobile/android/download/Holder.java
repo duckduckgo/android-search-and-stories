@@ -5,14 +5,12 @@ import android.widget.TextView;
 public class Holder {
 	public final TextView textViewTitle;
 	public final AsyncImageView imageViewBackground;
-	public final AsyncImageView imageViewFeedIcon; //Top Right Icon (Feed Source)
-	public final AsyncImageView imageViewUrlIcon; //Bottom Left Icon (Icon for linked page)
+	public final AsyncImageView imageViewFeedIcon; // Bottom Left Icon (Feed Source)
 	
 	public Holder(final TextView textViewTitle, final AsyncImageView imageViewBackground,
-				  final AsyncImageView imageViewFeedIcon, final AsyncImageView imageViewUrlIcon) {
+				  final AsyncImageView imageViewFeedIcon) {
 		this.textViewTitle = textViewTitle;
 		this.imageViewBackground = imageViewBackground;
 		this.imageViewFeedIcon = imageViewFeedIcon;
-		this.imageViewUrlIcon = imageViewUrlIcon;
 	}
 }

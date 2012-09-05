@@ -43,8 +43,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			cv = inflater.inflate(R.layout.main_feed_layout, null);
 			cv.setTag(new Holder((TextView)cv.findViewById(R.id.feedTitleTextView),
 					             (AsyncImageView)cv.findViewById(R.id.feedItemBackground),
-					             (AsyncImageView)cv.findViewById(R.id.feedItemSourceIcon),
-					             (AsyncImageView)cv.findViewById(R.id.feedItemUrlIcon)));
+					             (AsyncImageView)cv.findViewById(R.id.feedItemSourceIcon)));
 		}
 		
 		FeedObject feed = getItem(position);
@@ -65,28 +64,6 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			//Set the Title
 			holder.textViewTitle.setText(feed.getTitle());
 
-			//Set the URL Icon on the Left Hand Side
-			if (feed.getUrl() != null && !feed.getUrl().equals("null")) {
-				try {
-					iconUrl = new URL(feed.getUrl());
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-
-				if (iconUrl != null) {
-					String host = iconUrl.getHost();
-					if (host.indexOf(".") != host.lastIndexOf(".")) {
-						//Cut off the beginning, because we don't want/need it
-						host = host.substring(host.indexOf(".")+1);
-					}
-					imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewUrlIcon, scrolling);
-				} else {
-					imageDownloader.download(null, holder.imageViewUrlIcon, scrolling);
-				}
-			} else {
-				imageDownloader.download(null, holder.imageViewUrlIcon, scrolling);
-			}
-
 			if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
 				try {
 					feedUrl = new URL(feed.getFeed());
@@ -95,27 +72,12 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 				}
 
 				if (feedUrl != null) {
-					if (iconUrl != null) {
-						if (iconUrl.getHost().equals(feedUrl.getHost())) {
-							//They are the same, don't show it
-							imageDownloader.download(null, holder.imageViewFeedIcon, scrolling);
-						} else {
-							String host = feedUrl.getHost();
-							if (host.indexOf(".") != host.lastIndexOf(".")) {
-								//Cut off the beginning, because we don't want/need it
-								host = host.substring(host.indexOf(".")+1);
-							}							
-							//They are different, so show it
-							imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon, scrolling);
-						}
-					} else {
 						String host = feedUrl.getHost();
 						if (host.indexOf(".") != host.lastIndexOf(".")) {
 							//Cut off the beginning, because we don't want/need it
 							host = host.substring(host.indexOf(".")+1);
 						}
 						imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon, scrolling);
-					}
 				} else {
 					imageDownloader.download(null, holder.imageViewFeedIcon, scrolling);
 				}
