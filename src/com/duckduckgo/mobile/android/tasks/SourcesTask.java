@@ -10,19 +10,25 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.SourcesObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 
 	private static String TAG = "SourcesTask";
 	
 	private SourcesListener listener = null;
+	
+	private FileCache fileCache = null;
 		
 	public SourcesTask(SourcesListener listener) {
 		this.listener = listener;
+		this.fileCache = DDGApplication.getFileCache();
 	}
 	
 	@Override
@@ -32,7 +38,17 @@ public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 		try {
 			if (isCancelled()) return null;
 			
-			String body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
+			String body = DDGControlVar.sourceJSON;
+			
+			if(body == null){
+				body = fileCache.getStringFromInternal(DDGConstants.SOURCE_JSON_PATH);
+				
+				if(body == null){	// still null
+					DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
+					fileCache.saveStringToInternal(DDGConstants.SOURCE_JSON_PATH, body);
+				}
+			}
+			
 			Log.e(TAG, body);
 			json = new JSONArray(body);
 		} catch (JSONException jex) {

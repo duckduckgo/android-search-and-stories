@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.container;
 import java.util.Set;
 
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
+import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 
 import android.graphics.drawable.Drawable;
@@ -22,4 +23,6 @@ public class DuckDuckGoContainer {
 	public MainFeedTask mainFeedTask = null;
 	
 	public boolean feedItemLoading = false;
+	
+	public DownloadSourceIconTask sourceIconTask = null;
 }

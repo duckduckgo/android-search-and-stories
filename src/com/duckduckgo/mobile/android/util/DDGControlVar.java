@@ -6,4 +6,7 @@ public class DDGControlVar {
 	
 	public static boolean hasUpdatedFeed = false;
 	public static String regionString = "wt-wt";	// world traveler (none) as default
+	
+	public static boolean sourceIconsCached = false;
+	public static String sourceJSON = null;
 }

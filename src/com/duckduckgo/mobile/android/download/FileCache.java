@@ -1,9 +1,12 @@
 package com.duckduckgo.mobile.android.download;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import com.duckduckgo.mobile.android.util.DDGUtils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -76,5 +79,35 @@ public class FileCache {
 		}
 		
 		return false;
+	}
+	
+	public boolean saveStringToInternal(String name, String file){		
+		try {
+			FileOutputStream fos = this.context.openFileOutput(name, Context.MODE_PRIVATE);
+			fos.write(file.getBytes());
+			fos.close();
+			
+			return true;
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public String getStringFromInternal(String name){
+		String result = null;
+		
+		try {
+			FileInputStream fis = this.context.openFileInput(name);
+			result = DDGUtils.readStream(fis);
+			fis.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		
+		return result;
 	}
 }

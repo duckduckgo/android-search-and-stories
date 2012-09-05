@@ -53,6 +53,8 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.objects.SourcesObject;
+import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask.FeedListener;
 import com.duckduckgo.mobile.android.util.DDGConstants;
@@ -123,8 +125,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this);
     		
     		mDuckDuckGoContainer.mainFeedTask = null;
+    		mDuckDuckGoContainer.sourceIconTask = null;
     		
     		mDuckDuckGoContainer.feedItemLoading = false;
+    		
     		
     	}
         
@@ -378,6 +382,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		if(!DDGControlVar.sourceIconsCached){
+			mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(DDGApplication.getImageCache());
+			mDuckDuckGoContainer.sourceIconTask.execute();
+		}
 		
 		if(mDuckDuckGoContainer.webviewShowing){
 				feedView.setVisibility(View.GONE);

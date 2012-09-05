@@ -14,6 +14,7 @@ import com.duckduckgo.mobile.android.download.DownloadableImage;
 import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 
 //TODO: Eventually, don't take an ImageView, take a Downloadable object
 public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
@@ -32,7 +33,7 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 	@Override
 	protected Bitmap doInBackground(String... params) {
 		url = params[0];
-		return downloadBitmap(url);
+		return DDGUtils.downloadBitmap(this, url);
 	}
 	
 	@Override
@@ -61,39 +62,6 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 		}
 		
 		isCompleted = true; 
-	}
-	
-	private Bitmap downloadBitmap(String url) {
-		try {
-
-			if (isCancelled()) return null;
-				
-			InputStream inputStream = null;
-			try {
-				inputStream = DDGNetworkConstants.mainClient.doGetStream(url);
-				if (inputStream != null) {
-					// FIXME large bitmaps cause OutOfMemoryErrors
-					// see: http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
-					return BitmapFactory.decodeStream(inputStream);
-				}
-			} 
-			catch(DDGHttpException conex) {
-				Log.e(TAG, "Http Call Returned Bad Status. " + conex.getHttpStatus());
-				imageCache.addFailedUrl(url);
-				throw conex;
-			}
-			finally {
-				if (inputStream != null) {
-					inputStream.close();
-				}
-			}
-		} catch (DDGHttpException conException) {
-			Log.e(TAG, conException.getMessage(), conException);
-		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
-		}
-		
-		return null;
 	}
 	
 	static class FlushedInputStream extends FilterInputStream {

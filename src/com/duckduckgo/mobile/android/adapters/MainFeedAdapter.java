@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,7 +78,14 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 							//Cut off the beginning, because we don't want/need it
 							host = host.substring(host.indexOf(".")+1);
 						}
-						imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon, scrolling);
+						
+						Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + host, false);
+						if(bitmap != null){
+							holder.imageViewFeedIcon.setBitmap(bitmap);
+						}
+						else {
+							imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon, scrolling);
+						}
 				} else {
 					imageDownloader.download(null, holder.imageViewFeedIcon, scrolling);
 				}
