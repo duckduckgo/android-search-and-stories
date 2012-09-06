@@ -70,8 +70,7 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 						
 						if(link != null && !link.equals("null")){
 							
-							Log.v("LINK",link);
-							URL linkUrl = new URL(nextObj.getString("link"));
+							URL linkUrl = new URL(link);
 							
 							if(imageUrl != null && imageUrl.length() != 0){
 									Bitmap bitmap = DDGUtils.downloadBitmap(this, imageUrl);

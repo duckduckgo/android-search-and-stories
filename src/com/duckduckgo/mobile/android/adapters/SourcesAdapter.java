@@ -1,10 +1,13 @@
 package com.duckduckgo.mobile.android.adapters;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +23,7 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.download.SourceHolder;
 import com.duckduckgo.mobile.android.objects.SourcesObject;
+import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
@@ -59,11 +63,38 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 
 		if (feed != null) {			
 			
-			//Download the background image
-			if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
-				imageDownloader.download(feed.getImageUrl(), holder.imageViewBackground, false);
-			} else {
-				imageDownloader.download(null, holder.imageViewBackground, false);
+			String link = feed.getLink();
+			
+			if(link != null && !link.equals("null")){
+				
+				URL linkUrl;
+				try {
+					linkUrl = new URL(link);
+					String host = linkUrl.getHost();
+					if (host.indexOf(".") != host.lastIndexOf(".")) {
+						//Cut off the beginning, because we don't want/need it
+						host = host.substring(host.indexOf(".")+1);
+					}
+					
+					Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + host, false);
+					if(bitmap != null){
+						holder.imageViewBackground.setBitmap(bitmap);
+					}
+					else {
+						// fallback - should not happen
+						
+						//Download the background image
+//						if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
+//							imageDownloader.download(feed.getImageUrl(), holder.imageViewBackground, false);
+//						} else {
+//							imageDownloader.download(null, holder.imageViewBackground, false);
+//						}
+					}
+					
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+
 			}
 
 			//Set the Title
