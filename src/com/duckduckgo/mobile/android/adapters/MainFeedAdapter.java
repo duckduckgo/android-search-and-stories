@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -29,13 +30,16 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	
 	public boolean scrolling = false;
 	
+	public OnClickListener sourceClickListener;
+	
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
 	protected final ImageDownloader imageDownloader;
 			
-	public MainFeedAdapter(Context context) {
+	public MainFeedAdapter(Context context, OnClickListener sourceClickListener) {
 		super(context, 0);
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		imageDownloader = DDGApplication.getImageDownloader();
+		this.sourceClickListener = sourceClickListener;
 	}
 	
 	@Override
@@ -61,10 +65,14 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			} else {
 				imageDownloader.download(null, holder.imageViewBackground, scrolling);
 			}
+			
+			holder.imageViewBackground.setType(feed.getType());	// stored source id in imageview
+			holder.imageViewBackground.setOnClickListener(sourceClickListener);
+
 
 			//Set the Title
 			holder.textViewTitle.setText(feed.getTitle());
-
+			
 			if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
 				try {
 					feedUrl = new URL(feed.getFeed());

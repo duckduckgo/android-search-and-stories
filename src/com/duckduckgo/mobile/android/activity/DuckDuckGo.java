@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -45,12 +46,14 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
+import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SourcesObject;
@@ -122,7 +125,23 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             		R.layout.recentsearch_list_layout, R.id.recentSearchText, 
             		new ArrayList<String>(mDuckDuckGoContainer.recentSearchSet));
     		
-    		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this);
+    		OnClickListener sourceClickListener = new OnClickListener() {
+				
+				public void onClick(View v) {
+					// source filtering
+					
+					Set<String> sourceSet = new HashSet<String>();
+					sourceSet.add(((AsyncImageView) v).getType());
+					DDGUtils.saveSet(sharedPreferences, sourceSet, "sourceset");
+					
+					DDGControlVar.hasUpdatedFeed = false;
+					mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
+					mDuckDuckGoContainer.mainFeedTask.execute();
+					
+				}
+			};
+			
+    		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
     		
     		mDuckDuckGoContainer.mainFeedTask = null;
     		mDuckDuckGoContainer.sourceIconTask = null;

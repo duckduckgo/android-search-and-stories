@@ -15,6 +15,7 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 	private WeakReference<DownloadBitmapTask> downloadTaskReference;
 	private boolean hideOnDefault = false;
 	public boolean cachedrawn = false;
+	public String type = null;
 	
 	public AsyncImageView(Context context, AttributeSet attr) {
 		super (context, attr);
@@ -71,5 +72,13 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 
 	public boolean getMemCacheDrawn() {
 		return cachedrawn;
+	}
+	
+	public void setType(String type){
+		this.type = type;
+	}
+	
+	public String getType(){
+		return type;
 	}
 }
