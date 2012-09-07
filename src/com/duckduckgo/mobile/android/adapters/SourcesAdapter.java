@@ -63,20 +63,11 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 
 		if (feed != null) {			
 			
-			String link = feed.getLink();
+			String feedId = feed.getId();
 			
-			if(link != null && !link.equals("null")){
-				
-				URL linkUrl;
-				try {
-					linkUrl = new URL(link);
-					String host = linkUrl.getHost();
-					if (host.indexOf(".") != host.lastIndexOf(".")) {
-						//Cut off the beginning, because we don't want/need it
-						host = host.substring(host.indexOf(".")+1);
-					}
-					
-					Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + host, false);
+			if(feedId != null && !feedId.equals("null")){
+									
+					Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + feed.getId(), false);
 					if(bitmap != null){
 						holder.imageViewBackground.setBitmap(bitmap);
 					}
@@ -91,16 +82,12 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 //						}
 					}
 					
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				}
-
 			}
 
 			//Set the Title
 			holder.textViewTitle.setText(feed.getTitle());
 			
-			holder.id = feed.getId();
+			holder.id = feedId;
 			
 			// adjust checkbox value according to "default" parameter
 //			if(sourceSet.isEmpty()){

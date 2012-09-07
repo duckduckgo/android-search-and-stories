@@ -66,7 +66,9 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 				imageDownloader.download(null, holder.imageViewBackground, scrolling);
 			}
 			
-			holder.imageViewBackground.setType(feed.getType());	// stored source id in imageview
+			String feedType = feed.getType();
+			
+			holder.imageViewBackground.setType(feedType);	// stored source id in imageview
 			holder.imageViewBackground.setOnClickListener(sourceClickListener);
 
 
@@ -79,7 +81,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 				} catch (MalformedURLException e) {
 					e.printStackTrace();
 				}
-
+				
 				if (feedUrl != null) {
 						String host = feedUrl.getHost();
 						if (host.indexOf(".") != host.lastIndexOf(".")) {
@@ -87,7 +89,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 							host = host.substring(host.indexOf(".")+1);
 						}
 						
-						Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + host, false);
+						Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + feedType, false);
 						if(bitmap != null){
 							holder.imageViewFeedIcon.setBitmap(bitmap);
 						}

@@ -66,21 +66,14 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 					if (nextObj != null) {
 						
 						String imageUrl = nextObj.optString("image");			
-						String link = nextObj.getString("link");
+						String id = nextObj.getString("id");
 						
-						if(link != null && !link.equals("null")){
-							
-							URL linkUrl = new URL(link);
-							
+						if(id != null && !id.equals("null")){
+														
 							if(imageUrl != null && imageUrl.length() != 0){
 									Bitmap bitmap = DDGUtils.downloadBitmap(this, imageUrl);
 									if(bitmap != null){
-										String host = linkUrl.getHost();
-										if (host.indexOf(".") != host.lastIndexOf(".")) {
-											//Cut off the beginning, because we don't want/need it
-											host = host.substring(host.indexOf(".")+1);
-										}
-										cache.addBitmapToCache("DUCKDUCKICO--"+host, bitmap);
+										cache.addBitmapToCache("DUCKDUCKICO--"+id, bitmap);
 									}
 							}
 						
@@ -88,9 +81,6 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 					}
 				} catch (JSONException e) {
 					Log.e(TAG, "Failed to create object with info at index " + i);
-				} catch (MalformedURLException e) {
-					Log.e(TAG, "URL problem. Failed to create object with info at index " + i);
-					e.printStackTrace();
 				}
 			}
 		}
