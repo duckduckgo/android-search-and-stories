@@ -68,8 +68,8 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			
 			String feedType = feed.getType();
 			
-			holder.imageViewBackground.setType(feedType);	// stored source id in imageview
-			holder.imageViewBackground.setOnClickListener(sourceClickListener);
+			holder.imageViewFeedIcon.setType(feedType);	// stored source id in imageview
+			holder.imageViewFeedIcon.setOnClickListener(sourceClickListener);
 
 
 			//Set the Title
