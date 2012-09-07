@@ -136,6 +136,9 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 					}
 					
 					DDGControlVar.hasUpdatedFeed = false;
+					
+					// reset temporary filter before going back
+					DDGControlVar.targetSource = null;
 				}
 			});
 		}

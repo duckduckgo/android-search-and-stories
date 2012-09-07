@@ -130,13 +130,21 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				public void onClick(View v) {
 					// source filtering
 					
-					Set<String> sourceSet = new HashSet<String>();
-					sourceSet.add(((AsyncImageView) v).getType());
-					DDGUtils.saveSet(sharedPreferences, sourceSet, "sourceset");
+					if(DDGControlVar.targetSource != null){
+						DDGControlVar.targetSource = null;
+						
+						DDGControlVar.hasUpdatedFeed = false;
+						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
+						mDuckDuckGoContainer.mainFeedTask.execute();						
+					}
+					else {
 					
-					DDGControlVar.hasUpdatedFeed = false;
-					mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
-					mDuckDuckGoContainer.mainFeedTask.execute();
+						DDGControlVar.targetSource = ((AsyncImageView) v).getType();
+						
+						DDGControlVar.hasUpdatedFeed = false;
+						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
+						mDuckDuckGoContainer.mainFeedTask.execute();
+					}
 					
 				}
 			};

@@ -17,6 +17,7 @@ import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
 public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
@@ -41,19 +42,26 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		try {
 			if (isCancelled()) return null;
 			
-			Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
-			
-			if(sharedPreferences.contains("sourceset_size") && !sourceSet.isEmpty()){
-				String paramString = "";
-				for(String s : sourceSet){
-					paramString += s + ",";
+			if(DDGControlVar.targetSource != null){
+				// temporary, icon tap filter
+				feedUrl += "&s=" + DDGControlVar.targetSource;
+			}
+			else {
+				// main, preference-based filter
+				Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
+
+				if(sharedPreferences.contains("sourceset_size") && !sourceSet.isEmpty()){
+					String paramString = "";
+					for(String s : sourceSet){
+						paramString += s + ",";
+					}
+					if(paramString.length() > 0){
+						paramString = paramString.substring(0,paramString.length()-1);
+					}
+
+					feedUrl += "&s=" + paramString;
+
 				}
-				if(paramString.length() > 0){
-					paramString = paramString.substring(0,paramString.length()-1);
-				}
-				
-				feedUrl += "&s=" + paramString;
-				
 			}
 			
 			String body = DDGNetworkConstants.mainClient.doGetString(feedUrl);

@@ -9,4 +9,6 @@ public class DDGControlVar {
 	
 	public static boolean sourceIconsCached = false;
 	public static String sourceJSON = null;
+	
+	public static String targetSource = null; 
 }
