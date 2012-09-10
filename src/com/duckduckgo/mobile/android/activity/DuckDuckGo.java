@@ -422,11 +422,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}	
 		else if(!mDuckDuckGoContainer.prefShowing){
 			switchScreens();
-			
-			if (!DDGControlVar.hasUpdatedFeed) {
-				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
-				mDuckDuckGoContainer.mainFeedTask.execute();
-			}
+			keepFeedUpdated();
 		}
 	}
 
@@ -467,11 +463,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			homeSettingsButton.setImageResource(R.drawable.settings_button);
 			
 			switchScreens();
-			
-			if (!DDGControlVar.hasUpdatedFeed) {
-				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
-				mDuckDuckGoContainer.mainFeedTask.execute();
-			}
+			keepFeedUpdated();
 		}
 		else {
 			super.onBackPressed();
@@ -688,6 +680,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					homeSettingsButton.setImageResource(R.drawable.settings_button);
 					
 					switchScreens();
+					keepFeedUpdated();
 				}
 
 			}
@@ -729,6 +722,17 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
 		// Restore the state of the WebView
 		mainWebView.restoreState(savedInstanceState);
+	}
+	
+	/**
+	 * Refresh feed if it's not marked as updated
+	 */
+	private void keepFeedUpdated()
+	{
+		if (!DDGControlVar.hasUpdatedFeed) {
+			mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
+			mDuckDuckGoContainer.mainFeedTask.execute();
+		}
 	}
 
 }
