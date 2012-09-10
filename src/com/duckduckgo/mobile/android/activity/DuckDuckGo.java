@@ -220,7 +220,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
         feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
 			public void onMainFeedItemSelected(FeedObject feedObject) {
-				savedState = false;
 				String url = feedObject.getUrl();
 				if (url != null) {
 					mDuckDuckGoContainer.feedItemLoading = true;
@@ -488,6 +487,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	public void searchOrGoToUrl(String text) {
 		if (text.length() > 0) {
+			
+			savedState = false;
+			
 			URL searchAsUrl = null;
 			String modifiedText = null;
 
