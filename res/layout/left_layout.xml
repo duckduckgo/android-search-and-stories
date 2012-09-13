@@ -5,7 +5,13 @@
     android:layout_height="fill_parent">
 
     <ListView android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/LeftMainView" />
-    <TextView android:layout_width="fill_parent" android:layout_height="wrap_content" android:textSize="14dp" android:text="@string/LeftRecent" />
+    <TextView 
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content" 
+        android:textSize="14dp" 
+        android:textColor="@android:color/white"
+        android:background="@color/holo_blue_dark"
+        android:text="@string/LeftRecent" />
     <com.duckduckgo.mobile.android.views.RecentSearchListView android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/LeftRecentView" />
         
     
