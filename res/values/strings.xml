@@ -17,5 +17,11 @@
     <string name="PrefRegion">Set Region</string>
     
     <string name="send_to">sharin\' stuff.</string>
+    
+    <string name="LeftStories">Stories</string>
+    <string name="LeftSaved">Saved</string>
+    <string name="LeftSettings">Settings</string>
+    <string name="LeftRecent">Recent</string>
+    <string name="LeftRecentQueries">Recent Queries</string>
 
 </resources>
