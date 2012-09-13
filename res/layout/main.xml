@@ -23,7 +23,7 @@
    	        		 android:layout_marginLeft="5dp"
    	        		 android:id="@+id/settingsButton"
    	        		 android:background="@android:color/transparent"
-   	        		 android:src="@drawable/settings_button" />
+   	        		 android:src="@drawable/menu_button" />
  
    	    <AutoCompleteTextView android:layout_width="0dip"
 			   	        	  android:layout_height="match_parent"
