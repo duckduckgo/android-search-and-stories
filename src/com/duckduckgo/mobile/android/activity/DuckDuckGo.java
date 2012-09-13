@@ -183,6 +183,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftRecentView.setOnRecentSearchItemSelectedListener(new OnRecentSearchItemSelectedListener() {
 			
 			public void onRecentSearchItemSelected(String recentQuery) {
+				fan.showMenu();
+				
 				if(recentQuery != null){
 					searchWebTerm(recentQuery);
 				}				
@@ -709,6 +711,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		
 		}
 		else if(parent.equals(leftMainView)){
+			fan.showMenu();
+			
 			String text = (String)parent.getAdapter().getItem(position);
 			if(text.equals(getBaseContext().getString(R.string.LeftSettings))){
 					
