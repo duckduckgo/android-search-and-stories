@@ -200,7 +200,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         searchField.setOnItemClickListener(this);
 
         // This makes a little (X) to clear the search bar.
-        final Drawable x = getResources().getDrawable(android.R.drawable.presence_offline);
+        final Drawable x = getResources().getDrawable(R.drawable.stop);
         x.setBounds(0, 0, x.getIntrinsicWidth(), x.getIntrinsicHeight());
         searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : x, null);
 
