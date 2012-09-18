@@ -23,5 +23,8 @@
     <string name="LeftSettings">Settings</string>
     <string name="LeftRecent">Recent</string>
     <string name="LeftRecentQueries">Recent Queries</string>
+    
+    <string name="Confirm">Confirm</string>
+    <string name="ConfirmClearHistory">All search history will be deleted. Are you sure?</string>
 
 </resources>

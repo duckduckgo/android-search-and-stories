@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
     android:orientation="horizontal" >    
     
         		  
@@ -10,6 +9,8 @@
             	  android:layout_height="wrap_content"
             	  android:layout_marginTop="5dp"
             	  android:layout_marginBottom="5dp"
+            	  android:paddingLeft="5dp"
+            	  android:paddingRight="5dp"
             	  android:textSize="18dp"
             	  android:text="This is test Text"
             	  android:textStyle="bold"
