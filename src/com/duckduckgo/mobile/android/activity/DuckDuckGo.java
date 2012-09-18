@@ -100,6 +100,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             "Recent Queries",
             "Settings"
     };
+	
+	private final int PREFERENCES_RESULT = 0;
 			
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -720,7 +722,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
 						if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
 					        Intent intent = new Intent(getBaseContext(), Preferences.class);
-					        startActivity(intent);
+					        startActivityForResult(intent, PREFERENCES_RESULT);
 						}
 						else {
 							showPrefFragment();
@@ -749,6 +751,20 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				displayRecentSearch();
 			}
 
+		}
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (requestCode == PREFERENCES_RESULT){
+			if (resultCode == RESULT_OK) {
+				boolean clearedHistory = data.getBooleanExtra("hasClearedHistory",false);
+				if(clearedHistory){
+					clearRecentSearch();
+				}
+			}
 		}
 	}
 	

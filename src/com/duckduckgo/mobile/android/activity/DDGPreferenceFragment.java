@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.activity;
 
 import android.annotation.TargetApi;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -10,11 +11,13 @@ import android.preference.PreferenceFragment;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.fragment.ConfirmClearHistoryDialog;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
@@ -32,14 +35,8 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		
 		Preference clearHistoryPref = (Preference) findPreference("clearHistoryPref");
 		clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-		    public boolean onPreferenceClick(Preference preference) {
-    			DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "recentsearch");
-		    	
-		    	if(getActivity().getClass() == DuckDuckGo.class){
-		    		DuckDuckGo ddgParent = (DuckDuckGo) getActivity();
-		    		ddgParent.clearRecentSearch();
-		    	}
-		    	
+		    public boolean onPreferenceClick(Preference preference) {		    	
+		    	showClearHistoryConfirm();		    	
 		    	return true;
 		    }
 		});
@@ -66,6 +63,28 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 			}
 		});
 	}
+	
+	@TargetApi(11)
+	private void showClearHistoryConfirm() {
+        FragmentManager fm = getFragmentManager();
+        final ConfirmClearHistoryDialog confirmDialog = new ConfirmClearHistoryDialog();
+        OnClickListener listener = new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+    			DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "recentsearch");
+		    	
+		    	if(getActivity().getClass() == DuckDuckGo.class){
+		    		DuckDuckGo ddgParent = (DuckDuckGo) getActivity();
+		    		ddgParent.clearRecentSearch();
+		    	}	
+		    	
+		    	confirmDialog.dismiss();
+			}
+		};
+		confirmDialog.setOKListener(listener);
+		confirmDialog.show(fm, "fragment_clear_history");
+    }
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 		if(key.equals("startScreenPref")){
