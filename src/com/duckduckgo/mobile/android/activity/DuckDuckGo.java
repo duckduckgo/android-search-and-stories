@@ -674,6 +674,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mDuckDuckGoContainer.prefShowing = true;
 				
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+		mDuckDuckGoContainer.webviewShowing = false;
 	}
 	
 	public void displayNewsFeed(){
@@ -682,6 +683,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		prefLayout.setVisibility(View.GONE);
     	feedView.setVisibility(View.VISIBLE);
     	keepFeedUpdated();
+    	mDuckDuckGoContainer.webviewShowing = false;
 	}
 	
 	public void displayRecentSearch(){
@@ -690,6 +692,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		feedView.setVisibility(View.GONE);
     	feedProgressBar.setVisibility(View.GONE);
     	recentSearchView.setVisibility(View.VISIBLE);
+    	mDuckDuckGoContainer.webviewShowing = false;
 	}
 
 	public void onClick(View v) {
