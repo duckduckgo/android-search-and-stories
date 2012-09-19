@@ -459,11 +459,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		if(!DDGControlVar.sourceIconsCached){
-			mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(DDGApplication.getImageCache());
-			mDuckDuckGoContainer.sourceIconTask.execute();
-		}
+
+		mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(DDGApplication.getImageCache());
+		mDuckDuckGoContainer.sourceIconTask.execute();
 		
 		if(mDuckDuckGoContainer.webviewShowing){
 				feedView.setVisibility(View.GONE);

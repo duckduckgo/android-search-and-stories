@@ -1,7 +1,5 @@
 package com.duckduckgo.mobile.android.tasks;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +29,8 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 	ImageCache cache;
 	
 	FileCache fileCache;
+	
+	private boolean testedCache = false;
 			
 	public DownloadSourceIconTask(ImageCache cache) {
 		this.cache = cache;
@@ -44,12 +44,13 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 		try {
 			if (isCancelled()) return null;
 			
-			String body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
-			fileCache.saveStringToInternal(DDGConstants.SOURCE_JSON_PATH, body);
-			DDGControlVar.sourceJSON = body;
-			
-			Log.e(TAG, body);
-			json = new JSONArray(body);
+			if(DDGControlVar.sourceJSON == null){
+				String body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
+				fileCache.saveStringToInternal(DDGConstants.SOURCE_JSON_PATH, body);
+				DDGControlVar.sourceJSON = body;
+				Log.e(TAG, body);
+			}
+			json = new JSONArray(DDGControlVar.sourceJSON);
 		} catch (JSONException jex) {
 			Log.e(TAG, jex.getMessage(), jex);
 		} catch (DDGHttpException conException) {
@@ -71,6 +72,13 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 						if(id != null && !id.equals("null")){
 														
 							if(imageUrl != null && imageUrl.length() != 0){
+									if(!testedCache){
+										if(cache.getBitmapFromCache("DUCKDUCKICO--"+id, false) != null){
+											return returnFeed;
+										}
+										testedCache = true;
+									}
+								
 									Bitmap bitmap = DDGUtils.downloadBitmap(this, imageUrl);
 									if(bitmap != null){
 										cache.addBitmapToCache("DUCKDUCKICO--"+id, bitmap);
@@ -86,22 +94,6 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 		}
 		
 		return returnFeed;
-	}
-	
-	@Override
-	protected void onPostExecute(List<SourcesObject> feed) {	
-			if (feed != null) {
-				// this.listener.onSourceIconRetrieved(feed);
-				
-				// TODO cache the feed response
-				
-				DDGControlVar.sourceIconsCached = true;
-				Editor editor = DDGApplication.getSharedPreferences().edit();
-				editor.putBoolean("sourceiconscached", true);
-				editor.commit();
-			} else {
-				// this.listener.onSourceIconRetrievalFailed();
-			}
 	}
 
 }
