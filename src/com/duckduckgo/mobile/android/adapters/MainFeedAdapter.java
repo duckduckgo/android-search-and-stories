@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 
 public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
@@ -34,7 +36,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
 	protected final ImageDownloader imageDownloader;
-			
+				
 	public MainFeedAdapter(Context context, OnClickListener sourceClickListener) {
 		super(context, 0);
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -54,7 +56,6 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		FeedObject feed = getItem(position);
 		
 		final Holder holder = (Holder) cv.getTag();
-		URL iconUrl = null;
 		URL feedUrl = null;
 
 		if (feed != null) {			
@@ -74,6 +75,13 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 
 			//Set the Title
 			holder.textViewTitle.setText(feed.getTitle());
+			
+			String feedId = feed.getId();
+			// FIXME : it'd be good to reset color to default color for textview in layout XML
+			holder.textViewTitle.setTextColor(Color.WHITE);
+			if(DDGControlVar.readArticles.contains(feedId)){
+				holder.textViewTitle.setTextColor(Color.GRAY);
+			}
 			
 			if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
 				try {
