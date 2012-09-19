@@ -13,6 +13,7 @@
 
 <string-array name="regionArray">
     <item>World Traveler (none)</item>
+    <item>United States</item>
     <item>Arabia</item>
     <item>Arabia (en)</item>
     <item>Argentina</item>
@@ -75,8 +76,7 @@
 	<item>Thailand</item>
     <item>Turkey</item>
     <item>Ukraine</item>
-    <item>United Kingdom</item>
-    <item>United States</item>    
+    <item>United Kingdom</item>  
     <item>United States (es)</item>
     <item>Venezuela</item>
     <item>Vietnam</item>
@@ -85,6 +85,7 @@
 
 <string-array name="regionValues">
     <item>wt-wt</item>
+    <item>us-en</item>
     <item>xa-ar</item>
     <item>xa-en</item>
     <item>ar-es</item>
@@ -147,8 +148,7 @@
     <item>th-th</item>
     <item>tr-tr</item>
     <item>ua-uk</item>
-    <item>uk-en</item>
-    <item>us-en</item>    
+    <item>uk-en</item>  
     <item>ue-es</item>
     <item>ve-es</item>
     <item>vn-vi</item>
