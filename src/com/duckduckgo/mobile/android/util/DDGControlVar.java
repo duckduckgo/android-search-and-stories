@@ -1,5 +1,8 @@
 package com.duckduckgo.mobile.android.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class DDGControlVar {
 	
 	public static SCREEN START_SCREEN = SCREEN.SCR_NEWS_FEED;	// news feed
@@ -13,4 +16,6 @@ public class DDGControlVar {
 	public static String targetSource = null; 
 	
 	public static boolean useDefaultSources = true;
+	
+	public static Set<String> readArticles = new HashSet<String>(); 
 }

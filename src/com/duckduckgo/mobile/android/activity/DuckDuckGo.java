@@ -15,6 +15,7 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -264,6 +265,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					mDuckDuckGoContainer.feedItemLoading = true;
 					searchOrGoToUrl(url);
 				}
+				
+				// record article as read
+				String feedId = feedObject.getId();
+				if(feedId != null){
+					DDGControlVar.readArticles.add(feedId);
+					mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
+				}
 			}
         });
         feedView.setOnMainFeedItemLongClickListener(new OnMainFeedItemLongClickListener() {
@@ -473,6 +481,31 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mDuckDuckGoContainer.mainFeedTask.cancel(false);
 			mDuckDuckGoContainer.mainFeedTask = null;
 		}
+		
+		String combined = "";
+		for(String id : DDGControlVar.readArticles){
+			combined += id + "-";
+		}
+		if(combined.length() != 0){
+			Editor editor = sharedPreferences.edit();
+			editor.putString("readarticles", combined);
+			editor.commit();
+		}
+	}
+	
+	@Override
+	protected void onStop() {
+		String combined = "";
+		for(String id : DDGControlVar.readArticles){
+			combined += id + "-";
+		}
+		if(combined.length() != 0){
+			Editor editor = sharedPreferences.edit();
+			editor.putString("readarticles", combined);
+			editor.commit();
+		}
+		
+		super.onStop();
 	}
 	
 	@Override

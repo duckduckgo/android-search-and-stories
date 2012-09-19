@@ -31,6 +31,15 @@ public class DDGApplication extends Application {
 		DDGControlVar.regionString = sharedPreferences.getString("regionPref", "wt-wt");
 		DDGControlVar.sourceIconsCached = sharedPreferences.getBoolean("sourceiconscached", false);
 		DDGControlVar.useDefaultSources = sharedPreferences.contains("sourceset");
+		
+		String strReadArticles = sharedPreferences.getString("readarticles", null);
+		if(strReadArticles != null){
+			for(String strId : strReadArticles.split(".")){
+				if(strId != null && strId.length() != 0){
+					DDGControlVar.readArticles.add(strId);
+				}
+			}
+		}
      
 	}
 	
