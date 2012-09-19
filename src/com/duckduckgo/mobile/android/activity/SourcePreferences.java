@@ -1,17 +1,22 @@
 package com.duckduckgo.mobile.android.activity;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ListView;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.SourcesAdapter;
 import com.duckduckgo.mobile.android.container.SourcePreferencesContainer;
 import com.duckduckgo.mobile.android.objects.SourcesObject;
 import com.duckduckgo.mobile.android.tasks.SourcesTask;
 import com.duckduckgo.mobile.android.tasks.SourcesTask.SourcesListener;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 
 public class SourcePreferences extends Activity implements SourcesListener {
 
@@ -44,6 +49,22 @@ public class SourcePreferences extends Activity implements SourcesListener {
 	}
 
 	public void onSourcesRetrieved(List<SourcesObject> feed) {
+		
+		// if using defaults, should repopulate source set with default list
+		if(DDGControlVar.useDefaultSources){
+			Set<String> sourceSet = new HashSet<String>();
+			
+			for(SourcesObject sobj : feed){
+				if(sobj.getDefault() == 1)
+					sourceSet.add(sobj.getId());
+			}
+			
+			DDGUtils.saveSet(DDGApplication.getSharedPreferences(), sourceSet, "sourceset");
+			
+			// reset source set of underlying list adapter
+			sourcePrefContainer.sourcesAdapter.sourceSet = sourceSet;
+		}
+		
 		sourcePrefContainer.sourcesAdapter.setList(feed);
 		sourcePrefContainer.sourcesAdapter.notifyDataSetChanged();
 		

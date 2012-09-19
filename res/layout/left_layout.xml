@@ -8,7 +8,7 @@
     <ListView 
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content" 
-        android:cacheColorHint="#00000000"
+        android:cacheColorHint="@android:color/transparent"
         android:id="@+id/LeftMainView" />
     <TextView 
         android:layout_width="fill_parent" 
@@ -20,7 +20,7 @@
     <com.duckduckgo.mobile.android.views.RecentSearchListView 
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content" 
-        android:cacheColorHint="#00000000"
+        android:cacheColorHint="@android:color/transparent"
         android:id="@+id/LeftRecentView" />
         
     
