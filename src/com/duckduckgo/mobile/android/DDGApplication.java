@@ -30,6 +30,7 @@ public class DDGApplication extends Application {
 		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString("startScreenPref", "0")));
 		DDGControlVar.regionString = sharedPreferences.getString("regionPref", "wt-wt");
 		DDGControlVar.sourceIconsCached = sharedPreferences.getBoolean("sourceiconscached", false);
+		DDGControlVar.useDefaultSources = sharedPreferences.contains("sourceset");
      
 	}
 	

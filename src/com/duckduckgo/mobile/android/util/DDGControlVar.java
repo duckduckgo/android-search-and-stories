@@ -11,4 +11,6 @@ public class DDGControlVar {
 	public static String sourceJSON = null;
 	
 	public static String targetSource = null; 
+	
+	public static boolean useDefaultSources = true;
 }

@@ -34,7 +34,7 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 	protected final ImageDownloader imageDownloader;
 	
 	private SharedPreferences sharedPreferences;
-	private Set<String> sourceSet;
+	public Set<String> sourceSet;
 				
 	public SourcesAdapter(Context context) {
 		super(context, 0);
@@ -86,29 +86,19 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 			
 			holder.id = feedId;
 			
-			// adjust checkbox value according to "default" parameter
-//			if(sourceSet.isEmpty()){
-//				if(feed.getDefault() == 1){
-//					holder.checkbox.setChecked(true);
-//				}
-//				else {
-//					holder.checkbox.setChecked(false);
-//				}
-//			}
-//			else {
-				// the list is custom, show user selections
-								
-				if(sourceSet.contains(holder.id)){
-					holder.checkbox.setChecked(true);
-				}
-				else {
-					holder.checkbox.setChecked(false);
-				}
-//			}
+			
+			if(sourceSet.contains(holder.id)){
+				holder.checkbox.setChecked(true);
+			}
+			else {
+				holder.checkbox.setChecked(false);
+			}
 			
 			holder.checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 				
 				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+					
+					DDGControlVar.useDefaultSources = false;
 															
 					if(isChecked){
 						sourceSet.add(holder.id);
