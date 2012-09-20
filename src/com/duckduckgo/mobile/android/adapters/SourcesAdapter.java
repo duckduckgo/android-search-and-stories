@@ -5,7 +5,6 @@ import java.util.Set;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;

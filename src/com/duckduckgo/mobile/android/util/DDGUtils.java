@@ -53,6 +53,10 @@ public final class DDGUtils {
 	    return set;  
 	}  
 	
+	public static boolean existsSet(SharedPreferences prefs, String setName) {
+		return prefs.contains(setName + "_size");
+	}
+	
 	public static void deleteSet(SharedPreferences prefs, String setName) {  
 	    final int size = prefs.getInt(setName + "_size", 0);  
 	    Editor editor = prefs.edit();
