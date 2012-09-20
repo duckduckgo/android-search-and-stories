@@ -360,6 +360,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
         			if (fullURL != null) {
         				//Okay, it's a valid url, which we already knew...
+        				
+        				// disambiguations appear directly as path string
+        				String path = fullURL.getPath();
+        				
         				String query = fullURL.getQuery();
         				if (query != null) {
         					//Get the actual query string now...
@@ -371,10 +375,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             					}
             					String realText = URLDecoder.decode(text);
             					setSearchBarText(realText);
-        					} else {
+        					}
+        					else if(path != null && !path.equals("/")){
+            					String text = path.substring(path.lastIndexOf("/") + 1).replace("_", " ");
+            					setSearchBarText(text);
+            				}
+        					else {
         						setSearchBarText(url);
         					}
-        				} else {
+        				}
+        				else {
         					setSearchBarText(url);
         				}
         			} else {
