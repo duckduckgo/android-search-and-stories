@@ -5,6 +5,7 @@ import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
 
 import android.app.Application;
@@ -29,8 +30,7 @@ public class DDGApplication extends Application {
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString("startScreenPref", "0")));
 		DDGControlVar.regionString = sharedPreferences.getString("regionPref", "wt-wt");
-		DDGControlVar.sourceIconsCached = sharedPreferences.getBoolean("sourceiconscached", false);
-		DDGControlVar.useDefaultSources = sharedPreferences.contains("sourceset");
+		DDGControlVar.useDefaultSources = !DDGUtils.existsSet(sharedPreferences, "sourceset");
 		
 		String strReadArticles = sharedPreferences.getString("readarticles", null);
 		if(strReadArticles != null){

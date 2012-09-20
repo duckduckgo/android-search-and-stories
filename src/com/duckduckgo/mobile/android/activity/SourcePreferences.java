@@ -63,6 +63,7 @@ public class SourcePreferences extends Activity implements SourcesListener {
 			
 			// reset source set of underlying list adapter
 			sourcePrefContainer.sourcesAdapter.sourceSet = sourceSet;
+			sourcePrefContainer.sourcesAdapter.notifyDataSetChanged();
 		}
 		
 		sourcePrefContainer.sourcesAdapter.setList(feed);
