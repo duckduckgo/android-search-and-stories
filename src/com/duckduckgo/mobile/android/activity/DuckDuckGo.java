@@ -454,6 +454,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 	}
 	
+	private void clearBrowserState() {
+		mainWebView.stopLoading();
+		mainWebView.clearHistory();
+		mainWebView.clearView();
+	}
+	
 	public void setSearchBarText(String text) {
 		searchField.setFocusable(false);
 		searchField.setFocusableInTouchMode(false);
@@ -466,6 +472,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         // control which start screen is shown & configure related views
 		
 		clearSearchBar();
+		clearBrowserState();
 		
         if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
         	displayNewsFeed();
@@ -530,18 +537,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		if (mDuckDuckGoContainer.webviewShowing) {
 			if (mainWebView.canGoBack()) {
 				mainWebView.goBack();
-			} else {
-				mainWebView.stopLoading();
-				
+			} else {				
 				switchScreens();
 				
 				mainWebView.setVisibility(View.GONE);
 				prefLayout.setVisibility(View.GONE);
-				mainWebView.clearView();
 				mDuckDuckGoContainer.webviewShowing = false;
-				searchField.setText("");
-				
-				searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 
 			}
 		}
@@ -742,6 +743,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
     	
+    	clearBrowserState();
+    	
     	if(DDGControlVar.START_SCREEN != SCREEN.SCR_NEWS_FEED){
     		DDGControlVar.homeScreenShowing = false;
     		homeSettingsButton.setImageResource(R.drawable.home_button);
@@ -759,6 +762,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	feedProgressBar.setVisibility(View.GONE);
     	recentSearchView.setVisibility(View.VISIBLE);
     	mDuckDuckGoContainer.webviewShowing = false;
+    	
+    	clearBrowserState();
     	
     	if(DDGControlVar.START_SCREEN != SCREEN.SCR_RECENT_SEARCH){
     		DDGControlVar.homeScreenShowing = false;
@@ -824,10 +829,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					//We are going home!
 					mainWebView.clearHistory();
 					mainWebView.clearView();
-					searchField.setText("");
-					mDuckDuckGoContainer.webviewShowing = false;
-					
-					searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+					clearSearchBar();
+					mDuckDuckGoContainer.webviewShowing = false;					
 				}
 			}
 			else if(text.equals(getBaseContext().getString(R.string.LeftRecentQueries))){
