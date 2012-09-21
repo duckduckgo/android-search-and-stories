@@ -3,6 +3,7 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:id="@+id/LeftMainLayout"
     android:background="@drawable/linen_bg">
 
     <ListView 
@@ -16,7 +17,8 @@
         android:textSize="14dp" 
         android:textColor="@android:color/white"
         android:background="@color/holo_blue_dark"
-        android:text="@string/LeftRecent" />
+        android:text="@string/LeftRecent"
+        android:id="@+id/LeftRecentTextView" />
     <com.duckduckgo.mobile.android.views.RecentSearchListView 
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content" 

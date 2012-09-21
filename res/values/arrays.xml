@@ -154,4 +154,11 @@
     <item>vn-vi</item>
 </string-array>
 
+
+<string-array name="leftMenuDefault">
+   <item>@string/LeftStories</item>
+   <item>@string/LeftSaved</item>
+   <item>@string/LeftSettings</item>
+</string-array>
+
 </resources>

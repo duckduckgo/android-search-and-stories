@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -88,6 +89,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private WebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
 	private LinearLayout prefLayout = null;
+	private LinearLayout leftMainLayout = null;
 	
 	private SharedPreferences sharedPreferences;
 	
@@ -95,12 +97,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private boolean savedState = false;
 	
-	String[] listContent = {
-            "Stories",
-            "Saved",
-            "Recent Queries",
-            "Settings"
-    };
+	ArrayList<String> listContent;
 	
 	private final int PREFERENCES_RESULT = 0;
 			
@@ -176,8 +173,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		
     	}
     	
+    	leftMainLayout = (LinearLayout) findViewById(R.id.LeftMainLayout);
     	leftMainView = (ListView) findViewById(R.id.LeftMainView);
     	leftRecentView = (RecentSearchListView) findViewById(R.id.LeftRecentView);
+    	
+    	listContent = new ArrayList<String>();
+    	for(String s : getResources().getStringArray(R.array.leftMenuDefault)) {
+    		listContent.add(s);
+    	}
     	
     	lMainAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, listContent);
     	leftMainView.setAdapter(lMainAdapter);    
@@ -475,9 +478,20 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		clearBrowserState();
 		
         if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
+        	// show recent queries on slide-out menu
+        	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
+        	leftMainLayout.findViewById(R.id.LeftRecentTextView).setVisibility(View.VISIBLE);
+        	leftRecentView.setVisibility(View.VISIBLE);
+        	
         	displayNewsFeed();
         }
         else if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
+        	// hide recent queries from slide-out menu
+        	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
+        	lMainAdapter.insert(getString(R.string.LeftRecentQueries), 0);
+        	leftMainLayout.findViewById(R.id.LeftRecentTextView).setVisibility(View.GONE);
+        	leftRecentView.setVisibility(View.GONE);
+        	
         	displayRecentSearch();
         }
 	}
