@@ -731,8 +731,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 		mDuckDuckGoContainer.webviewShowing = false;
-		DDGControlVar.homeScreenShowing = false;
-		homeSettingsButton.setImageResource(R.drawable.home_button);
 	}
 	
 	public void displayNewsFeed(){
@@ -745,11 +743,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	
     	clearBrowserState();
     	
-    	if(DDGControlVar.START_SCREEN != SCREEN.SCR_NEWS_FEED){
-    		DDGControlVar.homeScreenShowing = false;
-    		homeSettingsButton.setImageResource(R.drawable.home_button);
-    	}
-    	else {
+    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
     	}
@@ -765,11 +759,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	
     	clearBrowserState();
     	
-    	if(DDGControlVar.START_SCREEN != SCREEN.SCR_RECENT_SEARCH){
-    		DDGControlVar.homeScreenShowing = false;
-    		homeSettingsButton.setImageResource(R.drawable.home_button);
-    	}
-    	else {
+    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
     	}
