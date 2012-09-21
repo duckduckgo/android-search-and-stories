@@ -17,4 +17,6 @@ public class DDGControlVar {
 	public static boolean useDefaultSources = true;
 	
 	public static Set<String> readArticles = new HashSet<String>(); 
+	
+	public static boolean homeScreenShowing = true;
 }

@@ -448,6 +448,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		return getLayoutInflater().inflate(resId, null);
 	}
 	
+	private void clearSearchBar() {
+		searchField.setText("");
+    	searchField.setCompoundDrawables(null, null, null, null);
+		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+	}
+	
 	public void setSearchBarText(String text) {
 		searchField.setFocusable(false);
 		searchField.setFocusableInTouchMode(false);
@@ -458,6 +464,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private void switchScreens(){
         // control which start screen is shown & configure related views
+		
         if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
         	displayNewsFeed();
         }
@@ -594,6 +601,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				}
 			}
 
+			
+			// definitely loading something in the browser - set home icon before we go
+			DDGControlVar.homeScreenShowing = false;
+			homeSettingsButton.setImageResource(R.drawable.home_button);
+			
 			//We use the . check to determine if this is a single word or not... 
 			//if it doesn't contain a . plus domain (2 more characters) it won't be a URL, even if it's valid, like http://test
 			if (searchAsUrl != null) {
@@ -716,6 +728,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 		mDuckDuckGoContainer.webviewShowing = false;
+		DDGControlVar.homeScreenShowing = false;
+		homeSettingsButton.setImageResource(R.drawable.home_button);
 	}
 	
 	public void displayNewsFeed(){
@@ -725,6 +739,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	feedView.setVisibility(View.VISIBLE);
     	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
+    	
+    	if(DDGControlVar.START_SCREEN != SCREEN.SCR_NEWS_FEED){
+    		DDGControlVar.homeScreenShowing = false;
+    		homeSettingsButton.setImageResource(R.drawable.home_button);
+    	}
+    	else {
+    		DDGControlVar.homeScreenShowing = true;
+    		homeSettingsButton.setImageResource(R.drawable.menu_button);
+    	}
 	}
 	
 	public void displayRecentSearch(){
@@ -734,11 +757,27 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	feedProgressBar.setVisibility(View.GONE);
     	recentSearchView.setVisibility(View.VISIBLE);
     	mDuckDuckGoContainer.webviewShowing = false;
+    	
+    	if(DDGControlVar.START_SCREEN != SCREEN.SCR_RECENT_SEARCH){
+    		DDGControlVar.homeScreenShowing = false;
+    		homeSettingsButton.setImageResource(R.drawable.home_button);
+    	}
+    	else {
+    		DDGControlVar.homeScreenShowing = true;
+    		homeSettingsButton.setImageResource(R.drawable.menu_button);
+    	}
 	}
 
 	public void onClick(View v) {
-		if (v.equals(homeSettingsButton)) {			
-			fan.showMenu();
+		if (v.equals(homeSettingsButton)) {	
+			if(DDGControlVar.homeScreenShowing){
+				fan.showMenu();
+			}
+			else {
+				// going home
+				clearSearchBar();
+				switchScreens();
+			}
 		}
 	}
 
