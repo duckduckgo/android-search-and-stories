@@ -465,6 +465,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private void switchScreens(){
         // control which start screen is shown & configure related views
 		
+		clearSearchBar();
+		
         if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
         	displayNewsFeed();
         }
@@ -775,7 +777,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			}
 			else {
 				// going home
-				clearSearchBar();
 				switchScreens();
 			}
 		}
