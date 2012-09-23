@@ -5,7 +5,7 @@
     <string name="SettingsButtonContentDescription">Settings</string>
     <string name="HomeButtonContentDescription">Home</string>
     
-    <string name="PrefGroupAppFlow">Application Flow</string>
+    <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Privacy</string>
     <string name="PrefStartScreen">Main Screen</string>
     <string name="PrefNewsFeed">News Feed</string>
