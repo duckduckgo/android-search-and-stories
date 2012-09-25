@@ -6,17 +6,55 @@
     android:id="@+id/LeftMainLayout"
     android:background="@drawable/linen_bg">
 
-    <ListView 
-        android:layout_width="fill_parent" 
-        android:layout_height="wrap_content" 
-        android:cacheColorHint="@android:color/transparent"
-        android:id="@+id/LeftMainView" />
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+	    style="@style/ListItemText"
+	    android:id="@+id/LeftHomeTextView" 
+	    android:layout_width="fill_parent" 
+	    android:layout_height="60dp" 
+	    android:drawableLeft="@drawable/icon_home_selector"
+	    android:background="@drawable/left_main_selector"
+	    android:clickable="true"
+	    android:text="@string/HomeButtonContentDescription"
+	    android:gravity="center_vertical" android:paddingLeft="6dip" 
+	    android:minHeight="?android:attr/listPreferredItemHeight"/>
+    
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+	    style="@style/ListItemText"
+	    android:id="@+id/LeftSavedTextView" 
+	    android:layout_width="fill_parent" 
+	    android:layout_height="60dp" 
+	    android:drawableLeft="@drawable/icon_saved_selector"
+	   	android:background="@drawable/left_main_selector"
+	   	android:clickable="true"
+	    android:text="@string/LeftSaved"
+	    android:gravity="center_vertical" android:paddingLeft="6dip" 
+	    android:minHeight="?android:attr/listPreferredItemHeight"/>
+        
+     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+	    style="@style/ListItemText"
+	    android:id="@+id/LeftSettingsTextView" 
+	    android:layout_width="fill_parent" 
+	    android:layout_height="60dp" 
+	    android:drawableLeft="@drawable/icon_settings_selector"
+	    android:background="@drawable/left_main_selector"
+	    android:clickable="true"
+	    android:text="@string/LeftSettings"
+	    android:gravity="center_vertical" android:paddingLeft="6dip" 
+	    android:minHeight="?android:attr/listPreferredItemHeight"/>
+    
+<!--     <ListView  -->
+<!--         android:layout_width="fill_parent"  -->
+<!--         android:layout_height="wrap_content"  -->
+<!--         android:cacheColorHint="@android:color/transparent" -->
+<!--         android:listSelector="@drawable/left_main_selector" -->
+<!--         android:id="@+id/LeftMainView" /> -->
     <TextView 
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content" 
         android:textSize="14dp" 
         android:textColor="@android:color/white"
-        android:background="@color/holo_blue_dark"
+        android:background="@drawable/left_divider"
+        android:paddingLeft="6dp"
         android:text="@string/LeftRecent"
         android:id="@+id/LeftRecentTextView" />
     <com.duckduckgo.mobile.android.views.RecentSearchListView 

@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="MainFeedText">
         <item name="android:textColor">#FFFFFF</item>
         <item name="android:textSize">14dp</item>
+    </style>
+    <style name="ListItemText" parent="@android:style/TextAppearance.Holo.Large">
+        <item name="android:textColor">@color/left_text_selector</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
+        <item name="android:drawablePadding">5dp</item>
     </style>
 </resources>
