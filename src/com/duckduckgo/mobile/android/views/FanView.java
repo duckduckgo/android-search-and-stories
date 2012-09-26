@@ -77,7 +77,7 @@ public class FanView extends RelativeLayout {
 			inflater.inflate(fan, mFanView);
 		}
 		
-		mFanView.setLayoutParams(new RelativeLayout.LayoutParams((int) px, LayoutParams.WRAP_CONTENT));
+		mFanView.setLayoutParams(new RelativeLayout.LayoutParams((int) px, LayoutParams.MATCH_PARENT));
 	}
 
 	public void setFragments(Fragment main, Fragment fan) {

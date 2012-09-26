@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/LeftMainLayout"
-    android:background="@drawable/linen_bg">
+    android:background="@drawable/left_bg">
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
 	    style="@style/ListItemText"
