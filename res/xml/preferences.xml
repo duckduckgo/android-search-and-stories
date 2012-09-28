@@ -25,7 +25,11 @@
 	android:defaultValue="wt-wt"
 	android:entries="@array/regionArray"
     android:entryValues="@array/regionValues">
-	</ListPreference>	
+	</ListPreference>
+	<CheckBoxPreference 
+	android:title="@string/PrefModifyQuery"
+	android:key="modifyQueryPref"
+	android:defaultValue="false" />	
 </PreferenceCategory>
 <PreferenceCategory android:title="@string/PrefGroupPrivacy">
 	<CheckBoxPreference 

@@ -70,7 +70,7 @@ import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelect
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView.OnRecentSearchItemSelectedListener;
 
-public class DuckDuckGo extends Activity implements OnEditorActionListener, FeedListener, OnClickListener, OnItemClickListener {
+public class DuckDuckGo extends Activity implements OnEditorActionListener, FeedListener, OnClickListener {
 
 	protected final String TAG = "DuckDuckGo";
 	
@@ -226,7 +226,25 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         searchField = (AutoCompleteTextView) findViewById(R.id.searchEditText);
         searchField.setAdapter(new AutoCompleteResultsAdapter(this));
         searchField.setOnEditorActionListener(this);
-        searchField.setOnItemClickListener(this);
+
+        searchField.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				if(!sharedPreferences.getBoolean("modifyQueryPref", false)){
+					//Hide the keyboard and perform a search
+					hideKeyboard(searchField);
+					searchField.dismissDropDown();
+					
+					String text = (String)parent.getAdapter().getItem(position);
+					if (text != null) {
+						text.trim();
+						searchOrGoToUrl(text);
+					}		
+				}
+				
+			}
+		});
 
         // This makes a little (X) to clear the search bar.
         final Drawable x = getResources().getDrawable(R.drawable.stop);
@@ -351,19 +369,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         mainWebView = (WebView) findViewById(R.id.mainWebView);
         mainWebView.getSettings().setJavaScriptEnabled(true);
         mainWebView.setWebViewClient(new WebViewClient() {
-        	@Override
         	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
         		if(!savedState)
         			view.loadUrl(url);
         		return true;
         	}
         	
-        	@Override
         	public void onPageStarted(WebView view, String url, Bitmap favicon) {
         		super.onPageStarted(view, url, favicon);          	
         	}
         	
-        	@Override
         	public void onPageFinished (WebView view, String url) {
         		        		
         		if (url.contains("duckduckgo.com")) {
@@ -801,9 +816,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
     	}
 	}
+	
+	public void hideKeyboard(View view) {
+		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}
 
 	public void onClick(View v) {
-		if (v.equals(homeSettingsButton)) {	
+		if (v.equals(homeSettingsButton)) {			
+			hideKeyboard(searchField);
+			
 			if(DDGControlVar.homeScreenShowing){
 				fan.showMenu();
 			}
@@ -852,22 +874,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 //			mDuckDuckGoContainer.prefShowing = false;
 //			displayRecentSearch();
 //		}
-	}
-
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		if (parent.equals(searchField)) {	
-			//Hide the keyboard and perform a search
-			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-			searchField.dismissDropDown();
-			
-			String text = (String)parent.getAdapter().getItem(position);
-			if (text != null) {
-				text.trim();
-				searchOrGoToUrl(text);
-			}
-		
-		}
 	}
 
 	@Override
