@@ -12,10 +12,12 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="60dp" 
 	    android:drawableLeft="@drawable/icon_home_selector"
+	    android:drawableRight="@drawable/icon_caret_selector"
 	    android:background="@drawable/left_main_selector"
 	    android:clickable="true"
 	    android:text="@string/HomeButtonContentDescription"
 	    android:gravity="center_vertical" android:paddingLeft="6dip" 
+	    android:paddingRight="6dip"
 	    android:minHeight="?android:attr/listPreferredItemHeight"/>
     
     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
@@ -24,10 +26,12 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="60dp" 
 	    android:drawableLeft="@drawable/icon_saved_selector"
+	    android:drawableRight="@drawable/icon_caret_selector"
 	   	android:background="@drawable/left_main_selector"
 	   	android:clickable="true"
 	    android:text="@string/LeftSaved"
 	    android:gravity="center_vertical" android:paddingLeft="6dip" 
+	    android:paddingRight="6dip"
 	    android:minHeight="?android:attr/listPreferredItemHeight"/>
         
      <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
@@ -36,10 +40,12 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="60dp" 
 	    android:drawableLeft="@drawable/icon_settings_selector"
+	    android:drawableRight="@drawable/icon_caret_selector"
 	    android:background="@drawable/left_main_selector"
 	    android:clickable="true"
 	    android:text="@string/LeftSettings"
 	    android:gravity="center_vertical" android:paddingLeft="6dip" 
+	    android:paddingRight="6dip"
 	    android:minHeight="?android:attr/listPreferredItemHeight"/>
     
 <!--     <ListView  -->
