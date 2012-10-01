@@ -846,7 +846,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		else if(v.equals(leftHomeTextView)){
 			fan.showMenu();
 			
-			// show stories
 			mDuckDuckGoContainer.prefShowing = false;
 			
 			if (mDuckDuckGoContainer.webviewShowing) {
@@ -858,9 +857,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mDuckDuckGoContainer.webviewShowing = false;					
 			}
 			
-			if(DDGControlVar.START_SCREEN != DDGControlVar.PREV_START_SCREEN){
-				switchScreens();
-			}
+			switchScreens();
 		}
 		else if(v.equals(leftSavedTextView)){
 			fan.showMenu();		
@@ -870,8 +867,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			
 			if(!mDuckDuckGoContainer.prefShowing){
 				
-				DDGControlVar.PREV_START_SCREEN = DDGControlVar.START_SCREEN; 
-
 				if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
 			        Intent intent = new Intent(getBaseContext(), Preferences.class);
 			        startActivityForResult(intent, PREFERENCES_RESULT);
