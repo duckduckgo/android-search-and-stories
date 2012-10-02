@@ -598,13 +598,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		if (mDuckDuckGoContainer.webviewShowing) {
 			if (mainWebView.canGoBack()) {
 				mainWebView.goBack();
-			} else {				
+			} else {
+				// going home
 				switchScreens();
-				
-				mainWebView.setVisibility(View.GONE);
-				prefLayout.setVisibility(View.GONE);
-				mDuckDuckGoContainer.webviewShowing = false;
-
 			}
 		}
 		else if(mDuckDuckGoContainer.prefShowing){
