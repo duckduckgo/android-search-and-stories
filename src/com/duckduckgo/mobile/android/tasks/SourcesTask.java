@@ -38,15 +38,26 @@ public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 		try {
 			if (isCancelled()) return null;
 			
-			String body = DDGControlVar.sourceJSON;
+			String body = null;
 			
-			if(body == null){
-				body = fileCache.getStringFromInternal(DDGConstants.SOURCE_JSON_PATH);
-				
-				if(body == null){	// still null
-					DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
-					fileCache.saveStringToInternal(DDGConstants.SOURCE_JSON_PATH, body);
+			if(!DDGControlVar.hasUpdatedFeed) {
+				// if an update is triggered, directly fetch from URL
+				body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
+				fileCache.saveStringToInternal(DDGConstants.SOURCE_JSON_PATH, body);
+			}
+			
+			else {
+				body = DDGControlVar.sourceJSON;
+			
+				if(body == null){
+					body = fileCache.getStringFromInternal(DDGConstants.SOURCE_JSON_PATH);
+					
+					if(body == null){	// still null
+						body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
+						fileCache.saveStringToInternal(DDGConstants.SOURCE_JSON_PATH, body);
+					}
 				}
+			
 			}
 			
 			Log.e(TAG, body);

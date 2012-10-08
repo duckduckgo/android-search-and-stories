@@ -73,6 +73,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "sourceset");
 				DDGControlVar.hasUpdatedFeed = false;
 				DDGControlVar.useDefaultSources = true;
+				DDGControlVar.hasUpdatedSources = false;
 				
 				return true;
 			}

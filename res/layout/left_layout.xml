@@ -67,6 +67,7 @@
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content" 
         android:cacheColorHint="@android:color/transparent"
+        android:listSelector="@drawable/left_recent_selector"
         android:id="@+id/LeftRecentView" />
         
     

@@ -11,6 +11,7 @@
             	  android:layout_marginBottom="5dp"
             	  android:paddingLeft="5dp"
             	  android:paddingRight="5dp"
+            	  style="@style/ListItemText"
             	  android:textSize="18dp"
             	  android:text="This is test Text"
             	  android:textStyle="bold"

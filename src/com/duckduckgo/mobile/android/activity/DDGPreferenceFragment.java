@@ -59,6 +59,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 				DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "sourceset");
 				DDGControlVar.hasUpdatedFeed = false;
 				DDGControlVar.useDefaultSources = true;
+				DDGControlVar.hasUpdatedSources = false;
 				
 				return true;
 			}

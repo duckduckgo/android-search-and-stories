@@ -15,6 +15,7 @@ public class DDGControlVar {
 	public static String targetSource = null; 
 	
 	public static boolean useDefaultSources = true;
+	public static boolean hasUpdatedSources = false;
 	
 	public static Set<String> readArticles = new HashSet<String>(); 
 	
