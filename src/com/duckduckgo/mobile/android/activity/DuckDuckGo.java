@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -557,6 +558,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		else if(!mDuckDuckGoContainer.prefShowing){
 			switchScreens();
 		}
+		
+		if(getIntent().getBooleanExtra("widget", false)) {
+			searchField.requestFocus();
+			showKeyboard(searchField);
+		}
+		
 	}
 
 	@Override
@@ -825,6 +832,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void hideKeyboard(View view) {
 		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	}
+	
+	public void showKeyboard(View view) {
+		// InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+		// imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+		// imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+		getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 	}
 
 	public void onClick(View v) {

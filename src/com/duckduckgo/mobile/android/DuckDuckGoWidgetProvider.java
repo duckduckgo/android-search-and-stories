@@ -20,6 +20,7 @@ public class DuckDuckGoWidgetProvider extends AppWidgetProvider {
 
             // Create an Intent to launch ExampleActivity
             Intent intent = new Intent(context, DuckDuckGo.class);
+            intent.putExtra("widget", true);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
             // Get the layout for the App Widget and attach an on-click listener to the button
