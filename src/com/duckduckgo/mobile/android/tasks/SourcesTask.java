@@ -1,12 +1,17 @@
 package com.duckduckgo.mobile.android.tasks;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -25,16 +30,19 @@ public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 	private SourcesListener listener = null;
 	
 	private FileCache fileCache = null;
+	private Context context;
 		
-	public SourcesTask(SourcesListener listener) {
+	public SourcesTask(Context context, SourcesListener listener) {
 		this.listener = listener;
 		this.fileCache = DDGApplication.getFileCache();
+		this.context = context;
 	}
 	
 	@Override
 	protected List<SourcesObject> doInBackground(Void... arg0) {
 		JSONArray json = null;
 		List<SourcesObject> returnFeed = new ArrayList<SourcesObject>();
+		Map<String, String> simpleFeed = new HashMap<String, String>();
 		try {
 			if (isCancelled()) return null;
 			
@@ -71,13 +79,18 @@ public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 		}
 
 		if (json != null) {
-			if (isCancelled()) return returnFeed;
+			if (isCancelled()) {
+				// dump source map to cache file before method exit
+				dumpSimpleSourceMap(simpleFeed);
+				return returnFeed;
+			}
 			for (int i = 0; i < json.length(); i++) {
 				try {
 					JSONObject nextObj = json.getJSONObject(i);
 					if (nextObj != null) {
 						SourcesObject feed = new SourcesObject(nextObj);
 						if (feed != null) {
+							simpleFeed.put(feed.getId(),feed.getTitle());
 							returnFeed.add(feed);
 						}
 					}
@@ -87,6 +100,8 @@ public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 			}
 		}
 		
+		// dump source map to cache file before method exit
+		dumpSimpleSourceMap(simpleFeed);
 		return returnFeed;
 	}
 	
@@ -104,5 +119,31 @@ public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 	public static interface SourcesListener {
 		public void onSourcesRetrieved(List<SourcesObject> feed);
 		public void onSourcesRetrievalFailed();
+	}
+	
+	private void dumpSimpleSourceMap(Map<String,String> sourceMap) {
+		
+		// dump simple source list serialization before method exit
+		if(!DDGControlVar.hasUpdatedFeed || DDGControlVar.simpleSourceMap == null) {
+			
+			try {
+
+				FileOutputStream fos = context.openFileOutput(DDGConstants.SOURCE_SIMPLE_PATH, Context.MODE_PRIVATE);
+				String line;
+
+				for(Map.Entry<String,String> e : sourceMap.entrySet()) {
+					line = e.getKey() + "__" + e.getValue() + "\n";
+					fos.write(line.getBytes());
+				}
+
+				fos.close();
+
+			}
+			catch(IOException e){
+				e.printStackTrace();
+			}
+		}
+		
+		DDGControlVar.simpleSourceMap = sourceMap;
 	}
 }

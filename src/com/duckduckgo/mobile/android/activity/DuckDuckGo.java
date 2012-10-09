@@ -91,9 +91,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private LinearLayout prefLayout = null;
 	private LinearLayout leftMainLayout = null;
 	
+	// event section is a local notification bar at the top, below searchbar
+	private LinearLayout eventLayout = null;
+	
 	private TextView leftHomeTextView = null;
 	private TextView leftSavedTextView = null;
 	private TextView leftSettingsTextView = null;
+	
+	private TextView sourceTextView = null;
 	
 	private SharedPreferences sharedPreferences;
 	
@@ -151,13 +156,20 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					if(DDGControlVar.targetSource != null){
 						DDGControlVar.targetSource = null;
 						
+						eventLayout.setVisibility(View.GONE);
+						sourceTextView.setText("");
+						
 						DDGControlVar.hasUpdatedFeed = false;
 						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
 						mDuckDuckGoContainer.mainFeedTask.execute();						
 					}
 					else {
 					
-						DDGControlVar.targetSource = ((AsyncImageView) v).getType();
+						String sourceType = ((AsyncImageView) v).getType(); 
+						DDGControlVar.targetSource = sourceType;
+						
+						eventLayout.setVisibility(View.VISIBLE);
+						sourceTextView.setText(DDGControlVar.simpleSourceMap.get(sourceType));
 						
 						DDGControlVar.hasUpdatedFeed = false;
 						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
@@ -289,7 +301,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
         });
-
+        
+        eventLayout = (LinearLayout) findViewById(R.id.eventLayout);
+        sourceTextView = (TextView) findViewById(R.id.sourceText);
 
         recentSearchView = (RecentSearchListView) findViewById(R.id.recentSearchItems);
         View header = getLayoutInflater().inflate(R.layout.recentsearch_header, null);
@@ -548,11 +562,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onResume() {
 		super.onResume();
 
-		mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(DDGApplication.getImageCache());
+		mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(getApplicationContext(), DDGApplication.getImageCache());
 		mDuckDuckGoContainer.sourceIconTask.execute();
 		
 		if(mDuckDuckGoContainer.webviewShowing){
 				feedView.setVisibility(View.GONE);
+				eventLayout.setVisibility(View.GONE);
 				mainWebView.setVisibility(View.VISIBLE);
 		}	
 		else if(!mDuckDuckGoContainer.prefShowing){
@@ -700,6 +715,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void searchWebTerm(String term) {
 		if (!mDuckDuckGoContainer.webviewShowing) {
 			feedView.setVisibility(View.GONE);
+			eventLayout.setVisibility(View.GONE);
 			recentSearchView.setVisibility(View.GONE);
 			mainWebView.setVisibility(View.VISIBLE);
 			mDuckDuckGoContainer.webviewShowing = true;
@@ -738,6 +754,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void showWebUrl(String url) {
 		if (!mDuckDuckGoContainer.webviewShowing) {
 			feedView.setVisibility(View.GONE);
+			eventLayout.setVisibility(View.GONE);
 			mainWebView.setVisibility(View.VISIBLE);
 			mDuckDuckGoContainer.webviewShowing = true;
 			mDuckDuckGoContainer.prefShowing = false;
@@ -791,6 +808,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mainWebView.setVisibility(View.GONE);
 		recentSearchView.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.VISIBLE);
+		eventLayout.setVisibility(View.GONE);
 		mDuckDuckGoContainer.prefShowing = true;
 				
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
@@ -802,6 +820,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mainWebView.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
     	feedView.setVisibility(View.VISIBLE);
+    	eventLayout.setVisibility(View.GONE);
     	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
     	
@@ -819,6 +838,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		feedView.setVisibility(View.GONE);
     	feedProgressBar.setVisibility(View.GONE);
     	recentSearchView.setVisibility(View.VISIBLE);
+    	eventLayout.setVisibility(View.GONE);
     	mDuckDuckGoContainer.webviewShowing = false;
     	
     	clearBrowserState();

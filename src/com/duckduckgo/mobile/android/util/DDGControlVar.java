@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.util;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class DDGControlVar {
@@ -11,6 +12,7 @@ public class DDGControlVar {
 	public static String regionString = "wt-wt";	// world traveler (none) as default
 	
 	public static String sourceJSON = null;
+	public static Map<String,String> simpleSourceMap = null;
 	
 	public static String targetSource = null; 
 	

@@ -1,12 +1,16 @@
 package com.duckduckgo.mobile.android.download;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.FileProcessor;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -109,5 +113,23 @@ public class FileCache {
 		}
 		
 		return result;
+	}
+	
+	public void processFromInternal(String name, FileProcessor processor) {
+		
+		try {
+			FileInputStream fis = this.context.openFileInput(name);
+			BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+			String strLine;
+			
+			while ((strLine = br.readLine()) != null) {
+				processor.processLine(strLine);
+			}
+			fis.close();
+		}
+		catch(IOException e){
+			e.printStackTrace();
+		}
+		
 	}
 }

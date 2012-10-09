@@ -9,4 +9,5 @@ public class DDGConstants {
 	public static final String ICON_LOOKUP_URL = "http://i2.duck.co/i/";
 	
 	public static final String SOURCE_JSON_PATH = "source.json";
+	public static final String SOURCE_SIMPLE_PATH = "simple.kry";
 }
