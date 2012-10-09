@@ -110,6 +110,8 @@
                 style="@style/ListItemText"
                 android:paddingLeft="6dip" 
 	    		android:paddingRight="6dip"
+	    		android:clickable="true"
+	    		android:gravity="center"
 	    		android:textSize="16dp"
                 android:text=""
                 android:id="@+id/sourceText"

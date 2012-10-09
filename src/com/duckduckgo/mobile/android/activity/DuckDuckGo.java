@@ -6,7 +6,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -44,7 +43,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -304,6 +302,35 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         eventLayout = (LinearLayout) findViewById(R.id.eventLayout);
         sourceTextView = (TextView) findViewById(R.id.sourceText);
+        
+        // This makes a little (X) to cancel source filtering.
+        final Drawable xc = getResources().getDrawable(R.drawable.stop);
+        xc.setBounds(0, 0, xc.getIntrinsicWidth(), xc.getIntrinsicHeight());
+        sourceTextView.setCompoundDrawables(null, null, xc, null);
+
+        sourceTextView.setOnTouchListener(new OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+                if (sourceTextView.getCompoundDrawables()[2] == null) {
+                    return false;
+                }
+                if (event.getAction() != MotionEvent.ACTION_UP) {
+                    return false;
+                }
+                if (event.getX() > sourceTextView.getWidth() - sourceTextView.getPaddingRight() - xc.getIntrinsicWidth()) {
+                	// cancel filtering
+                	DDGControlVar.targetSource = null;
+					
+					eventLayout.setVisibility(View.GONE);
+					sourceTextView.setText("");
+					
+					DDGControlVar.hasUpdatedFeed = false;
+					mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
+					mDuckDuckGoContainer.mainFeedTask.execute();
+                }
+                return false;
+            }
+
+        });
 
         recentSearchView = (RecentSearchListView) findViewById(R.id.recentSearchItems);
         View header = getLayoutInflater().inflate(R.layout.recentsearch_header, null);
