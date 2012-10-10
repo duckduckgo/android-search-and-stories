@@ -46,7 +46,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 				// temporary, icon tap filter
 				feedUrl += "&s=" + DDGControlVar.targetSource;
 			}
-			else if(!DDGControlVar.useDefaultSources){
+			else {
 				// main, preference-based filter
 				Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
 

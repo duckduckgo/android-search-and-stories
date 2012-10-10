@@ -7,14 +7,14 @@
     
     <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Privacy</string>
-    <string name="PrefStartScreen">Main Screen</string>
-    <string name="PrefNewsFeed">News Feed</string>
-    <string name="PrefRecentSearch">Recent Searches</string>
-    <string name="PrefRecordHistory">Record History</string>
-    <string name="PrefClearHistory">Clear History</string>
-    <string name="PrefSources">Change Sources</string>
-    <string name="PrefResetSources">Reset Sources to Defaults</string>
-    <string name="PrefRegion">Set Region</string>
+    <string name="PrefStartScreen">Main screen</string>
+    <string name="PrefNewsFeed">News feed</string>
+    <string name="PrefRecentSearch">Recent searches</string>
+    <string name="PrefRecordHistory">Record history</string>
+    <string name="PrefClearHistory">Clear history</string>
+    <string name="PrefSources">Change sources</string>
+    <string name="PrefResetSources">Reset sources to defaults</string>
+    <string name="PrefRegion">Set region</string>
     <string name="PrefModifyQuery">Modify suggested query</string>
     
     <string name="send_to">sharin\' stuff.</string>
