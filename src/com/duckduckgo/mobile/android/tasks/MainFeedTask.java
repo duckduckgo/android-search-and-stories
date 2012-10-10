@@ -62,6 +62,25 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 					feedUrl += "&s=" + paramString;
 
 				}
+				else {
+					// this case is when default sources are not loaded
+					if(DDGControlVar.defaultSourceSet == null || DDGControlVar.defaultSourceSet.isEmpty()){
+						synchronized (DDGControlVar.defaultSourceSet) {
+							DDGControlVar.defaultSourceSet.wait();
+						}
+					}
+					
+					String paramString = "";
+					for(String s : DDGControlVar.defaultSourceSet){
+						paramString += s + ",";
+					}
+					if(paramString.length() > 0){
+						paramString = paramString.substring(0,paramString.length()-1);
+					}
+
+					feedUrl += "&s=" + paramString;
+					
+				}
 			}
 			
 			String body = DDGNetworkConstants.mainClient.doGetString(feedUrl);

@@ -14,11 +14,6 @@
 	android:key="sourcesPref"
 	android:defaultValue="">
 	</Preference>
-	<Preference 
-	android:title="@string/PrefResetSources"
-	android:key="resetSourcesPref"
-	android:defaultValue="">
-	</Preference>
 	<ListPreference 
 	android:title="@string/PrefRegion"
 	android:key="regionPref"

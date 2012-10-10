@@ -39,6 +39,7 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 	private boolean testedCache = false;
 	private boolean isCached = false;
 	private boolean readSimpleSourceMap = false;
+	private boolean readDefaultSourceSet = false;
 			
 	public DownloadSourceIconTask(Context context, ImageCache cache) {
 		this.cache = cache;
@@ -86,6 +87,11 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 				}
 			}
 			
+			if(!DDGControlVar.hasUpdatedSources || DDGControlVar.defaultSourceSet == null 
+					|| DDGControlVar.defaultSourceSet.isEmpty()){
+				readDefaultSourceSet = true;
+			}
+			
 			json = new JSONArray(body);
 		} catch (JSONException jex) {
 			Log.e(TAG, jex.getMessage(), jex);
@@ -105,17 +111,22 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 						String imageUrl = nextObj.optString("image");			
 						String id = nextObj.getString("id");
 						String title = nextObj.getString("title");
+						int def = nextObj.getInt("default");
 						
 						if(id != null && !id.equals("null")){
 							
 							simpleFeed.put(id, title);
+							
+							if(def == 1){
+								DDGControlVar.defaultSourceSet.add(id);
+							}
 																					
 							if(imageUrl != null && imageUrl.length() != 0){
 								// if mode = reading simple source map, then do not exit upon icon cache detection
 										if(!testedCache){
 											if(cache.getBitmapFromCache("DUCKDUCKICO--"+id, false) != null){
 												isCached = true;
-												if(!readSimpleSourceMap) {
+												if(!readSimpleSourceMap && !readDefaultSourceSet) {
 													return returnFeed;
 												}
 											}
@@ -139,6 +150,16 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 		}
 		
 		dumpSimpleSourceMap(simpleFeed);
+		
+		// default source related
+		synchronized (DDGControlVar.defaultSourceSet) {
+			DDGControlVar.defaultSourceSet.notify();
+		}
+		
+		if(readDefaultSourceSet){
+			DDGUtils.saveSet(DDGApplication.getSharedPreferences(), DDGControlVar.defaultSourceSet, "defaultset");
+		}
+		
 		return returnFeed;
 	}
 	

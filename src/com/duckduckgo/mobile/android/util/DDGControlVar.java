@@ -13,6 +13,7 @@ public class DDGControlVar {
 	
 	public static String sourceJSON = null;
 	public static Map<String,String> simpleSourceMap = null;
+	public static Set<String> defaultSourceSet = null;
 	
 	public static String targetSource = null; 
 	

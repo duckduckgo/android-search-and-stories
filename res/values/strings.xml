@@ -27,5 +27,7 @@
     
     <string name="Confirm">Confirm</string>
     <string name="ConfirmClearHistory">All search history will be deleted. Are you sure?</string>
+    
+    <string name="Defaults">Defaults</string>
 
 </resources>

@@ -65,19 +65,6 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				return true;
 			}
 		});
-
-		Preference resetSourcesPref = (Preference) findPreference("resetSourcesPref");
-		resetSourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			
-			public boolean onPreferenceClick(Preference preference) {
-				DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "sourceset");
-				DDGControlVar.hasUpdatedFeed = false;
-				DDGControlVar.useDefaultSources = true;
-				DDGControlVar.hasUpdatedSources = false;
-				
-				return true;
-			}
-		});
 		
     }
   }
