@@ -653,9 +653,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			}
 		}
 		else if(mDuckDuckGoContainer.prefShowing){
-			prefLayout.setVisibility(View.GONE);
-			mDuckDuckGoContainer.prefShowing = false;
-						
 			switchScreens();
 		}
 		else {
@@ -673,6 +670,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			String text = searchField.getText().toString();
 			text.trim();
 			
+			mDuckDuckGoContainer.feedItemLoading = true;
 			searchOrGoToUrl(text);
 		}
 		
@@ -850,9 +848,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	eventLayout.setVisibility(View.GONE);
     	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
-    	
-    	clearBrowserState();
-    	
+		mDuckDuckGoContainer.prefShowing = false;
+    	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
@@ -867,9 +864,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	recentSearchView.setVisibility(View.VISIBLE);
     	eventLayout.setVisibility(View.GONE);
     	mDuckDuckGoContainer.webviewShowing = false;
-    	
-    	clearBrowserState();
-    	
+		mDuckDuckGoContainer.prefShowing = false;
+    	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
