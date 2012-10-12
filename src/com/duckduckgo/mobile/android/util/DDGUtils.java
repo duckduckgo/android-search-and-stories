@@ -9,10 +9,13 @@ import java.util.Set;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -113,4 +116,21 @@ public final class DDGUtils {
 		      return "";
 		    }
 	}
+	  
+	  public static Intent newEmailIntent(Context context, String address, String subject, String body, String cc) {
+	      Intent intent = new Intent(Intent.ACTION_SEND);
+	      intent.putExtra(Intent.EXTRA_EMAIL, new String[] { address });
+	      intent.putExtra(Intent.EXTRA_TEXT, body);
+	      intent.putExtra(Intent.EXTRA_SUBJECT, subject);
+	      intent.putExtra(Intent.EXTRA_CC, cc);
+	      intent.setType("message/rfc822");
+	      return intent;
+	  }
+	  
+	  public static Intent newTelIntent(Context context, String telurl) {
+	      Intent intent = new Intent(Intent.ACTION_DIAL);
+	      // FIXME : need to check XXX is really a short number in tel:XXX 
+	      intent.setData(Uri.parse(telurl));
+	      return intent;
+	  }
 }

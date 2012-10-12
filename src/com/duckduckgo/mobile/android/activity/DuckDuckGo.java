@@ -18,6 +18,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.net.MailTo;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
@@ -421,8 +422,23 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         mainWebView.getSettings().setJavaScriptEnabled(true);
         mainWebView.setWebViewClient(new WebViewClient() {
         	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
-        		if(!savedState)
-        			view.loadUrl(url);
+        		if(!savedState) {
+        			// handle mailto: and tel: links with native apps
+        			if(url.startsWith("mailto:")){
+                        MailTo mt = MailTo.parse(url);
+                        Intent i = DDGUtils.newEmailIntent(DuckDuckGo.this, mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
+                        startActivity(i);
+                        return true;
+                    }
+        			else if(url.startsWith("tel:")){
+                        Intent i = DDGUtils.newTelIntent(DuckDuckGo.this, url);
+                        startActivity(i);
+                        return true;
+        			}
+        			else {	
+        				view.loadUrl(url);
+        			}        			
+        		}
         		return true;
         	}
         	
