@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.activity;
 
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -562,8 +563,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 	}
 	
-	private void clearBrowserState() {
+	private void clearBrowserState() {		
 		mainWebView.stopLoading();
+		mainWebView.pauseTimers();
 		mainWebView.clearHistory();
 		mainWebView.clearView();
 	}
@@ -694,6 +696,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void searchOrGoToUrl(String text) {
+		
+		mainWebView.resumeTimers();
+		
 		if (text.length() > 0) {
 			
 			savedState = false;
