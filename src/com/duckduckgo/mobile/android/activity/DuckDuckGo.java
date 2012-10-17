@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -64,6 +65,7 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
+import com.duckduckgo.mobile.android.views.DDGWebView;
 import com.duckduckgo.mobile.android.views.FanView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
@@ -86,7 +88,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private RecentSearchListView recentSearchView = null;
 	
-	private WebView mainWebView = null;
+	private DDGWebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
 	private LinearLayout prefLayout = null;
 	private LinearLayout leftMainLayout = null;
@@ -182,10 +184,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
     		
     		mDuckDuckGoContainer.mainFeedTask = null;
-    		mDuckDuckGoContainer.sourceIconTask = null;
-    		
-    		mDuckDuckGoContainer.feedItemLoading = false;
-    		
+    		mDuckDuckGoContainer.sourceIconTask = null;    		
     		
     	}
     	
@@ -359,7 +358,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				
 				String url = feedObject.getUrl();
 				if (url != null) {
-					mDuckDuckGoContainer.feedItemLoading = true;
 					searchOrGoToUrl(url);
 				}
 				
@@ -419,7 +417,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         // http://code.google.com/p/android/issues/detail?id=21266
         // Possibly also related to CSS Transforms (bug 21305)
         // http://code.google.com/p/android/issues/detail?id=21305
-        mainWebView = (WebView) findViewById(R.id.mainWebView);
+        mainWebView = (DDGWebView) findViewById(R.id.mainWebView);
         mainWebView.getSettings().setJavaScriptEnabled(true);
         mainWebView.setWebViewClient(new WebViewClient() {
         	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
@@ -437,6 +435,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
                         return true;
         			}
         			else {	
+        				Log.v("LOAD",url);
         				view.loadUrl(url);
         			}        			
         		}
@@ -448,6 +447,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	}
         	
         	public void onPageFinished (WebView view, String url) {
+        		
+        		if(!mDuckDuckGoContainer.allowInHistory) {
+        			mainWebView.clearHistory();
+        			mDuckDuckGoContainer.allowInHistory = false;
+        		}
         		        		
         		if (url.contains("duckduckgo.com")) {
         			// FIXME api level
@@ -515,11 +519,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         			setSearchBarText(url);
         		}
         		
-        		if(mDuckDuckGoContainer.feedItemLoading){
-        			mainWebView.clearHistory();
-        			mDuckDuckGoContainer.feedItemLoading = false;
-        		}
-        		
 				searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 
         	}
@@ -530,6 +529,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	public void onProgressChanged(WebView view, int newProgress) {
         		super.onProgressChanged(view, newProgress);
         		
+        		if(!mDuckDuckGoContainer.allowInHistory) {
+        			mainWebView.clearHistory();
+        		}
+        		
         		if(newProgress == 100){
         			searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
         		}
@@ -539,6 +542,22 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		}
 
         	}
+        });
+        
+       mainWebView.setOnTouchListener(new View.OnTouchListener() {
+            
+            public boolean onTouch(View v, MotionEvent event) {
+            	
+                WebView.HitTestResult hr = ((WebView)v).getHitTestResult();
+                
+//                Log.i(TAG, "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
+                
+                if(hr != null && hr.getExtra() != null) {
+                	mDuckDuckGoContainer.allowInHistory = true;
+                }
+                	
+                return false;
+            }
         });
         
         feedProgressBar = (ProgressBar) findViewById(R.id.feedLoadingProgress);
@@ -565,9 +584,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private void clearBrowserState() {		
 		mainWebView.stopLoading();
-		mainWebView.pauseTimers();
-		mainWebView.clearHistory();
-		mainWebView.clearView();
+		mDuckDuckGoContainer.allowInHistory = false;
+//		mainWebView.clearHistory();
+//		mainWebView.clearView();
 	}
 	
 	public void setSearchBarText(String text) {
@@ -688,7 +707,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			String text = searchField.getText().toString();
 			text.trim();
 			
-			mDuckDuckGoContainer.feedItemLoading = true;
 			searchOrGoToUrl(text);
 		}
 		
@@ -696,9 +714,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void searchOrGoToUrl(String text) {
-		
-		mainWebView.resumeTimers();
-		
+				
 		if (text.length() > 0) {
 			
 			savedState = false;

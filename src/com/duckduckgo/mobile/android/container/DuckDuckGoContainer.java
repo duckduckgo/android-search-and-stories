@@ -21,8 +21,7 @@ public class DuckDuckGoContainer {
 	
 	public MainFeedAdapter feedAdapter = null;
 	public MainFeedTask mainFeedTask = null;
-	
-	public boolean feedItemLoading = false;
-	
+	public boolean allowInHistory = false;
+		
 	public DownloadSourceIconTask sourceIconTask = null;
 }
