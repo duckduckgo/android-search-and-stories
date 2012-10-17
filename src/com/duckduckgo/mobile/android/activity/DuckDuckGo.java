@@ -452,6 +452,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         			mainWebView.clearHistory();
         			mDuckDuckGoContainer.allowInHistory = false;
         		}
+        		
+        		if(mainWebView.getVisibility() != View.VISIBLE) {
+        			return;
+        		}
         		        		
         		if (url.contains("duckduckgo.com")) {
         			// FIXME api level
@@ -531,6 +535,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		
         		if(!mDuckDuckGoContainer.allowInHistory) {
         			mainWebView.clearHistory();
+        		}
+        		
+        		if(mainWebView.getVisibility() != View.VISIBLE) {
+        			return;
         		}
         		
         		if(newProgress == 100){

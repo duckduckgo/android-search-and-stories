@@ -15,25 +15,25 @@ public class DDGWebView extends WebView {
 	public boolean is_gone=true;
 	public AttributeSet attrSet = null;
 	
-//	public void onWindowVisibilityChanged(int visibility)
-//	       {super.onWindowVisibilityChanged(visibility);
-//	        if (visibility==View.GONE)
-//	           {try
-//	                {WebView.class.getMethod("onPause").invoke(this);//stop flash
-//	                }
-//	            catch (Exception e) {}
-//	            this.pauseTimers();
-//	            this.is_gone=true;
-//	           }
-//	        else if (visibility==View.VISIBLE)
-//	             {try
-//	                  {WebView.class.getMethod("onResume").invoke(this);//resume flash
-//	                  }
-//	              catch (Exception e) {}
-//	              this.resumeTimers();
-//	              this.is_gone=false;
-//	             }
-//	       }
+	public void onWindowVisibilityChanged(int visibility)
+	       {super.onWindowVisibilityChanged(visibility);
+	        if (visibility==View.GONE)
+	           {try
+	                {WebView.class.getMethod("onPause").invoke(this);//stop flash
+	                }
+	            catch (Exception e) {}
+	            this.pauseTimers();
+	            this.is_gone=true;
+	           }
+	        else if (visibility==View.VISIBLE)
+	             {try
+	                  {WebView.class.getMethod("onResume").invoke(this);//resume flash
+	                  }
+	              catch (Exception e) {}
+	              this.resumeTimers();
+	              this.is_gone=false;
+	             }
+	       }
 	
 	public AttributeSet getAttributes() {
 		return attrSet;
