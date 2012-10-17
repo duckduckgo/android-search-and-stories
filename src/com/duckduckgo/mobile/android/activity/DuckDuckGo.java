@@ -443,20 +443,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	}
         	
         	public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        		super.onPageStarted(view, url, favicon);          	
-        	}
-        	
-        	public void onPageFinished (WebView view, String url) {
-        		
-        		if(!mDuckDuckGoContainer.allowInHistory) {
-        			mainWebView.clearHistory();
-        			mDuckDuckGoContainer.allowInHistory = false;
-        		}
-        		
-        		if(mainWebView.getVisibility() != View.VISIBLE) {
-        			return;
-        		}
-        		        		
+        		super.onPageStarted(view, url, favicon);
+
+        		// Omnibar like behavior.
         		if (url.contains("duckduckgo.com")) {
         			// FIXME api level
         	        mainWebView.getSettings().setSupportZoom(true);
@@ -522,9 +511,20 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	        //mainWebView.getSettings().setPluginsEnabled(true); 
         			setSearchBarText(url);
         		}
+        	}
+        	
+        	public void onPageFinished (WebView view, String url) {
+        		
+        		if(!mDuckDuckGoContainer.allowInHistory) {
+        			mainWebView.clearHistory();
+        			mDuckDuckGoContainer.allowInHistory = false;
+        		}
+        		
+        		if(mainWebView.getVisibility() != View.VISIBLE) {
+        			return;
+        		}
         		
 				searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
-
         	}
         });
                 
