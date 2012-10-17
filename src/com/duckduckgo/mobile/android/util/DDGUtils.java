@@ -13,10 +13,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 public final class DDGUtils {
@@ -117,9 +120,9 @@ public final class DDGUtils {
 		    }
 	}
 	  
-	  public static Intent newEmailIntent(Context context, String address, String subject, String body, String cc) {
+	  public static Intent newEmailIntent(String toAddress, String subject, String body, String cc) {
 	      Intent intent = new Intent(Intent.ACTION_SEND);
-	      intent.putExtra(Intent.EXTRA_EMAIL, new String[] { address });
+	      intent.putExtra(Intent.EXTRA_EMAIL, new String[] { toAddress });
 	      intent.putExtra(Intent.EXTRA_TEXT, body);
 	      intent.putExtra(Intent.EXTRA_SUBJECT, subject);
 	      intent.putExtra(Intent.EXTRA_CC, cc);
@@ -127,10 +130,31 @@ public final class DDGUtils {
 	      return intent;
 	  }
 	  
-	  public static Intent newTelIntent(Context context, String telurl) {
+	  public static Intent newTelIntent(String telurl) {
 	      Intent intent = new Intent(Intent.ACTION_DIAL);
 	      // FIXME : need to check XXX is really a short number in tel:XXX 
 	      intent.setData(Uri.parse(telurl));
 	      return intent;
+	  }
+	  
+	  public static String getBuildInfo(Context context) {		  
+		  // get app version info
+		  String appVersion = "";
+		  PackageInfo pInfo;
+		  try {
+			  pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			  appVersion = pInfo.versionName + " (" + pInfo.versionCode + ")\n";
+		  } catch (NameNotFoundException e) {}
+		
+		  String board = "Board: " + Build.BOARD + "\n";
+		  String bootloader = "Bootloader: " + Build.BOOTLOADER + "\n";
+		  String brand = "Brand: " + Build.BRAND + "\n";
+		  String device = "Device: " + Build.DEVICE + "\n";
+		  String display = "Display: " + Build.DISPLAY + "\n";
+		  String product = "Product: " + Build.PRODUCT + "\n";
+		  String model = "Model: " + Build.MODEL + "\n";
+		  String manufacturer = "Manufacturer: " + Build.MANUFACTURER + "\n";
+		  
+		  return appVersion + board + bootloader + brand + device + display + product + model + manufacturer;
 	  }
 }

@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.activity;
 
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -48,6 +49,19 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 				Intent intent = new Intent(getActivity(), SourcePreferences.class);
 		        startActivity(intent);
 				
+				return true;
+			}
+		});
+		
+		Preference sendFeedbackPref = (Preference) findPreference("sendFeedbackPref");
+		sendFeedbackPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			public boolean onPreferenceClick(Preference preference) {
+				Context context = getPreferenceScreen().getContext();
+				
+				Intent intent = DDGUtils.newEmailIntent(context.getResources().getString(R.string.FeedbackTo), 
+						context.getResources().getString(R.string.FeedbackSubject), DDGUtils.getBuildInfo(context), "");
+		        startActivity(Intent.createChooser(intent, "Select application to send"));
 				return true;
 			}
 		});

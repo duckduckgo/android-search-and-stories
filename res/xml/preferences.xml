@@ -36,4 +36,10 @@
 	android:key="clearHistoryPref"
 	android:defaultValue="" />
 </PreferenceCategory>
+<PreferenceCategory android:title="@string/PrefGroupFeedback">
+	<Preference 
+	android:title="@string/PrefSendFeedback"
+	android:key="sendFeedbackPref"
+	android:defaultValue="" />
+</PreferenceCategory>
 </PreferenceScreen>

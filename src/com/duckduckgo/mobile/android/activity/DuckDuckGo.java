@@ -425,17 +425,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         			// handle mailto: and tel: links with native apps
         			if(url.startsWith("mailto:")){
                         MailTo mt = MailTo.parse(url);
-                        Intent i = DDGUtils.newEmailIntent(DuckDuckGo.this, mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
+                        Intent i = DDGUtils.newEmailIntent(mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
                         startActivity(i);
                         return true;
                     }
         			else if(url.startsWith("tel:")){
-                        Intent i = DDGUtils.newTelIntent(DuckDuckGo.this, url);
+                        Intent i = DDGUtils.newTelIntent(url);
                         startActivity(i);
                         return true;
         			}
         			else {	
-        				Log.v("LOAD",url);
         				view.loadUrl(url);
         			}        			
         		}

@@ -24,6 +24,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -62,6 +63,20 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				Intent intent = new Intent(getBaseContext(), SourcePreferences.class);
 		        startActivity(intent);
 				
+				return true;
+			}
+		});
+		
+		
+		Preference sendFeedbackPref = (Preference) findPreference("sendFeedbackPref");
+		sendFeedbackPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			public boolean onPreferenceClick(Preference preference) {
+				Context context = getPreferenceScreen().getContext();
+				
+				Intent intent = DDGUtils.newEmailIntent(context.getResources().getString(R.string.FeedbackTo), 
+						context.getResources().getString(R.string.FeedbackSubject), DDGUtils.getBuildInfo(context), "");
+		        startActivity(Intent.createChooser(intent, "Select application to send"));
 				return true;
 			}
 		});

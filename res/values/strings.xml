@@ -7,6 +7,7 @@
     
     <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Privacy</string>
+    <string name="PrefGroupFeedback">Feedback</string>
     <string name="PrefStartScreen">Main screen</string>
     <string name="PrefNewsFeed">News feed</string>
     <string name="PrefRecentSearch">Recent searches</string>
@@ -16,6 +17,7 @@
     <string name="PrefResetSources">Reset sources to defaults</string>
     <string name="PrefRegion">Set region</string>
     <string name="PrefModifyQuery">Modify suggested query</string>
+    <string name="PrefSendFeedback">Send Feedback</string>
     
     <string name="send_to">sharin\' stuff.</string>
     
@@ -29,5 +31,8 @@
     <string name="ConfirmClearHistory">All search history will be deleted. Are you sure?</string>
     
     <string name="Defaults">Defaults</string>
+    
+    <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
+    <string name="FeedbackSubject">DuckDuckGo Android v2</string>
 
 </resources>
