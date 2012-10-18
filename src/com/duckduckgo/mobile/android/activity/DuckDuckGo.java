@@ -37,6 +37,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.webkit.WebView.HitTestResult;
 import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -516,7 +517,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		
         		if(!mDuckDuckGoContainer.allowInHistory) {
         			mainWebView.clearHistory();
-        			mDuckDuckGoContainer.allowInHistory = false;
         		}
         		
         		if(mainWebView.getVisibility() != View.VISIBLE) {
@@ -551,17 +551,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	}
         });
         
-       mainWebView.setOnTouchListener(new View.OnTouchListener() {
+       mainWebView.setExtraTouchListener(new View.OnTouchListener() {
             
             public boolean onTouch(View v, MotionEvent event) {
             	
-                WebView.HitTestResult hr = ((WebView)v).getHitTestResult();
-                
-//                Log.i(TAG, "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
-                
-                if(hr != null && hr.getExtra() != null) {
-                	mDuckDuckGoContainer.allowInHistory = true;
-                }
+            	HitTestResult hr = ((DDGWebView) v).getHitTestResult();
+            	if(hr != null && hr.getExtra() != null) {            	
+            		mDuckDuckGoContainer.allowInHistory = true; 
+            		Log.i(TAG, "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
+            	}
                 	
                 return false;
             }

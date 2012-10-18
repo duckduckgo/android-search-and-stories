@@ -2,10 +2,13 @@ package com.duckduckgo.mobile.android.views;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebView;
 
 public class DDGWebView extends WebView {
+	
+	OnTouchListener extraTouchListener;
 
 	public DDGWebView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -37,6 +40,19 @@ public class DDGWebView extends WebView {
 	
 	public AttributeSet getAttributes() {
 		return attrSet;
+	}
+	
+	public void setExtraTouchListener(OnTouchListener listener) {
+		extraTouchListener = listener;
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {            
+	    boolean consumed = super.onTouchEvent(event);
+	    if(extraTouchListener != null) {
+	    	extraTouchListener.onTouch(this, event);
+	    }
+	    return consumed;
 	}
 	
 //	public void onDetachedFromWindow()
