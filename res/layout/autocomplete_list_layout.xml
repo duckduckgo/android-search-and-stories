@@ -7,10 +7,11 @@
     
     <com.duckduckgo.mobile.android.download.AsyncImageView android:layout_width="50dp"
         	   android:layout_height="50dp"
-        	   android:scaleType="center"
+        	   android:scaleType="centerCrop"
         	   android:layout_margin="2dp"
         	   android:layout_gravity="center_vertical"
-        	   android:id="@+id/autoCompleteImage" />
+        	   android:id="@+id/autoCompleteImage"
+        	   android:background="@xml/autocomplete_rounded_edges" />
     
     <LinearLayout android:layout_width="wrap_content"
         		  android:layout_height="wrap_content"
