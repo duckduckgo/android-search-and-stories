@@ -4,6 +4,8 @@
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
     android:background="@android:color/background_light"
+    android:paddingTop="2dp"
+    android:paddingBottom="2dp"
     android:orientation="horizontal" >
     
     <com.duckduckgo.mobile.android.download.AsyncImageView android:layout_width="50dp"
@@ -14,6 +16,8 @@
         	   app:cornerRadius="5dp"
         	   android:id="@+id/autoCompleteImage" />
     
+    <View android:layout_width="2dp" android:layout_height="match_parent" />
+    
     <LinearLayout android:layout_width="wrap_content"
         		  android:layout_height="wrap_content"
         		  android:orientation="vertical"
@@ -23,15 +27,16 @@
             	  android:layout_height="wrap_content"
             	  android:text="This is test Text"
             	  android:textStyle="bold"
-            	  android:textColor="@android:color/primary_text_light"
+            	  android:textColor="#54595f"
             	  android:id="@+id/autoCompleteResultText">
         </TextView>
         
         <TextView android:layout_width="wrap_content"
             	  android:layout_height="wrap_content"
             	  android:text="This is test text"
-            	  android:textColor="@android:color/primary_text_light"
-            	  android:layout_marginLeft="3dp"
+            	  android:textColor="#7c8594"
+            	  android:maxLines="2"
+	    	  	  android:ellipsize="end"
             	  android:id="@+id/autoCompleteDetailText">
         </TextView>
     </LinearLayout>
