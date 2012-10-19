@@ -3,4 +3,7 @@
     <declare-styleable name="FanView">
         <attr name="menuSize" format="dimension" />
     </declare-styleable>
+    <declare-styleable name="AsyncImageView">
+        <attr name="cornerRadius" format="dimension" />
+    </declare-styleable>
 </resources>
