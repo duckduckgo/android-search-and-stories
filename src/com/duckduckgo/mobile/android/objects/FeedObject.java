@@ -15,6 +15,34 @@ public class FeedObject {
 	private final String imageUrl;
 	private final String type;
 	
+	public FeedObject() {
+		// no-arg constructor for ORMlite
+		this.feed = "";
+		this.favicon = "";
+		this.description = "";
+		this.timestamp = "";
+		this.url = "";
+		this.title = "";
+		this.id = "";
+		this.category = "";
+		this.imageUrl = "";
+		this.type = "";
+	}
+	
+	public FeedObject(String id, String title, String description, String feed, String url, String imageUrl,
+			String favicon, String timestamp, String category, String type) {
+		this.id = id;
+		this.title = title;
+		this.description = description;
+		this.feed = feed;
+		this.url = url;
+		this.imageUrl = imageUrl;
+		this.favicon = favicon;
+		this.timestamp = timestamp;
+		this.category = category;
+		this.type = type;
+	}
+	
 	public FeedObject(JSONObject obj) throws JSONException {
 		this.feed = obj.getString("feed");
 		this.favicon = obj.getString("favicon");

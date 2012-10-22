@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android;
 
+import com.duckduckgo.mobile.android.db.DdgDB;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
@@ -18,10 +19,12 @@ public class DDGApplication extends Application {
 	private static FileCache fileCache = null;
 	private static final ImageDownloader imageDownloader = new ImageDownloader(imageCache);
 	private static SharedPreferences sharedPreferences = null;
+	private static DdgDB db = null;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		db = new DdgDB(this);
 		fileCache = new FileCache(this.getApplicationContext());
 		imageCache.setFileCache(fileCache);
 		
@@ -58,5 +61,9 @@ public class DDGApplication extends Application {
 	
 	public static FileCache getFileCache() {
 		return fileCache;
+	}
+	
+	public static DdgDB getDB() {
+		return db;
 	}
 }

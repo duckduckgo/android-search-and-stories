@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.AdapterView;
 
-public class MainFeedListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
+public class MainFeedListView extends ListView implements android.widget.AdapterView.OnItemClickListener {
 
 	private OnMainFeedItemSelectedListener listener;
 	private OnMainFeedItemLongClickListener longClickListener;
@@ -18,7 +18,7 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		super(context, attrs);
 		
 		this.setOnItemClickListener(this);
-		this.setOnItemLongClickListener(this);
+//		this.setOnItemLongClickListener(this);
 	}
 	
 	public void setOnMainFeedItemSelectedListener(OnMainFeedItemSelectedListener listener) {
@@ -39,16 +39,16 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		}
 	}
 
-	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		FeedObject obj = (FeedObject) getAdapter().getItem(position);
-
-		if (obj != null) {
-			if (longClickListener != null) {
-				longClickListener.onMainFeedItemLongClick(obj);
-			}
-		}
-		return true;
-	}
+//	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//		FeedObject obj = (FeedObject) getAdapter().getItem(position);
+//
+//		if (obj != null) {
+//			if (longClickListener != null) {
+//				longClickListener.onMainFeedItemLongClick(obj);
+//			}
+//		}
+//		return true;
+//	}
 
 	public interface OnMainFeedItemSelectedListener {
 		public void onMainFeedItemSelected(FeedObject feedObject);

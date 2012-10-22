@@ -21,6 +21,10 @@
     
     <string name="send_to">sharin\' stuff.</string>
     
+    <string name="MainFeedContextTitle">sharin\' stuff.</string>
+    <string name="Save">Save</string>
+    <string name="Share">Share</string>
+    
     <string name="LeftStories">Stories</string>
     <string name="LeftSaved">Saved</string>
     <string name="LeftSettings">Settings</string>

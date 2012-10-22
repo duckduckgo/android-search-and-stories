@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.activity;
 
-import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -26,7 +25,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -42,6 +44,7 @@ import android.webkit.WebViewClient;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -58,10 +61,11 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
+import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
-import com.duckduckgo.mobile.android.tasks.MainFeedTask.FeedListener;
+import com.duckduckgo.mobile.android.tasks.SavedFeedTask;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -69,7 +73,6 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.DDGWebView;
 import com.duckduckgo.mobile.android.views.FanView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
-import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView.OnRecentSearchItemSelectedListener;
@@ -79,13 +82,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	protected final String TAG = "DuckDuckGo";
 	
 	DuckDuckGoContainer mDuckDuckGoContainer;
-	
+		
 	private AutoCompleteTextView searchField = null;
 	private ProgressBar feedProgressBar = null;
 	private MainFeedListView feedView = null;
 	private RecentSearchListView leftRecentView = null;
 	
 	ArrayAdapter<String> lRecentAdapter;
+	
+	private FanView fan;
 	
 	private RecentSearchListView recentSearchView = null;
 	
@@ -104,14 +109,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private TextView sourceTextView = null;
 	
 	private SharedPreferences sharedPreferences;
-	
-	private FanView fan;
-	
+		
 	private boolean savedState = false;
 	
 	ArrayList<String> listContent;
 	
 	private final int PREFERENCES_RESULT = 0;
+	
+	private final int CONTEXT_ITEM_SAVE = 0;
+	private final int CONTEXT_ITEM_SHARE = 1;
 			
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -126,8 +132,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 //        TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 //        String countryCode = tm.getSimCountryIso();
 //        String lang = getResources().getConfiguration().locale.getLanguage();
-//        Log.v("COUNLANG",countryCode + " " + lang);
-        
+//        Log.v("COUNLANG",countryCode + " " + lang);        
         
         if(savedInstanceState != null)
         	savedState = true;
@@ -350,6 +355,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
+        registerForContextMenu(feedView);
         feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
 			public void onMainFeedItemSelected(FeedObject feedObject) {
 				// close left nav if it's open
@@ -370,16 +376,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				}
 			}
         });
-        feedView.setOnMainFeedItemLongClickListener(new OnMainFeedItemLongClickListener() {
-			public void onMainFeedItemLongClick(FeedObject feedObject) {
-				Intent sendIntent = new Intent();
-				sendIntent.setAction(Intent.ACTION_SEND);
-				sendIntent.putExtra(Intent.EXTRA_TEXT, "WatrCoolr URL: "+feedObject.getUrl());
-				sendIntent.putExtra(Intent.EXTRA_SUBJECT, feedObject.getTitle());
-				sendIntent.setType("text/plain");
-				startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
-			}
-        });
+//        feedView.setOnMainFeedItemLongClickListener(new OnMainFeedItemLongClickListener() {
+//			public void onMainFeedItemLongClick(FeedObject feedObject) {
+//				Intent sendIntent = new Intent();
+//				sendIntent.setAction(Intent.ACTION_SEND);
+//				sendIntent.putExtra(Intent.EXTRA_TEXT, "WatrCoolr URL: "+feedObject.getUrl());
+//				sendIntent.putExtra(Intent.EXTRA_SUBJECT, feedObject.getTitle());
+//				sendIntent.setType("text/plain");
+//				startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+//			}
+//        });
         feedView.setOnScrollListener(new OnScrollListener() {
 			
         	int firstVisibleItem;
@@ -689,7 +695,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		if (mDuckDuckGoContainer.webviewShowing) {
 			if (mainWebView.canGoBack()) {
 				mainWebView.goBack();
-			} else {
+			}
+			else if(mDuckDuckGoContainer.savedFeedShowing) {
+				clearSearchBar();
+				clearBrowserState();
+				displaySavedFeed();
+			}
+			else {
 				// going home
 				switchScreens();
 			}
@@ -843,7 +855,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onFeedRetrievalFailed() {
 		//If the mainFeedTask is null, we are currently paused
 		//Otherwise, we can try again
-		if (mDuckDuckGoContainer.mainFeedTask != null) {
+		if (mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.savedFeedTask != null) {
+			mDuckDuckGoContainer.savedFeedTask = new SavedFeedTask(this);
+			mDuckDuckGoContainer.savedFeedTask.execute();
+		}
+		else if (!mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.mainFeedTask != null) {
 			mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
 			mDuckDuckGoContainer.mainFeedTask.execute();
 		}
@@ -883,6 +899,28 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displayNewsFeed(){
+		if(mDuckDuckGoContainer.savedFeedShowing) {
+			mDuckDuckGoContainer.savedFeedShowing = false;
+			DDGControlVar.hasUpdatedFeed = false;
+		}
+		recentSearchView.setVisibility(View.GONE);
+		mainWebView.setVisibility(View.GONE);
+		prefLayout.setVisibility(View.GONE);
+    	feedView.setVisibility(View.VISIBLE);
+    	eventLayout.setVisibility(View.GONE);
+    	keepFeedUpdated();
+    	mDuckDuckGoContainer.webviewShowing = false;
+		mDuckDuckGoContainer.prefShowing = false;
+    	    	
+    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
+    		DDGControlVar.homeScreenShowing = true;
+    		homeSettingsButton.setImageResource(R.drawable.menu_button);
+    	}
+	}
+	
+	public void displaySavedFeed(){
+		mDuckDuckGoContainer.savedFeedShowing = true;
+		DDGControlVar.hasUpdatedFeed = false;
 		recentSearchView.setVisibility(View.GONE);
 		mainWebView.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
@@ -956,6 +994,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		else if(v.equals(leftSavedTextView)){
 			fan.showMenu();		
+			
+			displaySavedFeed();
 		}
 		else if(v.equals(leftSettingsTextView)){
 			fan.showMenu();
@@ -1026,9 +1066,46 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		if (!DDGControlVar.hasUpdatedFeed) {
 			feedProgressBar.setVisibility(View.VISIBLE);
 			
-			mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
-			mDuckDuckGoContainer.mainFeedTask.execute();
+			if(mDuckDuckGoContainer.savedFeedShowing) {
+				mDuckDuckGoContainer.savedFeedTask = new SavedFeedTask(this);
+				mDuckDuckGoContainer.savedFeedTask.execute();
+			}
+			else {
+				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
+				mDuckDuckGoContainer.mainFeedTask.execute();
+			}
 		}
 	}
 
+    public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		menu.setHeaderTitle(getResources().getString(R.string.MainFeedContextTitle));
+		menu.add(0, CONTEXT_ITEM_SAVE, 0, getResources().getString(R.string.Save));
+		menu.add(0, CONTEXT_ITEM_SHARE, 1, getResources().getString(R.string.Share));
+	}
+    
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {	   	
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+		long itemId = item.getItemId();
+		int itemPosition = info.position;
+		
+		FeedObject feedObject = (FeedObject) feedView.getItemAtPosition(itemPosition);
+    	
+    	if(itemId==CONTEXT_ITEM_SAVE){
+    		DDGApplication.getDB().insert(feedObject);
+       	}
+    	else if(itemId==CONTEXT_ITEM_SHARE){
+			Intent sendIntent = new Intent();
+			sendIntent.setAction(Intent.ACTION_SEND);
+			sendIntent.putExtra(Intent.EXTRA_TEXT, "WatrCoolr URL: "+feedObject.getUrl());
+			sendIntent.putExtra(Intent.EXTRA_SUBJECT, feedObject.getTitle());
+			sendIntent.setType("text/plain");
+			startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+			return true;
+       	}
+    	
+    	return false;
+	}
+    
 }
