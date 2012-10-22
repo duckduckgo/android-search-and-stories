@@ -12,13 +12,13 @@
 
 	<ImageView
 		android:id="@+id/ddg_icon"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_gravity="bottom"
-		android:drawablePadding="1dip"
+		android:layout_width="45dp"
+		android:layout_height="51dp"
+		android:layout_gravity="center_vertical"
+		android:drawablePadding="0dip"
 		android:paddingRight="1dip"
 		android:paddingLeft="1dip"
-		android:paddingBottom="18dip"
+		android:paddingBottom="1dip"
 		android:src="@drawable/ddg_logo" />
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -41,7 +41,7 @@
 	        <ImageButton
 	            android:id="@+id/widget_go_btn"
 	            android:layout_width="wrap_content"
-	            android:layout_height="fill_parent"
+	            android:layout_height="wrap_content"
 	            android:background="@drawable/search_button"
 	            android:layout_marginTop="1dip"/>
 
