@@ -118,7 +118,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private final int PREFERENCES_RESULT = 0;
 	
 	private final int CONTEXT_ITEM_SAVE = 0;
-	private final int CONTEXT_ITEM_SHARE = 1;
+	private final int CONTEXT_ITEM_UNSAVE = 1;
+	private final int CONTEXT_ITEM_SHARE = 2;
 			
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -1084,7 +1085,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
 		menu.setHeaderTitle(getResources().getString(R.string.MainFeedContextTitle));
-		menu.add(0, CONTEXT_ITEM_SAVE, 0, getResources().getString(R.string.Save));
+		if(mDuckDuckGoContainer.savedFeedShowing) {
+			menu.add(0, CONTEXT_ITEM_UNSAVE, 0, getResources().getString(R.string.Unsave));
+		}
+		else {
+			menu.add(0, CONTEXT_ITEM_SAVE, 0, getResources().getString(R.string.Save));
+		}
 		menu.add(0, CONTEXT_ITEM_SHARE, 1, getResources().getString(R.string.Share));
 	}
     
@@ -1098,6 +1104,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	
     	if(itemId==CONTEXT_ITEM_SAVE){
     		DDGApplication.getDB().insert(feedObject);
+       	}
+    	else if(itemId==CONTEXT_ITEM_UNSAVE){
+    		DDGApplication.getDB().deleteById(feedObject.getId());
+    		mDuckDuckGoContainer.feedAdapter.remove(feedObject);
        	}
     	else if(itemId==CONTEXT_ITEM_SHARE){
 			Intent sendIntent = new Intent();

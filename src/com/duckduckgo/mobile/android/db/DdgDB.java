@@ -57,9 +57,8 @@ public class DdgDB {
 	      this.db.delete(FEED_TABLE, null, null);
 	}
 	
-	public void deleteById(int id) {
-		String sid = String.valueOf(id);
-	      this.db.delete(FEED_TABLE, "id=?", new String[]{sid});
+	public void deleteById(String id) {
+	      this.db.delete(FEED_TABLE, "id=?", new String[]{id});
 	}
 	
 	public void deleteByUrl(String url) {

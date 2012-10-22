@@ -23,6 +23,7 @@
     
     <string name="MainFeedContextTitle">sharin\' stuff.</string>
     <string name="Save">Save</string>
+    <string name="Unsave">Unsave</string>
     <string name="Share">Share</string>
     
     <string name="LeftStories">Stories</string>
