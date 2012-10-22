@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android;
 
+import java.io.File;
+
 import com.duckduckgo.mobile.android.db.DdgDB;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
@@ -11,6 +13,8 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.preference.PreferenceManager;
 
 public class DDGApplication extends Application {
@@ -65,5 +69,18 @@ public class DDGApplication extends Application {
 	
 	public static DdgDB getDB() {
 		return db;
+	}
+	
+	// method overridden to put DB in external DB folder cleanable upon uninstall
+	@Override
+	public SQLiteDatabase openOrCreateDatabase(String name, int mode,
+	CursorFactory factory) {
+	    File externalFilesDir = getExternalFilesDir(null);
+	    if(externalFilesDir == null) {
+	        return null;
+	    }
+	 
+	    File dbFile = new File(externalFilesDir, name);
+	    return SQLiteDatabase.openDatabase(dbFile.getAbsolutePath(), null, SQLiteDatabase.CREATE_IF_NECESSARY);
 	}
 }

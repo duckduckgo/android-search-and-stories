@@ -53,6 +53,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
@@ -853,12 +854,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void onFeedRetrievalFailed() {
+
+		// Do not retry for SavedFeedTask, DB reply should be usable, when good or bad
+		if (mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.savedFeedTask != null) {
+			onFeedRetrieved(new ArrayList<FeedObject>());
+			Toast.makeText(this, R.string.SavedFeedEmpty, Toast.LENGTH_LONG).show();
+		}
+		
 		//If the mainFeedTask is null, we are currently paused
 		//Otherwise, we can try again
-		if (mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.savedFeedTask != null) {
-			mDuckDuckGoContainer.savedFeedTask = new SavedFeedTask(this);
-			mDuckDuckGoContainer.savedFeedTask.execute();
-		}
 		else if (!mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.mainFeedTask != null) {
 			mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
 			mDuckDuckGoContainer.mainFeedTask.execute();

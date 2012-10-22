@@ -38,5 +38,7 @@
     
     <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
+    
+    <string name="SavedFeedEmpty">There is no saved item yet!</string>
 
 </resources>
