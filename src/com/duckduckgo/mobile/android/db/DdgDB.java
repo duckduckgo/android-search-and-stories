@@ -15,7 +15,6 @@ public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
 	private static final int DATABASE_VERSION = 1;
-	private static String DATABASE_PATH;
 	private static final String FEED_TABLE = "feed";
 	
 	
@@ -29,7 +28,6 @@ public class DdgDB {
 	public DdgDB(Context context) {
 	      this.context = context;
 	      OpenHelper openHelper = new OpenHelper(this.context);
-	      this.DATABASE_PATH = context.getExternalFilesDir(null).getAbsolutePath();
 	      this.db = openHelper.getWritableDatabase();
 	      this.insertStmt = this.db.compileStatement(INSERT);
 	}
