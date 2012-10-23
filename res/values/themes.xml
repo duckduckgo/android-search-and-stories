@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="DDGTheme" parent="android:Theme.NoTitleBar">
+        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
+    </style>
+
+    <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">
+        <item name="android:popupBackground">@drawable/new_spinner_dropdown_background</item>
+    </style>
+
+</resources>
