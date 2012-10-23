@@ -5,16 +5,14 @@ import java.lang.ref.WeakReference;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Path;
-import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 
 //TODO: Instead of using DownloadDrawable, we can just subclass ImageView with an AsyncImageView or some such...
 public class AsyncImageView extends ImageView implements DownloadableImage {
@@ -22,22 +20,21 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 	private boolean hideOnDefault = false;
 	public boolean cachedrawn = false;
 	public String type = null;
-	private Path clipPath = null;
 	
 	/**
 	   * The corner radius of the view (in pixel).
 	   */
 	private float cornerRadius = 0;
 	
+	private int layoutWidth = 0, layoutHeight = 0;
+	
 	public AsyncImageView(Context context, AttributeSet attr) {
 		super (context, attr);
-		clipPath = new Path();
 	    getXMLAttribute(context, attr);
 	}
 	
 	public AsyncImageView(Context context, AttributeSet attr, int defStyle) {
 		super (context, attr, defStyle);
-		clipPath = new Path();
 	    getXMLAttribute(context, attr);
 	}
 	
@@ -53,7 +50,7 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 	  private void getXMLAttribute(Context context, AttributeSet attrs) {
 	    // Get proportion.
 	    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AsyncImageView);
-	    cornerRadius = a.getDimension(R.styleable.AsyncImageView_cornerRadius, 0);	    
+	    cornerRadius = a.getDimension(R.styleable.AsyncImageView_cornerRadius, 0);		   
 	    a.recycle();
 	  }
 	  
@@ -85,13 +82,18 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 		if (this.getVisibility() == View.GONE && this.hideOnDefault) {
 			this.setVisibility(View.VISIBLE);
 		}
+						
+		if(cornerRadius != 0) {
+		    ViewGroup.LayoutParams layoutParams = this.getLayoutParams();
+		    layoutWidth = layoutParams.width;	
+		    layoutHeight = layoutParams.height;
+		    
+			setImageBitmap(DDGUtils.getRoundedCornerImage(bitmap, cornerRadius, layoutWidth, layoutHeight));
+			return;
+		}
 		
-		setImageBitmap(bitmap);
-		
-		// initialize corner clipping path
-		if(cornerRadius != 0) {	    
-		    clipPath.addRoundRect(new RectF(0, 0, this.getWidth(), this.getHeight()), cornerRadius, cornerRadius, Path.Direction.CW);
-	    }
+		setImageBitmap(bitmap);		
+
 	}
 	
 	public void setDefault() {
@@ -125,14 +127,6 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 	
 	public String getType(){
 		return type;
-	}
-	
-	@Override
-	protected void onDraw(Canvas canvas) {
-		
-		if(this.cornerRadius != 0) {
-		    canvas.clipPath(clipPath);
-		}
-	    super.onDraw(canvas);
-	}
+	}	
+
 }

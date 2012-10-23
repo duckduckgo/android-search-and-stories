@@ -10,10 +10,9 @@
     
     <com.duckduckgo.mobile.android.download.AsyncImageView android:layout_width="50dp"
         	   android:layout_height="50dp"
-        	   android:scaleType="centerCrop"
         	   android:layout_margin="2dp"
         	   android:layout_gravity="center_vertical"
-        	   app:cornerRadius="5dp"
+        	   app:cornerRadius="10dp"
         	   android:id="@+id/autoCompleteImage" />
     
     <View android:layout_width="2dp" android:layout_height="match_parent" />
