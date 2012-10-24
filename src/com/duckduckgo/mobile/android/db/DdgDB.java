@@ -139,7 +139,7 @@ public class DdgDB {
 		}
 		query += "type = ?";
 		
-		String[] typeArray = (String[]) types.toArray(new String[0]);
+		String[] typeArray = (String[]) types.toArray(new String[types.size()]);
 		
 		Cursor c = this.db.query(FEED_TABLE, null, query, typeArray, null, null, null, null);
 		if (c.moveToFirst()) {
