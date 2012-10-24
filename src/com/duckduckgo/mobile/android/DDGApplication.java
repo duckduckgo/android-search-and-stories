@@ -22,7 +22,7 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.preference.PreferenceManager;
 
 @ReportsCrashes(formKey="",
-formUri = "http://10.0.0.59:10000/crash/",
+formUri = "https://caine.duckduckgo.com/crash.js",
 mode = ReportingInteractionMode.TOAST,
 resToastText = R.string.crash_toast_text, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
 resNotifTickerText = R.string.crash_notif_ticker_text,
