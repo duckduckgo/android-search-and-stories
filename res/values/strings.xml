@@ -18,6 +18,9 @@
     <string name="PrefRegion">Set region</string>
     <string name="PrefModifyQuery">Modify suggested query</string>
     <string name="PrefSendFeedback">Send Feedback</string>
+    <string name="PrefEnableAcra">Error reporting</string>
+    <string name="PrefAcraDisabled">Reporting disabled</string>
+    <string name="PrefAcraEnabled">Reporting enabled</string>
     
     <string name="send_to">sharin\' stuff.</string>
     
@@ -41,5 +44,15 @@
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
     
     <string name="SavedFeedEmpty">There is no saved item yet!</string>
+    
+    <string name="crash_toast_text">Application crashed! Crash-related data will be collected and reported upon confirmation.</string>
+    <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
+    <string name="crash_notif_title">DuckDuckGo crash report</string>
+    <string name="crash_notif_text">Please click here to help fix the issue.</string>
+    <string name="crash_dialog_text">An unexpected error occurred forcing the application to stop. 
+        Please help us fix the problem by clicking \'OK\' to send crash-related data. 
+        (IMPORTANT: Sensitive information such as your search query or browsed URL can be included.)</string>
+    <string name="crash_dialog_comment_prompt">Your comment: </string>
+    <string name="crash_dialog_ok_toast">Thank you for your help!</string>
 
 </resources>
