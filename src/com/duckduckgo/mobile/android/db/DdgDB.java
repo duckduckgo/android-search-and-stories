@@ -101,7 +101,11 @@ public class DdgDB {
 	}
 	
 	public ArrayList<FeedObject> selectByType(String type){
-		ArrayList<FeedObject> feeds = new ArrayList<FeedObject>(50);
+		if(type == null) {
+			return null;
+		}
+		
+		ArrayList<FeedObject> feeds = new ArrayList<FeedObject>(20);
 		Cursor c = this.db.query(FEED_TABLE, null, "type = ?", new String[]{type}, null, null, null, null);
 		if (c.moveToFirst()) {
 			do {
@@ -121,7 +125,11 @@ public class DdgDB {
 	}
 	
 	public ArrayList<FeedObject> selectByType(Set<String> types){
-		ArrayList<FeedObject> feeds = new ArrayList<FeedObject>(50);
+		if(types == null || types.isEmpty()) {
+			return null;
+		}
+		
+		ArrayList<FeedObject> feeds = new ArrayList<FeedObject>(20);
 		
 		String query = "";
 		if(types.size() > 1) {
@@ -131,7 +139,7 @@ public class DdgDB {
 		}
 		query += "type = ?";
 		
-		String[] typeArray = (String[]) types.toArray();
+		String[] typeArray = (String[]) types.toArray(new String[0]);
 		
 		Cursor c = this.db.query(FEED_TABLE, null, query, typeArray, null, null, null, null);
 		if (c.moveToFirst()) {
