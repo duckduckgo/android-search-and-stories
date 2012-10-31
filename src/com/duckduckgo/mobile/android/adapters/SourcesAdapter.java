@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android.adapters;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -123,6 +125,15 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 
 	public void setList(List<SourcesObject> feed) {
 		this.clear();
+		
+		// alphabetical sort
+		Collections.sort(feed, new Comparator<SourcesObject>() {
+	        @Override public int compare(SourcesObject p1, SourcesObject p2) {
+	            return p1.getTitle().compareToIgnoreCase(p2.getTitle());
+	        }
+
+	    });
+		
 		for (SourcesObject next : feed) {
 			this.add(next);
 		}
