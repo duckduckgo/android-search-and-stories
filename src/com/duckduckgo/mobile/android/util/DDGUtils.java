@@ -3,25 +3,24 @@ package com.duckduckgo.mobile.android.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
-import com.duckduckgo.mobile.android.network.DDGHttpException;
-import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
-
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.PorterDuff.Mode;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
@@ -30,6 +29,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.network.DDGHttpException;
+import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 
 public final class DDGUtils {
 	public static boolean saveArray(SharedPreferences prefs, String[] array, String arrayName) {   
@@ -233,4 +237,34 @@ public final class DDGUtils {
 		  return output;
 
 		  }
+	  
+	  public static List<AppShortInfo> getInstalledComponents(Context context) {
+		  final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
+		  mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
+		  mainIntent.removeCategory(Intent.CATEGORY_TEST);
+		  final List<ResolveInfo> pkgAppsList = context.getPackageManager().queryIntentActivities( mainIntent, 0);		 
+		  
+		  ArrayList<AppShortInfo> labels = new ArrayList<AppShortInfo>();
+		  for(ResolveInfo rInfo : pkgAppsList) {
+				  String label = "";
+				  label += rInfo.loadLabel(context.getPackageManager());
+				  labels.add(new AppShortInfo(label, rInfo.activityInfo.packageName));
+		  }
+		  
+		  return labels;
+	  }
+	  
+	  public static void launchApp(Context context, String packageName) {
+			Intent mIntent = context.getPackageManager().getLaunchIntentForPackage(
+					packageName);
+			if (mIntent != null) {
+				try {
+					context.startActivity(mIntent);
+				} catch (ActivityNotFoundException err) {
+					Toast t = Toast.makeText(context,
+							R.string.ErrorAppNotFound, Toast.LENGTH_SHORT);
+					t.show();
+				}
+			}
+		}
 }

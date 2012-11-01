@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,9 +27,10 @@ import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
+import com.duckduckgo.mobile.android.util.AppShortInfo;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 
-public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements Filterable {
+public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> implements Filterable {
 	private final LayoutInflater inflater;
 	
 	protected final String TAG = "AutoCompleteResultsAdapter";
@@ -50,10 +52,10 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 	}
 	
 	@Override
-	public String getItem(int index) {
+	public SuggestObject getItem(int index) {
 		SuggestObject obj = getSuggestionObject(index);
 		if (obj != null) {
-			return obj.getPhrase();
+			return obj;
 		} else {
 			return null;
 		}
@@ -77,7 +79,13 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 		if (suggestion != null) {
 			holder.autoCompleteResult.setText(suggestion.getPhrase());
 			holder.autoCompleteDetail.setText(suggestion.getSnippet());
-			imageDownloader.download(suggestion.getImageUrl(), holder.autoCompleteImage, false);
+			Drawable acDrawable = suggestion.getDrawable();
+			if(acDrawable == null) {
+				imageDownloader.download(suggestion.getImageUrl(), holder.autoCompleteImage, false);
+			}
+			else {
+				holder.autoCompleteImage.setImageDrawable(acDrawable);
+			}
 		}
 		
 		return cv;
@@ -110,6 +118,19 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<String> implements 
 					//TODO: Check if this constraint is already in the cache
 										
 					JSONArray json = getJSONResultForConstraint(constraint);
+					
+					
+					// also search in apps
+					Context context = getContext();
+					ArrayList<AppShortInfo> appResults = DDGApplication.getDB().selectApps(constraint.toString());
+					if(appResults != null) {
+						for(AppShortInfo appInfo : appResults) {
+							SuggestObject item = new SuggestObject(appInfo.name, appInfo.packageName, context);
+							if (item != null) {
+								newResults.add(item);
+							}
+						}
+					}
 								
 					for (int i = 0; i < json.length(); i++) {
 						try {

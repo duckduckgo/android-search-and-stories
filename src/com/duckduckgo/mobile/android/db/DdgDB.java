@@ -10,26 +10,32 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.util.AppShortInfo;
 
 public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 4;
 	private static final String FEED_TABLE = "feed";
+	private static final String APP_TABLE = "apps";
 	
 	
 	private Context context;
 	private SQLiteDatabase db;
 
-	private SQLiteStatement insertStmt;
+	private SQLiteStatement insertStmt, insertStmtApp;
 	// private static final String INSERT = "insert or ignore into " + FEED_TABLE + " (id,title,description,feed,url,imageurl,favicon,timestamp,category,type) values (?,?,?,?,?,?,?,?,?,?)";
 	private static final String INSERT = "insert or replace into " + FEED_TABLE + " (id,title,description,feed,url,imageurl,favicon,timestamp,category,type) values (?,?,?,?,?,?,?,?,?,?)";
+	
+	private static final String APP_INSERT = "insert or replace into " + APP_TABLE + " (title,package) values (?,?)";
+
 	
 	public DdgDB(Context context) {
 	      this.context = context;
 	      OpenHelper openHelper = new OpenHelper(this.context);
 	      this.db = openHelper.getWritableDatabase();
 	      this.insertStmt = this.db.compileStatement(INSERT);
+	      this.insertStmtApp = this.db.compileStatement(APP_INSERT);
 	}
 	
 	public long insert(FeedObject e) {
@@ -45,6 +51,17 @@ public class DdgDB {
 	      this.insertStmt.bindString(10, e.getType());
 	      long result = this.insertStmt.executeInsert();
 	      return result;
+	}
+	
+	public long insertApp(AppShortInfo appInfo) {
+	      this.insertStmtApp.bindString(1, appInfo.name);
+	      this.insertStmtApp.bindString(2, appInfo.packageName);
+	      long result = this.insertStmtApp.executeInsert();
+	      return result;
+	}
+	
+	public void deleteApps() {
+	      this.db.delete(APP_TABLE, null, null);
 	}
 	
 //	public long update(FeedObject e) {
@@ -68,6 +85,24 @@ public class DdgDB {
 	private FeedObject getFeedObject(Cursor c) {
 		return new FeedObject(c.getString(0), c.getString(1), c.getString(2), c.getString(3),
 				c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9));
+	}
+	
+	private AppShortInfo getAppShortInfo(Cursor c) {
+		return new AppShortInfo(c.getString(0), c.getString(1));
+	}
+	
+	public ArrayList<AppShortInfo> selectApps(String title){
+		Cursor c = this.db.query(APP_TABLE, null, "title MATCH ?", new String[]{title+"*"} , null, null, null);
+		if(c.moveToFirst()) {
+			ArrayList<AppShortInfo> apps = new ArrayList<AppShortInfo>(20);
+			do {
+				apps.add(getAppShortInfo(c));
+			} while(c.moveToNext());
+
+			return apps;
+		}
+		
+		return null;
 	}
 	
 	public ArrayList<FeedObject> selectAll(){
@@ -185,12 +220,19 @@ public class DdgDB {
 		  			  
 		  			  db.execSQL("CREATE INDEX idx_id ON " + FEED_TABLE + " (id) ");
 		  			  db.execSQL("CREATE INDEX idx_idtype ON " + FEED_TABLE + " (id, type) ");
+		  			  
+		  			db.execSQL("CREATE VIRTUAL TABLE " + APP_TABLE + " USING FTS3 (" 
+			  			    +"title VARCHAR(300), "
+			  			    +"package VARCHAR(300) "
+			  			    +")"
+			  			    );
 
 		  	}
 	
 		  	@Override
 		  	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		  		db.execSQL("DROP TABLE IF EXISTS feed");
+		  		db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
+		  		db.execSQL("DROP TABLE IF EXISTS " + APP_TABLE);
 		  		onCreate(db);
 		  	}
 	}

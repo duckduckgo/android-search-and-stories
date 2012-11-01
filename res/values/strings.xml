@@ -54,5 +54,7 @@
         (IMPORTANT: Sensitive information such as your search query or browsed URL can be included.)</string>
     <string name="crash_dialog_comment_prompt">Your comment: </string>
     <string name="crash_dialog_ok_toast">Thank you for your help!</string>
+    
+    <string name="ErrorAppNotFound">App Not Found</string>
 
 </resources>

@@ -64,6 +64,7 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.SavedFeedTask;
@@ -71,6 +72,7 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
+import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.DDGWebView;
 import com.duckduckgo.mobile.android.views.FanView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
@@ -265,10 +267,17 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					hideKeyboard(searchField);
 					searchField.dismissDropDown();
 					
-					String text = (String)parent.getAdapter().getItem(position);
-					if (text != null) {
-						text.trim();
-						searchOrGoToUrl(text);
+					SuggestObject suggestObject = (SuggestObject)parent.getAdapter().getItem(position);
+					SuggestType suggestType = suggestObject.getType();
+					if (suggestObject != null) {
+						if(suggestType == SuggestType.TEXT) {
+							String text = suggestObject.getPhrase();
+							text.trim();
+							searchOrGoToUrl(text);
+						}
+						else if(suggestType == SuggestType.APP) {
+							DDGUtils.launchApp(DuckDuckGo.this, suggestObject.getSnippet());
+						}
 					}		
 				}
 				

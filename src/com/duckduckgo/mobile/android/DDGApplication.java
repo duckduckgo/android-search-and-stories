@@ -11,6 +11,7 @@ import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
+import com.duckduckgo.mobile.android.util.AppShortInfo;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
@@ -20,6 +21,7 @@ import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 @ReportsCrashes(formKey="",
 formUri = "https://caine.duckduckgo.com/crash.js",
@@ -64,6 +66,12 @@ public class DDGApplication extends Application {
 					DDGControlVar.readArticles.add(strId);
 				}
 			}
+		}
+		
+		db.deleteApps();		
+		for(AppShortInfo appInfo : DDGUtils.getInstalledComponents(this)) {
+			db.insertApp(appInfo);
+			Log.v("MAIN",appInfo.name + " " + appInfo.packageName);
 		}
      
 	}
