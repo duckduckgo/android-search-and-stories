@@ -202,7 +202,21 @@ public final class DDGUtils {
 
 		    // Finally, we create a new bitmap of the specified size and draw our new,
 		    // scaled bitmap onto it.
-		    Bitmap dest = Bitmap.createBitmap(newWidth, newHeight, source.getConfig());
+		    Bitmap dest = null;
+		    try {
+		    	dest = Bitmap.createBitmap(newWidth, newHeight, source.getConfig());
+		    }
+		    catch(Exception e){
+		    	Log.e("UTIL", e.getMessage());
+		    	Log.e("UTIL", newWidth + " " + newHeight);
+		    	Log.e("UTIL", "Source: " + source);
+		    	Log.e("UTIL", "Source: " + source.getConfig());
+		    	return null;
+		    }
+		    
+		    if(dest == null)
+		    	return null;
+		    
 		    Canvas canvas = new Canvas(dest);
 		    canvas.drawBitmap(source, null, targetRect, paint);
 
@@ -267,4 +281,13 @@ public final class DDGUtils {
 				}
 			}
 		}
+	  
+	  public static void shareWebPage(Context context, String title, String url) {
+		  Intent sendIntent = new Intent();
+			sendIntent.setAction(Intent.ACTION_SEND);
+			sendIntent.putExtra(Intent.EXTRA_TEXT, "WatrCoolr URL: "+ url);
+			sendIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+			sendIntent.setType("text/plain");
+			context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.send_to)));
+	  }
 }

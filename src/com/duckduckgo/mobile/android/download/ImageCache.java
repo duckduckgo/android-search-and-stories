@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import android.graphics.Bitmap;
 import android.os.Handler;
-import android.util.Log;
 
 //TODO: Do we want to add any file caching for any objects?
 

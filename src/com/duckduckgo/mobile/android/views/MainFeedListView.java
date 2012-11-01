@@ -11,22 +11,15 @@ import android.widget.AdapterView;
 public class MainFeedListView extends ListView implements android.widget.AdapterView.OnItemClickListener {
 
 	private OnMainFeedItemSelectedListener listener;
-	private OnMainFeedItemLongClickListener longClickListener;
-
 	
 	public MainFeedListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		this.setOnItemClickListener(this);
-//		this.setOnItemLongClickListener(this);
 	}
 	
 	public void setOnMainFeedItemSelectedListener(OnMainFeedItemSelectedListener listener) {
 		this.listener = listener;
-	}
-
-	public void setOnMainFeedItemLongClickListener(OnMainFeedItemLongClickListener longClickListener) {
-		this.longClickListener = longClickListener;
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

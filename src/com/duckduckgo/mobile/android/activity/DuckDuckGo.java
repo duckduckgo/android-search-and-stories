@@ -11,8 +11,10 @@ import java.util.Set;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -50,6 +52,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -71,6 +74,8 @@ import com.duckduckgo.mobile.android.tasks.SavedFeedTask;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.Item;
+import com.duckduckgo.mobile.android.util.Item.ItemType;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.DDGWebView;
@@ -99,6 +104,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private DDGWebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
+	private ImageButton shareButton = null;
 	private LinearLayout prefLayout = null;
 	private LinearLayout leftMainLayout = null;
 	
@@ -122,6 +128,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private final int CONTEXT_ITEM_SAVE = 0;
 	private final int CONTEXT_ITEM_UNSAVE = 1;
 	private final int CONTEXT_ITEM_SHARE = 2;
+	
+	Item[] shareDialogItems;
+	FeedObject currentFeedObject = null;
+	boolean isFeedObject = false;
 			
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -142,6 +152,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	savedState = true;
         
         sharedPreferences = DDGApplication.getSharedPreferences();
+        
+        ArrayList<Item> dialogItems = new ArrayList<Item>();
+        dialogItems.add(new Item(getResources().getString(R.string.Share), android.R.drawable.ic_menu_share, ItemType.SHARE));
+        dialogItems.add(new Item(getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE));
+
+        shareDialogItems = (Item []) dialogItems.toArray(new Item[dialogItems.size()]);
         
 		mDuckDuckGoContainer = (DuckDuckGoContainer) getLastNonConfigurationInstance();
     	if(mDuckDuckGoContainer == null){
@@ -253,6 +269,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         homeSettingsButton = (ImageButton) findViewById(R.id.settingsButton);
         homeSettingsButton.setOnClickListener(this);
+        
+        shareButton = (ImageButton) findViewById(R.id.shareButton);
+        shareButton.setOnClickListener(this);
         
         searchField = (AutoCompleteTextView) findViewById(R.id.searchEditText);
         searchField.setAdapter(new AutoCompleteResultsAdapter(this));
@@ -374,6 +393,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					fan.showMenu();
 				}
 				
+				// keep a reference, so that we can reuse details while saving
+				currentFeedObject = feedObject;
+				isFeedObject = true;
+				
 				String url = feedObject.getUrl();
 				if (url != null) {
 					searchOrGoToUrl(url);
@@ -460,7 +483,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	}
         	
         	public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        		super.onPageStarted(view, url, favicon);
+        		super.onPageStarted(view, url, favicon);        		
 
         		// Omnibar like behavior.
         		if (url.contains("duckduckgo.com")) {
@@ -575,6 +598,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             	HitTestResult hr = ((DDGWebView) v).getHitTestResult();
             	if(hr != null && hr.getExtra() != null) {            	
             		mDuckDuckGoContainer.allowInHistory = true; 
+            		isFeedObject = false;
             		Log.i(TAG, "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
             	}
                 	
@@ -803,15 +827,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void searchWebTerm(String term) {
-		if (!mDuckDuckGoContainer.webviewShowing) {
-			feedView.setVisibility(View.GONE);
-			eventLayout.setVisibility(View.GONE);
-			recentSearchView.setVisibility(View.GONE);
-			mainWebView.setVisibility(View.VISIBLE);
-			mDuckDuckGoContainer.webviewShowing = true;
-			mDuckDuckGoContainer.prefShowing = false;
-			prefLayout.setVisibility(View.GONE);
-		}
+		displayWebView();
 		
 		if(!savedState){
 			if(DDGControlVar.regionString == "wt-wt"){	// default
@@ -842,14 +858,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void showWebUrl(String url) {
-		if (!mDuckDuckGoContainer.webviewShowing) {
-			feedView.setVisibility(View.GONE);
-			eventLayout.setVisibility(View.GONE);
-			mainWebView.setVisibility(View.VISIBLE);
-			mDuckDuckGoContainer.webviewShowing = true;
-			mDuckDuckGoContainer.prefShowing = false;
-			prefLayout.setVisibility(View.GONE);
-		}
+		displayWebView();
 		
 		if(!savedState)
 			mainWebView.loadUrl(url);
@@ -903,6 +912,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void displayPreferences(){
 		feedView.setVisibility(View.GONE);
 		mainWebView.setVisibility(View.GONE);
+		shareButton.setVisibility(View.GONE);
 		recentSearchView.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.VISIBLE);
 		eventLayout.setVisibility(View.GONE);
@@ -919,6 +929,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		recentSearchView.setVisibility(View.GONE);
 		mainWebView.setVisibility(View.GONE);
+		shareButton.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
     	feedView.setVisibility(View.VISIBLE);
     	eventLayout.setVisibility(View.GONE);
@@ -937,6 +948,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		DDGControlVar.hasUpdatedFeed = false;
 		recentSearchView.setVisibility(View.GONE);
 		mainWebView.setVisibility(View.GONE);
+		shareButton.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
     	feedView.setVisibility(View.VISIBLE);
     	eventLayout.setVisibility(View.GONE);
@@ -952,6 +964,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	public void displayRecentSearch(){
 		mainWebView.setVisibility(View.GONE);
+		shareButton.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
 		feedView.setVisibility(View.GONE);
     	feedProgressBar.setVisibility(View.GONE);
@@ -964,6 +977,21 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
     	}
+	}
+	
+	public void displayWebView() {
+		if (!mDuckDuckGoContainer.webviewShowing) {
+			feedView.setVisibility(View.GONE);
+			eventLayout.setVisibility(View.GONE);
+			recentSearchView.setVisibility(View.GONE);
+			
+			shareButton.setVisibility(View.VISIBLE);
+			
+			mainWebView.setVisibility(View.VISIBLE);
+			mDuckDuckGoContainer.webviewShowing = true;
+			mDuckDuckGoContainer.prefShowing = false;
+			prefLayout.setVisibility(View.GONE);			
+		}
 	}
 	
 	public void hideKeyboard(View view) {
@@ -989,6 +1017,54 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				// going home
 				switchScreens();
 			}
+		}
+		else if (v.equals(shareButton)) {			
+			hideKeyboard(searchField);
+			
+			final ListAdapter adapter = new ArrayAdapter<Item>(
+					this,
+					android.R.layout.select_dialog_item,
+					android.R.id.text1,
+					shareDialogItems){
+				public View getView(int position, View convertView, android.view.ViewGroup parent) {
+					View v = super.getView(position, convertView, parent);
+					TextView tv = (TextView)v.findViewById(android.R.id.text1);
+					tv.setCompoundDrawablesWithIntrinsicBounds(shareDialogItems[position].icon, 0, 0, 0);
+
+					//Add 10dp margin between image and text (support various screen densities)
+					int dp10 = (int) (10 * getResources().getDisplayMetrics().density + 0.5f);
+					tv.setCompoundDrawablePadding(dp10);
+
+					return v;
+				}
+			};
+
+			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
+			ab.setTitle("Dialog Title");
+			ab.setAdapter(adapter, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					Item it = ((Item) adapter.getItem(item));
+					if(it.type == Item.ItemType.SHARE) {
+						String pageTitle = mainWebView.getTitle();
+						String pageUrl = mainWebView.getUrl();
+						
+						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+					}
+					else if(it.type == Item.ItemType.SAVE) {
+						if(isFeedObject) {
+							// browsing a feed item, we can save it as is
+							DDGApplication.getDB().insert(currentFeedObject);
+						}
+						else {
+							String pageTitle = mainWebView.getTitle();
+							String pageUrl = mainWebView.getUrl();
+//							Log.v(TAG,"insert regular page: " + pageTitle + " " + pageUrl);
+							DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl));
+						}
+					}
+				}
+			});
+			ab.show();
 		}
 		else if(v.equals(leftHomeTextView)){
 			fan.showMenu();
@@ -1119,12 +1195,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.feedAdapter.remove(feedObject);
        	}
     	else if(itemId==CONTEXT_ITEM_SHARE){
-			Intent sendIntent = new Intent();
-			sendIntent.setAction(Intent.ACTION_SEND);
-			sendIntent.putExtra(Intent.EXTRA_TEXT, "WatrCoolr URL: "+feedObject.getUrl());
-			sendIntent.putExtra(Intent.EXTRA_SUBJECT, feedObject.getTitle());
-			sendIntent.setType("text/plain");
-			startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
+    		DDGUtils.shareWebPage(DuckDuckGo.this, feedObject.getTitle(), feedObject.getUrl());
 			return true;
        	}
     	

@@ -12,7 +12,7 @@
         android:id="@+id/searchBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/background_light"
+        android:background="@drawable/topbar_background"
         android:paddingBottom="5dp"
         android:paddingTop="5dp" >
     
@@ -41,6 +41,15 @@
 			   	        	  android:inputType="textAutoComplete"
 			   	        	  android:hint="@string/SearchString"
 			   	        	  android:id="@+id/searchEditText" />
+   	    
+   	    <ImageButton android:layout_width="40dp"
+   	        		 android:layout_height="40dp"
+   	        		 android:scaleType="fitCenter"
+   	        		 android:layout_marginLeft="5dp"
+   	        		 android:id="@+id/shareButton"
+   	        		 android:background="@android:color/transparent"
+   	        		 android:visibility="gone"
+   	        		 android:src="@drawable/icon_share_selector" />
    	    		  
     </LinearLayout>
     
