@@ -23,6 +23,8 @@ import android.graphics.drawable.Drawable;
 import android.net.MailTo;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.Preference.OnPreferenceClickListener;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -276,6 +278,17 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         searchField = (AutoCompleteTextView) findViewById(R.id.searchEditText);
         searchField.setAdapter(new AutoCompleteResultsAdapter(this));
         searchField.setOnEditorActionListener(this);
+        
+        searchField.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// close left nav if it's open
+				if(fan.isOpen()){
+					fan.showMenu();
+				}				
+			}
+		});
 
         searchField.setOnItemClickListener(new OnItemClickListener() {
 
@@ -902,8 +915,19 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         if (mWorkFragment == null) {
             mWorkFragment = new DDGPreferenceFragment();
             mWorkFragment.setRetainInstance(true);
+            mWorkFragment.setCustomPreferenceClickListener(new OnPreferenceClickListener() {
+				
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					// close left nav if it's open
+					if(fan.isOpen()){
+						fan.showMenu();
+					}	
+					return false;
+				}
+			});
             fm.beginTransaction().replace(R.id.prefFragment,
-                    new DDGPreferenceFragment()).commit();  
+                    mWorkFragment).commit();  
         }
         
         displayPreferences();

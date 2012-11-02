@@ -9,6 +9,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
+import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +26,9 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 
 @TargetApi(11)
 public class DDGPreferenceFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
-
+	
+	OnPreferenceClickListener customListener = null;
+	
 	@TargetApi(11)
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -123,5 +126,18 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
         }
         
     }
+	
+	public void setCustomPreferenceClickListener(OnPreferenceClickListener listener) {
+		customListener = listener;		
+	}
+	
+	@Override
+	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen,
+			Preference preference) {
+		if(customListener != null) {
+			customListener.onPreferenceClick(preference);
+		}
+		return super.onPreferenceTreeClick(preferenceScreen, preference);
+	}
 	
 }
