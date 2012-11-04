@@ -29,6 +29,7 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.util.AppShortInfo;
 import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> implements Filterable {
 	private final LayoutInflater inflater;
@@ -121,13 +122,15 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 					
 					
 					// also search in apps
-					Context context = getContext();
-					ArrayList<AppShortInfo> appResults = DDGApplication.getDB().selectApps(constraint.toString());
-					if(appResults != null) {
-						for(AppShortInfo appInfo : appResults) {
-							SuggestObject item = new SuggestObject(appInfo.name, appInfo.packageName, context);
-							if (item != null) {
-								newResults.add(item);
+					if(DDGControlVar.includeAppsInSearch) {
+						Context context = getContext();
+						ArrayList<AppShortInfo> appResults = DDGApplication.getDB().selectApps(constraint.toString());
+						if(appResults != null) {
+							for(AppShortInfo appInfo : appResults) {
+								SuggestObject item = new SuggestObject(appInfo.name, appInfo.packageName, context);
+								if (item != null) {
+									newResults.add(item);
+								}
 							}
 						}
 					}

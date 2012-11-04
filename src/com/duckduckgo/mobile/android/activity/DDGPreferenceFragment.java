@@ -99,6 +99,9 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		else if(key.equals("regionPref")){
 			DDGControlVar.regionString = sharedPreferences.getString(key, "wt-wt");
 		}
+		else if(key.equals("appSearchPref")){
+			DDGControlVar.includeAppsInSearch = sharedPreferences.getBoolean(key, false);
+		}
 
 	}
 	

@@ -22,6 +22,10 @@
     android:entryValues="@array/regionValues">
 	</ListPreference>
 	<CheckBoxPreference 
+	android:title="@string/PrefAppSearch"
+	android:key="appSearchPref"
+	android:defaultValue="false" />
+	<CheckBoxPreference 
 	android:title="@string/PrefModifyQuery"
 	android:key="modifyQueryPref"
 	android:defaultValue="false" />	

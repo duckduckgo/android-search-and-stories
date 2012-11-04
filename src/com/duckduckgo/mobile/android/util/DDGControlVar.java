@@ -23,4 +23,6 @@ public class DDGControlVar {
 	public static Set<String> readArticles = new HashSet<String>(); 
 	
 	public static boolean homeScreenShowing = true;
+	
+	public static boolean includeAppsInSearch = false;
 }

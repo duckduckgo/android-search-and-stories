@@ -16,8 +16,9 @@
     <string name="PrefSources">Change sources</string>
     <string name="PrefResetSources">Reset sources to defaults</string>
     <string name="PrefRegion">Set region</string>
-    <string name="PrefModifyQuery">Modify suggested query</string>
+    <string name="PrefModifyQuery">Edit autocomplete result</string>
     <string name="PrefSendFeedback">Send Feedback</string>
+    <string name="PrefAppSearch">Include apps in search</string>
     <string name="PrefEnableAcra">Error reporting</string>
     <string name="PrefAcraDisabled">Reporting disabled</string>
     <string name="PrefAcraEnabled">Reporting enabled</string>
