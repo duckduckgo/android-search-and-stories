@@ -62,4 +62,9 @@ public class SuggestObject {
 	public SuggestType getType() {
 		return type;
 	}
+	
+	@Override
+	public String toString() {
+		return this.phrase;
+	}
 }
