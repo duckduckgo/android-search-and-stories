@@ -272,6 +272,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         homeSettingsButton = (ImageButton) findViewById(R.id.settingsButton);
         homeSettingsButton.setOnClickListener(this);
         
+        if(mDuckDuckGoContainer.webviewShowing) {
+        	homeSettingsButton.setImageResource(R.drawable.home_button);
+        }
+        
         shareButton = (ImageButton) findViewById(R.id.shareButton);
         shareButton.setOnClickListener(this);
         

@@ -28,13 +28,13 @@
    	    <FrameLayout
         android:layout_width="0dip"
 		android:layout_height="match_parent"
+		android:layout_marginRight="5dp"
+		android:layout_marginLeft="5dp"
  	    android:layout_weight="1"
         android:background="@android:color/white" >
    	    
    	    <AutoCompleteTextView android:layout_width="match_parent"
 			   	        	  android:layout_height="match_parent"
-			   	        	  android:layout_marginRight="5dp"
-			   	        	  android:layout_marginLeft="5dp"
 			   	        	  android:background="@drawable/searchfield"
 			   	        	  android:paddingLeft="5dp"
 			   	        	  android:singleLine="true"
