@@ -25,11 +25,16 @@
    	        		 android:background="@android:color/transparent"
    	        		 android:src="@drawable/menu_button" />
  
-   	    <AutoCompleteTextView android:layout_width="0dip"
+   	    <FrameLayout
+        android:layout_width="0dip"
+		android:layout_height="match_parent"
+ 	    android:layout_weight="1"
+        android:background="@android:color/white" >
+   	    
+   	    <AutoCompleteTextView android:layout_width="match_parent"
 			   	        	  android:layout_height="match_parent"
 			   	        	  android:layout_marginRight="5dp"
 			   	        	  android:layout_marginLeft="5dp"
-			   	        	  android:layout_weight="1"
 			   	        	  android:background="@drawable/searchfield"
 			   	        	  android:paddingLeft="5dp"
 			   	        	  android:singleLine="true"
@@ -42,10 +47,11 @@
 			   	        	  android:hint="@string/SearchString"
 			   	        	  android:id="@+id/searchEditText" />
    	    
+   	    </FrameLayout>
+   	    
    	    <ImageButton android:layout_width="40dp"
    	        		 android:layout_height="40dp"
    	        		 android:scaleType="centerInside"
-   	        		 android:layout_marginLeft="5dp"
    	        		 android:id="@+id/shareButton"
    	        		 android:background="@android:color/transparent"
    	        		 android:visibility="gone"
