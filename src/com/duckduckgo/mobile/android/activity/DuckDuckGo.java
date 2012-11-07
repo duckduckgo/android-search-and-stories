@@ -275,6 +275,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         shareButton = (ImageButton) findViewById(R.id.shareButton);
         shareButton.setOnClickListener(this);
         
+        // adjust visibility of share button after screen rotation
+        if(mDuckDuckGoContainer.webviewShowing) {
+        	shareButton.setVisibility(View.VISIBLE);
+        }
+        
         searchField = (AutoCompleteTextView) findViewById(R.id.searchEditText);
         searchField.setAdapter(new AutoCompleteResultsAdapter(this));
         searchField.setOnEditorActionListener(this);
@@ -1064,7 +1069,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			};
 
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle("Dialog Title");
+			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
 			ab.setAdapter(adapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
 					Item it = ((Item) adapter.getItem(item));

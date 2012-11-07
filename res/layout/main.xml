@@ -49,9 +49,9 @@
    	    
    	    </FrameLayout>
    	    
-   	    <ImageButton android:layout_width="40dp"
+   	    <ImageButton android:layout_width="30dp"
    	        		 android:layout_height="40dp"
-   	        		 android:scaleType="centerInside"
+   	        		 android:scaleType="fitCenter"
    	        		 android:id="@+id/shareButton"
    	        		 android:background="@android:color/transparent"
    	        		 android:visibility="gone"

@@ -46,6 +46,8 @@
     
     <string name="SavedFeedEmpty">There is no saved item yet!</string>
     
+    <string name="MoreMenuTitle">Page options</string>
+    
     <string name="crash_toast_text">Application crashed! Crash-related data will be collected and reported upon confirmation.</string>
     <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
     <string name="crash_notif_title">DuckDuckGo crash report</string>
