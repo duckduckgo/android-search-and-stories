@@ -7,8 +7,10 @@ import java.util.List;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -71,7 +73,30 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			
 			holder.imageViewFeedIcon.setType(feedType);	// stored source id in imageview
 			holder.imageViewFeedIcon.setOnClickListener(sourceClickListener);
-
+			
+			final View iconParent = (View) cv.findViewById(R.id.feedWrapper);
+			iconParent.post(new Runnable() {
+	            public void run() {
+	                // Post in the parent's message queue to make sure the parent
+	                // lays out its children before we call getHitRect()
+	                Rect delegateArea = new Rect();
+	                AsyncImageView delegate = holder.imageViewFeedIcon;
+	                delegate.getHitRect(delegateArea);
+	                delegateArea.top = 0;
+	                delegateArea.bottom = iconParent.getBottom();
+	                delegateArea.left = 0;
+	                // right side limit also considers the space that is available from TextView, without text displayed
+	                // in TextView padding area on the left
+	                delegateArea.right = holder.textViewTitle.getLeft() + holder.textViewTitle.getPaddingLeft();
+	                TouchDelegate expandedArea = new TouchDelegate(delegateArea,
+	                        delegate);
+	                // give the delegate to an ancestor of the view we're delegating the area to
+	                if (View.class.isInstance(delegate.getParent())) {
+	                    ((View) delegate.getParent())
+	                            .setTouchDelegate(expandedArea);
+	                }
+	            };
+	        });
 
 			//Set the Title
 			holder.textViewTitle.setText(feed.getTitle());
