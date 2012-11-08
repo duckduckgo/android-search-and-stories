@@ -25,6 +25,9 @@
     
     <string name="send_to">sharin\' stuff.</string>
     
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    
     <string name="MainFeedContextTitle">sharin\' stuff.</string>
     <string name="Save">Save</string>
     <string name="Unsave">Unsave</string>
@@ -47,6 +50,9 @@
     <string name="SavedFeedEmpty">There is no saved item yet!</string>
     
     <string name="MoreMenuTitle">Page options</string>
+    
+    <string name="OpenInExternalBrowser">Open in external browser</string>
+    <string name="ConfirmExternalBrowser">Please confirm</string>
     
     <string name="crash_toast_text">Application crashed! Crash-related data will be collected and reported upon confirmation.</string>
     <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>

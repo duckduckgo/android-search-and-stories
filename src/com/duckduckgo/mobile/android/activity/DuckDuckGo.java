@@ -21,6 +21,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.MailTo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -36,6 +37,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
@@ -613,19 +615,51 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	}
         });
         
-       mainWebView.setExtraTouchListener(new View.OnTouchListener() {
-            
-            public boolean onTouch(View v, MotionEvent event) {
-            	
-            	HitTestResult hr = ((DDGWebView) v).getHitTestResult();
-            	if(hr != null && hr.getExtra() != null) {            	
-            		mDuckDuckGoContainer.allowInHistory = true; 
-            		isFeedObject = false;
-            		Log.i(TAG, "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
-            	}
-                	
-                return false;
-            }
+        mainWebView.setExtraTouchListener(new View.OnTouchListener() {
+
+        	public boolean onTouch(View v, MotionEvent event) {
+
+        		HitTestResult hr = ((DDGWebView) v).getHitTestResult();
+        		if(hr != null && hr.getExtra() != null) {            	
+        			mDuckDuckGoContainer.allowInHistory = true; 
+        			isFeedObject = false;
+        			Log.i(TAG, "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
+        		}
+
+        		return false;
+        	}
+        });
+
+        mainWebView.setOnLongClickListener(new OnLongClickListener() {
+
+        	@Override
+        	public boolean onLongClick(View v) {
+        		HitTestResult hr = ((DDGWebView) v).getHitTestResult();
+        		if(hr != null && hr.getExtra() != null) {
+        			Log.i(TAG, "LONG getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
+        			final String touchedUrl = hr.getExtra();
+        			
+        			AlertDialog dialog = new AlertDialog.Builder(DuckDuckGo.this).create();
+        	        dialog.setTitle(getResources().getString(R.string.OpenInExternalBrowser));
+        	        dialog.setMessage(getResources().getString(R.string.ConfirmExternalBrowser));
+        	        dialog.setCancelable(false);
+        	        dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.Yes), new DialogInterface.OnClickListener() {
+        	            public void onClick(DialogInterface dialog, int buttonId) {
+        	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(touchedUrl));
+        	            	startActivity(browserIntent);
+        	            }
+        	        });
+        	        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.No), new DialogInterface.OnClickListener() {
+        	            public void onClick(DialogInterface dialog, int buttonId) {
+        	                dialog.dismiss();
+        	            }
+        	        });
+        	        dialog.setIcon(android.R.drawable.ic_dialog_info);
+        	        dialog.show();
+        		}
+
+        		return false;
+        	}
         });
         
         feedProgressBar = (ProgressBar) findViewById(R.id.feedLoadingProgress);

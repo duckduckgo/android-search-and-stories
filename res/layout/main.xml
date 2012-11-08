@@ -42,6 +42,7 @@
 			   	        	  android:dropDownWidth="match_parent"
 			   	        	  android:dropDownAnchor="@+id/searchBar"
 			   	        	  android:dropDownHorizontalOffset="0dp"
+			   	        	  android:dropDownVerticalOffset="1dp"
 			   	        	  android:completionThreshold="1"
 			   	        	  android:inputType="textAutoComplete"
 			   	        	  android:hint="@string/SearchString"
