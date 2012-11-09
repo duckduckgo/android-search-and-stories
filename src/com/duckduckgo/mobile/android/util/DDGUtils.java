@@ -202,16 +202,17 @@ public final class DDGUtils {
 
 		    // Finally, we create a new bitmap of the specified size and draw our new,
 		    // scaled bitmap onto it.
-		    // FIXME fix the NPE here in scaleCenterCrop
 		    Bitmap dest = null;
+		    Bitmap.Config destConfig = source.getConfig();
+		    if(destConfig == null) {
+		    	destConfig = Bitmap.Config.ARGB_8888;
+		    }
+ 
 		    try {
-		    	dest = Bitmap.createBitmap(newWidth, newHeight, source.getConfig());
+		    	// just in case illegal arguments (width, height) arrive
+		    	dest = Bitmap.createBitmap(newWidth, newHeight, destConfig);
 		    }
 		    catch(Exception e){
-		    	Log.e("UTIL", e.getMessage());
-		    	Log.e("UTIL", newWidth + " " + newHeight);
-		    	Log.e("UTIL", "Source: " + source);
-		    	Log.e("UTIL", "Source: " + source.getConfig());
 		    	return null;
 		    }
 		    
