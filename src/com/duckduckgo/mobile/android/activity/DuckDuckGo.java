@@ -70,6 +70,7 @@ import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.listener.FeedListener;
+import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
@@ -501,7 +502,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
                         return true;
         			}
         			else {	
-        				view.loadUrl(url);
+        				view.loadUrl(url, DDGNetworkConstants.extraHeaders);
         			}        			
         		}
         		return true;
@@ -918,7 +919,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		displayWebView();
 		
 		if(!savedState)
-			mainWebView.loadUrl(url);
+			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
 	}
 
 	public void onFeedRetrieved(List<FeedObject> feed) {

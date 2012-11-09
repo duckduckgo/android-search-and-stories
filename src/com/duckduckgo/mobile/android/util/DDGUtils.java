@@ -202,6 +202,7 @@ public final class DDGUtils {
 
 		    // Finally, we create a new bitmap of the specified size and draw our new,
 		    // scaled bitmap onto it.
+		    // FIXME fix the NPE here in scaleCenterCrop
 		    Bitmap dest = null;
 		    try {
 		    	dest = Bitmap.createBitmap(newWidth, newHeight, source.getConfig());
@@ -230,6 +231,10 @@ public final class DDGUtils {
 		  paint.setAntiAlias(true);
       
           Bitmap targetBitmap = scaleCenterCrop(bitmap, targetWidth, targetHeight);
+          if(targetBitmap == null) {
+        	// the case when scaleCenterCrop fails
+        	  return null;
+          }
 		  
           // round
 		  

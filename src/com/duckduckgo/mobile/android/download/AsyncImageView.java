@@ -88,7 +88,14 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 		    layoutWidth = layoutParams.width;	
 		    layoutHeight = layoutParams.height;
 		    
-			setImageBitmap(DDGUtils.getRoundedCornerImage(bitmap, cornerRadius, layoutWidth, layoutHeight));
+		    Bitmap roundedImage = DDGUtils.getRoundedCornerImage(bitmap, cornerRadius, layoutWidth, layoutHeight);
+		    if(roundedImage != null) {
+		    	setImageBitmap(roundedImage);
+		    }
+		    else {
+		    	// TODO take a look at scaleCenterCrop method to fix this failure
+		    	setDefault();
+		    }
 			return;
 		}
 		

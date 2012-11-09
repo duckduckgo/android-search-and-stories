@@ -1,5 +1,8 @@
 package com.duckduckgo.mobile.android.network;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.conn.params.ConnManagerParams;
 import ch.boye.httpclientandroidlib.conn.params.ConnPerRouteBean;
@@ -11,6 +14,8 @@ public class DDGNetworkConstants {
 	public static DDGHttpClient mainClient = null;
 	private static ClientConnectionManager mainConnManager = null;
     private static HttpParams httpParams = new BasicHttpParams();
+    
+    public static Map<String, String> extraHeaders = new HashMap<String, String>();
 	
 	public static void initialize(){
 		// Create and initialize HTTP parameters
@@ -24,6 +29,10 @@ public class DDGNetworkConstants {
         // be using the HttpClient.
         mainConnManager = new ThreadSafeClientConnManager();
         mainClient = new DDGHttpClient(mainConnManager, httpParams);
+        
+        
+        // initialize referrer headers to use with WebView
+        extraHeaders.put("Referer", "http://www.google.com/");
 	}
 	
 	public static DDGHttpClient getNewClient(){
