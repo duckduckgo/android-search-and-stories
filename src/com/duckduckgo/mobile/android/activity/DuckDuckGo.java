@@ -86,6 +86,7 @@ import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.DDGWebView;
 import com.duckduckgo.mobile.android.views.FanView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
+import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView.OnRecentSearchItemSelectedListener;
@@ -102,6 +103,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private RecentSearchListView leftRecentView = null;
 	
 	ArrayAdapter<String> lRecentAdapter;
+	ListAdapter contextAdapter;
 	
 	private FanView fan;
 	
@@ -219,6 +221,24 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.sourceIconTask = null;    		
     		
     	}
+    	
+		contextAdapter = new ArrayAdapter<Item>(
+				this,
+				android.R.layout.select_dialog_item,
+				android.R.id.text1,
+				shareDialogItems){
+			public View getView(int position, View convertView, android.view.ViewGroup parent) {
+				View v = super.getView(position, convertView, parent);
+				TextView tv = (TextView)v.findViewById(android.R.id.text1);
+				tv.setCompoundDrawablesWithIntrinsicBounds(shareDialogItems[position].icon, 0, 0, 0);
+
+				//Add 10dp margin between image and text (support various screen densities)
+				int dp10 = (int) (10 * getResources().getDisplayMetrics().density + 0.5f);
+				tv.setCompoundDrawablePadding(dp10);
+
+				return v;
+			}
+		};
     	
     	leftMainLayout = (LinearLayout) findViewById(R.id.LeftMainLayout);
     	
@@ -436,16 +456,34 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				}
 			}
         });
-//        feedView.setOnMainFeedItemLongClickListener(new OnMainFeedItemLongClickListener() {
-//			public void onMainFeedItemLongClick(FeedObject feedObject) {
-//				Intent sendIntent = new Intent();
-//				sendIntent.setAction(Intent.ACTION_SEND);
-//				sendIntent.putExtra(Intent.EXTRA_TEXT, "WatrCoolr URL: "+feedObject.getUrl());
-//				sendIntent.putExtra(Intent.EXTRA_SUBJECT, feedObject.getTitle());
-//				sendIntent.setType("text/plain");
-//				startActivity(Intent.createChooser(sendIntent, getResources().getText(R.string.send_to)));
-//			}
-//        });
+        feedView.setOnMainFeedItemLongClickListener(new OnMainFeedItemLongClickListener() {
+			public void onMainFeedItemLongClick(FeedObject feedObject) {
+				final String pageTitle = feedObject.getTitle();
+				final String pageUrl = feedObject.getUrl();
+				final FeedObject fObject = feedObject;
+				
+				// FIXME unify this code as one, extend DialogInterface.OnClickListener
+				// to initialize with pageTitle, pageUrl and feedObject
+				AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
+				ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
+				ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						Item it = ((Item) contextAdapter.getItem(item));
+						if(it.type == Item.ItemType.SHARE) {
+							DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+						}
+						else if(it.type == Item.ItemType.SAVE) {
+							DDGApplication.getDB().insert(fObject);
+						}
+						else if(it.type == Item.ItemType.EXTERNAL) {
+	    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
+	    	            	startActivity(browserIntent);
+						}
+					}
+				});
+				ab.show();
+			}
+        });
         feedView.setOnScrollListener(new OnScrollListener() {
 			
         	int firstVisibleItem;
@@ -1089,30 +1127,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		else if (v.equals(shareButton)) {			
 			hideKeyboard(searchField);
-			
-			final ListAdapter adapter = new ArrayAdapter<Item>(
-					this,
-					android.R.layout.select_dialog_item,
-					android.R.id.text1,
-					shareDialogItems){
-				public View getView(int position, View convertView, android.view.ViewGroup parent) {
-					View v = super.getView(position, convertView, parent);
-					TextView tv = (TextView)v.findViewById(android.R.id.text1);
-					tv.setCompoundDrawablesWithIntrinsicBounds(shareDialogItems[position].icon, 0, 0, 0);
-
-					//Add 10dp margin between image and text (support various screen densities)
-					int dp10 = (int) (10 * getResources().getDisplayMetrics().density + 0.5f);
-					tv.setCompoundDrawablePadding(dp10);
-
-					return v;
-				}
-			};
 
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
 			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
-			ab.setAdapter(adapter, new DialogInterface.OnClickListener() {
+			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					Item it = ((Item) adapter.getItem(item));
+					Item it = ((Item) contextAdapter.getItem(item));
 					if(it.type == Item.ItemType.SHARE) {
 						String pageTitle = mainWebView.getTitle();
 						String pageUrl = mainWebView.getUrl();
@@ -1238,41 +1258,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mDuckDuckGoContainer.mainFeedTask.execute();
 			}
 		}
-	}
-
-    public void onCreateContextMenu(ContextMenu menu, View v,ContextMenuInfo menuInfo) {
-		super.onCreateContextMenu(menu, v, menuInfo);
-		menu.setHeaderTitle(getResources().getString(R.string.MainFeedContextTitle));
-		if(mDuckDuckGoContainer.savedFeedShowing) {
-			menu.add(0, CONTEXT_ITEM_UNSAVE, 0, getResources().getString(R.string.Unsave));
-		}
-		else {
-			menu.add(0, CONTEXT_ITEM_SAVE, 0, getResources().getString(R.string.Save));
-		}
-		menu.add(0, CONTEXT_ITEM_SHARE, 1, getResources().getString(R.string.Share));
-	}
-    
-	@Override
-	public boolean onContextItemSelected(MenuItem item) {	   	
-		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-		long itemId = item.getItemId();
-		int itemPosition = info.position;
-		
-		FeedObject feedObject = (FeedObject) feedView.getItemAtPosition(itemPosition);
-    	
-    	if(itemId==CONTEXT_ITEM_SAVE){
-    		DDGApplication.getDB().insert(feedObject);
-       	}
-    	else if(itemId==CONTEXT_ITEM_UNSAVE){
-    		DDGApplication.getDB().deleteById(feedObject.getId());
-    		mDuckDuckGoContainer.feedAdapter.remove(feedObject);
-       	}
-    	else if(itemId==CONTEXT_ITEM_SHARE){
-    		DDGUtils.shareWebPage(DuckDuckGo.this, feedObject.getTitle(), feedObject.getUrl());
-			return true;
-       	}
-    	
-    	return false;
 	}
     
 }
