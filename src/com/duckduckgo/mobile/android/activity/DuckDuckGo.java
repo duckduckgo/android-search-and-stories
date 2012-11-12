@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.MailTo;
 import android.net.Uri;
@@ -55,6 +57,7 @@ import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Filter.FilterListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -140,6 +143,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	Item[] shareDialogItems;
 	FeedObject currentFeedObject = null;
 	boolean isFeedObject = false;
+	
+	
+	// for keeping filter source at same position
+	String m_objectId = null;
+	int m_itemHeight;
+	int m_yOffset;
+	
 			
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -198,10 +208,22 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 						
 						DDGControlVar.hasUpdatedFeed = false;
 						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
-						mDuckDuckGoContainer.mainFeedTask.execute();						
+						mDuckDuckGoContainer.mainFeedTask.execute();
 					}
 					else {
 					
+						View itemParent = (View) v.getParent().getParent();
+						int pos = feedView.getPositionForView(itemParent);
+						m_objectId = ((FeedObject) feedView.getItemAtPosition(pos)).getId();
+						m_itemHeight = itemParent.getHeight();
+						Log.v(TAG, "POS " + pos);
+						
+						Rect r = new Rect();
+						Point offset = new Point();
+						feedView.getChildVisibleRect(itemParent, r, offset);						
+						m_yOffset = offset.y; 
+						Log.v(TAG,"OFFSET " + offset.y);
+						
 						String sourceType = ((AsyncImageView) v).getType(); 
 						DDGControlVar.targetSource = sourceType;
 						
@@ -974,6 +996,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mDuckDuckGoContainer.feedAdapter.setList(feed);
 		mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
 		DDGControlVar.hasUpdatedFeed = true;
+		
+		// do this upon filter completion
+		if(DDGControlVar.targetSource != null && m_objectId != null) {
+			int nPos = feedView.getSelectionPosById(m_objectId);
+			Log.v(TAG, "nPOS " + nPos);
+			feedView.smoothScrollToPositionFromTop(nPos, m_yOffset);
+		}
 	}
 	
 	public void onFeedRetrievalFailed() {

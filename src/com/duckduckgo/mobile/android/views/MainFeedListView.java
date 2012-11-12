@@ -57,4 +57,29 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		public void onMainFeedItemLongClick(FeedObject feedObject);
 	}
 
+	public void setSelectionById(String id) {
+		int itemCount = getCount();
+		for(int i=0; i < itemCount ; ++i) {
+			if(((FeedObject) getItemAtPosition(i)).getId().equals(id)) {
+				setSelection(i);
+				break;
+			}
+		}
+	}
+	
+	/**
+	 * Find the item given by its ID and return its position in the list
+	 * @param id item ID
+	 * @return item position in the list
+	 */
+	public int getSelectionPosById(String id) {
+		int itemCount = getCount();
+		for(int i=0; i < itemCount ; ++i) {
+			if(((FeedObject) getItemAtPosition(i)).getId().equals(id)) {
+				return i;
+			}
+		}
+		
+		return -1;
+	}
 }
