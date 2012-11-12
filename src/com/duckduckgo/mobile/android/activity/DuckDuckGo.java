@@ -13,6 +13,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
+import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -705,7 +706,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         feedProgressBar = (ProgressBar) findViewById(R.id.feedLoadingProgress);
         
         prefLayout = (LinearLayout) findViewById(R.id.prefLayout);
-        
+		
     }
 	
 	private View buildLabel(String text) {
@@ -767,22 +768,34 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	@Override
 	public void onResume() {
 		super.onResume();
-
-		mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(getApplicationContext(), DDGApplication.getImageCache());
-		mDuckDuckGoContainer.sourceIconTask.execute();
 		
-		if(mDuckDuckGoContainer.webviewShowing){
-				feedView.setVisibility(View.GONE);
-				eventLayout.setVisibility(View.GONE);
-				mainWebView.setVisibility(View.VISIBLE);
-		}	
-		else if(!mDuckDuckGoContainer.prefShowing){
-			switchScreens();
+		// global search intent
+        Intent intent = getIntent(); 
+        
+		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			String query = intent.getStringExtra(SearchManager.QUERY);
+			searchField.setText(query);
+			searchWebTerm(query);
 		}
+		else {
+			// not executed on global search for quick response
+			mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(getApplicationContext(), DDGApplication.getImageCache());
+			mDuckDuckGoContainer.sourceIconTask.execute();
 		
-		if(getIntent().getBooleanExtra("widget", false)) {
-			searchField.requestFocus();
-			showKeyboard(searchField);
+			if(mDuckDuckGoContainer.webviewShowing){
+					feedView.setVisibility(View.GONE);
+					eventLayout.setVisibility(View.GONE);
+					mainWebView.setVisibility(View.VISIBLE);
+			}	
+			else if(!mDuckDuckGoContainer.prefShowing){
+				switchScreens();
+			}
+			
+			if(intent.getBooleanExtra("widget", false)) {
+				searchField.requestFocus();
+				showKeyboard(searchField);
+			}
+		
 		}
 		
 	}

@@ -67,11 +67,13 @@ public class DDGApplication extends Application {
 			}
 		}
 		
-		db.deleteApps();		
-		for(AppShortInfo appInfo : DDGUtils.getInstalledComponents(this)) {
-			db.insertApp(appInfo);
-//			Log.v("MAIN",appInfo.name + " " + appInfo.packageName);
-		}
+		// FIXME resetting installed apps in DB leads to slow start-up
+		
+//		db.deleteApps();		
+//		for(AppShortInfo appInfo : DDGUtils.getInstalledComponents(this)) {
+//			db.insertApp(appInfo);
+////			Log.v("MAIN",appInfo.name + " " + appInfo.packageName);
+//		}
      
 	}
 	

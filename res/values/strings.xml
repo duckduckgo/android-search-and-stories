@@ -5,6 +5,8 @@
     <string name="SettingsButtonContentDescription">Settings</string>
     <string name="HomeButtonContentDescription">Home</string>
     
+    <string name="search_hint">Search...</string>
+    
     <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Privacy</string>
     <string name="PrefGroupFeedback">Feedback</string>
