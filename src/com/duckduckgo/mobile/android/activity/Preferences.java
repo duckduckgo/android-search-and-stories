@@ -28,6 +28,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -77,6 +78,17 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 				Intent intent = DDGUtils.newEmailIntent(context.getResources().getString(R.string.FeedbackTo), 
 						context.getResources().getString(R.string.FeedbackSubject), DDGUtils.getBuildInfo(context), "");
 		        startActivity(Intent.createChooser(intent, "Select application to send"));
+				return true;
+			}
+		});
+		
+		Preference ratePref = (Preference) findPreference("ratePref");
+		ratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			public boolean onPreferenceClick(Preference preference) {
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				intent.setData(Uri.parse("market://details?id=com.duckduckgo.mobile.android"));
+				startActivity(intent);
 				return true;
 			}
 		});

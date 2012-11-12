@@ -45,6 +45,10 @@
 	android:title="@string/PrefSendFeedback"
 	android:key="sendFeedbackPref"
 	android:defaultValue="" />
+	<Preference 
+	android:title="@string/PrefRate"
+	android:key="ratePref"
+	android:defaultValue="" />
 	<CheckBoxPreference android:key="acra.enable"
     android:title="@string/PrefEnableAcra"
     android:summaryOn="@string/PrefAcraEnabled"
