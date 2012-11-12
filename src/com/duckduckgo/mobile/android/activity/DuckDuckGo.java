@@ -288,7 +288,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			public void onRecentSearchItemSelected(String recentQuery) {
 				fan.showMenu();
 				
-				if(recentQuery != null){
+				if(recentQuery != null){				
 					searchWebTerm(recentQuery);
 				}				
 			}
@@ -904,12 +904,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					e.printStackTrace();
 					searchAsUrl = null;
 				}
-			}
-
-			
-			// definitely loading something in the browser - set home icon before we go
-			DDGControlVar.homeScreenShowing = false;
-			homeSettingsButton.setImageResource(R.drawable.home_button);
+			}			
 			
 			//We use the . check to determine if this is a single word or not... 
 			//if it doesn't contain a . plus domain (2 more characters) it won't be a URL, even if it's valid, like http://test
@@ -1100,6 +1095,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displayWebView() {
+		// loading something in the browser - set home icon
+		DDGControlVar.homeScreenShowing = false;
+		homeSettingsButton.setImageResource(R.drawable.home_button);	
+		
 		if (!mDuckDuckGoContainer.webviewShowing) {
 			feedView.setVisibility(View.GONE);
 			eventLayout.setVisibility(View.GONE);
