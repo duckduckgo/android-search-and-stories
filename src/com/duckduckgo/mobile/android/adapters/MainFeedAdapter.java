@@ -14,6 +14,9 @@ import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
@@ -36,6 +39,10 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	
 	public OnClickListener sourceClickListener;
 	
+	private int markedItem = -1;
+	
+	private AlphaAnimation blinkanimation = null;
+	
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
 	protected final ImageDownloader imageDownloader;
 				
@@ -44,6 +51,13 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		imageDownloader = DDGApplication.getImageDownloader();
 		this.sourceClickListener = sourceClickListener;
+		
+		// animation to use for blinking cue
+		blinkanimation = new AlphaAnimation(1, 0.3f);
+		blinkanimation.setDuration(300);
+		blinkanimation.setInterpolator(new LinearInterpolator());
+		blinkanimation.setRepeatCount(2);
+		blinkanimation.setRepeatMode(Animation.REVERSE);
 	}
 	
 	@Override
@@ -136,6 +150,13 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 				imageDownloader.download(null, holder.imageViewFeedIcon, scrolling);
 			}
 		}
+		
+		if(position == markedItem && cv != null) {			
+			cv.startAnimation(blinkanimation);
+			
+			// only blink once
+			unmark();
+		}
 
 		return cv;
 	}
@@ -146,6 +167,18 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		for (FeedObject next : feed) {
 			this.add(next);
 		}
+	}
+	
+	/**
+	 * Mark a list item position to be blinked
+	 * @param itemPos
+	 */
+	public void mark(int itemPos) {
+		markedItem = itemPos;
+	}
+	
+	public void unmark() {
+		markedItem = -1;
 	}
 
 }

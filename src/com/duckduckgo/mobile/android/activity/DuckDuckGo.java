@@ -39,11 +39,15 @@ import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -1002,6 +1006,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			int nPos = feedView.getSelectionPosById(m_objectId);
 			Log.v(TAG, "nPOS " + nPos);
 			feedView.smoothScrollToPositionFromTop(nPos, m_yOffset);
+			
+			// mark for blink animation (as a visual cue after list update)
+			mDuckDuckGoContainer.feedAdapter.mark(nPos);
 		}
 	}
 	
