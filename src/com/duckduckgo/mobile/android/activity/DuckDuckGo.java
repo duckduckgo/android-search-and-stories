@@ -8,6 +8,8 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Semaphore;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -76,6 +78,7 @@ import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.download.DownloadableImage;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
@@ -527,7 +530,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		Holder holder;
         		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
         				mDuckDuckGoContainer.feedAdapter.scrolling = false;
-        				int count = view.getChildCount();
+        				final int count = view.getChildCount();        				        				
+        				
         				for(int i=0;i<count;++i){
         					View cv = view.getChildAt(i);
         					holder = (Holder) cv.getTag();
@@ -535,9 +539,22 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         						mDuckDuckGoContainer.feedAdapter.getView(firstVisibleItem+i, cv, view);
         					}
         				}
+        				
+        				// cache prev/next 3 images
+        				Runnable r = new Runnable() {
+							
+							@Override
+							public void run() {
+								DDGApplication.getImageDownloader().clearQueueDownloads();
+								cachePrevNextImages(3);
+							}
+						};
+						r.run();
         	    }
         		else {
-        			mDuckDuckGoContainer.feedAdapter.scrolling = true;
+        			mDuckDuckGoContainer.feedAdapter.scrolling = true;        			
+        			// clear all downloads related with visible views
+        			DDGApplication.getImageDownloader().clearQueueDownloads();
         			DDGApplication.getImageDownloader().clearAllDownloads();
         		}
         		
@@ -734,6 +751,25 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         prefLayout = (LinearLayout) findViewById(R.id.prefLayout);
 		
     }
+	
+	/**
+	 * Cache previous/next N images
+	 */
+	private void cachePrevNextImages(int nImages) {
+		// download/cache invisible feed items from -2 to +2 
+		int lastPos = feedView.getLastVisiblePosition();
+		ArrayList<String> imageUrls = new ArrayList<String>();
+		int startIndex = feedView.getFirstVisiblePosition() - nImages;
+		int endIndex = lastPos + nImages;
+		int totalCount = mDuckDuckGoContainer.feedAdapter.getCount();
+		startIndex = (startIndex > 0) ? startIndex : 0;
+		endIndex = (endIndex < totalCount) ? endIndex : (totalCount-1);
+		for(int i=startIndex;i<=endIndex;++i) {
+			imageUrls.add(mDuckDuckGoContainer.feedAdapter.getItem(i).getImageUrl());
+		}
+		
+		DDGApplication.getImageDownloader().queueUrls(imageUrls);
+	}
 	
 	private View buildLabel(String text) {
 		    TextView result=new TextView(this);

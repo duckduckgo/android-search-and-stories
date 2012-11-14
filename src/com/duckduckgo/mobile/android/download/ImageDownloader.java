@@ -1,14 +1,23 @@
 package com.duckduckgo.mobile.android.download;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Executor;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import android.graphics.Bitmap;
 import android.util.Log;
+
+import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 //TODO: Any way we can limit the number of simultaneous downloads? Do we need to?
 //TODO: Any way we can find out that multiple objects are attempting to get the same item?
@@ -20,9 +29,31 @@ public class ImageDownloader {
 	private final ImageCache cache;
 	
     private Map<DownloadableImage, String> imageViews=Collections.synchronizedMap(new WeakHashMap<DownloadableImage, String>());
+    
+    private Executor executor;
+    
+    private static final int CORE_POOL_SIZE = 2;
+    private static final int MAXIMUM_POOL_SIZE = 128;
+    private static final int KEEP_ALIVE = 1;
+    
+    private ArrayList<DownloadBitmapTask> queuedTasks;
+    
+    private static final BlockingQueue<Runnable> sPoolWorkQueue =
+            new LinkedBlockingQueue<Runnable>(10);
+    
+    private static final ThreadFactory sThreadFactory = new ThreadFactory() {
+        private final AtomicInteger mCount = new AtomicInteger(1);
+
+        public Thread newThread(Runnable r) {
+            return new Thread(r, "AsyncTask #" + mCount.getAndIncrement());
+        }
+    };
 	
 	public ImageDownloader(ImageCache cache) {
 		this.cache = cache;
+		this.executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
+			                    TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
+		this.queuedTasks = new ArrayList<DownloadBitmapTask>(6);
 	}
 	
     boolean imageViewReused(DownloadableImage image, String url){
@@ -37,7 +68,7 @@ public class ImageDownloader {
 		if (url == null || url.length() == 0) {
 			//Cancel anything downloading, set the image to default, and return
 			cancelPreviousDownload(url, image);
-			image.setDefault();
+			image.setDefault();			
 			return;
 
 		}
@@ -122,6 +153,21 @@ public class ImageDownloader {
 		
 		for(DownloadableImage image : removeList){
 			imageViews.remove(image);
+		}
+	}
+	
+	// queue all downloads as background downloads
+	public void queueUrls(final ArrayList<String> imageUrls) {	
+				
+		for(String url : imageUrls) {
+			DownloadBitmapTask task = new DownloadBitmapTask(null, cache);
+			task.executeOnExecutor(this.executor, url);
+		}		
+	}
+	
+	public void clearQueueDownloads() {
+		for(DownloadBitmapTask task : queuedTasks) {
+			task.cancel(true);
 		}
 	}
 }

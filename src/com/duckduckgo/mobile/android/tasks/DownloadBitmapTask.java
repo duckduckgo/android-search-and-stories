@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.duckduckgo.mobile.android.download.DownloadableImage;
 import com.duckduckgo.mobile.android.download.ImageCache;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
 //TODO: Eventually, don't take an ImageView, take a Downloadable object
@@ -18,27 +19,34 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 	private static final String TAG = "DownloadBitmapTask";
 	
 	public String url;
-	private final WeakReference<DownloadableImage> imageViewReference;
+	private WeakReference<DownloadableImage> imageViewReference = null;
 	private final ImageCache imageCache;
 	public boolean isCompleted = false;
 	
+	// flag for background download - not updating/using imageViewReference
+	public boolean isBackground = true;
+	
 	public DownloadBitmapTask(DownloadableImage image, ImageCache imageCache) {
-		imageViewReference = new WeakReference<DownloadableImage>(image);
+		if(image != null) {
+			imageViewReference = new WeakReference<DownloadableImage>(image);
+			isBackground = false;
+		}
 		this.imageCache = imageCache;
 	}
 	
-	@Override
-	protected Bitmap doInBackground(String... params) {
-		url = params[0];
-		return DDGUtils.downloadBitmap(this, url);
+	public void setBackground() {
+		isBackground = true;
 	}
 	
 	@Override
-	protected void onPostExecute(Bitmap bitmap) {
+	protected Bitmap doInBackground(String... params) {		
+		url = params[0];
+		Bitmap bitmap = DDGUtils.downloadBitmap(this, url);
+		
 		if (isCancelled()) {
 			bitmap = null;
 			isCompleted = true;
-			return;
+			return null;
 		}
 
 		if (bitmap != null) {
@@ -48,13 +56,24 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 				bitmap = null;
 			}
 		}
-
+		
 		imageCache.addBitmapToCache(url, bitmap);
 		
-		if (imageViewReference != null) {
-			DownloadableImage image = imageViewReference.get();
-			if (image != null) {
-				image.setBitmap(bitmap);
+		return bitmap;
+	}
+	
+	@Override
+	protected void onPostExecute(Bitmap bitmap) {	
+		
+		Log.v(TAG,"IS BACK: " + isBackground);
+		if(!isBackground) {
+			// downloading visible item
+			
+			if (imageViewReference != null) {
+				DownloadableImage image = imageViewReference.get();
+				if (image != null) {
+					image.setBitmap(bitmap);
+				}
 			}
 		}
 		
