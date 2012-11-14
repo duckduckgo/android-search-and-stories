@@ -17,7 +17,6 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 //TODO: Any way we can limit the number of simultaneous downloads? Do we need to?
 //TODO: Any way we can find out that multiple objects are attempting to get the same item?

@@ -11,7 +11,6 @@ import android.util.Log;
 
 import com.duckduckgo.mobile.android.download.DownloadableImage;
 import com.duckduckgo.mobile.android.download.ImageCache;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
 //TODO: Eventually, don't take an ImageView, take a Downloadable object
