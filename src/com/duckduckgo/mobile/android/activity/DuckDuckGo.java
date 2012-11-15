@@ -520,6 +520,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	public void onScrollStateChanged(AbsListView view, int scrollState) {
         		Holder holder;
         		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+        			mScrollCancelLock = false;
         				mDuckDuckGoContainer.feedAdapter.scrolling = false;
         				final int count = view.getChildCount();        				        				
         				
@@ -540,7 +541,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 								cachePrevNextImages(3);
 							}
 						};
-						r.run();
+						r.run();						
         	    }
         		else {
         			mDuckDuckGoContainer.feedAdapter.scrolling = true;        			
@@ -1045,7 +1046,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mScrollCancelLock = true;
 			Log.v(TAG, "nPOS " + nPos);
 			feedView.smoothScrollToPositionFromTop(nPos, m_yOffset);
-			mScrollCancelLock = false;
 			
 			// mark for blink animation (as a visual cue after list update)
 			mDuckDuckGoContainer.feedAdapter.mark(nPos);
