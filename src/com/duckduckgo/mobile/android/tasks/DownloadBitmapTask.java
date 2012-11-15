@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.duckduckgo.mobile.android.download.DownloadableImage;
 import com.duckduckgo.mobile.android.download.ImageCache;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
 //TODO: Eventually, don't take an ImageView, take a Downloadable object
@@ -45,6 +46,16 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 		if (isCancelled()) {
 			bitmap = null;
 			isCompleted = true;
+			
+			// signal task completion
+			while(true) {
+				synchronized (DDGControlVar.taskCompleteSignal) {
+					DDGControlVar.taskCompleteSignal.task = this;
+					DDGControlVar.taskCompleteSignal.notifyAll();
+					break;
+				}
+			}
+			
 			return null;
 		}
 
@@ -77,6 +88,15 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 		}
 		
 		isCompleted = true; 
+		
+		// signal task completion
+		while(true) {
+			synchronized (DDGControlVar.taskCompleteSignal) {
+				DDGControlVar.taskCompleteSignal.task = this;
+				DDGControlVar.taskCompleteSignal.notifyAll();
+				break;
+			}
+		}
 	}
 	
 	static class FlushedInputStream extends FilterInputStream {

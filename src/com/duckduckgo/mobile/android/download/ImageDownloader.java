@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
@@ -17,6 +18,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 
 import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 //TODO: Any way we can limit the number of simultaneous downloads? Do we need to?
 //TODO: Any way we can find out that multiple objects are attempting to get the same item?
@@ -37,6 +39,9 @@ public class ImageDownloader {
     
     private ArrayList<DownloadBitmapTask> queuedTasks;
     
+    // track running tasks in queue
+    private Runnable taskWatcher;
+    
     private static final BlockingQueue<Runnable> sPoolWorkQueue =
             new LinkedBlockingQueue<Runnable>(10);
     
@@ -53,6 +58,26 @@ public class ImageDownloader {
 		this.executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
 			                    TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 		this.queuedTasks = new ArrayList<DownloadBitmapTask>(6);
+		this.taskWatcher = new Runnable() {
+			
+			@Override
+			public void run() {
+				while(true) {
+					synchronized(DDGControlVar.taskCompleteSignal) {
+						try {
+							DDGControlVar.taskCompleteSignal.wait();
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+						
+						if(DDGControlVar.taskCompleteSignal != null) {
+							DownloadBitmapTask task = DDGControlVar.taskCompleteSignal.task;
+							queuedTasks.remove(task);
+						}
+					}
+				}
+			}
+		};
 	}
 	
     boolean imageViewReused(DownloadableImage image, String url){
@@ -124,7 +149,7 @@ public class ImageDownloader {
 		task.execute(url);
 	}
 	
-	private static boolean cancelPreviousDownload(String url, DownloadableImage image) {
+	private boolean cancelPreviousDownload(String url, DownloadableImage image) {
 		DownloadBitmapTask task = image.getDownloadBitmapTask();
 		
 		if (task != null) {
@@ -132,13 +157,17 @@ public class ImageDownloader {
 			if ((bitmapUrl == null) || !bitmapUrl.equals(url)) {
 				task.cancel(true);
 			} else {
+				this.queuedTasks.remove(task);
 				return false;
 			}
+			
+			this.queuedTasks.remove(task);
 		}
+				
 		return true;
 	}
 	
-	public void clearAllDownloads() {
+	public void clearVisibleDownloads() {
 		HashSet<DownloadableImage> removeList = new HashSet<DownloadableImage>();
 		for(DownloadableImage image : imageViews.keySet()){
 			DownloadBitmapTask task = image.getDownloadBitmapTask();
@@ -159,14 +188,23 @@ public class ImageDownloader {
 	public void queueUrls(final ArrayList<String> imageUrls) {	
 				
 		for(String url : imageUrls) {
+			if(url == null)
+				continue;
 			DownloadBitmapTask task = new DownloadBitmapTask(null, cache);
+			this.queuedTasks.add(task);
 			task.executeOnExecutor(this.executor, url);
 		}		
 	}
 	
 	public void clearQueueDownloads() {
+		ArrayList<DownloadBitmapTask> removeList = new ArrayList<DownloadBitmapTask>();
 		for(DownloadBitmapTask task : queuedTasks) {
 			task.cancel(true);
+			removeList.add(task);
+		}
+		
+		for(DownloadBitmapTask task : removeList) {
+			this.queuedTasks.remove(task);
 		}
 	}
 }

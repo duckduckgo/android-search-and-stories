@@ -25,4 +25,6 @@ public class DDGControlVar {
 	public static boolean homeScreenShowing = true;
 	
 	public static boolean includeAppsInSearch = false;
+	
+	public static TaskCompleteSignal taskCompleteSignal = new TaskCompleteSignal();
 }

@@ -6,6 +6,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -144,6 +145,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	String m_objectId = null;
 	int m_itemHeight;
 	int m_yOffset;
+	
+	boolean mScrollCancelLock = false;
 	
 			
 	@Override
@@ -541,9 +544,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	    }
         		else {
         			mDuckDuckGoContainer.feedAdapter.scrolling = true;        			
-        			// clear all downloads related with visible views
-        			DDGApplication.getImageDownloader().clearQueueDownloads();
-        			DDGApplication.getImageDownloader().clearAllDownloads();
+        			// clear all downloads related with visible views        			
+        			// check if this is part of smooth scroll event after source filtering
+        			if(!mScrollCancelLock) {
+        				DDGApplication.getImageDownloader().clearQueueDownloads();
+        				DDGApplication.getImageDownloader().clearVisibleDownloads();
+        			}
         		}
         		
         	}
@@ -1036,8 +1042,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		// do this upon filter completion
 		if(DDGControlVar.targetSource != null && m_objectId != null) {
 			int nPos = feedView.getSelectionPosById(m_objectId);
+			mScrollCancelLock = true;
 			Log.v(TAG, "nPOS " + nPos);
 			feedView.smoothScrollToPositionFromTop(nPos, m_yOffset);
+			mScrollCancelLock = false;
 			
 			// mark for blink animation (as a visual cue after list update)
 			mDuckDuckGoContainer.feedAdapter.mark(nPos);
