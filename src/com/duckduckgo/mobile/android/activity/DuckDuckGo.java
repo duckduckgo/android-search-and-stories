@@ -147,6 +147,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	int m_yOffset;
 	
 	boolean mScrollCancelLock = false;
+	Runnable cachePrevNextTask = null;
 	
 			
 	@Override
@@ -168,6 +169,18 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	savedState = true;
         
         sharedPreferences = DDGApplication.getSharedPreferences();
+        
+        
+        //set caching task to run after at least a news feed item loads
+        // cache prev/next 3 images
+        cachePrevNextTask = new Runnable() {
+			
+			@Override
+			public void run() {
+				DDGApplication.getImageDownloader().clearQueueDownloads();
+				cachePrevNextImages(3);
+			}
+		};
         
         ArrayList<Item> dialogItems = new ArrayList<Item>();
         dialogItems.add(new Item(getResources().getString(R.string.Share), android.R.drawable.ic_menu_share, ItemType.SHARE));
@@ -242,7 +255,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.sourceIconTask = null;    		
     		
     	}
-    	
+    	    	
 		contextAdapter = new ArrayAdapter<Item>(
 				this,
 				android.R.layout.select_dialog_item,
@@ -452,6 +465,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
+        feedView.setAfterRenderTask(cachePrevNextTask);
         registerForContextMenu(feedView);
         feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
 			public void onMainFeedItemSelected(FeedObject feedObject) {
@@ -533,15 +547,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         				}
         				
         				// cache prev/next 3 images
-        				Runnable r = new Runnable() {
-							
-							@Override
-							public void run() {
-								DDGApplication.getImageDownloader().clearQueueDownloads();
-								cachePrevNextImages(3);
-							}
-						};
-						r.run();						
+        				cachePrevNextTask.run();						
         	    }
         		else {
         			mDuckDuckGoContainer.feedAdapter.scrolling = true;        			
@@ -1049,6 +1055,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			
 			// mark for blink animation (as a visual cue after list update)
 			mDuckDuckGoContainer.feedAdapter.mark(nPos);
+		}
+		else {
+			// scroll triggers pre-caching for source filtering case
+			// this is for the static, no-scroll case
+			feedView.enableAfterRender();
 		}
 	}
 	
