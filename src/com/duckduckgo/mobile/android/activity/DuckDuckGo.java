@@ -745,15 +745,23 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	 */
 	private void cachePrevNextImages(int nImages) {
 		// download/cache invisible feed items from -2 to +2 
+		int firstPos = feedView.getFirstVisiblePosition();
 		int lastPos = feedView.getLastVisiblePosition();
 		ArrayList<String> imageUrls = new ArrayList<String>();
-		int startIndex = feedView.getFirstVisiblePosition() - nImages;
+		int startIndex = firstPos - nImages;
 		int endIndex = lastPos + nImages;
 		int totalCount = mDuckDuckGoContainer.feedAdapter.getCount();
 		startIndex = (startIndex > 0) ? startIndex : 0;
 		endIndex = (endIndex < totalCount) ? endIndex : (totalCount-1);
-		for(int i=startIndex;i<=endIndex;++i) {
+		// up
+		for(int i=startIndex;i<firstPos;++i) {
 			imageUrls.add(mDuckDuckGoContainer.feedAdapter.getItem(i).getImageUrl());
+		}
+		// down
+		if(lastPos != totalCount-1) {
+			for(int i=lastPos+1;i<=endIndex;++i) {
+				imageUrls.add(mDuckDuckGoContainer.feedAdapter.getItem(i).getImageUrl());
+			}
 		}
 		
 		DDGApplication.getImageDownloader().queueUrls(imageUrls);
