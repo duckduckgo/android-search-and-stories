@@ -98,7 +98,12 @@ public final class DDGUtils {
 				if (inputStream != null) {
 					// FIXME large bitmaps cause OutOfMemoryErrors
 					// see: http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
-					return BitmapFactory.decodeStream(inputStream);
+					try {
+						return BitmapFactory.decodeStream(inputStream);
+					}
+					catch(OutOfMemoryError memException) {
+						return null;
+					}
 				}
 			} 
 			catch(DDGHttpException conex) {

@@ -112,28 +112,6 @@
 
 	        
     	</LinearLayout>
-    	
-        <LinearLayout 	  
-            android:layout_height="40dp"
-			android:layout_width="match_parent"
-			android:visibility="gone"
-			android:background="@drawable/left_bg"
-			android:id="@+id/eventLayout">  
-			
-            <TextView 
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/ListItemText"
-                android:paddingLeft="6dip" 
-	    		android:paddingRight="6dip"
-	    		android:clickable="true"
-	    		android:gravity="center"
-	    		android:textSize="16dp"
-                android:text=""
-                android:id="@+id/sourceText"
-                />
-			
-        </LinearLayout>
         
     </RelativeLayout>
         		  

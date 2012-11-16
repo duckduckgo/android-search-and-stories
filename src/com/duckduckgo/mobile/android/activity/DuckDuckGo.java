@@ -6,7 +6,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -115,15 +114,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private LinearLayout prefLayout = null;
 	private LinearLayout leftMainLayout = null;
 	
-	// event section is a local notification bar at the top, below searchbar
-	private LinearLayout eventLayout = null;
-	
 	private TextView leftHomeTextView = null;
 	private TextView leftSavedTextView = null;
 	private TextView leftSettingsTextView = null;
-	
-	private TextView sourceTextView = null;
-	
+		
 	private SharedPreferences sharedPreferences;
 		
 	private boolean savedState = false;
@@ -213,10 +207,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					
 					if(DDGControlVar.targetSource != null){
 						DDGControlVar.targetSource = null;
-						
-						eventLayout.setVisibility(View.GONE);
-						sourceTextView.setText("");
-						
+												
 						DDGControlVar.hasUpdatedFeed = false;
 						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
 						mDuckDuckGoContainer.mainFeedTask.execute();
@@ -237,10 +228,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 						
 						String sourceType = ((AsyncImageView) v).getType(); 
 						DDGControlVar.targetSource = sourceType;
-						
-						eventLayout.setVisibility(View.VISIBLE);
-						sourceTextView.setText(DDGControlVar.simpleSourceMap.get(sourceType));
-						
+												
 						DDGControlVar.hasUpdatedFeed = false;
 						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
 						mDuckDuckGoContainer.mainFeedTask.execute();
@@ -415,38 +403,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-        });
-        
-        eventLayout = (LinearLayout) findViewById(R.id.eventLayout);
-        sourceTextView = (TextView) findViewById(R.id.sourceText);
-        
-        // This makes a little (X) to cancel source filtering.
-        final Drawable xc = getResources().getDrawable(R.drawable.stop);
-        xc.setBounds(0, 0, xc.getIntrinsicWidth(), xc.getIntrinsicHeight());
-        sourceTextView.setCompoundDrawables(null, null, xc, null);
-
-        sourceTextView.setOnTouchListener(new OnTouchListener() {
-            public boolean onTouch(View v, MotionEvent event) {
-                if (sourceTextView.getCompoundDrawables()[2] == null) {
-                    return false;
-                }
-                if (event.getAction() != MotionEvent.ACTION_UP) {
-                    return false;
-                }
-                if (event.getX() > sourceTextView.getWidth() - sourceTextView.getPaddingRight() - xc.getIntrinsicWidth()) {
-                	// cancel filtering
-                	DDGControlVar.targetSource = null;
-					
-					eventLayout.setVisibility(View.GONE);
-					sourceTextView.setText("");
-					
-					DDGControlVar.hasUpdatedFeed = false;
-					mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
-					mDuckDuckGoContainer.mainFeedTask.execute();
-                }
-                return false;
-            }
-
         });
 
         recentSearchView = (RecentSearchListView) findViewById(R.id.recentSearchItems);
@@ -855,7 +811,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		
 			if(mDuckDuckGoContainer.webviewShowing){
 					feedView.setVisibility(View.GONE);
-					eventLayout.setVisibility(View.GONE);
 					mainWebView.setVisibility(View.VISIBLE);
 			}	
 			else if(!mDuckDuckGoContainer.prefShowing){
@@ -1117,7 +1072,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		shareButton.setVisibility(View.GONE);
 		recentSearchView.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.VISIBLE);
-		eventLayout.setVisibility(View.GONE);
 		mDuckDuckGoContainer.prefShowing = true;
 				
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
@@ -1134,7 +1088,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		shareButton.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
     	feedView.setVisibility(View.VISIBLE);
-    	eventLayout.setVisibility(View.GONE);
     	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
 		mDuckDuckGoContainer.prefShowing = false;
@@ -1153,7 +1106,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		shareButton.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
     	feedView.setVisibility(View.VISIBLE);
-    	eventLayout.setVisibility(View.GONE);
     	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
 		mDuckDuckGoContainer.prefShowing = false;
@@ -1171,7 +1123,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		feedView.setVisibility(View.GONE);
     	feedProgressBar.setVisibility(View.GONE);
     	recentSearchView.setVisibility(View.VISIBLE);
-    	eventLayout.setVisibility(View.GONE);
     	mDuckDuckGoContainer.webviewShowing = false;
 		mDuckDuckGoContainer.prefShowing = false;
     	    	
@@ -1188,7 +1139,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		
 		if (!mDuckDuckGoContainer.webviewShowing) {
 			feedView.setVisibility(View.GONE);
-			eventLayout.setVisibility(View.GONE);
 			recentSearchView.setVisibility(View.GONE);
 			
 			shareButton.setVisibility(View.VISIBLE);
