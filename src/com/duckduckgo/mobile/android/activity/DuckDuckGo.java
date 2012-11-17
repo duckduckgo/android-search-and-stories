@@ -222,11 +222,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					// source filtering
 					
 					if(DDGControlVar.targetSource != null){
-						DDGControlVar.targetSource = null;
-												
-						DDGControlVar.hasUpdatedFeed = false;
-						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
-						mDuckDuckGoContainer.mainFeedTask.execute();
+						cancelSourceFilter();
 					}
 					else {
 					
@@ -754,6 +750,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		DDGApplication.getImageDownloader().queueUrls(imageUrls);
 	}
 	
+	/**
+	 * Cancels source filter applied with source icon click from feed item
+	 */
+	public void cancelSourceFilter() {
+		DDGControlVar.targetSource = null;		
+		DDGControlVar.hasUpdatedFeed = false;
+		mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
+		mDuckDuckGoContainer.mainFeedTask.execute();
+	}
+	
 	private View buildLabel(String text) {
 		    TextView result=new TextView(this);
 		    result.setText(text);
@@ -896,6 +902,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		else if(mDuckDuckGoContainer.prefShowing){
 			switchScreens();
+		}
+		// main feed showing & source filter is active
+		else if(DDGControlVar.targetSource != null){
+			cancelSourceFilter();
 		}
 		else {
 			super.onBackPressed();
