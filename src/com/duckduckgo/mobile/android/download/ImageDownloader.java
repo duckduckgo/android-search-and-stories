@@ -155,6 +155,7 @@ public class ImageDownloader {
 		if (task != null) {
 			String bitmapUrl = task.url;
 			if ((bitmapUrl == null) || !bitmapUrl.equals(url)) {
+				Log.v(TAG,"Canceling Prev: " + url);
 				task.cancel(true);
 			} else {
 				this.queuedTasks.remove(task);
@@ -173,6 +174,7 @@ public class ImageDownloader {
 			DownloadBitmapTask task = image.getDownloadBitmapTask();
 			
 				if(task != null && !task.isCompleted){
+					Log.v(TAG,"Canceling VIS: " + task.url);
 					task.cancel(true);
 					removeList.add(image);
 				}
@@ -199,6 +201,7 @@ public class ImageDownloader {
 	public void clearQueueDownloads() {
 		ArrayList<DownloadBitmapTask> removeList = new ArrayList<DownloadBitmapTask>();
 		for(DownloadBitmapTask task : queuedTasks) {
+			Log.v(TAG,"Canceling QUEUE: " + task.url);
 			task.cancel(true);
 			removeList.add(task);
 		}

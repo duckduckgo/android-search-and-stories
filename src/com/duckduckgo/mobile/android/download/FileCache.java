@@ -2,10 +2,12 @@ package com.duckduckgo.mobile.android.download;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import android.content.Context;
@@ -15,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.FileProcessor;
 
@@ -97,6 +100,54 @@ public class FileCache {
 		}
 		
 		return false;
+	}
+	
+	public boolean saveStreamToInternal(String name, InputStream is){		
+		byte[] bucket = new byte[1024];
+	    try {
+			FileOutputStream fos = this.context.openFileOutput(name, Context.MODE_PRIVATE);
+		      int readSize;
+		      while((readSize = is.read(bucket)) != -1) {
+		    	  fos.write(bucket,0,readSize);
+		      }
+		      fos.close();
+		      return true;
+		    } catch (IOException e) {
+		    	e.printStackTrace();
+		      return false;
+		    }	
+	}
+	
+	public String getPath(String name) {
+		File f =  this.context.getFileStreamPath(name);
+		if(f != null) {
+			return f.getAbsolutePath();
+		}
+		return null;
+	}
+	
+	public FileDescriptor getFd(String name) {
+		try {
+			return this.context.openFileInput(name).getFD();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public FileInputStream getFileInputStream(String name) {
+		try {
+			return this.context.openFileInput(name);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public void removeFile(String name) {
+		this.context.deleteFile(name);
 	}
 	
 	public String getStringFromInternal(String name){

@@ -31,6 +31,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -157,7 +158,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 //        TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 //        String countryCode = tm.getSimCountryIso();
 //        String lang = getResources().getConfiguration().locale.getLanguage();
-//        Log.v("COUNLANG",countryCode + " " + lang);        
+//        Log.v("COUNLANG",countryCode + " " + lang);
+        
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+//        int height = displaymetrics.heightPixels;
+//        int wwidth = displaymetrics.widthPixels;
+        DDGUtils.feedItemWidth = displaymetrics.widthPixels;
+        
+        DDGUtils.feedItemHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
+                (float) 135.0, getResources().getDisplayMetrics());
         
         if(savedInstanceState != null)
         	savedState = true;

@@ -63,6 +63,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	@Override
 	public View getView(int position, View cv, ViewGroup parent) {
 		if (cv == null) {
+			Log.v("POS","position: " + position);
 			cv = inflater.inflate(R.layout.main_feed_layout, null);
 			cv.setTag(new Holder((TextView)cv.findViewById(R.id.feedTitleTextView),
 					             (AsyncImageView)cv.findViewById(R.id.feedItemBackground),

@@ -1,13 +1,20 @@
 package com.duckduckgo.mobile.android.util;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +26,7 @@ import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
@@ -29,13 +37,21 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Toast;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 
 public final class DDGUtils {
+	
+	public static int feedItemWidth = 0, feedItemHeight = 0;
+	
+    private static final Pattern PUNC_PATTERN = Pattern.compile("[:.,/]");
+	
 	public static boolean saveArray(SharedPreferences prefs, String[] array, String arrayName) {   
 	    SharedPreferences.Editor editor = prefs.edit();  
 	    editor.putInt(arrayName +"_size", array.length);  
@@ -85,8 +101,77 @@ public final class DDGUtils {
 	    editor.commit();  
 	} 
 	
+	@TargetApi(10)
+	private static Bitmap decodeRegion(FileDescriptor fd) {
+		Log.v("REGION","region decoder : ");
+		int useWidth, useHeight;
+		
+		useWidth = feedItemWidth;
+		useHeight = feedItemHeight;
+		
+		//Decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFileDescriptor(fd, null, o);
+        
+        // use original sizes if image is not bigger than feed item view
+        if(o.outWidth < feedItemWidth) useWidth = o.outWidth;
+        if(o.outHeight < feedItemHeight) useHeight = o.outHeight;
+		
+		BitmapRegionDecoder decoder;
+		try {
+			decoder = BitmapRegionDecoder.newInstance(fd, false);
+			Log.v("REGION","IMAGE width height: " + useWidth + " " + useHeight);
+			Rect innerTile = new Rect(0, 0, useWidth, useHeight);
+			Bitmap region = decoder.decodeRegion(innerTile, null);
+			return region;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	private static Bitmap decodeImage(FileDescriptor fd) {
+		final String TAG = "decodeImage";
+
+		//Decode image size
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeFileDescriptor(fd, null, o);
+        
+        Log.v(TAG,"IMAGE width height: " + o.outWidth + " " + o.outHeight);
+        
+        //The new size we want to scale to
+
+        //Find the correct scale value. It should be the power of 2.
+        int scale=1;
+//        while(o.outWidth/scale/2>=REQUIRED_SIZE && o.outHeight/scale/2>=REQUIRED_SIZE)
+//        while(o.outWidth/scale>=REQUIRED_SIZE)
+        while(o.outWidth/scale/2>=480 || o.outHeight/scale/2>=287)
+            scale*=2;
+        
+        Log.v(TAG,"Scale: " + scale);
+					
+			BitmapFactory.Options options=new BitmapFactory.Options();
+	        //Decode with inSampleSize
+	        options.inSampleSize=scale;
+	        
+	        try {
+				Bitmap result = BitmapFactory.decodeFileDescriptor(fd, null, options);
+				return result;
+	        }
+	        catch(OutOfMemoryError oomError) {
+	        	oomError.printStackTrace();
+	        	return null;
+	        }
+	}
+	
 	public static Bitmap downloadBitmap(AsyncTask<?, ?, ?> task, String url) {
 		final String TAG = "downloadBitmap";
+		
+		FileCache fileCache = DDGApplication.getFileCache();
+		FileDescriptor fileDesc;
+		Bitmap resultBitmap;
 		
 		try {
 
@@ -98,12 +183,27 @@ public final class DDGUtils {
 				if (inputStream != null) {
 					// FIXME large bitmaps cause OutOfMemoryErrors
 					// see: http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
-					try {
-						return BitmapFactory.decodeStream(inputStream);
-					}
-					catch(OutOfMemoryError memException) {
-						return null;
-					}
+										
+					Matcher matcher = PUNC_PATTERN.matcher(url);
+					String nURL = matcher.replaceAll("_");
+					String fname = "tmp" + nURL;
+										
+					fileCache.saveStreamToInternal(fname, inputStream);
+					fileDesc = fileCache.getFd(fname);
+					inputStream.close();
+							
+					
+					// for API level 10, there is BitmapRegionDecoder
+					// http://developer.android.com/reference/android/graphics/BitmapRegionDecoder.html
+					
+				    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD_MR1) {
+				    	resultBitmap = decodeRegion(fileDesc);
+				    }
+				    else {
+				    	resultBitmap = decodeImage(fileDesc);
+				    }
+				    fileCache.removeFile(fname);
+			    	return resultBitmap;
 				}
 			} 
 			catch(DDGHttpException conex) {
