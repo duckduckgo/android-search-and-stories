@@ -116,7 +116,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private LinearLayout leftMainLayout = null;
 	
 	private TextView leftHomeTextView = null;
+	private TextView leftStoriesTextView = null;
 	private TextView leftSavedTextView = null;
+	private TextView leftRecentTextView = null;
 	private TextView leftSettingsTextView = null;
 		
 	private SharedPreferences sharedPreferences;
@@ -277,7 +279,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftMainLayout = (LinearLayout) findViewById(R.id.LeftMainLayout);
     	
     	leftHomeTextView = (TextView) findViewById(R.id.LeftHomeTextView);
+    	leftStoriesTextView = (TextView) findViewById(R.id.LeftStoriesTextView);
     	leftSavedTextView = (TextView) findViewById(R.id.LeftSavedTextView);
+    	leftRecentTextView = (TextView) findViewById(R.id.LeftRecentTextView);
     	leftSettingsTextView = (TextView) findViewById(R.id.LeftSettingsTextView);
     	
     	int pixelValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
@@ -289,6 +293,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	Drawable xt = getResources().getDrawable(R.drawable.icon_home_selector);
         xt.setBounds(0, 0, pixelValue, pixelValue);
         leftHomeTextView.setCompoundDrawables(xt, null, caret, null);
+
+        caret = getResources().getDrawable(R.drawable.icon_caret_selector);
+    	caret.setBounds(0, 0, pixelValue, pixelValue);
+        
+    	xt = getResources().getDrawable(android.R.drawable.ic_menu_rotate);
+        xt.setBounds(0, 0, pixelValue, pixelValue);
+        leftStoriesTextView.setCompoundDrawables(xt, null, caret, null);        
         
         caret = getResources().getDrawable(R.drawable.icon_caret_selector);
     	caret.setBounds(0, 0, pixelValue, pixelValue);
@@ -305,6 +316,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         leftSettingsTextView.setCompoundDrawables(xt, null, caret, null);
     	
     	leftHomeTextView.setOnClickListener(this);
+    	leftStoriesTextView.setOnClickListener(this);
     	leftSavedTextView.setOnClickListener(this);
     	leftSettingsTextView.setOnClickListener(this);
     	
@@ -800,19 +812,36 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
         	// show recent queries on slide-out menu
 //        	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
-        	leftMainLayout.findViewById(R.id.LeftRecentTextView).setVisibility(View.VISIBLE);
-        	leftRecentView.setVisibility(View.VISIBLE);
+        	
+    		// left side menu visibility changes
+        	leftRecentTextView.setVisibility(View.VISIBLE);
+        	leftRecentView.setVisibility(View.VISIBLE);	
+        	leftSavedTextView.setVisibility(View.VISIBLE);
+        	leftStoriesTextView.setVisibility(View.GONE);
         	
         	displayNewsFeed();
         }
         else if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
         	// hide recent queries from slide-out menu
 //        	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
-//        	lMainAdapter.insert(getString(R.string.LeftRecentQueries), 0);
-        	leftMainLayout.findViewById(R.id.LeftRecentTextView).setVisibility(View.GONE);
+//        	lMainAdapter.insert(getString(R.string.LeftRecentQueries), 0); 
+        	
+    		// left side menu visibility changes
+        	leftRecentTextView.setVisibility(View.GONE);
         	leftRecentView.setVisibility(View.GONE);
+        	leftSavedTextView.setVisibility(View.VISIBLE);
+        	leftStoriesTextView.setVisibility(View.VISIBLE);
         	
         	displayRecentSearch();
+        }
+        else if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
+    		// left side menu visibility changes
+        	leftRecentTextView.setVisibility(View.VISIBLE);
+        	leftRecentView.setVisibility(View.VISIBLE);
+        	leftSavedTextView.setVisibility(View.GONE);
+        	leftStoriesTextView.setVisibility(View.VISIBLE);
+        	
+        	displaySavedFeed();
         }
 	}
 	
@@ -1106,11 +1135,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mDuckDuckGoContainer.webviewShowing = false;
 	}
 	
-	public void displayNewsFeed(){
-		if(mDuckDuckGoContainer.savedFeedShowing) {
-			mDuckDuckGoContainer.savedFeedShowing = false;
-			DDGControlVar.hasUpdatedFeed = false;
-		}
+	/**
+	 * Method that switches visibility of views for Home or Saved feed
+	 */
+	private void displayFeedCore() {
+    	// main view visibility changes and keep feed updated
 		recentSearchView.setVisibility(View.GONE);
 		mainWebView.setVisibility(View.GONE);
 		shareButton.setVisibility(View.GONE);
@@ -1119,6 +1148,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
 		mDuckDuckGoContainer.prefShowing = false;
+	}
+	
+	public void displayNewsFeed(){
+		if(mDuckDuckGoContainer.savedFeedShowing) {
+			mDuckDuckGoContainer.savedFeedShowing = false;
+			DDGControlVar.hasUpdatedFeed = false;
+		}
+		
+		displayFeedCore();
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
     		DDGControlVar.homeScreenShowing = true;
@@ -1129,22 +1167,17 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void displaySavedFeed(){
 		mDuckDuckGoContainer.savedFeedShowing = true;
 		DDGControlVar.hasUpdatedFeed = false;
-		recentSearchView.setVisibility(View.GONE);
-		mainWebView.setVisibility(View.GONE);
-		shareButton.setVisibility(View.GONE);
-		prefLayout.setVisibility(View.GONE);
-    	feedView.setVisibility(View.VISIBLE);
-    	keepFeedUpdated();
-    	mDuckDuckGoContainer.webviewShowing = false;
-		mDuckDuckGoContainer.prefShowing = false;
+		
+		displayFeedCore();
     	    	
-    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
+    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
     	}
 	}
 	
-	public void displayRecentSearch(){
+	public void displayRecentSearch(){    	
+    	// main view visibility changes
 		mainWebView.setVisibility(View.GONE);
 		shareButton.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
@@ -1252,9 +1285,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			
 			switchScreens();
 		}
+		else if(v.equals(leftStoriesTextView)){
+			fan.showMenu();			
+			displayNewsFeed();
+		}
 		else if(v.equals(leftSavedTextView)){
-			fan.showMenu();		
-			
+			fan.showMenu();			
 			displaySavedFeed();
 		}
 		else if(v.equals(leftSettingsTextView)){

@@ -4,11 +4,13 @@
 <string-array name="startScreenArray">
    <item>@string/PrefNewsFeed</item>
    <item>@string/PrefRecentSearch</item>
+   <item>@string/PrefSavedItems</item>
 </string-array>
 
 <string-array name="startScreenValues">
    <item>0</item>
    <item>1</item>
+   <item>2</item>
 </string-array>
 
 <string-array name="regionArray">

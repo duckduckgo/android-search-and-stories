@@ -22,6 +22,21 @@
     
     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
 	    style="@style/ListItemText"
+	    android:id="@+id/LeftStoriesTextView" 
+	    android:layout_width="fill_parent" 
+	    android:layout_height="60dp" 
+	    android:drawableLeft="@android:drawable/ic_menu_rotate"
+	    android:drawableRight="@drawable/icon_caret_selector"
+	   	android:background="@drawable/left_main_selector"
+	   	android:clickable="true"
+	   	android:visibility="gone"
+	    android:text="@string/LeftStories"
+	    android:gravity="center_vertical" android:paddingLeft="6dip" 
+	    android:paddingRight="6dip"
+	    android:minHeight="?android:attr/listPreferredItemHeight"/>
+    
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+	    style="@style/ListItemText"
 	    android:id="@+id/LeftSavedTextView" 
 	    android:layout_width="fill_parent" 
 	    android:layout_height="60dp" 

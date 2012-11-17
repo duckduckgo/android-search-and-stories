@@ -12,6 +12,7 @@
     <string name="PrefGroupFeedback">Feedback</string>
     <string name="PrefStartScreen">Main screen</string>
     <string name="PrefNewsFeed">News feed</string>
+    <string name="PrefSavedItems">Saved items</string>
     <string name="PrefRecentSearch">Recent searches</string>
     <string name="PrefRecordHistory">Record history</string>
     <string name="PrefClearHistory">Clear history</string>
