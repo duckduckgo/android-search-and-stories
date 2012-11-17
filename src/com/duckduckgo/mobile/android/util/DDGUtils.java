@@ -193,6 +193,9 @@ public final class DDGUtils {
 					inputStream.close();
 							
 					
+					if(fileDesc == null)
+						return null;
+					
 					// for API level 10, there is BitmapRegionDecoder
 					// http://developer.android.com/reference/android/graphics/BitmapRegionDecoder.html
 					
