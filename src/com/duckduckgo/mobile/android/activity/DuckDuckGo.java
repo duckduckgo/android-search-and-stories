@@ -177,14 +177,20 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         //set caching task to run after at least a news feed item loads
         // cache prev/next 3 images
-        cachePrevNextTask = new Runnable() {
-			
-			@Override
-			public void run() {
-				DDGApplication.getImageDownloader().clearQueueDownloads();
-				cachePrevNextImages(3);
-			}
-		};
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+	        cachePrevNextTask = new Runnable() {
+				
+				@Override
+				public void run() {
+					DDGApplication.getImageDownloader().clearQueueDownloads();
+					cachePrevNextImages(3);
+				}
+			};
+		}
+		// TODO caching prev/next images requires API Level 11 for now, because of  executeOnExecutor
+		// in  ImageDownloader.queueUrls() , task.executeOnExecutor(this.executor, url);
+		// implement cache prev/next for devices below API level 11
+		// may need to use a modified copy of AsyncTask class to achieve this 
         
         ArrayList<Item> dialogItems = new ArrayList<Item>();
         dialogItems.add(new Item(getResources().getString(R.string.Share), android.R.drawable.ic_menu_share, ItemType.SHARE));
@@ -513,7 +519,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         				}
         				
         				// cache prev/next 3 images
-        				cachePrevNextTask.run();						
+        				if(cachePrevNextTask != null) {
+        					cachePrevNextTask.run();		
+        				}
         	    }
         		else {
         			mDuckDuckGoContainer.feedAdapter.scrolling = true;        			
