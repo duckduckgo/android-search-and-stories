@@ -142,6 +142,13 @@ public class ImageCache {
 		softBitmapCache.clear();
 	}
 	
+	/**
+	 * Purge in-memory cache resources
+	 */
+	public void purge() {
+		doPurge.run();
+	}
+	
 	public void setFileCache(FileCache fileCache) {
 		this.fileCache = fileCache;
 	}

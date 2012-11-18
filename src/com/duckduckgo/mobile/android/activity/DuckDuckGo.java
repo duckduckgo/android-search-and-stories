@@ -937,8 +937,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			cancelSourceFilter();
 		}
 		else {
-			super.onBackPressed();
 			DDGControlVar.hasUpdatedFeed = false;
+			DDGApplication.getImageCache().purge();
+			super.onBackPressed();
 		}
 	}
 	
