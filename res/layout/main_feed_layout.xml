@@ -7,7 +7,6 @@
                android:layout_height="135dp"
                android:maxHeight="135dp"
                android:scaleType="centerCrop"
-               android:src="@drawable/testbackground" 
                android:id="@+id/feedItemBackground" />
 				
 	<LinearLayout android:layout_width="match_parent"
@@ -23,7 +22,6 @@
 		    	   android:layout_gravity="center_vertical"
 		    	   android:layout_margin="5dp"
 		    	   android:scaleType="fitCenter"
-		    	   android:src="@drawable/menu_button"
 		    	   android:id="@+id/feedItemSourceIcon" />
 	    	    		  
 		<TextView android:layout_width="wrap_content"

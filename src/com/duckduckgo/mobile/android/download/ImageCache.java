@@ -15,7 +15,7 @@ import android.os.Handler;
 public class ImageCache {
 	private static final String TAG = "ImageCache";
 	
-	private static final int CACHE_CAPACITY = 50; //How many items we can have that the GC won't touch (we still purge it though)
+	private static final int CACHE_CAPACITY = 24; //How many items we can have that the GC won't touch (we still purge it though)
 	private static final int PURGE_DELAY = 60000; //milliseconds before we purge all items (60 seconds)
 
 	private FileCache fileCache = null;

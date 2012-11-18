@@ -109,4 +109,10 @@ public class DDGApplication extends Application {
 	    File dbFile = new File(externalFilesDir, name);
 	    return SQLiteDatabase.openDatabase(dbFile.getAbsolutePath(), null, SQLiteDatabase.CREATE_IF_NECESSARY);
 	}
+	
+	@Override
+	public void onLowMemory() {
+		DDGApplication.getImageCache().purge();
+		super.onLowMemory();
+	}
 }

@@ -199,15 +199,25 @@ public class ImageDownloader {
 	}
 	
 	public void clearQueueDownloads() {
-		ArrayList<DownloadBitmapTask> removeList = new ArrayList<DownloadBitmapTask>();
 		for(DownloadBitmapTask task : queuedTasks) {
-			Log.v(TAG,"Canceling QUEUE: " + task.url);
-			task.cancel(true);
-			removeList.add(task);
-		}
+			if(task != null) {
+				Log.v(TAG,"Canceling QUEUE: " + task.url);
+				task.cancel(true);
+			}
+		}		
+		this.queuedTasks.clear();
+	}
+	
+	public void clearAllDownloads() {
+		clearQueueDownloads();
 		
-		for(DownloadBitmapTask task : removeList) {
-			this.queuedTasks.remove(task);
+		for(DownloadableImage image : imageViews.keySet()){
+			DownloadBitmapTask task = image.getDownloadBitmapTask();
+				if(task != null){
+					Log.v(TAG,"Canceling VIS: " + task.url);
+					task.cancel(true);
+				}
 		}
+		imageViews.clear();
 	}
 }

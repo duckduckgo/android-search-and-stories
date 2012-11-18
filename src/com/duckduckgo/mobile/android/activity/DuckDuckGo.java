@@ -910,6 +910,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			editor.commit();
 		}
 		
+		DDGApplication.getImageDownloader().clearAllDownloads();
+		DDGApplication.getImageCache().purge();
+		
 		super.onStop();
 	}
 	
@@ -938,7 +941,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		else {
 			DDGControlVar.hasUpdatedFeed = false;
-			DDGApplication.getImageCache().purge();
 			super.onBackPressed();
 		}
 	}
