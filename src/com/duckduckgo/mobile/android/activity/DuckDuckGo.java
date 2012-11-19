@@ -113,7 +113,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private ImageButton homeSettingsButton = null;
 	private ImageButton shareButton = null;
 	private LinearLayout prefLayout = null;
-	private LinearLayout leftMainLayout = null;
 	
 	private TextView leftHomeTextView = null;
 	private TextView leftStoriesTextView = null;
@@ -275,9 +274,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				return v;
 			}
 		};
-    	
-    	leftMainLayout = (LinearLayout) findViewById(R.id.LeftMainLayout);
-    	
+    	    	
     	leftHomeTextView = (TextView) findViewById(R.id.LeftHomeTextView);
     	leftStoriesTextView = (TextView) findViewById(R.id.LeftStoriesTextView);
     	leftSavedTextView = (TextView) findViewById(R.id.LeftSavedTextView);
@@ -739,7 +736,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	 * Cache previous/next N images
 	 */
 	private void cachePrevNextImages(int nImages) {
-		// download/cache invisible feed items from -2 to +2 
+		// download/cache invisible feed items from -N to +N 
 		int firstPos = feedView.getFirstVisiblePosition();
 		int lastPos = feedView.getLastVisiblePosition();
 		ArrayList<String> imageUrls = new ArrayList<String>();
@@ -909,11 +906,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			editor.putString("readarticles", combined);
 			editor.commit();
 		}
-		
+				
+		super.onStop();
+	}
+	
+	@Override
+	protected void onDestroy() {
 		DDGApplication.getImageDownloader().clearAllDownloads();
 		DDGApplication.getImageCache().purge();
-		
-		super.onStop();
+		super.onDestroy();
 	}
 	
 	@Override
