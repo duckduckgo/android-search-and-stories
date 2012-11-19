@@ -174,7 +174,9 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 
 		if(hasRenderedItem && !isJobExecuted) {
 			// on item render event, run only one time
-			this.job.execute();			
+			if(this.job != null) {
+				this.job.execute();		
+			}
 			isJobExecuted = true;
 		}		
 		hasRenderedItem = true;

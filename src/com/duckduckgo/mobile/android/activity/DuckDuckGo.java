@@ -455,18 +455,20 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
         
         // prepare AsyncImageView context and LayoutParams according to rendered items in feedView
-        mDuckDuckGoContainer.feedAdapter.setItemRenderJob(new JobInterface() {
-			
-			@Override
-			public void execute() {
-				View v = feedView.getChildAt(feedView.getFirstVisiblePosition());
-				Holder h = (Holder) v.getTag();
-				if(h != null) {
-					cachePrevNextHeadTask.setContext(h.imageViewBackground.getContext());
-					cachePrevNextHeadTask.setLayoutParams(h.imageViewBackground.getLayoutParams());
+        if(cachePrevNextHeadTask != null) {
+	        mDuckDuckGoContainer.feedAdapter.setItemRenderJob(new JobInterface() {
+				
+				@Override
+				public void execute() {
+					View v = feedView.getChildAt(feedView.getFirstVisiblePosition());
+					Holder h = (Holder) v.getTag();
+					if(h != null) {
+						cachePrevNextHeadTask.setContext(h.imageViewBackground.getContext());
+						cachePrevNextHeadTask.setLayoutParams(h.imageViewBackground.getLayoutParams());
+					}
 				}
-			}
-		});
+			});
+        }
         
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
         // context and LayoutParams for this cache task (to instantiate AsyncImageViews) will be set in feedView
