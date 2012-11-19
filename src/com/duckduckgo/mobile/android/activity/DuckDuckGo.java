@@ -73,6 +73,7 @@ import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
+import com.duckduckgo.mobile.android.tasks.CacheTask;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.SavedFeedTask;
@@ -143,7 +144,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	int m_yOffset;
 	
 	boolean mScrollCancelLock = false;
-	Runnable cachePrevNextTask = null;
+	CacheTask cachePrevNextTask = null;
 	
 			
 	@Override
@@ -179,12 +180,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         //set caching task to run after at least a news feed item loads
         // cache prev/next 3 images
 		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
-	        cachePrevNextTask = new Runnable() {
+	        cachePrevNextTask = new CacheTask() {
 				
 				@Override
 				public void run() {
 					DDGApplication.getImageDownloader().clearQueueDownloads();
-					cachePrevNextImages(3);
+					cachePrevNextImages(this.context, this.params, 3);
 				}
 			};
 		}
@@ -442,7 +443,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
-        feedView.setAfterRenderTask(cachePrevNextTask);
+//        feedView.setAfterRenderTask(cachePrevNextTask);
         registerForContextMenu(feedView);
         feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
 			public void onMainFeedItemSelected(FeedObject feedObject) {
@@ -509,7 +510,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	}
 
         	public void onScrollStateChanged(AbsListView view, int scrollState) {
-        		Holder holder;
+        		Holder holder = null;
         		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
         			mScrollCancelLock = false;
         				mDuckDuckGoContainer.feedAdapter.scrolling = false;
@@ -523,9 +524,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         					}
         				}
         				
-        				// cache prev/next 3 images
-        				if(cachePrevNextTask != null) {
-        					cachePrevNextTask.run();		
+        				if(holder != null) {
+	        				// cache prev/next 3 images
+	        				if(cachePrevNextTask != null) {
+	        					cachePrevNextTask.setContext(holder.imageViewBackground.getContext());
+	        					cachePrevNextTask.setLayoutParams(holder.imageViewBackground.getLayoutParams());
+	        					cachePrevNextTask.run();		
+	        				}
         				}
         	    }
         		else {
@@ -735,7 +740,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	/**
 	 * Cache previous/next N images
 	 */
-	private void cachePrevNextImages(int nImages) {
+	private void cachePrevNextImages(Context context, android.view.ViewGroup.LayoutParams params, int nImages) {
 		// download/cache invisible feed items from -N to +N 
 		int firstPos = feedView.getFirstVisiblePosition();
 		int lastPos = feedView.getLastVisiblePosition();
@@ -756,7 +761,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			}
 		}
 		
-		DDGApplication.getImageDownloader().queueUrls(imageUrls);
+		DDGApplication.getImageDownloader().queueUrls(context, params, imageUrls);
 	}
 	
 	/**

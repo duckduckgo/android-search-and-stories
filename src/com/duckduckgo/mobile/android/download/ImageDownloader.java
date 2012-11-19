@@ -14,8 +14,11 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 
 import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -87,8 +90,16 @@ public class ImageDownloader {
         return false;
     }
 	
+    public void download(String url, DownloadableImage image, boolean onlyUseMemCache) {
+    	download(url, image, onlyUseMemCache, false);
+    }
+    
+    public void bgDownload(String url, DownloadableImage image, boolean onlyUseMemCache) {
+    	download(url, image, onlyUseMemCache, true);
+    }
+    
 	//TODO: Should take a Downloadable object
-	public void download(String url, DownloadableImage image, boolean onlyUseMemCache) {
+	public void download(String url, DownloadableImage image, boolean onlyUseMemCache, boolean isBackgroundTask) {
 		if (url == null || url.length() == 0) {
 			//Cancel anything downloading, set the image to default, and return
 			cancelPreviousDownload(url, image);
@@ -114,7 +125,7 @@ public class ImageDownloader {
 				return;
 			}
 			
-			attemptDownload(url, image);
+			attemptDownload(url, image, isBackgroundTask);
 		} else {
 			Log.d(TAG, "Using Cached Image for URL: " + url);
 			cancelPreviousDownload(url, image);
@@ -126,7 +137,7 @@ public class ImageDownloader {
 		}
 	}
 	
-	private void attemptDownload(String url, DownloadableImage image) {
+	private void attemptDownload(String url, DownloadableImage image, boolean isBackgroundTask) {
 		if (url == null) {
 			//No image to download!
 			image.setDownloadBitmapTask(null);
@@ -146,7 +157,14 @@ public class ImageDownloader {
 		DownloadBitmapTask task = new DownloadBitmapTask(image, cache);
 		image.setDownloadBitmapTask(task);
 		image.setDefault();
-		task.execute(url);
+		
+		if(isBackgroundTask) {
+			this.queuedTasks.add(task);
+			task.executeOnExecutor(this.executor, url);
+		}
+		else {
+			task.execute(url);
+		}
 	}
 	
 	private boolean cancelPreviousDownload(String url, DownloadableImage image) {
@@ -187,14 +205,15 @@ public class ImageDownloader {
 	}
 	
 	// queue all downloads as background downloads
-	public void queueUrls(final ArrayList<String> imageUrls) {	
+	public void queueUrls(final Context context, final LayoutParams params, final ArrayList<String> imageUrls) {	
 				
 		for(String url : imageUrls) {
 			if(url == null)
 				continue;
-			DownloadBitmapTask task = new DownloadBitmapTask(null, cache);
-			this.queuedTasks.add(task);
-			task.executeOnExecutor(this.executor, url);
+			AsyncImageView nView = new AsyncImageView(context);
+			nView.setLayoutParams(params);
+			nView.setVisibility(View.GONE);
+			bgDownload(url, nView, false);
 		}		
 	}
 	
