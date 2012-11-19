@@ -6,5 +6,5 @@ package com.duckduckgo.mobile.android.service;
  *
  */
 public interface JobInterface {
-	void job();
+	void execute();
 }

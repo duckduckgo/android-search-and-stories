@@ -26,6 +26,7 @@ import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.service.JobInterface;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 
@@ -45,6 +46,10 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
 	protected final ImageDownloader imageDownloader;
+	
+	private boolean hasRenderedItem = false;
+	private boolean isJobExecuted = false;
+	private JobInterface job = null;
 				
 	public MainFeedAdapter(Context context, OnClickListener sourceClickListener) {
 		super(context, 0);
@@ -58,6 +63,14 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		blinkanimation.setInterpolator(new LinearInterpolator());
 		blinkanimation.setRepeatCount(2);
 		blinkanimation.setRepeatMode(Animation.REVERSE);
+	}
+	
+	/**
+	 * Set external job to be executed upon any item rendering
+	 * @param job
+	 */
+	public void setItemRenderJob(JobInterface job) {
+		this.job = job;
 	}
 	
 	@Override
@@ -159,6 +172,13 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			unmark();
 		}
 
+		if(hasRenderedItem && !isJobExecuted) {
+			// on item render event, run only one time
+			this.job.execute();			
+			isJobExecuted = true;
+		}		
+		hasRenderedItem = true;
+		
 		return cv;
 	}
 	

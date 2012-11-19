@@ -17,7 +17,7 @@ public class DDGDownloaderServiceConnection implements ServiceConnection
         { 
                 newService = ((DDGDownloaderService.LocalBinder)service).getService(); 
                 if(jobInterface != null) {
-                	jobInterface.job();
+                	jobInterface.execute();
                 }
         } 
         public void onServiceDisconnected(ComponentName name) 
