@@ -1,16 +1,13 @@
 package com.duckduckgo.mobile.android.views;
 
-import com.duckduckgo.mobile.android.download.Holder;
-import com.duckduckgo.mobile.android.objects.FeedObject;
-import com.duckduckgo.mobile.android.tasks.CacheTask;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.AdapterView;
+import android.widget.ListView;
+
+import com.duckduckgo.mobile.android.objects.FeedObject;
 
 public class MainFeedListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
@@ -18,7 +15,7 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 	private OnMainFeedItemLongClickListener longClickListener;
 	
 	private boolean isAfterRenderRun = false;
-	private CacheTask afterRenderTask = null;
+	private Runnable afterRenderTask = null;
 	
 	public MainFeedListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -39,7 +36,7 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 	 * A task (Runnable) to run after at least a view is rendered can be set
 	 * @param task
 	 */
-	public void setAfterRenderTask(CacheTask task) {
+	public void setAfterRenderTask(Runnable task) {
 		afterRenderTask = task;
 	}
 

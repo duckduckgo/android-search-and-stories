@@ -73,8 +73,6 @@ import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
-import com.duckduckgo.mobile.android.service.JobInterface;
-import com.duckduckgo.mobile.android.tasks.CacheTask;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.SavedFeedTask;
@@ -145,7 +143,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	int m_yOffset;
 	
 	boolean mScrollCancelLock = false;
-	CacheTask cachePrevNextTask = null, cachePrevNextHeadTask = null;
+	Runnable cachePrevNextTask = null, cachePrevNextHeadTask = null;
 	
 			
 	@Override
@@ -181,22 +179,22 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         //set caching task to run after at least a news feed item loads
         // cache prev/next 3 images
 		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
-	        cachePrevNextTask = new CacheTask() {
+	        cachePrevNextTask = new Runnable() {
 				
 				@Override
 				public void run() {
 					DDGApplication.getImageDownloader().clearQueueDownloads();
-					cachePrevNextImages(this.context, this.params, 3);
+					cachePrevNextImages(3);
 				}
 			};
 			
 			// task for the list "head rendering" case
-			cachePrevNextHeadTask = new CacheTask() {
+			cachePrevNextHeadTask = new Runnable() {
 				
 				@Override
 				public void run() {
 					DDGApplication.getImageDownloader().clearQueueDownloads();
-					cachePrevNextImages(this.context, this.params, 3);
+					cachePrevNextImages(3);
 				}
 			};
 		}
@@ -452,24 +450,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		});
         
         
-        feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);
-        
-        // prepare AsyncImageView context and LayoutParams according to rendered items in feedView
-        if(cachePrevNextHeadTask != null) {
-	        mDuckDuckGoContainer.feedAdapter.setItemRenderJob(new JobInterface() {
-				
-				@Override
-				public void execute() {
-					View v = feedView.getChildAt(feedView.getFirstVisiblePosition());
-					Holder h = (Holder) v.getTag();
-					if(h != null) {
-						cachePrevNextHeadTask.setContext(h.imageViewBackground.getContext());
-						cachePrevNextHeadTask.setLayoutParams(h.imageViewBackground.getLayoutParams());
-					}
-				}
-			});
-        }
-        
+        feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);        
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
         // context and LayoutParams for this cache task (to instantiate AsyncImageViews) will be set in feedView
         feedView.setAfterRenderTask(cachePrevNextHeadTask);
@@ -555,8 +536,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         				if(holder != null) {
 	        				// cache prev/next 3 images
 	        				if(cachePrevNextTask != null) {
-	        					cachePrevNextTask.setContext(holder.imageViewBackground.getContext());
-	        					cachePrevNextTask.setLayoutParams(holder.imageViewBackground.getLayoutParams());
 	        					cachePrevNextTask.run();		
 	        				}
         				}
@@ -768,7 +747,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	/**
 	 * Cache previous/next N images
 	 */
-	private void cachePrevNextImages(Context context, android.view.ViewGroup.LayoutParams params, int nImages) {
+	private void cachePrevNextImages(int nImages) {
 		// download/cache invisible feed items from -N to +N 
 		int firstPos = feedView.getFirstVisiblePosition();
 		int lastPos = feedView.getLastVisiblePosition();
@@ -789,7 +768,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			}
 		}
 		
-		DDGApplication.getImageDownloader().queueUrls(context, params, imageUrls);
+		DDGApplication.getImageDownloader().queueUrls(getApplicationContext(), imageUrls);
 	}
 	
 	/**

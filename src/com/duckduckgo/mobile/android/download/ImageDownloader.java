@@ -205,13 +205,12 @@ public class ImageDownloader {
 	}
 	
 	// queue all downloads as background downloads
-	public void queueUrls(final Context context, final LayoutParams params, final ArrayList<String> imageUrls) {	
+	public void queueUrls(final Context context, final ArrayList<String> imageUrls) {	
 				
 		for(String url : imageUrls) {
 			if(url == null)
 				continue;
 			AsyncImageView nView = new AsyncImageView(context);
-			nView.setLayoutParams(params);
 			nView.setVisibility(View.GONE);
 			bgDownload(url, nView, false);
 		}		
