@@ -57,6 +57,7 @@ public class DDGApplication extends Application {
 		DDGControlVar.regionString = sharedPreferences.getString("regionPref", "wt-wt");
 		DDGControlVar.useDefaultSources = !DDGUtils.existsSet(sharedPreferences, "sourceset");
 		DDGControlVar.defaultSourceSet = DDGUtils.loadSet(sharedPreferences, "defaultset");
+		DDGControlVar.alwaysUseExternalBrowser = sharedPreferences.getBoolean("externalBrowserPref", false);
 		
 		String strReadArticles = sharedPreferences.getString("readarticles", null);
 		if(strReadArticles != null){

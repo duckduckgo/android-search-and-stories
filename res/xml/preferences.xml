@@ -29,6 +29,10 @@
 	android:title="@string/PrefModifyQuery"
 	android:key="modifyQueryPref"
 	android:defaultValue="false" />	
+	<CheckBoxPreference 
+	android:title="@string/PrefExternalBrowser"
+	android:key="externalBrowserPref"
+	android:defaultValue="false" />
 </PreferenceCategory>
 <PreferenceCategory android:title="@string/PrefGroupPrivacy">
 	<CheckBoxPreference 

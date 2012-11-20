@@ -20,6 +20,7 @@
     <string name="PrefResetSources">Reset sources to defaults</string>
     <string name="PrefRegion">Set region</string>
     <string name="PrefModifyQuery">Edit autocomplete result</string>
+    <string name="PrefExternalBrowser">Always use external browser</string>
     <string name="PrefSendFeedback">Send Feedback</string>
     <string name="PrefRate">Rate Us</string>
     <string name="PrefAppSearch">Include apps in search</string>

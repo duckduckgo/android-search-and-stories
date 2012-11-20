@@ -114,6 +114,9 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		else if(key.equals("appSearchPref")){
 			DDGControlVar.includeAppsInSearch = sharedPreferences.getBoolean(key, false);
 		}
+		else if(key.equals("externalBrowserPref")){
+			DDGControlVar.alwaysUseExternalBrowser = sharedPreferences.getBoolean(key, false);
+		}
 
 	}
 	

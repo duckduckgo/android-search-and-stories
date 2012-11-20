@@ -128,10 +128,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private final int PREFERENCES_RESULT = 0;
 	
-	private final int CONTEXT_ITEM_SAVE = 0;
-	private final int CONTEXT_ITEM_UNSAVE = 1;
-	private final int CONTEXT_ITEM_SHARE = 2;
-	
 	Item[] shareDialogItems;
 	FeedObject currentFeedObject = null;
 	boolean isFeedObject = false;
@@ -1031,6 +1027,19 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void searchWebTerm(String term) {
+		if(DDGControlVar.alwaysUseExternalBrowser) {
+			String url;
+			if(DDGControlVar.regionString == "wt-wt"){	// default
+				url = DDGConstants.SEARCH_URL + URLEncoder.encode(term);
+			}
+			else {
+				url = DDGConstants.SEARCH_URL + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
+			}
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        	startActivity(browserIntent);
+        	return;
+		}
+		
 		displayWebView();
 		
 		if(!savedState){
@@ -1062,6 +1071,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void showWebUrl(String url) {
+		if(DDGControlVar.alwaysUseExternalBrowser) {
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        	startActivity(browserIntent);
+        	return;
+		}
+		
 		displayWebView();
 		
 		if(!savedState)
