@@ -815,6 +815,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private void switchScreens(){
         // control which start screen is shown & configure related views
 		
+		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		clearSearchBar();
 		clearBrowserState();
 		
