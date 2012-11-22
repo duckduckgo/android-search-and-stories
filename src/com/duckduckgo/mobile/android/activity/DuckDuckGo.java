@@ -25,12 +25,14 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.MailTo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -54,6 +56,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -90,6 +93,10 @@ import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongCl
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView.OnRecentSearchItemSelectedListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnLastItemVisibleListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
 
 public class DuckDuckGo extends Activity implements OnEditorActionListener, FeedListener, OnClickListener {
 
@@ -101,6 +108,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private ProgressBar feedProgressBar = null;
 	private MainFeedListView feedView = null;
 	private RecentSearchListView leftRecentView = null;
+	
+	private PullToRefreshMainFeedListView mPullRefreshListView = null;
 	
 	ArrayAdapter<String> lRecentAdapter;
 	ListAdapter contextAdapter;
@@ -446,7 +455,35 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		});
         
         
-        feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);        
+		mPullRefreshListView = (PullToRefreshMainFeedListView) findViewById(R.id.mainFeedItems);
+
+		// Set a listener to be invoked when the list should be refreshed.
+		mPullRefreshListView.setOnRefreshListener(new OnRefreshListener<MainFeedListView>() {
+			@Override
+			public void onRefresh(PullToRefreshBase<MainFeedListView> refreshView) {
+				mPullRefreshListView.setLastUpdatedLabel(DateUtils.formatDateTime(getApplicationContext(),
+						System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
+								| DateUtils.FORMAT_ABBREV_ALL));
+
+				// refresh the list
+				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
+				mDuckDuckGoContainer.mainFeedTask.execute();
+			}
+		});
+
+//		// Add an end-of-list listener
+//		mPullRefreshListView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
+//
+//			@Override
+//			public void onLastItemVisible() {
+//				Toast.makeText(DuckDuckGo.this, "End of List!", Toast.LENGTH_SHORT).show();
+//			}
+//		});        
+        
+//        feedView = (MainFeedListView) findViewById(R.id.mainFeedItems);  
+		
+		feedView = mPullRefreshListView.getRefreshableView();
+		
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
         // context and LayoutParams for this cache task (to instantiate AsyncImageViews) will be set in feedView
         feedView.setAfterRenderTask(cachePrevNextHeadTask);
@@ -511,7 +548,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		if(visibleItemCount > 0){
         			mDuckDuckGoContainer.feedAdapter.scrolling = true;
         		}
-        		this.firstVisibleItem = firstVisibleItem;
         	}
 
         	public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -519,11 +555,21 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
         			mScrollCancelLock = false;
         				mDuckDuckGoContainer.feedAdapter.scrolling = false;
-        				final int count = view.getChildCount();        				        				
+        				final int count = feedView.getChildCount();        
+        				firstVisibleItem = feedView.getFirstVisiblePosition()-feedView.getHeaderViewsCount();
+        				
+        				Log.d("SCROLL","first: " + firstVisibleItem);
+        				Log.d("SCROLL","count: " + count);
         				
         				for(int i=0;i<count;++i){
-        					View cv = view.getChildAt(i);
+            				Log.d("SCROLL","i: " + i);
+        					View cv = feedView.getChildAt(i);
+        					
+        					if(cv instanceof FrameLayout)
+        						continue;
+        					
         					holder = (Holder) cv.getTag();
+        					
         					if(!holder.imageViewBackground.getMemCacheDrawn()){
         						mDuckDuckGoContainer.feedAdapter.getView(firstVisibleItem+i, cv, view);
         					}
@@ -738,15 +784,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         prefLayout = (LinearLayout) findViewById(R.id.prefLayout);
 		
-    }
+    }	
 	
 	/**
 	 * Cache previous/next N images
 	 */
 	private void cachePrevNextImages(int nImages) {
 		// download/cache invisible feed items from -N to +N 
-		int firstPos = feedView.getFirstVisiblePosition();
-		int lastPos = feedView.getLastVisiblePosition();
+		int firstPos = feedView.getFirstVisiblePosition()-feedView.getHeaderViewsCount();
+		int lastPos = feedView.getLastVisiblePosition()-feedView.getHeaderViewsCount();
 		ArrayList<String> imageUrls = new ArrayList<String>();
 		int startIndex = firstPos - nImages;
 		int endIndex = lastPos + nImages;
@@ -1086,13 +1132,17 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onFeedRetrieved(List<FeedObject> feed) {
 		feedProgressBar.setVisibility(View.GONE);
 		mDuckDuckGoContainer.feedAdapter.scrolling = false;
-		mDuckDuckGoContainer.feedAdapter.setList(feed);
+		mDuckDuckGoContainer.feedAdapter.addData(feed);
 		mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
+		
+		// update pull-to-refresh header to reflect task completion
+		mPullRefreshListView.onRefreshComplete();
+				
 		DDGControlVar.hasUpdatedFeed = true;
 		
 		// do this upon filter completion
 		if(DDGControlVar.targetSource != null && m_objectId != null) {
-			int nPos = feedView.getSelectionPosById(m_objectId);
+			int nPos = feedView.getSelectionPosById(m_objectId) - feedView.getHeaderViewsCount();
 			mScrollCancelLock = true;
 			Log.v(TAG, "nPOS " + nPos);
 			feedView.smoothScrollToPositionFromTop(nPos, m_yOffset);
@@ -1176,7 +1226,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mainWebView.setVisibility(View.GONE);
 		shareButton.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
-    	feedView.setVisibility(View.VISIBLE);
+		mPullRefreshListView.setVisibility(View.VISIBLE);
+//    	feedView.setVisibility(View.VISIBLE);
     	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
 		mDuckDuckGoContainer.prefShowing = false;
@@ -1213,7 +1264,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mainWebView.setVisibility(View.GONE);
 		shareButton.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
-		feedView.setVisibility(View.GONE);
+		mPullRefreshListView.setVisibility(View.GONE);
+//		feedView.setVisibility(View.GONE);
     	feedProgressBar.setVisibility(View.GONE);
     	recentSearchView.setVisibility(View.VISIBLE);
     	mDuckDuckGoContainer.webviewShowing = false;
@@ -1231,7 +1283,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		homeSettingsButton.setImageResource(R.drawable.home_button);	
 		
 		if (!mDuckDuckGoContainer.webviewShowing) {
-			feedView.setVisibility(View.GONE);
+			mPullRefreshListView.setVisibility(View.GONE);
+//			feedView.setVisibility(View.GONE);
 			recentSearchView.setVisibility(View.GONE);
 			
 			shareButton.setVisibility(View.VISIBLE);

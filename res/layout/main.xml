@@ -77,11 +77,24 @@
             	 android:visibility="gone"
             	 android:id="@+id/mainWebView" />
         
-        <com.duckduckgo.mobile.android.views.MainFeedListView
+<!--         <com.duckduckgo.mobile.android.views.MainFeedListView -->
+<!--             	  android:layout_width="match_parent" -->
+<!--                   android:layout_height="match_parent" -->
+<!--                   android:background="@android:color/transparent" -->
+<!--                   android:visibility="gone" -->
+<!--                   android:id="@+id/mainFeedItems" /> -->
+
+        <com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView
             	  android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:background="@android:color/transparent"
-                  android:visibility="gone"
+                  
+                  android:fadingEdge="none"
+        		  android:fastScrollEnabled="false"
+        		  android:footerDividersEnabled="false"
+        		  android:headerDividersEnabled="false"
+        		  android:smoothScrollbar="true"
+        		  
                   android:id="@+id/mainFeedItems" />
         
         <com.duckduckgo.mobile.android.views.RecentSearchListView

@@ -2,6 +2,9 @@ package com.duckduckgo.mobile.android.adapters;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
@@ -39,6 +42,9 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	
 	public OnClickListener sourceClickListener;
 	
+	private SimpleDateFormat dateFormat;
+	private Date lastFeedDate = null;
+	
 	private int markedItem = -1;
 	
 	private AlphaAnimation blinkanimation = null;
@@ -51,6 +57,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		imageDownloader = DDGApplication.getImageDownloader();
 		this.sourceClickListener = sourceClickListener;
+		this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		
 		// animation to use for blinking cue
 		blinkanimation = new AlphaAnimation(1, 0.3f);
@@ -167,6 +174,29 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		this.clear();
 		for (FeedObject next : feed) {
 			this.add(next);
+		}
+	}
+	
+	public void addData(List<FeedObject> feed) {
+		if(this.lastFeedDate == null) {
+			setList(feed);
+			return;
+		}
+		
+		Date tmpFeedDate = null;
+		for (FeedObject next : feed) {
+			try {
+				tmpFeedDate = this.dateFormat.parse(next.getTimestamp());
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
+			if(tmpFeedDate == null || !tmpFeedDate.after(lastFeedDate)) {
+				return;
+			}
+			
+			this.insert(next, 0);
+			this.lastFeedDate = tmpFeedDate;
 		}
 	}
 	

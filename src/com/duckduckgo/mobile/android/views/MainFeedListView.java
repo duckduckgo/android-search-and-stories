@@ -85,8 +85,9 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 	 * @return item position in the list
 	 */
 	public int getSelectionPosById(String id) {
-		int itemCount = getCount();
-		for(int i=0; i < itemCount ; ++i) {
+		int headerViewCount = getHeaderViewsCount();
+		int itemCount = getCount() - headerViewCount;
+		for(int i=headerViewCount; i < itemCount ; ++i) {
 			if(((FeedObject) getItemAtPosition(i)).getId().equals(id)) {
 				return i;
 			}
