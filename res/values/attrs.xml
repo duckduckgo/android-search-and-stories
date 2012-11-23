@@ -9,6 +9,7 @@
     
     
         <declare-styleable name="PullToRefresh">
+        <attr name="ptrHeaderSize" format="dimension" />
         <attr name="ptrAdapterViewBackground" format="reference|color" />
         <attr name="ptrHeaderBackground" format="reference|color" />
         <attr name="ptrHeaderTextColor" format="reference|color" />

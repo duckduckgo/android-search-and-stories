@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="?attr/ptrHeaderSize" >
 
     <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
         android:layout_marginRight="@dimen/header_footer_internal_padding" >
 
         <ImageView
             android:id="@+id/pull_to_refresh_image"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:scaleType="center" />
 
         <ProgressBar
             android:id="@+id/pull_to_refresh_progress"
@@ -20,11 +23,20 @@
             android:indeterminate="true"
             android:visibility="gone" />
     </FrameLayout>
+    
+    <ImageView
+            android:id="@+id/ptr_divider_image"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/refresh_dotted_line"
+            android:scaleType="center" />
 
     <LinearLayout
         android:layout_width="0px"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_weight="1"
+        android:layout_marginLeft="@dimen/header_footer_internal_padding"
+        android:gravity="center_vertical"
         android:orientation="vertical" >
 
         <TextView
