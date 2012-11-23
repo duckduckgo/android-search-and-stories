@@ -19,6 +19,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -1437,4 +1438,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 	}
     
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		mDuckDuckGoContainer.feedAdapter.scrolling = false;
+		super.onConfigurationChanged(newConfig);
+	}
 }
