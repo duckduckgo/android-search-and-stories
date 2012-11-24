@@ -1125,13 +1125,19 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		
 		// do this upon filter completion
 		if(DDGControlVar.targetSource != null && m_objectId != null) {
-			int nPos = feedView.getSelectionPosById(m_objectId) - feedView.getHeaderViewsCount();
+			int nPos = feedView.getSelectionPosById(m_objectId);
 			mScrollCancelLock = true;
 			Log.v(TAG, "nPOS " + nPos);
-			feedView.smoothScrollToPositionFromTop(nPos, m_yOffset);
+			
+//			if(android.os.Build.VERSION.SDK_INT >= 11) {
+//				feedView.smoothScrollToPositionFromTop(nPos, m_yOffset);
+//			}
+//			else {
+				feedView.setSelectionFromTop(nPos,m_yOffset);
+//			}
 			
 			// mark for blink animation (as a visual cue after list update)
-			mDuckDuckGoContainer.feedAdapter.mark(nPos);
+			mDuckDuckGoContainer.feedAdapter.mark(nPos - feedView.getHeaderViewsCount());
 		}
 		else {
 			// scroll triggers pre-caching for source filtering case
