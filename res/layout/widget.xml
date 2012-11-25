@@ -1,59 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/search_widget"
     android:background="@drawable/widget_frame_bg"
+    android:text="Search DuckDuckGo..."
+    android:textColor="@android:color/white"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingLeft="15dip"
-    android:paddingRight="18dip"
-    android:paddingTop="1dip"
-    android:paddingBottom="1dip" >
-
-	<ImageView
-		android:id="@+id/ddg_icon"
-		android:layout_width="45dp"
-		android:layout_height="51dp"
-		android:layout_gravity="center_vertical"
-		android:drawablePadding="0dip"
-		android:paddingRight="1dip"
-		android:paddingLeft="1dip"
-		android:paddingBottom="1dip"
-		android:src="@drawable/ddg_logo" />
-
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    		android:id="@+id/buttons"
-    		android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:layout_gravity="center_vertical">
-
-	        <TextView
-	            android:id="@+id/widget_search_text"
-	            android:layout_width="fill_parent"
-	            android:layout_height="fill_parent"
-	            android:layout_weight="1.0"
-	            android:background="@drawable/textfield_search"
-	            android:text="DuckDuckGo..."
-	            android:textColor="#c4c4c4"
-	            android:singleLine="true"
-	            android:gravity="center_vertical"/>
-
-	        <ImageButton
-	            android:id="@+id/widget_go_btn"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:background="@drawable/search_button"
-	            android:layout_marginTop="1dip"/>
-
-	<!--
-	        <ImageButton
-	            android:id="@+id/widget_voice_btn"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="8dip"
-	            android:background="@drawable/btn_voice_search"
-	            android:src="@android:drawable/ic_btn_speak_now"
-	        />
-	-->
-	</LinearLayout>
-</LinearLayout>
+    android:layout_height="wrap_content">
+</Button>
