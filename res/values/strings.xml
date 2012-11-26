@@ -11,7 +11,7 @@
     <string name="PrefGroupPrivacy">Privacy</string>
     <string name="PrefGroupFeedback">Feedback</string>
     <string name="PrefStartScreen">Main screen</string>
-    <string name="PrefNewsFeed">News feed</string>
+    <string name="PrefStories">Stories</string>
     <string name="PrefSavedItems">Saved items</string>
     <string name="PrefRecentSearch">Recent searches</string>
     <string name="PrefRecordHistory">Record history</string>

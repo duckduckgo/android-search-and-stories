@@ -45,6 +45,7 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
+import android.webkit.DownloadListener;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -763,6 +764,17 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	}
         });
         
+        mainWebView.setDownloadListener(new DownloadListener() { 
+            public void onDownloadStart(String url, String userAgent, 
+                    String contentDisposition, String mimetype, 
+                    long contentLength) { 
+                Intent intent = new Intent(Intent.ACTION_VIEW); 
+                intent.setData(Uri.parse(url)); 
+                intent.setType(mimetype); 
+                startActivity(intent); 
+            } 
+        }); 
+        
         feedProgressBar = (ProgressBar) findViewById(R.id.feedLoadingProgress);
         
         prefLayout = (LinearLayout) findViewById(R.id.prefLayout);
@@ -844,7 +856,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		clearSearchBar();
 		clearBrowserState();
 		
-        if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
+        if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){
         	// show recent queries on slide-out menu
 //        	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
         	
@@ -1229,7 +1241,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		
 		displayFeedCore();
     	    	
-    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_NEWS_FEED){
+    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
     	}
