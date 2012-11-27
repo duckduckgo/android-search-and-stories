@@ -283,6 +283,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				}
 			};
 			
+    		DDGControlVar.hasUpdatedFeed = false;
     		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
     		
     		mDuckDuckGoContainer.mainFeedTask = null;
