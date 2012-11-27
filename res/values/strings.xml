@@ -70,5 +70,7 @@
     <string name="crash_dialog_ok_toast">Thank you for your help!</string>
     
     <string name="ErrorAppNotFound">App Not Found</string>
+    <string name="ErrorActivityNotFound">No related activity found!</string>
+    <string name="ErrorDownloadFailed">Download failed!</string>
 
 </resources>

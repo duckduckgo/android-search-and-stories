@@ -54,7 +54,12 @@
 		<provider android:name=".providers.DuckDuckGoProvider"
 				android:authorities="com.duckduckgo.mobile.android.providers.DuckDuckGoProvider" />
         
-        
+		<receiver android:name=".broadcast.DownloadReceiver">
+		    <intent-filter>
+		        <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
+		    </intent-filter>
+		</receiver>
+		
     </application>
 
 </manifest>

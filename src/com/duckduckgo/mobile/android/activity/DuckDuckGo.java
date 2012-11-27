@@ -1,6 +1,9 @@
 package com.duckduckgo.mobile.android.activity;
 
+import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -9,17 +12,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.app.FragmentManager;
 import android.app.SearchManager;
+import android.content.ActivityNotFoundException;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -28,6 +38,7 @@ import android.net.MailTo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.text.Editable;
@@ -70,15 +81,20 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
+import com.duckduckgo.mobile.android.broadcast.DownloadReceiver;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.listener.FeedListener;
+import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
+import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
+import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
 import com.duckduckgo.mobile.android.tasks.SavedFeedTask;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -150,12 +166,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	boolean mScrollCancelLock = false;
 	Runnable cachePrevNextTask = null, cachePrevNextHeadTask = null;
 	
+	// downloader for web view
+	DownloadManager downloadManager;
 			
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_PROGRESS);
-        
+        		        
         setContentView(R.layout.twopane);
         
         fan = (FanView) findViewById(R.id.fan_view);
@@ -768,10 +786,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             public void onDownloadStart(String url, String userAgent, 
                     String contentDisposition, String mimetype, 
                     long contentLength) { 
-                Intent intent = new Intent(Intent.ACTION_VIEW); 
-                intent.setData(Uri.parse(url)); 
-                intent.setType(mimetype); 
-                startActivity(intent); 
+            	
+            	DuckDuckGo.this.downloadContent(url, mimetype);
             } 
         }); 
         
@@ -896,6 +912,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onResume() {
 		super.onResume();
 		
+		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD) {
+			initDownloadManager();
+		}
+		
 		// global search intent
         Intent intent = getIntent(); 
         
@@ -942,7 +962,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			Editor editor = sharedPreferences.edit();
 			editor.putString("readarticles", combined);
 			editor.commit();
-		}
+		}		
 	}
 	
 	@Override
@@ -1460,5 +1480,75 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onConfigurationChanged(Configuration newConfig) {
 		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		super.onConfigurationChanged(newConfig);
+	}	
+	
+	@SuppressLint("NewApi")
+	private void downloadContent(final String url, final String mimeType) {
+		// use mimeType to figure out an extension for temporary file
+		int idxSlash = mimeType.indexOf('/') + 1;
+		String ext = "tmp";
+		if(idxSlash != -1) {
+			ext = mimeType.substring(idxSlash);
+		}
+		String fileName = "down." + ext;
+		
+		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD) {
+			Uri uri = Uri.parse(url);
+			DownloadManager.Request r = new DownloadManager.Request(uri);
+
+			// This put the download in the same Download dir the browser uses
+			r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
+
+			// When downloading music and videos they will be listed in the player
+			// (Seems to be available since Honeycomb only)
+			if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+				r.allowScanningByMediaScanner();
+
+				// Notify user when download is completed
+				// (Seems to be available since Honeycomb only)
+				r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+			}
+
+			// Start download
+			downloadManager.enqueue(r);
+		}
+		else {
+			// manual download for devices below GINGERBREAD
+			
+			// TODO AsyncTask here
+			
+			MimeDownloadListener mimeListener = new MimeDownloadListener() {
+				
+				@Override
+				public void onDownloadFailed() {
+					// TODO Fail gracefully here... inform the user about failed download!
+					Toast.makeText(DuckDuckGo.this, R.string.ErrorDownloadFailed, Toast.LENGTH_LONG).show();
+				}
+				
+				@Override
+				public void onDownloadComplete(String filePath) {
+					// intent to view content
+					Intent viewIntent = new Intent(Intent.ACTION_VIEW); 
+					File file = new File(filePath);
+					viewIntent.setDataAndType(Uri.fromFile(file), mimeType); 
+					viewIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+					try {
+						startActivity(viewIntent);
+					}
+					catch(ActivityNotFoundException e) {	
+						Toast.makeText(DuckDuckGo.this, R.string.ErrorActivityNotFound, Toast.LENGTH_LONG).show();
+					}					
+				}
+			};
+			
+			MimeDownloadTask mimeTask = new MimeDownloadTask(mimeListener, url, fileName);
+			mimeTask.execute();
+		}		
 	}
+	
+	@TargetApi(11)
+	private void initDownloadManager() {
+		downloadManager = (DownloadManager) getSystemService(DuckDuckGo.DOWNLOAD_SERVICE);        
+	}
+	
 }
