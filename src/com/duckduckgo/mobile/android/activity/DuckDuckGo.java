@@ -626,7 +626,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		return true;
         	}
         	
-        	public void onPageStarted(WebView view, String url, Bitmap favicon) {
+        	@SuppressLint("NewApi")
+			public void onPageStarted(WebView view, String url, Bitmap favicon) {
         		super.onPageStarted(view, url, favicon);        		
 
         		// Omnibar like behavior.
@@ -634,13 +635,18 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         			// FIXME api level
         	        mainWebView.getSettings().setSupportZoom(true);
         	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
-        	        //mainWebView.getSettings().setEnableSmoothTransition(false);
         	        mainWebView.getSettings().setBuiltInZoomControls(false);
-        	        //mainWebView.getSettings().setDisplayZoomControls(false);
         	        mainWebView.getSettings().setUseWideViewPort(false);
         	        mainWebView.getSettings().setLoadWithOverviewMode(false);
-        	        //mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
-        	        //mainWebView.getSettings().setPluginsEnabled(true); 
+        	        
+        	        mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        	        mainWebView.getSettings().setPluginsEnabled(true); 
+
+        	        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+            	        mainWebView.getSettings().setEnableSmoothTransition(false);
+            	        mainWebView.getSettings().setDisplayZoomControls(false);
+        	        }
+        	        
         			URL fullURL = null;
         			try {
 						fullURL = new URL(url);
@@ -685,14 +691,18 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         			//This isn't duckduck go...
         			// FIXME api level
         	        mainWebView.getSettings().setSupportZoom(true);
-        	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.FAR);
-        	        //mainWebView.getSettings().setEnableSmoothTransition(true);
+        	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
         	        mainWebView.getSettings().setBuiltInZoomControls(true);
-        	        //mainWebView.getSettings().setDisplayZoomControls(false);
         	        mainWebView.getSettings().setUseWideViewPort(true);
         	        mainWebView.getSettings().setLoadWithOverviewMode(true);
-        	        //mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
-        	        //mainWebView.getSettings().setPluginsEnabled(true); 
+        	        mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
+        	        mainWebView.getSettings().setPluginsEnabled(true); 
+        	        
+        	        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+            	        mainWebView.getSettings().setEnableSmoothTransition(true);
+            	        mainWebView.getSettings().setDisplayZoomControls(false);
+        	        }
+        	        
         			setSearchBarText(url);
         		}
         	}
