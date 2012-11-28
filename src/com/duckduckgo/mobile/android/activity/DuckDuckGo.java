@@ -144,6 +144,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private TextView leftSavedTextView = null;
 	private TextView leftRecentTextView = null;
 	private TextView leftSettingsTextView = null;
+	
+	private LinearLayout leftHomeButtonLayout = null;
+	private LinearLayout leftStoriesButtonLayout = null;
+	private LinearLayout leftSavedButtonLayout = null;
+	private LinearLayout leftSettingsButtonLayout = null;
 		
 	private SharedPreferences sharedPreferences;
 		
@@ -314,6 +319,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftSavedTextView = (TextView) findViewById(R.id.LeftSavedTextView);
     	leftRecentTextView = (TextView) findViewById(R.id.LeftRecentTextView);
     	leftSettingsTextView = (TextView) findViewById(R.id.LeftSettingsTextView);
+    	
+    	
+    	leftHomeButtonLayout = (LinearLayout) findViewById(R.id.LeftHomeButtonLayout);
+    	leftStoriesButtonLayout = (LinearLayout) findViewById(R.id.LeftStoriesButtonLayout);
+    	leftSavedButtonLayout = (LinearLayout) findViewById(R.id.LeftSavedButtonLayout);
+    	leftSettingsButtonLayout = (LinearLayout) findViewById(R.id.LeftSettingsButtonLayout);
+    	
     	
     	int pixelValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
                 (float) 30.0, getResources().getDisplayMetrics());
@@ -890,8 +902,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		// left side menu visibility changes
         	leftRecentTextView.setVisibility(View.VISIBLE);
         	leftRecentView.setVisibility(View.VISIBLE);	
-        	leftSavedTextView.setVisibility(View.VISIBLE);
-        	leftStoriesTextView.setVisibility(View.GONE);
+        	leftSavedButtonLayout.setVisibility(View.VISIBLE);
+        	leftStoriesButtonLayout.setVisibility(View.GONE);
         	
         	displayNewsFeed();
         }
@@ -903,8 +915,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		// left side menu visibility changes
         	leftRecentTextView.setVisibility(View.GONE);
         	leftRecentView.setVisibility(View.GONE);
-        	leftSavedTextView.setVisibility(View.VISIBLE);
-        	leftStoriesTextView.setVisibility(View.VISIBLE);
+        	leftSavedButtonLayout.setVisibility(View.VISIBLE);
+        	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
         	
         	displayRecentSearch();
         }
@@ -912,8 +924,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		// left side menu visibility changes
         	leftRecentTextView.setVisibility(View.VISIBLE);
         	leftRecentView.setVisibility(View.VISIBLE);
-        	leftSavedTextView.setVisibility(View.GONE);
-        	leftStoriesTextView.setVisibility(View.VISIBLE);
+        	leftSavedButtonLayout.setVisibility(View.GONE);
+        	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
         	
         	displaySavedFeed();
         }
