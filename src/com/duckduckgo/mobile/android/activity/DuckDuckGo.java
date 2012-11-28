@@ -31,6 +31,7 @@ import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -1249,6 +1250,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         displayPreferences();
 	}
 	
+	private void clearLeftSelect() {
+		leftHomeTextView.setSelected(false);
+		leftSavedTextView.setSelected(false);
+		leftSettingsTextView.setSelected(false);
+		leftStoriesTextView.setSelected(false);
+	}
+	
 	public void displayPreferences(){
 		mPullRefreshFeedView.setVisibility(View.GONE);
 		mainWebView.setVisibility(View.GONE);
@@ -1259,6 +1267,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 		mDuckDuckGoContainer.webviewShowing = false;
+		
+		clearLeftSelect();
+		leftSettingsTextView.setSelected(true);
 	}
 	
 	/**
@@ -1283,10 +1294,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		
 		displayFeedCore();
+		clearLeftSelect();
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
+			leftHomeTextView.setSelected(true);
+    	}
+    	else {
+			leftStoriesTextView.setSelected(true);
     	}
 	}
 	
@@ -1295,10 +1311,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		DDGControlVar.hasUpdatedFeed = false;
 		
 		displayFeedCore();
+		clearLeftSelect();
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
+			leftHomeTextView.setSelected(true);
+    	}
+    	else {
+			leftSavedTextView.setSelected(true);
     	}
 	}
 	
@@ -1312,10 +1333,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	recentSearchView.setVisibility(View.VISIBLE);
     	mDuckDuckGoContainer.webviewShowing = false;
 		mDuckDuckGoContainer.prefShowing = false;
+		
+		clearLeftSelect();
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
+    		leftHomeTextView.setSelected(true);
     	}
 	}
 	
@@ -1574,4 +1598,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		downloadManager = (DownloadManager) getSystemService(DuckDuckGo.DOWNLOAD_SERVICE);        
 	}
 	
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if ( keyCode == KeyEvent.KEYCODE_MENU ) {
+	        fan.showMenu();
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
 }
