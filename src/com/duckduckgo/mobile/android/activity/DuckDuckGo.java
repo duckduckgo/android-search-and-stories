@@ -341,7 +341,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         caret = getResources().getDrawable(R.drawable.icon_caret_selector);
     	caret.setBounds(0, 0, pixelValue, pixelValue);
         
-    	xt = getResources().getDrawable(android.R.drawable.ic_menu_rotate);
+    	xt = getResources().getDrawable(R.drawable.icon_stories_selector);
         xt.setBounds(0, 0, pixelValue, pixelValue);
         leftStoriesTextView.setCompoundDrawables(xt, null, caret, null);        
         
