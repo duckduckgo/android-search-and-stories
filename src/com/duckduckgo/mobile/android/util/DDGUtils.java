@@ -49,6 +49,7 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 public final class DDGUtils {
 	
 	public static int feedItemWidth = 0, feedItemHeight = 0;
+	public static int maxItemWidthHeight = 0;
 	
     private static final Pattern PUNC_PATTERN = Pattern.compile("[:.,/]");
 	
@@ -131,7 +132,7 @@ public final class DDGUtils {
 		}
 	}
 	
-	private static Bitmap decodeImage(FileDescriptor fd) {
+	private static Bitmap decodeImage(FileDescriptor fd, String filePath) {
 		final String TAG = "decodeImage";
 
 		//Decode image size
@@ -147,7 +148,8 @@ public final class DDGUtils {
         int scale=1;
 //        while(o.outWidth/scale/2>=REQUIRED_SIZE && o.outHeight/scale/2>=REQUIRED_SIZE)
 //        while(o.outWidth/scale>=REQUIRED_SIZE)
-        while(o.outWidth/scale/2>=480 || o.outHeight/scale/2>=287)
+                
+        while(o.outWidth/scale/2>=maxItemWidthHeight || o.outHeight/scale/2>=maxItemWidthHeight)
             scale*=2;
         
         Log.v(TAG,"Scale: " + scale);
@@ -157,7 +159,7 @@ public final class DDGUtils {
 	        options.inSampleSize=scale;
 	        
 	        try {
-				Bitmap result = BitmapFactory.decodeFileDescriptor(fd, null, options);
+				Bitmap result = BitmapFactory.decodeFile(filePath, options);
 				return result;
 	        }
 	        catch(OutOfMemoryError oomError) {
@@ -191,7 +193,8 @@ public final class DDGUtils {
 					fileCache.saveStreamToInternal(fname, inputStream);
 					fileDesc = fileCache.getFd(fname);
 					inputStream.close();
-							
+					
+					String filePath = fileCache.getPath(fname);
 					
 					if(fileDesc == null)
 						return null;
@@ -203,7 +206,7 @@ public final class DDGUtils {
 				    	resultBitmap = decodeRegion(fileDesc);
 				    }
 				    else {
-				    	resultBitmap = decodeImage(fileDesc);
+				    	resultBitmap = decodeImage(fileDesc, filePath);
 				    }
 				    fileCache.removeFile(fname);
 			    	return resultBitmap;

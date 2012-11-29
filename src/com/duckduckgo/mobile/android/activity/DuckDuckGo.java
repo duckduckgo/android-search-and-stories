@@ -199,6 +199,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         DDGUtils.feedItemHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
                 (float) 135.0, getResources().getDisplayMetrics());
         
+        DDGUtils.maxItemWidthHeight = Math.max(DDGUtils.feedItemWidth, DDGUtils.feedItemHeight);
+        
         if(savedInstanceState != null)
         	savedState = true;
         
