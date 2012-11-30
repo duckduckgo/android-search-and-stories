@@ -49,7 +49,7 @@ public class SourcePreferences extends Activity implements SourcesListener {
 			
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getBaseContext(), R.string.DefaultsSetToast, Toast.LENGTH_SHORT).show();
+				Toast.makeText(getApplicationContext(), R.string.DefaultsSetToast, Toast.LENGTH_SHORT).show();
 
 				DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "sourceset");
 				DDGControlVar.hasUpdatedFeed = false;

@@ -57,6 +57,6 @@
     android:title="@string/PrefEnableAcra"
     android:summaryOn="@string/PrefAcraEnabled"
     android:summaryOff="@string/PrefAcraDisabled"
-    android:defaultValue="true"/>
+    android:defaultValue="false"/>
 </PreferenceCategory>
 </PreferenceScreen>
