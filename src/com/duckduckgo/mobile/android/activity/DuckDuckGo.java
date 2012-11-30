@@ -174,6 +174,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	// downloader for web view
 	DownloadManager downloadManager;
+	
+	boolean mCleanSearchBar = false;
 			
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -457,6 +459,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
                 if (event.getX() > searchField.getWidth() - searchField.getPaddingRight() - x.getIntrinsicWidth()) {
                 	searchField.setText("");
                 	searchField.setCompoundDrawables(null, null, null, null);
+                	
+                	mCleanSearchBar = true;
+                	searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
                 }
                 return false;
             }
@@ -726,6 +731,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	
         	public void onPageFinished (WebView view, String url) {
         		
+        		mCleanSearchBar = false;
+        		
         		if(!mDuckDuckGoContainer.allowInHistory) {
         			mainWebView.clearHistory();
         		}
@@ -755,8 +762,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         			searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
         		}
         		else {
-	        		mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
-	        		searchField.setBackgroundDrawable(mDuckDuckGoContainer.progressDrawable);
+        			if(!mCleanSearchBar) {
+        				mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
+        				searchField.setBackgroundDrawable(mDuckDuckGoContainer.progressDrawable);
+        			}
         		}
 
         	}
