@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
@@ -48,6 +49,8 @@ public class SourcePreferences extends Activity implements SourcesListener {
 			
 			@Override
 			public void onClick(View v) {
+				Toast.makeText(getBaseContext(), R.string.DefaultsSetToast, Toast.LENGTH_SHORT).show();
+
 				DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "sourceset");
 				DDGControlVar.hasUpdatedFeed = false;
 				DDGControlVar.useDefaultSources = true;

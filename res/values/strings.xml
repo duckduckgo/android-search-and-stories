@@ -74,5 +74,6 @@
     <string name="ErrorDownloadFailed">Download failed!</string>
     
     <string name="InfoReadStoriesFromCache">Connection failed! Stories retrieved from cache...</string>
+    <string name="DefaultsSetToast">Sources reset to the default.</string>
 
 </resources>
