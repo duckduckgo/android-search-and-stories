@@ -3,4 +3,5 @@
     android:minWidth="250dp"
     android:minHeight="40dp"
     android:initialLayout="@layout/widget"
+    android:resizeMode="none"
 />

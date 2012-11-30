@@ -15,7 +15,7 @@ public class DDGNetworkConstants {
 	private static ClientConnectionManager mainConnManager = null;
     private static HttpParams httpParams = new BasicHttpParams();
     
-    public static Map<String, String> extraHeaders = new HashMap<String, String>();
+//    public static Map<String, String> extraHeaders = new HashMap<String, String>();
 	
 	public static void initialize(){
 		// Create and initialize HTTP parameters
@@ -32,7 +32,7 @@ public class DDGNetworkConstants {
         
         
         // initialize referrer headers to use with WebView
-        extraHeaders.put("Referer", "http://www.google.com/");
+//        extraHeaders.put("Referer", "http://www.google.com/");
 	}
 	
 	public static DDGHttpClient getNewClient(){

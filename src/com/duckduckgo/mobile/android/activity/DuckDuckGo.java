@@ -636,7 +636,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
                         return true;
         			}
         			else {	
-        				view.loadUrl(url, DDGNetworkConstants.extraHeaders);
+//        				view.loadUrl(url, DDGNetworkConstants.extraHeaders);
+        				view.loadUrl(url);
         			}        			
         		}
         		return true;
@@ -644,8 +645,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	
         	@SuppressLint("NewApi")
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        		super.onPageStarted(view, url, favicon);        		
-
+        		super.onPageStarted(view, url, favicon);      
+        		
         		// Omnibar like behavior.
         		if (url.contains("duckduckgo.com")) {
         			// FIXME api level
@@ -1167,7 +1168,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		displayWebView();
 		
 		if(!savedState)
-			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
+//			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
+			mainWebView.loadUrl(url);
 	}
 
 	public void onFeedRetrieved(List<FeedObject> feed) {
