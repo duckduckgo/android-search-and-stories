@@ -8,11 +8,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
@@ -25,12 +29,19 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
 	private static String TAG = "MainFeedTask";
 	
+	private Context context = null;
 	private FeedListener listener = null;
 	
 	private SharedPreferences sharedPreferences;
+	
+	private FileCache fileCache = null;
+	
+	private boolean cacheRead;
 			
-	public MainFeedTask(FeedListener listener) {
+	public MainFeedTask(Context context, FeedListener listener) {
+		this.context = context;
 		this.listener = listener;
+		this.fileCache = DDGApplication.getFileCache();
 		
 		sharedPreferences = DDGApplication.getSharedPreferences();
 	}
@@ -40,6 +51,8 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		JSONArray json = null;
 		List<FeedObject> returnFeed = new ArrayList<FeedObject>();
 		String feedUrl = DDGConstants.MAIN_FEED_URL;
+		String body = null;
+		cacheRead = false;
 		try {
 			if (isCancelled()) return null;
 			
@@ -83,18 +96,36 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 					
 				}
 			}
-			
-			String body = DDGNetworkConstants.mainClient.doGetString(feedUrl);
+						
+			// if an update is triggered, directly fetch from URL
+			body = DDGNetworkConstants.mainClient.doGetString(feedUrl);
+			fileCache.saveStringToInternal(DDGConstants.STORIES_JSON_PATH, body);
+			DDGControlVar.storiesJSON = new String(body);
 			
 			
 			Log.e(TAG, body);
-			json = new JSONArray(body);
-		} catch (JSONException jex) {
-			Log.e(TAG, jex.getMessage(), jex);
 		} catch (DDGHttpException conException) {
 			Log.e(TAG, "Unable to execute Query: " + conException.getMessage(), conException);
+			
+			body = DDGControlVar.storiesJSON;
+			
+			// try getting JSON from file cache
+			if(body == null){
+				body = fileCache.getStringFromInternal(DDGConstants.STORIES_JSON_PATH);
+			}
+			
+			cacheRead = true;
+			
 		} catch (Exception e) {
 			Log.e(TAG, e.getMessage(), e);
+		}
+		
+		if(body != null) {	
+			try {
+				json = new JSONArray(body);
+			} catch (JSONException jex) {
+				Log.e(TAG, jex.getMessage(), jex);
+			}
 		}
 
 		if (json != null) {
@@ -119,6 +150,10 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	
 	@Override
 	protected void onPostExecute(List<FeedObject> feed) {	
+		if(cacheRead) {
+			Toast.makeText(context, R.string.InfoReadStoriesFromCache, Toast.LENGTH_LONG).show();
+		}
+		
 		if (this.listener != null) {
 			if (feed != null) {
 				this.listener.onFeedRetrieved(feed);

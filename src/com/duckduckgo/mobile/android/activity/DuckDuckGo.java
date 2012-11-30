@@ -284,7 +284,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 						DDGControlVar.targetSource = sourceType;
 												
 						DDGControlVar.hasUpdatedFeed = false;
-						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
+						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, DuckDuckGo.this);
 						mDuckDuckGoContainer.mainFeedTask.execute();
 					}
 					
@@ -500,7 +500,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 								| DateUtils.FORMAT_ABBREV_ALL));
 
 				// refresh the list
-				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
+				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, DuckDuckGo.this);
 				mDuckDuckGoContainer.mainFeedTask.execute();
 			}
 		});     
@@ -856,7 +856,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void cancelSourceFilter() {
 		DDGControlVar.targetSource = null;		
 		DDGControlVar.hasUpdatedFeed = false;
-		mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this);
+		mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, DuckDuckGo.this);
 		mDuckDuckGoContainer.mainFeedTask.execute();
 	}
 	
@@ -1215,7 +1215,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		//If the mainFeedTask is null, we are currently paused
 		//Otherwise, we can try again
 		else if (!mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.mainFeedTask != null) {
-			mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
+			mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, this);
 			mDuckDuckGoContainer.mainFeedTask.execute();
 		}
 	}
@@ -1519,7 +1519,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mDuckDuckGoContainer.savedFeedTask.execute();
 			}
 			else {
-				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
+				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, this);
 				mDuckDuckGoContainer.mainFeedTask.execute();
 			}
 		}

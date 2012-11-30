@@ -46,10 +46,10 @@ public class DDGHttpClient extends DefaultHttpClient {
 	private String m_strResult;
 
 	// Set the timeout in milliseconds until a connection is established.
-	int timeoutConnection = 15000;
+	int timeoutConnection = 3000;
 	
 	// Set the default socket timeout (SO_TIMEOUT) in milliseconds which is the timeout for waiting for data.
-	int timeoutSocket = 15000;
+	int timeoutSocket = 3000;
 	
 	private int mStatusCode;
 

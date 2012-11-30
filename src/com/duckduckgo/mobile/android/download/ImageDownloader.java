@@ -111,9 +111,9 @@ public class ImageDownloader {
 
 		Bitmap bitmap = cache.getBitmapFromCache(url, onlyUseMemCache);
 		
-		if(cache.checkFail(url)){
-			url = null;
-		}
+//		if(cache.checkFail(url)){
+//			url = null;
+//		}
 		
 
 		if (bitmap == null) {
