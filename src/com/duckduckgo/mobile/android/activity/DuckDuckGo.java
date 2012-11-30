@@ -211,7 +211,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         //set caching task to run after at least a news feed item loads
         // cache prev/next 3 images
-		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+//		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
 	        cachePrevNextTask = new Runnable() {
 				
 				@Override
@@ -230,7 +230,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					cachePrevNextImages(3);
 				}
 			};
-		}
+//		}
 		// TODO caching prev/next images requires API Level 11 for now, because of  executeOnExecutor
 		// in  ImageDownloader.queueUrls() , task.executeOnExecutor(this.executor, url);
 		// implement cache prev/next for devices below API level 11

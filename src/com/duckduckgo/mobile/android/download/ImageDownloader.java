@@ -16,6 +16,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup.LayoutParams;
@@ -43,7 +44,7 @@ public class ImageDownloader {
     private ArrayList<DownloadBitmapTask> queuedTasks;
     
     // track running tasks in queue
-    private Runnable taskWatcher;
+//    private Runnable taskWatcher;
     
     private static final BlockingQueue<Runnable> sPoolWorkQueue =
             new LinkedBlockingQueue<Runnable>(10);
@@ -61,26 +62,26 @@ public class ImageDownloader {
 		this.executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
 			                    TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 		this.queuedTasks = new ArrayList<DownloadBitmapTask>(6);
-		this.taskWatcher = new Runnable() {
-			
-			@Override
-			public void run() {
-				while(true) {
-					synchronized(DDGControlVar.taskCompleteSignal) {
-						try {
-							DDGControlVar.taskCompleteSignal.wait();
-						} catch (InterruptedException e) {
-							e.printStackTrace();
-						}
-						
-						if(DDGControlVar.taskCompleteSignal != null) {
-							DownloadBitmapTask task = DDGControlVar.taskCompleteSignal.task;
-							queuedTasks.remove(task);
-						}
-					}
-				}
-			}
-		};
+//		this.taskWatcher = new Runnable() {
+//			
+//			@Override
+//			public void run() {
+//				while(true) {
+//					synchronized(DDGControlVar.taskCompleteSignal) {
+//						try {
+//							DDGControlVar.taskCompleteSignal.wait();
+//						} catch (InterruptedException e) {
+//							e.printStackTrace();
+//						}
+//						
+//						if(DDGControlVar.taskCompleteSignal != null) {
+//							DownloadBitmapTask task = DDGControlVar.taskCompleteSignal.task;
+//							queuedTasks.remove(task);
+//						}
+//					}
+//				}
+//			}
+//		};
 	}
 	
     boolean imageViewReused(DownloadableImage image, String url){
@@ -160,7 +161,12 @@ public class ImageDownloader {
 		
 		if(isBackgroundTask) {
 			this.queuedTasks.add(task);
-			task.executeOnExecutor(this.executor, url);
+			if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+				task.executeOnExecutor(this.executor, url);
+			}
+			else {
+				task.execute(url);
+			}
 		}
 		else {
 			task.execute(url);

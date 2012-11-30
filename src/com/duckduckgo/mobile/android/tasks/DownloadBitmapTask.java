@@ -47,14 +47,14 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 			bitmap = null;
 			isCompleted = true;
 			
-			// signal task completion
-			while(true) {
-				synchronized (DDGControlVar.taskCompleteSignal) {
-					DDGControlVar.taskCompleteSignal.task = this;
-					DDGControlVar.taskCompleteSignal.notifyAll();
-					break;
-				}
-			}
+//			// signal task completion
+//			while(true) {
+//				synchronized (DDGControlVar.taskCompleteSignal) {
+//					DDGControlVar.taskCompleteSignal.task = this;
+//					DDGControlVar.taskCompleteSignal.notifyAll();
+//					break;
+//				}
+//			}
 			
 			return null;
 		}
@@ -89,14 +89,14 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 		
 		isCompleted = true; 
 		
-		// signal task completion
-		while(true) {
-			synchronized (DDGControlVar.taskCompleteSignal) {
-				DDGControlVar.taskCompleteSignal.task = this;
-				DDGControlVar.taskCompleteSignal.notifyAll();
-				break;
-			}
-		}
+//		// signal task completion
+//		while(true) {
+//			synchronized (DDGControlVar.taskCompleteSignal) {
+//				DDGControlVar.taskCompleteSignal.task = this;
+//				DDGControlVar.taskCompleteSignal.notifyAll();
+//				break;
+//			}
+//		}
 	}
 	
 	static class FlushedInputStream extends FilterInputStream {
