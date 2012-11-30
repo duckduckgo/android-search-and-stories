@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" 
+        		android:layout_width="fill_parent"
+        		android:layout_height="wrap_content"
+        		android:padding="5dp"
+        		android:clickable="true">
+	    	    		  
+		<Button
+    	android:layout_width="fill_parent"
+		android:layout_height="50dp" android:text="@string/Defaults"
+		style="@style/MainFeedText"
+		android:background="@drawable/blue_selector"
+		android:id="@+id/sourceDefaultButton" />
+		
+</LinearLayout>

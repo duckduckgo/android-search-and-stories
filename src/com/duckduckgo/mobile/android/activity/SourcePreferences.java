@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -42,9 +44,11 @@ public class SourcePreferences extends Activity implements SourcesListener {
 		}
 		
 		sourcesView = (ListView) findViewById(R.id.sourceItems);
+		View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
+		defaultButton = (Button) footerView.findViewById(R.id.sourceDefaultButton);
+		sourcesView.addFooterView(footerView);
 		sourcesView.setAdapter(sourcePrefContainer.sourcesAdapter);
 		
-		defaultButton = (Button) findViewById(R.id.sourceDefaultButton);
 		defaultButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
