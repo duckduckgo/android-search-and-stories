@@ -20,7 +20,6 @@ public class DdgDB {
 	private static final String APP_TABLE = "apps";
 	
 	
-	private Context context;
 	private SQLiteDatabase db;
 
 	private SQLiteStatement insertStmt, insertStmtApp;
@@ -31,8 +30,7 @@ public class DdgDB {
 
 	
 	public DdgDB(Context context) {
-	      this.context = context;
-	      OpenHelper openHelper = new OpenHelper(this.context);
+	      OpenHelper openHelper = new OpenHelper(context);
 	      this.db = openHelper.getWritableDatabase();
 	      this.insertStmt = this.db.compileStatement(INSERT);
 	      this.insertStmtApp = this.db.compileStatement(APP_INSERT);

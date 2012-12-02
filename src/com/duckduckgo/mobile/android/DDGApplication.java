@@ -10,7 +10,9 @@ import android.app.Application;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.db.DdgDB;
 import com.duckduckgo.mobile.android.download.FileCache;
@@ -40,6 +42,8 @@ public class DDGApplication extends Application {
 	private static final ImageDownloader imageDownloader = new ImageDownloader(imageCache);
 	private static SharedPreferences sharedPreferences = null;
 	private static DdgDB db = null;
+	
+	private static String DB_FOLDER_NAME = "database";
 	
 	@Override
 	public void onCreate() {
@@ -98,15 +102,11 @@ public class DDGApplication extends Application {
 		return db;
 	}
 	
-	// method overridden to put DB in external DB folder cleanable upon uninstall
+	// method overridden to put DB in database folder cleanable upon uninstall
 	@Override
 	public SQLiteDatabase openOrCreateDatabase(String name, int mode,
 	CursorFactory factory) {
-	    File externalFilesDir = getExternalFilesDir(null);
-	    if(externalFilesDir == null) {
-	        return null;
-	    }
-	 
+	    File externalFilesDir = getDir(DB_FOLDER_NAME, MODE_PRIVATE);
 	    File dbFile = new File(externalFilesDir, name);
 	    return SQLiteDatabase.openDatabase(dbFile.getAbsolutePath(), null, SQLiteDatabase.CREATE_IF_NECESSARY);
 	}
