@@ -5,29 +5,20 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URI;
-
-import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
-import com.duckduckgo.mobile.android.util.DDGUtils;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
-import android.app.DownloadManager.Query;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
-import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.widget.Toast;
+
+import com.duckduckgo.mobile.android.R;
 
 @SuppressLint("NewApi")
 public class DownloadReceiver extends BroadcastReceiver {
