@@ -1557,10 +1557,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			DownloadManager.Request r = new DownloadManager.Request(uri);
 
 			// This put the download in the same Download dir the browser uses
-			String storeState = Environment.getExternalStorageState();
-			if(storeState != null && Environment.MEDIA_MOUNTED.equals(storeState)) {
-				r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-			}
+			// r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
 
 			// When downloading music and videos they will be listed in the player
 			// (Seems to be available since Honeycomb only)

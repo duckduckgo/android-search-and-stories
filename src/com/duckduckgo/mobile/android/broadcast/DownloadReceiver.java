@@ -119,8 +119,7 @@ public class DownloadReceiver extends BroadcastReceiver {
 			return;
 
 		String downPath = null;
-		String storeState = Environment.getExternalStorageState();
-		if( !(storeState != null && storeState.equals(Environment.MEDIA_MOUNTED)) ) {
+		{
 
 			int idxSlash = mimeType.indexOf('/') + 1;
 			String ext = "tmp";
