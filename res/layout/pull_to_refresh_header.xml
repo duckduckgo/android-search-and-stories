@@ -43,16 +43,13 @@
             android:id="@+id/pull_to_refresh_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textStyle="bold" />
+            style="@style/PullToRefreshMainText" />
 
         <TextView
             android:id="@+id/pull_to_refresh_sub_text"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceSmall"
+            style="@style/PullToRefreshSubText"
             android:visibility="gone" />
     </LinearLayout>
 

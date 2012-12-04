@@ -33,6 +33,11 @@
 	android:title="@string/PrefExternalBrowser"
 	android:key="externalBrowserPref"
 	android:defaultValue="false" />
+	<Preference 
+	android:title="@string/PrefMainFontSize"
+	android:key="mainFontSizePref"
+	android:defaultValue="">
+	</Preference>
 </PreferenceCategory>
 <PreferenceCategory android:title="@string/PrefGroupPrivacy">
 	<CheckBoxPreference 

@@ -61,11 +61,14 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -138,6 +141,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private LinearLayout leftStoriesButtonLayout = null;
 	private LinearLayout leftSavedButtonLayout = null;
 	private LinearLayout leftSettingsButtonLayout = null;
+	
+	// font scaling
+	private LinearLayout fontSizeLayout = null;
 		
 	private SharedPreferences sharedPreferences;
 		
@@ -195,8 +201,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	savedState = true;
         
         sharedPreferences = DDGApplication.getSharedPreferences();
-        
-        
+       
         //set caching task to run after at least a news feed item loads
         // cache prev/next 3 images
 //		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
@@ -818,6 +823,44 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         feedProgressBar = (ProgressBar) findViewById(R.id.feedLoadingProgress);
         
         prefLayout = (LinearLayout) findViewById(R.id.prefLayout);
+        
+        fontSizeLayout = (LinearLayout) findViewById(R.id.fontSeekLayout);
+        
+        SeekBar fontSizeSeekBar = (SeekBar) findViewById(R.id.fontSizeSeekBar);
+        DDGControlVar.mainTextSize = sharedPreferences.getInt("mainFontSize", 14);
+        fontSizeSeekBar.setProgress(DDGControlVar.mainTextSize);
+        fontSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {				
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {				
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {		
+				DDGControlVar.mainTextSize = progress;
+				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+			}
+		});
+        
+        Button fontSizeApplyButton = (Button) findViewById(R.id.fontSizeApplyButton);
+        fontSizeApplyButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// save adjusted text size
+				Editor editor = sharedPreferences.edit();
+				editor.putInt("mainFontSize", DDGControlVar.mainTextSize);
+				editor.commit();
+				
+				DDGControlVar.prevMainTextSize = 0;				
+				fontSizeLayout.setVisibility(View.GONE);
+			}
+		});
 		
     }	
 	
@@ -895,6 +938,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		clearSearchBar();
 		clearBrowserState();
+		
+		if(DDGControlVar.prevMainTextSize != 0) {
+			fontSizeLayout.setVisibility(View.VISIBLE);
+		}
 		
         if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){
         	// show recent queries on slide-out menu
@@ -1029,6 +1076,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		else if(mDuckDuckGoContainer.prefShowing){
 			switchScreens();
+		}
+		else if(fontSizeLayout.getVisibility() != View.GONE) {
+			DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
+			mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+			DDGControlVar.prevMainTextSize = 0;
+			fontSizeLayout.setVisibility(View.GONE);
 		}
 		// main feed showing & source filter is active
 		else if(DDGControlVar.targetSource != null){
@@ -1240,7 +1293,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					// close left nav if it's open
 					if(fan.isOpen()){
 						fan.showMenu();
-					}	
+					}
+					
+					if(preference.getKey().equals("mainFontSizePref")) {
+						DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
+						prefLayout.setVisibility(View.GONE);
+						switchScreens();
+					}
+					
 					return false;
 				}
 			});

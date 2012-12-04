@@ -120,6 +120,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	        });
 
 			//Set the Title
+			holder.textViewTitle.setTextSize(DDGControlVar.mainTextSize);
 			holder.textViewTitle.setText(feed.getTitle());
 			
 			String feedId = feed.getId();

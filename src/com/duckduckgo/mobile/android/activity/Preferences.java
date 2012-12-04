@@ -93,6 +93,16 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			}
 		});
 		
+		Preference mainFontSizePref = (Preference) findPreference("mainFontSizePref");
+		mainFontSizePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			
+			public boolean onPreferenceClick(Preference preference) {
+				DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
+				finish();
+				return true;
+			}
+		});
+		
     }
   }
   

@@ -119,6 +119,35 @@
     		 		 style="@android:style/Widget.ProgressBar.Large"
     		 		 android:id="@+id/feedLoadingProgress" />
         
+        <LinearLayout 
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:visibility="gone"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:id="@+id/fontSeekLayout">
+   	    
+            <LinearLayout android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:gravity="center_vertical"
+            android:padding="20dp"
+            android:background="#aa3a3e45">
+   	    
+            <SeekBar android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/fontSizeSeekBar"
+                android:max="100"
+                android:minWidth="150dp"/>
+            
+            <Button android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:id="@+id/fontSizeApplyButton"
+                android:text="Apply" />
+            
+            </LinearLayout>
+            
+        </LinearLayout>
+        
         <LinearLayout 	  
             android:layout_height="match_parent"
 			android:layout_width="match_parent"

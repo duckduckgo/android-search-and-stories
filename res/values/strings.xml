@@ -24,6 +24,7 @@
     <string name="PrefSendFeedback">Send Feedback</string>
     <string name="PrefRate">Rate Us</string>
     <string name="PrefAppSearch">Include apps in search</string>
+    <string name="PrefMainFontSize">Story font size</string>
     <string name="PrefEnableAcra">Error reporting</string>
     <string name="PrefAcraDisabled">Reporting disabled</string>
     <string name="PrefAcraEnabled">Reporting enabled</string>

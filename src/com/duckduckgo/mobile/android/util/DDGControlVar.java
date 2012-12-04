@@ -28,5 +28,7 @@ public class DDGControlVar {
 	public static boolean includeAppsInSearch = false;
 	public static boolean alwaysUseExternalBrowser = false;
 	
+	public static int mainTextSize, prevMainTextSize;
+	
 //	public static TaskCompleteSignal taskCompleteSignal = new TaskCompleteSignal();
 }
