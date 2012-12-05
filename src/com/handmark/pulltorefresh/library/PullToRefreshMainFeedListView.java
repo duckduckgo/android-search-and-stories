@@ -261,6 +261,14 @@ public class PullToRefreshMainFeedListView extends PullToRefreshAdapterViewBase<
 		lv.setId(android.R.id.list);
 		return lv;
 	}
+	
+	public void setHeaderText(int value) {
+		mHeaderLoadingView.setTextSize(value);
+	}
+	
+	public void setHeaderSubText(int value) {
+		mHeaderLoadingView.setSubTextSize(value);
+	}
 
 	@TargetApi(9)
 	final class InternalListViewSDK9 extends InternalListView {

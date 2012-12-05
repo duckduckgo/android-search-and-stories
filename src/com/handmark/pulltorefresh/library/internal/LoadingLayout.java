@@ -223,6 +223,10 @@ public abstract class LoadingLayout extends LinearLayout {
 	public void setSubTextAppearance(int value) {
 		mSubHeaderText.setTextAppearance(getContext(), value);
 	}
+	
+	public void setSubTextSize(int value) {
+		mSubHeaderText.setTextSize(value);
+	}
 
 	public void setSubTextColor(ColorStateList color) {
 		mSubHeaderText.setTextColor(color);
@@ -235,6 +239,10 @@ public abstract class LoadingLayout extends LinearLayout {
 	public void setTextAppearance(int value) {
 		mHeaderText.setTextAppearance(getContext(), value);
 		mSubHeaderText.setTextAppearance(getContext(), value);
+	}
+	
+	public void setTextSize(int value) {
+		mHeaderText.setTextSize(value);
 	}
 
 	public void setTextColor(ColorStateList color) {

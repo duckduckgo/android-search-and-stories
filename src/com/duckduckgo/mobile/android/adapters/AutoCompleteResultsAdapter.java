@@ -79,7 +79,9 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 		
 		if (suggestion != null) {
 			holder.autoCompleteResult.setText(suggestion.getPhrase());
+			holder.autoCompleteResult.setTextSize(DDGControlVar.mainTextSize+2);
 			holder.autoCompleteDetail.setText(suggestion.getSnippet());
+			holder.autoCompleteDetail.setTextSize(DDGControlVar.mainTextSize);
 			Drawable acDrawable = suggestion.getDrawable();
 			if(acDrawable == null) {
 				imageDownloader.download(suggestion.getImageUrl(), holder.autoCompleteImage, false);

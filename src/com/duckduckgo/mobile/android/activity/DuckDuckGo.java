@@ -169,6 +169,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	// downloader for web view
 	DownloadManager downloadManager;
 	
+	// pull-to-refresh textviews
+	TextView ptrPrimary = null, ptrSecondary = null;
+	
 	boolean mCleanSearchBar = false;
 			
 	@Override
@@ -488,6 +491,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) findViewById(R.id.mainFeedItems);
+		ptrPrimary = (TextView) mPullRefreshFeedView.findViewById(R.id.pull_to_refresh_text);
+		ptrSecondary = (TextView) mPullRefreshFeedView.findViewById(R.id.pull_to_refresh_sub_text);
+		ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
+		ptrSecondary.setTextSize(DDGControlVar.mainTextSize);
+		mPullRefreshFeedView.setHeaderText(DDGControlVar.mainTextSize+2);
+		mPullRefreshFeedView.setHeaderSubText(DDGControlVar.mainTextSize);
 
 		// Set a listener to be invoked when the list should be refreshed.
 		mPullRefreshFeedView.setOnRefreshListener(new OnRefreshListener<MainFeedListView>() {
@@ -844,6 +853,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					boolean fromUser) {		
 				DDGControlVar.mainTextSize = progress;
 				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+				
+				// adjust Pull-to-Refresh
+				ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
+				ptrSecondary.setTextSize(DDGControlVar.mainTextSize);
+				mPullRefreshFeedView.setHeaderText(DDGControlVar.mainTextSize+2);
+				mPullRefreshFeedView.setHeaderSubText(DDGControlVar.mainTextSize);
 			}
 		});
         
@@ -856,6 +871,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				Editor editor = sharedPreferences.edit();
 				editor.putInt("mainFontSize", DDGControlVar.mainTextSize);
 				editor.commit();
+				
+				// adjust Pull-to-Refresh
+				ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
+				ptrSecondary.setTextSize(DDGControlVar.mainTextSize);
+				mPullRefreshFeedView.setHeaderText(DDGControlVar.mainTextSize+2);
+				mPullRefreshFeedView.setHeaderSubText(DDGControlVar.mainTextSize);
 				
 				DDGControlVar.prevMainTextSize = 0;				
 				fontSizeLayout.setVisibility(View.GONE);
@@ -1080,6 +1101,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		else if(fontSizeLayout.getVisibility() != View.GONE) {
 			DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
 			mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+			ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
+			ptrSecondary.setTextSize(DDGControlVar.mainTextSize+2);
+			mPullRefreshFeedView.setHeaderText(DDGControlVar.mainTextSize+2);
+			mPullRefreshFeedView.setHeaderSubText(DDGControlVar.mainTextSize);
 			DDGControlVar.prevMainTextSize = 0;
 			fontSizeLayout.setVisibility(View.GONE);
 		}

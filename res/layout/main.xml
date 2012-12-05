@@ -136,7 +136,7 @@
             <SeekBar android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
                 android:id="@+id/fontSizeSeekBar"
-                android:max="100"
+                android:max="98"
                 android:minWidth="150dp"/>
             
             <Button android:layout_height="wrap_content"

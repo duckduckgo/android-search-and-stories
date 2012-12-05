@@ -2,29 +2,32 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="MainFeedText">
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:textSize">14dp</item>
+        <item name="android:textSize">14sp</item>
     </style>
-    <style name="ListItemText" parent="@android:style/TextAppearance.Holo.Large">
+    <style name="ListItemText" parent="@android:style/TextAppearance.Large">
         <item name="android:textColor">@color/left_text_selector</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceLarge</item>
         <item name="android:drawablePadding">5dp</item>
     </style>
-    <style name="AutocompleteResultText" parent="@android:style/TextAppearance.Holo.Large">
+    <style name="AutocompleteResultText" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">#54595f</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
     </style>
-    <style name="AutocompleteDetailText" parent="@android:style/TextAppearance.Holo.Small">
+    <style name="AutocompleteDetailText" parent="@android:style/TextAppearance.Small">
         <item name="android:textColor">#7c8594</item>
         <item name="android:maxLines">2</item>
         <item name="android:ellipsize">end</item>
+        <item name="android:textSize">14sp</item>
     </style>
-    <style name="PullToRefreshMainText" parent="@android:style/TextAppearance.Holo.Large">
+    <style name="PullToRefreshMainText" parent="@android:style/TextAppearance.Medium">
         <item name="android:singleLine">true</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
+<!--         <item name="android:textAppearance">?android:attr/textAppearanceMedium</item> -->
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">16sp</item>
     </style>
-    <style name="PullToRefreshSubText" parent="@android:style/TextAppearance.Holo.Small">
+    <style name="PullToRefreshSubText" parent="@android:style/TextAppearance.Small">
         <item name="android:singleLine">true</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+<!--         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item> -->
+        <item name="android:textSize">14sp</item>
     </style>
 </resources>
