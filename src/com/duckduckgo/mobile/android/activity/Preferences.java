@@ -98,6 +98,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			
 			public boolean onPreferenceClick(Preference preference) {
 				DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
+				DDGControlVar.prevWebViewTextSize = DDGControlVar.webViewTextSize;
 				finish();
 				return true;
 			}

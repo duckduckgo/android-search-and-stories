@@ -29,6 +29,7 @@ public class DDGControlVar {
 	public static boolean alwaysUseExternalBrowser = false;
 	
 	public static int mainTextSize, prevMainTextSize;
+	public static int webViewTextSize = -1, prevWebViewTextSize = -1;
 	
 //	public static TaskCompleteSignal taskCompleteSignal = new TaskCompleteSignal();
 }

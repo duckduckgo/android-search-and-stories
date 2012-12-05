@@ -172,6 +172,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	// pull-to-refresh textviews
 	TextView ptrPrimary = null, ptrSecondary = null;
 	
+	// keep prev progress in font seek bar, to make incremental changes available
+	int seekBarPrevProgress;
+	SeekBar fontSizeSeekBar;
+	
 	boolean mCleanSearchBar = false;
 			
 	@Override
@@ -627,6 +631,19 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         // http://code.google.com/p/android/issues/detail?id=21305
         mainWebView = (DDGWebView) findViewById(R.id.mainWebView);
         mainWebView.getSettings().setJavaScriptEnabled(true);
+        
+        // read and configure web view font size
+        if(DDGControlVar.webViewTextSize == -1) {
+        	DDGControlVar.webViewTextSize = sharedPreferences.getInt("webViewFontSize", -1);
+        }
+        
+        if(DDGControlVar.webViewTextSize != -1) {
+            mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
+        }
+        else {
+        	DDGControlVar.webViewTextSize = mainWebView.getSettings().getDefaultFontSize();
+        }
+        
         mainWebView.setWebViewClient(new WebViewClient() {
         	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
         		if(!savedState) {
@@ -835,9 +852,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         fontSizeLayout = (LinearLayout) findViewById(R.id.fontSeekLayout);
         
-        SeekBar fontSizeSeekBar = (SeekBar) findViewById(R.id.fontSizeSeekBar);
+        fontSizeSeekBar = (SeekBar) findViewById(R.id.fontSizeSeekBar);
         DDGControlVar.mainTextSize = sharedPreferences.getInt("mainFontSize", 14);
-        fontSizeSeekBar.setProgress(DDGControlVar.mainTextSize);
+        seekBarPrevProgress = 50;
+        fontSizeSeekBar.setProgress(50);
         fontSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
 			@Override
@@ -851,7 +869,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {		
-				DDGControlVar.mainTextSize = progress;
+				if(!fromUser) return;
+				
+//				Log.v(TAG, "progress: " + progress + " prev prog: " + seekBarPrevProgress);
+				int diff = progress - seekBarPrevProgress;
+				DDGControlVar.mainTextSize += diff;
 				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 				
 				// adjust Pull-to-Refresh
@@ -859,6 +881,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				ptrSecondary.setTextSize(DDGControlVar.mainTextSize);
 				mPullRefreshFeedView.setHeaderText(DDGControlVar.mainTextSize+2);
 				mPullRefreshFeedView.setHeaderSubText(DDGControlVar.mainTextSize);
+				
+				DDGControlVar.webViewTextSize += diff;
+				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
+				
+				seekBarPrevProgress = progress;
 			}
 		});
         
@@ -870,16 +897,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				// save adjusted text size
 				Editor editor = sharedPreferences.edit();
 				editor.putInt("mainFontSize", DDGControlVar.mainTextSize);
+				editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
 				editor.commit();
 				
-				// adjust Pull-to-Refresh
-				ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
-				ptrSecondary.setTextSize(DDGControlVar.mainTextSize);
-				mPullRefreshFeedView.setHeaderText(DDGControlVar.mainTextSize+2);
-				mPullRefreshFeedView.setHeaderSubText(DDGControlVar.mainTextSize);
-				
-				DDGControlVar.prevMainTextSize = 0;				
+				DDGControlVar.prevMainTextSize = 0;		
+				DDGControlVar.prevWebViewTextSize = -1;
 				fontSizeLayout.setVisibility(View.GONE);
+				fontSizeSeekBar.setProgress(50);
+				seekBarPrevProgress = 50;
 			}
 		});
 		
@@ -1099,14 +1124,20 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			switchScreens();
 		}
 		else if(fontSizeLayout.getVisibility() != View.GONE) {
+			Log.v(TAG, "prev: " + DDGControlVar.prevMainTextSize);
 			DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
+			DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
 			mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 			ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
 			ptrSecondary.setTextSize(DDGControlVar.mainTextSize+2);
 			mPullRefreshFeedView.setHeaderText(DDGControlVar.mainTextSize+2);
 			mPullRefreshFeedView.setHeaderSubText(DDGControlVar.mainTextSize);
+			mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
 			DDGControlVar.prevMainTextSize = 0;
+			DDGControlVar.prevWebViewTextSize = -1;
 			fontSizeLayout.setVisibility(View.GONE);
+			fontSizeSeekBar.setProgress(50);
+			seekBarPrevProgress = 50;
 		}
 		// main feed showing & source filter is active
 		else if(DDGControlVar.targetSource != null){
@@ -1322,6 +1353,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					
 					if(preference.getKey().equals("mainFontSizePref")) {
 						DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
+						DDGControlVar.prevWebViewTextSize = DDGControlVar.webViewTextSize;
 						prefLayout.setVisibility(View.GONE);
 						switchScreens();
 					}
