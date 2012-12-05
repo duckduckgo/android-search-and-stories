@@ -60,6 +60,8 @@
     <string name="OpenInExternalBrowser">Open in external browser</string>
     <string name="ConfirmExternalBrowser">Please confirm</string>
     
+    <string name="ChangingFontSize">Changing font size...</string>
+    
     <string name="crash_toast_text">Application crashed! Crash-related data will be collected and reported upon confirmation.</string>
     <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
     <string name="crash_notif_title">DuckDuckGo crash report</string>

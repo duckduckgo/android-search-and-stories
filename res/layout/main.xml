@@ -131,21 +131,32 @@
             <LinearLayout android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:gravity="center_vertical"
+            android:orientation="vertical"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:background="#ee3a3e45">
-   	    
-            <SeekBar android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:id="@+id/fontSizeSeekBar"
-                android:minWidth="150dp"/>
             
-            <Button android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:id="@+id/fontSizeApplyButton"
-                android:text="Apply" />
+                <TextView android:textColor="@android:color/white"
+                    android:text="@string/ChangingFontSize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            
+                <LinearLayout android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    
+	                <SeekBar android:layout_height="wrap_content"
+	                android:layout_width="wrap_content"
+	                android:id="@+id/fontSizeSeekBar"
+	                android:minWidth="150dp"/>
+	            
+	            	<Button android:layout_height="wrap_content"
+	                android:layout_width="wrap_content"
+	                android:id="@+id/fontSizeApplyButton"
+	                android:text="Apply" />
+                    
+                </LinearLayout>
             
             </LinearLayout>
             
