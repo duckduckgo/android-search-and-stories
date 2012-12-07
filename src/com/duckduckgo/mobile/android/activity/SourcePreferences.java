@@ -30,6 +30,7 @@ public class SourcePreferences extends Activity implements SourcesListener {
 	
 	private ListView sourcesView = null;
 	private Button defaultButton = null;
+	private Button suggestSourceButton = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +44,19 @@ public class SourcePreferences extends Activity implements SourcesListener {
 			sourcePrefContainer.sourcesAdapter = new SourcesAdapter(this);
 		}
 		
+		// create "defaults" button
 		sourcesView = (ListView) findViewById(R.id.sourceItems);
 		View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
 		defaultButton = (Button) footerView.findViewById(R.id.sourceDefaultButton);
 		sourcesView.addFooterView(footerView);
+		
+		// create "suggest source" button, using the same layout
+		footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
+		footerView.findViewById(R.id.sourceDefaultButton).setId(R.id.suggestSourceButton);
+		suggestSourceButton = (Button) footerView.findViewById(R.id.suggestSourceButton);
+		suggestSourceButton.setText(R.string.SuggestSource);
+		sourcesView.addFooterView(footerView);
+		
 		sourcesView.setAdapter(sourcePrefContainer.sourcesAdapter);
 		
 		defaultButton.setOnClickListener(new OnClickListener() {
@@ -69,6 +79,16 @@ public class SourcePreferences extends Activity implements SourcesListener {
 				// reset source set of underlying list adapter
 				sourcePrefContainer.sourcesAdapter.notifyDataSetChanged();
 				sourcesView.invalidateViews();
+			}
+		});
+		
+		suggestSourceButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getApplicationContext(), R.string.SuggestSourceToast, Toast.LENGTH_SHORT).show();
+				
+				// TODO show a dialog with edit text to facilitate suggestion
 			}
 		});
 	}

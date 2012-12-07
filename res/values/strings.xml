@@ -53,6 +53,7 @@
     <string name="ConfirmClearHistory">All search history will be deleted. Are you sure?</string>
     
     <string name="Defaults">Defaults</string>
+    <string name="SuggestSource">Suggest a source</string>
     
     <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
@@ -83,6 +84,7 @@
     
     <string name="InfoReadStoriesFromCache">Connection failed! Stories retrieved from cache...</string>
     <string name="DefaultsSetToast">Sources reset to the default.</string>
+    <string name="SuggestSourceToast">To be implemented.</string>    
     
     <string name="SummaryWaterCooler">Water Cooler is a stream of cool stories from around the Web, aggregated using factors such as most e-mailed, upvoted etc.
     </string>
