@@ -6,6 +6,7 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,10 +86,10 @@ public class SourcePreferences extends Activity implements SourcesListener {
 		suggestSourceButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
-			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), R.string.SuggestSourceToast, Toast.LENGTH_SHORT).show();
-				
-				// TODO show a dialog with edit text to facilitate suggestion
+			public void onClick(View v) {				
+				Intent intent = DDGUtils.newEmailIntent(SourcePreferences.this.getResources().getString(R.string.FeedbackTo), 
+						SourcePreferences.this.getResources().getString(R.string.FeedbackSubject), getString(R.string.SuggestedSources), "");
+		        startActivity(Intent.createChooser(intent, "Select application to send"));
 			}
 		});
 	}

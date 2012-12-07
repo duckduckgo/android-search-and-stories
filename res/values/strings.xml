@@ -54,6 +54,7 @@
     
     <string name="Defaults">Defaults</string>
     <string name="SuggestSource">Suggest a source</string>
+    <string name="SuggestedSources">Please include these sources in Water Cooler:</string>
     
     <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
