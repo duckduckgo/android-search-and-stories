@@ -52,6 +52,7 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 		if (cv == null) {
 			cv = inflater.inflate(R.layout.sourcepref_layout, null);
 			cv.setTag(new SourceHolder((TextView)cv.findViewById(R.id.sourceTitleTextView),
+								 (TextView)cv.findViewById(R.id.sourceTitleSubTextView),
 					             (AsyncImageView)cv.findViewById(R.id.sourceItemBackground),
 					             (CheckBox)cv.findViewById(R.id.sourceCheckbox)));
 		}
@@ -85,6 +86,7 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 
 			//Set the Title
 			holder.textViewTitle.setText(feed.getTitle());
+			holder.textViewDescription.setText(feed.getDescription());
 			
 			holder.id = feedId;
 			

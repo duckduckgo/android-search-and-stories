@@ -9,26 +9,6 @@
 	android:entries="@array/startScreenArray"
     android:entryValues="@array/startScreenValues">
 	</ListPreference>
-	<Preference 
-	android:title="@string/PrefSources"
-	android:key="sourcesPref"
-	android:defaultValue="">
-	</Preference>
-	<ListPreference 
-	android:title="@string/PrefRegion"
-	android:key="regionPref"
-	android:defaultValue="wt-wt"
-	android:entries="@array/regionArray"
-    android:entryValues="@array/regionValues">
-	</ListPreference>
-	<CheckBoxPreference 
-	android:title="@string/PrefAppSearch"
-	android:key="appSearchPref"
-	android:defaultValue="false" />
-	<CheckBoxPreference 
-	android:title="@string/PrefModifyQuery"
-	android:key="modifyQueryPref"
-	android:defaultValue="false" />	
 	<CheckBoxPreference 
 	android:title="@string/PrefExternalBrowser"
 	android:key="externalBrowserPref"
@@ -39,6 +19,34 @@
 	android:defaultValue="">
 	</Preference>
 </PreferenceCategory>
+<PreferenceCategory android:title="@string/PrefSearchResults">
+	<ListPreference 
+	android:title="@string/PrefRegion"
+	android:key="regionPref"
+	android:defaultValue="wt-wt"
+	android:entries="@array/regionArray"
+    android:entryValues="@array/regionValues">
+	</ListPreference>    
+</PreferenceCategory> 
+<PreferenceCategory android:title="@string/PrefWaterCooler"
+    android:summary="@string/SummaryWaterCooler"
+    android:layout="@layout/preference_category_summary">
+	<Preference 
+	android:title="@string/PrefSources"
+	android:key="sourcesPref"
+	android:defaultValue="">
+	</Preference>
+</PreferenceCategory>    
+<PreferenceCategory android:title="@string/PrefAutocomplete">
+    <CheckBoxPreference 
+	android:title="@string/PrefAppSearch"
+	android:key="appSearchPref"
+	android:defaultValue="true" />
+	<CheckBoxPreference 
+	android:title="@string/PrefDirectQuery"
+	android:key="directQueryPref"
+	android:defaultValue="false" />	    
+</PreferenceCategory> 
 <PreferenceCategory android:title="@string/PrefGroupPrivacy">
 	<CheckBoxPreference 
 	android:title="@string/PrefRecordHistory"

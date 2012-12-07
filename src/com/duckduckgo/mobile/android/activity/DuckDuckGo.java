@@ -421,7 +421,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if(!sharedPreferences.getBoolean("modifyQueryPref", false)){
+				if(sharedPreferences.getBoolean("directQueryPref", false)){
 					//Hide the keyboard and perform a search
 					hideKeyboard(searchField);
 					searchField.dismissDropDown();

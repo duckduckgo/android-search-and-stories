@@ -12,17 +12,35 @@
                android:src="@drawable/testbackground" 
                android:id="@+id/sourceItemBackground"
                />
-	    	    		  
-		<TextView android:layout_width="0dp"
-		    	  android:layout_height="30dp"
-		    	  android:layout_weight="80"
-		    	  android:paddingTop="5dp"
-		    	  android:paddingBottom="5dp"
-		    	  android:paddingLeft="5dp"
+	
+	<LinearLayout
+        		android:layout_width="0dp"
+		    	android:layout_height="match_parent"
+		    	android:layout_weight="80"
+		    	android:paddingTop="5dp"
+		    	android:paddingBottom="5dp"
+		    	android:paddingLeft="5dp"
+		    	android:gravity="center_vertical"
+        		android:orientation="vertical">
+        		
+	    		<TextView android:layout_width="match_parent"
+		    	  android:layout_height="wrap_content"
 	    	  	  style="@style/MainFeedText"
-	    	  	  android:text="This is a Test String!"
+	    	  	  android:layout_weight="60"
+	    	  	  android:text="Test String!"
 	    	  	  android:singleLine="true"
 		    	  android:id="@+id/sourceTitleTextView" />
+	    		
+	    		<TextView android:layout_width="match_parent"
+		    	  android:layout_height="wrap_content"
+	    	  	  style="@style/MainFeedText"
+	    	  	  android:layout_weight="40"
+	    	  	  android:textSize="10sp"
+	    	  	  android:text="This is subtext string!"
+	    	  	  android:singleLine="true"
+		    	  android:id="@+id/sourceTitleSubTextView" />
+        		
+    </LinearLayout>	    	    	
 		
 	<CheckBox android:layout_width="0dp" android:layout_height="wrap_content"
 	    android:layout_weight="20"
