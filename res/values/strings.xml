@@ -88,5 +88,7 @@
     
     <string name="SummaryWaterCooler">Water Cooler is a stream of cool stories from around the Web, aggregated using factors such as most e-mailed, upvoted etc.
     </string>
+    
+    <string name="InformHistory"><i>Save recent searches</i> is disabled. You can enable it in <i>Settings.</i></string>
 
 </resources>

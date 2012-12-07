@@ -23,6 +23,7 @@ import ch.boye.httpclientandroidlib.client.methods.HttpPost;
 import ch.boye.httpclientandroidlib.client.params.HttpClientParams;
 import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.entity.HttpEntityWrapper;
+import ch.boye.httpclientandroidlib.impl.client.DefaultConnectionKeepAliveStrategy;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.impl.client.DefaultRedirectStrategy;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
@@ -59,6 +60,7 @@ public class DDGHttpClient extends DefaultHttpClient {
 		//HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 		HttpClientParams.setRedirecting(httpParameters, false);
 		setParams(httpParameters);
+		setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy());
 		
 		// HttpClientParams.setCookiePolicy(httpParameters, CookiePolicy.BEST_MATCH);
 		HttpProtocolParams.setUserAgent(httpParameters, DDGConstants.USER_AGENT);

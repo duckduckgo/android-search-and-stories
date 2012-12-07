@@ -41,6 +41,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -64,6 +65,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
@@ -144,6 +146,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	// font scaling
 	private LinearLayout fontSizeLayout = null;
+	
+	// notification for "Save Recent Searches" feature awareness
+	private View leftRecentHeaderView = null;
+	private boolean leftRecentHeaderShown = false;
 		
 	private SharedPreferences sharedPreferences;
 		
@@ -374,6 +380,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	for(String s : getResources().getStringArray(R.array.leftMenuDefault)) {
     		listContent.add(s);
     	}
+    	
+		leftRecentHeaderView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.recentsearch_notrecording_layout, null, false);
     	
     	leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
     	leftRecentView.setOnRecentSearchItemSelectedListener(new OnRecentSearchItemSelectedListener() {
@@ -995,6 +1003,23 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	
     		// left side menu visibility changes
         	leftRecentTextView.setVisibility(View.VISIBLE);
+        	
+        	if(sharedPreferences.getBoolean("recordHistoryPref", false)) {
+        		if(leftRecentHeaderShown) {
+	    			// user changed the setting, got it
+	        		leftRecentView.removeHeaderView(leftRecentHeaderView);
+	        		leftRecentHeaderShown = false;
+        		}
+        	}
+        	else {
+        		if(!leftRecentHeaderShown) {
+        			leftRecentView.setAdapter(null);
+        			leftRecentView.addHeaderView(leftRecentHeaderView);
+        			leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
+        			leftRecentHeaderShown = true;
+        		}
+        	}
+        	
         	leftRecentView.setVisibility(View.VISIBLE);	
         	leftSavedButtonLayout.setVisibility(View.VISIBLE);
         	leftStoriesButtonLayout.setVisibility(View.GONE);

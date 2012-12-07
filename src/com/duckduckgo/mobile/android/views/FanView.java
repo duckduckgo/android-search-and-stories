@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,10 +57,11 @@ public class FanView extends RelativeLayout {
 		LayoutInflater.from(context).inflate(R.layout.fan_view, this, true);
 		TypedArray a = context.obtainStyledAttributes(attrs,
 				R.styleable.FanView);
-
-		px = a.getDimension(R.styleable.FanView_menuSize, TypedValue
-				.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 200,
-						getResources().getDisplayMetrics()));
+		
+		DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+		float menuSizeRatio = a.getFloat(R.styleable.FanView_menuSize, 0.5f);
+		px = (int) (menuSizeRatio * displayMetrics.widthPixels);
+		
 		animDur = 1000;
 		fadeDur = (int) (animDur * 0.75f);
 		fade = true;
