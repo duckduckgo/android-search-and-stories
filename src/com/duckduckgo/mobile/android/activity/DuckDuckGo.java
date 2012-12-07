@@ -1221,6 +1221,18 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void searchWebTerm(String term) {
+		// save recent query if "record history" is enabled
+		if(sharedPreferences.getBoolean("recordHistoryPref", false)){
+			if(!mDuckDuckGoContainer.recentSearchSet.contains(term)){
+				mDuckDuckGoContainer.recentSearchSet.add(term);
+				mDuckDuckGoContainer.recentSearchAdapter.add(term);
+				
+				Set<String> recentSearchSet = DDGUtils.loadSet(sharedPreferences, "recentsearch");
+				recentSearchSet.add(term);
+				DDGUtils.saveSet(sharedPreferences, recentSearchSet, "recentsearch");
+			}
+		}
+		
 		if(DDGControlVar.alwaysUseExternalBrowser) {
 			String url;
 			if(DDGControlVar.regionString == "wt-wt"){	// default
@@ -1243,19 +1255,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			else {
 				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString));
 			}
-		}
-		
-		// save recent query if "record history" is enabled
-		if(sharedPreferences.getBoolean("recordHistoryPref", false)){
-			if(!mDuckDuckGoContainer.recentSearchSet.contains(term)){
-				mDuckDuckGoContainer.recentSearchSet.add(term);
-				mDuckDuckGoContainer.recentSearchAdapter.add(term);
-				
-				Set<String> recentSearchSet = DDGUtils.loadSet(sharedPreferences, "recentsearch");
-				recentSearchSet.add(term);
-				DDGUtils.saveSet(sharedPreferences, recentSearchSet, "recentsearch");
-			}
-		}
+		}		
 	}
 	
 	public void clearRecentSearch() {

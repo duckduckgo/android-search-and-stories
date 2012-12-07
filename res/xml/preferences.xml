@@ -45,7 +45,7 @@
 	<CheckBoxPreference 
 	android:title="@string/PrefDirectQuery"
 	android:key="directQueryPref"
-	android:defaultValue="false" />	    
+	android:defaultValue="true" />	    
 </PreferenceCategory> 
 <PreferenceCategory android:title="@string/PrefGroupPrivacy">
 	<CheckBoxPreference 
