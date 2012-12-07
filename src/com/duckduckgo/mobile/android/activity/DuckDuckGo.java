@@ -84,6 +84,7 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
+import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
@@ -214,6 +215,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	savedState = true;
         
         sharedPreferences = DDGApplication.getSharedPreferences();
+        
+        DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean("turnOffAutocompletePref", false);
        
         //set caching task to run after at least a news feed item loads
         // cache prev/next 3 images
@@ -1054,6 +1057,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onResume() {
 		super.onResume();
 		
+		// check autocomplete 
+		if(!DDGControlVar.isAutocompleteActive) {
+			searchField.setAdapter(null);
+			searchField.setOnEditorActionListener(null);
+		}
+		else {
+	        searchField.setAdapter(new AutoCompleteResultsAdapter(DuckDuckGo.this));
+	        searchField.setOnEditorActionListener(DuckDuckGo.this);
+		}
+		
 		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD) {
 			initDownloadManager();
 		}
@@ -1386,6 +1399,22 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					return false;
 				}
 			});
+            mWorkFragment.setCustomPreferenceChangeListener(new PreferenceChangeListener() {
+            	@Override
+            	public void onPreferenceChange(String key) {
+            		if(key.equals("turnOffAutocompletePref")) {
+	        			// check autocomplete 
+	        			if(!DDGControlVar.isAutocompleteActive) {
+	        				searchField.setAdapter(null);
+	        				searchField.setOnEditorActionListener(null);
+	        			}
+	        			else {
+	        		        searchField.setAdapter(new AutoCompleteResultsAdapter(DuckDuckGo.this));
+	        		        searchField.setOnEditorActionListener(DuckDuckGo.this);
+	        			}
+            		}
+            	}
+            });
             fm.beginTransaction().replace(R.id.prefFragment,
                     mWorkFragment).commit();  
         }

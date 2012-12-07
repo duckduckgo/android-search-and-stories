@@ -27,6 +27,7 @@ public class DDGControlVar {
 	
 	public static boolean includeAppsInSearch = true;
 	public static boolean alwaysUseExternalBrowser = false;
+	public static boolean isAutocompleteActive = true;
 	
 	public static int mainTextSize, prevMainTextSize;
 	public static int webViewTextSize = -1, prevWebViewTextSize = -1;

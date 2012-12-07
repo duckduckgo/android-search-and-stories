@@ -39,6 +39,10 @@
 </PreferenceCategory>    
 <PreferenceCategory android:title="@string/PrefAutocomplete">
     <CheckBoxPreference 
+	android:title="@string/PrefTurnOffAutocomplete"
+	android:key="turnOffAutocompletePref"
+	android:defaultValue="false" />
+    <CheckBoxPreference 
 	android:title="@string/PrefAppSearch"
 	android:key="appSearchPref"
 	android:defaultValue="true" />

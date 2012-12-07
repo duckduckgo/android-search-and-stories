@@ -9,6 +9,7 @@ import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -21,6 +22,7 @@ import android.widget.ListView;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.fragment.ConfirmClearHistoryDialog;
+import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
@@ -29,6 +31,7 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 public class DDGPreferenceFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 	
 	OnPreferenceClickListener customListener = null;
+	PreferenceChangeListener customChangeListener = null;
 	
 	@TargetApi(11)
 	@Override
@@ -117,6 +120,13 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		else if(key.equals("externalBrowserPref")){
 			DDGControlVar.alwaysUseExternalBrowser = sharedPreferences.getBoolean(key, false);
 		}
+		else if(key.equals("turnOffAutocompletePref")){
+			DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean(key, false);
+		}
+		
+		if(customChangeListener != null) {
+			customChangeListener.onPreferenceChange(key);
+		}
 
 	}
 	
@@ -156,6 +166,10 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 			customListener.onPreferenceClick(preference);
 		}
 		return super.onPreferenceTreeClick(preferenceScreen, preference);
+	}
+	
+	public void setCustomPreferenceChangeListener(PreferenceChangeListener listener) {
+		customChangeListener = listener;
 	}
 	
 }
