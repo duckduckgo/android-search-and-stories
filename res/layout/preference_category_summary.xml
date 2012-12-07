@@ -5,10 +5,9 @@
     <TextView android:id="@+android:id/title" 
               style="?android:attr/listSeparatorTextViewStyle"/>
     <TextView android:id="@+android:id/summary"
-        	  android:gravity="left|center_vertical"
-              android:paddingLeft="5dip" android:paddingRight="dip"
-              android:layout_width="match_parent" android:layout_height="wrap_content"/>
-    <View android:layout_width="fill_parent"
-		  android:layout_height="1dp"
-		  android:background="@drawable/dark_header_dither" />
+              style="?android:attr/listSeparatorTextViewStyle"
+              android:paddingLeft="8dp"
+              android:paddingRight="8dp"
+              android:textStyle="normal"
+              android:textSize="12sp"/>
 </LinearLayout>
