@@ -5,6 +5,7 @@
     <TextView android:id="@+android:id/title" 
               style="?android:attr/listSeparatorTextViewStyle"/>
     <TextView android:id="@+android:id/summary"
+        	  android:layout_height="wrap_content"
               style="?android:attr/listSeparatorTextViewStyle"
               android:paddingLeft="8dp"
               android:paddingRight="8dp"
