@@ -33,4 +33,6 @@ public class DDGControlVar {
 	public static int webViewTextSize = -1, prevWebViewTextSize = -1;
 	
 //	public static TaskCompleteSignal taskCompleteSignal = new TaskCompleteSignal();
+	
+	public static boolean hasAppsIndexed = false;
 }

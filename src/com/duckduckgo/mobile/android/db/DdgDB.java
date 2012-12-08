@@ -238,4 +238,9 @@ public class DdgDB {
 	public void close(){
 		db.close();
 	}
+	
+	public SQLiteDatabase getSQLiteDB() {
+		return db;
+	}
+
 }

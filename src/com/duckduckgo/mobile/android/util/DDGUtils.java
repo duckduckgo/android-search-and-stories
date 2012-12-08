@@ -375,12 +375,21 @@ public final class DDGUtils {
 		  mainIntent.removeCategory(Intent.CATEGORY_TEST);
 		  final List<ResolveInfo> pkgAppsList = context.getPackageManager().queryIntentActivities( mainIntent, 0);		 
 		  
+		  HashSet<String> packageNameSet = new HashSet<String>();
+		  
 		  ArrayList<AppShortInfo> labels = new ArrayList<AppShortInfo>();
+//		  Log.v("APP","al: ...start...");
 		  for(ResolveInfo rInfo : pkgAppsList) {
+			  String packageName = rInfo.activityInfo.packageName;
 				  String label = "";
 				  label += rInfo.loadLabel(context.getPackageManager());
-				  labels.add(new AppShortInfo(label, rInfo.activityInfo.packageName));
+				  if(!packageNameSet.contains(label + "-" + packageName)) {
+//				  	  Log.v("APP", "al: " + label + " " + packageName);
+					  labels.add(new AppShortInfo(label, packageName));
+					  packageNameSet.add(label + "-" + packageName);
+				  }
 		  }
+//		  Log.v("APP","al: ...end...");
 		  
 		  return labels;
 	  }
