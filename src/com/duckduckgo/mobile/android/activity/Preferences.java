@@ -162,6 +162,9 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 		else if(key.equals("externalBrowserPref")){
 			DDGControlVar.alwaysUseExternalBrowser = sharedPreferences.getBoolean(key, false);
 		}
+		else if(key.equals("turnOffAutocompletePref")){
+			DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean(key, false);
+		}
 
 	}
 	
