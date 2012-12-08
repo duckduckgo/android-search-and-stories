@@ -371,7 +371,7 @@ public final class DDGUtils {
 	  
 	  public static List<AppShortInfo> getInstalledComponents(Context context) {
 		  final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
-		  mainIntent.addCategory(Intent.CATEGORY_DEFAULT);
+		  mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 		  mainIntent.removeCategory(Intent.CATEGORY_TEST);
 		  final List<ResolveInfo> pkgAppsList = context.getPackageManager().queryIntentActivities( mainIntent, 0);		 
 		  
