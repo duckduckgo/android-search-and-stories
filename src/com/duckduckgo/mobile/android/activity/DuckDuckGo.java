@@ -65,7 +65,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ProgressBar;
@@ -318,6 +317,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.mainFeedTask = null;
     		mDuckDuckGoContainer.sourceIconTask = null;    		
     		
+    		mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
+    		
     	}
     	    	
 		contextAdapter = new ArrayAdapter<Item>(
@@ -424,7 +425,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         }
         
         searchField = (AutoCompleteTextView) findViewById(R.id.searchEditText);
-        searchField.setAdapter(new AutoCompleteResultsAdapter(this));
+        searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
         searchField.setOnEditorActionListener(this);
         
         searchField.setOnClickListener(new OnClickListener() {
@@ -447,7 +448,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					hideKeyboard(searchField);
 					searchField.dismissDropDown();
 					
-					SuggestObject suggestObject = (SuggestObject)parent.getAdapter().getItem(position);
+					SuggestObject suggestObject = mDuckDuckGoContainer.acAdapter.getItem(position);
 					SuggestType suggestType = suggestObject.getType();
 					if (suggestObject != null) {
 						if(suggestType == SuggestType.TEXT) {
@@ -1084,7 +1085,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			searchField.setAdapter(null);
 		}
 		else {
-	        searchField.setAdapter(new AutoCompleteResultsAdapter(DuckDuckGo.this));
+	        searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
 		}
 		
 		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD) {
@@ -1436,7 +1437,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	        				searchField.setAdapter(null);
 	        			}
 	        			else {
-	        		        searchField.setAdapter(new AutoCompleteResultsAdapter(DuckDuckGo.this));
+	        		        searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
 	        			}
             		}
             	}
