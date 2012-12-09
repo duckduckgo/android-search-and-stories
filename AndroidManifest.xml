@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.duckduckgo.mobile.android"
-    android:versionCode="15"
-    android:versionName="2.0.2" >
+    android:versionCode="16"
+    android:versionName="2.0.3" >
 
-    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="14" />
+    <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="16" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 

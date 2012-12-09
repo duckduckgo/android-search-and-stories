@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
@@ -19,10 +18,8 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup.LayoutParams;
 
 import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 //TODO: Any way we can limit the number of simultaneous downloads? Do we need to?
 //TODO: Any way we can find out that multiple objects are attempting to get the same item?

@@ -1,8 +1,5 @@
 package com.duckduckgo.mobile.android.network;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.conn.params.ConnManagerParams;
 import ch.boye.httpclientandroidlib.conn.params.ConnPerRouteBean;

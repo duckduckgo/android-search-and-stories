@@ -1,10 +1,7 @@
 package com.duckduckgo.mobile.android.util;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -37,7 +34,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
-import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
