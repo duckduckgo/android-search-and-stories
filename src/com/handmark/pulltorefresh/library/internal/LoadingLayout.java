@@ -17,11 +17,13 @@ package com.handmark.pulltorefresh.library.internal;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -241,8 +243,29 @@ public abstract class LoadingLayout extends LinearLayout {
 		mSubHeaderText.setTextAppearance(getContext(), value);
 	}
 	
+	private float convertPXtoDP(float px) {
+	    DisplayMetrics metrics = getResources().getDisplayMetrics();
+	    return px / (metrics.densityDpi / 160f);
+	}
+	
 	public void setTextSize(int value) {
 		mHeaderText.setTextSize(value);
+	}
+	
+	/**
+	 * sub text size in DP
+	 * @return dp units
+	 */
+	public int getSubTextSize() {
+	   return (int) convertPXtoDP(mSubHeaderText.getTextSize());
+	}
+	
+	/**
+	 * (main) text size in DP
+	 * @return dp units
+	 */
+	public int getTextSize() {
+		return (int) convertPXtoDP(mHeaderText.getTextSize());
 	}
 
 	public void setTextColor(ColorStateList color) {

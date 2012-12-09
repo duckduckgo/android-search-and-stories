@@ -177,9 +177,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	// downloader for web view
 	DownloadManager downloadManager;
 	
-	// pull-to-refresh textviews
-	TextView ptrPrimary = null, ptrSecondary = null;
-	
 	// keep prev progress in font seek bar, to make incremental changes available
 	int seekBarPrevProgress;
 	SeekBar fontSizeSeekBar;
@@ -519,12 +516,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) findViewById(R.id.mainFeedItems);
-		ptrPrimary = (TextView) mPullRefreshFeedView.findViewById(R.id.pull_to_refresh_text);
-		ptrSecondary = (TextView) mPullRefreshFeedView.findViewById(R.id.pull_to_refresh_sub_text);
-		ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
-		ptrSecondary.setTextSize(DDGControlVar.mainTextSize);
-		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.mainTextSize+2);
-		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.mainTextSize);
+		DDGControlVar.ptrHeaderSize = sharedPreferences.getInt("ptrHeaderTextSize", mPullRefreshFeedView.getHeaderTextSize());
+		DDGControlVar.ptrSubHeaderSize = sharedPreferences.getInt("ptrHeaderSubTextSize", mPullRefreshFeedView.getHeaderSubTextSize());
+		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
+		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
 
 		// Set a listener to be invoked when the list should be refreshed.
 		mPullRefreshFeedView.setOnRefreshListener(new OnRefreshListener<MainFeedListView>() {
@@ -900,11 +895,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				DDGControlVar.mainTextSize += diff;
 				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 				
+				DDGControlVar.ptrHeaderSize += diff;
+				DDGControlVar.ptrSubHeaderSize += diff;
+				
 				// adjust Pull-to-Refresh
-				ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
-				ptrSecondary.setTextSize(DDGControlVar.mainTextSize);
-				mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.mainTextSize+2);
-				mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.mainTextSize);
+				mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
+				mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
 				
 				DDGControlVar.webViewTextSize += diff;
 				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
@@ -922,10 +918,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				Editor editor = sharedPreferences.edit();
 				editor.putInt("mainFontSize", DDGControlVar.mainTextSize);
 				editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
+				editor.putInt("ptrHeaderTextSize", DDGControlVar.ptrHeaderSize);
+				editor.putInt("ptrHeaderSubTextSize", DDGControlVar.ptrSubHeaderSize);
 				editor.commit();
 				
 				DDGControlVar.prevMainTextSize = 0;		
 				DDGControlVar.prevWebViewTextSize = -1;
+				DDGControlVar.prevPtrHeaderSize = 0;
+				DDGControlVar.prevPtrSubHeaderSize = 0;
 				fontSizeLayout.setVisibility(View.GONE);
 				fontSizeSeekBar.setProgress(50);
 				seekBarPrevProgress = 50;
@@ -1177,13 +1177,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
 			DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
 			mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
-			ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
-			ptrSecondary.setTextSize(DDGControlVar.mainTextSize+2);
-			mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.mainTextSize+2);
-			mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.mainTextSize);
+			mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.prevPtrHeaderSize);
+			mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
 			mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
 			DDGControlVar.prevMainTextSize = 0;
 			DDGControlVar.prevWebViewTextSize = -1;
+			DDGControlVar.prevPtrHeaderSize = 0;
+			DDGControlVar.prevPtrSubHeaderSize = 0;
 			fontSizeLayout.setVisibility(View.GONE);
 			fontSizeSeekBar.setProgress(50);
 			seekBarPrevProgress = 50;
@@ -1403,6 +1403,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					if(preference.getKey().equals("mainFontSizePref")) {
 						DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
 						DDGControlVar.prevWebViewTextSize = DDGControlVar.webViewTextSize;
+						DDGControlVar.prevPtrHeaderSize = DDGControlVar.ptrHeaderSize;
+						DDGControlVar.prevPtrSubHeaderSize = DDGControlVar.ptrSubHeaderSize;
 						prefLayout.setVisibility(View.GONE);
 						switchScreens();
 					}

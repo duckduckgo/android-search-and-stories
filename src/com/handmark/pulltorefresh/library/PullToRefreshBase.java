@@ -1023,6 +1023,22 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 			post(mCurrentSmoothScrollRunnable);
 		}
 	}
+	
+	public void setHeaderTextSize(int value) {
+		mHeaderLayout.setTextSize(value);
+	}
+	
+	public void setHeaderSubTextSize(int value) {
+		mHeaderLayout.setSubTextSize(value);
+	}
+	
+	public int getHeaderTextSize() {
+		return mHeaderLayout.getTextSize();
+	}
+	
+	public int getHeaderSubTextSize() {
+		return mHeaderLayout.getSubTextSize();
+	}
 
 	public static enum AnimationStyle {
 		/**
