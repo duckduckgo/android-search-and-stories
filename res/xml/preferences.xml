@@ -45,7 +45,7 @@
     <CheckBoxPreference 
 	android:title="@string/PrefAppSearch"
 	android:key="appSearchPref"
-	android:defaultValue="true" />
+	android:defaultValue="false" />
 	<CheckBoxPreference 
 	android:title="@string/PrefDirectQuery"
 	android:key="directQueryPref"

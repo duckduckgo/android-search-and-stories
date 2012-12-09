@@ -180,18 +180,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	boolean mCleanSearchBar = false;
 			
-
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-		super.onWindowFocusChanged(hasFocus);   
-		if(DDGControlVar.includeAppsInSearch && !DDGControlVar.hasAppsIndexed) {
-			// index installed apps
-			new ScanAppsTask(getApplicationContext()).execute();
-			DDGControlVar.hasAppsIndexed = true;
-		}
-	}	
-	
-	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1084,6 +1072,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	        searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
 		}
 		
+		if(DDGControlVar.includeAppsInSearch && !DDGControlVar.hasAppsIndexed) {
+			// index installed apps
+			new ScanAppsTask(getApplicationContext()).execute();
+			DDGControlVar.hasAppsIndexed = true;
+		}
+		
 		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD) {
 			initDownloadManager();
 		}
@@ -1434,6 +1428,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	        			else {
 	        		        searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
 	        			}
+            		}
+            		else if(key.equals("appSearchPref")) {
+            			if(DDGControlVar.includeAppsInSearch && !DDGControlVar.hasAppsIndexed) {
+            				// index installed apps
+            				new ScanAppsTask(getApplicationContext()).execute();
+            				DDGControlVar.hasAppsIndexed = true;
+            			}
             		}
             	}
             });
