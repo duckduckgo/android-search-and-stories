@@ -523,8 +523,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		ptrSecondary = (TextView) mPullRefreshFeedView.findViewById(R.id.pull_to_refresh_sub_text);
 		ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
 		ptrSecondary.setTextSize(DDGControlVar.mainTextSize);
-		mPullRefreshFeedView.setHeaderText(DDGControlVar.mainTextSize+2);
-		mPullRefreshFeedView.setHeaderSubText(DDGControlVar.mainTextSize);
+		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.mainTextSize+2);
+		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.mainTextSize);
 
 		// Set a listener to be invoked when the list should be refreshed.
 		mPullRefreshFeedView.setOnRefreshListener(new OnRefreshListener<MainFeedListView>() {
@@ -903,8 +903,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				// adjust Pull-to-Refresh
 				ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
 				ptrSecondary.setTextSize(DDGControlVar.mainTextSize);
-				mPullRefreshFeedView.setHeaderText(DDGControlVar.mainTextSize+2);
-				mPullRefreshFeedView.setHeaderSubText(DDGControlVar.mainTextSize);
+				mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.mainTextSize+2);
+				mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.mainTextSize);
 				
 				DDGControlVar.webViewTextSize += diff;
 				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
@@ -1073,11 +1073,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		// check autocomplete 
 		if(!DDGControlVar.isAutocompleteActive) {
 			searchField.setAdapter(null);
-			searchField.setOnEditorActionListener(null);
 		}
 		else {
 	        searchField.setAdapter(new AutoCompleteResultsAdapter(DuckDuckGo.this));
-	        searchField.setOnEditorActionListener(DuckDuckGo.this);
 		}
 		
 		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD) {
@@ -1181,8 +1179,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 			ptrPrimary.setTextSize(DDGControlVar.mainTextSize+2);
 			ptrSecondary.setTextSize(DDGControlVar.mainTextSize+2);
-			mPullRefreshFeedView.setHeaderText(DDGControlVar.mainTextSize+2);
-			mPullRefreshFeedView.setHeaderSubText(DDGControlVar.mainTextSize);
+			mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.mainTextSize+2);
+			mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.mainTextSize);
 			mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
 			DDGControlVar.prevMainTextSize = 0;
 			DDGControlVar.prevWebViewTextSize = -1;
@@ -1419,11 +1417,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	        			// check autocomplete 
 	        			if(!DDGControlVar.isAutocompleteActive) {
 	        				searchField.setAdapter(null);
-	        				searchField.setOnEditorActionListener(null);
 	        			}
 	        			else {
 	        		        searchField.setAdapter(new AutoCompleteResultsAdapter(DuckDuckGo.this));
-	        		        searchField.setOnEditorActionListener(DuckDuckGo.this);
 	        			}
             		}
             	}

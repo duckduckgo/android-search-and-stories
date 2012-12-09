@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -47,6 +48,14 @@ public class SourcePreferences extends Activity implements SourcesListener {
 		
 		// create "defaults" button
 		sourcesView = (ListView) findViewById(R.id.sourceItems);
+		
+		View headerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.preference_category_summary, null, false);
+		TextView titleTv = ((TextView) headerView.findViewById(android.R.id.title));
+		titleTv.setText(R.string.WaterCoolerSources);
+		TextView summaryTv = ((TextView) headerView.findViewById(android.R.id.summary));
+		summaryTv.setText(R.string.LongWaterCooler);
+		sourcesView.addHeaderView(headerView);
+			
 		View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
 		defaultButton = (Button) footerView.findViewById(R.id.sourceDefaultButton);
 		sourcesView.addFooterView(footerView);

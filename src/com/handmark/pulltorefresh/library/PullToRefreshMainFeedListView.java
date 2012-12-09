@@ -262,11 +262,11 @@ public class PullToRefreshMainFeedListView extends PullToRefreshAdapterViewBase<
 		return lv;
 	}
 	
-	public void setHeaderText(int value) {
+	public void setHeaderTextSize(int value) {
 		mHeaderLoadingView.setTextSize(value);
 	}
 	
-	public void setHeaderSubText(int value) {
+	public void setHeaderSubTextSize(int value) {
 		mHeaderLoadingView.setSubTextSize(value);
 	}
 
