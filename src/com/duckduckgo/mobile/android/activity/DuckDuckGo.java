@@ -67,7 +67,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
-import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -116,7 +115,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	DuckDuckGoContainer mDuckDuckGoContainer;
 		
 	private AutoCompleteTextView searchField = null;
-	private ProgressBar feedProgressBar = null;
 	private MainFeedListView feedView = null;
 	private RecentSearchListView leftRecentView = null;
 	
@@ -870,9 +868,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             	DuckDuckGo.this.downloadContent(url, mimetype);
             } 
         }); 
-        
-        feedProgressBar = (ProgressBar) findViewById(R.id.feedLoadingProgress);
-        
+                
         prefLayout = (LinearLayout) findViewById(R.id.prefLayout);
         
         fontSizeLayout = (LinearLayout) findViewById(R.id.fontSeekLayout);
@@ -1344,7 +1340,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 
 	public void onFeedRetrieved(List<FeedObject> feed) {
-		feedProgressBar.setVisibility(View.GONE);
 		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		mDuckDuckGoContainer.feedAdapter.addData(feed);
 		mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
@@ -1528,7 +1523,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		shareButton.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.GONE);
 		mPullRefreshFeedView.setVisibility(View.GONE);
-    	feedProgressBar.setVisibility(View.GONE);
     	recentSearchView.setVisibility(View.VISIBLE);
     	mDuckDuckGoContainer.webviewShowing = false;
 		mDuckDuckGoContainer.prefShowing = false;
@@ -1709,7 +1703,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	private void keepFeedUpdated()
 	{
 		if (!DDGControlVar.hasUpdatedFeed) {
-			feedProgressBar.setVisibility(View.VISIBLE);
 			
 			if(mDuckDuckGoContainer.savedFeedShowing) {
 				mDuckDuckGoContainer.savedFeedTask = new SavedFeedTask(this);
