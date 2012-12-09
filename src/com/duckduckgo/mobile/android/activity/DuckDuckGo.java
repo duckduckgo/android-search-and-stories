@@ -518,8 +518,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) findViewById(R.id.mainFeedItems);
 		DDGControlVar.ptrHeaderSize = sharedPreferences.getInt("ptrHeaderTextSize", mPullRefreshFeedView.getHeaderTextSize());
 		DDGControlVar.ptrSubHeaderSize = sharedPreferences.getInt("ptrHeaderSubTextSize", mPullRefreshFeedView.getHeaderSubTextSize());
+		
 		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
 		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
+		
+		// set Loading... font
+		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
+		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
 
 		// Set a listener to be invoked when the list should be refreshed.
 		mPullRefreshFeedView.setOnRefreshListener(new OnRefreshListener<MainFeedListView>() {
@@ -902,6 +907,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
 				mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
 				
+				// set Loading... font
+				mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
+				mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
+				
 				DDGControlVar.webViewTextSize += diff;
 				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
 				
@@ -1177,8 +1186,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
 			DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
 			mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+			
 			mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.prevPtrHeaderSize);
 			mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
+			
+			// set Loading... font
+			mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.prevPtrHeaderSize);
+			mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
+			
 			mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
 			DDGControlVar.prevMainTextSize = 0;
 			DDGControlVar.prevWebViewTextSize = -1;

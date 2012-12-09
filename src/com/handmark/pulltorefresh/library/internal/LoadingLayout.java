@@ -17,7 +17,6 @@ package com.handmark.pulltorefresh.library.internal;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.drawable.AnimationDrawable;
