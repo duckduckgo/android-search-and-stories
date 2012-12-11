@@ -113,6 +113,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	protected final String TAG = "DuckDuckGo";
 	
 	DuckDuckGoContainer mDuckDuckGoContainer;
+	
+	// keeps default User-Agent for WebView
+	private String mWebViewDefaultUA = null;
 		
 	private AutoCompleteTextView searchField = null;
 	private MainFeedListView feedView = null;
@@ -647,7 +650,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         // http://code.google.com/p/android/issues/detail?id=21305
         mainWebView = (DDGWebView) findViewById(R.id.mainWebView);
         mainWebView.getSettings().setJavaScriptEnabled(true);
-        mainWebView.getSettings().setUserAgentString(DDGConstants.USER_AGENT);
+        
+        // get default User-Agent string for reuse later
+        mWebViewDefaultUA = mainWebView.getSettings().getUserAgentString();
         
         // read and configure web view font size
         if(DDGControlVar.webViewTextSize == -1) {
@@ -690,7 +695,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		
         		// Omnibar like behavior.
         		if (url.contains("duckduckgo.com")) {
-        			// FIXME api level
+        			mainWebView.getSettings().setUserAgentString(DDGConstants.USER_AGENT);
+        			
         	        mainWebView.getSettings().setSupportZoom(true);
         	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
         	        mainWebView.getSettings().setBuiltInZoomControls(false);
@@ -747,7 +753,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         			}
         		} else {
         			//This isn't duckduck go...
-        			// FIXME api level
+        			mainWebView.getSettings().setUserAgentString(mWebViewDefaultUA);
+        			
         	        mainWebView.getSettings().setSupportZoom(true);
         	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
         	        mainWebView.getSettings().setBuiltInZoomControls(true);
