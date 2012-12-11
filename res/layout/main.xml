@@ -40,6 +40,7 @@
 			   	        	  android:paddingLeft="5dp"
 			   	        	  android:singleLine="true"
 			   	        	  android:textSize="14dp"
+			   	        	  android:selectAllOnFocus="true"
 			   	        	  android:dropDownWidth="match_parent"
 			   	        	  android:dropDownAnchor="@+id/searchBar"
 			   	        	  android:dropDownHorizontalOffset="0dp"

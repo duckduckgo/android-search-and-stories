@@ -458,6 +458,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
         searchField.setOnTouchListener(new OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
+            	if (event.getAction() == MotionEvent.ACTION_DOWN) {
+    				mCleanSearchBar = true;
+                	searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+                }
+            	
                 if (searchField.getCompoundDrawables()[2] == null) {
                     return false;
                 }
