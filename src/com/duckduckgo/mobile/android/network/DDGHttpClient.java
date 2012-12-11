@@ -54,6 +54,9 @@ public class DDGHttpClient extends DefaultHttpClient {
 	
 	private int mStatusCode;
 
+	/**
+	 * XXX currently UNUSED
+	 */
 	public DDGHttpClient(){
 		HttpParams httpParameters = new BasicHttpParams();
 		//HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
@@ -79,6 +82,7 @@ public class DDGHttpClient extends DefaultHttpClient {
 		//HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
 		HttpClientParams.setRedirecting(httpParams, false);
 		// setParams(httpParams);
+		setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy());
 		
 		// HttpClientParams.setCookiePolicy(httpParameters, CookiePolicy.BEST_MATCH);
 //		HttpProtocolParams.setUserAgent(httpParams, "HTC_Dream Mozilla/5.0 (Linux; U; Android 1.5; en-us; Build/CUPCAKE) AppleWebKit/528.5+ (KHTML, like Gecko) Version/3.1.2 Mobile Safari/525.20.1");

@@ -8,6 +8,8 @@ import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.preference.PreferenceManager;
@@ -17,6 +19,7 @@ import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
+import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
@@ -51,6 +54,15 @@ public class DDGApplication extends Application {
 		fileCache = new FileCache(this.getApplicationContext());
 		imageCache.setFileCache(fileCache);
 		
+		try {
+			PackageInfo pInfo;
+			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+			String appVersion = pInfo.versionName;
+			DDGConstants.USER_AGENT.replace("%version", appVersion);
+		} catch (NameNotFoundException e) {
+			// at least specify new Android version
+			DDGConstants.USER_AGENT.replace("%version", "2+");
+		}
 		DDGNetworkConstants.initialize();
 		
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());

@@ -642,6 +642,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         // http://code.google.com/p/android/issues/detail?id=21305
         mainWebView = (DDGWebView) findViewById(R.id.mainWebView);
         mainWebView.getSettings().setJavaScriptEnabled(true);
+        mainWebView.getSettings().setUserAgentString(DDGConstants.USER_AGENT);
         
         // read and configure web view font size
         if(DDGControlVar.webViewTextSize == -1) {
