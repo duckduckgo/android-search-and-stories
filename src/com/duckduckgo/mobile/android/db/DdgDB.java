@@ -36,9 +36,27 @@ public class DdgDB {
 	      this.insertStmtApp = this.db.compileStatement(APP_INSERT);
 	}
 	
+	/**
+	 * insert a FeedObject to SQLite database
+	 * for feed items, the existing FeedObject is saved.
+	 * for ordinary webpages (including SERP), (url, title) pair is received here.
+	 * 
+	 * if title == null (happens often e.g. pages only containing an image), URL is used for title field.
+	 *   
+	 * 
+	 * @param e
+	 * @return if FeedObject(url,title) both null, return -1. Return Insert execution result otherwise
+	 */
 	public long insert(FeedObject e) {
+		String title = e.getTitle();		
+		if(e.getUrl() == null)
+			return -1l;
+		
+		if(title == null) {
+			title = e.getUrl();
+		}
 	      this.insertStmt.bindString(1, e.getId());
-	      this.insertStmt.bindString(2, e.getTitle());
+	      this.insertStmt.bindString(2, title);
 	      this.insertStmt.bindString(3, e.getDescription());
 	      this.insertStmt.bindString(4, e.getFeed());
 	      this.insertStmt.bindString(5, e.getUrl());

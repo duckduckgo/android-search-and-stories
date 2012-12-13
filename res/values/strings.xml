@@ -89,15 +89,18 @@
     <string name="SuggestSourceToast">To be implemented.</string>    
     
     <string name="SummaryWaterCooler">
-        Water Cooler is a stream of interesting stories from aggregated feeds, like most emailed or up-voted. 
-        In other words, it isn\'t the same stuff from the news apps. 
-        Check it out when you have five minutes to kill. You can also disable it above under <i>Home screen contents.</i>
+        Water Cooler is a stream of interesting stories you won\'t find in the news apps. 
+        All of the stories come from special feeds like most shared or up-voted. 
+        Check it out when you\'re waiting around for five minutes. 
+        Note: you can take Water Cooler off your home screen using the \"Home screen view\" setting above.
     </string>
     
     <string name="LongWaterCooler">
-        Water Cooler is a stream of interesting stories from around the Web. It isn\'t the same stuff you\'ll find on other news apps because all the stories come from aggregated feeds, 
-        like most emailed or up-voted. Select the feeds you want to see below. 
-        We\'re also always looking for more sources, which you can suggest below as well.
+        Water Cooler is a stream of interesting stories you won\'t find in the news apps. 
+        All of the stories come from special feeds like most shared or up-voted. 
+        Select the feeds you want to see below. 
+        We\'re also always looking for more sources, which you can suggest below as well. 
+        Note: you can take Water Cooler off your home screen using the \"Home screen view\" setting on the previous screen.
  	</string>
  	
     <string name="WaterCoolerSources">Water Cooler sources</string>
