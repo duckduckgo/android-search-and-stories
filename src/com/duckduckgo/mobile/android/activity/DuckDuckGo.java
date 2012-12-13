@@ -1060,11 +1060,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			searchField.setText(query);
 			searchWebTerm(query);
 		}
-		else if(intent.getBooleanExtra("widget", false)) {
-			displayRecentSearch();
-			searchField.requestFocus();
-			showKeyboard(searchField);
-		}
 		else {
 			// not executed on global search for quick response
 			mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(getApplicationContext(), DDGApplication.getImageCache());
@@ -1077,6 +1072,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			else if(!mDuckDuckGoContainer.prefShowing){
 				switchScreens();
 			}
+			
+			// removed the distinction between widget and regular app icon
+			// https://app.asana.com/0/230839424767/2717382704705
+//			if(intent.getBooleanExtra("widget", false)) {
+				searchField.requestFocus();
+				showKeyboard(searchField);
+//			}
 		
 		}
 		
