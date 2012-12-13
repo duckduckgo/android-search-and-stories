@@ -1019,55 +1019,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			fontSizeLayout.setVisibility(View.VISIBLE);
 		}
 		
-        if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){
-        	// show recent queries on slide-out menu
-//        	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
-        	
-    		// left side menu visibility changes
-        	leftRecentTextView.setVisibility(View.VISIBLE);
-        	
-        	if(sharedPreferences.getBoolean("recordHistoryPref", false)) {
-        		if(leftRecentHeaderShown) {
-	    			// user changed the setting, got it
-	        		leftRecentView.removeHeaderView(leftRecentHeaderView);
-	        		leftRecentHeaderShown = false;
-        		}
-        	}
-        	else {
-        		if(!leftRecentHeaderShown) {
-        			leftRecentView.setAdapter(null);
-        			leftRecentView.addHeaderView(leftRecentHeaderView);
-        			leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
-        			leftRecentHeaderShown = true;
-        		}
-        	}
-        	
-        	leftRecentView.setVisibility(View.VISIBLE);	
-        	leftSavedButtonLayout.setVisibility(View.VISIBLE);
-        	leftStoriesButtonLayout.setVisibility(View.GONE);
-        	
+        if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){        	
         	displayNewsFeed();
         }
-        else if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
-        	// hide recent queries from slide-out menu
-//        	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
-//        	lMainAdapter.insert(getString(R.string.LeftRecentQueries), 0); 
-        	
-    		// left side menu visibility changes
-        	leftRecentTextView.setVisibility(View.GONE);
-        	leftRecentView.setVisibility(View.GONE);
-        	leftSavedButtonLayout.setVisibility(View.VISIBLE);
-        	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
-        	
+        else if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){        	
         	displayRecentSearch();
         }
-        else if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
-    		// left side menu visibility changes
-        	leftRecentTextView.setVisibility(View.VISIBLE);
-        	leftRecentView.setVisibility(View.VISIBLE);
-        	leftSavedButtonLayout.setVisibility(View.GONE);
-        	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
-        	
+        else if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){        	
         	displaySavedFeed();
         }
 	}
@@ -1102,6 +1060,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			searchField.setText(query);
 			searchWebTerm(query);
 		}
+		else if(intent.getBooleanExtra("widget", false)) {
+			displayRecentSearch();
+			searchField.requestFocus();
+			showKeyboard(searchField);
+		}
 		else {
 			// not executed on global search for quick response
 			mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(getApplicationContext(), DDGApplication.getImageCache());
@@ -1113,11 +1076,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			}	
 			else if(!mDuckDuckGoContainer.prefShowing){
 				switchScreens();
-			}
-			
-			if(intent.getBooleanExtra("widget", false)) {
-				searchField.requestFocus();
-				showKeyboard(searchField);
 			}
 		
 		}
@@ -1518,6 +1476,33 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displayNewsFeed(){
+    	// show recent queries on slide-out menu
+//    	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
+    	
+		// left side menu visibility changes
+    	leftRecentTextView.setVisibility(View.VISIBLE);
+    	
+    	if(sharedPreferences.getBoolean("recordHistoryPref", false)) {
+    		if(leftRecentHeaderShown) {
+    			// user changed the setting, got it
+        		leftRecentView.removeHeaderView(leftRecentHeaderView);
+        		leftRecentHeaderShown = false;
+    		}
+    	}
+    	else {
+    		if(!leftRecentHeaderShown) {
+    			leftRecentView.setAdapter(null);
+    			leftRecentView.addHeaderView(leftRecentHeaderView);
+    			leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
+    			leftRecentHeaderShown = true;
+    		}
+    	}
+    	
+    	leftRecentView.setVisibility(View.VISIBLE);	
+    	leftSavedButtonLayout.setVisibility(View.VISIBLE);
+    	leftStoriesButtonLayout.setVisibility(View.GONE);		
+		
+		
 		if(mDuckDuckGoContainer.savedFeedShowing) {
 			mDuckDuckGoContainer.savedFeedShowing = false;
 			DDGControlVar.hasUpdatedFeed = false;
@@ -1537,6 +1522,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displaySavedFeed(){
+		// left side menu visibility changes
+    	leftRecentTextView.setVisibility(View.VISIBLE);
+    	leftRecentView.setVisibility(View.VISIBLE);
+    	leftSavedButtonLayout.setVisibility(View.GONE);
+    	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
+		
 		mDuckDuckGoContainer.savedFeedShowing = true;
 		DDGControlVar.hasUpdatedFeed = false;
 		
@@ -1555,6 +1546,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	public void displayRecentSearch(){  
 		findViewById(R.id.mainViewArea).setBackgroundResource(R.drawable.main_bg);
+		
+    	// hide recent queries from slide-out menu
+//    	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
+//    	lMainAdapter.insert(getString(R.string.LeftRecentQueries), 0); 
+		
+		// left side menu visibility changes
+    	leftRecentTextView.setVisibility(View.GONE);
+    	leftRecentView.setVisibility(View.GONE);
+    	leftSavedButtonLayout.setVisibility(View.VISIBLE);
+    	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
 		
     	// main view visibility changes
 		mainWebView.setVisibility(View.GONE);
