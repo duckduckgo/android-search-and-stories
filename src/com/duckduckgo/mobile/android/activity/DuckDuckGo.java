@@ -384,6 +384,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	}
     	
 		leftRecentHeaderView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.recentsearch_notrecording_layout, null, false);
+		leftRecentHeaderView.setOnClickListener(this);
     	
     	leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
     	leftRecentView.setOnRecentSearchItemSelectedListener(new OnRecentSearchItemSelectedListener() {
@@ -1462,6 +1463,26 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		leftStoriesTextView.setSelected(false);
 	}
 	
+	/**
+	 * main method that triggers display of Preferences screen or fragment
+	 */
+	private void showSettings() {
+		if(!mDuckDuckGoContainer.prefShowing){
+			
+			if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
+		        Intent intent = new Intent(getBaseContext(), Preferences.class);
+		        startActivityForResult(intent, PREFERENCES_RESULT);
+			}
+			else {
+				showPrefFragment();
+			}
+		
+		}
+	}
+	
+	/**
+	 * helper method to control visibility states etc. of other views in DuckDuckGo activity
+	 */
 	public void displayPreferences(){
 		findViewById(R.id.mainViewArea).setBackgroundResource(android.R.color.transparent);
 		
@@ -1655,20 +1676,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			fan.showMenu();			
 			displaySavedFeed();
 		}
-		else if(v.equals(leftSettingsTextView)){
-			fan.showMenu();
-			
-			if(!mDuckDuckGoContainer.prefShowing){
-				
-				if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
-			        Intent intent = new Intent(getBaseContext(), Preferences.class);
-			        startActivityForResult(intent, PREFERENCES_RESULT);
-				}
-				else {
-					showPrefFragment();
-				}
-			
-			}
+		else if(v.equals(leftSettingsTextView) || v.equals(leftRecentHeaderView)){
+			fan.showMenu();			
+			showSettings();
 		}
 		
 		// action for recent queries, leave as comment here		
