@@ -71,7 +71,7 @@
     <!-- Main View Area -->
     <RelativeLayout android:layout_width="fill_parent"
         		    android:layout_height="0dip"
-        		    android:layout_weight="1"
+        		    android:layout_weight="1"        		 
         		    android:id="@+id/mainViewArea">
         
         <com.duckduckgo.mobile.android.views.DDGWebView android:layout_width="match_parent"
@@ -89,7 +89,6 @@
         <com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView
             	  android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:background="@drawable/main_bg"
                   
                   app:ptrAnimationStyle="flip"
                   app:ptrHeaderTextColor="#b3bdc8"
@@ -111,14 +110,6 @@
                   android:background="@android:color/transparent"
                   android:visibility="gone"
                   android:id="@+id/recentSearchItems" />
-
-        <ProgressBar android:layout_width="wrap_content"
-    		 		 android:layout_height="wrap_content"
-    		 		 android:indeterminateOnly="true"
-    		 		 android:layout_centerInParent="true"
-    		 		 android:visibility="gone"
-    		 		 style="@android:style/Widget.ProgressBar.Large"
-    		 		 android:id="@+id/feedLoadingProgress" />
         
         <LinearLayout 
             android:layout_height="wrap_content"

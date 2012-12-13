@@ -1466,6 +1466,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displayPreferences(){
+		findViewById(R.id.mainViewArea).setBackgroundResource(android.R.color.transparent);
+		
 		mPullRefreshFeedView.setVisibility(View.GONE);
 		mainWebView.setVisibility(View.GONE);
 		shareButton.setVisibility(View.GONE);
@@ -1484,6 +1486,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	 * Method that switches visibility of views for Home or Saved feed
 	 */
 	private void displayFeedCore() {
+		findViewById(R.id.mainViewArea).setBackgroundResource(R.drawable.main_bg);
+		
     	// main view visibility changes and keep feed updated
 		recentSearchView.setVisibility(View.GONE);
 		mainWebView.setVisibility(View.GONE);
@@ -1531,7 +1535,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	}
 	}
 	
-	public void displayRecentSearch(){    	
+	public void displayRecentSearch(){  
+		findViewById(R.id.mainViewArea).setBackgroundResource(R.drawable.main_bg);
+		
     	// main view visibility changes
 		mainWebView.setVisibility(View.GONE);
 		shareButton.setVisibility(View.GONE);
@@ -1551,6 +1557,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displayWebView() {
+		findViewById(R.id.mainViewArea).setBackgroundResource(android.R.color.transparent);
+		
 		// loading something in the browser - set home icon
 		DDGControlVar.homeScreenShowing = false;
 		homeSettingsButton.setImageResource(R.drawable.home_button);	

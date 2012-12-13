@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal" >    
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
     
-        		  
-        <TextView android:layout_width="wrap_content"
-            	  android:layout_height="wrap_content"
-            	  android:layout_marginTop="5dp"
-            	  android:layout_marginBottom="5dp"
-            	  android:paddingLeft="5dp"
-            	  android:paddingRight="5dp"
-            	  style="@style/ListItemText"
-            	  android:textSize="18dp"
-            	  android:text="This is test Text"
-            	  android:textStyle="bold"
-            	  android:id="@+id/recentSearchText">
-        </TextView>
-        
-</LinearLayout>
+    <ImageView android:src="@android:color/transparent"
+        android:background="@drawable/div_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+	    style="@style/ListItemText"
+	    android:id="@+id/recentSearchText" 
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:background="@drawable/left_home_selector"
+	    android:text="This is test Text"
+	    android:gravity="center_vertical" android:paddingLeft="6dip" 
+	    android:paddingRight="6dip"
+	    android:textSize="18dp"/>
+    
+<!--             <TextView android:layout_width="wrap_content" -->
+<!--             	  android:layout_height="wrap_content" -->
+<!--             	  android:layout_marginTop="5dp" -->
+<!--             	  android:layout_marginBottom="5dp" -->
+<!--             	  android:paddingLeft="5dp" -->
+<!--             	  android:paddingRight="5dp" -->
+<!--             	  style="@style/ListItemText" -->
+<!--             	  android:textSize="18dp" -->
+<!--             	  android:text="This is test Text" -->
+<!--             	  android:textStyle="bold" -->
+<!--             	  android:id="@+id/recentSearchText"> -->
+<!--         </TextView> -->
+    
+    <ImageView android:src="@android:color/transparent"
+        android:background="@drawable/div_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    
+    </LinearLayout>
