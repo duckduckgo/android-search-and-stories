@@ -293,8 +293,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 						DDGControlVar.targetSource = sourceType;
 												
 						DDGControlVar.hasUpdatedFeed = false;
-						mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, DuckDuckGo.this);
-						mDuckDuckGoContainer.mainFeedTask.execute();
+						keepFeedUpdated();
 					}
 					
 				}
@@ -530,8 +529,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 								| DateUtils.FORMAT_ABBREV_ALL));
 
 				// refresh the list
-				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, DuckDuckGo.this);
-				mDuckDuckGoContainer.mainFeedTask.execute();
+				DDGControlVar.hasUpdatedFeed = false;
+				keepFeedUpdated();
 			}
 		});     
         		
@@ -974,8 +973,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void cancelSourceFilter() {
 		DDGControlVar.targetSource = null;		
 		DDGControlVar.hasUpdatedFeed = false;
-		mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, DuckDuckGo.this);
-		mDuckDuckGoContainer.mainFeedTask.execute();
+		keepFeedUpdated();
 	}
 	
 	private View buildLabel(String text) {
@@ -1390,8 +1388,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		//If the mainFeedTask is null, we are currently paused
 		//Otherwise, we can try again
 		else if (!mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.mainFeedTask != null) {
-			mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, this);
-			mDuckDuckGoContainer.mainFeedTask.execute();
+			keepFeedUpdated();
 		}
 	}
 	
