@@ -2,7 +2,7 @@
 <resources>
 
 <string-array name="startScreenArray">
-   <item>@string/PrefStories</item>
+   <item>@string/PrefWaterCoolerStories</item>
    <item>@string/PrefRecentSearch</item>
    <item>@string/PrefSavedItems</item>
 </string-array>

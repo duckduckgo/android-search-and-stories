@@ -12,6 +12,7 @@
     <string name="PrefGroupFeedback">Feedback</string>
     <string name="PrefStartScreen">Home screen view</string>
     <string name="PrefStories">Stories</string>
+    <string name="PrefWaterCoolerStories">Water Cooler (stories)</string>
     <string name="PrefSavedItems">Saved items</string>
     <string name="PrefRecentSearch">Recent searches</string>
     <string name="PrefRecordHistory">Save recent searches</string>
