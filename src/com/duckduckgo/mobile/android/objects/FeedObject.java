@@ -56,6 +56,24 @@ public class FeedObject {
 		this.type = "";
 	}
 	
+	public FeedObject(String title, String url, String imageUrl) {
+		this.id = url;
+		this.title = title;
+		this.description = "";
+		this.feed = "";
+		this.url = url;
+		if(imageUrl != null) {
+			this.imageUrl = imageUrl;
+		}
+		else {
+			this.imageUrl = "";
+		}
+		this.favicon = "";
+		this.timestamp = "";
+		this.category = "";
+		this.type = "";
+	}
+	
 	public FeedObject(JSONObject obj) throws JSONException {
 		this.feed = obj.getString("feed");
 		this.favicon = obj.getString("favicon");

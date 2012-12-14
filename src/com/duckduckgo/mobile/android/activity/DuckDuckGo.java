@@ -25,6 +25,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -182,7 +184,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	SeekBar fontSizeSeekBar;
 	
 	boolean mCleanSearchBar = false;
-			
+				
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -1643,8 +1645,19 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 						else {
 							String pageTitle = mainWebView.getTitle();
 							String pageUrl = mainWebView.getUrl();
+							
+							// take WebView (visible area) screenshot and save to file cache
+							Bitmap webBitmap = getBitmapFromView(mainWebView);
+							String imageFileName = "CUSTOM__" + pageUrl.replaceAll("\\W", ""); 
+							boolean success = DDGApplication.getFileCache().saveBitmapAsFile(imageFileName, webBitmap);
+							
 //							Log.v(TAG,"insert regular page: " + pageTitle + " " + pageUrl);
-							DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl));
+							if(success) {
+								DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl, imageFileName));
+							}
+							else {
+								DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl));
+							}
 						}
 					}
 					else if(it.type == Item.ItemType.EXTERNAL) {
@@ -1829,4 +1842,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
+	
+	public Bitmap getBitmapFromView(View view) {
+        Bitmap returnedBitmap = Bitmap.createBitmap(view.getWidth(), view.getHeight(),Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(returnedBitmap);
+        Drawable bgDrawable = view.getBackground();
+        if (bgDrawable!=null) 
+            bgDrawable.draw(canvas);
+        else 
+            canvas.drawColor(Color.TRANSPARENT);
+        view.draw(canvas);
+        return returnedBitmap;
+    }
 }

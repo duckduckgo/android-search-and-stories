@@ -6,9 +6,11 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.download.DownloadableImage;
 import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -38,9 +40,16 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 	}
 	
 	@Override
-	protected Bitmap doInBackground(String... params) {		
+	protected Bitmap doInBackground(String... params) {
+		Bitmap bitmap;
 		url = params[0];
-		Bitmap bitmap = DDGUtils.downloadBitmap(this, url);
+		
+		if(url.startsWith("CUSTOM__")) {
+			bitmap = DDGApplication.getFileCache().getBitmapFromImageFile(url);
+		}
+		else {
+			bitmap = DDGUtils.downloadBitmap(this, url);
+		}
 		
 		if (isCancelled()) {
 			bitmap = null;
