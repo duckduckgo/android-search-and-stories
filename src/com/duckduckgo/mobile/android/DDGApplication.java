@@ -12,6 +12,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
+import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 
 import com.duckduckgo.mobile.android.db.DdgDB;
@@ -64,6 +65,9 @@ public class DDGApplication extends Application {
 			DDGConstants.USER_AGENT.replace("%version", "2+");
 		}
 		DDGNetworkConstants.initialize();
+		
+		// set Helvetica Neue Medium
+		DDGConstants.TTF_HELVETICA_NEUE_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeue_Medium.ttf");
 		
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString("startScreenPref", "0")));

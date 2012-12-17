@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android.util;
 
+import android.graphics.Typeface;
+
 public class DDGConstants {
 	public static String USER_AGENT = "DDG-Android-%version";
 //	public static final String USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
@@ -12,4 +14,6 @@ public class DDGConstants {
 	public static final String STORIES_JSON_PATH = "stories.json";
 	public static final String SOURCE_JSON_PATH = "source.json";
 	public static final String SOURCE_SIMPLE_PATH = "simple.kry";
+	
+	public static Typeface TTF_HELVETICA_NEUE_MEDIUM = null;
 }

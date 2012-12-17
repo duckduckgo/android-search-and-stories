@@ -335,6 +335,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftRecentTextView = (TextView) findViewById(R.id.LeftRecentTextView);
     	leftSettingsTextView = (TextView) findViewById(R.id.LeftSettingsTextView);
     	
+    	leftHomeTextView.setTypeface(DDGConstants.TTF_HELVETICA_NEUE_MEDIUM);
+    	leftStoriesTextView.setTypeface(DDGConstants.TTF_HELVETICA_NEUE_MEDIUM);
+    	leftSavedTextView.setTypeface(DDGConstants.TTF_HELVETICA_NEUE_MEDIUM);
+    	leftRecentTextView.setTypeface(DDGConstants.TTF_HELVETICA_NEUE_MEDIUM);
+    	leftSettingsTextView.setTypeface(DDGConstants.TTF_HELVETICA_NEUE_MEDIUM);
+    	
     	
     	leftHomeButtonLayout = (LinearLayout) findViewById(R.id.LeftHomeButtonLayout);
     	leftStoriesButtonLayout = (LinearLayout) findViewById(R.id.LeftStoriesButtonLayout);

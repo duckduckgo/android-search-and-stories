@@ -14,6 +14,8 @@
 	    android:layout_height="match_parent"
 	    android:paddingLeft="10dp"
 	    android:paddingRight="5dp"
+	    android:paddingTop="5dp"
+    	android:paddingBottom="5dp"
 	    android:background="@drawable/left_main_selector"
 	    android:orientation="horizontal" >    
 	    
