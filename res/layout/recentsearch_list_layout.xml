@@ -9,6 +9,21 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
+    	<LinearLayout
+	    android:layout_width="fill_parent"
+	    android:layout_height="match_parent"
+	    android:paddingLeft="10dp"
+	    android:paddingRight="5dp"
+	    android:background="@drawable/left_main_selector"
+	    android:orientation="horizontal" >    
+	    
+	    	<ImageView android:layout_width="20dp"
+	        android:layout_height="20dp"
+	        android:layout_gravity="center_vertical"
+	        android:scaleType="centerInside"
+	        android:src="@drawable/ddg_source_icon"
+	        android:id="@+id/recentSearchImage"/>
+    
     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
 	    style="@style/ListItemText"
 	    android:id="@+id/recentSearchText" 
@@ -16,9 +31,11 @@
 	    android:layout_height="wrap_content" 
 	    android:background="@drawable/left_home_selector"
 	    android:text="This is test Text"
-	    android:gravity="center_vertical" android:paddingLeft="6dip" 
+	    android:gravity="center_vertical" android:paddingLeft="10dip" 
 	    android:paddingRight="6dip"
 	    android:textSize="18dp"/>
+    
+    </LinearLayout>
     
 <!--             <TextView android:layout_width="wrap_content" -->
 <!--             	  android:layout_height="wrap_content" -->
