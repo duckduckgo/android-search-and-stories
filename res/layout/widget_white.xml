@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/search_widget"
+    android:background="@drawable/widget_frame_bg_white"
+    android:text="DuckDuckGo..."
+    android:textColor="@android:color/white"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+</Button>

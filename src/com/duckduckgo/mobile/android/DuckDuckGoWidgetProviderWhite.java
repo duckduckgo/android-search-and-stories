@@ -9,7 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-public class DuckDuckGoWidgetProvider extends AppWidgetProvider {
+public class DuckDuckGoWidgetProviderWhite extends AppWidgetProvider {
 
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         final int N = appWidgetIds.length;
@@ -24,10 +24,10 @@ public class DuckDuckGoWidgetProvider extends AppWidgetProvider {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
             // Get the layout for the App Widget and attach an on-click listener to the button
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_white);
             views.setOnClickPendingIntent(R.id.search_widget, pendingIntent);
-            views.setOnClickPendingIntent(R.id.dax_icon, pendingIntent);
-            views.setOnClickPendingIntent(R.id.search_icon, pendingIntent);
+            //views.setOnClickPendingIntent(R.id.widget_go_btn, pendingIntent);
+            //views.setOnClickPendingIntent(R.id.widget_search_text, pendingIntent);
             //views.setOnClickPendingIntent(R.id.widget_voice_btn, pendingIntent);
 
             // Tell the AppWidgetManager to perform an update on the current App Widget
