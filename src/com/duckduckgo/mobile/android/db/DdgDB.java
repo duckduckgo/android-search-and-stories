@@ -90,8 +90,8 @@ public class DdgDB {
 	      this.db.delete(FEED_TABLE, null, null);
 	}
 	
-	public void deleteById(String id) {
-	      this.db.delete(FEED_TABLE, "id=?", new String[]{id});
+	public int deleteById(String id) {
+	      return this.db.delete(FEED_TABLE, "id=?", new String[]{id});
 	}
 	
 	public void deleteByUrl(String url) {

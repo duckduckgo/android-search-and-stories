@@ -317,6 +317,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				android.R.id.text1,
 				shareDialogItems){
 			public View getView(int position, View convertView, android.view.ViewGroup parent) {
+				if(mDuckDuckGoContainer.savedFeedShowing 
+						&& shareDialogItems[position].type == Item.ItemType.SAVE) {
+					shareDialogItems[position] = new Item(getResources().getString(R.string.Unsave), android.R.drawable.ic_menu_delete, ItemType.UNSAVE);
+				}
+				else if(!mDuckDuckGoContainer.savedFeedShowing 
+						&& shareDialogItems[position].type == Item.ItemType.UNSAVE) {
+					shareDialogItems[position] = new Item(getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE);
+				}
+				
 				View v = super.getView(position, convertView, parent);
 				TextView tv = (TextView)v.findViewById(android.R.id.text1);
 				tv.setCompoundDrawablesWithIntrinsicBounds(shareDialogItems[position].icon, 0, 0, 0);
@@ -589,6 +598,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 						}
 						else if(it.type == Item.ItemType.SAVE) {
 							DDGApplication.getDB().insert(fObject);
+						}
+						else if(it.type == Item.ItemType.UNSAVE) {
+							final int delResult = DDGApplication.getDB().deleteById(fObject.getId());
+							if(delResult != 0) {
+								mDuckDuckGoContainer.feedAdapter.remove(fObject);
+								mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+							}							
 						}
 						else if(it.type == Item.ItemType.EXTERNAL) {
 	    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
