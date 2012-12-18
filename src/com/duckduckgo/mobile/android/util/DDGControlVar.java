@@ -30,6 +30,7 @@ public class DDGControlVar {
 	public static boolean isAutocompleteActive = true;
 	
 	public static int mainTextSize, prevMainTextSize;
+	public static int recentTextSize, prevRecentTextSize; 
 	public static int webViewTextSize = -1, prevWebViewTextSize = -1;
 	public static int ptrHeaderSize, prevPtrHeaderSize;
 	public static int ptrSubHeaderSize, prevPtrSubHeaderSize;

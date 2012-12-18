@@ -78,6 +78,7 @@ import android.widget.Toast;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
+import com.duckduckgo.mobile.android.adapters.CustomArrayAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
@@ -265,7 +266,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		
     		mDuckDuckGoContainer.recentSearchSet = DDGUtils.loadSet(sharedPreferences, "recentsearch");
 
-    		mDuckDuckGoContainer.recentSearchAdapter = new ArrayAdapter<String>(this, 
+    		mDuckDuckGoContainer.recentSearchAdapter = new CustomArrayAdapter<String>(this, 
             		R.layout.recentsearch_list_layout, R.id.recentSearchText, 
             		new ArrayList<String>(mDuckDuckGoContainer.recentSearchSet));
     		
@@ -900,6 +901,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         fontSizeSeekBar = (SeekBar) findViewById(R.id.fontSizeSeekBar);
         DDGControlVar.mainTextSize = sharedPreferences.getInt("mainFontSize", 14);
+        DDGControlVar.recentTextSize = sharedPreferences.getInt("recentFontSize", 18);
         seekBarPrevProgress = 50;
         fontSizeSeekBar.setProgress(50);
         fontSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -921,6 +923,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				int diff = progress - seekBarPrevProgress;
 				DDGControlVar.mainTextSize += diff;
 				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+				
+				DDGControlVar.recentTextSize += diff;
+				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetInvalidated();
 				
 				DDGControlVar.ptrHeaderSize += diff;
 				DDGControlVar.ptrSubHeaderSize += diff;
@@ -948,12 +953,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				// save adjusted text size
 				Editor editor = sharedPreferences.edit();
 				editor.putInt("mainFontSize", DDGControlVar.mainTextSize);
+				editor.putInt("recentFontSize", DDGControlVar.recentTextSize);
 				editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
 				editor.putInt("ptrHeaderTextSize", DDGControlVar.ptrHeaderSize);
 				editor.putInt("ptrHeaderSubTextSize", DDGControlVar.ptrSubHeaderSize);
 				editor.commit();
 				
-				DDGControlVar.prevMainTextSize = 0;		
+				DDGControlVar.prevMainTextSize = 0;
+				DDGControlVar.prevRecentTextSize = 0;
 				DDGControlVar.prevWebViewTextSize = -1;
 				DDGControlVar.prevPtrHeaderSize = 0;
 				DDGControlVar.prevPtrSubHeaderSize = 0;
@@ -1171,6 +1178,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		else if(fontSizeLayout.getVisibility() != View.GONE) {
 			Log.v(TAG, "prev: " + DDGControlVar.prevMainTextSize);
 			DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
+			DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize;
 			DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
 			mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 			
@@ -1183,6 +1191,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			
 			mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
 			DDGControlVar.prevMainTextSize = 0;
+			DDGControlVar.prevRecentTextSize = 0;
 			DDGControlVar.prevWebViewTextSize = -1;
 			DDGControlVar.prevPtrHeaderSize = 0;
 			DDGControlVar.prevPtrSubHeaderSize = 0;
@@ -1402,6 +1411,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					
 					if(preference.getKey().equals("mainFontSizePref")) {
 						DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
+						DDGControlVar.prevRecentTextSize = DDGControlVar.recentTextSize;
 						DDGControlVar.prevWebViewTextSize = DDGControlVar.webViewTextSize;
 						DDGControlVar.prevPtrHeaderSize = DDGControlVar.ptrHeaderSize;
 						DDGControlVar.prevPtrSubHeaderSize = DDGControlVar.ptrSubHeaderSize;
