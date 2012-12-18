@@ -154,7 +154,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	// notification for "Save Recent Searches" feature awareness
 	private View leftRecentHeaderView = null;
-	private boolean leftRecentHeaderShown = false;
 		
 	private SharedPreferences sharedPreferences;
 		
@@ -218,7 +217,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         sharedPreferences = DDGApplication.getSharedPreferences();
         
         DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean("turnOffAutocompletePref", false);
-       
+               
         //set caching task to run after at least a news feed item loads
         // cache prev/next 3 images
 //		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
@@ -1519,18 +1518,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftRecentTextView.setVisibility(View.VISIBLE);
     	
     	if(sharedPreferences.getBoolean("recordHistoryPref", false)) {
-    		if(leftRecentHeaderShown) {
     			// user changed the setting, got it
+    		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) != null) {
         		leftRecentView.removeHeaderView(leftRecentHeaderView);
-        		leftRecentHeaderShown = false;
     		}
     	}
     	else {
-    		if(!leftRecentHeaderShown) {
+    		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) == null) {
     			leftRecentView.setAdapter(null);
     			leftRecentView.addHeaderView(leftRecentHeaderView);
     			leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
-    			leftRecentHeaderShown = true;
     		}
     	}
     	

@@ -55,7 +55,7 @@
 	<CheckBoxPreference 
 	android:title="@string/PrefRecordHistory"
 	android:key="recordHistoryPref"
-	android:defaultValue="false" />
+	android:defaultValue="true" />
 	<Preference 
 	android:title="@string/PrefClearHistory"
 	android:key="clearHistoryPref"
