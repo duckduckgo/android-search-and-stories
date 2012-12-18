@@ -16,5 +16,5 @@ public class DDGConstants {
 	public static final String SOURCE_JSON_PATH = "source.json";
 	public static final String SOURCE_SIMPLE_PATH = "simple.kry";
 	
-	public static Typeface TTF_HELVETICA_NEUE_MEDIUM = null;
+//	public static Typeface TTF_HELVETICA_NEUE_MEDIUM = null;
 }

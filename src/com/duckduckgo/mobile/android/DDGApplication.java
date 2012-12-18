@@ -67,7 +67,7 @@ public class DDGApplication extends Application {
 		DDGNetworkConstants.initialize();
 		
 		// set Helvetica Neue Medium
-		DDGConstants.TTF_HELVETICA_NEUE_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeue_Medium.ttf");
+//		DDGConstants.TTF_HELVETICA_NEUE_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeue_Medium.ttf");
 		
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString("startScreenPref", "0")));
