@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="53dp"
+    android:background="#edeef0">
     
     <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top"
+        android:background="@drawable/div_top2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="1dp"/>
 
     	<LinearLayout
 	    android:layout_width="fill_parent"
@@ -30,9 +31,11 @@
 	    style="@style/ListItemText"
 	    android:id="@+id/recentSearchText" 
 	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:background="@drawable/left_home_selector"
+	    android:layout_height="51dp" 
+	    android:background="@drawable/left_recent_selector"
+	    android:textColor="#4a5056"
 	    android:text="This is test Text"
+	    android:layout_gravity="center_vertical"
 	    android:gravity="center_vertical" android:paddingLeft="10dip" 
 	    android:paddingRight="6dip"
 	    android:textSize="18dp"/>
@@ -53,8 +56,8 @@
 <!--         </TextView> -->
     
     <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom"
+        android:background="@drawable/div_bottom2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="1dp"/>
     
     </LinearLayout>

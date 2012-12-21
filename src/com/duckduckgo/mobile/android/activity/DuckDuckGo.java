@@ -344,11 +344,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftRecentTextView = (TextView) findViewById(R.id.LeftRecentTextView);
     	leftSettingsTextView = (TextView) findViewById(R.id.LeftSettingsTextView);
     	
-//    	leftHomeTextView.setTypeface(DDGConstants.TTF_HELVETICA_NEUE_MEDIUM);
-//    	leftStoriesTextView.setTypeface(DDGConstants.TTF_HELVETICA_NEUE_MEDIUM);
-//    	leftSavedTextView.setTypeface(DDGConstants.TTF_HELVETICA_NEUE_MEDIUM);
-//    	leftRecentTextView.setTypeface(DDGConstants.TTF_HELVETICA_NEUE_MEDIUM);
-//    	leftSettingsTextView.setTypeface(DDGConstants.TTF_HELVETICA_NEUE_MEDIUM);
+    	leftHomeTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
+    	leftStoriesTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
+    	leftSavedTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
+    	leftRecentTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
+    	leftSettingsTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);    	
     	
     	
     	leftHomeButtonLayout = (LinearLayout) findViewById(R.id.LeftHomeButtonLayout);
@@ -1283,6 +1283,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		// save recent query if "record history" is enabled
 		if(sharedPreferences.getBoolean("recordHistoryPref", false)){
 			if(!mDuckDuckGoContainer.recentSearchSet.contains(term)){
+				Log.v(TAG, "Search: " + term);
 				mDuckDuckGoContainer.recentSearchSet.add(term);
 				mDuckDuckGoContainer.recentSearchAdapter.add(term);
 				

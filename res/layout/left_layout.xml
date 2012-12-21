@@ -4,38 +4,40 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/LeftMainLayout"
-    android:background="@drawable/left_bg">
+    android:background="#edeef0">
     
     
     <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="53dp"
     android:id="@+id/LeftHomeButtonLayout">
     
     <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top"
+        android:background="@drawable/div_top2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="1dp"/>
 
     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
 	    style="@style/ListItemText"
 	    android:id="@+id/LeftHomeTextView" 
 	    android:layout_width="fill_parent" 
-	    android:layout_height="60dp" 
+	    android:layout_height="51dp" 
+	    android:layout_gravity="center_vertical"
 	    android:drawableLeft="@drawable/icon_home_selector"
 	    android:drawableRight="@drawable/icon_caret_selector"
 	    android:background="@drawable/left_home_selector"
 	    android:clickable="true"
 	    android:text="@string/HomeButtonContentDescription"
+	    android:textColor="#4a5056"
 	    android:gravity="center_vertical" android:paddingLeft="6dip" 
 	    android:paddingRight="6dip"
 	    android:minHeight="?android:attr/listPreferredItemHeight"/>
     
     <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom"
+        android:background="@drawable/div_bottom2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="1dp"/>
     
     </LinearLayout>
 
@@ -43,44 +45,46 @@
     <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="53dp"
     android:visibility="gone"
     android:id="@+id/LeftStoriesButtonLayout">
     
     <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top"
+        android:background="@drawable/div_top2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="1dp"/>
     
     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
 	    style="@style/ListItemText"
 	    android:id="@+id/LeftStoriesTextView" 
 	    android:layout_width="fill_parent" 
-	    android:layout_height="60dp" 
+	    android:layout_height="51dp"
+	    android:layout_gravity="center_vertical" 
 	    android:drawableLeft="@android:drawable/ic_menu_rotate"
 	    android:drawableRight="@drawable/icon_caret_selector"
 	   	android:background="@drawable/left_main_selector"
 	   	android:clickable="true"
 	    android:text="@string/LeftStories"
+	    android:textColor="#4a5056"
 	    android:gravity="center_vertical" android:paddingLeft="6dip" 
 	    android:paddingRight="6dip"
 	    android:minHeight="?android:attr/listPreferredItemHeight"/>
     
         <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom"
+        android:background="@drawable/div_bottom2"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="1dp"/>
     
     </LinearLayout>
     
     <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="53dp"
     android:id="@+id/LeftSavedButtonLayout">
         
             <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top"
+        android:background="@drawable/div_top2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     
@@ -88,18 +92,20 @@
 	    style="@style/ListItemText"
 	    android:id="@+id/LeftSavedTextView" 
 	    android:layout_width="fill_parent" 
-	    android:layout_height="60dp" 
+	    android:layout_height="51dp"
+	    android:layout_gravity="center_vertical" 
 	    android:drawableLeft="@drawable/icon_saved_selector"
 	    android:drawableRight="@drawable/icon_caret_selector"
 	   	android:background="@drawable/left_main_selector"
 	   	android:clickable="true"
 	    android:text="@string/LeftSaved"
+	    android:textColor="#4a5056"
 	    android:gravity="center_vertical" android:paddingLeft="6dip" 
 	    android:paddingRight="6dip"
 	    android:minHeight="?android:attr/listPreferredItemHeight"/>
     
             <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom"
+        android:background="@drawable/div_bottom2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     
@@ -108,11 +114,11 @@
     <LinearLayout
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="53dp"
     android:id="@+id/LeftSettingsButtonLayout">
             
        		<ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top"
+        android:background="@drawable/div_top2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     
@@ -120,18 +126,20 @@
 	    style="@style/ListItemText"
 	    android:id="@+id/LeftSettingsTextView" 
 	    android:layout_width="fill_parent" 
-	    android:layout_height="60dp" 
+	    android:layout_height="51dp"
+	    android:layout_gravity="center_vertical" 
 	    android:drawableLeft="@drawable/icon_settings_selector"
 	    android:drawableRight="@drawable/icon_caret_selector"
 	    android:background="@drawable/left_main_selector"
 	    android:clickable="true"
 	    android:text="@string/LeftSettings"
+	    android:textColor="#4a5056"
 	    android:gravity="center_vertical" android:paddingLeft="6dip" 
 	    android:paddingRight="6dip"
 	    android:minHeight="?android:attr/listPreferredItemHeight"/>
      
              <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom"
+        android:background="@drawable/div_bottom2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
      
@@ -145,20 +153,28 @@
 <!--         android:id="@+id/LeftMainView" /> -->
     <TextView 
         android:layout_width="fill_parent" 
-        android:layout_height="wrap_content" 
+        android:layout_height="27dp" 
         android:textSize="14dp" 
-        android:textColor="@android:color/white"
-        android:background="@drawable/left_divider"
+        android:textColor="#9c9fa6"
+        android:background="#e1e2e6"
         android:paddingLeft="6dp"
         android:paddingTop="2dp"
         android:paddingBottom="2dp"
         android:text="@string/LeftRecent"
         android:id="@+id/LeftRecentTextView" />
+    <ImageView android:src="@android:color/transparent"
+        android:background="@drawable/div_top2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    
     <com.duckduckgo.mobile.android.views.RecentSearchListView 
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content" 
         android:cacheColorHint="@android:color/transparent"
         android:listSelector="@drawable/left_recent_selector"
+        android:background="#e1e2e6"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="1dp"
         android:id="@+id/LeftRecentView" />
         
     
