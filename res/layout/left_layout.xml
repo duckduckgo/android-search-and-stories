@@ -162,10 +162,10 @@
         android:paddingBottom="2dp"
         android:text="@string/LeftRecent"
         android:id="@+id/LeftRecentTextView" />
-    <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+<!--     <ImageView android:src="@android:color/transparent" -->
+<!--         android:background="@drawable/div_top2" -->
+<!--         android:layout_width="match_parent" -->
+<!--         android:layout_height="wrap_content"/> -->
     
     <com.duckduckgo.mobile.android.views.RecentSearchListView 
         android:layout_width="fill_parent" 

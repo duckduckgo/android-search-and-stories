@@ -6,4 +6,4 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" 
-    app:menuSize="0.65" />
+    app:menuSize="0.806" />

@@ -358,35 +358,23 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	
     	
     	int pixelValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
-                (float) 30.0, getResources().getDisplayMetrics());
-    	
-    	Drawable caret = getResources().getDrawable(R.drawable.icon_caret_selector);
-    	caret.setBounds(0, 0, pixelValue, pixelValue);
+                (float) 20.0, getResources().getDisplayMetrics());
     	
     	Drawable xt = getResources().getDrawable(R.drawable.icon_home_selector);
         xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftHomeTextView.setCompoundDrawables(xt, null, caret, null);
-
-        caret = getResources().getDrawable(R.drawable.icon_caret_selector);
-    	caret.setBounds(0, 0, pixelValue, pixelValue);
+        leftHomeTextView.setCompoundDrawables(xt, null, null, null);
         
     	xt = getResources().getDrawable(R.drawable.icon_stories_selector);
         xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftStoriesTextView.setCompoundDrawables(xt, null, caret, null);        
-        
-        caret = getResources().getDrawable(R.drawable.icon_caret_selector);
-    	caret.setBounds(0, 0, pixelValue, pixelValue);
+        leftStoriesTextView.setCompoundDrawables(xt, null, null, null);        
         
     	xt = getResources().getDrawable(R.drawable.icon_saved_selector);
         xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftSavedTextView.setCompoundDrawables(xt, null, caret, null);
-        
-        caret = getResources().getDrawable(R.drawable.icon_caret_selector);
-    	caret.setBounds(0, 0, pixelValue, pixelValue);
+        leftSavedTextView.setCompoundDrawables(xt, null, null, null);
         
     	xt = getResources().getDrawable(R.drawable.icon_settings_selector);
         xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftSettingsTextView.setCompoundDrawables(xt, null, caret, null);
+        leftSettingsTextView.setCompoundDrawables(xt, null, null, null);
     	
     	leftHomeTextView.setOnClickListener(this);
     	leftStoriesTextView.setOnClickListener(this);
