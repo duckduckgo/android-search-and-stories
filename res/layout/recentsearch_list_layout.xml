@@ -33,12 +33,12 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="51dp" 
 	    android:background="@drawable/left_recent_selector"
-	    android:textColor="#4a5056"
+	    android:textColor="@color/left_text"
 	    android:text="This is test Text"
 	    android:layout_gravity="center_vertical"
 	    android:gravity="center_vertical" android:paddingLeft="10dip" 
 	    android:paddingRight="6dip"
-	    android:textSize="18dp"/>
+	    android:textSize="18sp"/>
     
     </LinearLayout>
     

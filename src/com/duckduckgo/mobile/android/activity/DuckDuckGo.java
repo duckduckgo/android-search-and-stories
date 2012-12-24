@@ -79,6 +79,7 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.CustomArrayAdapter;
+import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
@@ -96,12 +97,12 @@ import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.DDGViewPager;
 import com.duckduckgo.mobile.android.util.Item;
 import com.duckduckgo.mobile.android.util.Item.ItemType;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.DDGWebView;
-import com.duckduckgo.mobile.android.views.FanView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
@@ -129,7 +130,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	ArrayAdapter<String> lRecentAdapter;
 	ListAdapter contextAdapter;
 	
-	private FanView fan;
+	private DDGViewPager viewPager;
+	private View contentView = null;
+	private View leftMenuView = null;
 	
 	private RecentSearchListView recentSearchView = null;
 	
@@ -190,10 +193,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_PROGRESS);
         		        
-        setContentView(R.layout.twopane);
-        
-        fan = (FanView) findViewById(R.id.fan_view);
-        fan.setViews(R.layout.main, R.layout.left_layout);
+        setContentView(R.layout.pager);
         
 //        TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 //        String countryCode = tm.getSimCountryIso();
@@ -256,6 +256,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	if(mDuckDuckGoContainer == null){
     		mDuckDuckGoContainer = new DuckDuckGoContainer();
     		
+            mDuckDuckGoContainer.pageAdapter = new DDGPagerAdapter(this);
+    		
     		mDuckDuckGoContainer.webviewShowing = false;
     		mDuckDuckGoContainer.prefShowing = false;
     		
@@ -310,6 +312,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
     		
     	}
+    	
+        viewPager = (DDGViewPager) findViewById(R.id.mainpager);
+        viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
+        viewPager.setCurrentItem(1);
+        
+        leftMenuView = mDuckDuckGoContainer.pageAdapter.getPageView(0);
+        contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);
     	    	
 		contextAdapter = new ArrayAdapter<Item>(
 				this,
@@ -338,11 +347,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			}
 		};
     	    	
-    	leftHomeTextView = (TextView) findViewById(R.id.LeftHomeTextView);
-    	leftStoriesTextView = (TextView) findViewById(R.id.LeftStoriesTextView);
-    	leftSavedTextView = (TextView) findViewById(R.id.LeftSavedTextView);
-    	leftRecentTextView = (TextView) findViewById(R.id.LeftRecentTextView);
-    	leftSettingsTextView = (TextView) findViewById(R.id.LeftSettingsTextView);
+    	leftHomeTextView = (TextView) leftMenuView.findViewById(R.id.LeftHomeTextView);
+    	leftStoriesTextView = (TextView) leftMenuView.findViewById(R.id.LeftStoriesTextView);
+    	leftSavedTextView = (TextView) leftMenuView.findViewById(R.id.LeftSavedTextView);
+    	leftRecentTextView = (TextView) leftMenuView.findViewById(R.id.LeftRecentTextView);
+    	leftSettingsTextView = (TextView) leftMenuView.findViewById(R.id.LeftSettingsTextView);
     	
     	leftHomeTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
     	leftStoriesTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
@@ -351,10 +360,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftSettingsTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);    	
     	
     	
-    	leftHomeButtonLayout = (LinearLayout) findViewById(R.id.LeftHomeButtonLayout);
-    	leftStoriesButtonLayout = (LinearLayout) findViewById(R.id.LeftStoriesButtonLayout);
-    	leftSavedButtonLayout = (LinearLayout) findViewById(R.id.LeftSavedButtonLayout);
-    	leftSettingsButtonLayout = (LinearLayout) findViewById(R.id.LeftSettingsButtonLayout);
+    	leftHomeButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftHomeButtonLayout);
+    	leftStoriesButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftStoriesButtonLayout);
+    	leftSavedButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftSavedButtonLayout);
+    	leftSettingsButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftSettingsButtonLayout);
     	
     	
     	int pixelValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
@@ -381,7 +390,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftSavedTextView.setOnClickListener(this);
     	leftSettingsTextView.setOnClickListener(this);
     	
-    	leftRecentView = (RecentSearchListView) findViewById(R.id.LeftRecentView);
+    	leftRecentView = (RecentSearchListView) leftMenuView.findViewById(R.id.LeftRecentView);
     	
     	listContent = new ArrayList<String>();
     	for(String s : getResources().getStringArray(R.array.leftMenuDefault)) {
@@ -395,7 +404,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftRecentView.setOnRecentSearchItemSelectedListener(new OnRecentSearchItemSelectedListener() {
 			
 			public void onRecentSearchItemSelected(String recentQuery) {
-				fan.showMenu();
+				int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
+				viewPager.setCurrentItem(otherItem);
 				
 				if(recentQuery != null){				
 					searchWebTerm(recentQuery);
@@ -403,14 +413,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			}
 		});
         
-        homeSettingsButton = (ImageButton) findViewById(R.id.settingsButton);
+        homeSettingsButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
         homeSettingsButton.setOnClickListener(this);
         
         if(mDuckDuckGoContainer.webviewShowing) {
         	homeSettingsButton.setImageResource(R.drawable.home_button);
         }
         
-        shareButton = (ImageButton) findViewById(R.id.shareButton);
+        shareButton = (ImageButton) contentView.findViewById(R.id.shareButton);
         shareButton.setOnClickListener(this);
         
         // adjust visibility of share button after screen rotation
@@ -418,7 +428,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	shareButton.setVisibility(View.VISIBLE);
         }
         
-        searchField = (AutoCompleteTextView) findViewById(R.id.searchEditText);
+        searchField = (AutoCompleteTextView) contentView.findViewById(R.id.searchEditText);
         searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
         searchField.setOnEditorActionListener(this);
         
@@ -427,8 +437,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			@Override
 			public void onClick(View v) {
 				// close left nav if it's open
-				if(fan.isOpen()){
-					fan.showMenu();
+				if(viewPager.getCurrentItem() == 0){
+					viewPager.setCurrentItem(1);
 				}				
 			}
 		});
@@ -501,7 +511,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             }
         });
 
-        recentSearchView = (RecentSearchListView) findViewById(R.id.recentSearchItems);
+        recentSearchView = (RecentSearchListView) contentView.findViewById(R.id.recentSearchItems);
         View header = getLayoutInflater().inflate(R.layout.recentsearch_header, null);
         recentSearchView.addHeaderView(header);
         recentSearchView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
@@ -515,7 +525,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		});
         
         
-		mPullRefreshFeedView = (PullToRefreshMainFeedListView) findViewById(R.id.mainFeedItems);
+		mPullRefreshFeedView = (PullToRefreshMainFeedListView) contentView.findViewById(R.id.mainFeedItems);
 		DDGControlVar.ptrHeaderSize = sharedPreferences.getInt("ptrHeaderTextSize", mPullRefreshFeedView.getHeaderTextSize());
 		DDGControlVar.ptrSubHeaderSize = sharedPreferences.getInt("ptrHeaderSubTextSize", mPullRefreshFeedView.getHeaderSubTextSize());
 		
@@ -547,8 +557,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
 			public void onMainFeedItemSelected(FeedObject feedObject) {
 				// close left nav if it's open
-				if(fan.isOpen()){
-					fan.showMenu();
+				if(viewPager.getCurrentItem() == 0){
+					viewPager.setCurrentItem(1);
 				}
 				
 				// keep a reference, so that we can reuse details while saving
@@ -660,7 +670,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         // http://code.google.com/p/android/issues/detail?id=21266
         // Possibly also related to CSS Transforms (bug 21305)
         // http://code.google.com/p/android/issues/detail?id=21305
-        mainWebView = (DDGWebView) findViewById(R.id.mainWebView);
+        mainWebView = (DDGWebView) contentView.findViewById(R.id.mainWebView);
         mainWebView.getSettings().setJavaScriptEnabled(true);
         
         // get default User-Agent string for reuse later
@@ -882,11 +892,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             } 
         }); 
                 
-        prefLayout = (LinearLayout) findViewById(R.id.prefLayout);
+        prefLayout = (LinearLayout) contentView.findViewById(R.id.prefLayout);
         
-        fontSizeLayout = (LinearLayout) findViewById(R.id.fontSeekLayout);
+        fontSizeLayout = (LinearLayout) contentView.findViewById(R.id.fontSeekLayout);
         
-        fontSizeSeekBar = (SeekBar) findViewById(R.id.fontSizeSeekBar);
+        fontSizeSeekBar = (SeekBar) contentView.findViewById(R.id.fontSizeSeekBar);
         DDGControlVar.mainTextSize = sharedPreferences.getInt("mainFontSize", 14);
         DDGControlVar.recentTextSize = sharedPreferences.getInt("recentFontSize", 18);
         seekBarPrevProgress = 50;
@@ -932,7 +942,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			}
 		});
         
-        Button fontSizeApplyButton = (Button) findViewById(R.id.fontSizeApplyButton);
+        Button fontSizeApplyButton = (Button) contentView.findViewById(R.id.fontSizeApplyButton);
         fontSizeApplyButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -1393,8 +1403,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
 					// close left nav if it's open
-					if(fan.isOpen()){
-						fan.showMenu();
+					if(viewPager.getCurrentItem() == 0){
+						viewPager.setCurrentItem(1);
 					}
 					
 					if(preference.getKey().equals("mainFontSizePref")) {
@@ -1466,7 +1476,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	 * helper method to control visibility states etc. of other views in DuckDuckGo activity
 	 */
 	public void displayPreferences(){
-		findViewById(R.id.mainViewArea).setBackgroundResource(android.R.color.transparent);
+		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(android.R.color.transparent);
 		
 		mPullRefreshFeedView.setVisibility(View.GONE);
 		mainWebView.setVisibility(View.GONE);
@@ -1486,7 +1496,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	 * Method that switches visibility of views for Home or Saved feed
 	 */
 	private void displayFeedCore() {
-		findViewById(R.id.mainViewArea).setBackgroundResource(R.drawable.main_bg);
+		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(R.color.main_bg);
 		
     	// main view visibility changes and keep feed updated
 		recentSearchView.setVisibility(View.GONE);
@@ -1567,7 +1577,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displayRecentSearch(){  
-		findViewById(R.id.mainViewArea).setBackgroundResource(R.drawable.main_bg);
+		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(R.color.main_bg);
 		
     	// hide recent queries from slide-out menu
 //    	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
@@ -1598,7 +1608,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displayWebView() {
-		findViewById(R.id.mainViewArea).setBackgroundResource(android.R.color.transparent);
+		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(android.R.color.transparent);
 		
 		// loading something in the browser - set home icon
 		DDGControlVar.homeScreenShowing = false;
@@ -1634,7 +1644,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			hideKeyboard(searchField);
 			
 			if(DDGControlVar.homeScreenShowing){
-				fan.showMenu();
+				int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
+				viewPager.setCurrentItem(otherItem);
 			}
 			else {
 				// going home
@@ -1687,7 +1698,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			ab.show();
 		}
 		else if(v.equals(leftHomeTextView)){
-			fan.showMenu();
+			int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
+			viewPager.setCurrentItem(otherItem);
 			
 			mDuckDuckGoContainer.prefShowing = false;
 			
@@ -1703,15 +1715,18 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			switchScreens();
 		}
 		else if(v.equals(leftStoriesTextView)){
-			fan.showMenu();			
+			int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
+			viewPager.setCurrentItem(otherItem);		
 			displayNewsFeed();
 		}
 		else if(v.equals(leftSavedTextView)){
-			fan.showMenu();			
+			int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
+			viewPager.setCurrentItem(otherItem);		
 			displaySavedFeed();
 		}
 		else if(v.equals(leftSettingsTextView) || v.equals(leftRecentHeaderView)){
-			fan.showMenu();			
+			int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
+			viewPager.setCurrentItem(otherItem);		
 			showSettings();
 		}
 		
@@ -1855,7 +1870,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if ( keyCode == KeyEvent.KEYCODE_MENU ) {
-	        fan.showMenu();
+	    	int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
+			viewPager.setCurrentItem(otherItem);
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

@@ -6,7 +6,7 @@
     android:id="@+id/recentSearchNotRecording">
     
     <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top"
+        android:background="@drawable/div_top2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     
@@ -39,7 +39,7 @@
 	</LinearLayout>
 
     <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom"
+        android:background="@drawable/div_bottom2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 

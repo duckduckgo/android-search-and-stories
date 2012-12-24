@@ -7,4 +7,10 @@
     <color name="topbar_bottom">#E6E6E6</color>
     
     <color name="menuitem_onclick">#e1e2e6</color>
+    <color name="left_bg">#edeef0</color>
+    <color name="main_bg">#edeef0</color>
+    <color name="recent_empty_bg">#e1e2e6</color>
+    <color name="recent_header_bg">#e1e2e6</color>
+    <color name="left_text">#4a5056</color>
+    <color name="left_secondary_text">#9c9fa6</color>
 </resources>

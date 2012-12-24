@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.container;
 import java.util.Set;
 
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
+import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
@@ -30,4 +31,6 @@ public class DuckDuckGoContainer {
 	public DownloadSourceIconTask sourceIconTask = null;
 	
 	public AutoCompleteResultsAdapter acAdapter = null;
+	
+	public DDGPagerAdapter pageAdapter = null;
 }

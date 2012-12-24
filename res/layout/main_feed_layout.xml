@@ -24,7 +24,7 @@
 		    	   android:scaleType="fitCenter"
 		    	   android:id="@+id/feedItemSourceIcon" />
 	    	    		  
-		<TextView android:layout_width="wrap_content"
+		<TextView android:layout_width="0dip"
 		    	  android:layout_height="wrap_content"
 		    	  android:layout_gravity="center_vertical"
 		    	  android:layout_weight="1"

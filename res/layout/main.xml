@@ -39,7 +39,7 @@
 			   	        	  android:background="@drawable/searchfield"
 			   	        	  android:paddingLeft="5dp"
 			   	        	  android:singleLine="true"
-			   	        	  android:textSize="14dp"
+			   	        	  android:textSize="14sp"
 			   	        	  android:selectAllOnFocus="true"
 			   	        	  android:dropDownWidth="match_parent"
 			   	        	  android:dropDownAnchor="@+id/searchBar"
@@ -89,10 +89,12 @@
         <com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView
             	  android:layout_width="match_parent"
                   android:layout_height="match_parent"
+                  android:divider="@android:color/white"
+                  android:dividerHeight="1dp"
                   
                   app:ptrAnimationStyle="flip"
-                  app:ptrHeaderTextColor="#b3bdc8"
-                  app:ptrHeaderSubTextColor="#8e97a5"
+                  app:ptrHeaderTextColor="@color/left_text"
+                  app:ptrHeaderSubTextColor="@color/left_secondary_text"
                   app:ptrDrawableTop="@drawable/refresh_arrow"
                   app:ptrHeaderSize="10dp"
                   
@@ -157,6 +159,7 @@
         <LinearLayout 	  
             android:layout_height="match_parent"
 			android:layout_width="match_parent"
+			android:baselineAligned="false"
 			android:visibility="gone"
 			android:id="@+id/prefLayout">  
 			
