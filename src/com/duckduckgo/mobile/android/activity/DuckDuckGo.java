@@ -703,6 +703,19 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
                         startActivity(i);
                         return true;
         			}
+        			else if(!(url.startsWith("http:") || url.startsWith("https:"))) {
+        				// custom handling, there can be a related app
+        				try {
+        					Intent customIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        					startActivity(customIntent);
+        					return true;
+        				}
+        				catch(ActivityNotFoundException ae) {
+        					// no related app, inform and still try to load in browser
+        					Toast.makeText(DuckDuckGo.this, "No related app found!", Toast.LENGTH_LONG).show();
+        					view.loadUrl(url);
+        				}
+        			}
         			else {	
 //        				view.loadUrl(url, DDGNetworkConstants.extraHeaders);
         				view.loadUrl(url);
