@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.container;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
@@ -21,7 +22,7 @@ public class DuckDuckGoContainer {
 	public Drawable progressDrawable, searchFieldDrawable;
 	
 	public ArrayAdapter<String> recentSearchAdapter = null;
-	public Set<String> recentSearchSet = null;
+	public ArrayList<String> recentSearchList = null;
 	
 	public MainFeedAdapter feedAdapter = null;
 	public MainFeedTask mainFeedTask = null;

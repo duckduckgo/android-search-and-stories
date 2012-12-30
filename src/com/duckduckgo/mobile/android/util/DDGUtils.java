@@ -57,6 +57,17 @@ public final class DDGUtils {
 	    return editor.commit();  
 	} 
 	
+	public static boolean saveList(SharedPreferences prefs, ArrayList<String> list, String listName) {   
+	    SharedPreferences.Editor editor = prefs.edit();  
+	    editor.putInt(listName +"_size", list.size());  
+	    int i=0;
+	    for(String s : list) {
+	    	editor.putString(listName + "_" + i, s);
+	    	++i;
+	    }
+	    return editor.commit();  
+	} 
+	
 	public static boolean saveSet(SharedPreferences prefs, Set<String> set, String setName) {   		
 	    SharedPreferences.Editor editor = prefs.edit();  
 	    final int setSize = set.size();
@@ -75,6 +86,15 @@ public final class DDGUtils {
 	    for(int i=0;i<size;i++)  
 	        array[i] = prefs.getString(arrayName + "_" + i, null);  
 	    return array;  
+	}  
+	
+	public static ArrayList<String> loadList(SharedPreferences prefs, String listName) {  
+	    int size = prefs.getInt(listName + "_size", 0);  
+	    ArrayList<String> list = new ArrayList<String>(size);  
+	    for(int i=0;i<size;i++)  {
+	    	list.add(prefs.getString(listName + "_" + i, null));
+	    }
+	    return list;  
 	}  
 	
 	public static Set<String> loadSet(SharedPreferences prefs, String setName) {  

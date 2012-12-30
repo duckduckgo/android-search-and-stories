@@ -265,11 +265,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
     		mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
     		
-    		mDuckDuckGoContainer.recentSearchSet = DDGUtils.loadSet(sharedPreferences, "recentsearch");
+    		mDuckDuckGoContainer.recentSearchList = DDGUtils.loadList(sharedPreferences, "recentsearch");
 
     		mDuckDuckGoContainer.recentSearchAdapter = new CustomArrayAdapter<String>(this, 
             		R.layout.recentsearch_list_layout, R.id.recentSearchText, 
-            		new ArrayList<String>(mDuckDuckGoContainer.recentSearchSet));
+            		mDuckDuckGoContainer.recentSearchList);
     		
     		OnClickListener sourceClickListener = new OnClickListener() {
 				
@@ -1296,14 +1296,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void searchWebTerm(String term) {
 		// save recent query if "record history" is enabled
 		if(sharedPreferences.getBoolean("recordHistoryPref", false)){
-			if(!mDuckDuckGoContainer.recentSearchSet.contains(term)){
+			if(!mDuckDuckGoContainer.recentSearchList.contains(term)){
 				Log.v(TAG, "Search: " + term);
-				mDuckDuckGoContainer.recentSearchSet.add(term);
-				mDuckDuckGoContainer.recentSearchAdapter.add(term);
+				mDuckDuckGoContainer.recentSearchList.add(term);
+//				mDuckDuckGoContainer.recentSearchAdapter.add(term);
 				
-				Set<String> recentSearchSet = DDGUtils.loadSet(sharedPreferences, "recentsearch");
-				recentSearchSet.add(term);
-				DDGUtils.saveSet(sharedPreferences, recentSearchSet, "recentsearch");
+				DDGUtils.saveList(sharedPreferences, mDuckDuckGoContainer.recentSearchList, "recentsearch");
 			}
 		}
 		
@@ -1333,8 +1331,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void clearRecentSearch() {
-		mDuckDuckGoContainer.recentSearchSet.clear();
-		mDuckDuckGoContainer.recentSearchAdapter.clear();
+		mDuckDuckGoContainer.recentSearchList.clear();
+//		mDuckDuckGoContainer.recentSearchAdapter.clear();
 		recentSearchView.invalidate();
 	}
 	

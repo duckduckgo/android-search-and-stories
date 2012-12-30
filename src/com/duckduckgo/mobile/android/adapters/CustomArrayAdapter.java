@@ -28,10 +28,7 @@ public class CustomArrayAdapter<T> extends ArrayAdapter<T> {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		View cv = convertView;
-		if(convertView == null) {
-		  cv = super.getView(position, convertView, parent);
-		}
+		  View cv = super.getView(position, convertView, parent);
 		
 		((TextView) cv.findViewById(textViewResourceId)).setTextSize(DDGControlVar.recentTextSize);
 		
