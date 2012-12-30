@@ -404,8 +404,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftRecentView.setOnRecentSearchItemSelectedListener(new OnRecentSearchItemSelectedListener() {
 			
 			public void onRecentSearchItemSelected(String recentQuery) {
-				int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
-				viewPager.setCurrentItem(otherItem);
+				viewPager.switchPage();
 				
 				if(recentQuery != null){				
 					searchWebTerm(recentQuery);
@@ -437,7 +436,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			@Override
 			public void onClick(View v) {
 				// close left nav if it's open
-				if(viewPager.getCurrentItem() == 0){
+				if(viewPager.isLeftMenuOpen()){
 					viewPager.setCurrentItem(1);
 				}				
 			}
@@ -557,7 +556,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
 			public void onMainFeedItemSelected(FeedObject feedObject) {
 				// close left nav if it's open
-				if(viewPager.getCurrentItem() == 0){
+				if(viewPager.isLeftMenuOpen()){
 					viewPager.setCurrentItem(1);
 				}
 				
@@ -1168,7 +1167,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	@Override
 	public void onBackPressed() {
-		if (mDuckDuckGoContainer.webviewShowing) {
+		// close left nav if it's open
+		if(viewPager.isLeftMenuOpen()){
+			viewPager.setCurrentItem(1);
+		}
+		else if (mDuckDuckGoContainer.webviewShowing) {
 			if (mainWebView.canGoBack()) {
 				mainWebView.goBack();
 			}
@@ -1416,7 +1419,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
 					// close left nav if it's open
-					if(viewPager.getCurrentItem() == 0){
+					if(viewPager.isLeftMenuOpen()){
 						viewPager.setCurrentItem(1);
 					}
 					
@@ -1657,8 +1660,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			hideKeyboard(searchField);
 			
 			if(DDGControlVar.homeScreenShowing){
-				int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
-				viewPager.setCurrentItem(otherItem);
+				viewPager.switchPage();
 			}
 			else {
 				// going home
@@ -1711,8 +1713,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			ab.show();
 		}
 		else if(v.equals(leftHomeTextView)){
-			int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
-			viewPager.setCurrentItem(otherItem);
+			viewPager.switchPage();
 			
 			mDuckDuckGoContainer.prefShowing = false;
 			
@@ -1728,18 +1729,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			switchScreens();
 		}
 		else if(v.equals(leftStoriesTextView)){
-			int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
-			viewPager.setCurrentItem(otherItem);		
+			viewPager.switchPage();		
 			displayNewsFeed();
 		}
 		else if(v.equals(leftSavedTextView)){
-			int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
-			viewPager.setCurrentItem(otherItem);		
+			viewPager.switchPage();		
 			displaySavedFeed();
 		}
 		else if(v.equals(leftSettingsTextView) || v.equals(leftRecentHeaderView)){
-			int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
-			viewPager.setCurrentItem(otherItem);		
+			viewPager.switchPage();		
 			showSettings();
 		}
 		
@@ -1883,8 +1881,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if ( keyCode == KeyEvent.KEYCODE_MENU ) {
-	    	int otherItem = viewPager.getCurrentItem() == 0 ? 1 : 0;
-			viewPager.setCurrentItem(otherItem);
+	    	viewPager.switchPage();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);

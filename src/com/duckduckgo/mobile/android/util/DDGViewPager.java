@@ -40,4 +40,16 @@ public class DDGViewPager extends ViewPager {
     public void setPagingEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+    
+    public boolean isLeftMenuOpen() {
+    	return getCurrentItem() == 0;
+    }
+    
+    /**
+     * Switch between two pages, left and right
+     */
+    public void switchPage() {
+    	int otherItem = getCurrentItem() == 0 ? 1 : 0;
+		setCurrentItem(otherItem);
+    }
 }
