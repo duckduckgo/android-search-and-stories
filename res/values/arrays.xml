@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+<string-array name="themeArray">
+   <item>@string/PrefThemeDark</item>
+   <item>@string/PrefThemeLight</item>
+</string-array>
+
+<string-array name="themeValues">
+   <item>DDGDark</item>
+   <item>DDGLight</item>
+</string-array>    
+    
 <string-array name="startScreenArray">
    <item>@string/PrefWaterCoolerStories</item>
    <item>@string/PrefRecentSearch</item>

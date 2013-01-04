@@ -24,6 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -192,6 +193,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_PROGRESS);
+        
+        sharedPreferences = DDGApplication.getSharedPreferences();
+        
+        String themeName = sharedPreferences.getString("themePref", "DDGDark");
+		int themeId = getResources().getIdentifier(themeName, "style", getPackageName());
+		if(themeId != 0) {
+			setTheme(themeId);
+		}
         		        
         setContentView(R.layout.pager);
         
@@ -213,8 +222,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
         if(savedInstanceState != null)
         	savedState = true;
-        
-        sharedPreferences = DDGApplication.getSharedPreferences();
         
         DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean("turnOffAutocompletePref", false);
                
@@ -369,7 +376,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	int pixelValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
                 (float) 20.0, getResources().getDisplayMetrics());
     	
-    	Drawable xt = getResources().getDrawable(R.drawable.icon_home_selector);
+    	TypedValue typedValue = new TypedValue(); 
+    	getTheme().resolveAttribute(R.attr.leftDrawableHome, typedValue, true);
+    	
+    	Drawable xt = getResources().getDrawable(typedValue.resourceId);
         xt.setBounds(0, 0, pixelValue, pixelValue);
         leftHomeTextView.setCompoundDrawables(xt, null, null, null);
         
@@ -377,11 +387,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         xt.setBounds(0, 0, pixelValue, pixelValue);
         leftStoriesTextView.setCompoundDrawables(xt, null, null, null);        
         
-    	xt = getResources().getDrawable(R.drawable.icon_saved_selector);
+        getTheme().resolveAttribute(R.attr.leftDrawableSaved, typedValue, true);
+    	xt = getResources().getDrawable(typedValue.resourceId);
         xt.setBounds(0, 0, pixelValue, pixelValue);
         leftSavedTextView.setCompoundDrawables(xt, null, null, null);
         
-    	xt = getResources().getDrawable(R.drawable.icon_settings_selector);
+        getTheme().resolveAttribute(R.attr.leftDrawableSettings, typedValue, true);
+    	xt = getResources().getDrawable(typedValue.resourceId);
         xt.setBounds(0, 0, pixelValue, pixelValue);
         leftSettingsTextView.setCompoundDrawables(xt, null, null, null);
     	
@@ -1437,7 +1449,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             mWorkFragment.setCustomPreferenceChangeListener(new PreferenceChangeListener() {
             	@Override
             	public void onPreferenceChange(String key) {
-            		if(key.equals("turnOffAutocompletePref")) {
+            		if(key.equals("themePref")){
+            			String themeName = sharedPreferences.getString(key, "DDGDark");
+            			int themeId = getResources().getIdentifier(themeName, "style", getPackageName());
+            			if(themeId != 0) {
+            				Intent intent = new Intent(getApplicationContext(), DuckDuckGo.class);
+            				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            				startActivity(intent);
+            			}
+            		}
+            		else if(key.equals("turnOffAutocompletePref")) {
 	        			// check autocomplete 
 	        			if(!DDGControlVar.isAutocompleteActive) {
 	        				searchField.setAdapter(null);

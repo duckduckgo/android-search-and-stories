@@ -48,5 +48,9 @@
         
         <attr name="leftTitleTextColor" format="color" />
         <attr name="leftTitleBackground" format="reference|color" />
+        
+        <attr name="leftDrawableHome" format="reference" />
+        <attr name="leftDrawableSaved" format="reference" />
+        <attr name="leftDrawableSettings" format="reference" />
     
 </resources>

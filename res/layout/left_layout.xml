@@ -16,7 +16,7 @@
 	    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
 		    style="@style/LeftItemText"
 		    android:id="@+id/LeftHomeTextView" 
-		    android:drawableLeft="@drawable/icon_home_selector"
+		    android:drawableLeft="?attr/leftDrawableHome"
 		    android:text="@string/HomeButtonContentDescription" />
 	    
 	    <ImageView style="@style/LeftDivBottom" />
@@ -50,7 +50,7 @@
 	    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
 		    style="@style/LeftItemText"
 		    android:id="@+id/LeftSavedTextView" 
-		    android:drawableLeft="@drawable/icon_saved_selector"
+		    android:drawableLeft="?attr/leftDrawableSaved"
 		    android:text="@string/LeftSaved" />
     
         <ImageView style="@style/LeftDivBottom" />
@@ -66,7 +66,7 @@
 	     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
 		    style="@style/LeftItemText"
 		    android:id="@+id/LeftSettingsTextView" 
-		    android:drawableLeft="@drawable/icon_settings_selector"
+		    android:drawableLeft="?attr/leftDrawableSettings"
 		    android:text="@string/LeftSettings" />
      
          <ImageView style="@style/LeftDivBottom" />

@@ -27,6 +27,10 @@
         
         <item name="leftTitleTextColor">#9c9fa6</item>
         <item name="leftTitleBackground">@color/recent_header_bg_light</item>
+        
+        <item name="leftDrawableHome">@drawable/icon_home_selector_light</item>
+        <item name="leftDrawableSaved">@drawable/icon_saved_selector_light</item>
+        <item name="leftDrawableSettings">@drawable/icon_settings_selector_light</item>
     </style>
     
     <style name="DDGDark" parent="android:Theme.NoTitleBar">
@@ -46,6 +50,10 @@
         
         <item name="leftTitleTextColor">#9c9fa6</item>
         <item name="leftTitleBackground">@drawable/left_bg_darker</item>
+        
+        <item name="leftDrawableHome">@drawable/icon_home_selector_dark</item>
+        <item name="leftDrawableSaved">@drawable/icon_saved_selector_dark</item>
+        <item name="leftDrawableSettings">@drawable/icon_settings_selector_dark</item>
     </style>
     
 </resources>

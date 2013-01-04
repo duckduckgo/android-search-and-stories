@@ -10,6 +10,9 @@
     <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Privacy</string>
     <string name="PrefGroupFeedback">Feedback</string>
+    <string name="PrefTheme">Theme</string>
+    <string name="PrefThemeLight">Light</string>
+    <string name="PrefThemeDark">Dark</string>
     <string name="PrefStartScreen">Home screen view</string>
     <string name="PrefStories">Stories</string>
     <string name="PrefWaterCoolerStories">Water Cooler (stories)</string>
