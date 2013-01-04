@@ -11,7 +11,7 @@
     <application
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
-        android:theme="@style/DDGTheme"
+        android:theme="@style/DDGLight"
         android:label="@string/AppName"
         android:name="DDGApplication">
         <activity

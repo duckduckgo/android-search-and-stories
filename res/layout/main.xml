@@ -71,7 +71,8 @@
     <!-- Main View Area -->
     <RelativeLayout android:layout_width="fill_parent"
         		    android:layout_height="0dip"
-        		    android:layout_weight="1"        		 
+        		    android:layout_weight="1"        	
+        		    android:background="?attr/leftLayoutRootBackground"	 
         		    android:id="@+id/mainViewArea">
         
         <com.duckduckgo.mobile.android.views.DDGWebView android:layout_width="match_parent"
@@ -93,7 +94,7 @@
                   android:dividerHeight="1dp"
                   
                   app:ptrAnimationStyle="flip"
-                  app:ptrHeaderTextColor="@color/left_text"
+                  app:ptrHeaderTextColor="?attr/leftItemTextColor"
                   app:ptrHeaderSubTextColor="@color/left_secondary_text"
                   app:ptrDrawableTop="@drawable/refresh_arrow"
                   app:ptrHeaderSize="10dp"

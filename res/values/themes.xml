@@ -9,4 +9,43 @@
         <item name="android:popupBackground">@drawable/new_spinner_dropdown_background</item>
     </style>
 
+    
+    <style name="DDGLight" parent="android:Theme.NoTitleBar">
+        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
+        
+        <item name="leftLayoutRootBackground">@color/left_bg_light</item>
+        <item name="leftDivTopBackground">@drawable/div_top_light</item>
+        <item name="leftDivBottomBackground">@drawable/div_bottom_light</item>
+        
+        <item name="leftItemTextColor">@color/left_text_light</item>
+        <item name="leftItemTextBackground">@drawable/left_main_selector_light</item>
+        
+        <item name="leftRecentListViewBackground">@color/recent_empty_bg_light</item> 
+        <item name="leftRecentListSelector">@drawable/left_recent_selector_light</item>   
+        <item name="leftRecentListRootBackground">@color/left_bg_light</item>
+         <item name="leftRecentItemTextColor">@color/left_text_light</item>
+        
+        <item name="leftTitleTextColor">#9c9fa6</item>
+        <item name="leftTitleBackground">@color/recent_header_bg_light</item>
+    </style>
+    
+    <style name="DDGDark" parent="android:Theme.NoTitleBar">
+        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
+        
+        <item name="leftLayoutRootBackground">@drawable/left_bg_dark</item>
+        <item name="leftDivTopBackground">@drawable/div_top_dark</item>
+        <item name="leftDivBottomBackground">@drawable/div_bottom_dark</item>
+        
+        <item name="leftItemTextColor">@drawable/left_item_text_selector_dark</item>        
+        <item name="leftItemTextBackground">@drawable/left_main_selector_dark</item>
+        
+        <item name="leftRecentListViewBackground">@drawable/left_bg_dark</item>        
+        <item name="leftRecentListSelector">@drawable/left_recent_selector_dark</item>   
+        <item name="leftRecentListRootBackground">@drawable/left_bg_dark</item>
+        <item name="leftRecentItemTextColor">@color/left_text_dark</item>
+        
+        <item name="leftTitleTextColor">#9c9fa6</item>
+        <item name="leftTitleBackground">@drawable/left_bg_darker</item>
+    </style>
+    
 </resources>

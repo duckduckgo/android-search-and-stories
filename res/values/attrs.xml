@@ -33,4 +33,20 @@
         </attr>
     </declare-styleable>
     
+        
+        <attr name="leftLayoutRootBackground" format="reference|color" />        
+        <attr name="leftDivTopBackground" format="reference|color" />
+        <attr name="leftDivBottomBackground" format="reference|color" />
+        
+        <attr name="leftItemTextColor" format="reference|color" />        
+        <attr name="leftItemTextBackground" format="reference|color" />
+        
+        <attr name="leftRecentListViewBackground" format="color|reference" />
+        <attr name="leftRecentListSelector" format="reference" />
+        <attr name="leftRecentListRootBackground" format="color|reference" />
+        <attr name="leftRecentItemTextColor" format="color|reference" />
+        
+        <attr name="leftTitleTextColor" format="color" />
+        <attr name="leftTitleBackground" format="reference|color" />
+    
 </resources>

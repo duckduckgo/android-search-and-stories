@@ -5,17 +5,12 @@
     android:layout_height="wrap_content"
     android:id="@+id/recentSearchNotRecording">
     
-    <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <ImageView style="@style/LeftDivTop" />
     
 	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	    style="@style/RecentNotRecordingItemRoot"
 	    android:layout_width="fill_parent"
 	    android:layout_height="match_parent"
-	    android:paddingLeft="5dp"
-	    android:paddingRight="5dp"
-	    android:background="@drawable/left_main_selector"
 	    android:orientation="horizontal" >    
 	    
 	    	<ImageView android:layout_width="wrap_content"
@@ -28,19 +23,13 @@
 	        		  
 	        <TextView android:layout_width="fill_parent"
 	            	  android:layout_height="wrap_content"
-	            	  android:layout_gravity="center_vertical"
-	            	  android:paddingLeft="5dp"
-	            	  style="@style/ListItemText"
-	            	  android:textSize="12sp"
+	            	  style="@style/RecentNotRecordingItemText"
 	            	  android:text="@string/InformHistory"
 	            	  android:id="@+id/recentSearchText">
 	        </TextView>
 	        
 	</LinearLayout>
 
-    <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    <ImageView style="@style/LeftDivBottom" />
 
 </LinearLayout>

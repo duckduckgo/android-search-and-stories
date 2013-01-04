@@ -1510,7 +1510,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	 * Method that switches visibility of views for Home or Saved feed
 	 */
 	private void displayFeedCore() {
-		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(R.color.main_bg);
+//		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(R.color.main_bg);
 		
     	// main view visibility changes and keep feed updated
 		recentSearchView.setVisibility(View.GONE);
@@ -1591,7 +1591,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displayRecentSearch(){  
-		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(R.color.main_bg);
+//		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(R.color.main_bg);
 		
     	// hide recent queries from slide-out menu
 //    	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
