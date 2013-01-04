@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="53dp"
-    android:background="#edeef0">
+    android:layout_width="match_parent" 
+    style="@style/RecentListRoot">
     
-    <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+    <ImageView style="@style/LeftDivTop" />
 
     	<LinearLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="match_parent"
-	    android:paddingLeft="10dp"
-	    android:paddingRight="5dp"
-	    android:paddingTop="8dp"
-    	android:paddingBottom="8dp"
-	    android:background="@drawable/left_main_selector"
+	    style="@style/RecentListItemRoot"
 	    android:orientation="horizontal" >    
 	    
 	    	<ImageView android:layout_width="20dp"
@@ -28,17 +20,9 @@
 	        android:id="@+id/recentSearchImage"/>
     
     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
-	    style="@style/ListItemText"
+	    style="@style/RecentItemText"
 	    android:id="@+id/recentSearchText" 
-	    android:layout_width="fill_parent" 
-	    android:layout_height="51dp" 
-	    android:background="@drawable/left_recent_selector"
-	    android:textColor="@color/left_text"
-	    android:text="This is test Text"
-	    android:layout_gravity="center_vertical"
-	    android:gravity="center_vertical" android:paddingLeft="10dip" 
-	    android:paddingRight="6dip"
-	    android:textSize="18sp"/>
+	    android:text="This is test Text" />
     
     </LinearLayout>
     
@@ -55,9 +39,6 @@
 <!--             	  android:id="@+id/recentSearchText"> -->
 <!--         </TextView> -->
     
-    <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+    <ImageView style="@style/LeftDivBottom" />
     
     </LinearLayout>

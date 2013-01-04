@@ -30,4 +30,91 @@
 <!--         <item name="android:textAppearance">?android:attr/textAppearanceSmall</item> -->
         <item name="android:textSize">14sp</item>
     </style>
+    
+    <style name="LeftLayoutRoot">
+        <item name="android:background">@color/left_bg</item>
+    </style>
+    
+    <style name="LeftDiv">
+        <item name="android:src">@android:color/transparent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+    </style>
+    
+    <style name="LeftDivTop" parent="LeftDiv">
+        <item name="android:background">@drawable/div_top2</item>
+    </style>
+    
+    <style name="LeftDivBottom" parent="LeftDiv">
+        <item name="android:background">@drawable/div_bottom2</item>
+    </style>
+    
+    <style name="LeftItemRoot">
+        <item name="android:orientation">vertical</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">53dp</item>
+    </style>
+    
+    <style name="LeftItemText" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/left_text</item>
+        <item name="android:drawablePadding">5dp</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">51dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingRight">6dp</item>
+        
+        <item name="android:drawableRight">@drawable/icon_caret_selector</item>        
+        <item name="android:clickable">true</item>
+        <item name="android:minHeight">?android:attr/listPreferredItemHeight</item>
+        
+        <item name="android:background">@drawable/left_main_selector</item>
+    </style>
+    
+    <style name="LeftTitleText">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">27dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#9c9fa6</item>
+        <item name="android:background">@color/recent_header_bg</item>
+        <item name="android:paddingLeft">6dp</item>
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item>
+    </style>
+    
+    <style name="LeftRecentListView">
+        <item name="android:listSelector">@drawable/left_recent_selector</item>
+        <item name="android:background">@color/recent_empty_bg</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+    
+    <style name="RecentListRoot">
+        <item name="android:background">#edeef0</item>
+        <item name="android:layout_height">53dp</item>
+    </style>
+    
+    <!--  do not apply attributes to this for now (not needed) -->
+    <style name="RecentListItemRoot">
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">5dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:background">@drawable/left_main_selector</item>
+    </style>
+    <!--  end -->
+    
+    <style name="RecentItemText" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/left_text</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">51dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">6dp</item>                
+        <item name="android:background">@drawable/left_recent_selector</item>
+    </style>
+    
 </resources>

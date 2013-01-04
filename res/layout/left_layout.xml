@@ -4,144 +4,72 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/LeftMainLayout"
-    android:background="@color/left_bg">
+    style="@style/LeftLayoutRoot">
     
     
     <LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="53dp"
+    style="@style/LeftItemRoot"
     android:id="@+id/LeftHomeButtonLayout">
     
-    <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
-
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
-	    style="@style/ListItemText"
-	    android:id="@+id/LeftHomeTextView" 
-	    android:layout_width="fill_parent" 
-	    android:layout_height="51dp" 
-	    android:layout_gravity="center_vertical"
-	    android:drawableLeft="@drawable/icon_home_selector"
-	    android:drawableRight="@drawable/icon_caret_selector"
-	    android:background="@drawable/left_home_selector"
-	    android:clickable="true"
-	    android:text="@string/HomeButtonContentDescription"
-	    android:textColor="@color/left_text"
-	    android:gravity="center_vertical" android:paddingLeft="6dip" 
-	    android:paddingRight="6dip"
-	    android:minHeight="?android:attr/listPreferredItemHeight"/>
-    
-    <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+	    <ImageView style="@style/LeftDivTop" />
+	
+	    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+		    style="@style/LeftItemText"
+		    android:id="@+id/LeftHomeTextView" 
+		    android:drawableLeft="@drawable/icon_home_selector"
+		    android:text="@string/HomeButtonContentDescription" />
+	    
+	    <ImageView style="@style/LeftDivBottom" />
     
     </LinearLayout>
 
     
     <LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="53dp"
+    style="@style/LeftItemRoot"
     android:visibility="gone"
     android:id="@+id/LeftStoriesButtonLayout">
     
-    <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+    	<ImageView style="@style/LeftDivTop" />
     
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
-	    style="@style/ListItemText"
-	    android:id="@+id/LeftStoriesTextView" 
-	    android:layout_width="fill_parent" 
-	    android:layout_height="51dp"
-	    android:layout_gravity="center_vertical" 
-	    android:drawableLeft="@android:drawable/ic_menu_rotate"
-	    android:drawableRight="@drawable/icon_caret_selector"
-	   	android:background="@drawable/left_main_selector"
-	   	android:clickable="true"
-	    android:text="@string/LeftStories"
-	    android:textColor="@color/left_text"
-	    android:gravity="center_vertical" android:paddingLeft="6dip" 
-	    android:paddingRight="6dip"
-	    android:minHeight="?android:attr/listPreferredItemHeight"/>
+	    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+		    style="@style/LeftItemText"
+		    android:id="@+id/LeftStoriesTextView" 
+		    android:drawableLeft="@android:drawable/ic_menu_rotate"
+		    android:text="@string/LeftStories" />
     
-        <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom2"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"/>
+        <ImageView style="@style/LeftDivBottom" />
     
     </LinearLayout>
     
     <LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="53dp"
+    style="@style/LeftItemRoot"
     android:id="@+id/LeftSavedButtonLayout">
         
-            <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <ImageView style="@style/LeftDivTop" />
     
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
-	    style="@style/ListItemText"
-	    android:id="@+id/LeftSavedTextView" 
-	    android:layout_width="fill_parent" 
-	    android:layout_height="51dp"
-	    android:layout_gravity="center_vertical" 
-	    android:drawableLeft="@drawable/icon_saved_selector"
-	    android:drawableRight="@drawable/icon_caret_selector"
-	   	android:background="@drawable/left_main_selector"
-	   	android:clickable="true"
-	    android:text="@string/LeftSaved"
-	    android:textColor="@color/left_text"
-	    android:gravity="center_vertical" android:paddingLeft="6dip" 
-	    android:paddingRight="6dip"
-	    android:minHeight="?android:attr/listPreferredItemHeight"/>
+	    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+		    style="@style/LeftItemText"
+		    android:id="@+id/LeftSavedTextView" 
+		    android:drawableLeft="@drawable/icon_saved_selector"
+		    android:text="@string/LeftSaved" />
     
-            <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <ImageView style="@style/LeftDivBottom" />
     
     </LinearLayout>
      
     <LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="53dp"
+    style="@style/LeftItemRoot"
     android:id="@+id/LeftSettingsButtonLayout">
             
-       		<ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_top2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+       	 <ImageView style="@style/LeftDivTop" />
     
-     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
-	    style="@style/ListItemText"
-	    android:id="@+id/LeftSettingsTextView" 
-	    android:layout_width="fill_parent" 
-	    android:layout_height="51dp"
-	    android:layout_gravity="center_vertical" 
-	    android:drawableLeft="@drawable/icon_settings_selector"
-	    android:drawableRight="@drawable/icon_caret_selector"
-	    android:background="@drawable/left_main_selector"
-	    android:clickable="true"
-	    android:text="@string/LeftSettings"
-	    android:textColor="@color/left_text"
-	    android:gravity="center_vertical" android:paddingLeft="6dip" 
-	    android:paddingRight="6dip"
-	    android:minHeight="?android:attr/listPreferredItemHeight"/>
+	     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+		    style="@style/LeftItemText"
+		    android:id="@+id/LeftSettingsTextView" 
+		    android:drawableLeft="@drawable/icon_settings_selector"
+		    android:text="@string/LeftSettings" />
      
-             <ImageView android:src="@android:color/transparent"
-        android:background="@drawable/div_bottom2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+         <ImageView style="@style/LeftDivBottom" />
      
      </LinearLayout>
     
@@ -152,14 +80,7 @@
 <!--         android:listSelector="@drawable/left_main_selector" -->
 <!--         android:id="@+id/LeftMainView" /> -->
     <TextView 
-        android:layout_width="fill_parent" 
-        android:layout_height="27dp" 
-        android:textSize="14sp" 
-        android:textColor="#9c9fa6"
-        android:background="@color/recent_header_bg"
-        android:paddingLeft="6dp"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
+        style="@style/LeftTitleText"
         android:text="@string/LeftRecent"
         android:id="@+id/LeftRecentTextView" />
 <!--     <ImageView android:src="@android:color/transparent" -->
@@ -171,10 +92,7 @@
         android:layout_width="fill_parent" 
         android:layout_height="wrap_content" 
         android:cacheColorHint="@android:color/transparent"
-        android:listSelector="@drawable/left_recent_selector"
-        android:background="@color/recent_empty_bg"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="1dp"
+        style="@style/LeftRecentListView"
         android:id="@+id/LeftRecentView" />
         
     
