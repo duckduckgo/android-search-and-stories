@@ -5,7 +5,7 @@
     <ListPreference 
 	android:title="@string/PrefTheme"
 	android:key="themePref"
-	android:defaultValue="0"
+	android:defaultValue="DDGDark"
 	android:entries="@array/themeArray"
     android:entryValues="@array/themeValues">
 	</ListPreference>
