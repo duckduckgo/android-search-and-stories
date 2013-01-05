@@ -251,7 +251,14 @@ public class DDGHttpClient extends DefaultHttpClient {
 			
 			response = execute(request);
 			mStatusCode = response.getStatusLine().getStatusCode();
-			if(mStatusCode != HttpStatus.SC_OK){
+			
+			if(mStatusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
+					mStatusCode == HttpStatus.SC_MOVED_PERMANENTLY ){
+				String redirectLocation = response.getFirstHeader("Location").getValue();
+//				responseURL = DDGConstants.mainURL + redirectLocation;
+				return doGet(redirectLocation);
+			}			
+			else if(mStatusCode != HttpStatus.SC_OK){
 				throw new DDGHttpException(mStatusCode);
 			}
 			
@@ -326,7 +333,14 @@ public class DDGHttpClient extends DefaultHttpClient {
 			
 			response = execute(request);
 			mStatusCode = response.getStatusLine().getStatusCode();
-			if(mStatusCode != HttpStatus.SC_OK){
+			
+			if(mStatusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
+					mStatusCode == HttpStatus.SC_MOVED_PERMANENTLY ){
+				String redirectLocation = response.getFirstHeader("Location").getValue();
+//				responseURL = DDGConstants.mainURL + redirectLocation;
+				return doGet(redirectLocation, params, raw);
+			}			
+			else if(mStatusCode != HttpStatus.SC_OK){
 				throw new DDGHttpException(mStatusCode);
 			}
 			
