@@ -36,8 +36,6 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 	FileCache fileCache;
 	private Context context;
 		
-	private boolean testedCache = false;
-	private boolean isCached = false;
 	private boolean readSimpleSourceMap = false;
 	private boolean readDefaultSourceSet = false;
 			
@@ -123,22 +121,17 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 																					
 							if(imageUrl != null && imageUrl.length() != 0){
 								// if mode = reading simple source map, then do not exit upon icon cache detection
-										if(!testedCache){
-											if(cache.getBitmapFromCache("DUCKDUCKICO--"+id, false) != null){
-												isCached = true;
-												if(!readSimpleSourceMap && !readDefaultSourceSet) {
-													return returnFeed;
-												}
-											}
-											testedCache = true;
-										}
-								
-									if(!isCached) {
-										Bitmap bitmap = DDGUtils.downloadBitmap(this, imageUrl);
-										if(bitmap != null){
-											cache.addBitmapToCache("DUCKDUCKICO--"+id, bitmap);
-										}
+								if(cache.getBitmapFromCache("DUCKDUCKICO--"+id, false) != null){
+									if(!readSimpleSourceMap && !readDefaultSourceSet) {
+										return returnFeed;
 									}
+								}
+								else {
+									Bitmap bitmap = DDGUtils.downloadBitmap(this, imageUrl);
+									if(bitmap != null){
+										cache.addBitmapToCache("DUCKDUCKICO--"+id, bitmap);
+									}
+								}
 							}
 						
 						}

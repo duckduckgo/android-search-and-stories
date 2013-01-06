@@ -89,15 +89,19 @@ public class ImageDownloader {
     }
 	
     public void download(String url, DownloadableImage image, boolean onlyUseMemCache) {
-    	download(url, image, onlyUseMemCache, false);
+    	download(url, image, onlyUseMemCache, false, null);
+    }
+    
+    public void download(String url, DownloadableImage image, boolean onlyUseMemCache, String cacheAs) {
+    	download(url, image, onlyUseMemCache, false, cacheAs);
     }
     
     public void bgDownload(String url, DownloadableImage image, boolean onlyUseMemCache) {
-    	download(url, image, onlyUseMemCache, true);
+    	download(url, image, onlyUseMemCache, true, null);
     }
     
 	//TODO: Should take a Downloadable object
-	public void download(String url, DownloadableImage image, boolean onlyUseMemCache, boolean isBackgroundTask) {
+	public void download(String url, DownloadableImage image, boolean onlyUseMemCache, boolean isBackgroundTask, String cacheAs) {
 		if (url == null || url.length() == 0) {
 			//Cancel anything downloading, set the image to default, and return
 			cancelPreviousDownload(url, image);
@@ -107,7 +111,13 @@ public class ImageDownloader {
 		}
 		imageViews.put(image, url);
 
-		Bitmap bitmap = cache.getBitmapFromCache(url, onlyUseMemCache);
+		Bitmap bitmap = null;
+		if(cacheAs != null) {
+			bitmap = cache.getBitmapFromCache(cacheAs, onlyUseMemCache);
+		}
+		else {
+			bitmap = cache.getBitmapFromCache(url, onlyUseMemCache);
+		}
 		
 //		if(cache.checkFail(url)){
 //			url = null;

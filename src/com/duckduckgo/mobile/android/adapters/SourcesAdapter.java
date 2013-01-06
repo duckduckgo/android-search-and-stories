@@ -72,14 +72,14 @@ public class SourcesAdapter extends ArrayAdapter<SourcesObject> {
 						holder.imageViewBackground.setBitmap(bitmap);
 					}
 					else {
-						// fallback - should not happen
+						// fallback - happens after an update to the source list
 						
 						//Download the background image
-//						if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
-//							imageDownloader.download(feed.getImageUrl(), holder.imageViewBackground, false);
-//						} else {
-//							imageDownloader.download(null, holder.imageViewBackground, false);
-//						}
+						if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
+							imageDownloader.download(feed.getImageUrl(), holder.imageViewBackground, false, "DUCKDUCKICO--"+feed.getId());
+						} else {
+							imageDownloader.download(null, holder.imageViewBackground, false);
+						}
 					}
 					
 			}
