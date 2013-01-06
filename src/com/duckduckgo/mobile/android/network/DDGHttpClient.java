@@ -16,16 +16,13 @@ import ch.boye.httpclientandroidlib.HttpResponse;
 import ch.boye.httpclientandroidlib.HttpResponseInterceptor;
 import ch.boye.httpclientandroidlib.HttpStatus;
 import ch.boye.httpclientandroidlib.NameValuePair;
-import ch.boye.httpclientandroidlib.ProtocolException;
 import ch.boye.httpclientandroidlib.client.entity.UrlEncodedFormEntity;
 import ch.boye.httpclientandroidlib.client.methods.HttpGet;
 import ch.boye.httpclientandroidlib.client.methods.HttpPost;
-import ch.boye.httpclientandroidlib.client.params.HttpClientParams;
 import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.entity.HttpEntityWrapper;
 import ch.boye.httpclientandroidlib.impl.client.DefaultConnectionKeepAliveStrategy;
 import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
-import ch.boye.httpclientandroidlib.impl.client.DefaultRedirectStrategy;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;
 import ch.boye.httpclientandroidlib.params.HttpProtocolParams;
@@ -61,7 +58,7 @@ public class DDGHttpClient extends DefaultHttpClient {
 		HttpParams httpParameters = new BasicHttpParams();
 		//HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
 		//HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
-		HttpClientParams.setRedirecting(httpParameters, false);
+//		HttpClientParams.setRedirecting(httpParameters, false);
 		setParams(httpParameters);
 		setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy());
 		
@@ -80,7 +77,7 @@ public class DDGHttpClient extends DefaultHttpClient {
 		// HttpParams httpParameters = new BasicHttpParams();
 		//HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
 		//HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
-		HttpClientParams.setRedirecting(httpParams, false);
+//		HttpClientParams.setRedirecting(httpParams, false);
 		// setParams(httpParams);
 		setKeepAliveStrategy(new DefaultConnectionKeepAliveStrategy());
 		
@@ -122,42 +119,7 @@ public class DDGHttpClient extends DefaultHttpClient {
                 }
             }
 
-        });
-		
-		
-		this.setRedirectStrategy(new DefaultRedirectStrategy() {
-			
-			public boolean isRedirected(HttpRequest request, HttpResponse response,
-					HttpContext context) throws ProtocolException {
-	            boolean isRedirect=false;
-	            isRedirect = super.isRedirected(request, response, context);
-
-	            if (!isRedirect) {
-	                int responseCode = response.getStatusLine().getStatusCode();
-	                if (responseCode == 301 || responseCode == 302) {
-	                    return true;
-	                }
-	            }
-	            return isRedirect;
-			}
-		});
-		
-//		this.setRedirectHandler(new DefaultRedirectHandler() {    
-//			@Override
-//			public boolean isRedirectRequested(HttpResponse response,
-//					HttpContext context) {
-//		            boolean isRedirect=false;
-//		            isRedirect = super.isRedirectRequested(response, context);
-//
-//		            if (!isRedirect) {
-//		                int responseCode = response.getStatusLine().getStatusCode();
-//		                if (responseCode == 301 || responseCode == 302) {
-//		                    return true;
-//		                }
-//		            }
-//		            return isRedirect;
-//			}
-//	    });
+        });		
 
 	}
 	
@@ -243,22 +205,16 @@ public class DDGHttpClient extends DefaultHttpClient {
 			throw new DDGHttpException(ex.getMessage());
 		}
 	}
-
+	
+	
 	public HttpEntity doGet(String url) throws DDGHttpException {
 		try {
 			request = new HttpGet(url);
 	//		Log.v("REQ",url);
 			
 			response = execute(request);
-			mStatusCode = response.getStatusLine().getStatusCode();
-			
-			if(mStatusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
-					mStatusCode == HttpStatus.SC_MOVED_PERMANENTLY ){
-				String redirectLocation = response.getFirstHeader("Location").getValue();
-//				responseURL = DDGConstants.mainURL + redirectLocation;
-				return doGet(redirectLocation);
-			}			
-			else if(mStatusCode != HttpStatus.SC_OK){
+			mStatusCode = response.getStatusLine().getStatusCode();					
+			if(mStatusCode != HttpStatus.SC_OK){
 				throw new DDGHttpException(mStatusCode);
 			}
 			
@@ -332,15 +288,8 @@ public class DDGHttpClient extends DefaultHttpClient {
 	//		Log.v("REQ",url + "?" + paramString);
 			
 			response = execute(request);
-			mStatusCode = response.getStatusLine().getStatusCode();
-			
-			if(mStatusCode == HttpStatus.SC_MOVED_TEMPORARILY ||
-					mStatusCode == HttpStatus.SC_MOVED_PERMANENTLY ){
-				String redirectLocation = response.getFirstHeader("Location").getValue();
-//				responseURL = DDGConstants.mainURL + redirectLocation;
-				return doGet(redirectLocation, params, raw);
-			}			
-			else if(mStatusCode != HttpStatus.SC_OK){
+			mStatusCode = response.getStatusLine().getStatusCode();		
+			if(mStatusCode != HttpStatus.SC_OK){
 				throw new DDGHttpException(mStatusCode);
 			}
 			
