@@ -458,7 +458,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if(sharedPreferences.getBoolean("directQueryPref", false)){
+				if(sharedPreferences.getBoolean("directQueryPref", true)){
 					//Hide the keyboard and perform a search
 					hideKeyboard(searchField);
 					searchField.dismissDropDown();
@@ -1307,7 +1307,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	public void searchWebTerm(String term) {
 		// save recent query if "record history" is enabled
-		if(sharedPreferences.getBoolean("recordHistoryPref", false)){
+		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
 			if(!mDuckDuckGoContainer.recentSearchList.contains(term)){
 				Log.v(TAG, "Search: " + term);
 				mDuckDuckGoContainer.recentSearchList.add(term);
@@ -1551,7 +1551,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		// left side menu visibility changes
     	leftRecentTextView.setVisibility(View.VISIBLE);
     	
-    	if(sharedPreferences.getBoolean("recordHistoryPref", false)) {
+    	if(sharedPreferences.getBoolean("recordHistoryPref", true)) {
     			// user changed the setting, got it
     		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) != null) {
         		leftRecentView.removeHeaderView(leftRecentHeaderView);
