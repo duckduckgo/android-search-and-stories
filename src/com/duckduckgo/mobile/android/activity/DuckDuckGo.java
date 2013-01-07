@@ -8,7 +8,6 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -24,7 +23,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -1442,6 +1440,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 						prefLayout.setVisibility(View.GONE);
 						switchScreens();
 					}
+					else if(preference.getKey().equals("recordHistoryPref")){
+						displayRecordHistoryDisabled();
+					}
 					
 					return false;
 				}
@@ -1551,19 +1552,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		// left side menu visibility changes
     	leftRecentTextView.setVisibility(View.VISIBLE);
     	
-    	if(sharedPreferences.getBoolean("recordHistoryPref", true)) {
-    			// user changed the setting, got it
-    		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) != null) {
-        		leftRecentView.removeHeaderView(leftRecentHeaderView);
-    		}
-    	}
-    	else {
-    		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) == null) {
-    			leftRecentView.setAdapter(null);
-    			leftRecentView.addHeaderView(leftRecentHeaderView);
-    			leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
-    		}
-    	}
+    	// adjust "not recording" indicator
+    	displayRecordHistoryDisabled();
     	
     	leftRecentView.setVisibility(View.VISIBLE);	
     	leftSavedButtonLayout.setVisibility(View.VISIBLE);
@@ -1917,4 +1907,23 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         view.draw(canvas);
         return returnedBitmap;
     }
+	
+	/**
+	 * Displays "not recording" indicator in left-menu if Save Searches option is disabled  
+	 */
+	public void displayRecordHistoryDisabled() {
+		if(sharedPreferences.getBoolean("recordHistoryPref", true)) {
+			// user changed the setting, got it
+    		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) != null) {
+        		leftRecentView.removeHeaderView(leftRecentHeaderView);
+    		}
+    	}
+    	else {
+    		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) == null) {
+    			leftRecentView.setAdapter(null);
+    			leftRecentView.addHeaderView(leftRecentHeaderView);
+    			leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
+    		}
+    	}
+	}
 }
