@@ -1308,7 +1308,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
 			if(!mDuckDuckGoContainer.recentSearchList.contains(term)){
 				Log.v(TAG, "Search: " + term);
-				mDuckDuckGoContainer.recentSearchList.add(term);
+				mDuckDuckGoContainer.recentSearchList.addFirst(term);
 //				mDuckDuckGoContainer.recentSearchAdapter.add(term);
 				
 				DDGUtils.saveList(sharedPreferences, mDuckDuckGoContainer.recentSearchList, "recentsearch");

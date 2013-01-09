@@ -1,6 +1,6 @@
 package com.duckduckgo.mobile.android.adapters;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 
@@ -21,8 +21,8 @@ public class CustomArrayAdapter<T> extends ArrayAdapter<T> {
 	
 	public CustomArrayAdapter(Context context,
 			int listLayout, int textViewResourceId,
-			ArrayList<T> arrayList) {
-		super(context, listLayout, textViewResourceId, arrayList);
+			List<T> list) {
+		super(context, listLayout, textViewResourceId, list);
 		this.textViewResourceId = textViewResourceId;
 	}
 

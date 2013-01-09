@@ -1,7 +1,9 @@
 package com.duckduckgo.mobile.android.container;
 
-import java.util.ArrayList;
-import java.util.Set;
+import java.util.LinkedList;
+
+import android.graphics.drawable.Drawable;
+import android.widget.ArrayAdapter;
 
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
@@ -9,9 +11,6 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.SavedFeedTask;
-
-import android.graphics.drawable.Drawable;
-import android.widget.ArrayAdapter;
 
 public class DuckDuckGoContainer {
 
@@ -22,7 +21,7 @@ public class DuckDuckGoContainer {
 	public Drawable progressDrawable, searchFieldDrawable;
 	
 	public ArrayAdapter<String> recentSearchAdapter = null;
-	public ArrayList<String> recentSearchList = null;
+	public LinkedList<String> recentSearchList = null;
 	
 	public MainFeedAdapter feedAdapter = null;
 	public MainFeedTask mainFeedTask = null;

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -57,7 +58,7 @@ public final class DDGUtils {
 	    return editor.commit();  
 	} 
 	
-	public static boolean saveList(SharedPreferences prefs, ArrayList<String> list, String listName) {   
+	public static boolean saveList(SharedPreferences prefs, List<String> list, String listName) {   
 	    SharedPreferences.Editor editor = prefs.edit();  
 	    editor.putInt(listName +"_size", list.size());  
 	    int i=0;
@@ -88,9 +89,9 @@ public final class DDGUtils {
 	    return array;  
 	}  
 	
-	public static ArrayList<String> loadList(SharedPreferences prefs, String listName) {  
+	public static LinkedList<String> loadList(SharedPreferences prefs, String listName) {  
 	    int size = prefs.getInt(listName + "_size", 0);  
-	    ArrayList<String> list = new ArrayList<String>(size);  
+	    LinkedList<String> list = new LinkedList<String>();  
 	    for(int i=0;i<size;i++)  {
 	    	list.add(prefs.getString(listName + "_" + i, null));
 	    }
