@@ -60,6 +60,7 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 				// if an update is triggered, directly fetch from URL
 				body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
 				fileCache.saveStringToInternal(DDGConstants.SOURCE_JSON_PATH, body);
+				DDGControlVar.sourceJSON = body;
 			}
 			
 			else {
@@ -72,6 +73,8 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 						body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
 						fileCache.saveStringToInternal(DDGConstants.SOURCE_JSON_PATH, body);
 					}
+					
+					DDGControlVar.sourceJSON = body;
 				}
 			
 			}
@@ -89,6 +92,8 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 					|| DDGControlVar.defaultSourceSet.isEmpty()){
 				readDefaultSourceSet = true;
 			}
+			
+			DDGControlVar.hasUpdatedSources = true;
 			
 			json = new JSONArray(body);
 		} catch (JSONException jex) {
