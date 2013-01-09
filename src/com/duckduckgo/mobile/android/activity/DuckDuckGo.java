@@ -712,6 +712,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
                         startActivity(i);
                         return true;
         			}
+        			else if(url.equals("file:///android_asset/webkit/")){
+        				return true;
+        			}
         			else if(!(url.startsWith("http:") || url.startsWith("https:"))) {
         				// custom handling, there can be a related app
         				try {
