@@ -15,6 +15,6 @@ public class Item {
     }
     
     public static enum ItemType {
-    	SHARE, SAVE, EXTERNAL, UNSAVE
+    	SHARE, SAVE, EXTERNAL, UNSAVE, REFRESH
     }
 }

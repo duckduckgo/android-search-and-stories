@@ -254,6 +254,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         dialogItems.add(new Item(getResources().getString(R.string.Share), android.R.drawable.ic_menu_share, ItemType.SHARE));
         dialogItems.add(new Item(getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE));
         dialogItems.add(new Item(getResources().getString(R.string.OpenInExternalBrowser), android.R.drawable.ic_menu_rotate, ItemType.EXTERNAL));
+        dialogItems.add(new Item(getResources().getString(R.string.Refresh), R.drawable.reload, ItemType.REFRESH));
 
         shareDialogItems = (Item []) dialogItems.toArray(new Item[dialogItems.size()]);
         
@@ -617,6 +618,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
 	    	            	startActivity(browserIntent);
 						}
+						else if(it.type == Item.ItemType.REFRESH) {
+	    	            	mainWebView.reload();
+						}
 					}
 				});
 				ab.show();
@@ -832,6 +836,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		}
         		
 				searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+				
+//				// This makes a little (X) to clear the search bar.
+//		        final Drawable x = getResources().getDrawable(R.drawable.stop);
+//		        x.setBounds(0, 0, (int)Math.floor(x.getIntrinsicWidth()/1.5), (int)Math.floor(x.getIntrinsicHeight()/1.5));
+//		        searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : x, null);
         	}
         });
                 
@@ -1719,6 +1728,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					else if(it.type == Item.ItemType.EXTERNAL) {
     	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mainWebView.getUrl()));
     	            	startActivity(browserIntent);
+					}
+					else if(it.type == Item.ItemType.REFRESH) {
+    	            	mainWebView.reload();
 					}
 				}
 			});
