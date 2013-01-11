@@ -428,7 +428,7 @@ public final class DDGUtils {
 	  public static void shareWebPage(Context context, String title, String url) {
 		  Intent sendIntent = new Intent();
 			sendIntent.setAction(Intent.ACTION_SEND);
-			sendIntent.putExtra(Intent.EXTRA_TEXT, "WatrCoolr URL: "+ url);
+			sendIntent.putExtra(Intent.EXTRA_TEXT, "Story link via DuckDuckGo for Android: "+ url);
 			sendIntent.putExtra(Intent.EXTRA_SUBJECT, title);
 			sendIntent.setType("text/plain");
 			context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.send_to)));
