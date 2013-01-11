@@ -254,7 +254,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         dialogItems.add(new Item(getResources().getString(R.string.Share), android.R.drawable.ic_menu_share, ItemType.SHARE));
         dialogItems.add(new Item(getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE));
         dialogItems.add(new Item(getResources().getString(R.string.OpenInExternalBrowser), android.R.drawable.ic_menu_rotate, ItemType.EXTERNAL));
-        dialogItems.add(new Item(getResources().getString(R.string.Refresh), R.drawable.reload, ItemType.REFRESH));
+        dialogItems.add(new Item(getResources().getString(R.string.Refresh), R.drawable.icon_reload, ItemType.REFRESH));
 
         shareDialogItems = (Item []) dialogItems.toArray(new Item[dialogItems.size()]);
         
