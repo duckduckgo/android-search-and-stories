@@ -1257,6 +1257,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	private void reloadAction() {
+		hideKeyboard(searchField);
 		mCleanSearchBar = false;
 //		mainWebView.resumeView();
         mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
