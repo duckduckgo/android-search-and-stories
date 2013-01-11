@@ -1258,7 +1258,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private void reloadAction() {
 		mCleanSearchBar = false;
-		mainWebView.resumeView();
+//		mainWebView.resumeView();
         mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
 		searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
 		mainWebView.reload(); 
@@ -1266,7 +1266,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private void stopAction() {
 		clearBrowserState();
-		mainWebView.stopView();
+//		mainWebView.stopView();
 		
     	searchField.setText("");
     	
@@ -1281,7 +1281,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	public void searchOrGoToUrl(String text) {
 		
-		mainWebView.resumeView();
+//		mainWebView.resumeView();
 				
 		if (text.length() > 0) {
 			
