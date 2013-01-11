@@ -1265,6 +1265,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	private void stopAction() {
+		mCleanSearchBar = true;
 		clearBrowserState();
 //		mainWebView.stopView();
 		
@@ -1274,8 +1275,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
         searchField.setCompoundDrawables(null, null, mDuckDuckGoContainer.reloadDrawable, null);
 //    	searchField.setCompoundDrawables(null, null, null, null);
-    	
-    	mCleanSearchBar = true;
+    	   
     	searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 	}
 	
