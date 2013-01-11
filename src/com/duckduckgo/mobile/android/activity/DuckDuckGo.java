@@ -1266,7 +1266,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	private void stopAction() {
 		mCleanSearchBar = true;
-		clearBrowserState();
+//		clearBrowserState();
 //		mainWebView.stopView();
 		
     	searchField.setText("");
