@@ -267,6 +267,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.webviewShowing = false;
     		mDuckDuckGoContainer.prefShowing = false;
     		
+    		mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
+    		mDuckDuckGoContainer.reloadDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.reload);
     		mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
     		mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
     		mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
@@ -480,9 +482,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		});
 
         // This makes a little (X) to clear the search bar.
-        final Drawable x = getResources().getDrawable(R.drawable.stop);
-        x.setBounds(0, 0, (int)Math.floor(x.getIntrinsicWidth()/1.5), (int)Math.floor(x.getIntrinsicHeight()/1.5));
-        searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : x, null);
+        mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
+        searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
 
         searchField.setOnTouchListener(new OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -497,12 +498,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
                 if (event.getAction() != MotionEvent.ACTION_UP) {
                     return false;
                 }
-                if (event.getX() > searchField.getWidth() - searchField.getPaddingRight() - x.getIntrinsicWidth()) {
-                	searchField.setText("");
-                	searchField.setCompoundDrawables(null, null, null, null);
-                	
-                	mCleanSearchBar = true;
-                	searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+                if (event.getX() > searchField.getWidth() - searchField.getPaddingRight() - mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()) {
+                	if(searchField.getCompoundDrawables()[2] == mDuckDuckGoContainer.stopDrawable) {
+	                	stopAction();
+                	}
+                	else {
+                		reloadAction();
+                	}
                 }
                 return false;
             }
@@ -511,7 +513,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
         searchField.addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-            	searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : x, null);
+            	searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
             }
 
             public void afterTextChanged(Editable arg0) {
@@ -619,7 +621,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	    	            	startActivity(browserIntent);
 						}
 						else if(it.type == Item.ItemType.REFRESH) {
-	    	            	mainWebView.reload();
+							reloadAction(); 
 						}
 					}
 				});
@@ -729,15 +731,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         				catch(ActivityNotFoundException ae) {
         					// no related app, inform and still try to load in browser
         					Toast.makeText(DuckDuckGo.this, "No related app found!", Toast.LENGTH_LONG).show();
-        					view.loadUrl(url);
+//        					view.loadUrl(url);
         				}
-        			}
-        			else {	
-//        				view.loadUrl(url, DDGNetworkConstants.extraHeaders);
-        				view.loadUrl(url);
-        			}        			
+        			}      			
         		}
-        		return true;
+        		return false;
         	}
         	
         	@SuppressLint("NewApi")
@@ -837,10 +835,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		
 				searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 				
-//				// This makes a little (X) to clear the search bar.
-//		        final Drawable x = getResources().getDrawable(R.drawable.stop);
-//		        x.setBounds(0, 0, (int)Math.floor(x.getIntrinsicWidth()/1.5), (int)Math.floor(x.getIntrinsicHeight()/1.5));
-//		        searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : x, null);
+				// This makes a little (X) to clear the search bar.
+				mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
+		        searchField.setCompoundDrawables(null, null, mDuckDuckGoContainer.reloadDrawable, null);
         	}
         });
                 
@@ -858,7 +855,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		}
         		
         		if(newProgress == 100){
-        			searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+        			searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);        			
         		}
         		else {
         			if(!mCleanSearchBar) {
@@ -1259,7 +1256,32 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		return false;
 	}
 	
+	private void reloadAction() {
+		mCleanSearchBar = false;
+		mainWebView.resumeView();
+        mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
+		searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
+		mainWebView.reload(); 
+	}
+	
+	private void stopAction() {
+		clearBrowserState();
+		mainWebView.stopView();
+		
+    	searchField.setText("");
+    	
+    	// This makes a little (X) to clear the search bar.
+    	mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
+        searchField.setCompoundDrawables(null, null, mDuckDuckGoContainer.reloadDrawable, null);
+//    	searchField.setCompoundDrawables(null, null, null, null);
+    	
+    	mCleanSearchBar = true;
+    	searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+	}
+	
 	public void searchOrGoToUrl(String text) {
+		
+		mainWebView.resumeView();
 				
 		if (text.length() > 0) {
 			
@@ -1730,7 +1752,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	            	startActivity(browserIntent);
 					}
 					else if(it.type == Item.ItemType.REFRESH) {
-    	            	mainWebView.reload();
+						reloadAction();
 					}
 				}
 			});

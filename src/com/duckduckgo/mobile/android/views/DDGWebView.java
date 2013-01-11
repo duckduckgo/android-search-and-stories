@@ -55,6 +55,22 @@ public class DDGWebView extends WebView {
 	    return consumed;
 	}
 	
+	public void stopView() {
+		try
+        {WebView.class.getMethod("onPause").invoke(this);//stop flash
+        }
+	    catch (Exception e) {}
+	    this.pauseTimers();
+	}
+	
+	public void resumeView() {
+		try
+        {WebView.class.getMethod("onResume").invoke(this);//resume flash
+        }
+	    catch (Exception e) {}
+	    this.resumeTimers();
+	}
+	
 //	public void onDetachedFromWindow()
 //	       {//this will be trigger when back key pressed, not when home key pressed
 //	        if (this.is_gone)
