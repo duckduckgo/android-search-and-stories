@@ -19,7 +19,8 @@ public class DuckDuckGoContainer {
 	public boolean savedFeedShowing = false;
 	
 	public Drawable progressDrawable, searchFieldDrawable;
-	public Drawable stopDrawable, reloadDrawable;
+	public Drawable stopDrawable;
+//	public Drawable reloadDrawable;
 	
 	public ArrayAdapter<String> recentSearchAdapter = null;
 	public LinkedList<String> recentSearchList = null;

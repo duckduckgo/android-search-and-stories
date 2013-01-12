@@ -268,7 +268,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.prefShowing = false;
     		
     		mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
-    		mDuckDuckGoContainer.reloadDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.reload);
+//    		mDuckDuckGoContainer.reloadDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.reload);
     		mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
     		mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
     		mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
@@ -835,9 +835,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         		
 				searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 				
-				// This makes a little (X) to clear the search bar.
-				mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
-		        searchField.setCompoundDrawables(null, null, mDuckDuckGoContainer.reloadDrawable, null);
+//				// This makes a little (X) to clear the search bar.
+//				mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
+//		        searchField.setCompoundDrawables(null, null, mDuckDuckGoContainer.reloadDrawable, null);
         	}
         });
                 
@@ -1271,10 +1271,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		
     	searchField.setText("");
     	
-    	// This makes a little (X) to clear the search bar.
-    	mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
-        searchField.setCompoundDrawables(null, null, mDuckDuckGoContainer.reloadDrawable, null);
-//    	searchField.setCompoundDrawables(null, null, null, null);
+//    	// This makes a little (X) to clear the search bar.
+//    	mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
+//        searchField.setCompoundDrawables(null, null, mDuckDuckGoContainer.reloadDrawable, null);
+    	searchField.setCompoundDrawables(null, null, null, null);
     	   
     	searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 	}
