@@ -28,7 +28,7 @@
             android:id="@+id/ptr_divider_image"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/refresh_dotted_line"
+            android:src="?attr/ptrDivider"
             android:scaleType="center" />
 
     <LinearLayout

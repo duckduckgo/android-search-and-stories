@@ -96,7 +96,7 @@
                   app:ptrAnimationStyle="flip"
                   app:ptrHeaderTextColor="?attr/leftItemTextColor"
                   app:ptrHeaderSubTextColor="@color/left_secondary_text"
-                  app:ptrDrawableTop="@drawable/refresh_arrow"
+                  app:ptrDrawableTop="?attr/ptrDrawable"
                   app:ptrHeaderSize="10dp"
                   
                   android:fadingEdge="none"

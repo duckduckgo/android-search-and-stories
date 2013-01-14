@@ -31,6 +31,9 @@
         <item name="leftDrawableHome">@drawable/icon_home_selector_light</item>
         <item name="leftDrawableSaved">@drawable/icon_saved_selector_light</item>
         <item name="leftDrawableSettings">@drawable/icon_settings_selector_light</item>
+        
+        <item name="ptrDrawable">@drawable/refresh_arrow_light</item>
+        <item name="ptrDivider">@drawable/refresh_dotted_line_light</item>
     </style>
     
     <style name="DDGDark" parent="android:Theme.NoTitleBar">
@@ -54,6 +57,9 @@
         <item name="leftDrawableHome">@drawable/icon_home_selector_dark</item>
         <item name="leftDrawableSaved">@drawable/icon_saved_selector_dark</item>
         <item name="leftDrawableSettings">@drawable/icon_settings_selector_dark</item>
+        
+        <item name="ptrDrawable">@drawable/refresh_arrow_dark</item>
+        <item name="ptrDivider">@drawable/refresh_dotted_line_dark</item>
     </style>
     
 </resources>
