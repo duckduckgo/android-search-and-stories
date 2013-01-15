@@ -311,7 +311,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				}
 			};
 			
-    		DDGControlVar.hasUpdatedFeed = false;
     		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
     		
     		mDuckDuckGoContainer.mainFeedTask = null;
@@ -320,6 +319,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
     		
     	}
+    	
+    	// always refresh on start
+    	DDGControlVar.hasUpdatedFeed = false;
     	
         viewPager = (DDGViewPager) findViewById(R.id.mainpager);
         viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
@@ -1136,7 +1138,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			// https://app.asana.com/0/230839424767/2717382704705
 //			if(intent.getBooleanExtra("widget", false)) {
 				searchField.requestFocus();
-				showKeyboard(searchField);
+				showKeyboard(searchField);				
 //			}
 		
 		}
