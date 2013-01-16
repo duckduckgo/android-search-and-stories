@@ -3,7 +3,7 @@ package com.duckduckgo.mobile.android.objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SourcesObject {
+public class SourcesObject implements SectionedListItem {
 	private final String description;
 	private final String link;
 	private final int selectedByDefault;
@@ -63,5 +63,10 @@ public class SourcesObject {
 	
 	public String getImageUrl() {
 		return imageUrl;
+	}
+
+	@Override
+	public boolean isSection() {
+		return false;
 	}
 }
