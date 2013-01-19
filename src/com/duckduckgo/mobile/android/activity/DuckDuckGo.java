@@ -1118,7 +1118,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
 			String query = intent.getStringExtra(SearchManager.QUERY);
-			searchField.setText(query);
+			setSearchBarText(query);
 			searchWebTerm(query);
 		}
 		else {
@@ -1344,9 +1344,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
 			if(!mDuckDuckGoContainer.recentSearchList.contains(term)){
 				Log.v(TAG, "Search: " + term);
-				mDuckDuckGoContainer.recentSearchList.addFirst(term);
-//				mDuckDuckGoContainer.recentSearchAdapter.add(term);
-				
+				mDuckDuckGoContainer.recentSearchList.addFirst(term);	
+				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
 				DDGUtils.saveList(sharedPreferences, mDuckDuckGoContainer.recentSearchList, "recentsearch");
 			}
 		}
@@ -1378,7 +1377,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	public void clearRecentSearch() {
 		mDuckDuckGoContainer.recentSearchList.clear();
-//		mDuckDuckGoContainer.recentSearchAdapter.clear();
+		mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
 		recentSearchView.invalidate();
 	}
 	
