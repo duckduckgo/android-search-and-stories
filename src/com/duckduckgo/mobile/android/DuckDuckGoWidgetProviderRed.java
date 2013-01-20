@@ -21,7 +21,7 @@ public class DuckDuckGoWidgetProviderRed extends AppWidgetProvider {
             // Create an Intent to launch ExampleActivity
             Intent intent = new Intent(context, DuckDuckGo.class);
             intent.putExtra("widget", true);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             // Get the layout for the App Widget and attach an on-click listener to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_red);
