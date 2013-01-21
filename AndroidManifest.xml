@@ -32,6 +32,7 @@
         <receiver android:name="com.duckduckgo.mobile.android.DuckDuckGoWidgetProviderRed">
 		    <intent-filter>
 		        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+		        <action android:name="com.duckduckgo.mobile.android.ACTION_ON_WIDGET_CLICK" />
 		    </intent-filter>
 		    <meta-data android:name="android.appwidget.provider"
 		        	   android:resource="@xml/widget_info_red" />
@@ -40,6 +41,7 @@
         <receiver android:name="com.duckduckgo.mobile.android.DuckDuckGoWidgetProviderWhite">
 		    <intent-filter>
 		        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+		        <action android:name="com.duckduckgo.mobile.android.ACTION_ON_WIDGET_CLICK" />
 		    </intent-filter>
 		    <meta-data android:name="android.appwidget.provider"
 		        	   android:resource="@xml/widget_info_white" />

@@ -1126,7 +1126,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(getApplicationContext(), DDGApplication.getImageCache());
 			mDuckDuckGoContainer.sourceIconTask.execute();
 		
-			if(mDuckDuckGoContainer.webviewShowing){
+			if(intent.getBooleanExtra("widget", false)) {
+				switchScreens();
+			}
+			else if(mDuckDuckGoContainer.webviewShowing){
 					mPullRefreshFeedView.setVisibility(View.GONE);
 					mainWebView.setVisibility(View.VISIBLE);
 			}	
