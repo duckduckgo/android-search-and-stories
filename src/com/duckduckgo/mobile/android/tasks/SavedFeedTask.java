@@ -78,7 +78,7 @@ public class SavedFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	protected void onPostExecute(List<FeedObject> feed) {	
 		if (this.listener != null) {
 			if (feed != null) {
-				this.listener.onFeedRetrieved(feed);
+				this.listener.onFeedRetrieved(feed, false);
 			} else {
 				this.listener.onFeedRetrievalFailed();
 			}

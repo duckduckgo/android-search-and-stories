@@ -186,6 +186,37 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	SeekBar fontSizeSeekBar;
 	
 	boolean mCleanSearchBar = false;
+	
+	class SourceClickListener implements OnClickListener {
+		public void onClick(View v) {
+			// source filtering
+			
+			if(DDGControlVar.targetSource != null){
+				cancelSourceFilter();
+			}
+			else {
+			
+				View itemParent = (View) v.getParent().getParent();
+				int pos = feedView.getPositionForView(itemParent);
+				m_objectId = ((FeedObject) feedView.getItemAtPosition(pos)).getId();
+				m_itemHeight = itemParent.getHeight();
+				Log.v(TAG, "POS " + pos);
+				
+				Rect r = new Rect();
+				Point offset = new Point();
+				feedView.getChildVisibleRect(itemParent, r, offset);						
+				m_yOffset = offset.y; 
+				Log.v(TAG,"OFFSET " + offset.y);
+				
+				String sourceType = ((AsyncImageView) v).getType(); 
+				DDGControlVar.targetSource = sourceType;
+										
+				DDGControlVar.hasUpdatedFeed = false;
+				keepFeedUpdated();
+			}
+			
+		}
+	}
 				
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -279,38 +310,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             		R.layout.recentsearch_list_layout, R.id.recentSearchText, 
             		mDuckDuckGoContainer.recentSearchList);
     		
-    		OnClickListener sourceClickListener = new OnClickListener() {
-				
-				public void onClick(View v) {
-					// source filtering
-					
-					if(DDGControlVar.targetSource != null){
-						cancelSourceFilter();
-					}
-					else {
-					
-						View itemParent = (View) v.getParent().getParent();
-						int pos = feedView.getPositionForView(itemParent);
-						m_objectId = ((FeedObject) feedView.getItemAtPosition(pos)).getId();
-						m_itemHeight = itemParent.getHeight();
-						Log.v(TAG, "POS " + pos);
-						
-						Rect r = new Rect();
-						Point offset = new Point();
-						feedView.getChildVisibleRect(itemParent, r, offset);						
-						m_yOffset = offset.y; 
-						Log.v(TAG,"OFFSET " + offset.y);
-						
-						String sourceType = ((AsyncImageView) v).getType(); 
-						DDGControlVar.targetSource = sourceType;
-												
-						DDGControlVar.hasUpdatedFeed = false;
-						keepFeedUpdated();
-					}
-					
-				}
-			};
-			
+    		SourceClickListener sourceClickListener = new SourceClickListener();			
     		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
     		
     		mDuckDuckGoContainer.mainFeedTask = null;
@@ -1398,7 +1398,18 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mainWebView.loadUrl(url);
 	}
 
-	public void onFeedRetrieved(List<FeedObject> feed) {
+	public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
+		
+		if(!fromCache) {
+			synchronized(mDuckDuckGoContainer.feedAdapter) {
+				DDGApplication.getImageDownloader().clearAllDownloads();
+				
+				SourceClickListener sourceClickListener = new SourceClickListener();			
+				mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
+				feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
+			}
+		}
+		
 		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		mDuckDuckGoContainer.feedAdapter.addData(feed);
 		mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
@@ -1435,7 +1446,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
 		// Do not retry for SavedFeedTask, DB reply should be usable, when good or bad
 		if (mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.savedFeedTask != null) {
-			onFeedRetrieved(new ArrayList<FeedObject>());
 			Toast.makeText(this, R.string.SavedFeedEmpty, Toast.LENGTH_LONG).show();
 		}
 		
@@ -1848,6 +1858,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mDuckDuckGoContainer.savedFeedTask.execute();
 			}
 			else {
+				// cache
+				new MainFeedTask(DuckDuckGo.this, this, true).execute();
+				
+				// for HTTP request
 				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, this);
 				mDuckDuckGoContainer.mainFeedTask.execute();
 			}

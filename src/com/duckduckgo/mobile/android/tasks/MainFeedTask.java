@@ -35,97 +35,112 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	private SharedPreferences sharedPreferences;
 	
 	private FileCache fileCache = null;
+		
+	private boolean fromCache = false;
 	
-	private boolean cacheRead;
-			
 	public MainFeedTask(Context context, FeedListener listener) {
+		this(context, listener, false);
+	}	
+			
+	public MainFeedTask(Context context, FeedListener listener, boolean fromCache) {
 		this.context = context;
 		this.listener = listener;
 		this.fileCache = DDGApplication.getFileCache();
 		
+		this.fromCache = fromCache;
+		
 		sharedPreferences = DDGApplication.getSharedPreferences();
+	}
+	
+	private String getFeedUrl() throws InterruptedException {
+		String feedUrl = DDGConstants.MAIN_FEED_URL;
+		
+		if(DDGControlVar.targetSource != null){
+			// temporary, icon tap filter
+			feedUrl += "&s=" + DDGControlVar.targetSource;
+		}
+		else {
+			// main, preference-based filter
+			Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
+
+			if(sharedPreferences.contains("sourceset_size") && !sourceSet.isEmpty()){
+				String paramString = "";
+				for(String s : sourceSet){
+					paramString += s + ",";
+				}
+				if(paramString.length() > 0){
+					paramString = paramString.substring(0,paramString.length()-1);
+				}
+
+				feedUrl += "&s=" + paramString;
+
+			}
+			else {
+				// this case is when default sources are not loaded
+				if(DDGControlVar.defaultSourceSet == null || DDGControlVar.defaultSourceSet.isEmpty()){
+					synchronized (DDGControlVar.defaultSourceSet) {
+						DDGControlVar.defaultSourceSet.wait();
+					}
+				}
+				
+				String paramString = "";
+				for(String s : DDGControlVar.defaultSourceSet){
+					paramString += s + ",";
+				}
+				if(paramString.length() > 0){
+					paramString = paramString.substring(0,paramString.length()-1);
+				}
+
+				feedUrl += "&s=" + paramString;
+				
+			}
+		}
+		
+		return feedUrl;
 	}
 	
 	@Override
 	protected List<FeedObject> doInBackground(Void... arg0) {
 		JSONArray json = null;
 		List<FeedObject> returnFeed = new ArrayList<FeedObject>();
-		String feedUrl = DDGConstants.MAIN_FEED_URL;
 		String body = null;
-		cacheRead = false;
-		try {
-			if (isCancelled()) return null;
-			
-			if(DDGControlVar.targetSource != null){
-				// temporary, icon tap filter
-				feedUrl += "&s=" + DDGControlVar.targetSource;
-			}
-			else {
-				// main, preference-based filter
-				Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
+		
+		if (isCancelled()) return null;
 
-				if(sharedPreferences.contains("sourceset_size") && !sourceSet.isEmpty()){
-					String paramString = "";
-					for(String s : sourceSet){
-						paramString += s + ",";
-					}
-					if(paramString.length() > 0){
-						paramString = paramString.substring(0,paramString.length()-1);
-					}
-
-					feedUrl += "&s=" + paramString;
-
-				}
-				else {
-					// this case is when default sources are not loaded
-					if(DDGControlVar.defaultSourceSet == null || DDGControlVar.defaultSourceSet.isEmpty()){
-						synchronized (DDGControlVar.defaultSourceSet) {
-							DDGControlVar.defaultSourceSet.wait();
-						}
-					}
-					
-					String paramString = "";
-					for(String s : DDGControlVar.defaultSourceSet){
-						paramString += s + ",";
-					}
-					if(paramString.length() > 0){
-						paramString = paramString.substring(0,paramString.length()-1);
-					}
-
-					feedUrl += "&s=" + paramString;
-					
-				}
-			}
-						
-			// if an update is triggered, directly fetch from URL
-			body = DDGNetworkConstants.mainClient.doGetString(feedUrl);
-			fileCache.saveStringToInternal(DDGConstants.STORIES_JSON_PATH, body);
-			DDGControlVar.storiesJSON = new String(body);
-			
-			
-			Log.e(TAG, body);
-		} catch (DDGHttpException conException) {
-			Log.e(TAG, "Unable to execute Query: " + conException.getMessage(), conException);
-			
+		if(this.fromCache) {
 			body = DDGControlVar.storiesJSON;
-			
+
 			// try getting JSON from file cache
 			if(body == null){
-				body = fileCache.getStringFromInternal(DDGConstants.STORIES_JSON_PATH);
+				synchronized(fileCache) {
+					body = fileCache.getStringFromInternal(DDGConstants.STORIES_JSON_PATH);
+				}
 			}
-			
-			cacheRead = true;
-			
-		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
 		}
-		
+		else {
+
+			try {				
+				// if an update is triggered, directly fetch from URL
+				body = DDGNetworkConstants.mainClient.doGetString(getFeedUrl());
+				synchronized(fileCache) {
+					fileCache.saveStringToInternal(DDGConstants.STORIES_JSON_PATH, body);
+					DDGControlVar.storiesJSON = new String(body);
+				}
+			}				
+			catch (Exception e) {
+				Log.e(TAG, e.getMessage(), e);
+			}
+		}
+
 		if(body != null) {	
 			try {
 				json = new JSONArray(body);
 			} catch (JSONException jex) {
 				Log.e(TAG, jex.getMessage(), jex);
 			}
+		}
+		else {
+			Log.e(TAG, "body: null - fromCache:" + fromCache);
 		}
 
 		if (json != null) {
@@ -150,13 +165,14 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	
 	@Override
 	protected void onPostExecute(List<FeedObject> feed) {	
-		if(cacheRead) {
-			Toast.makeText(context, R.string.InfoReadStoriesFromCache, Toast.LENGTH_LONG).show();
-		}
+		
+		
+		// XXX test code
+		if(feed.isEmpty()) return;
 		
 		if (this.listener != null) {
 			if (feed != null) {
-				this.listener.onFeedRetrieved(feed);
+				this.listener.onFeedRetrieved(feed, fromCache);
 			} else {
 				this.listener.onFeedRetrievalFailed();
 			}

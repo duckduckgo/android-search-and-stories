@@ -5,6 +5,6 @@ import java.util.List;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 
 public interface FeedListener {
-	public void onFeedRetrieved(List<FeedObject> feed);
+	public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache);
 	public void onFeedRetrievalFailed();
 }
