@@ -187,6 +187,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	boolean mCleanSearchBar = false;
 	
+	AlertDialog.Builder cacheDialogBuilder;
+	
 	class SourceClickListener implements OnClickListener {
 		public void onClick(View v) {
 			// source filtering
@@ -356,6 +358,22 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				return v;
 			}
 		};
+		
+		cacheDialogBuilder = new AlertDialog.Builder(this);
+		// Add the buttons
+		cacheDialogBuilder.setTitle(R.string.ErrorFeedTitle);
+		cacheDialogBuilder.setMessage(R.string.ErrorFeedDetail);
+		cacheDialogBuilder.setPositiveButton(R.string.Continue, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   dialog.dismiss();
+		           }
+		       });
+		cacheDialogBuilder.setNegativeButton(R.string.Retry, new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   DDGControlVar.hasUpdatedFeed = false;
+		        	   keepFeedUpdated();
+		           }
+		       });
     	    	
     	leftHomeTextView = (TextView) leftMenuView.findViewById(R.id.LeftHomeTextView);
     	leftStoriesTextView = (TextView) leftMenuView.findViewById(R.id.LeftStoriesTextView);
@@ -1452,7 +1470,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		//If the mainFeedTask is null, we are currently paused
 		//Otherwise, we can try again
 		else if (!mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.mainFeedTask != null) {
-			keepFeedUpdated();
+			
+			// Create the AlertDialog
+			AlertDialog failDialog = cacheDialogBuilder.create();
+			failDialog.show();
 		}
 	}
 	

@@ -111,5 +111,11 @@
     <string name="WaterCoolerSources">Water Cooler sources</string>
     
     <string name="InformHistory"><i>Save recent searches</i> is disabled. You can enable it in <i>Settings.</i></string>
+    
+    <string name="Continue">Continue</string>
+    <string name="Retry">Retry</string>
+    <string name="ErrorFeedTitle">Error: Feed request</string>
+    <string name="ErrorFeedDetail">Feed request failed, possibly because of a connection problem.
+        You will still be able to browse cached items or you may choose to retry.</string>
 
 </resources>

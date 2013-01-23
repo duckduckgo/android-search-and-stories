@@ -38,6 +38,8 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		
 	private boolean fromCache = false;
 	
+	private boolean requestFailed = false;
+	
 	public MainFeedTask(Context context, FeedListener listener) {
 		this(context, listener, false);
 	}	
@@ -128,6 +130,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 				}
 			}				
 			catch (Exception e) {
+				requestFailed = true;
 				Log.e(TAG, e.getMessage(), e);
 			}
 		}
@@ -164,18 +167,15 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	}
 	
 	@Override
-	protected void onPostExecute(List<FeedObject> feed) {	
+	protected void onPostExecute(List<FeedObject> feed) {		
 		
+		if(requestFailed) {
+			this.listener.onFeedRetrievalFailed();
+			return;
+		}
 		
-		// XXX test code
-		if(feed.isEmpty()) return;
-		
-		if (this.listener != null) {
-			if (feed != null) {
-				this.listener.onFeedRetrieved(feed, fromCache);
-			} else {
-				this.listener.onFeedRetrievalFailed();
-			}
+		if (this.listener != null && feed != null) {
+			this.listener.onFeedRetrieved(feed, fromCache);
 		}
 	}
 	
