@@ -5,8 +5,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.TreeSet;
 
 import android.content.Context;
@@ -160,7 +162,7 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 	public void setList(List<SourcesObject> feed) {
 		this.clear();
 		
-		HashMap<String, ArrayList<SourcesObject>> categoryMap = new HashMap<String, ArrayList<SourcesObject>>();
+		Map<String, ArrayList<SourcesObject>> categoryMap = new TreeMap<String, ArrayList<SourcesObject>>();
 		for(SourcesObject feedItem : feed) {
 			String category = feedItem.getCategory();
 			
