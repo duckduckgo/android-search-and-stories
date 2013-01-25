@@ -117,5 +117,7 @@
     <string name="ErrorFeedTitle">Error: Feed request</string>
     <string name="ErrorFeedDetail">Feed request failed, possibly because of a connection problem.
         You will still be able to browse cached items or you may choose to retry.</string>
+        
+    <string name="Apply">Apply</string>
 
 </resources>

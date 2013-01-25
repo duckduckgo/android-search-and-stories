@@ -1,34 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_height="wrap_content" android:layout_width="fill_parent"
-	android:layout_centerInParent="true" android:visibility="gone"
-	android:gravity="center" android:orientation="horizontal">
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#ee3a3e45"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="5dp"
+    android:layout_centerInParent="true"
+    android:visibility="gone" >
 
-	<LinearLayout android:layout_height="wrap_content"
-		android:layout_width="wrap_content" android:gravity="center_vertical"
-		android:orientation="vertical" android:paddingTop="10dp"
-		android:paddingBottom="10dp" android:paddingLeft="20dp"
-		android:paddingRight="20dp" android:background="#ee3a3e45">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/ChangingFontSize"
+        android:textColor="@android:color/white" />
 
-		<TextView android:textColor="@android:color/white"
-			android:text="@string/ChangingFontSize" android:layout_width="wrap_content"
-			android:layout_height="wrap_content" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
 
-		<LinearLayout android:layout_width="wrap_content"
-			android:layout_height="wrap_content">
+        <SeekBar
+            android:id="@+id/fontSizeSeekBar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:max="10"
+            android:minWidth="150dp"
+            android:progress="5" />
 
-			<SeekBar android:layout_height="wrap_content"
-				android:layout_width="wrap_content" android:id="@+id/fontSizeSeekBar"
-				android:minWidth="150dp" 
-				android:progress="5"
-				android:max="10" />
-
-			<Button android:layout_height="wrap_content"
-				android:layout_width="wrap_content" android:id="@+id/fontSizeApplyButton"
-				android:text="Apply" />
-
-		</LinearLayout>
-
-	</LinearLayout>
+        <Button
+            android:id="@+id/fontSizeApplyButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:text="@string/Apply" />
+    </LinearLayout>
 
 </LinearLayout>
