@@ -77,6 +77,8 @@ public class DDGApplication extends Application {
 		DDGControlVar.useDefaultSources = !DDGUtils.existsSet(sharedPreferences, "sourceset");
 		DDGControlVar.defaultSourceSet = DDGUtils.loadSet(sharedPreferences, "defaultset");
 		DDGControlVar.alwaysUseExternalBrowser = sharedPreferences.getBoolean("externalBrowserPref", false);
+		DDGControlVar.fontPrevProgress = sharedPreferences.getInt("fontPrevProgress", 5);
+		DDGControlVar.fontProgress = DDGControlVar.fontPrevProgress;
 		
 		String strReadArticles = sharedPreferences.getString("readarticles", null);
 		if(strReadArticles != null){

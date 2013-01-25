@@ -182,7 +182,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	DownloadManager downloadManager;
 	
 	// keep prev progress in font seek bar, to make incremental changes available
-	int seekBarPrevProgress;
 	SeekBar fontSizeSeekBar;
 	
 	boolean mCleanSearchBar = false;
@@ -950,8 +949,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         fontSizeSeekBar = (SeekBar) contentView.findViewById(R.id.fontSizeSeekBar);
         DDGControlVar.mainTextSize = sharedPreferences.getInt("mainFontSize", 14);
         DDGControlVar.recentTextSize = sharedPreferences.getInt("recentFontSize", 18);
-        seekBarPrevProgress = 50;
-        fontSizeSeekBar.setProgress(50);
+//        DDGControlVar.fontPrevProgress = DDGControlVar.fontProgress;
+        fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
         fontSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
 			@Override
@@ -966,17 +965,21 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {		
 				if(!fromUser) return;
-				
-//				Log.v(TAG, "progress: " + progress + " prev prog: " + seekBarPrevProgress);
-				int diff = progress - seekBarPrevProgress;
-				DDGControlVar.mainTextSize += diff;
+								
+				Log.v(TAG, "progress: " + progress + " prev prog: " + DDGControlVar.fontPrevProgress);
+				int diff = progress - DDGControlVar.fontPrevProgress;
+				Log.v(TAG, "diff: " + (progress - DDGControlVar.fontPrevProgress));
+				DDGControlVar.fontProgress = progress;
+				Log.v(TAG, "main text : " + DDGControlVar.mainTextSize);
+				DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize + diff;
+				Log.v(TAG, "main text2 : " + DDGControlVar.mainTextSize);
 				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 				
-				DDGControlVar.recentTextSize += diff;
+				DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize + diff;
 				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetInvalidated();
 				
-				DDGControlVar.ptrHeaderSize += diff;
-				DDGControlVar.ptrSubHeaderSize += diff;
+				DDGControlVar.ptrHeaderSize = DDGControlVar.prevPtrHeaderSize + diff;
+				DDGControlVar.ptrSubHeaderSize = DDGControlVar.prevPtrSubHeaderSize + diff;
 				
 				// adjust Pull-to-Refresh
 				mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
@@ -986,10 +989,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
 				mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
 				
-				DDGControlVar.webViewTextSize += diff;
-				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
-				
-				seekBarPrevProgress = progress;
+				DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize + diff;
+				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);				
 			}
 		});
         
@@ -998,8 +999,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			
 			@Override
 			public void onClick(View v) {
+				// XXX !!! Intentional Crash !!!
+//				mDuckDuckGoContainer = null;
+//				mDuckDuckGoContainer.feedAdapter = null;
+				DDGControlVar.fontPrevProgress = DDGControlVar.fontProgress;
+				
 				// save adjusted text size
 				Editor editor = sharedPreferences.edit();
+				editor.putInt("fontPrevProgress", DDGControlVar.fontPrevProgress);
 				editor.putInt("mainFontSize", DDGControlVar.mainTextSize);
 				editor.putInt("recentFontSize", DDGControlVar.recentTextSize);
 				editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
@@ -1013,8 +1020,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				DDGControlVar.prevPtrHeaderSize = 0;
 				DDGControlVar.prevPtrSubHeaderSize = 0;
 				fontSizeLayout.setVisibility(View.GONE);
-				fontSizeSeekBar.setProgress(50);
-				seekBarPrevProgress = 50;
+				fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
 			}
 		});
 		
@@ -1251,8 +1257,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			DDGControlVar.prevPtrHeaderSize = 0;
 			DDGControlVar.prevPtrSubHeaderSize = 0;
 			fontSizeLayout.setVisibility(View.GONE);
-			fontSizeSeekBar.setProgress(50);
-			seekBarPrevProgress = 50;
+			fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
 		}
 		// main feed showing & source filter is active
 		else if(DDGControlVar.targetSource != null){
