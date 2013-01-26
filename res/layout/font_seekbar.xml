@@ -5,7 +5,6 @@
     android:background="#ee3a3e45"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="5dp"
     android:layout_centerInParent="true"
     android:visibility="gone" >
 
@@ -20,11 +19,13 @@
         android:layout_height="wrap_content"
         android:gravity="center" >
 
-        <SeekBar
+        <com.duckduckgo.mobile.android.views.SeekBarHint
             android:id="@+id/fontSizeSeekBar"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:max="10"
             android:minWidth="150dp"
             android:progress="5" />
