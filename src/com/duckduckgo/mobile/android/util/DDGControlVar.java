@@ -36,6 +36,7 @@ public class DDGControlVar {
 	public static int webViewTextSize = -1, prevWebViewTextSize = -1;
 	public static int ptrHeaderSize, prevPtrHeaderSize;
 	public static int ptrSubHeaderSize, prevPtrSubHeaderSize;
+	public static int leftTitleTextSize, prevLeftTitleTextSize;
 	
 //	public static TaskCompleteSignal taskCompleteSignal = new TaskCompleteSignal();
 	

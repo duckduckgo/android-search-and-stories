@@ -47,6 +47,7 @@
         <attr name="leftRecentListRootBackground" format="color|reference" />
         <attr name="leftRecentItemTextColor" format="color|reference" />
         
+        <attr name="leftTitleTextSize" format="dimension" />
         <attr name="leftTitleTextColor" format="color" />
         <attr name="leftTitleBackground" format="reference|color" />
         

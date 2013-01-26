@@ -388,6 +388,19 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftSettingsTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);    	
     	
     	
+    	TypedValue tmpTypedValue = new TypedValue(); 
+    	getTheme().resolveAttribute(R.attr.leftTitleTextSize, tmpTypedValue, true);
+    	int defLeftTitleTextSize = (int) tmpTypedValue.getDimension(getResources().getDisplayMetrics());
+    	Log.v(TAG, "default font (left): " + defLeftTitleTextSize);
+    	
+    	DDGControlVar.leftTitleTextSize = sharedPreferences.getInt("leftTitleTextSize", defLeftTitleTextSize);
+    	
+    	leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+    	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+    	leftSavedTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+//    	leftRecentTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+    	leftSettingsTextView.setTextSize(DDGControlVar.leftTitleTextSize); 
+    	    	
     	leftHomeButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftHomeButtonLayout);
     	leftStoriesButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftStoriesButtonLayout);
     	leftSavedButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftSavedButtonLayout);
@@ -969,10 +982,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				int diff = progress - DDGControlVar.fontPrevProgress;
 				// set thumb text
 				if(diff == 0) {
-					fontSizeSeekBar.setExtraText("No change");
+					fontSizeSeekBar.setExtraText(getResources().getString(R.string.NoChange));
 				}
 				else if(progress == DDGConstants.FONT_SEEKBAR_MID) {
-					fontSizeSeekBar.setExtraText("Default");
+					fontSizeSeekBar.setExtraText(getResources().getString(R.string.Defaults));
 				}
 				else if(progress > DDGConstants.FONT_SEEKBAR_MID) {
 					fontSizeSeekBar.setExtraText("+" + (progress-DDGConstants.FONT_SEEKBAR_MID));
@@ -999,7 +1012,17 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
 				
 				DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize + diff;
-				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);				
+				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
+				
+				DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize + diff;
+				
+				Log.v(TAG, "left : " + DDGControlVar.leftTitleTextSize);
+				leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+		    	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+		    	leftSavedTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+//		    	leftRecentTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+		    	leftSettingsTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+		    	leftMenuView.invalidate();
 			}
 		});
         
@@ -1022,6 +1045,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
 				editor.putInt("ptrHeaderTextSize", DDGControlVar.ptrHeaderSize);
 				editor.putInt("ptrHeaderSubTextSize", DDGControlVar.ptrSubHeaderSize);
+				editor.putInt("leftTitleTextSize", DDGControlVar.leftTitleTextSize);
 				editor.commit();
 				
 				DDGControlVar.prevMainTextSize = 0;
@@ -1029,6 +1053,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				DDGControlVar.prevWebViewTextSize = -1;
 				DDGControlVar.prevPtrHeaderSize = 0;
 				DDGControlVar.prevPtrSubHeaderSize = 0;
+				DDGControlVar.prevLeftTitleTextSize = 0;
 				fontSizeLayout.setVisibility(View.GONE);
 				fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
 			}
@@ -1252,7 +1277,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
 			DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize;
 			DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
+			Log.v(TAG, "left: " + DDGControlVar.prevLeftTitleTextSize);
+			DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize;
 			mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+			mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetInvalidated();
 			
 			mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.prevPtrHeaderSize);
 			mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
@@ -1267,8 +1295,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			DDGControlVar.prevWebViewTextSize = -1;
 			DDGControlVar.prevPtrHeaderSize = 0;
 			DDGControlVar.prevPtrSubHeaderSize = 0;
+			DDGControlVar.prevLeftTitleTextSize = 0;
 			fontSizeLayout.setVisibility(View.GONE);
 			fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
+			
+			leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+	    	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+	    	leftSavedTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+//	    	leftRecentTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+	    	leftSettingsTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+	    	leftMenuView.invalidate();
 		}
 		// main feed showing & source filter is active
 		else if(DDGControlVar.targetSource != null){
@@ -1522,6 +1558,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 						DDGControlVar.prevWebViewTextSize = DDGControlVar.webViewTextSize;
 						DDGControlVar.prevPtrHeaderSize = DDGControlVar.ptrHeaderSize;
 						DDGControlVar.prevPtrSubHeaderSize = DDGControlVar.ptrSubHeaderSize;
+						DDGControlVar.prevLeftTitleTextSize = DDGControlVar.leftTitleTextSize;
 						prefLayout.setVisibility(View.GONE);
 						switchScreens();
 					}
@@ -1540,7 +1577,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
             			int themeId = getResources().getIdentifier(themeName, "style", getPackageName());
             			if(themeId != 0) {
             				Intent intent = new Intent(getApplicationContext(), DuckDuckGo.class);
-            				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             				startActivity(intent);
             			}
             		}
