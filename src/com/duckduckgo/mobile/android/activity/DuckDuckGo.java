@@ -966,23 +966,22 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					boolean fromUser) {		
 				if(!fromUser) return;
 								
-				Log.v(TAG, "progress: " + progress + " prev prog: " + DDGControlVar.fontPrevProgress);
 				int diff = progress - DDGControlVar.fontPrevProgress;
 				// set thumb text
 				if(diff == 0) {
+					fontSizeSeekBar.setExtraText("No change");
+				}
+				else if(progress == DDGConstants.FONT_SEEKBAR_MID) {
 					fontSizeSeekBar.setExtraText("Default");
 				}
-				else if(diff > 0) {
-					fontSizeSeekBar.setExtraText("+" + diff);
+				else if(progress > DDGConstants.FONT_SEEKBAR_MID) {
+					fontSizeSeekBar.setExtraText("+" + (progress-DDGConstants.FONT_SEEKBAR_MID));
 				}
 				else {
-					fontSizeSeekBar.setExtraText(String.valueOf(diff));
+					fontSizeSeekBar.setExtraText(String.valueOf((progress-DDGConstants.FONT_SEEKBAR_MID)));
 				}
-				Log.v(TAG, "diff: " + (progress - DDGControlVar.fontPrevProgress));
 				DDGControlVar.fontProgress = progress;
-				Log.v(TAG, "main text : " + DDGControlVar.mainTextSize);
 				DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize + diff;
-				Log.v(TAG, "main text2 : " + DDGControlVar.mainTextSize);
 				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 				
 				DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize + diff;

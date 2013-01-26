@@ -29,8 +29,8 @@ public class DDGControlVar {
 	public static boolean alwaysUseExternalBrowser = false;
 	public static boolean isAutocompleteActive = true;
 	
-	public static int fontProgress = 5;	// over scale 0-10
-	public static int fontPrevProgress = 5;	// over scale 0-10
+	public static int fontProgress = DDGConstants.FONT_SEEKBAR_MID;	// over scale 0-10
+	public static int fontPrevProgress = DDGConstants.FONT_SEEKBAR_MID;	// over scale 0-10
 	public static int mainTextSize, prevMainTextSize;
 	public static int recentTextSize, prevRecentTextSize; 
 	public static int webViewTextSize = -1, prevWebViewTextSize = -1;

@@ -19,4 +19,6 @@ public class DDGConstants {
 //	public static Typeface TTF_HELVETICA_NEUE_MEDIUM = null;
 	public static Typeface TTF_ROBOTO_BOLD = null;	
 	public static Typeface TTF_ROBOTO_MEDIUM = null;	
+	
+	public static final int FONT_SEEKBAR_MID = 5;
 }
