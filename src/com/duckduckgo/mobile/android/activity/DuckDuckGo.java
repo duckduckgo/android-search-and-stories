@@ -1185,16 +1185,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(getApplicationContext(), DDGApplication.getImageCache());
 			mDuckDuckGoContainer.sourceIconTask.execute();
 		
-			if(intent.getBooleanExtra("widget", false)) {
-				switchScreens();
-			}
-			else if(mDuckDuckGoContainer.webviewShowing){
-					mPullRefreshFeedView.setVisibility(View.GONE);
-					mainWebView.setVisibility(View.VISIBLE);
-			}	
-			else if(!mDuckDuckGoContainer.prefShowing){
-				switchScreens();
-			}
+			switchScreens();
 			
 			// removed the distinction between widget and regular app icon
 			// https://app.asana.com/0/230839424767/2717382704705
