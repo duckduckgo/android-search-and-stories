@@ -35,40 +35,15 @@ public class SavedFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		
 		// retrieve from DB
 		List<FeedObject> returnFeed = new ArrayList<FeedObject>();
-		
-		try {
-				
-			if (isCancelled()) return null;
-			
-			if(DDGControlVar.targetSource != null){
-				// temporary, icon tap filter				
-				returnFeed = this.db.selectByType(DDGControlVar.targetSource);
-			}
-			else {
-				// main, preference-based filter
-				Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
 
-				if(sharedPreferences.contains("sourceset_size") && !sourceSet.isEmpty()){					
-					returnFeed = this.db.selectByType(sourceSet);
-				}
-				else {
-					// this case is when default sources are not loaded
-					if(DDGControlVar.defaultSourceSet == null || DDGControlVar.defaultSourceSet.isEmpty()){
-						synchronized (DDGControlVar.defaultSourceSet) {
-							DDGControlVar.defaultSourceSet.wait();
-						}
-					}
-					
-//					sourceSet = DDGControlVar.defaultSourceSet;
-//					returnFeed = this.db.selectByType(sourceSet);
+		if (isCancelled()) return null;
 
-					returnFeed = this.db.selectAll();
-				}
-			}
-			
+		if(DDGControlVar.targetSource != null){
+			// temporary, icon tap filter				
+			returnFeed = this.db.selectByType(DDGControlVar.targetSource);
 		}
-		catch(InterruptedException e) {
-			e.printStackTrace();
+		else {
+			returnFeed = this.db.selectAll();
 		}
 		
 		return returnFeed;
