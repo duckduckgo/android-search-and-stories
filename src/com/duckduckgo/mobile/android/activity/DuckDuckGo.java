@@ -1015,7 +1015,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				
 				DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize + diff;
 				
-				Log.v(TAG, "left : " + DDGControlVar.leftTitleTextSize);
 				leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
 		    	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
 		    	leftSavedTextView.setTextSize(DDGControlVar.leftTitleTextSize);
@@ -1278,7 +1277,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
 			DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize;
 			DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
-			Log.v(TAG, "left: " + DDGControlVar.prevLeftTitleTextSize);
 			DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize;
 			mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 			mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetInvalidated();
