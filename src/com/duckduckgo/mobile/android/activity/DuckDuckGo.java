@@ -1128,12 +1128,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		searchField.setFocusableInTouchMode(true);
 	}
 	
-	private void switchScreens(){
-        // control which start screen is shown & configure related views
-		
+	private void resetScreenState() {
 		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		clearSearchBar();
 		clearBrowserState();
+	}
+	
+	private void switchScreens(){
+        // control which start screen is shown & configure related views
 		
 		if(DDGControlVar.prevMainTextSize != 0) {
 			fontSizeLayout.setVisibility(View.VISIBLE);
@@ -1185,7 +1187,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(getApplicationContext(), DDGApplication.getImageCache());
 			mDuckDuckGoContainer.sourceIconTask.execute();
 		
-			switchScreens();
+			if(intent.getBooleanExtra("widget", false)) {
+				switchScreens();
+			}
+			else if(mDuckDuckGoContainer.webviewShowing){
+					mPullRefreshFeedView.setVisibility(View.GONE);
+					mainWebView.setVisibility(View.VISIBLE);
+			}	
+			else if(!mDuckDuckGoContainer.prefShowing){
+				switchScreens();
+			}
 			
 			// removed the distinction between widget and regular app icon
 			// https://app.asana.com/0/230839424767/2717382704705
@@ -1659,6 +1670,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displayNewsFeed(){
+		resetScreenState();
+		
     	// show recent queries on slide-out menu
 //    	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
     	
@@ -1692,6 +1705,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displaySavedFeed(){
+		resetScreenState();
+		
 		// left side menu visibility changes
     	leftRecentTextView.setVisibility(View.VISIBLE);
     	leftRecentView.setVisibility(View.VISIBLE);
@@ -1715,6 +1730,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void displayRecentSearch(){  
+		resetScreenState();
+		
 //		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(R.color.main_bg);
 		
     	// hide recent queries from slide-out menu
