@@ -391,7 +391,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	TypedValue tmpTypedValue = new TypedValue(); 
     	getTheme().resolveAttribute(R.attr.leftTitleTextSize, tmpTypedValue, true);
     	int defLeftTitleTextSize = (int) tmpTypedValue.getDimension(getResources().getDisplayMetrics());
-    	Log.v(TAG, "default font (left): " + defLeftTitleTextSize);
     	
     	DDGControlVar.leftTitleTextSize = sharedPreferences.getInt("leftTitleTextSize", defLeftTitleTextSize);
     	
