@@ -1115,7 +1115,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mainWebView.stopLoading();
 		mDuckDuckGoContainer.allowInHistory = false;
 //		mainWebView.clearHistory();
-//		mainWebView.clearView();
+		mainWebView.clearView();
 	}
 	
 	public void setSearchBarText(String text) {
@@ -1356,6 +1356,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void searchOrGoToUrl(String text) {
 		
 //		mainWebView.resumeView();
+		
+		hideKeyboard(mainWebView);
+		clearBrowserState();
 				
 		if (text.length() > 0) {
 			
