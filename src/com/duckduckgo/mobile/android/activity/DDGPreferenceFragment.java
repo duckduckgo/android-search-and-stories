@@ -148,7 +148,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 
         if(getActivity() instanceof DuckDuckGo){
         	DuckDuckGo ddg = (DuckDuckGo) getActivity();
-        	if(ddg.mDuckDuckGoContainer.prefShowing){
+        	if(ddg.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS){
         		ddg.showPrefFragment();
         	}
         }

@@ -296,9 +296,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		mDuckDuckGoContainer = new DuckDuckGoContainer();
     		
             mDuckDuckGoContainer.pageAdapter = new DDGPagerAdapter(this);
-    		
-    		mDuckDuckGoContainer.webviewShowing = false;
-    		mDuckDuckGoContainer.prefShowing = false;
+            
+            mDuckDuckGoContainer.webviewShowing = false;
     		
     		mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
 //    		mDuckDuckGoContainer.reloadDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.reload);
@@ -338,11 +337,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				android.R.id.text1,
 				shareDialogItems){
 			public View getView(int position, View convertView, android.view.ViewGroup parent) {
-				if(mDuckDuckGoContainer.savedFeedShowing 
+				if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED 
 						&& shareDialogItems[position].type == Item.ItemType.SAVE) {
 					shareDialogItems[position] = new Item(getResources().getString(R.string.Unsave), android.R.drawable.ic_menu_delete, ItemType.UNSAVE);
 				}
-				else if(!mDuckDuckGoContainer.savedFeedShowing 
+				else if(!(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) 
 						&& shareDialogItems[position].type == Item.ItemType.UNSAVE) {
 					shareDialogItems[position] = new Item(getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE);
 				}
@@ -914,6 +913,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         	}
         });
 
+        
         mainWebView.setOnLongClickListener(new OnLongClickListener() {
 
         	@Override
@@ -1139,6 +1139,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			fontSizeLayout.setVisibility(View.VISIBLE);
 		}
 		
+		mDuckDuckGoContainer.currentScreen = DDGControlVar.START_SCREEN;
+		
         if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){        	
         	displayNewsFeed();
         }
@@ -1192,7 +1194,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 					mPullRefreshFeedView.setVisibility(View.GONE);
 					mainWebView.setVisibility(View.VISIBLE);
 			}	
-			else if(!mDuckDuckGoContainer.prefShowing){
+			else if(!(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS)){
 				switchScreens();
 			}
 			
@@ -1258,7 +1260,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			if (mainWebView.canGoBack()) {
 				mainWebView.goBack();
 			}
-			else if(mDuckDuckGoContainer.savedFeedShowing) {
+			else if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) {
 				clearSearchBar();
 				clearBrowserState();
 				displaySavedFeed();
@@ -1268,7 +1270,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				switchScreens();
 			}
 		}
-		else if(mDuckDuckGoContainer.prefShowing){
+		else if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS){
 			switchScreens();
 		}
 		else if(fontSizeLayout.getVisibility() != View.GONE) {
@@ -1517,13 +1519,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onFeedRetrievalFailed() {
 
 		// Do not retry for SavedFeedTask, DB reply should be usable, when good or bad
-		if (mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.savedFeedTask != null) {
+		if (mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED && mDuckDuckGoContainer.savedFeedTask != null) {
 			Toast.makeText(this, R.string.SavedFeedEmpty, Toast.LENGTH_LONG).show();
 		}
 		
 		//If the mainFeedTask is null, we are currently paused
 		//Otherwise, we can try again
-		else if (!mDuckDuckGoContainer.savedFeedShowing && mDuckDuckGoContainer.mainFeedTask != null) {
+		else if (!(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) && mDuckDuckGoContainer.mainFeedTask != null) {
 			
 			// Create the AlertDialog
 			AlertDialog failDialog = cacheDialogBuilder.create();
@@ -1619,7 +1621,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	 * main method that triggers display of Preferences screen or fragment
 	 */
 	private void showSettings() {
-		if(!mDuckDuckGoContainer.prefShowing){
+		if(!((mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS))){
+			
+			mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SETTINGS;
 			
 			if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
 		        Intent intent = new Intent(getBaseContext(), Preferences.class);
@@ -1643,7 +1647,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		shareButton.setVisibility(View.GONE);
 		recentSearchView.setVisibility(View.GONE);
 		prefLayout.setVisibility(View.VISIBLE);
-		mDuckDuckGoContainer.prefShowing = true;
+		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SETTINGS;
 				
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 		mDuckDuckGoContainer.webviewShowing = false;
@@ -1666,7 +1670,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mPullRefreshFeedView.setVisibility(View.VISIBLE);
     	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
-		mDuckDuckGoContainer.prefShowing = false;
 	}
 	
 	public void displayNewsFeed(){
@@ -1686,10 +1689,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftStoriesButtonLayout.setVisibility(View.GONE);		
 		
 		
-		if(mDuckDuckGoContainer.savedFeedShowing) {
-			mDuckDuckGoContainer.savedFeedShowing = false;
+		if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) {
 			DDGControlVar.hasUpdatedFeed = false;
 		}
+		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_STORIES;
 		
 		displayFeedCore();
 		clearLeftSelect();
@@ -1713,7 +1716,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftSavedButtonLayout.setVisibility(View.GONE);
     	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
 		
-		mDuckDuckGoContainer.savedFeedShowing = true;
+		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SAVED_FEED;
 		DDGControlVar.hasUpdatedFeed = false;
 		
 		displayFeedCore();
@@ -1751,7 +1754,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mPullRefreshFeedView.setVisibility(View.GONE);
     	recentSearchView.setVisibility(View.VISIBLE);
     	mDuckDuckGoContainer.webviewShowing = false;
-		mDuckDuckGoContainer.prefShowing = false;
 		
 		clearLeftSelect();
     	    	
@@ -1777,7 +1779,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			
 			mainWebView.setVisibility(View.VISIBLE);
 			mDuckDuckGoContainer.webviewShowing = true;
-			mDuckDuckGoContainer.prefShowing = false;
 			prefLayout.setVisibility(View.GONE);			
 		}
 	}
@@ -1856,9 +1857,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 		else if(v.equals(leftHomeTextView)){
 			viewPager.switchPage();
-			
-			mDuckDuckGoContainer.prefShowing = false;
-			
+						
 			if (mDuckDuckGoContainer.webviewShowing) {
 
 				//We are going home!
@@ -1913,6 +1912,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	@Override
 	protected void onSaveInstanceState(Bundle outState)
 	{
+		outState.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
+		outState.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
+		outState.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
+		outState.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
+		
 		super.onSaveInstanceState(outState);
 
 		// Save the state of the WebView
@@ -1923,9 +1927,64 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	protected void onRestoreInstanceState(Bundle savedInstanceState)
 	{
 		super.onRestoreInstanceState(savedInstanceState);
-
+		
+		DDGControlVar.homeScreenShowing = savedInstanceState.getBoolean("homeScreenShowing");
+		mDuckDuckGoContainer.webviewShowing = savedInstanceState.getBoolean("webviewShowing");
+		mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(savedInstanceState.getInt("currentScreen"));
+		mDuckDuckGoContainer.allowInHistory = savedInstanceState.getBoolean("allowInHistory");
+		
+		clearLeftSelect();
+		markLeftSelect(mDuckDuckGoContainer.currentScreen);
+		
 		// Restore the state of the WebView
-		mainWebView.restoreState(savedInstanceState);
+    	if(mDuckDuckGoContainer.webviewShowing) {
+    		mainWebView.restoreState(savedInstanceState);
+    		return;
+    	}
+		    	    	
+    	// arbitrary choice to not display Settings on comeback
+		if(DDGControlVar.START_SCREEN == mDuckDuckGoContainer.currentScreen ||
+				SCREEN.SCR_SETTINGS == mDuckDuckGoContainer.currentScreen) {
+    		switchScreens();
+    		return;
+    	}
+    	else {
+    		if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) {
+    			displaySavedFeed();
+    			return;
+    		}
+    	}
+		
+	}
+	
+	private void markLeftSelect(SCREEN current) {
+		if(DDGControlVar.START_SCREEN == current) {
+			leftHomeTextView.setSelected(true);
+			
+			if(mDuckDuckGoContainer.webviewShowing){
+	    		homeSettingsButton.setImageResource(R.drawable.home_button);
+			}
+			else {
+	    		homeSettingsButton.setImageResource(R.drawable.menu_button);
+			}
+		}
+		else {
+    		homeSettingsButton.setImageResource(R.drawable.home_button);
+			switch(current) {
+				case SCR_STORIES:
+					leftStoriesTextView.setSelected(true);
+					break;
+				case SCR_SAVED_FEED:
+					leftSavedTextView.setSelected(true);
+					break;
+				case SCR_RECENT_SEARCH:
+					leftRecentTextView.setSelected(true);
+					break;
+				case SCR_SETTINGS:
+					leftSettingsTextView.setSelected(true);
+					break;
+			}
+		}
 	}
 	
 	/**
@@ -1935,7 +1994,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	{
 		if (!DDGControlVar.hasUpdatedFeed) {
 			
-			if(mDuckDuckGoContainer.savedFeedShowing) {
+			if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) {
 				mDuckDuckGoContainer.savedFeedTask = new SavedFeedTask(this);
 				mDuckDuckGoContainer.savedFeedTask.execute();
 			}

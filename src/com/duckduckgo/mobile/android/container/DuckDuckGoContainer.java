@@ -11,12 +11,12 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.SavedFeedTask;
+import com.duckduckgo.mobile.android.util.SCREEN;
 
 public class DuckDuckGoContainer {
-
+	
 	public boolean webviewShowing = false;
-	public boolean prefShowing = false;
-	public boolean savedFeedShowing = false;
+	public SCREEN currentScreen = SCREEN.SCR_STORIES;
 	
 	public Drawable progressDrawable, searchFieldDrawable;
 	public Drawable stopDrawable;
