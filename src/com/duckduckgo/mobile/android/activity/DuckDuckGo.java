@@ -1183,8 +1183,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			fontSizeLayout.setVisibility(View.VISIBLE);
 		}
 		
-		mDuckDuckGoContainer.currentScreen = DDGControlVar.START_SCREEN;
-		
         if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){        	
         	displayNewsFeed();
         }
@@ -1194,6 +1192,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         else if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){        	
         	displaySavedFeed();
         }
+        
+        mDuckDuckGoContainer.currentScreen = DDGControlVar.START_SCREEN;
 	}
 	
 	@Override
