@@ -1029,9 +1029,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			
 			@Override
 			public void onClick(View v) {
-				// XXX !!! Intentional Crash !!!
-//				mDuckDuckGoContainer = null;
-//				mDuckDuckGoContainer.feedAdapter = null;
 				DDGControlVar.fontPrevProgress = DDGControlVar.fontProgress;
 				fontSizeSeekBar.setExtraText(null);
 				
@@ -1054,6 +1051,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				DDGControlVar.prevLeftTitleTextSize = 0;
 				fontSizeLayout.setVisibility(View.GONE);
 				fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
+			}
+		});
+        
+        Button fontSizeCancelButton = (Button) contentView.findViewById(R.id.fontSizeCancelButton);
+        fontSizeCancelButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				cancelFontScaling();
 			}
 		});
 		
@@ -1130,6 +1136,40 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		clearSearchBar();
 		clearBrowserState();
+	}
+	
+	private void cancelFontScaling() {
+		fontSizeSeekBar.setExtraText(null);
+		DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
+		DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize;
+		DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
+		DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize;
+		mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+		mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetInvalidated();
+		
+		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.prevPtrHeaderSize);
+		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
+		
+		// set Loading... font
+		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.prevPtrHeaderSize);
+		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
+		
+		mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
+		DDGControlVar.prevMainTextSize = 0;
+		DDGControlVar.prevRecentTextSize = 0;
+		DDGControlVar.prevWebViewTextSize = -1;
+		DDGControlVar.prevPtrHeaderSize = 0;
+		DDGControlVar.prevPtrSubHeaderSize = 0;
+		DDGControlVar.prevLeftTitleTextSize = 0;
+		fontSizeLayout.setVisibility(View.GONE);
+		fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
+		
+		leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+    	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+    	leftSavedTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+//    	leftRecentTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+    	leftSettingsTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+    	leftMenuView.invalidate();
 	}
 	
 	private void switchScreens(){
@@ -1274,38 +1314,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			switchScreens();
 		}
 		else if(fontSizeLayout.getVisibility() != View.GONE) {
-			fontSizeSeekBar.setExtraText(null);
-			Log.v(TAG, "prev: " + DDGControlVar.prevMainTextSize);
-			DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
-			DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize;
-			DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
-			DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize;
-			mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
-			mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetInvalidated();
-			
-			mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.prevPtrHeaderSize);
-			mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
-			
-			// set Loading... font
-			mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.prevPtrHeaderSize);
-			mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
-			
-			mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
-			DDGControlVar.prevMainTextSize = 0;
-			DDGControlVar.prevRecentTextSize = 0;
-			DDGControlVar.prevWebViewTextSize = -1;
-			DDGControlVar.prevPtrHeaderSize = 0;
-			DDGControlVar.prevPtrSubHeaderSize = 0;
-			DDGControlVar.prevLeftTitleTextSize = 0;
-			fontSizeLayout.setVisibility(View.GONE);
-			fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
-			
-			leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-	    	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-	    	leftSavedTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-//	    	leftRecentTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-	    	leftSettingsTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-	    	leftMenuView.invalidate();
+			cancelFontScaling();
 		}
 		// main feed showing & source filter is active
 		else if(DDGControlVar.targetSource != null){

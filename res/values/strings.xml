@@ -119,6 +119,7 @@
         You will still be able to browse cached items or you may choose to retry.</string>
         
     <string name="Apply">Apply</string>
+    <string name="Cancel">Cancel</string>
     <string name="NoChange">No Change</string>
 
 </resources>

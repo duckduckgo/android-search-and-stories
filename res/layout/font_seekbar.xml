@@ -29,13 +29,24 @@
             android:max="10"
             android:minWidth="150dp"
             android:progress="5" />
-
+    </LinearLayout>
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+        
         <Button
             android:id="@+id/fontSizeApplyButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:text="@string/Apply" />
+        
+        <Button
+            android:id="@+id/fontSizeCancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/Cancel" />
     </LinearLayout>
 
 </LinearLayout>
