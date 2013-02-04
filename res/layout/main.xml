@@ -23,12 +23,15 @@
         		    android:layout_weight="1"        	
         		    android:background="?attr/leftLayoutRootBackground"	 
         		    android:id="@+id/mainViewArea">
+        		    
+        <ViewFlipper android:id="@+id/ViewFlipperMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
         
         <com.duckduckgo.mobile.android.views.DDGWebView android:layout_width="match_parent"
             	 android:layout_height="match_parent"
-            	 android:visibility="gone"
             	 android:id="@+id/mainWebView" />
-
+        
         <com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView
             	  android:layout_width="match_parent"
                   android:layout_height="match_parent"
@@ -53,25 +56,25 @@
             	  android:layout_width="match_parent"
                   android:layout_height="match_parent"
                   android:background="@android:color/transparent"
-                  android:visibility="gone"
                   android:id="@+id/recentSearchItems" />
-        
-        <include android:id="@+id/fontSeekLayout" layout="@layout/font_seekbar" />
         
         <LinearLayout 	  
             android:layout_height="match_parent"
 			android:layout_width="match_parent"
 			android:baselineAligned="false"
-			android:visibility="gone"
 			android:id="@+id/prefLayout">  
 			
             <!-- placeholder layout for DDGPreferenceFragment -->
             <FrameLayout android:id="@+id/prefFragment" android:layout_weight="1"
         				 android:layout_width="0px"
         				 android:layout_height="match_parent" />
+            
+            </LinearLayout>      
+        
+    </ViewFlipper>
 
-	        
-    	</LinearLayout>
+        
+        <include android:id="@+id/fontSeekLayout" layout="@layout/font_seekbar" />
         
     </RelativeLayout>
         		  
