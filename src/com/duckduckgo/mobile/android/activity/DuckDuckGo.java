@@ -1991,10 +1991,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				mDuckDuckGoContainer.savedFeedTask = new SavedFeedTask(this);
 				mDuckDuckGoContainer.savedFeedTask.execute();
 			}
+			else if(sharedPreferences.contains("sourceset_size") && sharedPreferences.getInt("sourceset_size", 0) == 0) {
+				// respect user choice of empty source list: show nothing
+				onFeedRetrieved(new ArrayList<FeedObject>(), true);
+			}
 			else {
 				// cache
 				new MainFeedTask(DuckDuckGo.this, this, true).execute();
-				
+			
 				// for HTTP request
 				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, this);
 				mDuckDuckGoContainer.mainFeedTask.execute();
