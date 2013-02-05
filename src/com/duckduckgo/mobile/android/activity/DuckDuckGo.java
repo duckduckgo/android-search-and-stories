@@ -334,7 +334,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);
         
         viewFlipper = (ViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
-        viewFlipper.setDisplayedChild(1);
+        viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
         
     	    	
 		contextAdapter = new ArrayAdapter<Item>(
@@ -1235,7 +1235,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				switchScreens();
 			}
 			else if(mDuckDuckGoContainer.webviewShowing){
-					viewFlipper.setDisplayedChild(0);
+					viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 			}	
 			else if(!(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS)){
 				switchScreens();
@@ -1656,7 +1656,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void displayPreferences(){
 		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(android.R.color.transparent);
 		
-		viewFlipper.setDisplayedChild(3);
+		viewFlipper.setDisplayedChild(SCREEN.SCR_SETTINGS.getFlipOrder());
 		shareButton.setVisibility(View.GONE);
 		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SETTINGS;
 				
@@ -1674,7 +1674,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 //		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(R.color.main_bg);
 		
     	// main view visibility changes and keep feed updated
-		viewFlipper.setDisplayedChild(1);
+		viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
 		shareButton.setVisibility(View.GONE);
     	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
@@ -1757,7 +1757,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		
     	// main view visibility changes
 		shareButton.setVisibility(View.GONE);
-		viewFlipper.setDisplayedChild(2);
+		viewFlipper.setDisplayedChild(SCREEN.SCR_RECENT_SEARCH.getFlipOrder());
     	mDuckDuckGoContainer.webviewShowing = false;
 		
 		clearLeftSelect();
@@ -1778,7 +1778,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		
 		if (!mDuckDuckGoContainer.webviewShowing) {			
 			shareButton.setVisibility(View.VISIBLE);
-			viewFlipper.setDisplayedChild(0);
+			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 			
 			mDuckDuckGoContainer.webviewShowing = true;
 		}

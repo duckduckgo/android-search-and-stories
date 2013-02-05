@@ -1,7 +1,7 @@
 package com.duckduckgo.mobile.android.util;
 
 public enum SCREEN {
-	SCR_STORIES(0), SCR_RECENT_SEARCH(1), SCR_SAVED_FEED(2), SCR_SETTINGS(3);
+	SCR_STORIES(0), SCR_RECENT_SEARCH(1), SCR_SAVED_FEED(2), SCR_SETTINGS(3), SCR_WEBVIEW(4);
 	
 	private int code;
 	
@@ -27,5 +27,25 @@ public enum SCREEN {
 				return SCR_STORIES;
 		}	
 			
+	}
+	
+	/**
+	 * method to get associated ViewFlipper order in main.xml
+	 * @return
+	 */
+	public int getFlipOrder() {
+		switch(this) {
+			case SCR_WEBVIEW:
+				return 0;
+			case SCR_STORIES:
+			case SCR_SAVED_FEED:
+				return 1;
+			case SCR_RECENT_SEARCH:
+				return 2;
+			case SCR_SETTINGS:
+				return 3;
+			default:
+				return 1;
+		}
 	}
 }
