@@ -1533,6 +1533,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		// Do not retry for SavedFeedTask, DB reply should be usable, when good or bad
 		if (mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED && mDuckDuckGoContainer.savedFeedTask != null) {
 			Toast.makeText(this, R.string.SavedFeedEmpty, Toast.LENGTH_LONG).show();
+			
+			// nothing to show, redirect to Home View screen
+			switchScreens();
 		}
 		
 		//If the mainFeedTask is null, we are currently paused
