@@ -62,6 +62,7 @@
             android:layout_height="match_parent"
 			android:layout_width="match_parent"
 			android:baselineAligned="false"
+			android:background="@android:color/black"	
 			android:id="@+id/prefLayout">  
 			
             <!-- placeholder layout for DDGPreferenceFragment -->

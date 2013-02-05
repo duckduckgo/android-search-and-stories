@@ -1653,9 +1653,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	/**
 	 * helper method to control visibility states etc. of other views in DuckDuckGo activity
 	 */
-	public void displayPreferences(){
-		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(android.R.color.transparent);
-		
+	public void displayPreferences(){		
 		viewFlipper.setDisplayedChild(SCREEN.SCR_SETTINGS.getFlipOrder());
 		shareButton.setVisibility(View.GONE);
 		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SETTINGS;
@@ -1670,9 +1668,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	/**
 	 * Method that switches visibility of views for Home or Saved feed
 	 */
-	private void displayFeedCore() {
-//		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(R.color.main_bg);
-		
+	private void displayFeedCore() {		
     	// main view visibility changes and keep feed updated
 		viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
 		shareButton.setVisibility(View.GONE);
@@ -1742,9 +1738,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	public void displayRecentSearch(){  
 		resetScreenState();
-		
-//		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(R.color.main_bg);
-		
+				
     	// hide recent queries from slide-out menu
 //    	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
 //    	lMainAdapter.insert(getString(R.string.LeftRecentQueries), 0); 
@@ -1769,9 +1763,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	}
 	}
 	
-	public void displayWebView() {
-		contentView.findViewById(R.id.mainViewArea).setBackgroundResource(android.R.color.transparent);
-		
+	public void displayWebView() {		
 		// loading something in the browser - set home icon
 		DDGControlVar.homeScreenShowing = false;
 		homeSettingsButton.setImageResource(R.drawable.home_button);	
