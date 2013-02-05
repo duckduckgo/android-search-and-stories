@@ -121,5 +121,8 @@
     <string name="Apply">Apply</string>
     <string name="Cancel">Cancel</string>
     <string name="NoChange">No Change</string>
+    
+    <string name="OnlyOnPhone">Only on phone</string>
+    <string name="SelectAppToSend">Select application to send</string>
 
 </resources>

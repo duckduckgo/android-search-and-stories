@@ -65,17 +65,21 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 			// main, preference-based filter
 			Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
 
-			if(sharedPreferences.contains("sourceset_size") && !sourceSet.isEmpty()){
-				String paramString = "";
-				for(String s : sourceSet){
-					paramString += s + ",";
+			if(sharedPreferences.contains("sourceset_size")){
+				if(!sourceSet.isEmpty()) {
+					String paramString = "";
+					for(String s : sourceSet){
+						paramString += s + ",";
+					}
+					if(paramString.length() > 0){
+						paramString = paramString.substring(0,paramString.length()-1);
+					}
+	
+					feedUrl += "&s=" + paramString;
 				}
-				if(paramString.length() > 0){
-					paramString = paramString.substring(0,paramString.length()-1);
+				else {
+					feedUrl = null;
 				}
-
-				feedUrl += "&s=" + paramString;
-
 			}
 			else {
 				// this case is when default sources are not loaded
@@ -123,6 +127,9 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
 			try {				
 				// if an update is triggered, directly fetch from URL
+				String feedUrl = getFeedUrl();
+				if(feedUrl == null)
+					return returnFeed;
 				body = DDGNetworkConstants.mainClient.doGetString(getFeedUrl());
 				synchronized(fileCache) {
 					fileCache.saveStringToInternal(DDGConstants.STORIES_JSON_PATH, body);

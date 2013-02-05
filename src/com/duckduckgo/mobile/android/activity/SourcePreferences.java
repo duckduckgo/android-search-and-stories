@@ -98,7 +98,7 @@ public class SourcePreferences extends Activity implements SourcesListener {
 			public void onClick(View v) {				
 				Intent intent = DDGUtils.newEmailIntent(SourcePreferences.this.getResources().getString(R.string.FeedbackTo), 
 						SourcePreferences.this.getResources().getString(R.string.FeedbackSubject), getString(R.string.SuggestedSources), "");
-		        startActivity(Intent.createChooser(intent, "Select application to send"));
+		        startActivity(Intent.createChooser(intent, getResources().getString(R.string.SelectAppToSend)));
 			}
 		});
 	}
