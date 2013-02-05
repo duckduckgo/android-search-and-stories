@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
   xmlns:android="http://schemas.android.com/apk/res/android">
+  <PreferenceCategory android:title="@string/PrefWaterCooler"
+    android:summary="@string/SummaryWaterCooler"
+    android:layout="@layout/preference_category_summary">
+	<Preference 
+	android:title="@string/PrefSources"
+	android:key="sourcesPref"
+	android:defaultValue="">
+	</Preference>
+  </PreferenceCategory> 
   <PreferenceCategory android:title="@string/PrefGroupAppFlow">
-    <ListPreference 
-	android:title="@string/PrefTheme"
-	android:key="themePref"
-	android:defaultValue="DDGDark"
-	android:entries="@array/themeArray"
-    android:entryValues="@array/themeValues">
-	</ListPreference>
 	<ListPreference 
 	android:title="@string/PrefStartScreen"
 	android:key="startScreenPref"
@@ -19,7 +21,14 @@
 	<CheckBoxPreference 
 	android:title="@string/PrefExternalBrowser"
 	android:key="externalBrowserPref"
-	android:defaultValue="false" />
+	android:defaultValue="false" />	      
+    <ListPreference 
+	android:title="@string/PrefTheme"
+	android:key="themePref"
+	android:defaultValue="DDGDark"
+	android:entries="@array/themeArray"
+    android:entryValues="@array/themeValues">
+	</ListPreference>
 	<Preference 
 	android:title="@string/PrefMainFontSize"
 	android:key="mainFontSizePref"
@@ -34,15 +43,6 @@
 	android:entries="@array/regionArray"
     android:entryValues="@array/regionValues">
 	</ListPreference>    
-</PreferenceCategory> 
-<PreferenceCategory android:title="@string/PrefWaterCooler"
-    android:summary="@string/SummaryWaterCooler"
-    android:layout="@layout/preference_category_summary">
-	<Preference 
-	android:title="@string/PrefSources"
-	android:key="sourcesPref"
-	android:defaultValue="">
-	</Preference>
 </PreferenceCategory>    
 <PreferenceCategory android:title="@string/PrefAutocomplete">
     <CheckBoxPreference 
