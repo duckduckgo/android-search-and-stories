@@ -16,6 +16,7 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 public class DuckDuckGoContainer {
 	
 	public boolean webviewShowing = false;
+	public boolean searchResultPage = false;
 	public SCREEN currentScreen = SCREEN.SCR_STORIES;
 	
 	public Drawable progressDrawable, searchFieldDrawable;

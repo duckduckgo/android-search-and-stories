@@ -1194,6 +1194,12 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         }
         
         mDuckDuckGoContainer.currentScreen = DDGControlVar.START_SCREEN;
+        
+		if(mDuckDuckGoContainer.searchResultPage) {
+			// previous screen was a SERP
+			showKeyboard(searchField);
+		}
+        mDuckDuckGoContainer.searchResultPage = false;
 	}
 	
 	@Override
@@ -1297,7 +1303,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onBackPressed() {
 		// close left nav if it's open
 		if(viewPager.isLeftMenuOpen()){
-			viewPager.setCurrentItem(1);
+			viewPager.setCurrentItem(SCREEN.SCR_STORIES.getFlipOrder());
 		}
 		else if (mDuckDuckGoContainer.webviewShowing) {
 			if (mainWebView.canGoBack()) {
@@ -1429,6 +1435,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void searchWebTerm(String term) {
+		mDuckDuckGoContainer.searchResultPage = true;
+		
 		// save recent query if "record history" is enabled
 		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
 			if(!mDuckDuckGoContainer.recentSearchList.contains(term)){
@@ -1782,10 +1790,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void showKeyboard(View view) {
-		// InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		// imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
-		// imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
 		getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+		 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//		 imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+		 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
 	}
 
 	public void onClick(View v) {
@@ -1909,6 +1918,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		outState.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
 		outState.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
 		outState.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
+		outState.putBoolean("searchResultPage", mDuckDuckGoContainer.searchResultPage);
 		
 		super.onSaveInstanceState(outState);
 
@@ -1925,6 +1935,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		mDuckDuckGoContainer.webviewShowing = savedInstanceState.getBoolean("webviewShowing");
 		mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(savedInstanceState.getInt("currentScreen"));
 		mDuckDuckGoContainer.allowInHistory = savedInstanceState.getBoolean("allowInHistory");
+		mDuckDuckGoContainer.searchResultPage = savedInstanceState.getBoolean("searchResultPage");
 		
 		clearLeftSelect();
 		markLeftSelect(mDuckDuckGoContainer.currentScreen);
