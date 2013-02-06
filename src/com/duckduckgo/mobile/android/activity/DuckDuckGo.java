@@ -1254,7 +1254,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			// removed the distinction between widget and regular app icon
 			// https://app.asana.com/0/230839424767/2717382704705
 //			if(intent.getBooleanExtra("widget", false)) {
-				searchField.requestFocus();
 				showKeyboard(searchField);				
 //			}
 		
@@ -1794,11 +1793,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void showKeyboard(View view) {
-		getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+		view.requestFocus();
+		
+		 getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 		 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
 //		 imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
 		 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+		 
 	}
 
 	public void onClick(View v) {
