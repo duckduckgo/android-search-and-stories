@@ -1206,6 +1206,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	public void onResume() {
 		super.onResume();
 		
+		// update feeds
+		// https://app.asana.com/0/2891531242889/2858723303746
+		DDGControlVar.hasUpdatedFeed = false;
+		
 		// check autocomplete 
 		if(!DDGControlVar.isAutocompleteActive) {
 			searchField.setAdapter(null);
