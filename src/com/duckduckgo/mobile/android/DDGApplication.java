@@ -26,7 +26,7 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
 
 @ReportsCrashes(formKey="",
-formUri = "https://caine.duckduckgo.com/crash.js",
+formUri = "https://collect.duckduckgo.com/collect.js?type=crash",
 mode = ReportingInteractionMode.TOAST,
 resToastText = R.string.crash_toast_text, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
 resNotifTickerText = R.string.crash_notif_ticker_text,
