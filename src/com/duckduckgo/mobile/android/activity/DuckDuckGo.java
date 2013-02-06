@@ -204,13 +204,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				int pos = feedView.getPositionForView(itemParent);
 				m_objectId = ((FeedObject) feedView.getItemAtPosition(pos)).getId();
 				m_itemHeight = itemParent.getHeight();
-				Log.v(TAG, "POS " + pos);
 				
 				Rect r = new Rect();
 				Point offset = new Point();
 				feedView.getChildVisibleRect(itemParent, r, offset);						
 				m_yOffset = offset.y; 
-				Log.v(TAG,"OFFSET " + offset.y);
 				
 				String sourceType = ((AsyncImageView) v).getType(); 
 				DDGControlVar.targetSource = sourceType;
@@ -1520,7 +1518,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		if(DDGControlVar.targetSource != null && m_objectId != null) {
 			int nPos = feedView.getSelectionPosById(m_objectId);
 			mScrollCancelLock = true;
-			Log.v(TAG, "nPOS " + nPos);
 			
 //			if(android.os.Build.VERSION.SDK_INT >= 11) {
 //				feedView.smoothScrollToPositionFromTop(nPos, m_yOffset);

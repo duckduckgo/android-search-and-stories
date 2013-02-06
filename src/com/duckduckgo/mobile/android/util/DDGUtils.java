@@ -121,7 +121,7 @@ public final class DDGUtils {
 	
 	@TargetApi(10)
 	private static Bitmap decodeRegion(FileDescriptor fd) {
-		Log.v("REGION","region decoder : ");
+		// Log.v("REGION","region decoder : ");
 		int useWidth, useHeight;
 		
 		useWidth = feedItemWidth;
@@ -139,7 +139,7 @@ public final class DDGUtils {
 		BitmapRegionDecoder decoder;
 		try {
 			decoder = BitmapRegionDecoder.newInstance(fd, false);
-			Log.v("REGION","IMAGE width height: " + useWidth + " " + useHeight);
+			// Log.v("REGION","IMAGE width height: " + useWidth + " " + useHeight);
 			Rect innerTile = new Rect(0, 0, useWidth, useHeight);
 			Bitmap region = decoder.decodeRegion(innerTile, null);
 			return region;
@@ -157,7 +157,7 @@ public final class DDGUtils {
         o.inJustDecodeBounds = true;
         BitmapFactory.decodeFileDescriptor(fd, null, o);
         
-        Log.v(TAG,"IMAGE width height: " + o.outWidth + " " + o.outHeight);
+        // Log.v(TAG,"IMAGE width height: " + o.outWidth + " " + o.outHeight);
         
         //The new size we want to scale to
 
@@ -169,7 +169,7 @@ public final class DDGUtils {
         while(o.outWidth/scale/2>=maxItemWidthHeight || o.outHeight/scale/2>=maxItemWidthHeight)
             scale*=2;
         
-        Log.v(TAG,"Scale: " + scale);
+        // Log.v(TAG,"Scale: " + scale);
 					
 			BitmapFactory.Options options=new BitmapFactory.Options();
 	        //Decode with inSampleSize
