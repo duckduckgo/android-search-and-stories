@@ -1546,7 +1546,9 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			Toast.makeText(this, R.string.SavedFeedEmpty, Toast.LENGTH_LONG).show();
 			
 			// nothing to show, redirect to Home View screen
-			switchScreens();
+			if(DDGControlVar.START_SCREEN != SCREEN.SCR_SAVED_FEED) {
+				switchScreens();
+			}
 		}
 		
 		//If the mainFeedTask is null, we are currently paused
