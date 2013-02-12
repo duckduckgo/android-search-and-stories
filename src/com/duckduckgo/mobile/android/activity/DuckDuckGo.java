@@ -80,6 +80,7 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.CustomArrayAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
+import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
@@ -88,6 +89,7 @@ import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.objects.HistoryObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
@@ -104,11 +106,11 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.DDGWebView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
+import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemSelectedListener;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
-import com.duckduckgo.mobile.android.views.RecentSearchListView.OnRecentSearchItemSelectedListener;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
@@ -307,9 +309,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     		
     		mDuckDuckGoContainer.recentSearchList = DDGUtils.loadList(sharedPreferences, "recentsearch");
 
-    		mDuckDuckGoContainer.recentSearchAdapter = new CustomArrayAdapter<String>(this, 
-            		R.layout.recentsearch_list_layout, R.id.recentSearchText, 
-            		mDuckDuckGoContainer.recentSearchList);
+//    		mDuckDuckGoContainer.recentSearchAdapter = new CustomArrayAdapter<String>(this, 
+//            		R.layout.recentsearch_list_layout, R.id.recentSearchText, 
+//            		mDuckDuckGoContainer.recentSearchList);
+    		
+    		mDuckDuckGoContainer.recentSearchAdapter = new HistoryCursorAdapter(DuckDuckGo.this, DDGApplication.getDB().getCursorHistory());
     		
     		SourceClickListener sourceClickListener = new SourceClickListener();			
     		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
@@ -449,13 +453,16 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		leftRecentHeaderView.setOnClickListener(this);
     	
     	leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
-    	leftRecentView.setOnRecentSearchItemSelectedListener(new OnRecentSearchItemSelectedListener() {
+    	leftRecentView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
-			public void onRecentSearchItemSelected(String recentQuery) {
+			public void onHistoryItemSelected(HistoryObject historyObject) {
 				viewPager.switchPage();
 				
-				if(recentQuery != null){				
-					searchWebTerm(recentQuery);
+				if(historyObject != null){	
+					if(historyObject.getType().equals("R"))
+						searchWebTerm(historyObject.getData());
+					else if(historyObject.getType().equals("W")) 
+						showWebUrl(historyObject.getUrl());
 				}				
 			}
 		});
@@ -562,12 +569,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         View header = getLayoutInflater().inflate(R.layout.recentsearch_header, null);
         recentSearchView.addHeaderView(header);
         recentSearchView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
-        recentSearchView.setOnRecentSearchItemSelectedListener(new OnRecentSearchItemSelectedListener() {
+        recentSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
-			public void onRecentSearchItemSelected(String recentQuery) {
-				if(recentQuery != null){
-					searchWebTerm(recentQuery);
-				}				
+			public void onHistoryItemSelected(HistoryObject historyObject) {
+				if(historyObject != null){	
+					if(historyObject.getType().equals("R"))
+						searchWebTerm(historyObject.getData());
+					else if(historyObject.getType().equals("W")) 
+						showWebUrl(historyObject.getUrl());
+				}			
 			}
 		});
         
@@ -614,6 +624,10 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 				
 				String url = feedObject.getUrl();
 				if (url != null) {
+					DDGApplication.getDB().insertFeedItem(feedObject.getTitle(), feedObject.getUrl(), feedObject.getType());
+					mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+					mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+					
 					searchOrGoToUrl(url);
 				}
 				
@@ -1445,9 +1459,14 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
 			if(!mDuckDuckGoContainer.recentSearchList.contains(term)){
 				Log.v(TAG, "Search: " + term);
-				mDuckDuckGoContainer.recentSearchList.addFirst(term);	
+//				mDuckDuckGoContainer.recentSearchList.addFirst(term);	
+//				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+//				DDGUtils.saveList(sharedPreferences, mDuckDuckGoContainer.recentSearchList, "recentsearch");
+				
+				DDGApplication.getDB().insertRecentSearch(term);
+				mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
 				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
-				DDGUtils.saveList(sharedPreferences, mDuckDuckGoContainer.recentSearchList, "recentsearch");
+
 			}
 		}
 		
@@ -1477,7 +1496,6 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void clearRecentSearch() {
-		mDuckDuckGoContainer.recentSearchList.clear();
 		mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
 		recentSearchView.invalidate();
 	}

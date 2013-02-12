@@ -1,6 +1,9 @@
 package com.duckduckgo.mobile.android.views;
 
+import com.duckduckgo.mobile.android.objects.HistoryObject;
+
 import android.content.Context;
+import android.database.Cursor;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ListView;
@@ -8,7 +11,7 @@ import android.widget.AdapterView;
 
 public class RecentSearchListView extends ListView implements android.widget.AdapterView.OnItemClickListener {
 
-	private OnRecentSearchItemSelectedListener listener;
+	private OnHistoryItemSelectedListener listener;
 	
 	public RecentSearchListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -16,22 +19,23 @@ public class RecentSearchListView extends ListView implements android.widget.Ada
 		this.setOnItemClickListener(this);
 	}
 	
-	public void setOnRecentSearchItemSelectedListener(OnRecentSearchItemSelectedListener listener) {
+	public void setOnHistoryItemSelectedListener(OnHistoryItemSelectedListener listener) {
 		this.listener = listener;
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		String obj = (String) getAdapter().getItem(position);
+		Cursor c = (Cursor) getAdapter().getItem(position);
+		HistoryObject obj = new HistoryObject(c);
 		
 		if (obj != null) {
 			if (listener != null) {
-				listener.onRecentSearchItemSelected(obj);
+				listener.onHistoryItemSelected(obj);
 			}
 		}
 	}
 	
-	public interface OnRecentSearchItemSelectedListener {
-		public void onRecentSearchItemSelected(String recentQuery);
+	public interface OnHistoryItemSelectedListener {
+		public void onHistoryItemSelected(HistoryObject historyObject);
 	}
 
 }

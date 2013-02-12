@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.db;
 import java.util.ArrayList;
 import java.util.Set;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -10,14 +11,16 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.objects.HistoryObject;
 import com.duckduckgo.mobile.android.util.AppShortInfo;
 
 public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 4;
+	private static final int DATABASE_VERSION = 6;
 	private static final String FEED_TABLE = "feed";
 	private static final String APP_TABLE = "apps";
+	private static final String HISTORY_TABLE = "history";
 	
 	
 	private SQLiteDatabase db;
@@ -27,6 +30,10 @@ public class DdgDB {
 	private static final String INSERT = "insert or replace into " + FEED_TABLE + " (id,title,description,feed,url,imageurl,favicon,timestamp,category,type) values (?,?,?,?,?,?,?,?,?,?)";
 	
 	private static final String APP_INSERT = "insert or replace into " + APP_TABLE + " (title,package) values (?,?)";
+	
+	// if type = recent search, data = query.  if type = web page / feed item, data = title, url is target
+	// extraType is for feed source
+	private static final String HISTORY_INSERT = "insert or replace into " + HISTORY_TABLE + " (type, data, url, extraType) values (?,?,?,?)";
 
 	
 	public DdgDB(Context context) {
@@ -76,6 +83,36 @@ public class DdgDB {
 	      return result;
 	}
 	
+	public long insertRecentSearch(String query) {
+		ContentValues contentValues = new ContentValues();
+		contentValues.put("type", "R");
+		contentValues.put("data", query);
+		contentValues.put("url", "");
+		contentValues.put("extraType", "");
+		return this.db.insert(HISTORY_TABLE, null, contentValues);
+	}
+	
+	public long insertWebPage(String title, String url) {
+		ContentValues contentValues = new ContentValues();
+		contentValues.put("type", "W");
+		contentValues.put("data", title);
+		contentValues.put("url", url);
+		contentValues.put("extraType", "");
+		return this.db.insert(HISTORY_TABLE, null, contentValues);
+	}
+	
+	public long insertFeedItem(String title, String url, String extraType) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("type", "W");
+        contentValues.put("data", title);
+        contentValues.put("url", url);
+        contentValues.put("extraType", extraType);
+
+        long res = this.db.insertOrThrow(HISTORY_TABLE, null, contentValues);
+        
+        return res;
+	}
+	
 	public void deleteApps() {
 	      this.db.delete(APP_TABLE, null, null);
 	}
@@ -105,6 +142,10 @@ public class DdgDB {
 	
 	private AppShortInfo getAppShortInfo(Cursor c) {
 		return new AppShortInfo(c.getString(0), c.getString(1));
+	}
+	
+	private HistoryObject getHistoryObject(Cursor c) {
+		return new HistoryObject(c.getString(0), c.getString(1), c.getString(2), c.getString(3));
 	}
 	
 	public ArrayList<AppShortInfo> selectApps(String title){
@@ -210,6 +251,25 @@ public class DdgDB {
 		return feeds;
 	}
 	
+	public ArrayList<HistoryObject> selectHistory(){
+		Cursor c = this.db.query(HISTORY_TABLE, null, null, null , null, null, null);
+		if(c.moveToFirst()) {
+			ArrayList<HistoryObject> historyItems = new ArrayList<HistoryObject>(30);
+			do {
+				historyItems.add(getHistoryObject(c));
+			} while(c.moveToNext());
+
+			return historyItems;
+		}
+		
+		return null;
+	}
+	
+	public Cursor getCursorHistory() {
+		return this.db.query(HISTORY_TABLE, null, null, null , null, null, null);
+	}
+
+	
 	
 	private static class OpenHelper extends SQLiteOpenHelper {
 
@@ -242,6 +302,15 @@ public class DdgDB {
 			  			    +"package VARCHAR(300) "
 			  			    +")"
 			  			    );
+		  			
+		  			db.execSQL("CREATE TABLE " + HISTORY_TABLE + "("
+		  					+"_id INTEGER PRIMARY KEY, "
+			  			    +"type VARCHAR(300), "
+			  			    +"data VARCHAR(300), "
+			  			    +"url VARCHAR(300), "
+			  			    +"extraType VARCHAR(300)"
+			  			    +")"
+			  			    );
 
 		  	}
 	
@@ -249,6 +318,7 @@ public class DdgDB {
 		  	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		  		db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
 		  		db.execSQL("DROP TABLE IF EXISTS " + APP_TABLE);
+		  		db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
 		  		onCreate(db);
 		  	}
 	}
