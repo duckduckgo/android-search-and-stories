@@ -93,7 +93,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 			
 			@Override
 			public void onClick(View v) {
-    			DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "recentsearch");
+				DDGApplication.getDB().deleteHistory();
 		    	
 		    	if(getActivity().getClass() == DuckDuckGo.class){
 		    		DuckDuckGo ddgParent = (DuckDuckGo) getActivity();

@@ -117,6 +117,10 @@ public class DdgDB {
 	      this.db.delete(APP_TABLE, null, null);
 	}
 	
+	public void deleteHistory() {
+	      this.db.delete(HISTORY_TABLE, null, null);
+	}
+	
 //	public long update(FeedObject e) {
 //	      ContentValues args = new ContentValues();
 //	      args.put("text", e.text);

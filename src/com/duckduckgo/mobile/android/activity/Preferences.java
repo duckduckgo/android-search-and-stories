@@ -121,7 +121,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 	
 				  public void onClick(DialogInterface dialog, int whichButton) {
 					  
-					  DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "recentsearch");		    			
+					  DDGApplication.getDB().deleteHistory();
 		    		  hasClearedHistory = true;
 					  
 				  }})

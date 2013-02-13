@@ -1458,11 +1458,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		// save recent query if "record history" is enabled
 		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
 			if(!mDuckDuckGoContainer.recentSearchList.contains(term)){
-				Log.v(TAG, "Search: " + term);
-//				mDuckDuckGoContainer.recentSearchList.addFirst(term);	
-//				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
-//				DDGUtils.saveList(sharedPreferences, mDuckDuckGoContainer.recentSearchList, "recentsearch");
-				
+				Log.v(TAG, "Search: " + term);		
 				DDGApplication.getDB().insertRecentSearch(term);
 				mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
 				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
@@ -1496,8 +1492,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	}
 	
 	public void clearRecentSearch() {
+		mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
 		mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
-		recentSearchView.invalidate();
 	}
 	
 	public void showWebUrl(String url) {
