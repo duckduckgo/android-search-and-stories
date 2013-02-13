@@ -12,12 +12,20 @@
 	    style="@style/RecentListItemRoot"
 	    android:orientation="horizontal" >    
 	    
-	    	<ImageView android:layout_width="20dp"
-	        android:layout_height="20dp"
-	        android:layout_gravity="center_vertical"
-	        android:scaleType="centerInside"
-	        android:src="@drawable/ddg_source_icon"
-	        android:id="@+id/recentSearchImage"/>
+<!-- 	    	<ImageView android:layout_width="20dp" -->
+<!-- 	        android:layout_height="20dp" -->
+<!-- 	        android:layout_gravity="center_vertical" -->
+<!-- 	        android:scaleType="centerInside" -->
+<!-- 	        android:src="@drawable/ddg_source_icon" -->
+<!-- 	        android:id="@+id/recentSearchImage"/> -->
+
+	<com.duckduckgo.mobile.android.download.AsyncImageView style="@style/MainFeedText" 
+		    	   android:layout_width="20dp"
+		    	   android:layout_height="20dp"
+		    	   android:layout_gravity="center_vertical"
+		    	   android:scaleType="centerInside"
+		    	   android:src="@drawable/ddg_source_icon"
+		    	   android:id="@+id/recentSearchImage" />
     
     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
 	    style="@style/RecentItemText"
