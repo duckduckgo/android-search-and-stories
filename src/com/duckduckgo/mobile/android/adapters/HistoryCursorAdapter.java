@@ -2,25 +2,33 @@ package com.duckduckgo.mobile.android.adapters;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.opengl.Visibility;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 public class HistoryCursorAdapter extends CursorAdapter {
-
-    public HistoryCursorAdapter(Context context, Cursor c) {
+	Activity parentActivity;
+	
+    public HistoryCursorAdapter(Activity parentActivity, Context context, Cursor c) {
         super(context, c);
+        this.parentActivity = parentActivity; 
     }
 
     @Override
@@ -38,8 +46,11 @@ public class HistoryCursorAdapter extends CursorAdapter {
         // here we are setting our data
         // that means, take the data from the cursor and put it in views
 
+    	final String data = cursor.getString(cursor.getColumnIndex("data"));
+    	final String type = cursor.getString(cursor.getColumnIndex("type"));
+    	
         TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
-        textViewHistory.setText(cursor.getString(cursor.getColumnIndex("data")));
+        textViewHistory.setText(data);
         textViewHistory.setTextSize(DDGControlVar.recentTextSize);
         
         String strUrl = cursor.getString(cursor.getColumnIndex("url"));
@@ -79,5 +90,28 @@ public class HistoryCursorAdapter extends CursorAdapter {
         else {
         	imageViewHistory.setImageResource(R.drawable.ddg_source_icon);
         }
+        
+        // query use button
+        Button buttonHistory = (Button) view.findViewById(R.id.recentSearchPaste);
+        
+        // only for a recent search
+        if(type.equals("R")) {
+        	buttonHistory.setVisibility(View.VISIBLE);
+	        buttonHistory.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if(parentActivity instanceof DuckDuckGo) {
+						// prepare searchbar with given data and wait for user action
+						((DuckDuckGo) parentActivity).preSearch(data);
+					}
+				}
+			});
+        }
+        else {
+        	buttonHistory.setVisibility(View.GONE);
+        	buttonHistory.setOnClickListener(null);
+        }
+
     }
 }

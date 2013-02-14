@@ -64,6 +64,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -313,7 +314,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 //            		R.layout.recentsearch_list_layout, R.id.recentSearchText, 
 //            		mDuckDuckGoContainer.recentSearchList);
     		
-    		mDuckDuckGoContainer.recentSearchAdapter = new HistoryCursorAdapter(DuckDuckGo.this, DDGApplication.getDB().getCursorHistory());
+    		mDuckDuckGoContainer.recentSearchAdapter = new HistoryCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorHistory());
     		
     		SourceClickListener sourceClickListener = new SourceClickListener();			
     		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
@@ -2151,5 +2152,15 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     			leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
     		}
     	}
+	}
+	
+	/**
+	 * set searchbar text, close left-menu (if open), show keyboard and focus on searchbar
+	 * pre-search actions combined
+	 */
+	public void preSearch(String query) {
+		setSearchBarText(query);
+		showKeyboard(searchField);
+		viewPager.setCurrentItem(1);
 	}
 }

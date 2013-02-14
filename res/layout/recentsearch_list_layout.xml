@@ -30,7 +30,19 @@
     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
 	    style="@style/RecentItemText"
 	    android:id="@+id/recentSearchText" 
+	    android:layout_weight="1"
 	    android:text="This is test Text" />
+    
+    <Button
+     android:layout_height="match_parent"
+     android:layout_width="20dp"
+     android:focusable="false"
+     android:visibility="gone"
+     android:background="@android:color/transparent"
+     android:textColor="@android:color/white"
+     android:text="+"
+     android:gravity="center"
+     android:id="@+id/recentSearchPaste" />
     
     </LinearLayout>
     
