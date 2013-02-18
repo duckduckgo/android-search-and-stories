@@ -50,7 +50,7 @@ public class Tab2Fragment extends Fragment {
 		
 		if(activity instanceof DuckDuckGo) {	
 			
-			savedFeedAdapter = new SavedFeedCursorAdapter(activity, activity, DDGApplication.getDB().getCursorFeed());
+			savedFeedAdapter = new SavedFeedCursorAdapter(activity, activity, DDGApplication.getDB().getCursorStoryFeed());
 			
     		savedFeedView = (MainFeedListView) fragmentLayout.findViewById(R.id.savedFeedItems);
     		savedFeedView.setAdapter(savedFeedAdapter);

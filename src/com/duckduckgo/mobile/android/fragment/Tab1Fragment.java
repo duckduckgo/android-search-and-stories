@@ -4,7 +4,9 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.objects.HistoryObject;
+import com.duckduckgo.mobile.android.objects.SavedResultObject;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemSelectedListener;
 
@@ -23,7 +25,7 @@ import android.widget.LinearLayout;
  */
 public class Tab1Fragment extends Fragment {
 	RecentSearchListView savedSearchView = null;
-	HistoryCursorAdapter savedSearchAdapter = null;
+	SavedResultCursorAdapter savedSearchAdapter = null;
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
@@ -48,19 +50,21 @@ public class Tab1Fragment extends Fragment {
 		
 		if(activity instanceof DuckDuckGo) {	
 			
-//    		savedSearchAdapter = new HistoryCursorAdapter(activity, activity, DDGApplication.getDB().getCursorHistory());
+    		savedSearchAdapter = new SavedResultCursorAdapter(activity, activity, DDGApplication.getDB().getCursorResultFeed());
 			
 			savedSearchView = (RecentSearchListView) fragmentLayout.findViewById(R.id.savedSearchItems);
-//			savedSearchView.setAdapter(savedSearchAdapter);
-			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.recentSearchAdapter);
+			savedSearchView.setAdapter(savedSearchAdapter);
 			savedSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 				
 				public void onHistoryItemSelected(HistoryObject historyObject) {
 					if(historyObject != null){	
-						if(historyObject.getType().equals("R"))
-							((DuckDuckGo) activity).searchWebTerm(historyObject.getData());
-						else if(historyObject.getType().equals("W")) 
-							((DuckDuckGo) activity).showWebUrl(historyObject.getUrl());
+						((DuckDuckGo) activity).showWebUrl(historyObject.getUrl());
+					}			
+				}
+				
+				public void onSavedResultSelected(SavedResultObject savedResultObject) {
+					if(savedResultObject != null){	
+						((DuckDuckGo) activity).showWebUrl(savedResultObject.getUrl());
 					}			
 				}
 			});

@@ -99,6 +99,7 @@ import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.HistoryObject;
+import com.duckduckgo.mobile.android.objects.SavedResultObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
@@ -577,6 +578,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						showWebUrl(historyObject.getUrl());
 				}				
 			}
+			
+			public void onSavedResultSelected(SavedResultObject savedResultObject) {
+				if(savedResultObject != null){	
+					showWebUrl(savedResultObject.getUrl());
+				}			
+			}
 		});
         
         homeSettingsButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
@@ -689,6 +696,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						searchWebTerm(historyObject.getData());
 					else if(historyObject.getType().equals("W")) 
 						showWebUrl(historyObject.getUrl());
+				}			
+			}
+			
+			public void onSavedResultSelected(SavedResultObject savedResultObject) {
+				if(savedResultObject != null){	
+					showWebUrl(savedResultObject.getUrl());
 				}			
 			}
 		});

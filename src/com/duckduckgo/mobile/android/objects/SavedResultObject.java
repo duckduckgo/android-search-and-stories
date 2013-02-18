@@ -2,13 +2,13 @@ package com.duckduckgo.mobile.android.objects;
 
 import android.database.Cursor;
 
-public class HistoryObject {
+public class SavedResultObject {
 	private final String type;
 	private final String data;
 	private final String url;
 	private final String extraType;
 
-	public HistoryObject() {
+	public SavedResultObject() {
 		// no-arg constructor for ORMlite
 		this.type = "";
 		this.data = "";
@@ -16,32 +16,32 @@ public class HistoryObject {
 		this.extraType = "";
 	}
 	
-	public HistoryObject(String type, String data, String url, String extraType) {
+	public SavedResultObject(String type, String data, String url, String extraType) {
 		this.type = type;
 		this.data = data;
 		this.url = url;
 		this.extraType = extraType;
 	}
 	
-	public HistoryObject(String type, String data, String url) {
+	public SavedResultObject(String type, String data, String url) {
 		this.type = type;
 		this.data = data;
 		this.url = url;
 		this.extraType = "";
 	}
 	
-	public HistoryObject(String type, String data) {
+	public SavedResultObject(String type, String data) {
 		this.type = type;
 		this.data = data;
 		this.url = "";
 		this.extraType = "";
 	}
 	
-	public HistoryObject(Cursor c) {
-		this.type = c.getString(c.getColumnIndex("type"));
-		this.data = c.getString(c.getColumnIndex("data"));
+	public SavedResultObject(Cursor c) {
+		this.type = "";
+		this.data = c.getString(c.getColumnIndex("title"));
 		this.url = c.getString(c.getColumnIndex("url"));
-		this.extraType = c.getString(c.getColumnIndex("extraType"));
+		this.extraType = c.getString(c.getColumnIndex("type"));
 	}
 	
 	@Override

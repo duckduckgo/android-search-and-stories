@@ -273,8 +273,12 @@ public class DdgDB {
 		return this.db.query(HISTORY_TABLE, null, null, null , null, null, null);
 	}
 	
-	public Cursor getCursorFeed() {
-		return this.db.query(FEED_TABLE, null, null, null , null, null, null);
+	public Cursor getCursorResultFeed() {
+		return this.db.query(FEED_TABLE, null, "feed=''", null , null, null, null);
+	}
+	
+	public Cursor getCursorStoryFeed() {
+		return this.db.query(FEED_TABLE, null, "NOT feed=''", null , null, null, null);
 	}
 
 	
