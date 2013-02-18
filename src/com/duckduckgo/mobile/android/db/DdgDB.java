@@ -17,7 +17,7 @@ import com.duckduckgo.mobile.android.util.AppShortInfo;
 public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 6;
+	private static final int DATABASE_VERSION = 7;
 	private static final String FEED_TABLE = "feed";
 	private static final String APP_TABLE = "apps";
 	private static final String HISTORY_TABLE = "history";
@@ -26,8 +26,8 @@ public class DdgDB {
 	private SQLiteDatabase db;
 
 	private SQLiteStatement insertStmt, insertStmtApp;
-	// private static final String INSERT = "insert or ignore into " + FEED_TABLE + " (id,title,description,feed,url,imageurl,favicon,timestamp,category,type) values (?,?,?,?,?,?,?,?,?,?)";
-	private static final String INSERT = "insert or replace into " + FEED_TABLE + " (id,title,description,feed,url,imageurl,favicon,timestamp,category,type) values (?,?,?,?,?,?,?,?,?,?)";
+	// private static final String INSERT = "insert or ignore into " + FEED_TABLE + " (_id,title,description,feed,url,imageurl,favicon,timestamp,category,type) values (?,?,?,?,?,?,?,?,?,?)";
+	private static final String INSERT = "insert or replace into " + FEED_TABLE + " (_id,title,description,feed,url,imageurl,favicon,timestamp,category,type) values (?,?,?,?,?,?,?,?,?,?)";
 	
 	private static final String APP_INSERT = "insert or replace into " + APP_TABLE + " (title,package) values (?,?)";
 	
@@ -132,7 +132,7 @@ public class DdgDB {
 	}
 	
 	public int deleteById(String id) {
-	      return this.db.delete(FEED_TABLE, "id=?", new String[]{id});
+	      return this.db.delete(FEED_TABLE, "_id=?", new String[]{id});
 	}
 	
 	public void deleteByUrl(String url) {
@@ -181,7 +181,7 @@ public class DdgDB {
 	}
 	
 	public FeedObject selectById(String id){
-		Cursor c = this.db.query(FEED_TABLE, null, "id=?", new String[]{id} , null, null, null);
+		Cursor c = this.db.query(FEED_TABLE, null, "_id=?", new String[]{id} , null, null, null);
 		if(c.moveToFirst()) {
 			return getFeedObject(c);
 		}
@@ -189,7 +189,7 @@ public class DdgDB {
 	}
 	
 	public FeedObject selectByIdType(String id, String type){
-		Cursor c = this.db.query(FEED_TABLE, null, "id=? AND type = ?", new String[]{id,type} , null, null, null);
+		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND type = ?", new String[]{id,type} , null, null, null);
 		if(c.moveToFirst()) {
 			return getFeedObject(c);
 		}
@@ -272,6 +272,10 @@ public class DdgDB {
 	public Cursor getCursorHistory() {
 		return this.db.query(HISTORY_TABLE, null, null, null , null, null, null);
 	}
+	
+	public Cursor getCursorFeed() {
+		return this.db.query(FEED_TABLE, null, null, null , null, null, null);
+	}
 
 	
 	
@@ -285,7 +289,7 @@ public class DdgDB {
 		  	public void onCreate(SQLiteDatabase db) {
 		  			  
 		  			  db.execSQL("CREATE TABLE " + FEED_TABLE + "(" 
-		  			    +"id VARCHAR(300) UNIQUE, "
+		  			    +"_id VARCHAR(300) UNIQUE, "
 		  			    +"title VARCHAR(300), "
 		  			    +"description VARCHAR(300), "
 		  			    +"feed VARCHAR(300), "
@@ -298,8 +302,8 @@ public class DdgDB {
 		  			    +")"
 		  			    );
 		  			  
-		  			  db.execSQL("CREATE INDEX idx_id ON " + FEED_TABLE + " (id) ");
-		  			  db.execSQL("CREATE INDEX idx_idtype ON " + FEED_TABLE + " (id, type) ");
+		  			  db.execSQL("CREATE INDEX idx_id ON " + FEED_TABLE + " (_id) ");
+		  			  db.execSQL("CREATE INDEX idx_idtype ON " + FEED_TABLE + " (_id, type) ");
 		  			  
 		  			db.execSQL("CREATE VIRTUAL TABLE " + APP_TABLE + " USING FTS3 (" 
 			  			    +"title VARCHAR(300), "

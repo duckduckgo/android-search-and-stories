@@ -71,6 +71,8 @@
         				 android:layout_height="match_parent" />
             
             </LinearLayout>      
+            
+        <include android:id="@android:id/tabhost" layout="@layout/tabbed" />
         
     </ViewFlipper>
 

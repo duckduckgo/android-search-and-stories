@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.views;
 
 import android.content.Context;
+import android.database.sqlite.SQLiteCursor;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
@@ -41,7 +42,14 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		FeedObject obj = (FeedObject) getAdapter().getItem(position);
+		Object item = getAdapter().getItem(position);
+		FeedObject obj = null;
+		if(item instanceof FeedObject) {
+			obj = (FeedObject) item;
+		}
+		else if(item instanceof SQLiteCursor) {
+			obj = new FeedObject(((SQLiteCursor) item));
+		}
 		
 		if (obj != null) {
 			if (listener != null) {
@@ -51,7 +59,14 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 	}
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-		FeedObject obj = (FeedObject) getAdapter().getItem(position);
+		Object item = getAdapter().getItem(position);
+		FeedObject obj = null;
+		if(item instanceof FeedObject) {
+			obj = (FeedObject) item;
+		}
+		else if(item instanceof SQLiteCursor) {
+			obj = new FeedObject(((SQLiteCursor) item));
+		}
 
 		if (obj != null) {
 			if (longClickListener != null) {

@@ -124,5 +124,8 @@
     
     <string name="OnlyOnPhone">Only on phone</string>
     <string name="SelectAppToSend">Select application to send</string>
+    
+    <string name="SavedResults">Saved Results</string>
+    <string name="SavedStories">Saved Stories</string>
 
 </resources>

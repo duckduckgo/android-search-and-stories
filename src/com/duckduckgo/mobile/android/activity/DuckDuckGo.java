@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -35,6 +36,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
@@ -70,7 +74,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.SeekBar;
+import android.widget.TabHost;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -86,6 +92,8 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
+import com.duckduckgo.mobile.android.fragment.Tab1Fragment;
+import com.duckduckgo.mobile.android.fragment.Tab2Fragment;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
@@ -115,12 +123,13 @@ import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
+import android.support.v4.app.FragmentTabHost;
 
-public class DuckDuckGo extends Activity implements OnEditorActionListener, FeedListener, OnClickListener {
+public class DuckDuckGo extends FragmentActivity implements OnEditorActionListener, FeedListener, OnClickListener {
 
 	protected final String TAG = "DuckDuckGo";
 	
-	DuckDuckGoContainer mDuckDuckGoContainer;
+	public DuckDuckGoContainer mDuckDuckGoContainer;
 	
 	// keeps default User-Agent for WebView
 	private String mWebViewDefaultUA = null;
@@ -194,6 +203,31 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 	
 	AlertDialog.Builder cacheDialogBuilder;
 	
+	private FragmentTabHost savedTabHost = null;
+	
+	class TabFactory implements TabContentFactory {
+
+		private final Context mContext;
+
+	    /**
+	     * @param context
+	     */
+	    public TabFactory(Context context) {
+	        mContext = context;
+	    }
+
+	    /** (non-Javadoc)
+	     * @see android.widget.TabHost.TabContentFactory#createTabContent(java.lang.String)
+	     */
+	    public View createTabContent(String tag) {
+	        View v = new View(mContext);
+	        v.setMinimumWidth(0);
+	        v.setMinimumHeight(0);
+	        return v;
+	    }
+
+	}
+	
 	class SourceClickListener implements OnClickListener {
 		public void onClick(View v) {
 			// source filtering
@@ -222,6 +256,74 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 			
 		}
 	}
+	
+	public OnMainFeedItemSelectedListener mFeedItemSelectedListener = new OnMainFeedItemSelectedListener() {
+		public void onMainFeedItemSelected(FeedObject feedObject) {
+			// close left nav if it's open
+			if(viewPager.isLeftMenuOpen()){
+				viewPager.setCurrentItem(1);
+			}
+			
+			// keep a reference, so that we can reuse details while saving
+			currentFeedObject = feedObject;
+			isFeedObject = true;
+			
+			String url = feedObject.getUrl();
+			if (url != null) {
+				DDGApplication.getDB().insertFeedItem(feedObject.getTitle(), feedObject.getUrl(), feedObject.getType());
+				mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+				
+				searchOrGoToUrl(url);
+			}
+			
+			// record article as read
+			String feedId = feedObject.getId();
+			if(feedId != null){
+				DDGControlVar.readArticles.add(feedId);
+				mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
+			}
+		}
+    };
+    
+    public OnMainFeedItemLongClickListener mFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
+		public void onMainFeedItemLongClick(FeedObject feedObject) {
+			final String pageTitle = feedObject.getTitle();
+			final String pageUrl = feedObject.getUrl();
+			final FeedObject fObject = feedObject;
+			
+			// FIXME unify this code as one, extend DialogInterface.OnClickListener
+			// to initialize with pageTitle, pageUrl and feedObject
+			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
+			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
+			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					Item it = ((Item) contextAdapter.getItem(item));
+					if(it.type == Item.ItemType.SHARE) {
+						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+					}
+					else if(it.type == Item.ItemType.SAVE) {
+						DDGApplication.getDB().insert(fObject);
+					}
+					else if(it.type == Item.ItemType.UNSAVE) {
+						final int delResult = DDGApplication.getDB().deleteById(fObject.getId());
+						if(delResult != 0) {
+							mDuckDuckGoContainer.feedAdapter.remove(fObject);
+							mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+						}							
+					}
+					else if(it.type == Item.ItemType.EXTERNAL) {
+    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
+    	            	startActivity(browserIntent);
+					}
+					else if(it.type == Item.ItemType.REFRESH) {
+						reloadAction(); 
+					}
+				}
+			});
+			ab.show();
+		}
+    };
 				
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -294,7 +396,7 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 
         shareDialogItems = (Item []) dialogItems.toArray(new Item[dialogItems.size()]);
         
-		mDuckDuckGoContainer = (DuckDuckGoContainer) getLastNonConfigurationInstance();
+		mDuckDuckGoContainer = (DuckDuckGoContainer) getLastCustomNonConfigurationInstance();
     	if(mDuckDuckGoContainer == null){
     		mDuckDuckGoContainer = new DuckDuckGoContainer();
     		
@@ -334,10 +436,17 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         viewPager.setCurrentItem(1);
         
         leftMenuView = mDuckDuckGoContainer.pageAdapter.getPageView(0);
-        contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);
+        contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);    
+        
+		// XXX Step 2: Setup TabHost
+		initialiseTabHost(savedInstanceState);
+		if (savedInstanceState != null) {
+            savedTabHost.setCurrentTabByTag(savedInstanceState.getString("simple")); //set the tab as per the saved state
+		}
         
         viewFlipper = (ViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
-        viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
+        // viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
+        viewFlipper.setDisplayedChild(4);       
         
     	    	
 		contextAdapter = new ArrayAdapter<Item>(
@@ -444,6 +553,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftSettingsTextView.setOnClickListener(this);
     	
     	leftRecentView = (RecentSearchListView) leftMenuView.findViewById(R.id.LeftRecentView);
+    	
+    	// XXX Setup tabbed saved view
     	
     	listContent = new ArrayList<String>();
     	for(String s : getResources().getStringArray(R.array.leftMenuDefault)) {
@@ -612,72 +723,8 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
         // context and LayoutParams for this cache task (to instantiate AsyncImageViews) will be set in feedView
         feedView.setAfterRenderTask(cachePrevNextHeadTask);
-        feedView.setOnMainFeedItemSelectedListener(new OnMainFeedItemSelectedListener() {
-			public void onMainFeedItemSelected(FeedObject feedObject) {
-				// close left nav if it's open
-				if(viewPager.isLeftMenuOpen()){
-					viewPager.setCurrentItem(1);
-				}
-				
-				// keep a reference, so that we can reuse details while saving
-				currentFeedObject = feedObject;
-				isFeedObject = true;
-				
-				String url = feedObject.getUrl();
-				if (url != null) {
-					DDGApplication.getDB().insertFeedItem(feedObject.getTitle(), feedObject.getUrl(), feedObject.getType());
-					mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
-					mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
-					
-					searchOrGoToUrl(url);
-				}
-				
-				// record article as read
-				String feedId = feedObject.getId();
-				if(feedId != null){
-					DDGControlVar.readArticles.add(feedId);
-					mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
-				}
-			}
-        });
-        feedView.setOnMainFeedItemLongClickListener(new OnMainFeedItemLongClickListener() {
-			public void onMainFeedItemLongClick(FeedObject feedObject) {
-				final String pageTitle = feedObject.getTitle();
-				final String pageUrl = feedObject.getUrl();
-				final FeedObject fObject = feedObject;
-				
-				// FIXME unify this code as one, extend DialogInterface.OnClickListener
-				// to initialize with pageTitle, pageUrl and feedObject
-				AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-				ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
-				ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int item) {
-						Item it = ((Item) contextAdapter.getItem(item));
-						if(it.type == Item.ItemType.SHARE) {
-							DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
-						}
-						else if(it.type == Item.ItemType.SAVE) {
-							DDGApplication.getDB().insert(fObject);
-						}
-						else if(it.type == Item.ItemType.UNSAVE) {
-							final int delResult = DDGApplication.getDB().deleteById(fObject.getId());
-							if(delResult != 0) {
-								mDuckDuckGoContainer.feedAdapter.remove(fObject);
-								mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
-							}							
-						}
-						else if(it.type == Item.ItemType.EXTERNAL) {
-	    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
-	    	            	startActivity(browserIntent);
-						}
-						else if(it.type == Item.ItemType.REFRESH) {
-							reloadAction(); 
-						}
-					}
-				});
-				ab.show();
-			}
-        });
+        feedView.setOnMainFeedItemSelectedListener(mFeedItemSelectedListener);
+        feedView.setOnMainFeedItemLongClickListener(mFeedItemLongClickListener);
         feedView.setOnScrollListener(new OnScrollListener() {
 			
         	int firstVisibleItem;
@@ -1748,10 +1795,13 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
     	leftSavedButtonLayout.setVisibility(View.GONE);
     	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
 		
-		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SAVED_FEED;
-		DDGControlVar.hasUpdatedFeed = false;
-		
-		displayFeedCore();
+//		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SAVED_FEED;
+//		DDGControlVar.hasUpdatedFeed = false;
+//		
+//		displayFeedCore();
+    	
+    	viewFlipper.setDisplayedChild(4);
+    	
 		clearLeftSelect();
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
@@ -1928,11 +1978,11 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		}
 	}
 	
-    @Override
-    public Object onRetainNonConfigurationInstance() {
-    	// return page container, holding all non-view data
-    	return mDuckDuckGoContainer;
-    }
+	@Override
+	public Object onRetainCustomNonConfigurationInstance() {
+	       // return page container, holding all non-view data
+	       return mDuckDuckGoContainer;
+	}
     
 	@Override
 	protected void onSaveInstanceState(Bundle outState)
@@ -2163,4 +2213,20 @@ public class DuckDuckGo extends Activity implements OnEditorActionListener, Feed
 		showKeyboard(searchField);
 		viewPager.setCurrentItem(1);
 	}
+
+	
+	/**
+	 * Step 2: Setup TabHost
+	 */
+	private void initialiseTabHost(Bundle args) {
+		savedTabHost = (FragmentTabHost) contentView.findViewById(android.R.id.tabhost);
+		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+        
+		savedTabHost.addTab(savedTabHost.newTabSpec("savedresults").setIndicator(getResources().getString(R.string.SavedResults)),
+                Tab1Fragment.class, null);
+		savedTabHost.addTab(savedTabHost.newTabSpec("savedstories").setIndicator(getResources().getString(R.string.SavedStories)),
+				Tab2Fragment.class, null);
+
+	}
+
 }

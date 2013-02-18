@@ -3,6 +3,8 @@ package com.duckduckgo.mobile.android.objects;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.database.sqlite.SQLiteCursor;
+
 public class FeedObject {
 	private final String feed;
 	private final String favicon;
@@ -85,6 +87,19 @@ public class FeedObject {
 		this.category = obj.getString("category");
 		this.imageUrl = obj.optString("image");
 		this.type = obj.getString("type");
+	}
+	
+	public FeedObject(SQLiteCursor cursor) {
+		this.id = cursor.getString(cursor.getColumnIndex("_id"));
+		this.title = cursor.getString(cursor.getColumnIndex("title"));
+		this.description = cursor.getString(cursor.getColumnIndex("description"));
+		this.feed = cursor.getString(cursor.getColumnIndex("feed"));
+		this.url = cursor.getString(cursor.getColumnIndex("url"));
+		this.imageUrl = cursor.getString(cursor.getColumnIndex("imageurl"));
+		this.favicon = cursor.getString(cursor.getColumnIndex("favicon"));
+		this.timestamp = cursor.getString(cursor.getColumnIndex("timestamp"));
+		this.category = cursor.getString(cursor.getColumnIndex("category"));
+		this.type = cursor.getString(cursor.getColumnIndex("type"));
 	}
 	
 	@Override
