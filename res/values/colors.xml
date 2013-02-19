@@ -14,4 +14,9 @@
     <color name="left_text_light">#4a5056</color>
     <color name="left_text_dark">#afb9cc</color>       
     <color name="left_secondary_text">#9c9fa6</color>
+    
+    <color name="left_bg_light2">#e2e1e6</color>
+    
+    <color name="tab_text_inactive">#9fa4aa</color>
+    <color name="tab_text_active">#6f7075</color>
 </resources>

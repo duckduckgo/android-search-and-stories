@@ -8,10 +8,25 @@
     <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">
         <item name="android:popupBackground">@drawable/new_spinner_dropdown_background</item>
     </style>
+	
+	<style name="DDGTabText">
+	    <item name="android:textSize">24sp</item>
+	    <item name="android:textStyle">normal</item>
+<!-- 	    <item name="android:textColor">@android:color/tab_indicator_text</item> -->
+	    <item name="android:textColor">?attr/tabTextSelector</item>
+	</style>  
+	
+	<style name="DDGTabWidget" parent="@android:style/Widget.TabWidget">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAppearance">@style/DDGTabText</item>
+        <item name="android:gravity">center</item>
+	</style>
 
     
     <style name="DDGLight" parent="android:Theme.NoTitleBar">
         <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
+        <item name="android:tabWidgetStyle">@style/DDGTabWidget</item> 
         
         <item name="leftLayoutRootBackground">@color/left_bg_light</item>
         <item name="leftDivTopBackground">@drawable/div_top_light</item>
@@ -35,10 +50,14 @@
         
         <item name="ptrDrawable">@drawable/refresh_arrow_light</item>
         <item name="ptrDivider">@drawable/refresh_dotted_line_light</item>
+        
+        <item name="tabIndicator">@drawable/tab_indicator_light</item>
+         <item name="tabTextSelector">@color/tab_text_selector</item>        
     </style>
     
     <style name="DDGDark" parent="android:Theme.NoTitleBar">
         <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
+        <item name="android:tabWidgetStyle">@style/DDGTabWidget</item> 
         
         <item name="leftLayoutRootBackground">@drawable/left_bg_dark</item>
         <item name="leftDivTopBackground">@drawable/div_top_dark</item>
@@ -62,6 +81,9 @@
         
         <item name="ptrDrawable">@drawable/refresh_arrow_dark</item>
         <item name="ptrDivider">@drawable/refresh_dotted_line_dark</item>
+        
+        <item name="tabIndicator">@drawable/tab_indicator_dark</item>        
+        <item name="tabTextSelector">@android:color/tab_indicator_text</item>
     </style>
     
 </resources>

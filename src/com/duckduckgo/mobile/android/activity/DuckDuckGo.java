@@ -77,6 +77,7 @@ import android.widget.SeekBar;
 import android.widget.TabHost;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TabHost.TabContentFactory;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -2239,7 +2240,17 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
                 Tab1Fragment.class, null);
 		savedTabHost.addTab(savedTabHost.newTabSpec("savedstories").setIndicator(getResources().getString(R.string.SavedStories)),
 				Tab2Fragment.class, null);
-
+		
+		initialiseTabColors(savedTabHost.getTabWidget());
+	}
+	
+	private void initialiseTabColors(TabWidget tab) {
+		 TypedValue typedValue = new TypedValue(); 
+		 getTheme().resolveAttribute(R.attr.tabIndicator, typedValue, true);
+		
+		for(int i=0;i<tab.getChildCount();i++) {
+			tab.getChildAt(i).setBackgroundResource(typedValue.resourceId);
+		}
 	}
 
 }
