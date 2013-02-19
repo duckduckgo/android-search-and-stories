@@ -7,12 +7,10 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.FragmentManager;
@@ -36,16 +34,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentTabHost;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -53,7 +49,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
@@ -70,16 +65,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.SeekBar;
-import android.widget.TabHost;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TabHost.TabContentFactory;
-import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -88,7 +80,6 @@ import android.widget.ViewFlipper;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
-import com.duckduckgo.mobile.android.adapters.CustomArrayAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
@@ -119,15 +110,14 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.DDGWebView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
-import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemSelectedListener;
-import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
+import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemSelectedListener;
+import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
-import android.support.v4.app.FragmentTabHost;
 
 public class DuckDuckGo extends FragmentActivity implements OnEditorActionListener, FeedListener, OnClickListener {
 
@@ -2237,36 +2227,22 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private void initialiseTabHost(Bundle args) {
 		savedTabHost = (FragmentTabHost) contentView.findViewById(android.R.id.tabhost);
 		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-        
-		savedTabHost.addTab(savedTabHost.newTabSpec("savedresults").setIndicator(getResources().getString(R.string.SavedResults)),
-                Tab1Fragment.class, null);
-		savedTabHost.addTab(savedTabHost.newTabSpec("savedstories").setIndicator(getResources().getString(R.string.SavedStories)),
-				Tab2Fragment.class, null);
-		
-		initialiseTabColors(savedTabHost.getTabWidget());
+		        
+		addTab(savedTabHost, getResources().getString(R.string.SavedResults), Tab1Fragment.class);
+		addTab(savedTabHost, getResources().getString(R.string.SavedStories), Tab2Fragment.class);
 	}
 	
-	private void initialiseTabColors(TabWidget tab) {
-		 TypedValue typedValue = new TypedValue(); 
-		 getTheme().resolveAttribute(R.attr.tabIndicator, typedValue, true);
-		
-		for(int i=0;i<tab.getChildCount();i++) {
-			View tabView = tab.getChildAt(i);
-			tabView.setBackgroundResource(typedValue.resourceId);
-			
-		//  get title text view
-	        final View textView = tabView.findViewById(android.R.id.title);
-	        if ( textView instanceof TextView ) {
-	            // just in case check the type
+	private void addTab(FragmentTabHost tabHost, String label, Class<?> intentClass) {
+		Intent intent = new Intent(this, intentClass);
+		FragmentTabHost.TabSpec spec = (FragmentTabHost.TabSpec) tabHost.newTabSpec(label);
 
-	            // center text
-	            ((TextView) textView).setGravity(Gravity.CENTER);
+		View tabIndicator = LayoutInflater.from(this).inflate(R.layout.tab_indicator, tabHost.getTabWidget(), false);
+		TextView title = (TextView) tabIndicator.findViewById(R.id.title);
+		title.setText(label);
 
-	            // explicitly set layout parameters
-	            textView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-	            textView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
-	        }
-		}
+		spec.setIndicator(tabIndicator);
+		spec.setContent(intent);
+		tabHost.addTab(spec, intentClass, null);
 	}
 
 }
