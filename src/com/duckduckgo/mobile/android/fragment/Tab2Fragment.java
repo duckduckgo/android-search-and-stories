@@ -60,7 +60,7 @@ public class Tab2Fragment extends Fragment {
 //					if(historyObject != null){	
 //						if(historyObject.getType().equals("R"))
 //							((DuckDuckGo) activity).searchWebTerm(historyObject.getData());
-//						else if(historyObject.getType().equals("W")) 
+//						else if(historyObject.getType().equals("F")) 
 //							((DuckDuckGo) activity).showWebUrl(historyObject.getUrl());
 //					}			
 //				}

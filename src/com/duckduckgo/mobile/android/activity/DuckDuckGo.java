@@ -565,10 +565,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				viewPager.switchPage();
 				
 				if(historyObject != null){	
-					if(historyObject.getType().equals("R"))
-						searchWebTerm(historyObject.getData());
-					else if(historyObject.getType().equals("W")) 
-						showWebUrl(historyObject.getUrl());
+					showHistoryObject(historyObject);
 				}				
 			}
 			
@@ -687,7 +684,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				if(historyObject != null){	
 					if(historyObject.getType().equals("R"))
 						searchWebTerm(historyObject.getData());
-					else if(historyObject.getType().equals("W")) 
+					else if(historyObject.getType().equals("F")) 
 						showWebUrl(historyObject.getUrl());
 				}			
 			}
@@ -1548,6 +1545,18 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void clearRecentSearch() {
 		mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
 		mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+	}
+	
+	public void showHistoryObject(HistoryObject object) {
+		if(object.getType().equals("R")) {
+			searchWebTerm(object.getData());
+		}
+		else if(object.getType().equals("F")){
+			DDGApplication.getDB().insertFeedItem(object);
+			mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+			mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+			showWebUrl(object.getUrl());
+		}		
 	}
 	
 	public void showWebUrl(String url) {

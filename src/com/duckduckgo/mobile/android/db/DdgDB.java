@@ -17,7 +17,7 @@ import com.duckduckgo.mobile.android.util.AppShortInfo;
 public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 7;
+	private static final int DATABASE_VERSION = 8;
 	private static final String FEED_TABLE = "feed";
 	private static final String APP_TABLE = "apps";
 	private static final String HISTORY_TABLE = "history";
@@ -105,14 +105,18 @@ public class DdgDB {
 		return this.db.insert(HISTORY_TABLE, null, contentValues);
 	}
 	
+	public long insertFeedItem(HistoryObject object) {
+		return insertFeedItem(object.getData(), object.getUrl(), object.getExtraType());
+	}
+	
 	public long insertFeedItem(String title, String url, String extraType) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put("type", "W");
+        contentValues.put("type", "F");
         contentValues.put("data", title);
         contentValues.put("url", url);
         contentValues.put("extraType", extraType);
         // delete old record if exists
-     	this.db.delete(HISTORY_TABLE, "type='W' AND data=? AND url=?", new String[]{title, url});
+     	this.db.delete(HISTORY_TABLE, "type='F' AND data=? AND url=?", new String[]{title, url});
         long res = this.db.insertOrThrow(HISTORY_TABLE, null, contentValues);        
         return res;
 	}
@@ -274,7 +278,7 @@ public class DdgDB {
 	}
 	
 	public Cursor getCursorHistory() {
-		return this.db.query(HISTORY_TABLE, null, null, null , null, null, null);
+		return this.db.query(HISTORY_TABLE, null, null, null , null, null, "_id DESC");
 	}
 	
 	public Cursor getCursorResultFeed() {
