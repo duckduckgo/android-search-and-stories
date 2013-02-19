@@ -35,11 +35,11 @@
     
     <Button
      android:layout_height="match_parent"
-     android:layout_width="20dp"
+     android:layout_width="30dp"
      android:focusable="false"
      android:visibility="gone"
      android:background="@android:color/transparent"
-     android:textColor="@android:color/white"
+     style="@style/RecentItemText"
      android:text="+"
      android:gravity="center"
      android:id="@+id/recentSearchPaste" />

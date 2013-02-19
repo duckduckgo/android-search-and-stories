@@ -33,7 +33,7 @@ public class DdgDB {
 	
 	// if type = recent search, data = query.  if type = web page / feed item, data = title, url is target
 	// extraType is for feed source
-	private static final String HISTORY_INSERT = "insert or replace into " + HISTORY_TABLE + " (type, data, url, extraType) values (?,?,?,?)";
+//	private static final String HISTORY_INSERT = "insert or replace into " + HISTORY_TABLE + " (type, data, url, extraType) values (?,?,?,?)";
 
 	
 	public DdgDB(Context context) {
