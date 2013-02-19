@@ -45,6 +45,7 @@ import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -52,6 +53,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
@@ -2249,7 +2251,21 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		 getTheme().resolveAttribute(R.attr.tabIndicator, typedValue, true);
 		
 		for(int i=0;i<tab.getChildCount();i++) {
-			tab.getChildAt(i).setBackgroundResource(typedValue.resourceId);
+			View tabView = tab.getChildAt(i);
+			tabView.setBackgroundResource(typedValue.resourceId);
+			
+		//  get title text view
+	        final View textView = tabView.findViewById(android.R.id.title);
+	        if ( textView instanceof TextView ) {
+	            // just in case check the type
+
+	            // center text
+	            ((TextView) textView).setGravity(Gravity.CENTER);
+
+	            // explicitly set layout parameters
+	            textView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+	            textView.getLayoutParams().width = ViewGroup.LayoutParams.WRAP_CONTENT;
+	        }
 		}
 	}
 

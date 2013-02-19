@@ -129,14 +129,4 @@
         <item name="android:textSize">12sp</item>
     </style>
     
-    <style name="CustomTabPageIndicator">
-<!--     <item name="android:textColor">#FF000000</item> -->
-<!--     <item name="android:paddingTop">6dp</item> -->
-<!--     <item name="android:paddingBottom">6dp</item> -->
-<!--     <item name="android:paddingLeft">16dip</item> -->
-<!--     <item name="android:paddingRight">16dip</item> -->
-<!--     <item name="android:maxLines">2</item> -->
-		<item name="android:background">?attr/tabIndicator</item>
-	</style>
-    
 </resources>

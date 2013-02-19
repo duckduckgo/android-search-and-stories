@@ -12,7 +12,6 @@
 	<style name="DDGTabText">
 	    <item name="android:textSize">24sp</item>
 	    <item name="android:textStyle">normal</item>
-<!-- 	    <item name="android:textColor">@android:color/tab_indicator_text</item> -->
 	    <item name="android:textColor">?attr/tabTextSelector</item>
 	</style>  
 	
@@ -20,7 +19,6 @@
         <item name="android:ellipsize">marquee</item>
         <item name="android:singleLine">true</item>
         <item name="android:textAppearance">@style/DDGTabText</item>
-        <item name="android:gravity">center</item>
 	</style>
 
     
