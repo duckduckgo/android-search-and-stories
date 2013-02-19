@@ -86,8 +86,8 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
-import com.duckduckgo.mobile.android.fragment.Tab1Fragment;
-import com.duckduckgo.mobile.android.fragment.Tab2Fragment;
+import com.duckduckgo.mobile.android.fragment.SavedResultTabFragment;
+import com.duckduckgo.mobile.android.fragment.SavedFeedTabFragment;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
@@ -2237,8 +2237,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		savedTabHost = (FragmentTabHost) contentView.findViewById(android.R.id.tabhost);
 		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 		        
-		addTab(savedTabHost, getResources().getString(R.string.SavedResults), Tab1Fragment.class);
-		addTab(savedTabHost, getResources().getString(R.string.SavedStories), Tab2Fragment.class);
+		addTab(savedTabHost, getResources().getString(R.string.SavedResults), SavedResultTabFragment.class);
+		addTab(savedTabHost, getResources().getString(R.string.SavedStories), SavedFeedTabFragment.class);
 	}
 	
 	private void addTab(FragmentTabHost tabHost, String label, Class<?> intentClass) {

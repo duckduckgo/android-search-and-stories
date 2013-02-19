@@ -72,7 +72,7 @@
             
             </LinearLayout>      
             
-        <include android:id="@android:id/tabhost" layout="@layout/tabbed" />
+        <include android:id="@android:id/tabhost" layout="@layout/tab_saved_view" />
         
     </ViewFlipper>
 
