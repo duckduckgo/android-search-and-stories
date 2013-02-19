@@ -19,7 +19,6 @@ import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemSel
 
 public class SavedResultTabFragment extends Fragment {
 	RecentSearchListView savedSearchView = null;
-	SavedResultCursorAdapter savedSearchAdapter = null;
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
@@ -37,11 +36,9 @@ public class SavedResultTabFragment extends Fragment {
 		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
 		
 		if(activity instanceof DuckDuckGo) {	
-			
-    		savedSearchAdapter = new SavedResultCursorAdapter(activity, activity, DDGApplication.getDB().getCursorResultFeed());
-			
+						
 			savedSearchView = (RecentSearchListView) fragmentLayout.findViewById(R.id.savedSearchItems);
-			savedSearchView.setAdapter(savedSearchAdapter);
+			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedSearchAdapter);
 			savedSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 				
 				public void onHistoryItemSelected(HistoryObject historyObject) {
@@ -56,6 +53,7 @@ public class SavedResultTabFragment extends Fragment {
 					}			
 				}
 			});
+			
 		}
 		
 		return fragmentLayout;

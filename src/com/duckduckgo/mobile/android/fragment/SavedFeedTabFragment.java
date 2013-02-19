@@ -17,7 +17,6 @@ import com.duckduckgo.mobile.android.views.MainFeedListView;
 
 public class SavedFeedTabFragment extends Fragment {
 	MainFeedListView savedFeedView = null;
-	SavedFeedCursorAdapter savedFeedAdapter = null;
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
@@ -35,11 +34,9 @@ public class SavedFeedTabFragment extends Fragment {
 		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedfeed, container, false);
 		
 		if(activity instanceof DuckDuckGo) {	
-			
-			savedFeedAdapter = new SavedFeedCursorAdapter(activity, activity, DDGApplication.getDB().getCursorStoryFeed());
-			
+						
     		savedFeedView = (MainFeedListView) fragmentLayout.findViewById(R.id.savedFeedItems);
-    		savedFeedView.setAdapter(savedFeedAdapter);
+    		savedFeedView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedFeedAdapter);
 //    		savedFeedView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 //				
 //				public void onHistoryItemSelected(HistoryObject historyObject) {
@@ -54,6 +51,7 @@ public class SavedFeedTabFragment extends Fragment {
     		
     		savedFeedView.setOnMainFeedItemSelectedListener(((DuckDuckGo) activity).mFeedItemSelectedListener);
     		savedFeedView.setOnMainFeedItemLongClickListener(((DuckDuckGo) activity).mFeedItemLongClickListener);
+    		
 		}
 		
 		return fragmentLayout;

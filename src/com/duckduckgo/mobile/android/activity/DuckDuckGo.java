@@ -83,6 +83,8 @@ import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
+import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
@@ -298,12 +300,17 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					}
 					else if(it.type == Item.ItemType.SAVE) {
 						DDGApplication.getDB().insert(fObject);
+						mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+						mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
 						final int delResult = DDGApplication.getDB().deleteById(fObject.getId());
 						if(delResult != 0) {
 							mDuckDuckGoContainer.feedAdapter.remove(fObject);
 							mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+							
+							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
 						}							
 					}
 					else if(it.type == Item.ItemType.EXTERNAL) {
@@ -419,6 +426,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     		mDuckDuckGoContainer.sourceIconTask = null;    		
     		
     		mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
+    		
+    		mDuckDuckGoContainer.savedSearchAdapter = new SavedResultCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorResultFeed());    	
+    		mDuckDuckGoContainer.savedFeedAdapter = new SavedFeedCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorStoryFeed());
     		
     	}
     	
@@ -1933,6 +1943,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 								DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl));
 							}
 						}
+						
+						mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+						mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
 					}
 					else if(it.type == Item.ItemType.EXTERNAL) {
     	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mainWebView.getUrl()));
