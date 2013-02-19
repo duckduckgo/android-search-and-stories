@@ -89,6 +89,8 @@ public class DdgDB {
 		contentValues.put("data", query);
 		contentValues.put("url", "");
 		contentValues.put("extraType", "");
+		// delete old record if exists
+		this.db.delete(HISTORY_TABLE, "type='R' AND data=?", new String[]{query});
 		return this.db.insert(HISTORY_TABLE, null, contentValues);
 	}
 	
@@ -98,6 +100,8 @@ public class DdgDB {
 		contentValues.put("data", title);
 		contentValues.put("url", url);
 		contentValues.put("extraType", "");
+		// delete old record if exists
+		this.db.delete(HISTORY_TABLE, "type='W' AND data=? AND url=?", new String[]{title, url});
 		return this.db.insert(HISTORY_TABLE, null, contentValues);
 	}
 	
@@ -107,9 +111,9 @@ public class DdgDB {
         contentValues.put("data", title);
         contentValues.put("url", url);
         contentValues.put("extraType", extraType);
-
-        long res = this.db.insertOrThrow(HISTORY_TABLE, null, contentValues);
-        
+        // delete old record if exists
+     	this.db.delete(HISTORY_TABLE, "type='W' AND data=? AND url=?", new String[]{title, url});
+        long res = this.db.insertOrThrow(HISTORY_TABLE, null, contentValues);        
         return res;
 	}
 	
