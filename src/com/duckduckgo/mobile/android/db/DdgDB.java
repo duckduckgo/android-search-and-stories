@@ -149,20 +149,26 @@ public class DdgDB {
 	}
 	
 	public int deleteById(String id) {
-	      return this.db.delete(FEED_TABLE, "_id=?", new String[]{id});
+		  FeedObject obj = selectById(id);
+	      int res = this.db.delete(FEED_TABLE, "_id=?", new String[]{id});
+	      int res2 = this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{obj.getTitle(), obj.getUrl()});
+	      return Math.max(res, res2);
+	}
+	
+	public int deleteFeedObject(FeedObject object) {
+		  int res = this.db.delete(FEED_TABLE, "_id=?", new String[]{object.getId()});
+	      int res2 = this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{object.getTitle(), object.getUrl()});
+	      return Math.max(res, res2);
 	}
 	
 	public void deleteByUrl(String url) {
 	      this.db.delete(FEED_TABLE, "url=?", new String[]{url});
 	}
 	
-	public int deleteByTitleUrl(String title, String url) {
-	      return this.db.delete(FEED_TABLE, "title=? AND url=?", new String[]{title, url});
-	}
-	
-	public int deleteInHistoryByDataUrl(String data, String url) {
-		  this.db.delete(FEED_TABLE, "title=? AND url=?", new String[]{data, url});
-	      return this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{data, url});
+	public int deleteByDataUrl(String data, String url) {
+		  int res = this.db.delete(FEED_TABLE, "title=? AND url=?", new String[]{data, url});
+	      int res2 = this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{data, url});
+	      return Math.max(res, res2);
 	}
 	
 	private FeedObject getFeedObject(Cursor c) {

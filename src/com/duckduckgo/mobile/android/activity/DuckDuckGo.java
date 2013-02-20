@@ -309,14 +309,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
-						final int delResult = DDGApplication.getDB().deleteById(fObject.getId());
-						if(delResult != 0) {
-							
-							// XXX we're not re-using main feed adapter for saved items from now on  
-							
-//							mDuckDuckGoContainer.feedAdapter.remove(fObject);
-//							mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
-							
+						final int delResult = DDGApplication.getDB().deleteFeedObject(fObject);
+						if(delResult != 0) {							
+							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+							mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
+							mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
 							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
 							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
 						}							
@@ -365,7 +363,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						DDGUtils.shareWebPage(DuckDuckGo.this, pageData, pageUrl);
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
-						final int delHistory = DDGApplication.getDB().deleteInHistoryByDataUrl(pageData, pageUrl);
+						final int delHistory = DDGApplication.getDB().deleteByDataUrl(pageData, pageUrl);
 						if(delHistory != 0) {							
 							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
 							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
