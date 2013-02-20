@@ -197,6 +197,11 @@ public class DdgDB {
 		return null;
 	}
 	
+	public boolean isSaved(String id) {
+		Cursor c = this.db.query(FEED_TABLE, null, "_id=?", new String[]{id} , null, null, null);
+		return c.moveToFirst();
+	}
+	
 	public FeedObject selectById(String id){
 		Cursor c = this.db.query(FEED_TABLE, null, "_id=?", new String[]{id} , null, null, null);
 		if(c.moveToFirst()) {

@@ -68,7 +68,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TabHost.TabContentFactory;
@@ -83,13 +82,14 @@ import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
+import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
-import com.duckduckgo.mobile.android.fragment.SavedResultTabFragment;
 import com.duckduckgo.mobile.android.fragment.SavedFeedTabFragment;
+import com.duckduckgo.mobile.android.fragment.SavedResultTabFragment;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
@@ -107,7 +107,6 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DDGViewPager;
 import com.duckduckgo.mobile.android.util.Item;
-import com.duckduckgo.mobile.android.util.Item.ItemType;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.DDGWebView;
@@ -137,7 +136,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private PullToRefreshMainFeedListView mPullRefreshFeedView = null;
 	
 	ArrayAdapter<String> lRecentAdapter;
-	ListAdapter contextAdapter;
 	
 	private DDGViewPager viewPager;
 	private View contentView = null;
@@ -176,7 +174,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	private final int PREFERENCES_RESULT = 0;
 	
-	Item[] shareDialogItems;
 	FeedObject currentFeedObject = null;
 	boolean isFeedObject = false;
 	
@@ -292,9 +289,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			// to initialize with pageTitle, pageUrl and feedObject
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
 			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
+			
+			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "mainfeed", feedObject.isSaved());
+			
 			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
 					Item it = ((Item) contextAdapter.getItem(item));
+					
 					if(it.type == Item.ItemType.SHARE) {
 						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
 					}
@@ -308,8 +309,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					else if(it.type == Item.ItemType.UNSAVE) {
 						final int delResult = DDGApplication.getDB().deleteById(fObject.getId());
 						if(delResult != 0) {
-							mDuckDuckGoContainer.feedAdapter.remove(fObject);
-							mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+							
+							// XXX we're not re-using main feed adapter for saved items from now on  
+							
+//							mDuckDuckGoContainer.feedAdapter.remove(fObject);
+//							mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 							
 							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
 							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
@@ -391,14 +395,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		// implement cache prev/next for devices below API level 11
 		// may need to use a modified copy of AsyncTask class to achieve this 
         
-        ArrayList<Item> dialogItems = new ArrayList<Item>();
-        dialogItems.add(new Item(getResources().getString(R.string.Share), android.R.drawable.ic_menu_share, ItemType.SHARE));
-        dialogItems.add(new Item(getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE));
-        dialogItems.add(new Item(getResources().getString(R.string.OpenInExternalBrowser), android.R.drawable.ic_menu_rotate, ItemType.EXTERNAL));
-        dialogItems.add(new Item(getResources().getString(R.string.Refresh), R.drawable.icon_reload, ItemType.REFRESH));
-
-        shareDialogItems = (Item []) dialogItems.toArray(new Item[dialogItems.size()]);
-        
 		mDuckDuckGoContainer = (DuckDuckGoContainer) getLastCustomNonConfigurationInstance();
     	if(mDuckDuckGoContainer == null){
     		mDuckDuckGoContainer = new DuckDuckGoContainer();
@@ -455,32 +451,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 //        viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());       
         
     	    	
-		contextAdapter = new ArrayAdapter<Item>(
-				this,
-				android.R.layout.select_dialog_item,
-				android.R.id.text1,
-				shareDialogItems){
-			public View getView(int position, View convertView, android.view.ViewGroup parent) {
-				if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED 
-						&& shareDialogItems[position].type == Item.ItemType.SAVE) {
-					shareDialogItems[position] = new Item(getResources().getString(R.string.Unsave), android.R.drawable.ic_menu_delete, ItemType.UNSAVE);
-				}
-				else if(!(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) 
-						&& shareDialogItems[position].type == Item.ItemType.UNSAVE) {
-					shareDialogItems[position] = new Item(getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE);
-				}
-				
-				View v = super.getView(position, convertView, parent);
-				TextView tv = (TextView)v.findViewById(android.R.id.text1);
-				tv.setCompoundDrawablesWithIntrinsicBounds(shareDialogItems[position].icon, 0, 0, 0);
-
-				//Add 10dp margin between image and text (support various screen densities)
-				int dp10 = (int) (10 * getResources().getDisplayMetrics().density + 0.5f);
-				tv.setCompoundDrawablePadding(dp10);
-
-				return v;
-			}
-		};
+//		contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1);
 		
 		cacheDialogBuilder = new AlertDialog.Builder(this);
 		// Add the buttons
@@ -1909,6 +1880,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
 			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
+						
+			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview", false);
+			
 			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
 					Item it = ((Item) contextAdapter.getItem(item));

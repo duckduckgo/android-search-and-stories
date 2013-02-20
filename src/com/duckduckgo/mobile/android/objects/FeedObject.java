@@ -1,7 +1,11 @@
 package com.duckduckgo.mobile.android.objects;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.duckduckgo.mobile.android.DDGApplication;
 
 import android.database.sqlite.SQLiteCursor;
 
@@ -16,7 +20,7 @@ public class FeedObject {
 	private final String category;
 	private final String imageUrl;
 	private final String type;
-	
+		
 	public FeedObject() {
 		// no-arg constructor for ORMlite
 		this.feed = "";
@@ -158,5 +162,9 @@ public class FeedObject {
 	
 	public String getType() {
 		return type;
+	}
+	
+	public boolean isSaved() {		
+		return DDGApplication.getDB().isSaved(getId());
 	}
 }
