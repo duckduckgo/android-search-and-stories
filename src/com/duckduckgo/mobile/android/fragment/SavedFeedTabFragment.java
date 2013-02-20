@@ -37,18 +37,7 @@ public class SavedFeedTabFragment extends Fragment {
 						
     		savedFeedView = (MainFeedListView) fragmentLayout.findViewById(R.id.savedFeedItems);
     		savedFeedView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedFeedAdapter);
-//    		savedFeedView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
-//				
-//				public void onHistoryItemSelected(HistoryObject historyObject) {
-//					if(historyObject != null){	
-//						if(historyObject.getType().equals("R"))
-//							((DuckDuckGo) activity).searchWebTerm(historyObject.getData());
-//						else if(historyObject.getType().equals("F")) 
-//							((DuckDuckGo) activity).showWebUrl(historyObject.getUrl());
-//					}			
-//				}
-//			});
-    		
+
     		savedFeedView.setOnMainFeedItemSelectedListener(((DuckDuckGo) activity).mFeedItemSelectedListener);
     		savedFeedView.setOnMainFeedItemLongClickListener(((DuckDuckGo) activity).mFeedItemLongClickListener);
     		

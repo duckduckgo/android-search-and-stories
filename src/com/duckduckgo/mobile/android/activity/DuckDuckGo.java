@@ -95,6 +95,7 @@ import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.HistoryObject;
+import com.duckduckgo.mobile.android.objects.ParentHistoryObject;
 import com.duckduckgo.mobile.android.objects.SavedResultObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
@@ -114,6 +115,7 @@ import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
+import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemLongClickListener;
 import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemSelectedListener;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -145,7 +147,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	private RecentSearchListView recentSearchView = null;
 	
-	private DDGWebView mainWebView = null;
+	public DDGWebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
 	private ImageButton shareButton = null;
 	
@@ -330,6 +332,75 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			});
 			ab.show();
 		}
+    };
+    
+    
+    public OnHistoryItemLongClickListener mSavedResultLongClickListener = new OnHistoryItemLongClickListener() {
+    	@Override
+    	public void onHistoryItemLongClick(ParentHistoryObject historyObject) {
+    		// TODO Auto-generated method stub
+    
+			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
+			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
+						
+			boolean isPageSaved = DDGApplication.getDB().isSaved(historyObject.getData(), historyObject.getUrl());
+			final String pageTitle = historyObject.getData();
+			final String pageUrl = historyObject.getUrl();
+			
+			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "history", isPageSaved);
+			
+			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					Item it = ((Item) contextAdapter.getItem(item));
+					if(it.type == Item.ItemType.SHARE) {						
+						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+					}
+					else if(it.type == Item.ItemType.SAVE) {
+							// XXX WebView.getUrl() can throw null on us, when empty
+							if(pageUrl != null) {
+							
+								// take WebView (visible area) screenshot and save to file cache
+								Bitmap webBitmap = getBitmapFromView(mainWebView);
+								String imageFileName = "CUSTOM__" + pageUrl.replaceAll("\\W", ""); 
+								boolean success = DDGApplication.getFileCache().saveBitmapAsFile(imageFileName, webBitmap);
+								
+//								Log.v(TAG,"insert regular page: " + pageTitle + " " + pageUrl);
+								if(success) {
+									DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl, imageFileName));
+								}
+								else {
+									DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl));
+								}
+							
+							}
+						
+						mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
+						mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
+						mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+						mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+					}
+					else if(it.type == Item.ItemType.UNSAVE) {
+						final int delResult = DDGApplication.getDB().deleteByTitleUrl(pageTitle, pageUrl);
+						if(delResult != 0) {							
+							mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
+							mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
+							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+						}							
+					}
+					else if(it.type == Item.ItemType.EXTERNAL) {
+    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mainWebView.getUrl()));
+    	            	startActivity(browserIntent);
+					}
+					else if(it.type == Item.ItemType.REFRESH) {
+						reloadAction();
+					}
+				}
+			});
+			ab.show();    		
+    		
+    		
+    	}
     };
 				
 	@Override
@@ -544,18 +615,15 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
     	leftRecentView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
-			public void onHistoryItemSelected(HistoryObject historyObject) {
+			public void onHistoryItemSelected(ParentHistoryObject historyObject) {
 				viewPager.switchPage();
 				
-				if(historyObject != null){	
-					showHistoryObject(historyObject);
+				if(historyObject != null){
+					if(historyObject instanceof HistoryObject)
+						showHistoryObject((HistoryObject) historyObject);
+					else if(historyObject instanceof SavedResultObject)
+						showWebUrl(historyObject.getUrl());
 				}				
-			}
-			
-			public void onSavedResultSelected(SavedResultObject savedResultObject) {
-				if(savedResultObject != null){	
-					showWebUrl(savedResultObject.getUrl());
-				}			
 			}
 		});
         
@@ -663,17 +731,15 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         recentSearchView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
         recentSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
-			public void onHistoryItemSelected(HistoryObject historyObject) {
-				if(historyObject != null){	
-					showHistoryObject(historyObject);
-				}			
+			public void onHistoryItemSelected(ParentHistoryObject historyObject) {
+				if(historyObject != null){
+					if(historyObject instanceof HistoryObject)
+						showHistoryObject((HistoryObject) historyObject);
+					else if(historyObject instanceof SavedResultObject)
+						showWebUrl(historyObject.getUrl());
+				}	
 			}
-			
-			public void onSavedResultSelected(SavedResultObject savedResultObject) {
-				if(savedResultObject != null){	
-					showWebUrl(savedResultObject.getUrl());
-				}			
-			}
+
 		});
         
         

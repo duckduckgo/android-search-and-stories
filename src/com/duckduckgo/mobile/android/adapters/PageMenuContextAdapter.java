@@ -62,6 +62,15 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 			else
 				add(dialogItems.get(ItemType.SAVE));
 		}
+		else if(pageType.equals("history")) {
+			add(dialogItems.get(ItemType.SHARE));
+			add(dialogItems.get(ItemType.EXTERNAL));
+			
+			if(isItemSaved)
+				add(dialogItems.get(ItemType.UNSAVE));
+			else
+				add(dialogItems.get(ItemType.SAVE));
+		}
 	}
 	
 	public View getView(int position, View convertView, android.view.ViewGroup parent) {		

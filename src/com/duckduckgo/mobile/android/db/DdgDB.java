@@ -156,6 +156,10 @@ public class DdgDB {
 	      this.db.delete(FEED_TABLE, "url=?", new String[]{url});
 	}
 	
+	public int deleteByTitleUrl(String title, String url) {
+	      return this.db.delete(FEED_TABLE, "title=? AND url=?", new String[]{title, url});
+	}
+	
 	private FeedObject getFeedObject(Cursor c) {
 		return new FeedObject(c.getString(0), c.getString(1), c.getString(2), c.getString(3),
 				c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9));

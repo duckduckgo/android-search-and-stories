@@ -8,12 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
-import com.duckduckgo.mobile.android.objects.HistoryObject;
-import com.duckduckgo.mobile.android.objects.SavedResultObject;
+import com.duckduckgo.mobile.android.objects.ParentHistoryObject;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemSelectedListener;
 
@@ -41,18 +38,14 @@ public class SavedResultTabFragment extends Fragment {
 			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedSearchAdapter);
 			savedSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 				
-				public void onHistoryItemSelected(HistoryObject historyObject) {
+				public void onHistoryItemSelected(ParentHistoryObject historyObject) {
 					if(historyObject != null){	
 						((DuckDuckGo) activity).showWebUrl(historyObject.getUrl());
 					}			
 				}
-				
-				public void onSavedResultSelected(SavedResultObject savedResultObject) {
-					if(savedResultObject != null){	
-						((DuckDuckGo) activity).showWebUrl(savedResultObject.getUrl());
-					}			
-				}
 			});
+			
+			savedSearchView.setOnHistoryItemLongClickListener(((DuckDuckGo) activity).mSavedResultLongClickListener);
 			
 		}
 		
