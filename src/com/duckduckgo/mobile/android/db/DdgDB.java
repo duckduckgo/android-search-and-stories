@@ -197,8 +197,30 @@ public class DdgDB {
 		return null;
 	}
 	
+	/**
+	 * for checking feed items
+	 * @param id
+	 * @return
+	 */
 	public boolean isSaved(String id) {
 		Cursor c = this.db.query(FEED_TABLE, null, "_id=?", new String[]{id} , null, null, null);
+		return c.moveToFirst();
+	}
+	
+	/**
+	 * for checking ordinary web pages
+	 * @param pageTitle
+	 * @param pageUrl
+	 * @return
+	 */
+	public boolean isSaved(String pageTitle, String pageUrl) {
+		if(pageUrl == null)
+			return false;
+		
+		if(pageTitle == null)
+			pageTitle = "";
+			
+		Cursor c = this.db.query(FEED_TABLE, null, "title=? AND url=?", new String[]{pageTitle, pageUrl} , null, null, null);
 		return c.moveToFirst();
 	}
 	

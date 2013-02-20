@@ -1881,7 +1881,16 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
 			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
 						
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview", false);
+			boolean isPageSaved;
+			
+			if(isFeedObject) {
+				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
+			}
+			else {
+				isPageSaved = DDGApplication.getDB().isSaved(mainWebView.getTitle(), mainWebView.getUrl()); 
+			}			
+			
+			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview", isPageSaved);
 			
 			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
@@ -1901,17 +1910,22 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 							String pageTitle = mainWebView.getTitle();
 							String pageUrl = mainWebView.getUrl();
 							
-							// take WebView (visible area) screenshot and save to file cache
-							Bitmap webBitmap = getBitmapFromView(mainWebView);
-							String imageFileName = "CUSTOM__" + pageUrl.replaceAll("\\W", ""); 
-							boolean success = DDGApplication.getFileCache().saveBitmapAsFile(imageFileName, webBitmap);
+							// XXX WebView.getUrl() can throw null on us, when empty
+							if(pageUrl != null) {
 							
-//							Log.v(TAG,"insert regular page: " + pageTitle + " " + pageUrl);
-							if(success) {
-								DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl, imageFileName));
-							}
-							else {
-								DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl));
+								// take WebView (visible area) screenshot and save to file cache
+								Bitmap webBitmap = getBitmapFromView(mainWebView);
+								String imageFileName = "CUSTOM__" + pageUrl.replaceAll("\\W", ""); 
+								boolean success = DDGApplication.getFileCache().saveBitmapAsFile(imageFileName, webBitmap);
+								
+//								Log.v(TAG,"insert regular page: " + pageTitle + " " + pageUrl);
+								if(success) {
+									DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl, imageFileName));
+								}
+								else {
+									DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl));
+								}
+							
 							}
 						}
 						
