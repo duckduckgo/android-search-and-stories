@@ -343,8 +343,17 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
 			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
 						
-			boolean isPageSaved = DDGApplication.getDB().isSaved(historyObject.getData(), historyObject.getUrl());
-			final String pageTitle = historyObject.getData();
+			boolean isPageSaved = false;
+			final boolean isSavedResult;
+			
+			if(historyObject instanceof SavedResultObject) {
+				isPageSaved = DDGApplication.getDB().isSaved(historyObject.getData(), historyObject.getUrl());
+			}
+			else if(historyObject instanceof HistoryObject){
+				isPageSaved = DDGApplication.getDB().isSavedInHistory(historyObject.getData(), historyObject.getUrl());
+			}
+			
+			final String pageData = historyObject.getData();
 			final String pageUrl = historyObject.getUrl();
 			
 			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "history", isPageSaved);
@@ -353,40 +362,18 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				public void onClick(DialogInterface dialog, int item) {
 					Item it = ((Item) contextAdapter.getItem(item));
 					if(it.type == Item.ItemType.SHARE) {						
-						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
-					}
-					else if(it.type == Item.ItemType.SAVE) {
-							// XXX WebView.getUrl() can throw null on us, when empty
-							if(pageUrl != null) {
-							
-								// take WebView (visible area) screenshot and save to file cache
-								Bitmap webBitmap = getBitmapFromView(mainWebView);
-								String imageFileName = "CUSTOM__" + pageUrl.replaceAll("\\W", ""); 
-								boolean success = DDGApplication.getFileCache().saveBitmapAsFile(imageFileName, webBitmap);
-								
-//								Log.v(TAG,"insert regular page: " + pageTitle + " " + pageUrl);
-								if(success) {
-									DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl, imageFileName));
-								}
-								else {
-									DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl));
-								}
-							
-							}
-						
-						mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
-						mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
-						mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-						mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+						DDGUtils.shareWebPage(DuckDuckGo.this, pageData, pageUrl);
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
-						final int delResult = DDGApplication.getDB().deleteByTitleUrl(pageTitle, pageUrl);
-						if(delResult != 0) {							
+						final int delHistory = DDGApplication.getDB().deleteInHistoryByDataUrl(pageData, pageUrl);
+						if(delHistory != 0) {							
+							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
 							mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
 							mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
 							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
 							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
-						}							
+						}	
 					}
 					else if(it.type == Item.ItemType.EXTERNAL) {
     	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mainWebView.getUrl()));
@@ -626,6 +613,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				}				
 			}
 		});
+    	leftRecentView.setOnHistoryItemLongClickListener(mSavedResultLongClickListener);
         
         homeSettingsButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
         homeSettingsButton.setOnClickListener(this);

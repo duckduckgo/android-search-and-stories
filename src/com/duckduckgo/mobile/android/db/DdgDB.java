@@ -160,6 +160,11 @@ public class DdgDB {
 	      return this.db.delete(FEED_TABLE, "title=? AND url=?", new String[]{title, url});
 	}
 	
+	public int deleteInHistoryByDataUrl(String data, String url) {
+		  this.db.delete(FEED_TABLE, "title=? AND url=?", new String[]{data, url});
+	      return this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{data, url});
+	}
+	
 	private FeedObject getFeedObject(Cursor c) {
 		return new FeedObject(c.getString(0), c.getString(1), c.getString(2), c.getString(3),
 				c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9));
@@ -225,6 +230,23 @@ public class DdgDB {
 			pageTitle = "";
 			
 		Cursor c = this.db.query(FEED_TABLE, null, "title=? AND url=?", new String[]{pageTitle, pageUrl} , null, null, null);
+		return c.moveToFirst();
+	}
+	
+	/**
+	 * for checking ordinary web pages
+	 * @param pageTitle
+	 * @param pageUrl
+	 * @return
+	 */
+	public boolean isSavedInHistory(String data, String url) {
+		if(url == null)
+			return false;
+		
+		if(data == null)
+			data = "";
+			
+		Cursor c = this.db.query(HISTORY_TABLE, null, "data=? AND url=?", new String[]{data, url} , null, null, null);
 		return c.moveToFirst();
 	}
 	
