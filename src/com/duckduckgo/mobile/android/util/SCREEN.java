@@ -38,8 +38,9 @@ public enum SCREEN {
 			case SCR_WEBVIEW:
 				return 0;
 			case SCR_STORIES:
-			case SCR_SAVED_FEED:
 				return 1;
+			case SCR_SAVED_FEED:
+				return 4;
 			case SCR_RECENT_SEARCH:
 				return 2;
 			case SCR_SETTINGS:

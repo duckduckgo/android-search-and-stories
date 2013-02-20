@@ -450,7 +450,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         
         viewFlipper = (ViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
         // viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
-        viewFlipper.setDisplayedChild(4);       
+//        viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());       
         
     	    	
 		contextAdapter = new ArrayAdapter<Item>(
@@ -1820,13 +1820,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	leftSavedButtonLayout.setVisibility(View.GONE);
     	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
 		
-//		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SAVED_FEED;
-//		DDGControlVar.hasUpdatedFeed = false;
-//		
-//		displayFeedCore();
+		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SAVED_FEED;
     	
-    	viewFlipper.setDisplayedChild(4);
+    	viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());
     	
+    	mDuckDuckGoContainer.webviewShowing = false;
 		clearLeftSelect();
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
