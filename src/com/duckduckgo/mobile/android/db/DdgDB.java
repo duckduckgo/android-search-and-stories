@@ -94,6 +94,19 @@ public class DdgDB {
 		return this.db.insert(HISTORY_TABLE, null, contentValues);
 	}
 	
+	public long insertHistoryObject(HistoryObject object) {
+		if(object.getType().equals("F")) {
+			return insertFeedItem(object.getData(), object.getUrl(), object.getExtraType());
+		}
+		else if(object.getType().equals("W")) {
+			return insertWebPage(object.getData(), object.getUrl());
+		}
+		else if(object.getType().equals("R")) {
+			return insertRecentSearch(object.getData());
+		}
+		return -1L;
+	}
+	
 	public long insertWebPage(String title, String url) {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put("type", "W");
@@ -103,10 +116,6 @@ public class DdgDB {
 		// delete old record if exists
 		this.db.delete(HISTORY_TABLE, "type='W' AND data=? AND url=?", new String[]{title, url});
 		return this.db.insert(HISTORY_TABLE, null, contentValues);
-	}
-	
-	public long insertFeedItem(HistoryObject object) {
-		return insertFeedItem(object.getData(), object.getUrl(), object.getExtraType());
 	}
 	
 	public long insertFeedItem(String title, String url, String extraType) {

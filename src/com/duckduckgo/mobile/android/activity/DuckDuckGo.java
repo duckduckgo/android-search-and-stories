@@ -300,6 +300,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					}
 					else if(it.type == Item.ItemType.SAVE) {
 						DDGApplication.getDB().insert(fObject);
+						mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
+						mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
 						mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
 						mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
 					}
@@ -692,10 +694,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			
 			public void onHistoryItemSelected(HistoryObject historyObject) {
 				if(historyObject != null){	
-					if(historyObject.getType().equals("R"))
-						searchWebTerm(historyObject.getData());
-					else if(historyObject.getType().equals("F")) 
-						showWebUrl(historyObject.getUrl());
+					showHistoryObject(historyObject);
 				}			
 			}
 			
@@ -1561,8 +1560,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		if(object.getType().equals("R")) {
 			searchWebTerm(object.getData());
 		}
-		else if(object.getType().equals("F")){
-			DDGApplication.getDB().insertFeedItem(object);
+		else {
+			DDGApplication.getDB().insertHistoryObject(object);
 			mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
 			mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
 			showWebUrl(object.getUrl());
@@ -1942,6 +1941,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 							}
 						}
 						
+						mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
+						mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
 						mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
 						mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
 					}
