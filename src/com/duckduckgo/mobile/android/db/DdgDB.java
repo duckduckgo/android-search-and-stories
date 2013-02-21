@@ -216,9 +216,7 @@ public class DdgDB {
 	}
 	
 	public int deleteFeedObject(FeedObject object) {
-		  int res = this.db.delete(FEED_TABLE, "_id=?", new String[]{object.getId()});
-	      int res2 = this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{object.getTitle(), object.getUrl()});
-	      return Math.max(res, res2);
+		  return this.db.delete(FEED_TABLE, "_id=?", new String[]{object.getId()});
 	}
 	
 	public void deleteByUrl(String url) {
@@ -231,6 +229,10 @@ public class DdgDB {
 	
 	public int deleteHistoryByDataUrl(String data, String url) {
 	      return this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{data, url});
+	}
+	
+	public int deleteHistoryByFeedId(String feedId) {
+	      return this.db.delete(HISTORY_TABLE, "feedId=?", new String[]{feedId});
 	}
 	
 	private FeedObject getFeedObject(Cursor c) {

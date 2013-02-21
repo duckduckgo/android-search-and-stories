@@ -303,16 +303,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					}
 					else if(it.type == Item.ItemType.SAVE) {
 						itemSave(pageTitle, pageUrl, fObject, null);
+						syncAdapters();
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
 						final int delResult = DDGApplication.getDB().deleteFeedObject(fObject);
 						if(delResult != 0) {							
-							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
-							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
-							mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
-							mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
-							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+							syncAdapters();
 						}							
 					}
 					else if(it.type == Item.ItemType.EXTERNAL) {
@@ -330,6 +326,50 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     
     
     public OnHistoryItemLongClickListener mSavedResultLongClickListener = new OnHistoryItemLongClickListener() {
+    	@Override
+    	public void onHistoryItemLongClick(ParentHistoryObject savedResultObject) {
+    		// TODO Auto-generated method stub
+    
+			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
+			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
+						
+			final boolean isPageSaved = DDGApplication.getDB().isSaved(savedResultObject.getData(), savedResultObject.getUrl());
+			
+			final String pageData = savedResultObject.getData();
+			final String pageUrl = savedResultObject.getUrl();
+						
+			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "history", isPageSaved);
+			
+			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int item) {
+					Item it = ((Item) contextAdapter.getItem(item));
+					if(it.type == Item.ItemType.SHARE) {						
+						DDGUtils.shareWebPage(DuckDuckGo.this, pageData, pageUrl);
+					}
+					else if(it.type == Item.ItemType.UNSAVE) {
+						final long delHistory = DDGApplication.getDB().deleteByDataUrl(pageData, pageUrl);
+						if(delHistory != 0) {							
+							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+							mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
+							mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
+							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+						}	
+					}
+					else if(it.type == Item.ItemType.EXTERNAL) {
+    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
+    	            	startActivity(browserIntent);
+					}
+				}
+			});
+			ab.show();    		
+    		    		
+    	}
+    };
+    
+    
+    public OnHistoryItemLongClickListener mHistoryLongClickListener = new OnHistoryItemLongClickListener() {
     	@Override
     	public void onHistoryItemLongClick(ParentHistoryObject historyObject) {
     		// TODO Auto-generated method stub
@@ -360,6 +400,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					}
 					else if(it.type == Item.ItemType.SAVE) {
 						itemSave(pageData, pageUrl, null, pageFeedId);
+						syncAdapters();
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
 						final long delHistory;
@@ -370,31 +411,24 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 							delHistory = DDGApplication.getDB().deleteByDataUrl(pageData, pageUrl);
 						}
 						if(delHistory != 0) {							
-							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
-							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
-							mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
-							mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
-							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+							syncAdapters();
 						}	
 					}
 					else if(it.type == Item.ItemType.DELETE) {
-						final int delHistory = DDGApplication.getDB().deleteHistoryByDataUrl(pageData, pageUrl);
+						final long delHistory;
+						if(pageFeedId != null && pageFeedId.length() != 0) {
+							delHistory = DDGApplication.getDB().deleteHistoryByFeedId(pageFeedId);
+						}
+						else {
+							delHistory = DDGApplication.getDB().deleteHistoryByDataUrl(pageData, pageUrl);
+						}						
 						if(delHistory != 0) {							
-							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
-							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
-							mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
-							mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
-							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+							syncAdapters();
 						}	
 					}
 					else if(it.type == Item.ItemType.EXTERNAL) {
     	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
     	            	startActivity(browserIntent);
-					}
-					else if(it.type == Item.ItemType.REFRESH) {
-						reloadAction();
 					}
 				}
 			});
@@ -440,7 +474,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			
 			}
 		}
-		
+    }
+    
+    public void syncAdapters() {
+    	mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+		mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
 		mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
 		mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
 		mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
@@ -670,7 +708,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				}				
 			}
 		});
-    	leftRecentView.setOnHistoryItemLongClickListener(mSavedResultLongClickListener);
+    	leftRecentView.setOnHistoryItemLongClickListener(mHistoryLongClickListener);
         
         homeSettingsButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
         homeSettingsButton.setOnClickListener(this);
@@ -2018,6 +2056,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					}
 					else if(it.type == Item.ItemType.SAVE) {
 						itemSave(pageTitle, pageUrl, currentFeedObject, null);
+						syncAdapters();
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
 						final int delHistory;
@@ -2028,12 +2067,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 							delHistory = DDGApplication.getDB().deleteByDataUrl(pageTitle, pageUrl);
 						}
 						if(delHistory != 0) {							
-							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
-							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
-							mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
-							mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
-							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+							syncAdapters();
 						}	
 					}
 					else if(it.type == Item.ItemType.EXTERNAL) {
