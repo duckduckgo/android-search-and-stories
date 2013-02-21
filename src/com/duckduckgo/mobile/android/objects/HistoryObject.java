@@ -4,6 +4,10 @@ import android.database.Cursor;
 
 public class HistoryObject extends ParentHistoryObject {
 	
+	public HistoryObject(String type, String data, String url, String extraType, String feedId) {
+		super(type, data, url, extraType, feedId);
+	}
+	
 	public HistoryObject(String type, String data, String url, String extraType) {
 		super(type, data, url, extraType);
 	}
@@ -21,5 +25,6 @@ public class HistoryObject extends ParentHistoryObject {
 		this.data = c.getString(c.getColumnIndex("data"));
 		this.url = c.getString(c.getColumnIndex("url"));
 		this.extraType = c.getString(c.getColumnIndex("extraType"));
+		this.feedId = c.getString(c.getColumnIndex("feedId"));
 	}
 }

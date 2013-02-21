@@ -48,6 +48,7 @@
     <string name="Unsave">Unsave</string>
     <string name="Share">Share</string>
     <string name="Refresh">Refresh</string>
+    <string name="Delete">Delete</string>
     
     <string name="LeftStories">Stories</string>
     <string name="LeftSaved">Saved</string>

@@ -5,6 +5,7 @@ public class ParentHistoryObject {
 	protected String data;
 	protected String url;
 	protected String extraType;
+	protected String feedId;
 
 	public ParentHistoryObject() {
 		// no-arg constructor for ORMlite
@@ -12,6 +13,15 @@ public class ParentHistoryObject {
 		this.data = "";
 		this.url = "";
 		this.extraType = "";
+		this.feedId = "";
+	}
+	
+	public ParentHistoryObject(String type, String data, String url, String extraType, String feedId) {
+		this.type = type;
+		this.data = data;
+		this.url = url;
+		this.extraType = extraType;
+		this.feedId = feedId;
 	}
 	
 	public ParentHistoryObject(String type, String data, String url, String extraType) {
@@ -19,6 +29,7 @@ public class ParentHistoryObject {
 		this.data = data;
 		this.url = url;
 		this.extraType = extraType;
+		this.feedId = "";
 	}
 	
 	public ParentHistoryObject(String type, String data, String url) {
@@ -26,6 +37,7 @@ public class ParentHistoryObject {
 		this.data = data;
 		this.url = url;
 		this.extraType = "";
+		this.feedId = "";
 	}
 	
 	public ParentHistoryObject(String type, String data) {
@@ -33,6 +45,7 @@ public class ParentHistoryObject {
 		this.data = data;
 		this.url = "";
 		this.extraType = "";
+		this.feedId = "";
 	}
 	
 	@Override
@@ -42,6 +55,7 @@ public class ParentHistoryObject {
 		string = string.concat("data:" + this.data + "\n");
 		string = string.concat("url:" + this.url + "\n");
 		string = string.concat("extraType:" + this.extraType + "}");
+		string = string.concat("feedId:" + this.feedId + "}");
 		return string;
 	}
 	
@@ -59,6 +73,10 @@ public class ParentHistoryObject {
 	
 	public String getExtraType() {
 		return extraType;
+	}
+	
+	public String getFeedId() {
+		return feedId;
 	}
 }
 

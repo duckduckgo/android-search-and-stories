@@ -17,7 +17,7 @@ import com.duckduckgo.mobile.android.util.AppShortInfo;
 public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 8;
+	private static final int DATABASE_VERSION = 9;
 	private static final String FEED_TABLE = "feed";
 	private static final String APP_TABLE = "apps";
 	private static final String HISTORY_TABLE = "history";
@@ -27,7 +27,7 @@ public class DdgDB {
 
 	private SQLiteStatement insertStmt, insertStmtApp;
 	// private static final String INSERT = "insert or ignore into " + FEED_TABLE + " (_id,title,description,feed,url,imageurl,favicon,timestamp,category,type) values (?,?,?,?,?,?,?,?,?,?)";
-	private static final String INSERT = "insert or replace into " + FEED_TABLE + " (_id,title,description,feed,url,imageurl,favicon,timestamp,category,type) values (?,?,?,?,?,?,?,?,?,?)";
+	private static final String INSERT = "insert or replace into " + FEED_TABLE + " (_id,title,description,feed,url,imageurl,favicon,timestamp,category,type, hidden) values (?,?,?,?,?,?,?,?,?,?,?)";
 	
 	private static final String APP_INSERT = "insert or replace into " + APP_TABLE + " (title,package) values (?,?)";
 	
@@ -54,7 +54,7 @@ public class DdgDB {
 	 * @param e
 	 * @return if FeedObject(url,title) both null, return -1. Return Insert execution result otherwise
 	 */
-	public long insert(FeedObject e) {
+	public long insert(FeedObject e, String hidden) {
 		String title = e.getTitle();		
 		if(e.getUrl() == null)
 			return -1l;
@@ -72,8 +72,30 @@ public class DdgDB {
 	      this.insertStmt.bindString(8, e.getTimestamp());
 	      this.insertStmt.bindString(9, e.getCategory());
 	      this.insertStmt.bindString(10, e.getType());
+	      this.insertStmt.bindString(11, hidden);
 	      long result = this.insertStmt.executeInsert();
 	      return result;
+	}
+	
+	/**
+	 * Ordinary item Save operation - keep Saved item VISIBLE  
+	 * @param e
+	 * @return
+	 */
+	public long insert(FeedObject e) {
+		// hidden = False, F
+		return this.insert(e, "F");
+	}
+	
+	/**
+	 * default item Save for browsed feed items - HIDDEN
+	 * when Save is used this will become VISIBLE 
+	 * @param e
+	 * @return
+	 */
+	public long insertHidden(FeedObject e) {
+		// hidden = True, T
+		return this.insert(e, "T");
 	}
 	
 	public long insertApp(AppShortInfo appInfo) {
@@ -89,6 +111,7 @@ public class DdgDB {
 		contentValues.put("data", query);
 		contentValues.put("url", "");
 		contentValues.put("extraType", "");
+		contentValues.put("feedId", "");
 		// delete old record if exists
 		this.db.delete(HISTORY_TABLE, "type='R' AND data=?", new String[]{query});
 		return this.db.insert(HISTORY_TABLE, null, contentValues);
@@ -96,7 +119,7 @@ public class DdgDB {
 	
 	public long insertHistoryObject(HistoryObject object) {
 		if(object.getType().equals("F")) {
-			return insertFeedItem(object.getData(), object.getUrl(), object.getExtraType());
+			return insertFeedItem(object.getData(), object.getUrl(), object.getExtraType(), object.getFeedId());
 		}
 		else if(object.getType().equals("W")) {
 			return insertWebPage(object.getData(), object.getUrl());
@@ -113,21 +136,61 @@ public class DdgDB {
 		contentValues.put("data", title);
 		contentValues.put("url", url);
 		contentValues.put("extraType", "");
+		contentValues.put("feedId", "");
 		// delete old record if exists
 		this.db.delete(HISTORY_TABLE, "type='W' AND data=? AND url=?", new String[]{title, url});
 		return this.db.insert(HISTORY_TABLE, null, contentValues);
 	}
 	
-	public long insertFeedItem(String title, String url, String extraType) {
+	public long insertFeedItem(String title, String url, String extraType, String feedId) {		
         ContentValues contentValues = new ContentValues();
         contentValues.put("type", "F");
         contentValues.put("data", title);
         contentValues.put("url", url);
         contentValues.put("extraType", extraType);
+        contentValues.put("feedId", feedId);
         // delete old record if exists
-     	this.db.delete(HISTORY_TABLE, "type='F' AND data=? AND url=?", new String[]{title, url});
+     	this.db.delete(HISTORY_TABLE, "type='F' AND feedId=?", new String[]{feedId});
         long res = this.db.insertOrThrow(HISTORY_TABLE, null, contentValues);        
         return res;
+	}
+	
+	public long insertFeedItem(FeedObject feedObject) {
+		this.insertHidden(feedObject);
+		
+		String feedId = feedObject.getId();		
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("type", "F");
+        contentValues.put("data", feedObject.getTitle());
+        contentValues.put("url", feedObject.getUrl());
+        contentValues.put("extraType", feedObject.getType());
+        contentValues.put("feedId", feedId);
+        // delete old record if exists
+     	this.db.delete(HISTORY_TABLE, "type='F' AND feedId=?", new String[]{feedId});
+        long res = this.db.insertOrThrow(HISTORY_TABLE, null, contentValues);        
+        return res;
+	}
+	
+	/**
+	 * make a hidden feed item VISIBLE
+	 * @param feedObject
+	 * @return
+	 */
+	public long makeItemVisible(String id) {
+	      ContentValues args = new ContentValues();
+	      args.put("hidden", "F");
+		return this.db.update(FEED_TABLE, args, "_id=?", new String[]{id});
+	}
+	
+	/**
+	 * make a hidden feed item VISIBLE
+	 * @param feedObject
+	 * @return
+	 */
+	public long makeItemHidden(String id) {
+	      ContentValues args = new ContentValues();
+	      args.put("hidden", "T");
+		return this.db.update(FEED_TABLE, args, "_id=?", new String[]{id});
 	}
 	
 	public void deleteApps() {
@@ -149,10 +212,7 @@ public class DdgDB {
 	}
 	
 	public int deleteById(String id) {
-		  FeedObject obj = selectById(id);
-	      int res = this.db.delete(FEED_TABLE, "_id=?", new String[]{id});
-	      int res2 = this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{obj.getTitle(), obj.getUrl()});
-	      return Math.max(res, res2);
+	      return this.db.delete(FEED_TABLE, "_id=?", new String[]{id});
 	}
 	
 	public int deleteFeedObject(FeedObject object) {
@@ -166,9 +226,11 @@ public class DdgDB {
 	}
 	
 	public int deleteByDataUrl(String data, String url) {
-		  int res = this.db.delete(FEED_TABLE, "title=? AND url=?", new String[]{data, url});
-	      int res2 = this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{data, url});
-	      return Math.max(res, res2);
+		  return this.db.delete(FEED_TABLE, "title=? AND url=?", new String[]{data, url});
+	}
+	
+	public int deleteHistoryByDataUrl(String data, String url) {
+	      return this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{data, url});
 	}
 	
 	private FeedObject getFeedObject(Cursor c) {
@@ -181,7 +243,7 @@ public class DdgDB {
 	}
 	
 	private HistoryObject getHistoryObject(Cursor c) {
-		return new HistoryObject(c.getString(0), c.getString(1), c.getString(2), c.getString(3));
+		return new HistoryObject(c.getString(0), c.getString(1), c.getString(2), c.getString(3), c.getString(4));
 	}
 	
 	public ArrayList<AppShortInfo> selectApps(String title){
@@ -218,7 +280,7 @@ public class DdgDB {
 	 * @return
 	 */
 	public boolean isSaved(String id) {
-		Cursor c = this.db.query(FEED_TABLE, null, "_id=?", new String[]{id} , null, null, null);
+		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
 		return c.moveToFirst();
 	}
 	
@@ -235,7 +297,7 @@ public class DdgDB {
 		if(pageTitle == null)
 			pageTitle = "";
 			
-		Cursor c = this.db.query(FEED_TABLE, null, "title=? AND url=?", new String[]{pageTitle, pageUrl} , null, null, null);
+		Cursor c = this.db.query(FEED_TABLE, null, "title=? AND url=? AND hidden='F'", new String[]{pageTitle, pageUrl} , null, null, null);
 		return c.moveToFirst();
 	}
 	
@@ -257,7 +319,15 @@ public class DdgDB {
 	}
 	
 	public FeedObject selectById(String id){
-		Cursor c = this.db.query(FEED_TABLE, null, "_id=?", new String[]{id} , null, null, null);
+		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
+		if(c.moveToFirst()) {
+			return getFeedObject(c);
+		}
+		return null;
+	}
+	
+	public FeedObject selectHiddenById(String id){
+		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='T'", new String[]{id} , null, null, null);
 		if(c.moveToFirst()) {
 			return getFeedObject(c);
 		}
@@ -265,7 +335,7 @@ public class DdgDB {
 	}
 	
 	public FeedObject selectByIdType(String id, String type){
-		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND type = ?", new String[]{id,type} , null, null, null);
+		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND type = ? AND hidden='F'", new String[]{id,type} , null, null, null);
 		if(c.moveToFirst()) {
 			return getFeedObject(c);
 		}
@@ -278,7 +348,7 @@ public class DdgDB {
 		}
 		
 		ArrayList<FeedObject> feeds = new ArrayList<FeedObject>(20);
-		Cursor c = this.db.query(FEED_TABLE, null, "type = ?", new String[]{type}, null, null, null, null);
+		Cursor c = this.db.query(FEED_TABLE, null, "type = ? AND hidden='F'", new String[]{type}, null, null, null, null);
 		if (c.moveToFirst()) {
 			do {
 				FeedObject e = getFeedObject(c);
@@ -350,11 +420,11 @@ public class DdgDB {
 	}
 	
 	public Cursor getCursorResultFeed() {
-		return this.db.query(FEED_TABLE, null, "feed=''", null , null, null, null);
+		return this.db.query(FEED_TABLE, null, "feed='' AND hidden='F'", null , null, null, null);
 	}
 	
 	public Cursor getCursorStoryFeed() {
-		return this.db.query(FEED_TABLE, null, "NOT feed=''", null , null, null, null);
+		return this.db.query(FEED_TABLE, null, "NOT feed='' AND hidden='F'", null , null, null, null);
 	}
 
 	
@@ -378,7 +448,8 @@ public class DdgDB {
 		  			    +"favicon VARCHAR(300), "
 		  			    +"timestamp VARCHAR(300), "
 		  			    +"category VARCHAR(300), "
-		  			    +"type VARCHAR(300)"
+		  			    +"type VARCHAR(300), "
+		  			    +"hidden CHAR(1)"
 		  			    +")"
 		  			    );
 		  			  
@@ -396,7 +467,8 @@ public class DdgDB {
 			  			    +"type VARCHAR(300), "
 			  			    +"data VARCHAR(300), "
 			  			    +"url VARCHAR(300), "
-			  			    +"extraType VARCHAR(300)"
+			  			    +"extraType VARCHAR(300), "
+			  			    +"feedId VARCHAR(300)"
 			  			    +")"
 			  			    );
 

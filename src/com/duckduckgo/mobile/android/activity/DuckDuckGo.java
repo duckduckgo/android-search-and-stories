@@ -265,7 +265,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			
 			String url = feedObject.getUrl();
 			if (url != null) {
-				DDGApplication.getDB().insertFeedItem(feedObject.getTitle(), feedObject.getUrl(), feedObject.getType());
+				DDGApplication.getDB().insertFeedItem(feedObject);
 				mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
 				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
 				
@@ -302,11 +302,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
 					}
 					else if(it.type == Item.ItemType.SAVE) {
-						DDGApplication.getDB().insert(fObject);
-						mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
-						mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
-						mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-						mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+						itemSave(pageTitle, pageUrl, fObject, null);
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
 						final int delResult = DDGApplication.getDB().deleteFeedObject(fObject);
@@ -341,17 +337,18 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
 			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
 						
-			boolean isPageSaved = false;
-			
-			if(historyObject instanceof SavedResultObject) {
-				isPageSaved = DDGApplication.getDB().isSaved(historyObject.getData(), historyObject.getUrl());
-			}
-			else if(historyObject instanceof HistoryObject){
-				isPageSaved = DDGApplication.getDB().isSavedInHistory(historyObject.getData(), historyObject.getUrl());
-			}
+			final boolean isPageSaved;
 			
 			final String pageData = historyObject.getData();
 			final String pageUrl = historyObject.getUrl();
+			final String pageFeedId = historyObject.getFeedId();
+			
+			if(pageFeedId != null && pageFeedId.length() != 0) {
+				isPageSaved = DDGApplication.getDB().isSaved(pageFeedId);
+			}
+			else {
+				isPageSaved = DDGApplication.getDB().isSaved(historyObject.getData(), historyObject.getUrl());
+			}
 			
 			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "history", isPageSaved);
 			
@@ -361,8 +358,28 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					if(it.type == Item.ItemType.SHARE) {						
 						DDGUtils.shareWebPage(DuckDuckGo.this, pageData, pageUrl);
 					}
+					else if(it.type == Item.ItemType.SAVE) {
+						itemSave(pageData, pageUrl, null, pageFeedId);
+					}
 					else if(it.type == Item.ItemType.UNSAVE) {
-						final int delHistory = DDGApplication.getDB().deleteByDataUrl(pageData, pageUrl);
+						final long delHistory;
+						if(pageFeedId != null && pageFeedId.length() != 0) {
+							delHistory = DDGApplication.getDB().makeItemHidden(pageFeedId);
+						}
+						else {
+							delHistory = DDGApplication.getDB().deleteByDataUrl(pageData, pageUrl);
+						}
+						if(delHistory != 0) {							
+							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+							mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
+							mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
+							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+						}	
+					}
+					else if(it.type == Item.ItemType.DELETE) {
+						final int delHistory = DDGApplication.getDB().deleteHistoryByDataUrl(pageData, pageUrl);
 						if(delHistory != 0) {							
 							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
 							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
@@ -386,6 +403,49 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     		
     	}
     };
+    
+    /**
+     * feedObject = real, first time SAVE for a feed item
+     * pageFeedId = mock save, make feed item visible
+     * feedObject = null -> pageTitle, pageUrl used to create Saved Result
+     * 
+     * @param pageTitle
+     * @param pageUrl
+     * @param feedObject
+     * @param pageFeedId
+     */
+    public void itemSave(String pageTitle, String pageUrl, FeedObject feedObject, String pageFeedId) {
+    	if(feedObject != null) {
+    		DDGApplication.getDB().insert(feedObject);
+    	}
+    	else if(pageFeedId != null && pageFeedId.length() != 0){
+    		DDGApplication.getDB().makeItemVisible(pageFeedId);
+    	}
+		else {							
+			// XXX WebView.getUrl() can throw null on us, when empty
+			if(pageUrl != null) {
+			
+				// take WebView (visible area) screenshot and save to file cache
+				Bitmap webBitmap = getBitmapFromView(mainWebView);
+				String imageFileName = "CUSTOM__" + pageUrl.replaceAll("\\W", ""); 
+				boolean success = DDGApplication.getFileCache().saveBitmapAsFile(imageFileName, webBitmap);
+				
+//				Log.v(TAG,"insert regular page: " + pageTitle + " " + pageUrl);
+				if(success) {
+					DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl, imageFileName));
+				}
+				else {
+					DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl));
+				}
+			
+			}
+		}
+		
+		mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
+		mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
+		mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+		mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+    }
 				
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -1957,34 +2017,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
 					}
 					else if(it.type == Item.ItemType.SAVE) {
-						if(isFeedObject) {
-							// browsing a feed item, we can save it as is
-							DDGApplication.getDB().insert(currentFeedObject);
-						}
-						else {							
-							// XXX WebView.getUrl() can throw null on us, when empty
-							if(pageUrl != null) {
-							
-								// take WebView (visible area) screenshot and save to file cache
-								Bitmap webBitmap = getBitmapFromView(mainWebView);
-								String imageFileName = "CUSTOM__" + pageUrl.replaceAll("\\W", ""); 
-								boolean success = DDGApplication.getFileCache().saveBitmapAsFile(imageFileName, webBitmap);
-								
-//								Log.v(TAG,"insert regular page: " + pageTitle + " " + pageUrl);
-								if(success) {
-									DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl, imageFileName));
-								}
-								else {
-									DDGApplication.getDB().insert(new FeedObject(pageTitle, pageUrl));
-								}
-							
-							}
-						}
-						
-						mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
-						mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
-						mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-						mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+						itemSave(pageTitle, pageUrl, currentFeedObject, null);
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
 						final int delHistory;
