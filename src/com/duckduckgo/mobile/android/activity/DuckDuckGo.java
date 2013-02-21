@@ -342,7 +342,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
 						
 			boolean isPageSaved = false;
-			final boolean isSavedResult;
 			
 			if(historyObject instanceof SavedResultObject) {
 				isPageSaved = DDGApplication.getDB().isSaved(historyObject.getData(), historyObject.getUrl());
@@ -374,7 +373,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						}	
 					}
 					else if(it.type == Item.ItemType.EXTERNAL) {
-    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mainWebView.getUrl()));
+    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
     	            	startActivity(browserIntent);
 					}
 					else if(it.type == Item.ItemType.REFRESH) {
@@ -1935,11 +1934,18 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						
 			boolean isPageSaved;
 			
+			final String pageTitle;
+			final String pageUrl;
+			
 			if(isFeedObject) {
+				pageTitle = currentFeedObject.getTitle();
+				pageUrl = currentFeedObject.getUrl();
 				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
 			}
 			else {
-				isPageSaved = DDGApplication.getDB().isSaved(mainWebView.getTitle(), mainWebView.getUrl()); 
+				pageTitle = mainWebView.getTitle();
+				pageUrl = mainWebView.getOriginalUrl();
+				isPageSaved = DDGApplication.getDB().isSaved(pageTitle, pageUrl); 
 			}			
 			
 			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview", isPageSaved);
@@ -1948,9 +1954,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				public void onClick(DialogInterface dialog, int item) {
 					Item it = ((Item) contextAdapter.getItem(item));
 					if(it.type == Item.ItemType.SHARE) {
-						String pageTitle = mainWebView.getTitle();
-						String pageUrl = mainWebView.getUrl();
-						
 						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
 					}
 					else if(it.type == Item.ItemType.SAVE) {
@@ -1958,10 +1961,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 							// browsing a feed item, we can save it as is
 							DDGApplication.getDB().insert(currentFeedObject);
 						}
-						else {
-							String pageTitle = mainWebView.getTitle();
-							String pageUrl = mainWebView.getUrl();
-							
+						else {							
 							// XXX WebView.getUrl() can throw null on us, when empty
 							if(pageUrl != null) {
 							
@@ -1986,8 +1986,25 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
 						mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
 					}
+					else if(it.type == Item.ItemType.UNSAVE) {
+						final int delHistory;
+						if(isFeedObject) {
+							delHistory = DDGApplication.getDB().deleteFeedObject(currentFeedObject);
+						}
+						else {
+							delHistory = DDGApplication.getDB().deleteByDataUrl(pageTitle, pageUrl);
+						}
+						if(delHistory != 0) {							
+							mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+							mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+							mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorResultFeed());
+							mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
+							mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+							mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+						}	
+					}
 					else if(it.type == Item.ItemType.EXTERNAL) {
-    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mainWebView.getUrl()));
+    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
     	            	startActivity(browserIntent);
 					}
 					else if(it.type == Item.ItemType.REFRESH) {
