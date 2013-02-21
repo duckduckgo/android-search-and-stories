@@ -88,7 +88,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
 				}     
         }
         else {
-        	imageViewHistory.setImageResource(R.drawable.ddg_source_icon);
+        	imageViewHistory.setImageResource(R.drawable.icon_history_search);
         }
         
         // query use button
