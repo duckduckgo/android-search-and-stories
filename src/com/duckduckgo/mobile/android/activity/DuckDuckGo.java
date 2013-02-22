@@ -287,10 +287,18 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			final String pageUrl = feedObject.getUrl();
 			final FeedObject fObject = feedObject;
 			
+			final String pageOptionsTitle; 
+			if(pageTitle != null && !pageTitle.equals("")) {
+				pageOptionsTitle = pageTitle;
+			}
+			else {
+				pageOptionsTitle = pageUrl;
+			}
+			
 			// FIXME unify this code as one, extend DialogInterface.OnClickListener
 			// to initialize with pageTitle, pageUrl and feedObject
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
+			ab.setTitle(pageOptionsTitle);
 			
 			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "mainfeed", feedObject.isSaved());
 			
@@ -327,10 +335,18 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			final String pageUrl = feedObject.getUrl();
 			final FeedObject fObject = feedObject;
 			
+			final String pageOptionsTitle; 
+			if(pageTitle != null && !pageTitle.equals("")) {
+				pageOptionsTitle = pageTitle;
+			}
+			else {
+				pageOptionsTitle = pageUrl;
+			}
+			
 			// FIXME unify this code as one, extend DialogInterface.OnClickListener
 			// to initialize with pageTitle, pageUrl and feedObject
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
+			ab.setTitle(pageOptionsTitle);
 			
 			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedfeed", feedObject.isSaved());
 			
@@ -361,15 +377,20 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     public OnHistoryItemLongClickListener mSavedResultLongClickListener = new OnHistoryItemLongClickListener() {
     	@Override
     	public void onHistoryItemLongClick(ParentHistoryObject savedResultObject) {
-    		// TODO Auto-generated method stub
+    		final String pageOptionsTitle; 
+    		final String pageData = savedResultObject.getData();
+    		final String pageUrl = savedResultObject.getUrl();
+			if(pageData != null && !pageData.equals("")) {
+				pageOptionsTitle = pageData;
+			}
+			else {
+				pageOptionsTitle = pageUrl;
+			}
     
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
+			ab.setTitle(pageOptionsTitle);
 						
-			final boolean isPageSaved = DDGApplication.getDB().isSaved(savedResultObject.getData(), savedResultObject.getUrl());
-			
-			final String pageData = savedResultObject.getData();
-			final String pageUrl = savedResultObject.getUrl();
+			final boolean isPageSaved = DDGApplication.getDB().isSaved(pageData, pageUrl);
 						
 			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedresult", isPageSaved);
 			
@@ -400,16 +421,22 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     public OnHistoryItemLongClickListener mHistoryLongClickListener = new OnHistoryItemLongClickListener() {
     	@Override
     	public void onHistoryItemLongClick(ParentHistoryObject historyObject) {
-    		// TODO Auto-generated method stub
-    
-			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
-						
-			final boolean isPageSaved;
-			
-			final String pageData = historyObject.getData();
+    		final String pageData = historyObject.getData();
 			final String pageUrl = historyObject.getUrl();
 			final String pageFeedId = historyObject.getFeedId();
+    		
+    		final String pageOptionsTitle; 
+			if(pageData != null && !pageData.equals("")) {
+				pageOptionsTitle = pageData;
+			}
+			else {
+				pageOptionsTitle = pageUrl;
+			}
+    
+			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
+			ab.setTitle(pageOptionsTitle);
+						
+			final boolean isPageSaved;					
 			
 			if(pageFeedId != null && pageFeedId.length() != 0) {
 				isPageSaved = DDGApplication.getDB().isSaved(pageFeedId);
@@ -2054,9 +2081,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 		else if (v.equals(shareButton)) {			
 			hideKeyboard(searchField);
-
-			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(getResources().getString(R.string.MoreMenuTitle));
 						
 			boolean isPageSaved;
 			
@@ -2072,9 +2096,20 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				pageTitle = mainWebView.getTitle();
 				pageUrl = mainWebView.getOriginalUrl();
 				isPageSaved = DDGApplication.getDB().isSaved(pageTitle, pageUrl); 
+			}
+			
+			final String pageOptionsTitle; 
+			if(pageTitle != null && !pageTitle.equals("")) {
+				pageOptionsTitle = pageTitle;
+			}
+			else {
+				pageOptionsTitle = pageUrl;
 			}			
 			
 			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview", isPageSaved);
+			
+			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
+			ab.setTitle(pageOptionsTitle);
 			
 			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
