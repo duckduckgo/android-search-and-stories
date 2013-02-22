@@ -53,20 +53,30 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 			else
 				add(dialogItems.get(ItemType.SAVE));
 		}
-		else if(pageType.equals("webview")) {
+		else if(pageType.equals("savedfeed")) {
+			add(dialogItems.get(ItemType.SHARE));
+			add(dialogItems.get(ItemType.EXTERNAL));			
+			add(dialogItems.get(ItemType.UNSAVE));
+		}
+		else if(pageType.equals("savedresult")) {
 			add(dialogItems.get(ItemType.SHARE));
 			add(dialogItems.get(ItemType.EXTERNAL));
-			add(dialogItems.get(ItemType.REFRESH));
+			add(dialogItems.get(ItemType.UNSAVE));
+		}
+		else if(pageType.equals("history")) {
+			add(dialogItems.get(ItemType.SHARE));
+			add(dialogItems.get(ItemType.EXTERNAL));
+			add(dialogItems.get(ItemType.DELETE));
 			
 			if(isItemSaved)
 				add(dialogItems.get(ItemType.UNSAVE));
 			else
 				add(dialogItems.get(ItemType.SAVE));
 		}
-		else if(pageType.equals("history")) {
+		else if(pageType.equals("webview")) {
 			add(dialogItems.get(ItemType.SHARE));
 			add(dialogItems.get(ItemType.EXTERNAL));
-			add(dialogItems.get(ItemType.DELETE));
+			add(dialogItems.get(ItemType.REFRESH));
 			
 			if(isItemSaved)
 				add(dialogItems.get(ItemType.UNSAVE));

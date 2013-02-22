@@ -8,10 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 
 
@@ -39,7 +37,7 @@ public class SavedFeedTabFragment extends Fragment {
     		savedFeedView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedFeedAdapter);
 
     		savedFeedView.setOnMainFeedItemSelectedListener(((DuckDuckGo) activity).mFeedItemSelectedListener);
-    		savedFeedView.setOnMainFeedItemLongClickListener(((DuckDuckGo) activity).mFeedItemLongClickListener);
+    		savedFeedView.setOnMainFeedItemLongClickListener(((DuckDuckGo) activity).mSavedFeedItemLongClickListener);
     		
 		}
 		
