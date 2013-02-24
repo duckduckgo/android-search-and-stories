@@ -12,7 +12,6 @@ import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
-import com.duckduckgo.mobile.android.tasks.SavedFeedTask;
 import com.duckduckgo.mobile.android.util.SCREEN;
 
 public class DuckDuckGoContainer {
@@ -30,7 +29,6 @@ public class DuckDuckGoContainer {
 	
 	public MainFeedAdapter feedAdapter = null;
 	public MainFeedTask mainFeedTask = null;
-	public SavedFeedTask savedFeedTask = null;
 	public boolean allowInHistory = false;
 		
 	public DownloadSourceIconTask sourceIconTask = null;

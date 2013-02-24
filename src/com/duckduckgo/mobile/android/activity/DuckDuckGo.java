@@ -102,7 +102,6 @@ import com.duckduckgo.mobile.android.objects.history.SavedResultHistoryObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
-import com.duckduckgo.mobile.android.tasks.SavedFeedTask;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -1821,19 +1820,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	public void onFeedRetrievalFailed() {
 
-		// Do not retry for SavedFeedTask, DB reply should be usable, when good or bad
-		if (mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED && mDuckDuckGoContainer.savedFeedTask != null) {
-			Toast.makeText(this, R.string.SavedFeedEmpty, Toast.LENGTH_LONG).show();
-			
-			// nothing to show, redirect to Home View screen
-			if(DDGControlVar.START_SCREEN != SCREEN.SCR_SAVED_FEED) {
-				switchScreens();
-			}
-		}
-		
 		//If the mainFeedTask is null, we are currently paused
 		//Otherwise, we can try again
-		else if (!(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) && mDuckDuckGoContainer.mainFeedTask != null) {
+		if (mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mDuckDuckGoContainer.mainFeedTask != null) {
 			
 			// Create the AlertDialog
 			AlertDialog failDialog = cacheDialogBuilder.create();
@@ -2307,11 +2296,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	{
 		if (!DDGControlVar.hasUpdatedFeed) {
 			
-			if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) {
-				mDuckDuckGoContainer.savedFeedTask = new SavedFeedTask(this);
-				mDuckDuckGoContainer.savedFeedTask.execute();
-			}
-			else if(sharedPreferences.contains("sourceset_size") && sharedPreferences.getInt("sourceset_size", 0) == 0) {
+			if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_STORIES)
+				return;
+			
+			
+			if(sharedPreferences.contains("sourceset_size") && sharedPreferences.getInt("sourceset_size", 0) == 0) {
 				// respect user choice of empty source list: show nothing
 				onFeedRetrieved(new ArrayList<FeedObject>(), true);
 			}
