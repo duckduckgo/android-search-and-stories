@@ -2117,7 +2117,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				pageTitle = mainWebView.getTitle();
 				pageUrl = mainWebView.getOriginalUrl();
 				pageType = "W";
-				isPageSaved = DDGApplication.getDB().isSaved(pageTitle, pageUrl); 
+				isPageSaved = DDGApplication.getDB().isSavedInOthers(pageTitle, pageUrl); 
 			}
 			
 			final String pageOptionsTitle; 
