@@ -48,42 +48,8 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         textViewHistory.setTextSize(DDGControlVar.recentTextSize);
         
         String strUrl = cursor.getString(cursor.getColumnIndex("url"));
-        String extraType = cursor.getString(cursor.getColumnIndex("type"));
         AsyncImageView imageViewHistory = (AsyncImageView) view.findViewById(R.id.recentSearchImage);
-        if(extraType.length() != 0) {
-          imageViewHistory.setType(extraType);
-          
-	          if (strUrl != null) {
-	        	  URL url = null;
-	        	  try {
-	        	  	url = new URL(strUrl);
-	        	  } catch (MalformedURLException e) {
-	  				e.printStackTrace();
-	    		  }     
-	        	  	
-	        	  	if (url != null) {
-						String host = url.getHost();
-						if (host.indexOf(".") != host.lastIndexOf(".")) {
-							//Cut off the beginning, because we don't want/need it
-							host = host.substring(host.indexOf(".")+1);
-						}
-						
-						Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + extraType, false);
-						if(bitmap != null){
-							imageViewHistory.setBitmap(bitmap);
-						}
-						else {
-							DDGApplication.getImageDownloader().download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", imageViewHistory, false);
-						}
-	        	  	}
-	          }
-	          else {
-	        	  DDGApplication.getImageDownloader().download(null, imageViewHistory, false);
-				}     
-        }
-        else {
-        	imageViewHistory.setImageResource(R.drawable.icon_history_search);
-        }
+        imageViewHistory.setImageResource(R.drawable.icon_history_search);
 
     }
 }

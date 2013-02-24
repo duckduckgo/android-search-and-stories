@@ -10,7 +10,9 @@ import android.widget.LinearLayout;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.objects.ParentHistoryObject;
+import com.duckduckgo.mobile.android.objects.history.HistoryObject;
+import com.duckduckgo.mobile.android.objects.history.ParentHistoryObject;
+import com.duckduckgo.mobile.android.objects.history.SavedResultHistoryObject;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemSelectedListener;
 
@@ -39,8 +41,11 @@ public class SavedResultTabFragment extends Fragment {
 			savedSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 				
 				public void onHistoryItemSelected(ParentHistoryObject historyObject) {
-					if(historyObject != null){	
-						((DuckDuckGo) activity).showWebUrl(historyObject.getUrl());
+					if(historyObject != null){							
+						if(historyObject instanceof HistoryObject)
+							((DuckDuckGo) activity).showHistoryObject((HistoryObject) historyObject);
+						else if(historyObject instanceof SavedResultHistoryObject)
+							((DuckDuckGo) activity).showSavedResultObject((SavedResultHistoryObject) historyObject);						
 					}			
 				}
 			});

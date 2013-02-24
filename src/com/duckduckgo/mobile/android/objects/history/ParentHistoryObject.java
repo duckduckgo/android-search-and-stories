@@ -1,4 +1,4 @@
-package com.duckduckgo.mobile.android.objects;
+package com.duckduckgo.mobile.android.objects.history;
 
 public class ParentHistoryObject {
 	protected String type;

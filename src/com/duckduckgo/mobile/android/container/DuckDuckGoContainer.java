@@ -3,7 +3,6 @@ package com.duckduckgo.mobile.android.container;
 import java.util.LinkedList;
 
 import android.graphics.drawable.Drawable;
-import android.widget.ArrayAdapter;
 
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;

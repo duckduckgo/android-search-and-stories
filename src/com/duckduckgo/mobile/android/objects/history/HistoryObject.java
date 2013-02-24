@@ -1,4 +1,4 @@
-package com.duckduckgo.mobile.android.objects;
+package com.duckduckgo.mobile.android.objects.history;
 
 import android.database.Cursor;
 

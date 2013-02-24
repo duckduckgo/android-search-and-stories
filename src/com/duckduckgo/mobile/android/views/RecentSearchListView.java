@@ -9,9 +9,9 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
-import com.duckduckgo.mobile.android.objects.HistoryObject;
-import com.duckduckgo.mobile.android.objects.ParentHistoryObject;
-import com.duckduckgo.mobile.android.objects.SavedResultObject;
+import com.duckduckgo.mobile.android.objects.history.HistoryObject;
+import com.duckduckgo.mobile.android.objects.history.ParentHistoryObject;
+import com.duckduckgo.mobile.android.objects.history.SavedResultHistoryObject;
 
 public class RecentSearchListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
@@ -44,7 +44,7 @@ public class RecentSearchListView extends ListView implements android.widget.Ada
 		}
 		else if(adapter instanceof SavedResultCursorAdapter) {
 			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
-			obj = new SavedResultObject(c);
+			obj = new SavedResultHistoryObject(c);
 		}
 		
 		if (obj != null) {
@@ -68,7 +68,7 @@ public class RecentSearchListView extends ListView implements android.widget.Ada
 		}
 		else if(adapter instanceof SavedResultCursorAdapter) {
 			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
-			obj = new SavedResultObject(c);
+			obj = new SavedResultHistoryObject(c);
 		}
 		
 		if (obj != null) {

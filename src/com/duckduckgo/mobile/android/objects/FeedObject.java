@@ -1,13 +1,11 @@
 package com.duckduckgo.mobile.android.objects;
 
-import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.duckduckgo.mobile.android.DDGApplication;
-
 import android.database.sqlite.SQLiteCursor;
+
+import com.duckduckgo.mobile.android.DDGApplication;
 
 public class FeedObject {
 	private final String feed;
