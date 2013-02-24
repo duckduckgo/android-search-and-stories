@@ -1932,6 +1932,41 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 	}
 	
+	
+	/** 
+	 * change button visibility in left-side navigation menu
+	 * according to screen
+	 */
+	private void changeLeftMenuVisibility(SCREEN screen) {		
+		// stories button
+		if(DDGControlVar.START_SCREEN != SCREEN.SCR_STORIES) {
+				leftStoriesButtonLayout.setVisibility(View.VISIBLE);
+		}
+		else {
+	    	leftStoriesButtonLayout.setVisibility(View.GONE);
+		}
+		
+		// saved button
+		if(DDGControlVar.START_SCREEN != SCREEN.SCR_SAVED_FEED) {
+			leftSavedButtonLayout.setVisibility(View.VISIBLE);
+		}
+		else {
+			leftSavedButtonLayout.setVisibility(View.GONE);
+		}
+    	
+		// recent search button
+    	if(DDGControlVar.START_SCREEN != SCREEN.SCR_RECENT_SEARCH) {
+    		leftRecentTextView.setVisibility(View.VISIBLE);
+        	leftRecentView.setVisibility(View.VISIBLE);
+    	}
+    	else {
+    		leftRecentTextView.setVisibility(View.GONE);
+        	leftRecentView.setVisibility(View.GONE);
+    	}
+
+	}
+	
+	
 	/**
 	 * helper method to control visibility states etc. of other views in DuckDuckGo activity
 	 */
@@ -1965,16 +2000,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 //    	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
     	
 		// left side menu visibility changes
-    	leftRecentTextView.setVisibility(View.VISIBLE);
+		changeLeftMenuVisibility(SCREEN.SCR_STORIES);
     	
     	// adjust "not recording" indicator
     	displayRecordHistoryDisabled();
-    	
-    	leftRecentView.setVisibility(View.VISIBLE);	
-    	leftSavedButtonLayout.setVisibility(View.VISIBLE);
-    	leftStoriesButtonLayout.setVisibility(View.GONE);		
-		
-		
+				
 		if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) {
 			DDGControlVar.hasUpdatedFeed = false;
 		}
@@ -1997,11 +2027,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		resetScreenState();
 		
 		// left side menu visibility changes
-    	leftRecentTextView.setVisibility(View.VISIBLE);
-    	leftRecentView.setVisibility(View.VISIBLE);
-    	leftSavedButtonLayout.setVisibility(View.GONE);
-    	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
-		
+		changeLeftMenuVisibility(SCREEN.SCR_SAVED_FEED);		
 		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SAVED_FEED;
     	
     	viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());
@@ -2027,10 +2053,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 //    	lMainAdapter.insert(getString(R.string.LeftRecentQueries), 0); 
 		
 		// left side menu visibility changes
-    	leftRecentTextView.setVisibility(View.GONE);
-    	leftRecentView.setVisibility(View.GONE);
-    	leftSavedButtonLayout.setVisibility(View.VISIBLE);
-    	leftStoriesButtonLayout.setVisibility(View.VISIBLE);
+		changeLeftMenuVisibility(SCREEN.SCR_RECENT_SEARCH);
 		
     	// main view visibility changes
 		shareButton.setVisibility(View.GONE);
