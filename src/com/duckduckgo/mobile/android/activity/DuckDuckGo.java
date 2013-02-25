@@ -886,7 +886,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				}	
 			}
 
-		});
+		});        
+        recentSearchView.setOnHistoryItemLongClickListener(mHistoryLongClickListener);
         
         
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) contentView.findViewById(R.id.mainFeedItems);

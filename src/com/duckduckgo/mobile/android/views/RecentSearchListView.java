@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
@@ -69,6 +70,11 @@ public class RecentSearchListView extends ListView implements android.widget.Ada
 		else if(adapter instanceof SavedResultCursorAdapter) {
 			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
 			obj = new SavedResultHistoryObject(c);
+		}
+		// XXX Recent Search view has a header view, so we receive HeaderviewListAdapter
+		else if(adapter instanceof HeaderViewListAdapter) {			
+			c = (Cursor) ((HeaderViewListAdapter) adapter).getItem(position);
+			obj = new HistoryObject(c);
 		}
 		
 		if (obj != null) {
