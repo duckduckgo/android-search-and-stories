@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="AppName">DuckDuckGo</string>
+    <string name="SearchString">Искать в DuckDuckGo...</string>
+    <string name="SettingsButtonContentDescription">Настройки</string>
+    <string name="HomeButtonContentDescription">Домой</string>
+    
+    <string name="search_hint">Поиск...</string>
+    
+    <string name="PrefGroupAppFlow">Приложение</string>
+    <string name="PrefGroupPrivacy">Конфиденциальность</string>
+    <string name="PrefGroupFeedback">Отзыв</string>
+    <string name="PrefStartScreen">Основной экран</string>
+    <string name="PrefStories">Истории</string>
+    <string name="PrefSavedItems">Сохранено</string>
+    <string name="PrefRecentSearch">Недавние запросы</string>
+    <string name="PrefRecordHistory">История запросов</string>
+    <string name="PrefClearHistory">Очистить историю</string>
+    <string name="PrefSources">Изменить источники</string>
+    <string name="PrefResetSources">Сбросить источники</string>
+    <string name="PrefRegion">Задать регион</string>
+    <string name="PrefModifyQuery">Редактировать автозаполнение результатов</string>
+    <string name="PrefExternalBrowser">Всегда использовать внешний браузер</string>
+    <string name="PrefSendFeedback">Отправить отзыв</string>
+    <string name="PrefRate">Оценить</string>
+    <string name="PrefAppSearch">Включить приложения в поиск</string>
+    <string name="PrefEnableAcra">Сообщение о ошибке</string>
+    <string name="PrefAcraDisabled">Отключено</string>
+    <string name="PrefAcraEnabled">Включено</string>
+    
+    <string name="send_to">sharin\' stuff.</string>
+    
+    <string name="Yes">Да</string>
+    <string name="No">Нет</string>
+    
+    <string name="MainFeedContextTitle">sharin\' stuff.</string>
+    <string name="Save">Сохранить</string>
+    <string name="Unsave">Не сохранять</string>
+    <string name="Share">Поделиться</string>
+    
+    <string name="LeftStories">Истории</string>
+    <string name="LeftSaved">Сохранено</string>
+    <string name="LeftSettings">Настройки</string>
+    <string name="LeftRecent">Недавние</string>
+    <string name="LeftRecentQueries">Недавние запросы</string>
+    
+    <string name="Confirm">Подтвердить</string>
+    <string name="ConfirmClearHistory">Вся история запросов будет удалена. Вы уверены?</string>
+    
+    <string name="Defaults">Умолчания</string>
+    
+    <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
+    <string name="FeedbackSubject">DuckDuckGo Android v2</string>
+    
+    <string name="SavedFeedEmpty">Здесь пока пусто!</string>
+    
+    <string name="MoreMenuTitle">Опции страницы</string>
+    
+    <string name="OpenInExternalBrowser">Открыть во внешнем браузере </string>
+    <string name="ConfirmExternalBrowser">Пожалуйста подтвердите</string>
+    
+    <string name="crash_toast_text">Приложение закрылось! Связанная с этим информация сохранена и доступна для отправки разработчику.</string>
+    <string name="crash_notif_ticker_text">Неожиданная ошибка. Пожалуйста, отправьте отзыв разработчику...</string>
+    <string name="crash_notif_title">DuckDuckGo crash report</string>
+    <string name="crash_notif_text">Пожалуйста, кликните здесь, чтобы  помочь нам выявить причину ошибки.</string>
+    <string name="crash_dialog_text">Неожиданная ошибка, приложение будет закрыто. 
+        Помогите нам исправить проблему кликнув \'OK\' для отправки сообщения о ошибке. 
+        (ВАЖНО:  Деликатная информация, такая как введёные запросы или посещённые сайты будет включена в отчёт).</string>
+    <string name="crash_dialog_comment_prompt">Ваш комментарий: </string>
+    <string name="crash_dialog_ok_toast">Спасибо за помощь!</string>
+    
+    <string name="ErrorAppNotFound">Приложение не найдено</string>
+    <string name="ErrorActivityNotFound">Нет связанных действий!</string>
+    <string name="ErrorDownloadFailed">Загрузка прервана!</string>
+    
+    <string name="InfoReadStoriesFromCache">Соединение потеряно! Загружено из кэша...</string>
+    <string name="DefaultsSetToast">Значения по умолчанию восстановленны.</string>
+
+</resources>
