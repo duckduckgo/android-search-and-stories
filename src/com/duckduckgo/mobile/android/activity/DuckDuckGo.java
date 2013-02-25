@@ -171,9 +171,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private SharedPreferences sharedPreferences;
 		
 	private boolean savedState = false;
-	
-	ArrayList<String> listContent;
-	
+		
 	private final int PREFERENCES_RESULT = 0;
 	
 	FeedObject currentFeedObject = null;
@@ -562,16 +560,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
         		        
         setContentView(R.layout.pager);
-        
-//        TelephonyManager tm = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
-//        String countryCode = tm.getSimCountryIso();
-//        String lang = getResources().getConfiguration().locale.getLanguage();
-//        Log.v("COUNLANG",countryCode + " " + lang);
-        
+          
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-//        int height = displaymetrics.heightPixels;
-//        int wwidth = displaymetrics.widthPixels;
         DDGUtils.feedItemWidth = displaymetrics.widthPixels;
         
         DDGUtils.feedItemHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
@@ -626,10 +617,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     		mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
     		
     		mDuckDuckGoContainer.recentSearchList = DDGUtils.loadList(sharedPreferences, "recentsearch");
-
-//    		mDuckDuckGoContainer.recentSearchAdapter = new CustomArrayAdapter<String>(this, 
-//            		R.layout.recentsearch_list_layout, R.id.recentSearchText, 
-//            		mDuckDuckGoContainer.recentSearchList);
     		
     		mDuckDuckGoContainer.recentSearchAdapter = new HistoryCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorHistory());
     		
@@ -665,10 +652,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         viewFlipper = (ViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
         // viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
 //        viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());       
-        
-    	    	
-//		contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1);
-		
+        		
 		cacheDialogBuilder = new AlertDialog.Builder(this);
 		// Add the buttons
 		cacheDialogBuilder.setTitle(R.string.ErrorFeedTitle);
@@ -746,13 +730,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	leftSettingsTextView.setOnClickListener(this);
     	
     	leftRecentView = (RecentSearchListView) leftMenuView.findViewById(R.id.LeftRecentView);
-    	
-    	// XXX Setup tabbed saved view
-    	
-    	listContent = new ArrayList<String>();
-    	for(String s : getResources().getStringArray(R.array.leftMenuDefault)) {
-    		listContent.add(s);
-    	}
     	
 		leftRecentHeaderView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.recentsearch_notrecording_layout, null, false);
 		leftRecentHeaderView.setOnClickListener(this);
@@ -1509,12 +1486,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			else if(!(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS)){
 				switchScreens();
 			}
-			
-			// removed the distinction between widget and regular app icon
-			// https://app.asana.com/0/230839424767/2717382704705
-//			if(intent.getBooleanExtra("widget", false)) {
-				showKeyboard(searchField);				
-//			}
+						
+			if(DDGControlVar.START_SCREEN == mDuckDuckGoContainer.currentScreen) {
+				showKeyboard(searchField);
+			}
 		
 		}
 		
