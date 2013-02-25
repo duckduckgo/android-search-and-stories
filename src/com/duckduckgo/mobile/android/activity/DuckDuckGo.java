@@ -30,6 +30,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.MailTo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -1300,6 +1301,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			}
 		});
 		
+        
+        
+        // show Home screen
+        switchScreens();
     }	
 	
 	/**
@@ -1479,13 +1484,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			mDuckDuckGoContainer.sourceIconTask.execute();
 		
 			if(intent.getBooleanExtra("widget", false)) {
-				switchScreens();
+				viewFlipper.setDisplayedChild(DDGControlVar.START_SCREEN.getFlipOrder());
+				showKeyboard(searchField);
 			}
 			else if(mDuckDuckGoContainer.webviewShowing){
-					viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
-			}	
-			else if(!(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS)){
-				switchScreens();
+				viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 			}
 		
 		}
@@ -2288,6 +2291,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	/**
 	 * Refresh feed if it's not marked as updated
 	 */
+	@SuppressLint("NewApi")
 	private void keepFeedUpdated()
 	{
 		if (!DDGControlVar.hasUpdatedFeed) {
@@ -2302,11 +2306,19 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			}
 			else {
 				// cache
-				new MainFeedTask(DuckDuckGo.this, this, true).execute();
+				MainFeedTask cacheTask = new MainFeedTask(DuckDuckGo.this, this, true);
 			
 				// for HTTP request
 				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, this);
-				mDuckDuckGoContainer.mainFeedTask.execute();
+				
+				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+					cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+					mDuckDuckGoContainer.mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+				}
+				else {
+					cacheTask.execute();
+					mDuckDuckGoContainer.mainFeedTask.execute();
+				}
 			}
 		}
 	}
