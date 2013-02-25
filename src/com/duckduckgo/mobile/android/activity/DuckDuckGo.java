@@ -1428,7 +1428,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         
         mDuckDuckGoContainer.currentScreen = DDGControlVar.START_SCREEN;
         
-		if(mDuckDuckGoContainer.searchResultPage) {
+		if(mDuckDuckGoContainer.searchResultPage
+				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED) {
 			// previous screen was a SERP
 			showKeyboard(searchField);
 		}
@@ -1485,10 +1486,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			}	
 			else if(!(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS)){
 				switchScreens();
-			}
-						
-			if(DDGControlVar.START_SCREEN == mDuckDuckGoContainer.currentScreen) {
-				showKeyboard(searchField);
 			}
 		
 		}
