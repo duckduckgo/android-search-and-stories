@@ -6,58 +6,38 @@
     
     <ImageView style="@style/LeftDivTop" />
 
-    	<LinearLayout
+    <LinearLayout
 	    android:layout_width="fill_parent"
-	    android:layout_height="match_parent"
+	    android:layout_height="wrap_content"
 	    style="@style/RecentListItemRoot"
 	    android:orientation="horizontal" >    
-	    
-<!-- 	    	<ImageView android:layout_width="20dp" -->
-<!-- 	        android:layout_height="20dp" -->
-<!-- 	        android:layout_gravity="center_vertical" -->
-<!-- 	        android:scaleType="centerInside" -->
-<!-- 	        android:src="@drawable/ddg_source_icon" -->
-<!-- 	        android:id="@+id/recentSearchImage"/> -->
 
-	<com.duckduckgo.mobile.android.download.AsyncImageView style="@style/MainFeedText" 
-		    	   android:layout_width="20dp"
-		    	   android:layout_height="20dp"
-		    	   android:layout_gravity="center_vertical"
-		    	   android:scaleType="centerInside"
-		    	   android:src="@drawable/icon_history_search"
-		    	   android:id="@+id/recentSearchImage" />
-    
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
-	    style="@style/RecentItemText"
-	    android:id="@+id/recentSearchText" 
-	    android:layout_weight="1"
-	    android:text="This is test Text" />
-    
-    <Button
-     android:layout_height="match_parent"
-     android:layout_width="30dp"
-     android:focusable="false"
-     android:visibility="gone"
-     android:background="@android:color/transparent"
-     style="@style/RecentItemText"
-     android:text="+"
-     android:gravity="center"
-     android:id="@+id/recentSearchPaste" />
+		<com.duckduckgo.mobile.android.download.AsyncImageView style="@style/MainFeedText" 
+			    	   android:layout_width="20dp"
+			    	   android:layout_height="20dp"
+			    	   android:layout_gravity="center_vertical"
+			    	   android:scaleType="centerInside"
+			    	   android:src="@drawable/icon_history_search"
+			    	   android:id="@+id/recentSearchImage" />
+	    
+	    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+		    style="@style/RecentItemText"
+		    android:id="@+id/recentSearchText" 
+		    android:layout_weight="1"
+		    android:text="This is test Text" />
+	    
+	    <Button
+	     android:layout_height="match_parent"
+	     android:layout_width="30dp"
+	     android:focusable="false"
+	     android:visibility="gone"
+	     android:background="@android:color/transparent"
+	     style="@style/RecentItemText"
+	     android:text="+"
+	     android:gravity="center"
+	     android:id="@+id/recentSearchPaste" />
     
     </LinearLayout>
-    
-<!--             <TextView android:layout_width="wrap_content" -->
-<!--             	  android:layout_height="wrap_content" -->
-<!--             	  android:layout_marginTop="5dp" -->
-<!--             	  android:layout_marginBottom="5dp" -->
-<!--             	  android:paddingLeft="5dp" -->
-<!--             	  android:paddingRight="5dp" -->
-<!--             	  style="@style/ListItemText" -->
-<!--             	  android:textSize="18dp" -->
-<!--             	  android:text="This is test Text" -->
-<!--             	  android:textStyle="bold" -->
-<!--             	  android:id="@+id/recentSearchText"> -->
-<!--         </TextView> -->
     
     <ImageView style="@style/LeftDivBottom" />
     

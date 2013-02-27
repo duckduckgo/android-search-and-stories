@@ -8,6 +8,7 @@
     <com.duckduckgo.mobile.android.views.RecentSearchListView
             	  android:layout_width="match_parent"
                   android:layout_height="match_parent"                  
+                  style="@style/SavedResultListView"   
                   android:id="@+id/savedSearchItems" />
     
 </LinearLayout>
