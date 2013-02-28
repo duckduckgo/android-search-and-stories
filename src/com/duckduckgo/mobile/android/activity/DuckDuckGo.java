@@ -1304,7 +1304,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         
         
         // show Home screen
-        switchScreens();
+        displayHomeScreen();
     }	
 	
 	/**
@@ -1414,24 +1414,46 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	leftMenuView.invalidate();
 	}
 	
-	private void switchScreens(){
-        // control which start screen is shown & configure related views
+	/**
+	 * Displays given screen (stories, saved, settings etc.)
+	 * 
+	 * @param screen Screen to display
+	 * @param clean Whether screen state (searchbar, browser etc.) states will get cleaned
+	 */
+	private void displayScreen(SCREEN screen, boolean clean) {
+			if(clean) {
+				resetScreenState();
+			}
 		
-		if(DDGControlVar.prevMainTextSize != 0) {
-			fontSizeLayout.setVisibility(View.VISIBLE);
-		}
-		
-        if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){        	
-        	displayNewsFeed();
-        }
-        else if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){        	
-        	displayRecentSearch();
-        }
-        else if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){        	
-        	displaySavedFeed();
-        }
-        
-        mDuckDuckGoContainer.currentScreen = DDGControlVar.START_SCREEN;
+	        // control which screen is shown & configure related views
+			
+			if(DDGControlVar.prevMainTextSize != 0) {
+				fontSizeLayout.setVisibility(View.VISIBLE);
+			}
+			
+			switch(screen) {
+				case SCR_STORIES:
+					displayNewsFeed();
+					break;
+				case SCR_RECENT_SEARCH:
+					displayRecentSearch();
+					break;
+				case SCR_SAVED_FEED:
+					displaySavedFeed();
+					break;
+				case SCR_SETTINGS:
+					displaySettings();
+					break;
+				default:
+					break;
+			}
+	        
+			mDuckDuckGoContainer.prevScreen = mDuckDuckGoContainer.currentScreen;
+	        mDuckDuckGoContainer.currentScreen = screen;	        			
+	}
+	
+	private void displayHomeScreen() {
+		displayScreen(DDGControlVar.START_SCREEN, true);
         
 		if(mDuckDuckGoContainer.searchResultPage
 				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED) {
@@ -1546,18 +1568,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			if (mainWebView.canGoBack()) {
 				mainWebView.goBack();
 			}
-			else if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) {
-				clearSearchBar();
-				clearBrowserState();
-				displaySavedFeed();
-			}
 			else {
-				// going home
-				switchScreens();
+				displayScreen(mDuckDuckGoContainer.currentScreen, true);
 			}
 		}
 		else if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS){
-			switchScreens();
+			// go back to where we left of
+			displayScreen(mDuckDuckGoContainer.prevScreen, false);
 		}
 		else if(fontSizeLayout.getVisibility() != View.GONE) {
 			cancelFontScaling();
@@ -1836,7 +1853,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						DDGControlVar.prevPtrHeaderSize = DDGControlVar.ptrHeaderSize;
 						DDGControlVar.prevPtrSubHeaderSize = DDGControlVar.ptrSubHeaderSize;
 						DDGControlVar.prevLeftTitleTextSize = DDGControlVar.leftTitleTextSize;
-						switchScreens();
+						displayHomeScreen();
 					}
 					else if(preference.getKey().equals("recordHistoryPref")){
 						displayRecordHistoryDisabled();
@@ -1879,7 +1896,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
                     mWorkFragment).commit();  
         }
         
-        displayPreferences();
+        makePreferencesVisible();
 	}
 	
 	private void clearLeftSelect() {
@@ -1892,11 +1909,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	/**
 	 * main method that triggers display of Preferences screen or fragment
 	 */
-	private void showSettings() {
-		if(!((mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS))){
-			
-			mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SETTINGS;
-			
+	private void displaySettings() {
+		if(!((mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS))){					
 			if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
 		        Intent intent = new Intent(getBaseContext(), Preferences.class);
 		        startActivityForResult(intent, PREFERENCES_RESULT);
@@ -1946,10 +1960,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	/**
 	 * helper method to control visibility states etc. of other views in DuckDuckGo activity
 	 */
-	public void displayPreferences(){		
+	public void makePreferencesVisible(){		
 		viewFlipper.setDisplayedChild(SCREEN.SCR_SETTINGS.getFlipOrder());
 		shareButton.setVisibility(View.GONE);
-		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SETTINGS;
 				
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 		mDuckDuckGoContainer.webviewShowing = false;
@@ -1980,11 +1993,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	
     	// adjust "not recording" indicator
     	displayRecordHistoryDisabled();
-				
-		if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) {
-			DDGControlVar.hasUpdatedFeed = false;
-		}
-		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_STORIES;
+    	if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_STORIES) {
+    		DDGControlVar.hasUpdatedFeed = false;
+    	}
 		
 		displayFeedCore();
 		clearLeftSelect();
@@ -2003,8 +2014,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		resetScreenState();
 		
 		// left side menu visibility changes
-		changeLeftMenuVisibility(SCREEN.SCR_SAVED_FEED);		
-		mDuckDuckGoContainer.currentScreen = SCREEN.SCR_SAVED_FEED;
+		changeLeftMenuVisibility(SCREEN.SCR_SAVED_FEED);
     	
     	viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());
     	
@@ -2083,7 +2093,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			}
 			else {
 				// going home
-				switchScreens();
+				displayHomeScreen();
 			}
 		}
 		else if (v.equals(shareButton)) {			
@@ -2166,26 +2176,20 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				mDuckDuckGoContainer.webviewShowing = false;					
 			}
 			
-			switchScreens();
+			displayHomeScreen();
 		}
 		else if(v.equals(leftStoriesTextView)){
 			viewPager.switchPage();		
-			displayNewsFeed();
+			displayScreen(SCREEN.SCR_STORIES, false);
 		}
 		else if(v.equals(leftSavedTextView)){
 			viewPager.switchPage();		
-			displaySavedFeed();
+			displayScreen(SCREEN.SCR_SAVED_FEED, false);
 		}
 		else if(v.equals(leftSettingsTextView) || v.equals(leftRecentHeaderView)){
 			viewPager.switchPage();		
-			showSettings();
+			displayScreen(SCREEN.SCR_SETTINGS, false);
 		}
-		
-		// action for recent queries, leave as comment here		
-//		else if(v.equals(leftRecentQueriesTextView)){
-//			mDuckDuckGoContainer.prefShowing = false;
-//			displayRecentSearch();
-//		}
 	}
 
 	@Override
@@ -2214,6 +2218,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		outState.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
 		outState.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
 		outState.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
+		outState.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
 		outState.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
 		outState.putBoolean("searchResultPage", mDuckDuckGoContainer.searchResultPage);
 		
@@ -2231,6 +2236,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		DDGControlVar.homeScreenShowing = savedInstanceState.getBoolean("homeScreenShowing");
 		mDuckDuckGoContainer.webviewShowing = savedInstanceState.getBoolean("webviewShowing");
 		mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(savedInstanceState.getInt("currentScreen"));
+		mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(savedInstanceState.getInt("prevScreen"));
 		mDuckDuckGoContainer.allowInHistory = savedInstanceState.getBoolean("allowInHistory");
 		mDuckDuckGoContainer.searchResultPage = savedInstanceState.getBoolean("searchResultPage");
 		
@@ -2244,16 +2250,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	}
 		    	    	
     	// arbitrary choice to not display Settings on comeback
-		if(DDGControlVar.START_SCREEN == mDuckDuckGoContainer.currentScreen ||
-				SCREEN.SCR_SETTINGS == mDuckDuckGoContainer.currentScreen) {
-    		switchScreens();
-    		return;
+    	if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS) {
+    		displayHomeScreen();
     	}
     	else {
-    		if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED) {
-    			displaySavedFeed();
-    			return;
-    		}
+			displayScreen(mDuckDuckGoContainer.currentScreen, true);
     	}
 		
 	}
@@ -2295,11 +2296,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private void keepFeedUpdated()
 	{
 		if (!DDGControlVar.hasUpdatedFeed) {
-			
-			if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_STORIES)
-				return;
-			
-			
 			if(sharedPreferences.contains("sourceset_size") && sharedPreferences.getInt("sourceset_size", 0) == 0) {
 				// respect user choice of empty source list: show nothing
 				onFeedRetrieved(new ArrayList<FeedObject>(), true);
