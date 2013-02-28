@@ -1990,9 +1990,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	
     	// adjust "not recording" indicator
     	displayRecordHistoryDisabled();
-    	if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_STORIES) {
-    		DDGControlVar.hasUpdatedFeed = false;
-    	}
+    	
+    	// ensures feed refresh every time user switches to Stories screen
+    	DDGControlVar.hasUpdatedFeed = false;
 		
 		displayFeedCore();
 		clearLeftSelect();
