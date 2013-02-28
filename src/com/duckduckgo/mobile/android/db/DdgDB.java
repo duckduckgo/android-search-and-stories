@@ -47,11 +47,19 @@ public class DdgDB {
 	
 	public long insertSavedResult(SavedResultObject object) {
 		ContentValues contentValues = new ContentValues();
+		
+		String title = object.getTitle();
+		if(title == null)
+			title = "";
+		
+		if(object.getUrl() == null)
+			return -1L;
+		 
 		contentValues.put("title", object.getTitle());
 		contentValues.put("url", object.getUrl());
 		contentValues.put("imageUrl", object.getImageUrl());
 		// delete old record if exists
-		this.db.delete(SAVED_OTHERS_TABLE, "title=? AND url=?", new String[]{object.getTitle(), object.getUrl()});
+		this.db.delete(SAVED_OTHERS_TABLE, "url=?", new String[]{object.getUrl()});
 		return this.db.insert(SAVED_OTHERS_TABLE, null, contentValues);
 	}
 	
@@ -307,6 +315,12 @@ public class DdgDB {
 	 * @return
 	 */
 	public boolean isSavedInOthers(String title, String url) {
+		if(url == null)
+			return false;
+		
+		if(title == null)
+			title = "";
+		
 		Cursor c = this.db.query(SAVED_OTHERS_TABLE, null, "title=? AND url=?", new String[]{title, url} , null, null, null);
 		return c.moveToFirst();
 	}
