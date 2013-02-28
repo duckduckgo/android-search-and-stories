@@ -1772,11 +1772,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 		if(!fromCache) {
 			synchronized(mDuckDuckGoContainer.feedAdapter) {
-				DDGApplication.getImageDownloader().clearAllDownloads();
-				
-				SourceClickListener sourceClickListener = new SourceClickListener();			
-				mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
-				feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
+				DDGApplication.getImageDownloader().clearAllDownloads();				
+				mDuckDuckGoContainer.feedAdapter.clear();
 			}
 		}
 		
