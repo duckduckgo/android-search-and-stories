@@ -10,14 +10,11 @@ import android.widget.LinearLayout;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.objects.history.HistoryObject;
-import com.duckduckgo.mobile.android.objects.history.ParentHistoryObject;
-import com.duckduckgo.mobile.android.objects.history.SavedResultHistoryObject;
-import com.duckduckgo.mobile.android.views.RecentSearchListView;
-import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemSelectedListener;
+import com.duckduckgo.mobile.android.views.SavedSearchListView;
+import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemSelectedListener;
 
 public class SavedResultTabFragment extends Fragment {
-	RecentSearchListView savedSearchView = null;
+	SavedSearchListView savedSearchView = null;
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
@@ -36,21 +33,18 @@ public class SavedResultTabFragment extends Fragment {
 		
 		if(activity instanceof DuckDuckGo) {	
 						
-			savedSearchView = (RecentSearchListView) fragmentLayout.findViewById(R.id.savedSearchItems);
+			savedSearchView = (SavedSearchListView) fragmentLayout.findViewById(R.id.savedSearchItems);
 			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedSearchAdapter);
-			savedSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
+			savedSearchView.setOnSavedSearchItemSelectedListener(new OnSavedSearchItemSelectedListener() {
 				
-				public void onHistoryItemSelected(ParentHistoryObject historyObject) {
-					if(historyObject != null){							
-						if(historyObject instanceof HistoryObject)
-							((DuckDuckGo) activity).showHistoryObject((HistoryObject) historyObject);
-						else if(historyObject instanceof SavedResultHistoryObject)
-							((DuckDuckGo) activity).showSavedResultObject((SavedResultHistoryObject) historyObject);						
+				public void onSavedSearchItemSelected(String query) {
+					if(query != null){							
+						((DuckDuckGo) activity).searchWebTerm(query);			
 					}			
 				}
 			});
 			
-			savedSearchView.setOnHistoryItemLongClickListener(((DuckDuckGo) activity).mSavedResultLongClickListener);
+			savedSearchView.setOnSavedSearchItemLongClickListener(((DuckDuckGo) activity).mSavedSearchLongClickListener);
 			
 		}
 		

@@ -9,17 +9,15 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
-import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
-import com.duckduckgo.mobile.android.objects.history.ParentHistoryObject;
-import com.duckduckgo.mobile.android.objects.history.SavedResultHistoryObject;
+import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 
-public class RecentSearchListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
+public class HistoryListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
 	private OnHistoryItemSelectedListener listener;
 	private OnHistoryItemLongClickListener listenerLongClick;
 	
-	public RecentSearchListView(Context context, AttributeSet attrs) {
+	public HistoryListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		this.setOnItemClickListener(this);
@@ -37,21 +35,13 @@ public class RecentSearchListView extends ListView implements android.widget.Ada
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		Object adapter = getAdapter();
 		Cursor c = null;
-		ParentHistoryObject obj = null;
+		HistoryObject obj = null;
 		
 		if(adapter instanceof HistoryCursorAdapter) {		
 			c = (Cursor) ((HistoryCursorAdapter) adapter).getItem(position);
 			obj = new HistoryObject(c);
-		}
-		else if(adapter instanceof SavedResultCursorAdapter) {
-			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
-			obj = new SavedResultHistoryObject(c);
-		}
-		
-		if (obj != null) {
-			if (listener != null) {
+			if (listener != null)
 				listener.onHistoryItemSelected(obj);
-			}
 		}
 		
 	}
@@ -61,15 +51,11 @@ public class RecentSearchListView extends ListView implements android.widget.Ada
 		
 		Object adapter = getAdapter();		
 		Cursor c = null;
-		ParentHistoryObject obj = null;
+		HistoryObject obj = null;
 		
 		if(adapter instanceof HistoryCursorAdapter) {		
 			c = (Cursor) ((HistoryCursorAdapter) adapter).getItem(position);
 			obj = new HistoryObject(c);
-		}
-		else if(adapter instanceof SavedResultCursorAdapter) {
-			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
-			obj = new SavedResultHistoryObject(c);
 		}
 		// XXX Recent Search view has a header view, so we receive HeaderviewListAdapter
 		else if(adapter instanceof HeaderViewListAdapter) {			
@@ -87,11 +73,11 @@ public class RecentSearchListView extends ListView implements android.widget.Ada
 	}
 	
 	public interface OnHistoryItemSelectedListener {
-		public void onHistoryItemSelected(ParentHistoryObject historyObject);
+		public void onHistoryItemSelected(HistoryObject historyObject);
 	}
 	
 	public interface OnHistoryItemLongClickListener {
-		public void onHistoryItemLongClick(ParentHistoryObject historyObject);
+		public void onHistoryItemLongClick(HistoryObject historyObject);
 	}
 
 }

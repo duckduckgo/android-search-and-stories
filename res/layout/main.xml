@@ -52,11 +52,13 @@
         		  
                   android:id="@+id/mainFeedItems" />
         
-        <com.duckduckgo.mobile.android.views.RecentSearchListView
-            	  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:background="@android:color/transparent"
-                  android:id="@+id/recentSearchItems" />
+<!--         <com.duckduckgo.mobile.android.views.SavedSearchListView -->
+<!--             	  android:layout_width="match_parent" -->
+<!--                   android:layout_height="match_parent" -->
+<!--                   android:background="@android:color/transparent" -->
+<!--                   android:id="@+id/recentSearchItems" /> -->
+        
+        <include android:id="@+id/recentSearchLayout" layout="@layout/recentsearch" />
         
         <LinearLayout 	  
             android:layout_height="match_parent"

@@ -97,8 +97,6 @@ import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
-import com.duckduckgo.mobile.android.objects.history.ParentHistoryObject;
-import com.duckduckgo.mobile.android.objects.history.SavedResultHistoryObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
@@ -111,12 +109,15 @@ import com.duckduckgo.mobile.android.util.Item;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.DDGWebView;
+import com.duckduckgo.mobile.android.views.HistoryListView;
+import com.duckduckgo.mobile.android.views.SavedSearchListView;
+import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
+import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelectedListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
-import com.duckduckgo.mobile.android.views.RecentSearchListView;
-import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemLongClickListener;
-import com.duckduckgo.mobile.android.views.RecentSearchListView.OnHistoryItemSelectedListener;
+import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemLongClickListener;
+import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemSelectedListener;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -133,7 +134,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 	private AutoCompleteTextView searchField = null;
 	private MainFeedListView feedView = null;
-	private RecentSearchListView leftRecentView = null;
+	private HistoryListView leftRecentView = null;
 	
 	private PullToRefreshMainFeedListView mPullRefreshFeedView = null;
 	
@@ -145,7 +146,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	private ViewFlipper viewFlipper = null;
 	
-	private RecentSearchListView recentSearchView = null;
+	private SavedSearchListView recentSearchView = null;
 	
 	public DDGWebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
@@ -372,41 +373,38 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     };
     
     
-    public OnHistoryItemLongClickListener mSavedResultLongClickListener = new OnHistoryItemLongClickListener() {
+    public OnSavedSearchItemLongClickListener mSavedSearchLongClickListener = new OnSavedSearchItemLongClickListener() {
     	@Override
-    	public void onHistoryItemLongClick(ParentHistoryObject savedResultObject) {
+    	public void onSavedSearchItemLongClick(final String query) {
     		final String pageOptionsTitle; 
-    		final String pageData = savedResultObject.getData();
-    		final String pageUrl = savedResultObject.getUrl();
-			if(pageData != null && !pageData.equals("")) {
-				pageOptionsTitle = pageData;
+			if(query != null && !query.equals("")) {
+				pageOptionsTitle = query;
 			}
 			else {
-				pageOptionsTitle = pageUrl;
+				pageOptionsTitle = "";
 			}
     
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
 			ab.setTitle(pageOptionsTitle);
 						
-			final boolean isPageSaved = DDGApplication.getDB().isSaved(pageData, pageUrl);
+			final boolean isPageSaved = DDGApplication.getDB().isSavedSearch(query);
 						
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedresult", isPageSaved);
+			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedsearch", isPageSaved);
 			
 			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
 					Item it = ((Item) contextAdapter.getItem(item));
 					if(it.type == Item.ItemType.SHARE) {						
-						DDGUtils.shareWebPage(DuckDuckGo.this, pageData, pageUrl);
+						DDGUtils.shareSavedSearch(DuckDuckGo.this, query);
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
-						final long delHistory = DDGApplication.getDB().deleteSavedSearch(pageData);
+						final long delHistory = DDGApplication.getDB().deleteSavedSearch(query);
 						if(delHistory != 0) {							
 							syncAdapters();
 						}	
 					}
 					else if(it.type == Item.ItemType.EXTERNAL) {
-    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
-    	            	startActivity(browserIntent);
+						searchExternal(query);
 					}
 				}
 			});
@@ -418,7 +416,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     
     public OnHistoryItemLongClickListener mHistoryLongClickListener = new OnHistoryItemLongClickListener() {
     	@Override
-    	public void onHistoryItemLongClick(ParentHistoryObject historyObject) {
+    	public void onHistoryItemLongClick(HistoryObject historyObject) {
     		final String pageData = historyObject.getData();
 			final String pageUrl = historyObject.getUrl();
 			final String pageFeedId = historyObject.getFeedId();
@@ -711,7 +709,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	leftSavedTextView.setOnClickListener(this);
     	leftSettingsTextView.setOnClickListener(this);
     	
-    	leftRecentView = (RecentSearchListView) leftMenuView.findViewById(R.id.LeftRecentView);
+    	leftRecentView = (HistoryListView) leftMenuView.findViewById(R.id.LeftRecentView);
     	
 		leftRecentHeaderView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.recentsearch_notrecording_layout, null, false);
 		leftRecentHeaderView.setOnClickListener(this);
@@ -719,14 +717,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
     	leftRecentView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
-			public void onHistoryItemSelected(ParentHistoryObject historyObject) {
+			public void onHistoryItemSelected(HistoryObject historyObject) {
 				viewPager.switchPage();
 				
 				if(historyObject != null){
-					if(historyObject instanceof HistoryObject)
-						showHistoryObject((HistoryObject) historyObject);
-					else if(historyObject instanceof SavedResultHistoryObject)
-						showSavedResultObject((SavedResultHistoryObject) historyObject);
+					showHistoryObject((HistoryObject) historyObject);
 				}				
 			}
 		});
@@ -830,23 +825,18 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
             }
         });
 
-        recentSearchView = (RecentSearchListView) contentView.findViewById(R.id.recentSearchItems);
-        View header = getLayoutInflater().inflate(R.layout.recentsearch_header, null);
-        recentSearchView.addHeaderView(header);
-        recentSearchView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
-        recentSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
+        recentSearchView = (SavedSearchListView) contentView.findViewById(R.id.recentSearchItems);
+        recentSearchView.setAdapter(mDuckDuckGoContainer.savedSearchAdapter);
+        recentSearchView.setOnSavedSearchItemSelectedListener(new OnSavedSearchItemSelectedListener() {
 			
-			public void onHistoryItemSelected(ParentHistoryObject historyObject) {
-				if(historyObject != null){
-					if(historyObject instanceof HistoryObject)
-						showHistoryObject((HistoryObject) historyObject);
-					else if(historyObject instanceof SavedResultHistoryObject)
-						showSavedResultObject((SavedResultHistoryObject) historyObject);
+			public void onSavedSearchItemSelected(String query) {
+				if(query != null){
+					searchWebTerm(query);
 				}	
 			}
 
 		});        
-        recentSearchView.setOnHistoryItemLongClickListener(mHistoryLongClickListener);
+        recentSearchView.setOnSavedSearchItemLongClickListener(mSavedSearchLongClickListener);
         
         
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) contentView.findViewById(R.id.mainFeedItems);
@@ -1669,6 +1659,18 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 	}
 	
+	private void searchExternal(String term) {
+		String url;
+		if(DDGControlVar.regionString == "wt-wt"){	// default
+			url = DDGConstants.SEARCH_URL + URLEncoder.encode(term);
+		}
+		else {
+			url = DDGConstants.SEARCH_URL + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
+		}
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    	startActivity(browserIntent);
+	}
+	
 	public void searchWebTerm(String term) {
 		mDuckDuckGoContainer.searchResultPage = true;
 		mDuckDuckGoContainer.currentQuery = term; 
@@ -1685,15 +1687,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 		
 		if(DDGControlVar.alwaysUseExternalBrowser) {
-			String url;
-			if(DDGControlVar.regionString == "wt-wt"){	// default
-				url = DDGConstants.SEARCH_URL + URLEncoder.encode(term);
-			}
-			else {
-				url = DDGConstants.SEARCH_URL + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
-			}
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        	startActivity(browserIntent);
+			searchExternal(term);
         	return;
 		}
 		
@@ -1724,16 +1718,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
 			showWebUrl(object.getUrl());
 		}		
-	}
-	
-	public void showSavedResultObject(SavedResultHistoryObject object) {
-		String url = object.getUrl();
-		if(url != null && url.length() != 0) {
-			showWebUrl(url);
-		}
-		else {
-			searchWebTerm(object.getData());
-		}	
 	}
 	
 	public void showWebUrl(String url) {

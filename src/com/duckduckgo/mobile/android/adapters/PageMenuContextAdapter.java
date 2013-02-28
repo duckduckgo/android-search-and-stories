@@ -57,7 +57,7 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 			add(dialogItems.get(ItemType.EXTERNAL));			
 			add(dialogItems.get(ItemType.UNSAVE));
 		}
-		else if(pageType.equals("savedresult")) {
+		else if(pageType.equals("savedsearch")) {
 			add(dialogItems.get(ItemType.SHARE));
 			add(dialogItems.get(ItemType.EXTERNAL));
 			add(dialogItems.get(ItemType.UNSAVE));
