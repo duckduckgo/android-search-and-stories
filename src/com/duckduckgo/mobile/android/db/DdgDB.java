@@ -55,11 +55,11 @@ public class DdgDB {
 		if(object.getUrl() == null)
 			return -1L;
 		 
-		contentValues.put("title", object.getTitle());
+		contentValues.put("title", title);
 		contentValues.put("url", object.getUrl());
 		contentValues.put("imageUrl", object.getImageUrl());
 		// delete old record if exists
-		this.db.delete(SAVED_OTHERS_TABLE, "url=?", new String[]{object.getUrl()});
+		this.db.delete(SAVED_OTHERS_TABLE, "title=? AND url=?", new String[]{title, object.getUrl()});
 		return this.db.insert(SAVED_OTHERS_TABLE, null, contentValues);
 	}
 	
