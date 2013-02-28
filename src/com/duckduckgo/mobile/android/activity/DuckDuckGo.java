@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.activity;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -2046,6 +2047,33 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
 		 
 	}
+	
+	/**
+	 * Checks to see if URL is DuckDuckGo SERP
+	 * Returns the query if it's a SERP
+	 * 
+	 * @param url
+	 * @return
+	 */
+	private String isSERP(String url) {
+		if(!url.contains("duckduckgo.com"))
+			return null;
+		
+		Uri uri = Uri.parse(url);
+		String query = uri.getQueryParameter("q");
+		if(query != null)
+			return query;
+		
+		String lastPath = uri.getLastPathSegment();
+		if(lastPath == null)
+			return null;
+		
+		if(!lastPath.contains(".html")) {
+			return lastPath.replace("_", " ");
+		}
+		
+		return null;
+	}
 
 	public void onClick(View v) {
 		if (v.equals(homeSettingsButton)) {			
@@ -2068,17 +2096,19 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			final String pageUrl;
 			final String pageType;
 			
+			final String query = isSERP(mainWebView.getOriginalUrl());
+			
 			if(isFeedObject) {
 				pageTitle = currentFeedObject.getTitle();
 				pageUrl = currentFeedObject.getUrl();
 				pageType = "F";
 				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
-			}
-			else if(mDuckDuckGoContainer.searchSession) {
-				pageTitle = mDuckDuckGoContainer.currentQuery;
+			}						
+			else if(query != null) {
+				pageTitle = query;
 				pageUrl = mainWebView.getOriginalUrl();
 				pageType = "R";
-				isPageSaved = DDGApplication.getDB().isSavedSearch(mDuckDuckGoContainer.currentQuery);
+				isPageSaved = DDGApplication.getDB().isSavedSearch(query);
 			}
 			else {
 				// in case it's not a query or feed item
@@ -2105,14 +2135,19 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				public void onClick(DialogInterface dialog, int item) {
 					Item it = ((Item) contextAdapter.getItem(item));
 					if(it.type == Item.ItemType.SHARE) {
-						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+						if(pageType.equals("R") && query != null) {
+							DDGUtils.shareSavedSearch(DuckDuckGo.this, query, pageUrl);
+						}
+						else {
+							DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+						}
 					}
 					else if(it.type == Item.ItemType.SAVE) {
 						if(pageType.equals("F")) {
 							itemSaveFeed(currentFeedObject, null);
 						}
 						else if(pageType.equals("R")){
-							itemSaveSearch(mDuckDuckGoContainer.currentQuery);
+							itemSaveSearch(query);
 						}
 						syncAdapters();
 					}
@@ -2121,8 +2156,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						if(pageType.equals("F")) {
 							delHistory = DDGApplication.getDB().deleteFeedObject(currentFeedObject);
 						}
-						else if(pageType.equals("R")){
-							delHistory = DDGApplication.getDB().deleteSavedSearch(mDuckDuckGoContainer.currentQuery);
+						else if(pageType.equals("R") && query != null){
+							delHistory = DDGApplication.getDB().deleteSavedSearch(query);
 						}
 						if(delHistory != 0) {							
 							syncAdapters();

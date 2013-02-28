@@ -435,9 +435,13 @@ public final class DDGUtils {
 	  }
 	  
 	  public static void shareSavedSearch(Context context, String query) {
+		  shareSavedSearch(context, query, "https://duckduckgo.com/?q=" + query);
+	  }
+	  
+	  public static void shareSavedSearch(Context context, String query, String url) {
 		  Intent sendIntent = new Intent();
 			sendIntent.setAction(Intent.ACTION_SEND);
-			sendIntent.putExtra(Intent.EXTRA_TEXT, "Saved search via DuckDuckGo for Android: " + query);
+			sendIntent.putExtra(Intent.EXTRA_TEXT, "Saved search via DuckDuckGo for Android: " + url);
 			sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Saved search: " + query);
 			sendIntent.setType("text/plain");
 			context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.send_to)));
