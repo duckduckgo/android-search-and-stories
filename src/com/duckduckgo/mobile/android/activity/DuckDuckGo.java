@@ -1426,12 +1426,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private void displayHomeScreen() {
 		displayScreen(DDGControlVar.START_SCREEN, true);
         
-		if(mDuckDuckGoContainer.searchResultPage
+		if(mDuckDuckGoContainer.searchSession
 				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED) {
 			// previous screen was a SERP
 			showKeyboard(searchField);
 		}
-        mDuckDuckGoContainer.searchResultPage = false;
+        mDuckDuckGoContainer.searchSession = false;
 	}
 	
 	@Override
@@ -1672,7 +1672,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void searchWebTerm(String term) {
-		mDuckDuckGoContainer.searchResultPage = true;
+		mDuckDuckGoContainer.searchSession = true;
 		mDuckDuckGoContainer.currentQuery = term; 
 		
 		// save recent query if "record history" is enabled
@@ -2074,7 +2074,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				pageType = "F";
 				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
 			}
-			else if(mDuckDuckGoContainer.searchResultPage) {
+			else if(mDuckDuckGoContainer.searchSession) {
 				pageTitle = mDuckDuckGoContainer.currentQuery;
 				pageUrl = mainWebView.getOriginalUrl();
 				pageType = "R";
@@ -2195,7 +2195,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		outState.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
 		outState.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
 		outState.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
-		outState.putBoolean("searchResultPage", mDuckDuckGoContainer.searchResultPage);
+		outState.putBoolean("searchResultPage", mDuckDuckGoContainer.searchSession);
 		
 		super.onSaveInstanceState(outState);
 
@@ -2213,7 +2213,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(savedInstanceState.getInt("currentScreen"));
 		mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(savedInstanceState.getInt("prevScreen"));
 		mDuckDuckGoContainer.allowInHistory = savedInstanceState.getBoolean("allowInHistory");
-		mDuckDuckGoContainer.searchResultPage = savedInstanceState.getBoolean("searchResultPage");
+		mDuckDuckGoContainer.searchSession = savedInstanceState.getBoolean("searchResultPage");
 		
 		clearLeftSelect();
 		markLeftSelect(mDuckDuckGoContainer.currentScreen);

@@ -17,7 +17,10 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 public class DuckDuckGoContainer {
 	
 	public boolean webviewShowing = false;
-	public boolean searchResultPage = false;
+	
+	// denotes following browsing session is triggered by a search 
+	public boolean searchSession = false;
+	
 	public SCREEN currentScreen = SCREEN.SCR_STORIES;
 	public SCREEN prevScreen = SCREEN.SCR_STORIES;
 	
