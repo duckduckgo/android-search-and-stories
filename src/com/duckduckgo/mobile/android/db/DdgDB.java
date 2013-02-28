@@ -11,18 +11,17 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
 import com.duckduckgo.mobile.android.objects.FeedObject;
-import com.duckduckgo.mobile.android.objects.SavedResultObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.AppShortInfo;
 
 public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 10;
+	private static final int DATABASE_VERSION = 12;
 	private static final String FEED_TABLE = "feed";
 	private static final String APP_TABLE = "apps";
 	private static final String HISTORY_TABLE = "history";
-	private static final String SAVED_OTHERS_TABLE = "saved_others";
+	private static final String SAVED_SEARCH_TABLE = "saved_search";
 	
 	
 	private SQLiteDatabase db;
@@ -45,22 +44,15 @@ public class DdgDB {
 	      this.insertStmtApp = this.db.compileStatement(APP_INSERT);
 	}
 	
-	public long insertSavedResult(SavedResultObject object) {
-		ContentValues contentValues = new ContentValues();
-		
-		String title = object.getTitle();
-		if(title == null)
-			title = "";
-		
-		if(object.getUrl() == null)
+	public long insertSavedSearch(String query) {
+		if(query == null)
 			return -1L;
-		 
-		contentValues.put("title", title);
-		contentValues.put("url", object.getUrl());
-		contentValues.put("imageUrl", object.getImageUrl());
+		
+		ContentValues contentValues = new ContentValues();				 
+		contentValues.put("query", query);
 		// delete old record if exists
-		this.db.delete(SAVED_OTHERS_TABLE, "title=? AND url=?", new String[]{title, object.getUrl()});
-		return this.db.insert(SAVED_OTHERS_TABLE, null, contentValues);
+		this.db.delete(SAVED_SEARCH_TABLE, "query=?", new String[]{query});
+		return this.db.insert(SAVED_SEARCH_TABLE, null, contentValues);
 	}
 	
 	/**
@@ -236,8 +228,8 @@ public class DdgDB {
 		  return this.db.delete(FEED_TABLE, "_id=?", new String[]{object.getId()});
 	}
 	
-	public int deleteOthersByDataUrl(String data, String url) {
-		  return this.db.delete(SAVED_OTHERS_TABLE, "title=? AND url=?", new String[]{data, url});
+	public int deleteSavedSearch(String query) {
+		  return this.db.delete(SAVED_SEARCH_TABLE, "query=?", new String[]{query});
 	}
 	
 	public int deleteHistoryByDataUrl(String data, String url) {
@@ -304,24 +296,11 @@ public class DdgDB {
 	 * @param id
 	 * @return
 	 */
-	public boolean isSavedInOthersById(String id) {
-		Cursor c = this.db.query(SAVED_OTHERS_TABLE, null, "_id=?", new String[]{id} , null, null, null);
-		return c.moveToFirst();
-	}
-	
-	/**
-	 * for checking saved results
-	 * @param id
-	 * @return
-	 */
-	public boolean isSavedInOthers(String title, String url) {
-		if(url == null)
+	public boolean isSavedSearch(String query) {
+		if(query == null)
 			return false;
 		
-		if(title == null)
-			title = "";
-		
-		Cursor c = this.db.query(SAVED_OTHERS_TABLE, null, "title=? AND url=?", new String[]{title, url} , null, null, null);
+		Cursor c = this.db.query(SAVED_SEARCH_TABLE, null, "query=?", new String[]{query} , null, null, null);
 		return c.moveToFirst();
 	}
 	
@@ -460,8 +439,8 @@ public class DdgDB {
 		return this.db.query(HISTORY_TABLE, null, null, null , null, null, "_id DESC");
 	}
 	
-	public Cursor getCursorResultFeed() {
-		return this.db.query(SAVED_OTHERS_TABLE, null, null, null , null, null, null);
+	public Cursor getCursorSavedSearch() {
+		return this.db.query(SAVED_SEARCH_TABLE, null, null, null , null, null, null);
 	}
 	
 	public Cursor getCursorStoryFeed() {
@@ -513,15 +492,7 @@ public class DdgDB {
 			  			    +")"
 			  			    );
 		  			
-		  			  db.execSQL("CREATE TABLE " + SAVED_OTHERS_TABLE + "(" 
-				  			    +"_id INTEGER PRIMARY KEY, "
-				  			    +"title VARCHAR(300), "
-				  			    +"url VARCHAR(300), "
-				  			    +"imageurl VARCHAR(300) "
-				  			    +")"
-				  			    );
-		  			  
-		  			db.execSQL("CREATE INDEX idx_titleurl ON " + SAVED_OTHERS_TABLE + " (title, url) ");
+		  			  db.execSQL("CREATE TABLE " + SAVED_SEARCH_TABLE + "(_id INTEGER PRIMARY KEY, query VARCHAR(300) UNIQUE)");  
 
 		  	}
 	
@@ -530,7 +501,7 @@ public class DdgDB {
 		  		db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
 		  		db.execSQL("DROP TABLE IF EXISTS " + APP_TABLE);
 		  		db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
-		  		db.execSQL("DROP TABLE IF EXISTS " + SAVED_OTHERS_TABLE);
+		  		db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE);
 		  		onCreate(db);
 		  	}
 	}

@@ -40,4 +40,6 @@ public class DuckDuckGoContainer {
 	
 	public SavedResultCursorAdapter savedSearchAdapter = null;
 	public SavedFeedCursorAdapter savedFeedAdapter = null;
+	
+	public String currentQuery = "";
 }

@@ -13,9 +13,7 @@ public class SavedResultHistoryObject extends ParentHistoryObject {
 	}
 
 	public SavedResultHistoryObject(Cursor c) {
-		this.type = "";
-		this.data = c.getString(c.getColumnIndex("title"));
-		this.url = c.getString(c.getColumnIndex("url"));
+		this.data = c.getString(c.getColumnIndex("query"));
 	}
 	
 }
