@@ -1674,7 +1674,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	public void searchWebTerm(String term) {
 		mDuckDuckGoContainer.searchSession = true;
-		mDuckDuckGoContainer.currentQuery = term; 
 		
 		// save recent query if "record history" is enabled
 		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
