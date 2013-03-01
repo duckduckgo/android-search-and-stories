@@ -54,6 +54,7 @@
         <attr name="leftDrawableHome" format="reference" />
         <attr name="leftDrawableSaved" format="reference" />
         <attr name="leftDrawableSettings" format="reference" />
+        <attr name="leftDrawableStories" format="reference" />
         
         <attr name="tabIndicator" format="reference" />
         <attr name="tabTextSelector" format="color" />

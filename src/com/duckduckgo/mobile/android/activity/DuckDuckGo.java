@@ -691,7 +691,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         xt.setBounds(0, 0, pixelValue, pixelValue);
         leftHomeTextView.setCompoundDrawables(xt, null, null, null);
         
-    	xt = getResources().getDrawable(R.drawable.icon_stories_selector);
+        getTheme().resolveAttribute(R.attr.leftDrawableStories, typedValue, true);
+    	xt = getResources().getDrawable(typedValue.resourceId);
         xt.setBounds(0, 0, pixelValue, pixelValue);
         leftStoriesTextView.setCompoundDrawables(xt, null, null, null);        
         
