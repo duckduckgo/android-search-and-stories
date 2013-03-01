@@ -2,7 +2,6 @@ package com.duckduckgo.mobile.android.activity;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -108,15 +107,16 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DDGViewPager;
 import com.duckduckgo.mobile.android.util.Item;
 import com.duckduckgo.mobile.android.util.SCREEN;
+import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.DDGWebView;
 import com.duckduckgo.mobile.android.views.HistoryListView;
-import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelectedListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
+import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemLongClickListener;
 import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemSelectedListener;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
@@ -177,7 +177,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private final int PREFERENCES_RESULT = 0;
 	
 	FeedObject currentFeedObject = null;
-	boolean isFeedObject = false;
+//	boolean isFeedObject = false;
 	
 	
 	// for keeping filter source at same position
@@ -261,7 +261,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			
 			// keep a reference, so that we can reuse details while saving
 			currentFeedObject = feedObject;
-			isFeedObject = true;
+			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
 			
 			String url = feedObject.getUrl();
 			if (url != null) {
@@ -1117,7 +1117,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         		HitTestResult hr = ((DDGWebView) v).getHitTestResult();
         		if(hr != null && hr.getExtra() != null) {            	
         			mDuckDuckGoContainer.allowInHistory = true; 
-        			isFeedObject = false;
+        			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
         			Log.i(TAG, "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
         		}
 
@@ -1427,12 +1427,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private void displayHomeScreen() {
 		displayScreen(DDGControlVar.START_SCREEN, true);
         
-		if(mDuckDuckGoContainer.searchSession
+		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_SEARCH
 				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED) {
 			// previous screen was a SERP
 			showKeyboard(searchField);
 		}
-        mDuckDuckGoContainer.searchSession = false;
+        mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
 	
 	@Override
@@ -1673,7 +1673,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void searchWebTerm(String term) {
-		mDuckDuckGoContainer.searchSession = true;
+		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_SEARCH;
 		
 		// save recent query if "record history" is enabled
 		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
@@ -2097,11 +2097,21 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			
 			final String query = isSERP(mainWebView.getOriginalUrl());
 			
-			if(isFeedObject) {
+			// direct displaying after feed item is clicked
+			// the rest will arrive as SESSION_BROWSE
+			// so we should save this feed item with target redirected URL
+			if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED
+					|| 
+					( mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_BROWSE 
+						&& mDuckDuckGoContainer.lastFeedUrl.equals(mainWebView.getOriginalUrl() 
+					) 
+				)) {
 				pageTitle = currentFeedObject.getTitle();
 				pageUrl = currentFeedObject.getUrl();
 				pageType = "F";
 				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
+				
+				mDuckDuckGoContainer.lastFeedUrl = pageUrl;
 			}						
 			else if(query != null) {
 				pageTitle = query;
@@ -2229,7 +2239,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		outState.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
 		outState.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
 		outState.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
-		outState.putBoolean("searchResultPage", mDuckDuckGoContainer.searchSession);
+		outState.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
 		
 		super.onSaveInstanceState(outState);
 
@@ -2247,7 +2257,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(savedInstanceState.getInt("currentScreen"));
 		mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(savedInstanceState.getInt("prevScreen"));
 		mDuckDuckGoContainer.allowInHistory = savedInstanceState.getBoolean("allowInHistory");
-		mDuckDuckGoContainer.searchSession = savedInstanceState.getBoolean("searchResultPage");
+		mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(savedInstanceState.getInt("sessionType"));
 		
 		clearLeftSelect();
 		markLeftSelect(mDuckDuckGoContainer.currentScreen);

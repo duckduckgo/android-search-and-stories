@@ -13,13 +13,16 @@ import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.util.SCREEN;
+import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 
 public class DuckDuckGoContainer {
 	
 	public boolean webviewShowing = false;
 	
 	// denotes following browsing session is triggered by a search 
-	public boolean searchSession = false;
+//	public boolean searchSession = false;
+	public SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;
+	public String lastFeedUrl = "";
 	
 	public SCREEN currentScreen = SCREEN.SCR_STORIES;
 	public SCREEN prevScreen = SCREEN.SCR_STORIES;
