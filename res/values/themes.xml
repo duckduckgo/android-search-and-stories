@@ -49,6 +49,9 @@
         <item name="leftDrawableSettings">@drawable/icon_settings_selector_light</item>
         <item name="leftDrawableStories">@drawable/icon_stories_selector_light</item>
         
+        <item name="leftDrawablePlusBackground">@drawable/plus_button_bg_light</item>
+        <item name="leftDrawablePlusIcon">@drawable/plus_button_icon_light</item>
+                
         <item name="ptrDrawable">@drawable/refresh_arrow_light</item>
         <item name="ptrDivider">@drawable/refresh_dotted_line_light</item>
         
@@ -80,6 +83,9 @@
         <item name="leftDrawableSaved">@drawable/icon_saved_selector_dark</item>
         <item name="leftDrawableSettings">@drawable/icon_settings_selector_dark</item>
         <item name="leftDrawableStories">@drawable/icon_stories_selector_dark</item>
+        
+        <item name="leftDrawablePlusBackground">@drawable/plus_button_bg_dark</item>
+        <item name="leftDrawablePlusIcon">@drawable/plus_button_icon_dark</item>
         
         <item name="ptrDrawable">@drawable/refresh_arrow_dark</item>
         <item name="ptrDivider">@drawable/refresh_dotted_line_dark</item>

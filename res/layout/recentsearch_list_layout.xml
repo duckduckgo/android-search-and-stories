@@ -26,16 +26,12 @@
 		    android:layout_weight="1"
 		    android:text="This is test Text" />
 	    
-	    <Button
-	     android:layout_height="match_parent"
-	     android:layout_width="30dp"
-	     android:focusable="false"
-	     android:visibility="gone"
-	     android:background="@android:color/transparent"
-	     style="@style/RecentItemText"
-	     android:text="+"
-	     android:gravity="center"
-	     android:id="@+id/recentSearchPaste" />
+	    <ImageView android:layout_width="20dp"
+	        android:layout_height="20dp"
+	        android:src="?attr/leftDrawablePlusIcon"
+	        android:background="?attr/leftDrawablePlusBackground"
+	        android:layout_gravity="center_vertical"
+	        android:id="@+id/recentSearchPaste" />
     
     </LinearLayout>
     

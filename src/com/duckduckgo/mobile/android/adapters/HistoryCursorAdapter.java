@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -92,7 +93,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
         }
         
         // query use button
-        Button buttonHistory = (Button) view.findViewById(R.id.recentSearchPaste);
+        ImageView buttonHistory = (ImageView) view.findViewById(R.id.recentSearchPaste);
         
         // only for a recent search
         if(type.equals("R")) {

@@ -56,6 +56,9 @@
         <attr name="leftDrawableSettings" format="reference" />
         <attr name="leftDrawableStories" format="reference" />
         
+        <attr name="leftDrawablePlusBackground" format="reference" />
+        <attr name="leftDrawablePlusIcon" format="reference" />
+        
         <attr name="tabIndicator" format="reference" />
         <attr name="tabTextSelector" format="color" />
     
