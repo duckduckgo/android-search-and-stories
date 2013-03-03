@@ -314,7 +314,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						syncAdapters();
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
-						final int delResult = DDGApplication.getDB().deleteFeedObject(fObject);
+						final long delResult = DDGApplication.getDB().makeItemHidden(fObject.getId());
 						if(delResult != 0) {							
 							syncAdapters();
 						}							
@@ -358,7 +358,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
-						final int delResult = DDGApplication.getDB().deleteFeedObject(fObject);
+						final long delResult = DDGApplication.getDB().makeItemHidden(fObject.getId());
 						if(delResult != 0) {							
 							syncAdapters();
 						}							
@@ -2162,9 +2162,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						syncAdapters();
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
-						int delHistory = 0;
+						long delHistory = 0;
 						if(pageType.equals("F")) {
-							delHistory = DDGApplication.getDB().deleteFeedObject(currentFeedObject);
+							delHistory = DDGApplication.getDB().makeItemHidden(currentFeedObject.getId());
 						}
 						else if(pageType.equals("R") && query != null){
 							delHistory = DDGApplication.getDB().deleteSavedSearch(query);
