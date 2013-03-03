@@ -338,6 +338,14 @@ public class DdgDB {
 		return c.moveToFirst();
 	}
 	
+	public boolean isQueryInHistory(String query) {
+		if(query == null)
+			return false;
+			
+		Cursor c = this.db.query(HISTORY_TABLE, null, "data=? AND url='' AND type='R'", new String[]{query} , null, null, null);
+		return c.moveToFirst();
+	}
+	
 	public FeedObject selectById(String id){
 		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
 		if(c.moveToFirst()) {

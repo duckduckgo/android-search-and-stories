@@ -1,7 +1,5 @@
 package com.duckduckgo.mobile.android.container;
 
-import java.util.LinkedList;
-
 import android.graphics.drawable.Drawable;
 
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
@@ -32,7 +30,6 @@ public class DuckDuckGoContainer {
 //	public Drawable reloadDrawable;
 	
 	public HistoryCursorAdapter recentSearchAdapter = null;
-	public LinkedList<String> recentSearchList = null;
 	
 	public MainFeedAdapter feedAdapter = null;
 	public MainFeedTask mainFeedTask = null;

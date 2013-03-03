@@ -596,9 +596,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     		mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
     		mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
     		mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
-    		
-    		mDuckDuckGoContainer.recentSearchList = DDGUtils.loadList(sharedPreferences, "recentsearch");
-    		
+    		    		
     		mDuckDuckGoContainer.recentSearchAdapter = new HistoryCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorHistory());
     		
     		SourceClickListener sourceClickListener = new SourceClickListener();			
@@ -1678,13 +1676,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 		// save recent query if "record history" is enabled
 		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
-			if(!mDuckDuckGoContainer.recentSearchList.contains(term)){
 				Log.v(TAG, "Search: " + term);		
 				DDGApplication.getDB().insertRecentSearch(term);
 				mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
 				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
-
-			}
 		}
 		
 		if(DDGControlVar.alwaysUseExternalBrowser) {
