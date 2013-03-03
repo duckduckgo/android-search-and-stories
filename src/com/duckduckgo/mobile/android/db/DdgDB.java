@@ -443,6 +443,10 @@ public class DdgDB {
 		return null;
 	}
 	
+	public Cursor getCursorSearchHistory() {
+		return this.db.query(HISTORY_TABLE, null, "type='R'", null , null, null, "_id DESC");
+	}
+	
 	public Cursor getCursorHistory() {
 		return this.db.query(HISTORY_TABLE, null, null, null , null, null, "_id DESC");
 	}

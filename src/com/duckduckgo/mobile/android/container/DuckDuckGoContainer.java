@@ -30,6 +30,7 @@ public class DuckDuckGoContainer {
 //	public Drawable reloadDrawable;
 	
 	public HistoryCursorAdapter recentSearchAdapter = null;
+	public HistoryCursorAdapter historyAdapter = null;
 	
 	public MainFeedAdapter feedAdapter = null;
 	public MainFeedTask mainFeedTask = null;

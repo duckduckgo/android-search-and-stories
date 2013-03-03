@@ -147,7 +147,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	private ViewFlipper viewFlipper = null;
 	
-	private SavedSearchListView recentSearchView = null;
+	private HistoryListView recentSearchView = null;
 	
 	public DDGWebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
@@ -266,9 +266,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			String url = feedObject.getUrl();
 			if (url != null) {
 				DDGApplication.getDB().insertFeedItem(feedObject);
-				mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
-				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
-				
+				syncHistoryAdapters();				
 				searchOrGoToUrl(url);
 			}
 			
@@ -518,9 +516,15 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	DDGApplication.getDB().insertSavedSearch(query);
     }
     
-    public void syncAdapters() {
-    	mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+    public void syncHistoryAdapters() {
+    	mDuckDuckGoContainer.historyAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
+		mDuckDuckGoContainer.historyAdapter.notifyDataSetChanged();
+    	mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
 		mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+    }
+    
+    public void syncAdapters() {
+    	syncHistoryAdapters();
 		mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
 		mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
 		mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
@@ -597,7 +601,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     		mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
     		mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
     		    		
-    		mDuckDuckGoContainer.recentSearchAdapter = new HistoryCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorHistory());
+    		mDuckDuckGoContainer.recentSearchAdapter = new HistoryCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorSearchHistory());    		
+    		mDuckDuckGoContainer.historyAdapter = new HistoryCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorHistory());
     		
     		SourceClickListener sourceClickListener = new SourceClickListener();			
     		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
@@ -714,7 +719,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		leftRecentHeaderView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.recentsearch_notrecording_layout, null, false);
 		leftRecentHeaderView.setOnClickListener(this);
     	
-    	leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
+    	leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
     	leftRecentView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
 			public void onHistoryItemSelected(HistoryObject historyObject) {
@@ -825,18 +830,19 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
             }
         });
 
-        recentSearchView = (SavedSearchListView) contentView.findViewById(R.id.recentSearchItems);
-        recentSearchView.setAdapter(mDuckDuckGoContainer.savedSearchAdapter);
-        recentSearchView.setOnSavedSearchItemSelectedListener(new OnSavedSearchItemSelectedListener() {
+        recentSearchView = (HistoryListView) contentView.findViewById(R.id.recentSearchItems);
+        recentSearchView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
+        recentSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
-			public void onSavedSearchItemSelected(String query) {
-				if(query != null){
-					searchWebTerm(query);
-				}	
+			public void onHistoryItemSelected(HistoryObject historyObject) {
+				viewPager.switchPage();
+				
+				if(historyObject != null){
+					showHistoryObject((HistoryObject) historyObject);
+				}				
 			}
-
-		});        
-        recentSearchView.setOnSavedSearchItemLongClickListener(mSavedSearchLongClickListener);
+		});
+        recentSearchView.setOnHistoryItemLongClickListener(mHistoryLongClickListener);
         
         
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) contentView.findViewById(R.id.mainFeedItems);
@@ -1206,6 +1212,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 				
 				DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize + diff;
+				mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
 				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetInvalidated();
 				
 				DDGControlVar.ptrHeaderSize = DDGControlVar.prevPtrHeaderSize + diff;
@@ -1358,6 +1365,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
 		DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize;
 		mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
+		mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
 		mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetInvalidated();
 		
 		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.prevPtrHeaderSize);
@@ -1678,8 +1686,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
 				Log.v(TAG, "Search: " + term);		
 				DDGApplication.getDB().insertRecentSearch(term);
-				mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
-				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+				syncHistoryAdapters();
 		}
 		
 		if(DDGControlVar.alwaysUseExternalBrowser) {
@@ -1700,8 +1707,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void clearRecentSearch() {
-		mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
-		mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+		syncHistoryAdapters();
 	}
 	
 	public void showHistoryObject(HistoryObject object) {
@@ -1710,8 +1716,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 		else {
 			DDGApplication.getDB().insertHistoryObject(object);
-			mDuckDuckGoContainer.recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorHistory());
-			mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetChanged();
+			syncHistoryAdapters();
 			showWebUrl(object.getUrl());
 		}		
 	}
@@ -2443,7 +2448,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) == null) {
     			leftRecentView.setAdapter(null);
     			leftRecentView.addHeaderView(leftRecentHeaderView);
-    			leftRecentView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
+    			leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
     		}
     	}
 	}
