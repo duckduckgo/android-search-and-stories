@@ -252,6 +252,34 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 	}
 	
+	private void feedItemSelected(FeedObject feedObject) {
+		// keep a reference, so that we can reuse details while saving
+		currentFeedObject = feedObject;
+		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
+		
+		String url = feedObject.getUrl();
+		if (url != null) {
+			if(!DDGApplication.getDB().existsFeedById(feedObject.getId())) {
+				DDGApplication.getDB().insertFeedItem(feedObject);
+				syncAdapters();			
+			}
+			searchOrGoToUrl(url);
+		}
+		
+		// record article as read
+		String feedId = feedObject.getId();
+		if(feedId != null){
+			DDGControlVar.readArticles.add(feedId);
+			mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
+		}
+	}
+	
+	private void feedItemSelected(String feedId) {
+		FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
+		feedItemSelected(feedObject);
+	}
+	
+	
 	public OnMainFeedItemSelectedListener mFeedItemSelectedListener = new OnMainFeedItemSelectedListener() {
 		public void onMainFeedItemSelected(FeedObject feedObject) {
 			// close left nav if it's open
@@ -259,23 +287,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				viewPager.setCurrentItem(1);
 			}
 			
-			// keep a reference, so that we can reuse details while saving
-			currentFeedObject = feedObject;
-			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
-			
-			String url = feedObject.getUrl();
-			if (url != null) {
-				DDGApplication.getDB().insertFeedItem(feedObject);
-				syncHistoryAdapters();				
-				searchOrGoToUrl(url);
-			}
-			
-			// record article as read
-			String feedId = feedObject.getId();
-			if(feedId != null){
-				DDGControlVar.readArticles.add(feedId);
-				mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
-			}
+			feedItemSelected(feedObject);
 		}
     };
     
@@ -505,7 +517,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
      */
     public void itemSaveFeed(FeedObject feedObject, String pageFeedId) {
     	if(feedObject != null) {
-    		DDGApplication.getDB().insert(feedObject);
+    		if(DDGApplication.getDB().existsFeedById(feedObject.getId())) {
+    			DDGApplication.getDB().makeItemVisible(feedObject.getId());
+    		}
+    		else {
+    			DDGApplication.getDB().insertVisible(feedObject);
+    		}
     	}
     	else if(pageFeedId != null && pageFeedId.length() != 0){
     		DDGApplication.getDB().makeItemVisible(pageFeedId);
@@ -1713,6 +1730,14 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void showHistoryObject(HistoryObject object) {
 		if(object.getType().equals("R")) {
 			searchWebTerm(object.getData());
+		}
+		else if(object.getType().equals("F")) {
+			DDGApplication.getDB().insertHistoryObject(object);
+			syncHistoryAdapters();
+			String feedId = object.getFeedId();
+			if(feedId != null) {
+				feedItemSelected(feedId);
+			}
 		}
 		else {
 			DDGApplication.getDB().insertHistoryObject(object);

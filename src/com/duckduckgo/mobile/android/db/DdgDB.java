@@ -91,11 +91,21 @@ public class DdgDB {
 	}
 	
 	/**
+	 * Insert feed item, using visibility setting from the object itself
+	 * @param e feed item
+	 * @return
+	 */
+	public long insert(FeedObject e) {
+		// hidden = False, F
+		return this.insert(e, e.getHidden());
+	}
+	
+	/**
 	 * Ordinary item Save operation - keep Saved item VISIBLE  
 	 * @param e
 	 * @return
 	 */
-	public long insert(FeedObject e) {
+	public long insertVisible(FeedObject e) {
 		// hidden = False, F
 		return this.insert(e, "F");
 	}
@@ -169,7 +179,8 @@ public class DdgDB {
 	}
 	
 	public long insertFeedItem(FeedObject feedObject) {
-		this.insertHidden(feedObject);
+		this.deleteFeedObject(feedObject);
+		this.insert(feedObject);
 		
 		String feedId = feedObject.getId();		
         ContentValues contentValues = new ContentValues();
@@ -242,7 +253,7 @@ public class DdgDB {
 	
 	private FeedObject getFeedObject(Cursor c) {
 		return new FeedObject(c.getString(0), c.getString(1), c.getString(2), c.getString(3),
-				c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9));
+				c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9), c.getString(10));
 	}
 	
 	private AppShortInfo getAppShortInfo(Cursor c) {
@@ -344,6 +355,22 @@ public class DdgDB {
 			
 		Cursor c = this.db.query(HISTORY_TABLE, null, "data=? AND url='' AND type='R'", new String[]{query} , null, null, null);
 		return c.moveToFirst();
+	}
+	
+	public FeedObject selectFeedById(String id){
+		Cursor c = this.db.query(FEED_TABLE, null, "_id=?", new String[]{id} , null, null, null);
+		if(c.moveToFirst()) {
+			return getFeedObject(c);
+		}
+		return null;
+	}
+	
+	public boolean existsFeedById(String id){
+		Cursor c = this.db.query(FEED_TABLE, new String[]{"_id"}, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
+		if(c.moveToFirst()) {
+			return true;
+		}
+		return false;
 	}
 	
 	public FeedObject selectById(String id){
