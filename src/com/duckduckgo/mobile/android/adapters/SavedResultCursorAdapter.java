@@ -5,10 +5,13 @@ import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 
@@ -44,5 +47,19 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         AsyncImageView imageViewHistory = (AsyncImageView) view.findViewById(R.id.recentSearchImage);
         imageViewHistory.setImageResource(R.drawable.icon_history_search);
 
+        
+        // query use button
+        ImageView buttonHistory = (ImageView) view.findViewById(R.id.recentSearchPaste);
+        buttonHistory.setOnClickListener(new OnClickListener() {
+
+        	@Override
+        	public void onClick(View v) {
+        		if(parentActivity instanceof DuckDuckGo) {
+        			// prepare searchbar with given data and wait for user action
+        			((DuckDuckGo) parentActivity).preSearch(data);
+        		}
+        	}
+        });
+        
     }
 }
