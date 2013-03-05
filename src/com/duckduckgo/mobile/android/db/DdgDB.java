@@ -479,7 +479,7 @@ public class DdgDB {
 	}
 	
 	public Cursor getCursorSavedSearch() {
-		return this.db.query(SAVED_SEARCH_TABLE, null, null, null , null, null, null);
+		return this.db.query(SAVED_SEARCH_TABLE, null, null, null , null, null, "_id DESC");
 	}
 	
 	public Cursor getCursorStoryFeed() {

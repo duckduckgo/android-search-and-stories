@@ -40,7 +40,9 @@ public class SavedResultTabFragment extends Fragment {
 				
 				public void onSavedSearchItemSelected(String query) {
 					if(query != null){							
-						((DuckDuckGo) activity).searchWebTerm(query);			
+						((DuckDuckGo) activity).searchWebTerm(query);	
+						((DuckDuckGo) activity).itemSaveSearch(query);
+						((DuckDuckGo) activity).syncAdapters();
 					}			
 				}
 			});
