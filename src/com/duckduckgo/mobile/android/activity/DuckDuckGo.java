@@ -739,7 +739,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	leftRecentView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
 			public void onHistoryItemSelected(HistoryObject historyObject) {
-				viewPager.switchPage();
+				if(viewPager.isLeftMenuOpen()){
+					viewPager.setCurrentItem(1);
+				}
 				
 				if(historyObject != null){
 					showHistoryObject((HistoryObject) historyObject);
@@ -852,7 +854,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         recentSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
 			public void onHistoryItemSelected(HistoryObject historyObject) {
-				viewPager.switchPage();
+				if(viewPager.isLeftMenuOpen()){
+					viewPager.setCurrentItem(1);
+				}
 				
 				if(historyObject != null){
 					showHistoryObject((HistoryObject) historyObject);
