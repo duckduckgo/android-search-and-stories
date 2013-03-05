@@ -101,6 +101,7 @@
     <style name="RecentListRoot">
         <item name="android:background">?attr/leftRecentListRootBackground</item>
         <item name="android:layout_height">53dp</item>
+        <item name="android:layout_width">match_parent</item> 
     </style>
     
     <style name="RecentListItemRoot">

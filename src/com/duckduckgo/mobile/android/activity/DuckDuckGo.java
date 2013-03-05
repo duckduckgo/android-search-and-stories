@@ -116,9 +116,7 @@ import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelected
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
-import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemLongClickListener;
-import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemSelectedListener;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -736,6 +734,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		leftRecentHeaderView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.recentsearch_notrecording_layout, null, false);
 		leftRecentHeaderView.setOnClickListener(this);
     	
+		leftRecentView.setDivider(null);
     	leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
     	leftRecentView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
@@ -848,6 +847,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         });
 
         recentSearchView = (HistoryListView) contentView.findViewById(R.id.recentSearchItems);
+        recentSearchView.setDivider(null);
         recentSearchView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
         recentSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			

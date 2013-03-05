@@ -34,6 +34,7 @@ public class SavedResultTabFragment extends Fragment {
 		if(activity instanceof DuckDuckGo) {	
 						
 			savedSearchView = (SavedSearchListView) fragmentLayout.findViewById(R.id.savedSearchItems);
+			savedSearchView.setDivider(null);
 			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedSearchAdapter);
 			savedSearchView.setOnSavedSearchItemSelectedListener(new OnSavedSearchItemSelectedListener() {
 				

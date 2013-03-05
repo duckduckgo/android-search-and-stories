@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="match_parent" 
     style="@style/RecentListRoot">
     
     <ImageView style="@style/LeftDivTop" />
@@ -20,7 +19,7 @@
 			    	   android:src="@drawable/icon_history_search"
 			    	   android:id="@+id/recentSearchImage" />
 	    
-	    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+	    <TextView
 		    style="@style/RecentItemText"
 		    android:id="@+id/recentSearchText" 
 		    android:layout_weight="1"
