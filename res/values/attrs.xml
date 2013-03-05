@@ -59,6 +59,8 @@
         <attr name="leftDrawablePlusBackground" format="reference" />
         <attr name="leftDrawablePlusIcon" format="reference" />
         
+        <attr name="leftDropShadow" format="reference|color" />
+        
         <attr name="tabIndicator" format="reference" />
         <attr name="tabTextSelector" format="color" />
     

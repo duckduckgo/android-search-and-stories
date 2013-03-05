@@ -51,6 +51,8 @@
         
         <item name="leftDrawablePlusBackground">@drawable/plus_button_bg_light</item>
         <item name="leftDrawablePlusIcon">@drawable/plus_button_icon_light</item>
+        
+        <item name="leftDropShadow">@drawable/dropshadow_light</item>
                 
         <item name="ptrDrawable">@drawable/refresh_arrow_light</item>
         <item name="ptrDivider">@drawable/refresh_dotted_line_light</item>
@@ -86,6 +88,8 @@
         
         <item name="leftDrawablePlusBackground">@drawable/plus_button_bg_dark</item>
         <item name="leftDrawablePlusIcon">@drawable/plus_button_icon_dark</item>
+        
+        <item name="leftDropShadow">@drawable/dropshadow_dark</item>
         
         <item name="ptrDrawable">@drawable/refresh_arrow_dark</item>
         <item name="ptrDivider">@drawable/refresh_dotted_line_dark</item>
