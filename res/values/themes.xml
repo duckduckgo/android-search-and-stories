@@ -53,6 +53,7 @@
         <item name="leftDrawablePlusIcon">@drawable/plus_button_icon_light</item>
         
         <item name="leftDropShadow">@drawable/dropshadow_light</item>
+        <item name="topDropShadow">@drawable/dropshadow_up_light</item>
                 
         <item name="ptrDrawable">@drawable/refresh_arrow_light</item>
         <item name="ptrDivider">@drawable/refresh_dotted_line_light</item>
@@ -90,6 +91,7 @@
         <item name="leftDrawablePlusIcon">@drawable/plus_button_icon_dark</item>
         
         <item name="leftDropShadow">@drawable/dropshadow_dark</item>
+        <item name="topDropShadow">@drawable/dropshadow_up_dark</item>
         
         <item name="ptrDrawable">@drawable/refresh_arrow_dark</item>
         <item name="ptrDivider">@drawable/refresh_dotted_line_dark</item>
