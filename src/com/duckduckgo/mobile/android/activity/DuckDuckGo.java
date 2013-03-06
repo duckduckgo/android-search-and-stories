@@ -2125,7 +2125,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			final String pageUrl;
 			final String pageType;
 			
-			final String query = isSERP(mainWebView.getOriginalUrl());
+			// XXX should make Page Options button disabled if the page is not loaded yet
+			// url = null case
+			String webViewUrl = mainWebView.getOriginalUrl();
+			if(webViewUrl == null)
+				webViewUrl = "";
+			
+			final String query = isSERP(webViewUrl);
 			
 			// direct displaying after feed item is clicked
 			// the rest will arrive as SESSION_BROWSE
@@ -2133,26 +2139,26 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED
 					|| 
 					( mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_BROWSE 
-						&& mDuckDuckGoContainer.lastFeedUrl.equals(mainWebView.getOriginalUrl() 
-					) 
-				)) {
+						&& mDuckDuckGoContainer.lastFeedUrl.equals(webViewUrl) 
+					)
+			  ) {
 				pageTitle = currentFeedObject.getTitle();
 				pageUrl = currentFeedObject.getUrl();
 				pageType = "F";
 				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
 				
-				mDuckDuckGoContainer.lastFeedUrl = pageUrl;
+				mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
 			}						
 			else if(query != null) {
 				pageTitle = query;
-				pageUrl = mainWebView.getOriginalUrl();
+				pageUrl = webViewUrl;
 				pageType = "R";
 				isPageSaved = DDGApplication.getDB().isSavedSearch(query);
 			}
 			else {
 				// in case it's not a query or feed item
 				pageTitle = mainWebView.getTitle();
-				pageUrl = mainWebView.getOriginalUrl();
+				pageUrl = webViewUrl;
 				pageType = "W";
 				isPageSaved = false;
 			}
