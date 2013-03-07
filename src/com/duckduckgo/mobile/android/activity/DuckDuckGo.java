@@ -315,7 +315,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					Item it = ((Item) contextAdapter.getItem(item));
 					
 					if(it.type == Item.ItemType.SHARE) {
-						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+						DDGUtils.shareStory(DuckDuckGo.this, pageTitle, pageUrl);
 					}
 					else if(it.type == Item.ItemType.SAVE) {
 						itemSaveFeed(fObject, null);

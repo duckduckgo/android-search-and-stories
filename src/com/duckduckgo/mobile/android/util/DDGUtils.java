@@ -431,7 +431,16 @@ public final class DDGUtils {
 			sendIntent.putExtra(Intent.EXTRA_TEXT, "Story link via DuckDuckGo for Android: "+ url);
 			sendIntent.putExtra(Intent.EXTRA_SUBJECT, title);
 			sendIntent.setType("text/plain");
-			context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.send_to)));
+			context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.SharePage)));
+	  }
+	  
+	  public static void shareStory(Context context, String title, String url) {
+		  Intent sendIntent = new Intent();
+			sendIntent.setAction(Intent.ACTION_SEND);
+			sendIntent.putExtra(Intent.EXTRA_TEXT, "Story link via DuckDuckGo for Android: "+ url);
+			sendIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+			sendIntent.setType("text/plain");
+			context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.ShareStory)));
 	  }
 	  
 	  public static void shareSavedSearch(Context context, String query) {
@@ -444,6 +453,6 @@ public final class DDGUtils {
 			sendIntent.putExtra(Intent.EXTRA_TEXT, "Saved search via DuckDuckGo for Android: " + url);
 			sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Saved search: " + query);
 			sendIntent.setType("text/plain");
-			context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.send_to)));
+			context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.ShareSearch)));
 	  }
 }
