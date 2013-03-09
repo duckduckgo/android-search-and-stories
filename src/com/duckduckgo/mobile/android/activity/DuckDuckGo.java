@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -682,10 +683,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	
     	
     	TypedValue tmpTypedValue = new TypedValue(); 
-    	getTheme().resolveAttribute(R.attr.leftTitleTextSize, tmpTypedValue, true);
-    	int defLeftTitleTextSize = (int) tmpTypedValue.getDimension(getResources().getDisplayMetrics());
-    	
-    	DDGControlVar.leftTitleTextSize = sharedPreferences.getInt("leftTitleTextSize", defLeftTitleTextSize);
+    	getTheme().resolveAttribute(R.attr.leftButtonTextSize, tmpTypedValue, true);
+    	float defLeftTitleTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
+    	DDGControlVar.leftTitleTextSize = sharedPreferences.getFloat("leftTitleTextSize", defLeftTitleTextSize);
     	
     	leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
     	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
@@ -1196,8 +1196,15 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         fontSizeLayout = (LinearLayout) contentView.findViewById(R.id.fontSeekLayout);
         
         fontSizeSeekBar = (SeekBarHint) contentView.findViewById(R.id.fontSizeSeekBar);
-        DDGControlVar.mainTextSize = sharedPreferences.getInt("mainFontSize", 14);
-        DDGControlVar.recentTextSize = sharedPreferences.getInt("recentFontSize", 18);
+        
+    	getTheme().resolveAttribute(R.attr.mainTextSize, tmpTypedValue, true);
+    	float defMainTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
+    	DDGControlVar.mainTextSize = sharedPreferences.getFloat("mainFontSize", defMainTextSize);
+    	
+    	getTheme().resolveAttribute(R.attr.recentTextSize, tmpTypedValue, true);
+    	float defRecentTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
+    	DDGControlVar.recentTextSize = sharedPreferences.getFloat("recentFontSize", defRecentTextSize);
+        
         fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
         fontSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
@@ -1272,12 +1279,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				// save adjusted text size
 				Editor editor = sharedPreferences.edit();
 				editor.putInt("fontPrevProgress", DDGControlVar.fontPrevProgress);
-				editor.putInt("mainFontSize", DDGControlVar.mainTextSize);
-				editor.putInt("recentFontSize", DDGControlVar.recentTextSize);
+				editor.putFloat("mainFontSize", DDGControlVar.mainTextSize);
+				editor.putFloat("recentFontSize", DDGControlVar.recentTextSize);
 				editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
 				editor.putInt("ptrHeaderTextSize", DDGControlVar.ptrHeaderSize);
 				editor.putInt("ptrHeaderSubTextSize", DDGControlVar.ptrSubHeaderSize);
-				editor.putInt("leftTitleTextSize", DDGControlVar.leftTitleTextSize);
+				editor.putFloat("leftTitleTextSize", DDGControlVar.leftTitleTextSize);
 				editor.commit();
 				
 				DDGControlVar.prevMainTextSize = 0;
