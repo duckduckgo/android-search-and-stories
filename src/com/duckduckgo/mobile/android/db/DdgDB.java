@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.db;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import android.content.ContentValues;
@@ -10,9 +11,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.AppShortInfo;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 
 public class DdgDB {
 
@@ -493,6 +496,13 @@ public class DdgDB {
 	      OpenHelper(Context context) {
 	         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	      }
+	      
+	      	private void dropTables(SQLiteDatabase db) {
+	      		db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
+		  		db.execSQL("DROP TABLE IF EXISTS " + APP_TABLE);
+		  		db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
+		  		db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE);
+	      	}
 
 		    @Override
 		  	public void onCreate(SQLiteDatabase db) {
@@ -537,11 +547,41 @@ public class DdgDB {
 	
 		  	@Override
 		  	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		  		db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
-		  		db.execSQL("DROP TABLE IF EXISTS " + APP_TABLE);
-		  		db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
-		  		db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE);
-		  		onCreate(db);
+		  		if(oldVersion == 4 && newVersion >= 12) {		  			
+		  			// shape old FEED_TABLE like the new, and rename it as FEED_TABLE_old
+		  			db.execSQL("DELETE FROM " + FEED_TABLE + " WHERE feed='' ");
+		  			db.execSQL("DROP INDEX IF EXISTS idx_id");
+		      		db.execSQL("DROP INDEX IF EXISTS idx_idtype");
+		  			db.execSQL("ALTER TABLE " + FEED_TABLE + " RENAME TO " + FEED_TABLE + "_old");
+		  			
+		  			dropTables(db);
+		  			onCreate(db);
+		  					  			
+		  			// ***** recent queries *******
+		  			List<String> recentQueries = DDGUtils.loadList(DDGApplication.getSharedPreferences(), "recentsearch");
+		  			ContentValues contentValues = new ContentValues();
+		  			for(String query : recentQueries) {
+		  				// insertRecentSearch
+		  				contentValues.clear();
+		  				contentValues.put("type", "R");
+		  				contentValues.put("data", query);
+		  				contentValues.put("url", "");
+		  				contentValues.put("extraType", "");
+		  				contentValues.put("feedId", "");
+		  				db.insert(HISTORY_TABLE, null, contentValues);		  				
+		  			}
+		  			// ****************************
+		  					  					  					  			
+		  			// ***** saved feed items *****
+		  			db.execSQL("INSERT INTO " + FEED_TABLE + " SELECT *,'F' FROM " + FEED_TABLE + "_old");
+		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
+		  			// ****************************
+		  			
+		  		}
+		  		else {
+		  			dropTables(db);
+			  		onCreate(db);
+		  		}
 		  	}
 	}
 	

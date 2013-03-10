@@ -51,6 +51,7 @@ public class DDGApplication extends Application {
 		ACRA.init(this);
 		
 		super.onCreate();
+		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		db = new DdgDB(this);
 		fileCache = new FileCache(this.getApplicationContext());
 		imageCache.setFileCache(fileCache);
@@ -71,7 +72,6 @@ public class DDGApplication extends Application {
 		DDGConstants.TTF_ROBOTO_BOLD = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Bold.ttf");		
 		DDGConstants.TTF_ROBOTO_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Medium.ttf");	
 		
-		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString("startScreenPref", "0")));
 		DDGControlVar.regionString = sharedPreferences.getString("regionPref", "wt-wt");
 		DDGControlVar.useDefaultSources = !DDGUtils.existsSet(sharedPreferences, "sourceset");
