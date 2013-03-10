@@ -1344,7 +1344,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	 * Cancels source filter applied with source icon click from feed item
 	 */
 	public void cancelSourceFilter() {
-		DDGControlVar.targetSource = null;		
+		DDGControlVar.targetSource = null;
+		mDuckDuckGoContainer.feedAdapter.unmark();
 		DDGControlVar.hasUpdatedFeed = false;
 		keepFeedUpdated();
 	}
@@ -1802,7 +1803,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 //			}
 			
 			// mark for blink animation (as a visual cue after list update)
-			mDuckDuckGoContainer.feedAdapter.mark(nPos - feedView.getHeaderViewsCount());
+			mDuckDuckGoContainer.feedAdapter.mark(m_objectId);
 		}
 		else {
 			// scroll triggers pre-caching for source filtering case
