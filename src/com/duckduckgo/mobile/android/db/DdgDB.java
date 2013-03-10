@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.objects.FeedObject;
@@ -548,8 +549,9 @@ public class DdgDB {
 		  	@Override
 		  	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		  		if(oldVersion == 4 && newVersion >= 12) {		  			
+	  				ContentValues contentValues = new ContentValues();	  	
+		  			
 		  			// shape old FEED_TABLE like the new, and rename it as FEED_TABLE_old
-		  			db.execSQL("DELETE FROM " + FEED_TABLE + " WHERE feed='' ");
 		  			db.execSQL("DROP INDEX IF EXISTS idx_id");
 		      		db.execSQL("DROP INDEX IF EXISTS idx_idtype");
 		  			db.execSQL("ALTER TABLE " + FEED_TABLE + " RENAME TO " + FEED_TABLE + "_old");
@@ -559,7 +561,6 @@ public class DdgDB {
 		  					  			
 		  			// ***** recent queries *******
 		  			List<String> recentQueries = DDGUtils.loadList(DDGApplication.getSharedPreferences(), "recentsearch");
-		  			ContentValues contentValues = new ContentValues();
 		  			for(String query : recentQueries) {
 		  				// insertRecentSearch
 		  				contentValues.clear();
@@ -571,8 +572,22 @@ public class DdgDB {
 		  				db.insert(HISTORY_TABLE, null, contentValues);		  				
 		  			}
 		  			// ****************************
+		  			
+		  			// ****** saved search ********
+		  			Cursor c = db.query(FEED_TABLE + "_old", new String[]{"url"}, "feed=''", null, null, null, null);
+		  			while(c.moveToNext()) {
+		  				final String url = c.getString(0);
+		  				final String query = DDGUtils.isSERP(url);
+		  				if(query == null)
+		  					continue;
+		  				contentValues.clear();
+		  				contentValues.put("query", query);
+		  				db.insert(SAVED_SEARCH_TABLE, null, contentValues);		  				
+		  			}
+		  			// *****************************
 		  					  					  					  			
 		  			// ***** saved feed items *****
+		  			db.execSQL("DELETE FROM " + FEED_TABLE + "_old WHERE feed='' ");
 		  			db.execSQL("INSERT INTO " + FEED_TABLE + " SELECT *,'F' FROM " + FEED_TABLE + "_old");
 		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
 		  			// ****************************

@@ -2085,33 +2085,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		 
 	}
 	
-	/**
-	 * Checks to see if URL is DuckDuckGo SERP
-	 * Returns the query if it's a SERP
-	 * 
-	 * @param url
-	 * @return
-	 */
-	private String isSERP(String url) {
-		if(!url.contains("duckduckgo.com"))
-			return null;
-		
-		Uri uri = Uri.parse(url);
-		String query = uri.getQueryParameter("q");
-		if(query != null)
-			return query;
-		
-		String lastPath = uri.getLastPathSegment();
-		if(lastPath == null)
-			return null;
-		
-		if(!lastPath.contains(".html")) {
-			return lastPath.replace("_", " ");
-		}
-		
-		return null;
-	}
-
 	public void onClick(View v) {
 		if (v.equals(homeSettingsButton)) {			
 			hideKeyboard(searchField);
@@ -2139,7 +2112,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			if(webViewUrl == null)
 				webViewUrl = "";
 			
-			final String query = isSERP(webViewUrl);
+			final String query = DDGUtils.isSERP(webViewUrl);
 			
 			// direct displaying after feed item is clicked
 			// the rest will arrive as SESSION_BROWSE
