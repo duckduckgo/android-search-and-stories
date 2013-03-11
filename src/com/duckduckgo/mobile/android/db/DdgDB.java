@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.db;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -10,7 +11,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
-import android.util.Log;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.objects.FeedObject;
@@ -561,6 +561,7 @@ public class DdgDB {
 		  					  			
 		  			// ***** recent queries *******
 		  			List<String> recentQueries = DDGUtils.loadList(DDGApplication.getSharedPreferences(), "recentsearch");
+		  			Collections.reverse(recentQueries);
 		  			for(String query : recentQueries) {
 		  				// insertRecentSearch
 		  				contentValues.clear();
