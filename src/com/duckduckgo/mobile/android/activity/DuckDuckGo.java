@@ -86,6 +86,7 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.menuAdapters.MainFeedMenuAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
@@ -293,8 +294,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		public void onMainFeedItemLongClick(FeedObject feedObject) {
 			final String pageTitle = feedObject.getTitle();
 			final String pageUrl = feedObject.getUrl();
-			final FeedObject fObject = feedObject;
-			
 			final String pageOptionsTitle; 
 			if(pageTitle != null && !pageTitle.equals("")) {
 				pageOptionsTitle = pageTitle;
@@ -303,37 +302,19 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				pageOptionsTitle = pageUrl;
 			}
 			
-			// FIXME unify this code as one, extend DialogInterface.OnClickListener
-			// to initialize with pageTitle, pageUrl and feedObject
-			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(pageOptionsTitle);
+			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(DuckDuckGo.this);
+			alertBuilder.setTitle(pageOptionsTitle);
 			
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "mainfeed", feedObject.isSaved());
+			final PageMenuContextAdapter contextAdapter = new MainFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, 
+					android.R.id.text1, "mainfeed", feedObject);
 			
-			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+			alertBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					Item it = ((Item) contextAdapter.getItem(item));
-					
-					if(it.type == Item.ItemType.SHARE) {
-						DDGUtils.shareStory(DuckDuckGo.this, pageTitle, pageUrl);
-					}
-					else if(it.type == Item.ItemType.SAVE) {
-						itemSaveFeed(fObject, null);
-						syncAdapters();
-					}
-					else if(it.type == Item.ItemType.UNSAVE) {
-						final long delResult = DDGApplication.getDB().makeItemHidden(fObject.getId());
-						if(delResult != 0) {							
-							syncAdapters();
-						}							
-					}
-					else if(it.type == Item.ItemType.EXTERNAL) {
-    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
-    	            	startActivity(browserIntent);
-					}
+					Item clickedItem = ((Item) contextAdapter.getItem(item));
+					clickedItem.ActionToExecute.Execute();
 				}
 			});
-			ab.show();
+			alertBuilder.show();
 		}
     };
     

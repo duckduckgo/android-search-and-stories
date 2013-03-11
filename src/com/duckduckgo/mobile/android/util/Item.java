@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.util;
 
+
 public class Item {
     public final String text;
     public final int icon;
@@ -17,4 +18,6 @@ public class Item {
     public static enum ItemType {
     	SHARE, SAVE, EXTERNAL, UNSAVE, REFRESH, DELETE
     }
+    
+    public Action ActionToExecute;
 }
