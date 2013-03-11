@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.TouchDelegate;
 import android.view.View;
@@ -120,7 +121,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	        });
 
 			//Set the Title
-			holder.textViewTitle.setTextSize(DDGControlVar.mainTextSize);
+			holder.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
 			holder.textViewTitle.setText(feed.getTitle());
 			
 			String feedId = feed.getId();

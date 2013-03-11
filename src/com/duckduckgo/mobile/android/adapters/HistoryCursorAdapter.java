@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.opengl.Visibility;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -52,7 +53,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
     	
         TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
         textViewHistory.setText(data);
-        textViewHistory.setTextSize(DDGControlVar.recentTextSize);
+        textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
         
         String strUrl = cursor.getString(cursor.getColumnIndex("url"));
         String extraType = cursor.getString(cursor.getColumnIndex("extraType"));

@@ -684,14 +684,15 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	
     	TypedValue tmpTypedValue = new TypedValue(); 
     	getTheme().resolveAttribute(R.attr.leftButtonTextSize, tmpTypedValue, true);
+    	// XXX getDimension returns in PIXELS !
     	float defLeftTitleTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
     	DDGControlVar.leftTitleTextSize = sharedPreferences.getFloat("leftTitleTextSize", defLeftTitleTextSize);
     	
-    	leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-    	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-    	leftSavedTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-//    	leftRecentTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-    	leftSettingsTextView.setTextSize(DDGControlVar.leftTitleTextSize); 
+    	leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+//    	leftRecentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize); 
     	    	
     	leftHomeButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftHomeButtonLayout);
     	leftStoriesButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftStoriesButtonLayout);
@@ -1222,6 +1223,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				if(!fromUser) return;
 								
 				int diff = progress - DDGControlVar.fontPrevProgress;
+				float diffPixel = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 
+		                (float) diff, getResources().getDisplayMetrics());
 				// set thumb text
 				if(diff == 0) {
 					fontSizeSeekBar.setExtraText(getResources().getString(R.string.NoChange));
@@ -1236,10 +1239,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					fontSizeSeekBar.setExtraText(String.valueOf((progress-DDGConstants.FONT_SEEKBAR_MID)));
 				}
 				DDGControlVar.fontProgress = progress;
-				DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize + diff;
+				DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize + diffPixel;
 				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 				
-				DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize + diff;
+				DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize + diffPixel;
 				mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
 				mDuckDuckGoContainer.recentSearchAdapter.notifyDataSetInvalidated();
 				
@@ -1257,13 +1260,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize + diff;
 				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
 				
-				DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize + diff;
+				DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize + diffPixel;
 				
-				leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-		    	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-		    	leftSavedTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-//		    	leftRecentTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-		    	leftSettingsTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+				leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+		    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+		    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+//		    	leftRecentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+		    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
 		    	leftMenuView.invalidate();
 			}
 		});
@@ -1414,11 +1417,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		fontSizeLayout.setVisibility(View.GONE);
 		fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
 		
-		leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-    	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-    	leftSavedTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-//    	leftRecentTextView.setTextSize(DDGControlVar.leftTitleTextSize);
-    	leftSettingsTextView.setTextSize(DDGControlVar.leftTitleTextSize);
+		leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+//    	leftRecentTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
     	leftMenuView.invalidate();
 	}
 	
