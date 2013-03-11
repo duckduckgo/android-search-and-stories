@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -116,9 +117,7 @@ import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelected
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
-import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemLongClickListener;
-import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemSelectedListener;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -252,6 +251,34 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 	}
 	
+	private void feedItemSelected(FeedObject feedObject) {
+		// keep a reference, so that we can reuse details while saving
+		currentFeedObject = feedObject;
+		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
+		
+		String url = feedObject.getUrl();
+		if (url != null) {
+			if(!DDGApplication.getDB().existsFeedById(feedObject.getId())) {
+				DDGApplication.getDB().insertFeedItem(feedObject);
+				syncAdapters();			
+			}
+			searchOrGoToUrl(url);
+		}
+		
+		// record article as read
+		String feedId = feedObject.getId();
+		if(feedId != null){
+			DDGControlVar.readArticles.add(feedId);
+			mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
+		}
+	}
+	
+	private void feedItemSelected(String feedId) {
+		FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
+		feedItemSelected(feedObject);
+	}
+	
+	
 	public OnMainFeedItemSelectedListener mFeedItemSelectedListener = new OnMainFeedItemSelectedListener() {
 		public void onMainFeedItemSelected(FeedObject feedObject) {
 			// close left nav if it's open
@@ -259,23 +286,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				viewPager.setCurrentItem(1);
 			}
 			
-			// keep a reference, so that we can reuse details while saving
-			currentFeedObject = feedObject;
-			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
-			
-			String url = feedObject.getUrl();
-			if (url != null) {
-				DDGApplication.getDB().insertFeedItem(feedObject);
-				syncHistoryAdapters();				
-				searchOrGoToUrl(url);
-			}
-			
-			// record article as read
-			String feedId = feedObject.getId();
-			if(feedId != null){
-				DDGControlVar.readArticles.add(feedId);
-				mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
-			}
+			feedItemSelected(feedObject);
 		}
     };
     
@@ -305,7 +316,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					Item it = ((Item) contextAdapter.getItem(item));
 					
 					if(it.type == Item.ItemType.SHARE) {
-						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+						DDGUtils.shareStory(DuckDuckGo.this, pageTitle, pageUrl);
 					}
 					else if(it.type == Item.ItemType.SAVE) {
 						itemSaveFeed(fObject, null);
@@ -505,7 +516,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
      */
     public void itemSaveFeed(FeedObject feedObject, String pageFeedId) {
     	if(feedObject != null) {
-    		DDGApplication.getDB().insert(feedObject);
+    		if(DDGApplication.getDB().existsFeedById(feedObject.getId())) {
+    			DDGApplication.getDB().makeItemVisible(feedObject.getId());
+    		}
+    		else {
+    			DDGApplication.getDB().insertVisible(feedObject);
+    		}
     	}
     	else if(pageFeedId != null && pageFeedId.length() != 0){
     		DDGApplication.getDB().makeItemVisible(pageFeedId);
@@ -667,10 +683,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	
     	
     	TypedValue tmpTypedValue = new TypedValue(); 
-    	getTheme().resolveAttribute(R.attr.leftTitleTextSize, tmpTypedValue, true);
-    	int defLeftTitleTextSize = (int) tmpTypedValue.getDimension(getResources().getDisplayMetrics());
-    	
-    	DDGControlVar.leftTitleTextSize = sharedPreferences.getInt("leftTitleTextSize", defLeftTitleTextSize);
+    	getTheme().resolveAttribute(R.attr.leftButtonTextSize, tmpTypedValue, true);
+    	float defLeftTitleTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
+    	DDGControlVar.leftTitleTextSize = sharedPreferences.getFloat("leftTitleTextSize", defLeftTitleTextSize);
     	
     	leftHomeTextView.setTextSize(DDGControlVar.leftTitleTextSize);
     	leftStoriesTextView.setTextSize(DDGControlVar.leftTitleTextSize);
@@ -719,11 +734,14 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		leftRecentHeaderView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.recentsearch_notrecording_layout, null, false);
 		leftRecentHeaderView.setOnClickListener(this);
     	
+		leftRecentView.setDivider(null);
     	leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
     	leftRecentView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
 			public void onHistoryItemSelected(HistoryObject historyObject) {
-				viewPager.switchPage();
+				if(viewPager.isLeftMenuOpen()){
+					viewPager.setCurrentItem(1);
+				}
 				
 				if(historyObject != null){
 					showHistoryObject((HistoryObject) historyObject);
@@ -831,11 +849,14 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         });
 
         recentSearchView = (HistoryListView) contentView.findViewById(R.id.recentSearchItems);
+        recentSearchView.setDivider(null);
         recentSearchView.setAdapter(mDuckDuckGoContainer.recentSearchAdapter);
         recentSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
 			public void onHistoryItemSelected(HistoryObject historyObject) {
-				viewPager.switchPage();
+				if(viewPager.isLeftMenuOpen()){
+					viewPager.setCurrentItem(1);
+				}
 				
 				if(historyObject != null){
 					showHistoryObject((HistoryObject) historyObject);
@@ -1175,8 +1196,15 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         fontSizeLayout = (LinearLayout) contentView.findViewById(R.id.fontSeekLayout);
         
         fontSizeSeekBar = (SeekBarHint) contentView.findViewById(R.id.fontSizeSeekBar);
-        DDGControlVar.mainTextSize = sharedPreferences.getInt("mainFontSize", 14);
-        DDGControlVar.recentTextSize = sharedPreferences.getInt("recentFontSize", 18);
+        
+    	getTheme().resolveAttribute(R.attr.mainTextSize, tmpTypedValue, true);
+    	float defMainTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
+    	DDGControlVar.mainTextSize = sharedPreferences.getFloat("mainFontSize", defMainTextSize);
+    	
+    	getTheme().resolveAttribute(R.attr.recentTextSize, tmpTypedValue, true);
+    	float defRecentTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
+    	DDGControlVar.recentTextSize = sharedPreferences.getFloat("recentFontSize", defRecentTextSize);
+        
         fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
         fontSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			
@@ -1251,12 +1279,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				// save adjusted text size
 				Editor editor = sharedPreferences.edit();
 				editor.putInt("fontPrevProgress", DDGControlVar.fontPrevProgress);
-				editor.putInt("mainFontSize", DDGControlVar.mainTextSize);
-				editor.putInt("recentFontSize", DDGControlVar.recentTextSize);
+				editor.putFloat("mainFontSize", DDGControlVar.mainTextSize);
+				editor.putFloat("recentFontSize", DDGControlVar.recentTextSize);
 				editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
 				editor.putInt("ptrHeaderTextSize", DDGControlVar.ptrHeaderSize);
 				editor.putInt("ptrHeaderSubTextSize", DDGControlVar.ptrSubHeaderSize);
-				editor.putInt("leftTitleTextSize", DDGControlVar.leftTitleTextSize);
+				editor.putFloat("leftTitleTextSize", DDGControlVar.leftTitleTextSize);
 				editor.commit();
 				
 				DDGControlVar.prevMainTextSize = 0;
@@ -1321,7 +1349,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	 * Cancels source filter applied with source icon click from feed item
 	 */
 	public void cancelSourceFilter() {
-		DDGControlVar.targetSource = null;		
+		DDGControlVar.targetSource = null;
+		mDuckDuckGoContainer.feedAdapter.unmark();
 		DDGControlVar.hasUpdatedFeed = false;
 		keepFeedUpdated();
 	}
@@ -1719,6 +1748,14 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		if(object.getType().equals("R")) {
 			searchWebTerm(object.getData());
 		}
+		else if(object.getType().equals("F")) {
+			DDGApplication.getDB().insertHistoryObject(object);
+			syncHistoryAdapters();
+			String feedId = object.getFeedId();
+			if(feedId != null) {
+				feedItemSelected(feedId);
+			}
+		}
 		else {
 			DDGApplication.getDB().insertHistoryObject(object);
 			syncHistoryAdapters();
@@ -1771,7 +1808,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 //			}
 			
 			// mark for blink animation (as a visual cue after list update)
-			mDuckDuckGoContainer.feedAdapter.mark(nPos - feedView.getHeaderViewsCount());
+			mDuckDuckGoContainer.feedAdapter.mark(m_objectId);
 		}
 		else {
 			// scroll triggers pre-caching for source filtering case
@@ -2053,33 +2090,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		 
 	}
 	
-	/**
-	 * Checks to see if URL is DuckDuckGo SERP
-	 * Returns the query if it's a SERP
-	 * 
-	 * @param url
-	 * @return
-	 */
-	private String isSERP(String url) {
-		if(!url.contains("duckduckgo.com"))
-			return null;
-		
-		Uri uri = Uri.parse(url);
-		String query = uri.getQueryParameter("q");
-		if(query != null)
-			return query;
-		
-		String lastPath = uri.getLastPathSegment();
-		if(lastPath == null)
-			return null;
-		
-		if(!lastPath.contains(".html")) {
-			return lastPath.replace("_", " ");
-		}
-		
-		return null;
-	}
-
 	public void onClick(View v) {
 		if (v.equals(homeSettingsButton)) {			
 			hideKeyboard(searchField);
@@ -2101,7 +2111,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			final String pageUrl;
 			final String pageType;
 			
-			final String query = isSERP(mainWebView.getOriginalUrl());
+			// XXX should make Page Options button disabled if the page is not loaded yet
+			// url = null case
+			String webViewUrl = mainWebView.getOriginalUrl();
+			if(webViewUrl == null)
+				webViewUrl = "";
+			
+			final String query = DDGUtils.isSERP(webViewUrl);
 			
 			// direct displaying after feed item is clicked
 			// the rest will arrive as SESSION_BROWSE
@@ -2109,26 +2125,26 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED
 					|| 
 					( mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_BROWSE 
-						&& mDuckDuckGoContainer.lastFeedUrl.equals(mainWebView.getOriginalUrl() 
-					) 
-				)) {
+						&& mDuckDuckGoContainer.lastFeedUrl.equals(webViewUrl) 
+					)
+			  ) {
 				pageTitle = currentFeedObject.getTitle();
 				pageUrl = currentFeedObject.getUrl();
 				pageType = "F";
 				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
 				
-				mDuckDuckGoContainer.lastFeedUrl = pageUrl;
+				mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
 			}						
 			else if(query != null) {
 				pageTitle = query;
-				pageUrl = mainWebView.getOriginalUrl();
+				pageUrl = webViewUrl;
 				pageType = "R";
 				isPageSaved = DDGApplication.getDB().isSavedSearch(query);
 			}
 			else {
 				// in case it's not a query or feed item
 				pageTitle = mainWebView.getTitle();
-				pageUrl = mainWebView.getOriginalUrl();
+				pageUrl = webViewUrl;
 				pageType = "W";
 				isPageSaved = false;
 			}

@@ -45,7 +45,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	private SimpleDateFormat dateFormat;
 	private Date lastFeedDate = null;
 	
-	private int markedItem = -1;
+	private String markedItem = null;
 	
 	private AlphaAnimation blinkanimation = null;
 	
@@ -159,11 +159,14 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			}
 		}
 		
-		if(position == markedItem && cv != null) {			
-			cv.startAnimation(blinkanimation);
-			
-			// only blink once
-			unmark();
+		if(cv != null) {
+			if(markedItem != null && markedItem.equals(feed.getId())) {			
+				blinkanimation.reset();
+				cv.startAnimation(blinkanimation);
+			}
+			else {
+				cv.setAnimation(null);
+			}
 		}
 		
 		return cv;
@@ -204,12 +207,12 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	 * Mark a list item position to be blinked
 	 * @param itemPos
 	 */
-	public void mark(int itemPos) {
-		markedItem = itemPos;
+	public void mark(String itemId) {
+		markedItem = itemId;
 	}
 	
 	public void unmark() {
-		markedItem = -1;
+		markedItem = null;
 	}
 
 }

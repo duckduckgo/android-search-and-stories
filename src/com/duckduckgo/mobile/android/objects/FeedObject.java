@@ -18,6 +18,8 @@ public class FeedObject {
 	private final String category;
 	private final String imageUrl;
 	private final String type;
+	
+	private final String hidden;
 		
 	public FeedObject() {
 		// no-arg constructor for ORMlite
@@ -31,10 +33,11 @@ public class FeedObject {
 		this.category = "";
 		this.imageUrl = "";
 		this.type = "";
+		this.hidden = "T";
 	}
 	
 	public FeedObject(String id, String title, String description, String feed, String url, String imageUrl,
-			String favicon, String timestamp, String category, String type) {
+			String favicon, String timestamp, String category, String type, String hidden) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
@@ -45,6 +48,7 @@ public class FeedObject {
 		this.timestamp = timestamp;
 		this.category = category;
 		this.type = type;
+		this.hidden = hidden;
 	}
 	
 	public FeedObject(String title, String url) {
@@ -58,6 +62,7 @@ public class FeedObject {
 		this.timestamp = "";
 		this.category = "";
 		this.type = "";
+		this.hidden = "T";
 	}
 	
 	public FeedObject(String title, String url, String imageUrl) {
@@ -76,6 +81,7 @@ public class FeedObject {
 		this.timestamp = "";
 		this.category = "";
 		this.type = "";
+		this.hidden = "T";
 	}
 	
 	public FeedObject(JSONObject obj) throws JSONException {
@@ -89,6 +95,7 @@ public class FeedObject {
 		this.category = obj.getString("category");
 		this.imageUrl = obj.optString("image");
 		this.type = obj.getString("type");
+		this.hidden = "T";
 	}
 	
 	public FeedObject(SQLiteCursor cursor) {
@@ -102,6 +109,7 @@ public class FeedObject {
 		this.timestamp = cursor.getString(cursor.getColumnIndex("timestamp"));
 		this.category = cursor.getString(cursor.getColumnIndex("category"));
 		this.type = cursor.getString(cursor.getColumnIndex("type"));
+		this.hidden = cursor.getString(cursor.getColumnIndex("hidden"));;
 	}
 	
 	@Override
@@ -116,8 +124,9 @@ public class FeedObject {
 		string = string.concat("title:" + this.title + "\n");
 		string = string.concat("id:" + this.id + "\n");
 		string = string.concat("category:" + this.category + "\n");
-		string = string.concat("image: " + this.imageUrl + "}");
-		string = string.concat("type: " + this.type + "}");
+		string = string.concat("image: " + this.imageUrl + "\n");
+		string = string.concat("type: " + this.type + "\n");
+		string = string.concat("hidden: " + this.hidden + "}");
 		
 		return string;
 	}
@@ -164,5 +173,9 @@ public class FeedObject {
 	
 	public boolean isSaved() {		
 		return DDGApplication.getDB().isSaved(getId());
+	}
+	
+	public String getHidden() {		
+		return hidden;
 	}
 }

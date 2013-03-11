@@ -81,6 +81,13 @@
         
         <include android:id="@+id/fontSeekLayout" layout="@layout/font_seekbar" />
         
+        <View
+        android:id="@+id/dropshadow_top"
+        android:layout_width="fill_parent"
+        android:layout_height="5dp"
+        android:layout_alignParentTop="true"
+        android:background="?attr/topDropShadow"/>
+        
     </RelativeLayout>
         		  
 </LinearLayout>

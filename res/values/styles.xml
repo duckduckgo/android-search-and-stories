@@ -75,6 +75,7 @@
     <style name="LeftTitleText">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">27dp</item>
+        <item name="android:gravity">center_vertical</item>
         <item name="android:textSize">?attr/leftTitleTextSize</item>
         <item name="android:textColor">?attr/leftTitleTextColor</item>
         <item name="android:background">?attr/leftTitleBackground</item>
@@ -101,6 +102,7 @@
     <style name="RecentListRoot">
         <item name="android:background">?attr/leftRecentListRootBackground</item>
         <item name="android:layout_height">53dp</item>
+        <item name="android:layout_width">match_parent</item> 
     </style>
     
     <style name="RecentListItemRoot">

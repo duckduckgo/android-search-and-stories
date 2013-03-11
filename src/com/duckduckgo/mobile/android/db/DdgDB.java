@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.db;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import android.content.ContentValues;
@@ -9,10 +10,13 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.AppShortInfo;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 
 public class DdgDB {
 
@@ -91,11 +95,21 @@ public class DdgDB {
 	}
 	
 	/**
+	 * Insert feed item, using visibility setting from the object itself
+	 * @param e feed item
+	 * @return
+	 */
+	public long insert(FeedObject e) {
+		// hidden = False, F
+		return this.insert(e, e.getHidden());
+	}
+	
+	/**
 	 * Ordinary item Save operation - keep Saved item VISIBLE  
 	 * @param e
 	 * @return
 	 */
-	public long insert(FeedObject e) {
+	public long insertVisible(FeedObject e) {
 		// hidden = False, F
 		return this.insert(e, "F");
 	}
@@ -169,7 +183,8 @@ public class DdgDB {
 	}
 	
 	public long insertFeedItem(FeedObject feedObject) {
-		this.insertHidden(feedObject);
+		this.deleteFeedObject(feedObject);
+		this.insert(feedObject);
 		
 		String feedId = feedObject.getId();		
         ContentValues contentValues = new ContentValues();
@@ -242,7 +257,7 @@ public class DdgDB {
 	
 	private FeedObject getFeedObject(Cursor c) {
 		return new FeedObject(c.getString(0), c.getString(1), c.getString(2), c.getString(3),
-				c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9));
+				c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9), c.getString(10));
 	}
 	
 	private AppShortInfo getAppShortInfo(Cursor c) {
@@ -344,6 +359,22 @@ public class DdgDB {
 			
 		Cursor c = this.db.query(HISTORY_TABLE, null, "data=? AND url='' AND type='R'", new String[]{query} , null, null, null);
 		return c.moveToFirst();
+	}
+	
+	public FeedObject selectFeedById(String id){
+		Cursor c = this.db.query(FEED_TABLE, null, "_id=?", new String[]{id} , null, null, null);
+		if(c.moveToFirst()) {
+			return getFeedObject(c);
+		}
+		return null;
+	}
+	
+	public boolean existsFeedById(String id){
+		Cursor c = this.db.query(FEED_TABLE, new String[]{"_id"}, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
+		if(c.moveToFirst()) {
+			return true;
+		}
+		return false;
 	}
 	
 	public FeedObject selectById(String id){
@@ -452,7 +483,7 @@ public class DdgDB {
 	}
 	
 	public Cursor getCursorSavedSearch() {
-		return this.db.query(SAVED_SEARCH_TABLE, null, null, null , null, null, null);
+		return this.db.query(SAVED_SEARCH_TABLE, null, null, null , null, null, "_id DESC");
 	}
 	
 	public Cursor getCursorStoryFeed() {
@@ -466,6 +497,13 @@ public class DdgDB {
 	      OpenHelper(Context context) {
 	         super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	      }
+	      
+	      	private void dropTables(SQLiteDatabase db) {
+	      		db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
+		  		db.execSQL("DROP TABLE IF EXISTS " + APP_TABLE);
+		  		db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
+		  		db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE);
+	      	}
 
 		    @Override
 		  	public void onCreate(SQLiteDatabase db) {
@@ -510,11 +548,55 @@ public class DdgDB {
 	
 		  	@Override
 		  	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		  		db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
-		  		db.execSQL("DROP TABLE IF EXISTS " + APP_TABLE);
-		  		db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
-		  		db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE);
-		  		onCreate(db);
+		  		if(oldVersion == 4 && newVersion >= 12) {		  			
+	  				ContentValues contentValues = new ContentValues();	  	
+		  			
+		  			// shape old FEED_TABLE like the new, and rename it as FEED_TABLE_old
+		  			db.execSQL("DROP INDEX IF EXISTS idx_id");
+		      		db.execSQL("DROP INDEX IF EXISTS idx_idtype");
+		  			db.execSQL("ALTER TABLE " + FEED_TABLE + " RENAME TO " + FEED_TABLE + "_old");
+		  			
+		  			dropTables(db);
+		  			onCreate(db);
+		  					  			
+		  			// ***** recent queries *******
+		  			List<String> recentQueries = DDGUtils.loadList(DDGApplication.getSharedPreferences(), "recentsearch");
+		  			for(String query : recentQueries) {
+		  				// insertRecentSearch
+		  				contentValues.clear();
+		  				contentValues.put("type", "R");
+		  				contentValues.put("data", query);
+		  				contentValues.put("url", "");
+		  				contentValues.put("extraType", "");
+		  				contentValues.put("feedId", "");
+		  				db.insert(HISTORY_TABLE, null, contentValues);		  				
+		  			}
+		  			// ****************************
+		  			
+		  			// ****** saved search ********
+		  			Cursor c = db.query(FEED_TABLE + "_old", new String[]{"url"}, "feed=''", null, null, null, null);
+		  			while(c.moveToNext()) {
+		  				final String url = c.getString(0);
+		  				final String query = DDGUtils.isSERP(url);
+		  				if(query == null)
+		  					continue;
+		  				contentValues.clear();
+		  				contentValues.put("query", query);
+		  				db.insert(SAVED_SEARCH_TABLE, null, contentValues);		  				
+		  			}
+		  			// *****************************
+		  					  					  					  			
+		  			// ***** saved feed items *****
+		  			db.execSQL("DELETE FROM " + FEED_TABLE + "_old WHERE feed='' ");
+		  			db.execSQL("INSERT INTO " + FEED_TABLE + " SELECT *,'F' FROM " + FEED_TABLE + "_old");
+		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
+		  			// ****************************
+		  			
+		  		}
+		  		else {
+		  			dropTables(db);
+			  		onCreate(db);
+		  		}
 		  	}
 	}
 	

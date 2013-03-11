@@ -38,12 +38,13 @@
     <string name="PrefSearchResults">Search results</string>
     <string name="PrefTurnOffAutocomplete">Turn off auto-suggest</string>
     
-    <string name="send_to">sharin\' stuff.</string>
+    <string name="ShareStory">Share story</string>
+    <string name="ShareSearch">Share search</string>
+    <string name="SharePage">Share page</string>
     
     <string name="Yes">Yes</string>
     <string name="No">No</string>
     
-    <string name="MainFeedContextTitle">sharin\' stuff.</string>
     <string name="Save">Save</string>
     <string name="Unsave">Unsave</string>
     <string name="Share">Share</string>
