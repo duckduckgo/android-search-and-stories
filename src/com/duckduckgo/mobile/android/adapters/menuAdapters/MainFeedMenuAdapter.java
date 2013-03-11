@@ -12,6 +12,7 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.Item;
 import com.duckduckgo.mobile.android.util.Item.ItemType;
 import com.duckduckgo.mobile.android.util.menuItems.ShareMenuItem;
+import com.duckduckgo.mobile.android.util.menuItems.SendToExternalBrowserMenuItem;
 
 public class MainFeedMenuAdapter extends PageMenuContextAdapter {
 	DuckDuckGo context;
@@ -32,7 +33,7 @@ public class MainFeedMenuAdapter extends PageMenuContextAdapter {
 	
 	public void addItems() {
 		add(new ShareMenuItem(context, feedObject.getTitle(), feedObject.getUrl()));
-		addItemToExternal();			
+		add(new SendToExternalBrowserMenuItem(context, feedObject.getUrl()));		
 		if(feedObject.isSaved()){
 			addItemToUnsave();
 		}else{
@@ -65,17 +66,5 @@ public class MainFeedMenuAdapter extends PageMenuContextAdapter {
 			}
 		};
 		add(saveItem);
-	}
-
-	private void addItemToExternal() {
-		Item externalItem = getItem(ItemType.EXTERNAL);
-		externalItem.ActionToExecute = new Action() {
-			@Override
-			public void Execute() {
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(feedObject.getUrl()));
-            	context.startActivity(browserIntent);
-			}
-		};
-		add(externalItem);
 	}
 }
