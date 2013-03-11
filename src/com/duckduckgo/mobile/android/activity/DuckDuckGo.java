@@ -1073,6 +1073,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         		} else {
         			//This isn't duckduck go...
         			mainWebView.getSettings().setUserAgentString(mWebViewDefaultUA);
+        			// This is a bit strange, but necessary to load Twitter in the app
+        			//TODO: Figure out a better way, it has something to do with JS with errors
+        			if (url.contains("twitter.com")) {
+        				mainWebView.getSettings().setUserAgentString(DDGConstants.USER_AGENT);
+        			}
         			
         	        mainWebView.getSettings().setSupportZoom(true);
         	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
