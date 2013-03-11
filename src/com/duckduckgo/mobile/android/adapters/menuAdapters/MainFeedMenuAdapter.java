@@ -27,10 +27,10 @@ public class MainFeedMenuAdapter extends PageMenuContextAdapter {
 			int textViewResourceId, String pageType, FeedObject feedObject) {
 		this(context, resource, textViewResourceId);
 		this.feedObject = feedObject;
-		setType(pageType, feedObject.isSaved());
+		addItems();
 	}
 	
-	public void setType(String pageType) {
+	public void addItems() {
 		addItemToShare();
 		addItemToExternal();			
 		if(feedObject.isSaved()){
@@ -52,6 +52,7 @@ public class MainFeedMenuAdapter extends PageMenuContextAdapter {
 				}					
 			}
 		};
+		add(saveItem);
 	}
 
 	private void addItemToUnsave() {
