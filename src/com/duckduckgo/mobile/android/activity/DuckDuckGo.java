@@ -114,6 +114,7 @@ import com.duckduckgo.mobile.android.util.Item;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.SuggestType;
+import com.duckduckgo.mobile.android.util.builders.OptionsDialogBuilder;
 import com.duckduckgo.mobile.android.views.DDGWebView;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
@@ -358,24 +359,17 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			final String pageFeedId = historyObject.getFeedId();
 			final String pageType = historyObject.getType();
     
-			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DuckDuckGo.this);
+			OptionsDialogBuilder alertDialogBuilder;
 						
 			final PageMenuContextAdapter contextAdapter;
 			if(pageType.equals("F") && pageFeedId != null && pageFeedId.length() != 0) {
-				alertDialogBuilder.setTitle(R.string.StoryOptionsTitle);
 				contextAdapter = new HistoryFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, historyObject);
+				alertDialogBuilder = new OptionsDialogBuilder(DuckDuckGo.this, contextAdapter, R.string.StoryOptionsTitle);
 			}
 			else{
-				alertDialogBuilder.setTitle(R.string.SearchOptionsTitle);
 				contextAdapter = new HistorySearchMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, historyObject);
+				alertDialogBuilder = new OptionsDialogBuilder(DuckDuckGo.this, contextAdapter, R.string.SearchOptionsTitle);
 			}
-			
-			alertDialogBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					Item clickedItem = ((Item) contextAdapter.getItem(item));
-					clickedItem.ActionToExecute.Execute();
-				}
-			});
 			alertDialogBuilder.show();
     	}
     };
