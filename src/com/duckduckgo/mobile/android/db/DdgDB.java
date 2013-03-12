@@ -18,6 +18,8 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.AppShortInfo;
+import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
 public class DdgDB {
@@ -600,7 +602,13 @@ public class DdgDB {
 		  			
 		  			// clear old sharedPreferences values, types can conflict (int -> float)
 		  			Editor editor = sharedPreferences.edit();
-		  			editor.clear();
+					editor.putInt("fontPrevProgress", DDGConstants.FONT_SEEKBAR_MID);
+					editor.remove("mainFontSize");
+					editor.remove("recentFontSize");
+					editor.remove("webViewFontSize");
+					editor.remove("ptrHeaderTextSize");
+					editor.remove("ptrHeaderSubTextSize");
+					editor.remove("leftTitleTextSize");
 		  			editor.commit();
 		  		}
 		  		else {
