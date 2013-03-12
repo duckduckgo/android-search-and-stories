@@ -392,8 +392,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				pageOptionsTitle = pageUrl;
 			}
     
-			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(pageOptionsTitle);
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DuckDuckGo.this);
+			alertDialogBuilder.setTitle(pageOptionsTitle);
 						
 			final boolean isPageSaved;					
 			
@@ -409,52 +409,62 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			
 			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "history", isPageSaved);
 			
-			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+			alertDialogBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					Item it = ((Item) contextAdapter.getItem(item));
-					if(it.type == Item.ItemType.SHARE) {						
-						DDGUtils.shareWebPage(DuckDuckGo.this, pageData, pageUrl);
-					}
-					else if(it.type == Item.ItemType.SAVE) {
-						if(pageType.equals("F")) {
+					Item clickedItem = ((Item) contextAdapter.getItem(item));
+					
+					if(pageType.equals("F")){
+						if(clickedItem.type == Item.ItemType.SHARE) {						
+							DDGUtils.shareWebPage(DuckDuckGo.this, pageData, pageUrl);
+						}
+						else if(clickedItem.type == Item.ItemType.SAVE) {
 							itemSaveFeed(null, pageFeedId);
+							syncAdapters();
 						}
-						else if(pageType.equals("R")) {
+						else if(clickedItem.type == Item.ItemType.UNSAVE) {
+							long delHistory = DDGApplication.getDB().makeItemHidden(pageFeedId);
+							if(delHistory != 0) {							
+								syncAdapters();
+							}	
+						}
+						else if(clickedItem.type == Item.ItemType.DELETE) {
+							final long delHistory = DDGApplication.getDB().deleteHistoryByFeedId(pageFeedId);					
+							if(delHistory != 0) {							
+								syncAdapters();
+							}	
+						}
+						else if(clickedItem.type == Item.ItemType.EXTERNAL) {
+	    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
+	    	            	startActivity(browserIntent);
+						}
+					}else{
+						if(clickedItem.type == Item.ItemType.SHARE) {						
+							DDGUtils.shareWebPage(DuckDuckGo.this, pageData, pageUrl);
+						}
+						else if(clickedItem.type == Item.ItemType.SAVE) {
 							itemSaveSearch(pageData);
-						}
-						syncAdapters();
-					}
-					else if(it.type == Item.ItemType.UNSAVE) {
-						long delHistory = 0;
-						if(pageType.equals("F") && pageFeedId != null && pageFeedId.length() != 0) {
-							delHistory = DDGApplication.getDB().makeItemHidden(pageFeedId);
-						}
-						else if(pageType.equals("R")){
-							delHistory = DDGApplication.getDB().deleteSavedSearch(pageData);
-						}
-						if(delHistory != 0) {							
 							syncAdapters();
-						}	
-					}
-					else if(it.type == Item.ItemType.DELETE) {
-						final long delHistory;
-						if(pageFeedId != null && pageFeedId.length() != 0) {
-							delHistory = DDGApplication.getDB().deleteHistoryByFeedId(pageFeedId);
 						}
-						else {
-							delHistory = DDGApplication.getDB().deleteHistoryByDataUrl(pageData, pageUrl);
-						}						
-						if(delHistory != 0) {							
-							syncAdapters();
-						}	
-					}
-					else if(it.type == Item.ItemType.EXTERNAL) {
-    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
-    	            	startActivity(browserIntent);
+						else if(clickedItem.type == Item.ItemType.UNSAVE) {
+							long delHistory = DDGApplication.getDB().deleteSavedSearch(pageData);
+							if(delHistory != 0) {							
+								syncAdapters();
+							}	
+						}
+						else if(clickedItem.type == Item.ItemType.DELETE) {
+							final long delHistory = DDGApplication.getDB().deleteHistoryByDataUrl(pageData, pageUrl);				
+							if(delHistory != 0) {							
+								syncAdapters();
+							}	
+						}
+						else if(clickedItem.type == Item.ItemType.EXTERNAL) {
+	    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
+	    	            	startActivity(browserIntent);
+						}
 					}
 				}
 			});
-			ab.show();    		
+			alertDialogBuilder.show();    		
     		
     		
     	}
