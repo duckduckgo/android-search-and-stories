@@ -1321,7 +1321,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         
         // if the app is launched from another app, load the URL
         if (getIntent().getData() != null) {
-        	searchOrGoToUrl(getIntent().getData().toString());
+        	displayWebView();
+        	mainWebView.loadUrl(getIntent().getData().toString());
         }
     }	
 	
