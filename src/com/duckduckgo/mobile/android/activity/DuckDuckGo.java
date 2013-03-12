@@ -86,6 +86,7 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.menuAdapters.HistoryFeedMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.MainFeedMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.SavedFeedMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.SavedSearchMenuAdapter;
@@ -396,9 +397,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			alertDialogBuilder.setTitle(pageOptionsTitle);
 						
 			final boolean isPageSaved;					
-			
+			final PageMenuContextAdapter contextAdapter;
 			if(pageType.equals("F") && pageFeedId != null && pageFeedId.length() != 0) {
 				isPageSaved = DDGApplication.getDB().isSaved(pageFeedId);
+				contextAdapter = new HistoryFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "history");
 			}
 			else if(pageType.equals("R")){
 				isPageSaved = DDGApplication.getDB().isSavedSearch(historyObject.getData());
@@ -406,8 +408,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			else {
 				isPageSaved = false;
 			}
-			
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "history", isPageSaved);
 			
 			alertDialogBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
