@@ -6,11 +6,11 @@ import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.util.Action;
 import com.duckduckgo.mobile.android.util.Item;
 
-public class UnSaveMenuItem extends Item {
+public class UnSaveFeedMenuItem extends Item {
 	private DuckDuckGo context;
 	private String feedObjectId;
 
-	public UnSaveMenuItem(DuckDuckGo context, String feedObjectId){
+	public UnSaveFeedMenuItem(DuckDuckGo context, String feedObjectId){
 		super(context.getResources().getString(R.string.Unsave), android.R.drawable.ic_menu_delete, ItemType.UNSAVE);
 		this.context = context;
 		this.feedObjectId = feedObjectId;
