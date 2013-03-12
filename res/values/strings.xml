@@ -129,5 +129,8 @@
     
     <string name="SavedResults">Saved Results</string>
     <string name="SavedStories">Saved Stories</string>
+    <string name="StoryOptionsTitle">Story options</string>
+    <string name="SearchOptionsTitle">Search options</string>
+    <string name="PageOptionsTitle">Page options</string>
 
 </resources>
