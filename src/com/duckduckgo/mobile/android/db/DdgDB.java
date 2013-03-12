@@ -7,6 +7,8 @@ import java.util.Set;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -558,9 +560,11 @@ public class DdgDB {
 		  			
 		  			dropTables(db);
 		  			onCreate(db);
+		  			
+		  			SharedPreferences sharedPreferences = DDGApplication.getSharedPreferences();
 		  					  			
 		  			// ***** recent queries *******
-		  			List<String> recentQueries = DDGUtils.loadList(DDGApplication.getSharedPreferences(), "recentsearch");
+		  			List<String> recentQueries = DDGUtils.loadList(sharedPreferences, "recentsearch");
 		  			Collections.reverse(recentQueries);
 		  			for(String query : recentQueries) {
 		  				// insertRecentSearch
@@ -593,6 +597,11 @@ public class DdgDB {
 		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
 		  			// ****************************
 		  			
+		  			
+		  			// clear old sharedPreferences values, types can conflict (int -> float)
+		  			Editor editor = sharedPreferences.edit();
+		  			editor.clear();
+		  			editor.commit();
 		  		}
 		  		else {
 		  			dropTables(db);
