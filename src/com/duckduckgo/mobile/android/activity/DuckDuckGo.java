@@ -1197,8 +1197,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
             	
             	DuckDuckGo.this.downloadContent(url, mimetype);
             } 
-        });
-        
+        }); 
+                        
         fontSizeLayout = (LinearLayout) contentView.findViewById(R.id.fontSeekLayout);
         
         fontSizeSeekBar = (SeekBarHint) contentView.findViewById(R.id.fontSizeSeekBar);
@@ -1314,16 +1314,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				cancelFontScaling();
 			}
 		});
- 
+		
+        
         
         // show Home screen
         displayHomeScreen();
-        
-        // if the app is launched from another app, load the URL
-        if (getIntent().getData() != null) {
-        	displayWebView();
-        	mainWebView.loadUrl(getIntent().getData().toString());
-        }
     }	
 	
 	/**

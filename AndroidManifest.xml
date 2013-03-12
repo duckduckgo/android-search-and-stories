@@ -26,37 +26,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             
-            <!-- Default browser intents -->
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="http" />
-				<data android:scheme="https" />
-				<data android:scheme="about" />
-				<data android:scheme="javascript" />
-			</intent-filter>
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<data android:scheme="file" />
-				<data android:scheme="http" />
-				<data android:scheme="https" />
-				<data android:mimeType="text/html"/>
-				<data android:mimeType="text/plain"/>
-				<data android:mimeType="application/xhtml+xml"/>
-			</intent-filter>
-			
-			<intent-filter>
-				<action android:name="android.intent.action.WEB_SEARCH" />
-				<category android:name="android.intent.category.DEFAULT" />
-				<category android:name="android.intent.category.BROWSABLE" />
-				<data android:scheme="" />
-				<data android:scheme="http" />
-				<data android:scheme="https" />
-   			</intent-filter>
-            
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
