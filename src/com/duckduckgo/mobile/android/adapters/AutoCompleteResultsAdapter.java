@@ -12,6 +12,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,9 +80,11 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 		
 		if (suggestion != null) {
 			holder.autoCompleteResult.setText(suggestion.getPhrase());
-			holder.autoCompleteResult.setTextSize(DDGControlVar.mainTextSize+2);
+			final int pixelValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 
+	                (float) 2.0, getContext().getResources().getDisplayMetrics());
+			holder.autoCompleteResult.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize+pixelValue);
 			holder.autoCompleteDetail.setText(suggestion.getSnippet());
-			holder.autoCompleteDetail.setTextSize(DDGControlVar.mainTextSize);
+			holder.autoCompleteDetail.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
 			Drawable acDrawable = suggestion.getDrawable();
 			if(acDrawable == null) {
 				imageDownloader.download(suggestion.getImageUrl(), holder.autoCompleteImage, false);

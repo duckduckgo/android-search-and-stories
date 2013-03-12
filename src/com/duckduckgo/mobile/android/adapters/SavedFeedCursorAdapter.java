@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.TouchDelegate;
 import android.view.View;
@@ -96,7 +97,7 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
     	});
 
     	//Set the Title
-    	textViewTitle.setTextSize(DDGControlVar.mainTextSize);
+    	textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
     	textViewTitle.setText(title);
 
     	// FIXME : it'd be good to reset color to default color for textview in layout XML

@@ -38,6 +38,7 @@
 			   	        	  android:dropDownVerticalOffset="0dp"
 			   	        	  android:completionThreshold="1"
 			   	        	  android:inputType="textAutoComplete"
+			   	        	  android:imeOptions="actionGo"
 			   	        	  android:hint="@string/SearchString"
 			   	        	  android:id="@+id/searchEditText" />
    	    

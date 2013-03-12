@@ -31,12 +31,12 @@ public class DDGControlVar {
 	
 	public static int fontProgress = DDGConstants.FONT_SEEKBAR_MID;	// over scale 0-10
 	public static int fontPrevProgress = DDGConstants.FONT_SEEKBAR_MID;	// over scale 0-10
-	public static int mainTextSize, prevMainTextSize;
-	public static int recentTextSize, prevRecentTextSize; 
+	public static float mainTextSize, prevMainTextSize;
+	public static float recentTextSize, prevRecentTextSize; 
 	public static int webViewTextSize = -1, prevWebViewTextSize = -1;
 	public static int ptrHeaderSize, prevPtrHeaderSize;
 	public static int ptrSubHeaderSize, prevPtrSubHeaderSize;
-	public static int leftTitleTextSize, prevLeftTitleTextSize;
+	public static float leftTitleTextSize, prevLeftTitleTextSize;
 	
 //	public static TaskCompleteSignal taskCompleteSignal = new TaskCompleteSignal();
 	

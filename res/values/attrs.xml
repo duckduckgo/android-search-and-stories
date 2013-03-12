@@ -47,6 +47,7 @@
         <attr name="leftRecentListRootBackground" format="color|reference" />
         <attr name="leftRecentItemTextColor" format="color|reference" />
         
+        <attr name="leftButtonTextSize" format="dimension" />
         <attr name="leftTitleTextSize" format="dimension" />
         <attr name="leftTitleTextColor" format="color" />
         <attr name="leftTitleBackground" format="reference|color" />
@@ -64,5 +65,8 @@
         
         <attr name="tabIndicator" format="reference" />
         <attr name="tabTextSelector" format="color" />
+        
+        <attr name="mainTextSize" format="dimension" />
+        <attr name="recentTextSize" format="dimension" />
     
 </resources>

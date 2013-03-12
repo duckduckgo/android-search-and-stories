@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +43,7 @@ public class SavedResultCursorAdapter extends CursorAdapter {
     	
         TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
         textViewHistory.setText(data);
-        textViewHistory.setTextSize(DDGControlVar.recentTextSize);
+        textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
         
         AsyncImageView imageViewHistory = (AsyncImageView) view.findViewById(R.id.recentSearchImage);
         imageViewHistory.setImageResource(R.drawable.icon_history_search);
