@@ -6,12 +6,12 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.Action;
 import com.duckduckgo.mobile.android.util.Item;
 
-public class SaveMenuItem extends Item {
+public class SaveFeedMenuItem extends Item {
 	
 	private DuckDuckGo context;
 	private FeedObject feedObject;
 
-	public SaveMenuItem(DuckDuckGo context, FeedObject feedObject){
+	public SaveFeedMenuItem(DuckDuckGo context, FeedObject feedObject){
 		super(context.getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE);
 		this.context = context;
 		this.feedObject = feedObject;

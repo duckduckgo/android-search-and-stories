@@ -3,7 +3,7 @@ package com.duckduckgo.mobile.android.adapters.menuAdapters;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.objects.FeedObject;
-import com.duckduckgo.mobile.android.util.menuItems.SaveMenuItem;
+import com.duckduckgo.mobile.android.util.menuItems.SaveFeedMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SendToExternalBrowserMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.ShareFeedMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.UnSaveFeedMenuItem;
@@ -31,7 +31,7 @@ public class MainFeedMenuAdapter extends PageMenuContextAdapter {
 		if(feedObject.isSaved()){
 			add(new UnSaveFeedMenuItem(context, feedObject.getId()));
 		}else{
-			add(new SaveMenuItem(context, feedObject));
+			add(new SaveFeedMenuItem(context, feedObject));
 		}
 	}
 }
