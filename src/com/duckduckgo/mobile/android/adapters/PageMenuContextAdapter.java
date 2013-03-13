@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android.adapters;
 
+import static com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter.dialogItems;
+
 import java.util.HashMap;
 
 import android.content.Context;
@@ -23,6 +25,10 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
         dialogItems.put(ItemType.DELETE, new Item(context.getResources().getString(R.string.Delete), android.R.drawable.ic_menu_close_clear_cancel, ItemType.DELETE));
         dialogItems.put(ItemType.EXTERNAL, new Item(context.getResources().getString(R.string.OpenInExternalBrowser), android.R.drawable.ic_menu_rotate, ItemType.EXTERNAL));
         dialogItems.put(ItemType.REFRESH, new Item(context.getResources().getString(R.string.Refresh), R.drawable.icon_reload, ItemType.REFRESH));
+	}
+	
+	protected Item getItem(ItemType itemType){
+		return dialogItems.get(itemType);
 	}
 
 	public PageMenuContextAdapter(Context context, int resource,

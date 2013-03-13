@@ -87,6 +87,11 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.menuAdapters.HistoryFeedMenuAdapter;
+import com.duckduckgo.mobile.android.adapters.menuAdapters.HistorySearchMenuAdapter;
+import com.duckduckgo.mobile.android.adapters.menuAdapters.MainFeedMenuAdapter;
+import com.duckduckgo.mobile.android.adapters.menuAdapters.SavedFeedMenuAdapter;
+import com.duckduckgo.mobile.android.adapters.menuAdapters.SavedSearchMenuAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
@@ -110,6 +115,7 @@ import com.duckduckgo.mobile.android.util.Item;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.SuggestType;
+import com.duckduckgo.mobile.android.util.builders.OptionsDialogBuilder;
 import com.duckduckgo.mobile.android.views.DDGWebView;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
@@ -291,94 +297,39 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     };
     
     public OnMainFeedItemLongClickListener mFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
-		public void onMainFeedItemLongClick(FeedObject feedObject) {
-			final String pageTitle = feedObject.getTitle();
-			final String pageUrl = feedObject.getUrl();
-			final FeedObject fObject = feedObject;
+		public void onMainFeedItemLongClick(FeedObject feedObject) {	
 			
-			final String pageOptionsTitle; 
-			if(pageTitle != null && !pageTitle.equals("")) {
-				pageOptionsTitle = pageTitle;
-			}
-			else {
-				pageOptionsTitle = pageUrl;
-			}
+			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(DuckDuckGo.this);
+			alertBuilder.setTitle(R.string.StoryOptionsTitle);
 			
-			// FIXME unify this code as one, extend DialogInterface.OnClickListener
-			// to initialize with pageTitle, pageUrl and feedObject
-			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(pageOptionsTitle);
+			final PageMenuContextAdapter contextAdapter = new MainFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, 
+					android.R.id.text1, "mainfeed", feedObject);
 			
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "mainfeed", feedObject.isSaved());
-			
-			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+			alertBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					Item it = ((Item) contextAdapter.getItem(item));
-					
-					if(it.type == Item.ItemType.SHARE) {
-						DDGUtils.shareStory(DuckDuckGo.this, pageTitle, pageUrl);
-					}
-					else if(it.type == Item.ItemType.SAVE) {
-						itemSaveFeed(fObject, null);
-						syncAdapters();
-					}
-					else if(it.type == Item.ItemType.UNSAVE) {
-						final long delResult = DDGApplication.getDB().makeItemHidden(fObject.getId());
-						if(delResult != 0) {							
-							syncAdapters();
-						}							
-					}
-					else if(it.type == Item.ItemType.EXTERNAL) {
-    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
-    	            	startActivity(browserIntent);
-					}
+					Item clickedItem = ((Item) contextAdapter.getItem(item));
+					clickedItem.ActionToExecute.Execute();
 				}
 			});
-			ab.show();
+			alertBuilder.show();
 		}
     };
     
     public OnMainFeedItemLongClickListener mSavedFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
 		public void onMainFeedItemLongClick(FeedObject feedObject) {
-			final String pageTitle = feedObject.getTitle();
-			final String pageUrl = feedObject.getUrl();
-			final FeedObject fObject = feedObject;
 			
-			final String pageOptionsTitle; 
-			if(pageTitle != null && !pageTitle.equals("")) {
-				pageOptionsTitle = pageTitle;
-			}
-			else {
-				pageOptionsTitle = pageUrl;
-			}
+			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(DuckDuckGo.this);
+			alertBuilder.setTitle(R.string.StoryOptionsTitle);
 			
-			// FIXME unify this code as one, extend DialogInterface.OnClickListener
-			// to initialize with pageTitle, pageUrl and feedObject
-			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(pageOptionsTitle);
+			final PageMenuContextAdapter contextAdapter = new SavedFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedfeed", feedObject);
 			
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedfeed", feedObject.isSaved());
-			
-			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+			alertBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					Item it = ((Item) contextAdapter.getItem(item));
-					
-					if(it.type == Item.ItemType.SHARE) {
-						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
-					}
-					else if(it.type == Item.ItemType.UNSAVE) {
-						final long delResult = DDGApplication.getDB().makeItemHidden(fObject.getId());
-						if(delResult != 0) {							
-							syncAdapters();
-						}							
-					}
-					else if(it.type == Item.ItemType.EXTERNAL) {
-    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
-    	            	startActivity(browserIntent);
-					}
+					Item clickedItem = ((Item) contextAdapter.getItem(item));
+					clickedItem.ActionToExecute.Execute();
 				}
 			});
-			ab.show();
+			alertBuilder .show();
 		}
     };
     
@@ -386,40 +337,19 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     public OnSavedSearchItemLongClickListener mSavedSearchLongClickListener = new OnSavedSearchItemLongClickListener() {
     	@Override
     	public void onSavedSearchItemLongClick(final String query) {
-    		final String pageOptionsTitle; 
-			if(query != null && !query.equals("")) {
-				pageOptionsTitle = query;
-			}
-			else {
-				pageOptionsTitle = "";
-			}
-    
-			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(pageOptionsTitle);
+    		    
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DuckDuckGo.this);
+			alertDialogBuilder.setTitle(R.string.SearchOptionsTitle);
 						
-			final boolean isPageSaved = DDGApplication.getDB().isSavedSearch(query);
-						
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedsearch", isPageSaved);
+			final PageMenuContextAdapter contextAdapter = new SavedSearchMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedsearch", query);
 			
-			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+			alertDialogBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					Item it = ((Item) contextAdapter.getItem(item));
-					if(it.type == Item.ItemType.SHARE) {						
-						DDGUtils.shareSavedSearch(DuckDuckGo.this, query);
-					}
-					else if(it.type == Item.ItemType.UNSAVE) {
-						final long delHistory = DDGApplication.getDB().deleteSavedSearch(query);
-						if(delHistory != 0) {							
-							syncAdapters();
-						}	
-					}
-					else if(it.type == Item.ItemType.EXTERNAL) {
-						searchExternal(query);
-					}
+					Item clickedItem = ((Item) contextAdapter.getItem(item));
+					clickedItem.ActionToExecute.Execute();
 				}
 			});
-			ab.show();    		
-    		    		
+			alertDialogBuilder.show();
     	}
     };
     
@@ -427,84 +357,21 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     public OnHistoryItemLongClickListener mHistoryLongClickListener = new OnHistoryItemLongClickListener() {
     	@Override
     	public void onHistoryItemLongClick(HistoryObject historyObject) {
-    		final String pageData = historyObject.getData();
-			final String pageUrl = historyObject.getUrl();
 			final String pageFeedId = historyObject.getFeedId();
 			final String pageType = historyObject.getType();
-    		
-    		final String pageOptionsTitle; 
-			if(pageData != null && !pageData.equals("")) {
-				pageOptionsTitle = pageData;
-			}
-			else {
-				pageOptionsTitle = pageUrl;
-			}
     
-			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(pageOptionsTitle);
+			OptionsDialogBuilder alertDialogBuilder;
 						
-			final boolean isPageSaved;					
-			
+			final PageMenuContextAdapter contextAdapter;
 			if(pageType.equals("F") && pageFeedId != null && pageFeedId.length() != 0) {
-				isPageSaved = DDGApplication.getDB().isSaved(pageFeedId);
+				contextAdapter = new HistoryFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, historyObject);
+				alertDialogBuilder = new OptionsDialogBuilder(DuckDuckGo.this, contextAdapter, R.string.StoryOptionsTitle);
 			}
-			else if(pageType.equals("R")){
-				isPageSaved = DDGApplication.getDB().isSavedSearch(historyObject.getData());
+			else{
+				contextAdapter = new HistorySearchMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, historyObject);
+				alertDialogBuilder = new OptionsDialogBuilder(DuckDuckGo.this, contextAdapter, R.string.SearchOptionsTitle);
 			}
-			else {
-				isPageSaved = false;
-			}
-			
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "history", isPageSaved);
-			
-			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					Item it = ((Item) contextAdapter.getItem(item));
-					if(it.type == Item.ItemType.SHARE) {						
-						DDGUtils.shareWebPage(DuckDuckGo.this, pageData, pageUrl);
-					}
-					else if(it.type == Item.ItemType.SAVE) {
-						if(pageType.equals("F")) {
-							itemSaveFeed(null, pageFeedId);
-						}
-						else if(pageType.equals("R")) {
-							itemSaveSearch(pageData);
-						}
-						syncAdapters();
-					}
-					else if(it.type == Item.ItemType.UNSAVE) {
-						long delHistory = 0;
-						if(pageType.equals("F") && pageFeedId != null && pageFeedId.length() != 0) {
-							delHistory = DDGApplication.getDB().makeItemHidden(pageFeedId);
-						}
-						else if(pageType.equals("R")){
-							delHistory = DDGApplication.getDB().deleteSavedSearch(pageData);
-						}
-						if(delHistory != 0) {							
-							syncAdapters();
-						}	
-					}
-					else if(it.type == Item.ItemType.DELETE) {
-						final long delHistory;
-						if(pageFeedId != null && pageFeedId.length() != 0) {
-							delHistory = DDGApplication.getDB().deleteHistoryByFeedId(pageFeedId);
-						}
-						else {
-							delHistory = DDGApplication.getDB().deleteHistoryByDataUrl(pageData, pageUrl);
-						}						
-						if(delHistory != 0) {							
-							syncAdapters();
-						}	
-					}
-					else if(it.type == Item.ItemType.EXTERNAL) {
-    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
-    	            	startActivity(browserIntent);
-					}
-				}
-			});
-			ab.show();    		
-    		
-    		
+			alertDialogBuilder.show();
     	}
     };
     
@@ -1704,7 +1571,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 	}
 	
-	private void searchExternal(String term) {
+	public void searchExternal(String term) {
 		String url;
 		if(DDGControlVar.regionString == "wt-wt"){	// default
 			url = DDGConstants.SEARCH_URL + URLEncoder.encode(term);
@@ -2131,7 +1998,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						&& mDuckDuckGoContainer.lastFeedUrl.equals(webViewUrl) 
 					)
 			  ) {
-				pageTitle = currentFeedObject.getTitle();
+				pageTitle = getString(R.string.StoryOptionsTitle);
 				pageUrl = currentFeedObject.getUrl();
 				pageType = "F";
 				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
@@ -2139,31 +2006,23 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
 			}						
 			else if(query != null) {
-				pageTitle = query;
+				pageTitle = getString(R.string.SearchOptionsTitle);
 				pageUrl = webViewUrl;
 				pageType = "R";
 				isPageSaved = DDGApplication.getDB().isSavedSearch(query);
 			}
 			else {
 				// in case it's not a query or feed item
-				pageTitle = mainWebView.getTitle();
+				pageTitle = getString(R.string.PageOptionsTitle);
 				pageUrl = webViewUrl;
 				pageType = "W";
 				isPageSaved = false;
 			}
 			
-			final String pageOptionsTitle; 
-			if(pageTitle != null && !pageTitle.equals("")) {
-				pageOptionsTitle = pageTitle;
-			}
-			else {
-				pageOptionsTitle = pageUrl;
-			}			
-			
 			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview-"+pageType, isPageSaved);
 			
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(pageOptionsTitle);
+			ab.setTitle(pageTitle);
 			
 			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {

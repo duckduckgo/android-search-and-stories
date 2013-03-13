@@ -15,3 +15,6 @@ bin
 gen
 local.properties
 *.jar
+.idea/
+DuckDuckGo.eml
+DuckDuckGo.iml

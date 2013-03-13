@@ -36,6 +36,20 @@ public class FeedObject {
 		this.hidden = "T";
 	}
 	
+	public FeedObject(String id){
+		this.id = id;
+		this.feed = "";
+		this.favicon = "";
+		this.description = "";
+		this.timestamp = "";
+		this.url = "";
+		this.title = "";
+		this.category = "";
+		this.imageUrl = "";
+		this.type = "";
+		this.hidden = "T";
+	}
+	
 	public FeedObject(String id, String title, String description, String feed, String url, String imageUrl,
 			String favicon, String timestamp, String category, String type, String hidden) {
 		this.id = id;
