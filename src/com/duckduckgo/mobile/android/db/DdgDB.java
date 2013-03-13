@@ -63,18 +63,6 @@ public class DdgDB {
 		return this.db.insert(SAVED_SEARCH_TABLE, null, contentValues);
 	}
 	
-	public long insertSavedPage(String title, String url) {
-		if(title == null || url == null)
-			return -1L;
-		
-		ContentValues contentValues = new ContentValues();				 
-		contentValues.put("title", title);
-		contentValues.put("url", url);
-		// delete old record if exists
-		this.db.delete(SAVED_SEARCH_TABLE, "url=?", new String[]{url});
-		return this.db.insert(SAVED_SEARCH_TABLE, null, contentValues);
-	}
-	
 	/**
 	 * insert a FeedObject to SQLite database
 	 * for feed items, the existing FeedObject is saved.
@@ -263,10 +251,6 @@ public class DdgDB {
 		  return this.db.delete(SAVED_SEARCH_TABLE, "query=?", new String[]{query});
 	}
 	
-	public int deleteSavedPage(String url) {
-		  return this.db.delete(SAVED_SEARCH_TABLE, "url=?", new String[]{url});
-	}
-	
 	public int deleteHistoryByDataUrl(String data, String url) {
 	      return this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{data, url});
 	}
@@ -336,19 +320,6 @@ public class DdgDB {
 			return false;
 		
 		Cursor c = this.db.query(SAVED_SEARCH_TABLE, null, "query=?", new String[]{query} , null, null, null);
-		return c.moveToFirst();
-	}
-	
-	/**
-	 * for checking saved results
-	 * @param id
-	 * @return
-	 */
-	public boolean isSavedPage(String url) {
-		if(url == null)
-			return false;
-		
-		Cursor c = this.db.query(SAVED_SEARCH_TABLE, null, "url=?", new String[]{url} , null, null, null);
 		return c.moveToFirst();
 	}
 	
@@ -575,13 +546,7 @@ public class DdgDB {
 			  			    +")"
 			  			    );
 		  			
-		  			  db.execSQL("CREATE TABLE " + SAVED_SEARCH_TABLE + "("
-		  					  +"_id INTEGER PRIMARY KEY, "
-		  					  +"query VARCHAR(300), "
-		  					  +"title VARCHAR(300), "
-		  					  +"url VARCHAR(300)"
-		  					  +")"
-		  					  );  
+		  			  db.execSQL("CREATE TABLE " + SAVED_SEARCH_TABLE + "(_id INTEGER PRIMARY KEY, query VARCHAR(300) UNIQUE)");  
 
 		  	}
 	

@@ -36,10 +36,8 @@ public class SavedSearchListView extends ListView implements android.widget.Adap
 		if(adapter instanceof SavedResultCursorAdapter) {
 			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
 			String query = c.getString(c.getColumnIndex("query"));
-			String title = c.getString(c.getColumnIndex("title"));
-			String url = c.getString(c.getColumnIndex("url"));
 			if (listener != null)
-				listener.onSavedSearchItemSelected(query, title, url);
+				listener.onSavedSearchItemSelected(query);
 		}
 		
 	}
@@ -50,28 +48,27 @@ public class SavedSearchListView extends ListView implements android.widget.Adap
 		Object adapter = getAdapter();		
 		Cursor c = null;
 		String query = null;
-		String title = null, url = null;
 		
 		if(adapter instanceof SavedResultCursorAdapter) {
 			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
 			query = c.getString(c.getColumnIndex("query"));
-			title = c.getString(c.getColumnIndex("title"));
-			url = c.getString(c.getColumnIndex("url"));
 		}
 		
-		if (listenerLongClick != null) {
-				listenerLongClick.onSavedSearchItemLongClick(query, title, url);
+		if (query != null) {
+			if (listenerLongClick != null) {
+				listenerLongClick.onSavedSearchItemLongClick(query);
+			}
 		}
 		
 		return false;
 	}
 	
 	public interface OnSavedSearchItemSelectedListener {
-		public void onSavedSearchItemSelected(String query, String title, String url);
+		public void onSavedSearchItemSelected(String query);
 	}
 	
 	public interface OnSavedSearchItemLongClickListener {
-		public void onSavedSearchItemLongClick(String query, String title, String url);
+		public void onSavedSearchItemLongClick(String query);
 	}
 
 }

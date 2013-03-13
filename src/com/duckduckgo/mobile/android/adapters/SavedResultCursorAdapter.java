@@ -39,15 +39,10 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         // here we are setting our data
         // that means, take the data from the cursor and put it in views
 
-    	final String query = cursor.getString(cursor.getColumnIndex("query"));    	
-    	final String title = cursor.getString(cursor.getColumnIndex("title"));
-    	final String url = cursor.getString(cursor.getColumnIndex("url"));
+    	final String data = cursor.getString(cursor.getColumnIndex("query"));
     	
         TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
-        if(query != null)
-        	textViewHistory.setText(query);
-        else
-        	textViewHistory.setText(title);
+        textViewHistory.setText(data);
         textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
         
         AsyncImageView imageViewHistory = (AsyncImageView) view.findViewById(R.id.recentSearchImage);
@@ -62,12 +57,7 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         	public void onClick(View v) {
         		if(parentActivity instanceof DuckDuckGo) {
         			// prepare searchbar with given data and wait for user action
-        			if(query != null) {
-        				((DuckDuckGo) parentActivity).preSearch(query);
-        			}
-        			else if(url != null){
-        				((DuckDuckGo) parentActivity).preSearch(url);
-        			}
+        			((DuckDuckGo) parentActivity).preSearch(data);
         		}
         	}
         });
