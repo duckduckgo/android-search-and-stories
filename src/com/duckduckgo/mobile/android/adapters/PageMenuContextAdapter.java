@@ -72,7 +72,7 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 			else
 				add(dialogItems.get(ItemType.SAVE));
 		}
-		else if(pageType.equals("webview-F") || pageType.equals("webview-R")) {
+		else if(pageType.equals("webview-F") || pageType.equals("webview-R") || pageType.equals("webview-W")) {
 			add(dialogItems.get(ItemType.SHARE));
 			add(dialogItems.get(ItemType.EXTERNAL));
 			add(dialogItems.get(ItemType.REFRESH));
@@ -81,11 +81,6 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 				add(dialogItems.get(ItemType.UNSAVE));
 			else
 				add(dialogItems.get(ItemType.SAVE));
-		}
-		else if(pageType.equals("webview-W")) {
-			add(dialogItems.get(ItemType.SHARE));
-			add(dialogItems.get(ItemType.EXTERNAL));
-			add(dialogItems.get(ItemType.REFRESH));
 		}
 	}
 	

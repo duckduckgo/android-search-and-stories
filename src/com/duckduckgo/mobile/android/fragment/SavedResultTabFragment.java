@@ -38,12 +38,17 @@ public class SavedResultTabFragment extends Fragment {
 			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedSearchAdapter);
 			savedSearchView.setOnSavedSearchItemSelectedListener(new OnSavedSearchItemSelectedListener() {
 				
-				public void onSavedSearchItemSelected(String query) {
+				public void onSavedSearchItemSelected(String query, String title, String url) {
 					if(query != null){							
 						((DuckDuckGo) activity).searchWebTerm(query);	
 						((DuckDuckGo) activity).itemSaveSearch(query);
 						((DuckDuckGo) activity).syncAdapters();
-					}			
+					}	
+					else if(url != null){
+						((DuckDuckGo) activity).searchOrGoToUrl(url);	
+						((DuckDuckGo) activity).itemSaveOther(title, url);
+						((DuckDuckGo) activity).syncAdapters();
+					}
 				}
 			});
 			
