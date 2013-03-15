@@ -2069,7 +2069,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 							
 							@Override
 							public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
-								mainWebView.loadDataWithBaseURL(feed.get(0).getUrl(), feed.get(0).getHtml(), "text/html", "utf8", null);
+								mainWebView.loadDataWithBaseURL(feed.get(0).getUrl(), feed.get(0).getHtml(), "text/html", "utf8", mainWebView.getUrl());
 							}
 							
 							@Override

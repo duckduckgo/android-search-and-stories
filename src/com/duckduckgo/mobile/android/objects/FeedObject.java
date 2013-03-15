@@ -121,7 +121,10 @@ public class FeedObject {
 		this.category = obj.getString("category");
 		this.imageUrl = obj.optString("image");
 		this.type = obj.getString("type");
-		this.articleUrl = obj.getString("article_url");
+		if(obj.has("article_url"))
+			this.articleUrl = obj.getString("article_url");
+		else
+			this.articleUrl = "";
 		if(obj.has("html"))
 			this.html = obj.getString("html");
 		else
