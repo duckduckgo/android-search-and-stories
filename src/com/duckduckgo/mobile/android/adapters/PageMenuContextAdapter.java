@@ -25,6 +25,7 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
         dialogItems.put(ItemType.DELETE, new Item(context.getResources().getString(R.string.Delete), android.R.drawable.ic_menu_close_clear_cancel, ItemType.DELETE));
         dialogItems.put(ItemType.EXTERNAL, new Item(context.getResources().getString(R.string.OpenInExternalBrowser), android.R.drawable.ic_menu_rotate, ItemType.EXTERNAL));
         dialogItems.put(ItemType.REFRESH, new Item(context.getResources().getString(R.string.Refresh), R.drawable.icon_reload, ItemType.REFRESH));
+        dialogItems.put(ItemType.READABLE, new Item(context.getResources().getString(R.string.Readable), android.R.drawable.ic_menu_add, ItemType.READABLE));
 	}
 	
 	protected Item getItem(ItemType itemType){
@@ -87,6 +88,11 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 				add(dialogItems.get(ItemType.UNSAVE));
 			else
 				add(dialogItems.get(ItemType.SAVE));
+			
+			// enable readability button
+			if(pageType.equals("webview-F")) {
+				add(dialogItems.get(ItemType.READABLE));
+			}
 		}
 		else if(pageType.equals("webview-W")) {
 			add(dialogItems.get(ItemType.SHARE));

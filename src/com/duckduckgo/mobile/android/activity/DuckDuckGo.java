@@ -106,6 +106,7 @@ import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
+import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -2063,6 +2064,21 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					else if(it.type == Item.ItemType.REFRESH) {
 						reloadAction();
 					}
+					else if(it.type == Item.ItemType.READABLE && pageType.equals("F")) {
+						new ReadableFeedTask(new FeedListener() {
+							
+							@Override
+							public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
+								mainWebView.loadDataWithBaseURL(feed.get(0).getUrl(), feed.get(0).getHtml(), "text/html", "utf8", null);
+							}
+							
+							@Override
+							public void onFeedRetrievalFailed() {
+								// TODO Auto-generated method stub
+								
+							}
+						}, currentFeedObject).execute();
+					}					
 				}
 			});
 			ab.show();

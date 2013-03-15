@@ -18,6 +18,8 @@ public class FeedObject {
 	private final String category;
 	private final String imageUrl;
 	private final String type;
+	private final String articleUrl;
+	private final String html;
 	
 	private final String hidden;
 		
@@ -33,6 +35,8 @@ public class FeedObject {
 		this.category = "";
 		this.imageUrl = "";
 		this.type = "";
+		this.articleUrl = "";
+		this.html = "";
 		this.hidden = "T";
 	}
 	
@@ -47,11 +51,13 @@ public class FeedObject {
 		this.category = "";
 		this.imageUrl = "";
 		this.type = "";
+		this.articleUrl = "";
+		this.html = "";
 		this.hidden = "T";
 	}
 	
 	public FeedObject(String id, String title, String description, String feed, String url, String imageUrl,
-			String favicon, String timestamp, String category, String type, String hidden) {
+			String favicon, String timestamp, String category, String type, String articleUrl, String html, String hidden) {
 		this.id = id;
 		this.title = title;
 		this.description = description;
@@ -62,6 +68,8 @@ public class FeedObject {
 		this.timestamp = timestamp;
 		this.category = category;
 		this.type = type;
+		this.articleUrl = articleUrl;
+		this.html = html;
 		this.hidden = hidden;
 	}
 	
@@ -76,6 +84,8 @@ public class FeedObject {
 		this.timestamp = "";
 		this.category = "";
 		this.type = "";
+		this.articleUrl = "";
+		this.html = "";
 		this.hidden = "T";
 	}
 	
@@ -95,6 +105,8 @@ public class FeedObject {
 		this.timestamp = "";
 		this.category = "";
 		this.type = "";
+		this.articleUrl = "";
+		this.html = "";
 		this.hidden = "T";
 	}
 	
@@ -109,6 +121,11 @@ public class FeedObject {
 		this.category = obj.getString("category");
 		this.imageUrl = obj.optString("image");
 		this.type = obj.getString("type");
+		this.articleUrl = obj.getString("article_url");
+		if(obj.has("html"))
+			this.html = obj.getString("html");
+		else
+			this.html = "";
 		this.hidden = "T";
 	}
 	
@@ -123,6 +140,8 @@ public class FeedObject {
 		this.timestamp = cursor.getString(cursor.getColumnIndex("timestamp"));
 		this.category = cursor.getString(cursor.getColumnIndex("category"));
 		this.type = cursor.getString(cursor.getColumnIndex("type"));
+		this.articleUrl = cursor.getString(cursor.getColumnIndex("articleurl"));
+		this.html = cursor.getString(cursor.getColumnIndex("html"));
 		this.hidden = cursor.getString(cursor.getColumnIndex("hidden"));;
 	}
 	
@@ -140,6 +159,8 @@ public class FeedObject {
 		string = string.concat("category:" + this.category + "\n");
 		string = string.concat("image: " + this.imageUrl + "\n");
 		string = string.concat("type: " + this.type + "\n");
+		string = string.concat("article_url:" + this.articleUrl + "\n");
+		string = string.concat("html:" + this.html + "\n");
 		string = string.concat("hidden: " + this.hidden + "}");
 		
 		return string;
@@ -184,6 +205,14 @@ public class FeedObject {
 	public String getType() {
 		return type;
 	}
+	
+  	public String getHtml() {
+  		return html;
+  	}
+  	
+  	public String getArticleUrl() {
+  		return articleUrl;
+  	}
 	
 	public boolean isSaved() {		
 		return DDGApplication.getDB().isSaved(getId());

@@ -19,13 +19,12 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.AppShortInfo;
 import com.duckduckgo.mobile.android.util.DDGConstants;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
 public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 12;
+	private static final int DATABASE_VERSION = 13;
 	private static final String FEED_TABLE = "feed";
 	private static final String APP_TABLE = "apps";
 	private static final String HISTORY_TABLE = "history";
@@ -261,7 +260,7 @@ public class DdgDB {
 	
 	private FeedObject getFeedObject(Cursor c) {
 		return new FeedObject(c.getString(0), c.getString(1), c.getString(2), c.getString(3),
-				c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9), c.getString(10));
+				c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9), c.getString(10), "", c.getString(11));
 	}
 	
 	private AppShortInfo getAppShortInfo(Cursor c) {
@@ -523,6 +522,7 @@ public class DdgDB {
 		  			    +"timestamp VARCHAR(300), "
 		  			    +"category VARCHAR(300), "
 		  			    +"type VARCHAR(300), "
+		  			    +"articleurl VARCHAR(300), "
 		  			    +"hidden CHAR(1)"
 		  			    +")"
 		  			    );
