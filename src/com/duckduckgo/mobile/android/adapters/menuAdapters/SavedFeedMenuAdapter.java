@@ -5,7 +5,7 @@ import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.menuItems.SendToExternalBrowserMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.ShareFeedMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.UnSaveFeedMenuItem;
+import com.duckduckgo.mobile.android.util.menuItems.UnSaveStoryMenuItem;
 
 public class SavedFeedMenuAdapter extends PageMenuContextAdapter {
 	private DuckDuckGo context;
@@ -27,6 +27,6 @@ public class SavedFeedMenuAdapter extends PageMenuContextAdapter {
 	public void addItems() {
 		add(new ShareFeedMenuItem(context, feedObject.getTitle(), feedObject.getUrl()));
 		add(new SendToExternalBrowserMenuItem(context, feedObject.getUrl()));		
-		add(new UnSaveFeedMenuItem(context, feedObject.getId()));
+		add(new UnSaveStoryMenuItem(context, feedObject.getId()));
 	}
 }

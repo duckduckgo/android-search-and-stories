@@ -23,20 +23,20 @@
     <string name="PrefSources">Change story sources</string>
     <string name="PrefResetSources">Reset sources to defaults</string>
     <string name="PrefRegion">Region boost</string>
-    <string name="PrefDirectQuery">Search from auto-suggest</string>
+    <string name="PrefDirectQuery">Search from autocomplete</string>
     <string name="PrefExternalBrowser">Always use external browser</string>
     <string name="PrefSendFeedback">Send Feedback</string>
     <string name="PrefRate">Rate Us</string>
-    <string name="PrefAppSearch">Include apps in auto-suggest</string>
+    <string name="PrefAppSearch">Include apps in autocomplete</string>
     <string name="PrefMainFontSize">Font size</string>
     <string name="PrefEnableAcra">Error reporting</string>
     <string name="PrefAcraDisabled">Reporting disabled</string>
     <string name="PrefAcraEnabled">Reporting enabled</string>
     
     <string name="PrefWaterCooler">Water Cooler</string>
-    <string name="PrefAutocomplete">Auto-suggest</string>
+    <string name="PrefAutocomplete">Autocomplete</string>
     <string name="PrefSearchResults">Search results</string>
-    <string name="PrefTurnOffAutocomplete">Turn off auto-suggest</string>
+    <string name="PrefTurnOffAutocomplete">Turn off autocomplete</string>
     
     <string name="ShareStory">Share story</string>
     <string name="ShareSearch">Share search</string>
@@ -134,5 +134,12 @@
     <string name="StoryOptionsTitle">Story options</string>
     <string name="SearchOptionsTitle">Search options</string>
     <string name="PageOptionsTitle">Page options</string>
+    
+    <string name="ToastUnSaveStory">The story has been removed from your saved stories.</string>
+    <string name="ToastUnSaveSearch">The search has been removed from your saved searches.</string>
+    <string name="ToastSaveStory">Your story was saved.</string>
+    <string name="ToastSaveSearch">Your search was saved.</string>
+    <string name="ToastDeleteStoryInHistory">The story has been removed from your history.</string>
+    <string name="ToastDeleteUrlInHistory">The url has been removed from your history.</string>
 
 </resources>

@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -40,7 +41,15 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		addPreferencesFromResource(R.xml.preferences);
 		
 		getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
-		
+
+		whenClearingHistoryShowsClearHistoryConfirmDialog();
+		whenChangingStorySourcesGoesToSourcePreferences();
+		whenSendingFeedBackLaunchesEmailIntent();
+		whenRatingGoesToMarket();
+		whenTurningOffAutoCompleteSyncsOtherAutoCompletePreferences();
+	}
+
+	private void whenClearingHistoryShowsClearHistoryConfirmDialog() {
 		Preference clearHistoryPref = (Preference) findPreference("clearHistoryPref");
 		clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 		    public boolean onPreferenceClick(Preference preference) {		    	
@@ -48,7 +57,9 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		    	return true;
 		    }
 		});
-		
+	}
+
+	private void whenChangingStorySourcesGoesToSourcePreferences() {
 		Preference sourcesPref = (Preference) findPreference("sourcesPref");
 		sourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
@@ -59,7 +70,9 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 				return true;
 			}
 		});
-		
+	}
+
+	private void whenSendingFeedBackLaunchesEmailIntent() {
 		Preference sendFeedbackPref = (Preference) findPreference("sendFeedbackPref");
 		sendFeedbackPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
@@ -72,7 +85,9 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 				return true;
 			}
 		});
-		
+	}
+
+	private void whenRatingGoesToMarket() {
 		Preference ratePref = (Preference) findPreference("ratePref");
 		ratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
@@ -80,6 +95,22 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 				Intent intent = new Intent(Intent.ACTION_VIEW);
 				intent.setData(Uri.parse("market://details?id=com.duckduckgo.mobile.android"));
 				startActivity(intent);
+				return true;
+			}
+		});
+	}
+
+	private void whenTurningOffAutoCompleteSyncsOtherAutoCompletePreferences() {
+		final Preference appSearchPreference = (Preference)findPreference("appSearchPref");
+		final Preference directQueryPreference = (Preference)findPreference("directQueryPref");
+		Preference turnOffAutoCompletePreference = (Preference)findPreference("turnOffAutocompletePref");
+		turnOffAutoCompletePreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				Boolean isTurnedOff = (Boolean)newValue;
+				appSearchPreference.setEnabled(!isTurnedOff);
+				directQueryPreference.setEnabled(!isTurnedOff);
+				
 				return true;
 			}
 		});

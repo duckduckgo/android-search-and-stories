@@ -10,13 +10,13 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.Item;
-import com.duckduckgo.mobile.android.util.menuItems.DeleteFeedInHistoryMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.SaveFeedMenuItem;
+import com.duckduckgo.mobile.android.util.menuItems.DeleteStoryInHistoryMenuItem;
+import com.duckduckgo.mobile.android.util.menuItems.SaveStoryMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SearchExternalMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SendToExternalBrowserMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.ShareFeedMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.ShareSearchMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.UnSaveFeedMenuItem;
+import com.duckduckgo.mobile.android.util.menuItems.UnSaveStoryMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.UnSaveSearchMenuItem;
 
 public class HistoryFeedMenuAdapter extends PageMenuContextAdapter {
@@ -39,9 +39,9 @@ public class HistoryFeedMenuAdapter extends PageMenuContextAdapter {
 	public void addItems() {
 		FeedObject feedObject = new FeedObject(historyObject.getFeedId());
 		add(new ShareFeedMenuItem(context, historyObject.getData(), historyObject.getUrl()));
-		add(new SaveFeedMenuItem(context, feedObject));
-		add(new UnSaveFeedMenuItem(context, historyObject.getFeedId()));
-		add(new DeleteFeedInHistoryMenuItem(context, historyObject.getFeedId()));
+		add(new SaveStoryMenuItem(context, feedObject));
+		add(new UnSaveStoryMenuItem(context, historyObject.getFeedId()));
+		add(new DeleteStoryInHistoryMenuItem(context, historyObject.getFeedId()));
 		add(new SendToExternalBrowserMenuItem(context, historyObject.getUrl()));
 	}
 }
