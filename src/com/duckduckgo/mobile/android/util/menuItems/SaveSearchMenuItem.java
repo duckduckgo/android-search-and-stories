@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android.util.menuItems;
 
+import android.widget.Toast;
+
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.objects.FeedObject;
@@ -25,6 +27,7 @@ public class SaveSearchMenuItem extends Item {
 			public void Execute() {
 				context.itemSaveSearch(pageData);
 				context.syncAdapters();
+				Toast.makeText(context, R.string.ToastSaveSearch, Toast.LENGTH_SHORT).show();
 			};
 		};
 	}

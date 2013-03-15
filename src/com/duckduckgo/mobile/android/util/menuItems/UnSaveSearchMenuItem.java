@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android.util.menuItems;
 
+import android.widget.Toast;
+
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
@@ -26,6 +28,7 @@ public class UnSaveSearchMenuItem extends Item {
 				if(delHistory != 0) {							
 					context.syncAdapters();
 				}	
+				Toast.makeText(context, R.string.ToastUnSaveSearch, Toast.LENGTH_SHORT).show();
 			};
 		};
 	}

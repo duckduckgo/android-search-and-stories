@@ -132,5 +132,12 @@
     <string name="StoryOptionsTitle">Story options</string>
     <string name="SearchOptionsTitle">Search options</string>
     <string name="PageOptionsTitle">Page options</string>
+    
+    <string name="ToastUnSaveStory">The story has been removed from your saved stories.</string>
+    <string name="ToastUnSaveSearch">The search has been removed from your saved searches.</string>
+    <string name="ToastSaveStory">Your story was saved.</string>
+    <string name="ToastSaveSearch">Your search was saved.</string>
+    <string name="ToastDeleteStoryInHistory">The story has been removed from your history.</string>
+    <string name="ToastDeleteUrlInHistory">The url has been removed from your history.</string>
 
 </resources>
