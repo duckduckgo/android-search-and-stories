@@ -1301,10 +1301,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	/**
 	 * Displays given screen (stories, saved, settings etc.)
 	 * 
-	 * @param screen Screen to display
+	 * @param screenToDisplay Screen to display
 	 * @param clean Whether screen state (searchbar, browser etc.) states will get cleaned
 	 */
-	private void displayScreen(SCREEN screen, boolean clean) {
+	private void displayScreen(SCREEN screenToDisplay, boolean clean) {
 			if(clean) {
 				resetScreenState();
 			}
@@ -1315,7 +1315,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				fontSizeLayout.setVisibility(View.VISIBLE);
 			}
 			
-			switch(screen) {
+			switch(screenToDisplay) {
 				case SCR_STORIES:
 					displayNewsFeed();
 					break;
@@ -1331,9 +1331,15 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				default:
 					break;
 			}
+			
+			if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH &&
+					!screenToDisplay.equals(SCREEN.SCR_RECENT_SEARCH)){
+				leftRecentTextView.setVisibility(View.VISIBLE);
+	        	leftRecentView.setVisibility(View.VISIBLE);
+			}
 	        
 			mDuckDuckGoContainer.prevScreen = mDuckDuckGoContainer.currentScreen;
-	        mDuckDuckGoContainer.currentScreen = screen;	        			
+	        mDuckDuckGoContainer.currentScreen = screenToDisplay;	        			
 	}
 	
 	private void displayHomeScreen() {
@@ -1807,7 +1813,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private void changeLeftMenuVisibility(SCREEN screen) {		
 		// stories button
 		if(DDGControlVar.START_SCREEN != SCREEN.SCR_STORIES) {
-				leftStoriesButtonLayout.setVisibility(View.VISIBLE);
+			leftStoriesButtonLayout.setVisibility(View.VISIBLE);
 		}
 		else {
 	    	leftStoriesButtonLayout.setVisibility(View.GONE);
@@ -1909,11 +1915,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void displayRecentSearch(){  
-		resetScreenState();
-				
-    	// hide recent queries from slide-out menu
-//    	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
-//    	lMainAdapter.insert(getString(R.string.LeftRecentQueries), 0); 
+		resetScreenState(); 
 		
 		// left side menu visibility changes
 		changeLeftMenuVisibility(SCREEN.SCR_RECENT_SEARCH);
@@ -1961,154 +1963,166 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		 
 	}
 	
-	public void onClick(View v) {
-		if (v.equals(homeSettingsButton)) {			
-			hideKeyboard(searchField);
-			
-			if(DDGControlVar.homeScreenShowing){
-				viewPager.switchPage();
-			}
-			else {
-				// going home
-				displayHomeScreen();
-			}
+	public void onClick(View view) {
+		if (view.equals(homeSettingsButton)) {			
+			handleHomeSettingsButtonClick();
 		}
-		else if (v.equals(shareButton)) {			
-			hideKeyboard(searchField);
-						
-			boolean isPageSaved;
-			
-			final String pageTitle;
-			final String pageUrl;
-			final String pageType;
-			
-			// XXX should make Page Options button disabled if the page is not loaded yet
-			// url = null case
-			String webViewUrl = mainWebView.getOriginalUrl();
-			if(webViewUrl == null)
-				webViewUrl = "";
-			
-			final String query = DDGUtils.isSERP(webViewUrl);
-			
-			// direct displaying after feed item is clicked
-			// the rest will arrive as SESSION_BROWSE
-			// so we should save this feed item with target redirected URL
-			if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED
-					|| 
-					( mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_BROWSE 
-						&& mDuckDuckGoContainer.lastFeedUrl.equals(webViewUrl) 
-					)
-			  ) {
-				pageTitle = getString(R.string.StoryOptionsTitle);
-				pageUrl = currentFeedObject.getUrl();
-				pageType = "F";
-				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
-				
-				mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
-			}						
-			else if(query != null) {
-				pageTitle = getString(R.string.SearchOptionsTitle);
-				pageUrl = webViewUrl;
-				pageType = "R";
-				isPageSaved = DDGApplication.getDB().isSavedSearch(query);
-			}
-			else {
-				// in case it's not a query or feed item
-				pageTitle = getString(R.string.PageOptionsTitle);
-				pageUrl = webViewUrl;
-				pageType = "W";
-				isPageSaved = false;
-			}
-			
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview-"+pageType, isPageSaved);
-			
-			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(pageTitle);
-			
-			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					Item it = ((Item) contextAdapter.getItem(item));
-					if(it.type == Item.ItemType.SHARE) {
-						if(pageType.equals("R") && query != null) {
-							DDGUtils.shareSavedSearch(DuckDuckGo.this, query, pageUrl);
-						}
-						else {
-							DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
-						}
-					}
-					else if(it.type == Item.ItemType.SAVE) {
-						if(pageType.equals("F")) {
-							itemSaveFeed(currentFeedObject, null);
-						}
-						else if(pageType.equals("R")){
-							itemSaveSearch(query);
-						}
-						syncAdapters();
-					}
-					else if(it.type == Item.ItemType.UNSAVE) {
-						long delHistory = 0;
-						if(pageType.equals("F")) {
-							delHistory = DDGApplication.getDB().makeItemHidden(currentFeedObject.getId());
-						}
-						else if(pageType.equals("R") && query != null){
-							delHistory = DDGApplication.getDB().deleteSavedSearch(query);
-						}
-						if(delHistory != 0) {							
-							syncAdapters();
-						}	
-					}
-					else if(it.type == Item.ItemType.EXTERNAL) {
-    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
-    	            	startActivity(browserIntent);
-					}
-					else if(it.type == Item.ItemType.REFRESH) {
-						reloadAction();
-					}
-					else if(it.type == Item.ItemType.READABLE && pageType.equals("F")) {
-						new ReadableFeedTask(new FeedListener() {
-							
-							@Override
-							public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
-								mainWebView.loadDataWithBaseURL(feed.get(0).getUrl(), feed.get(0).getHtml(), "text/html", "utf8", mainWebView.getUrl());
-							}
-							
-							@Override
-							public void onFeedRetrievalFailed() {
-								// TODO Auto-generated method stub
-								
-							}
-						}, currentFeedObject).execute();
-					}					
-				}
-			});
-			ab.show();
+		else if (view.equals(shareButton)) {			
+			handleShareButtonClick();
 		}
-		else if(v.equals(leftHomeTextView)){
-			viewPager.switchPage();
-						
-			if (mDuckDuckGoContainer.webviewShowing) {
-
-				//We are going home!
-				mainWebView.clearHistory();
-				mainWebView.clearView();
-				clearSearchBar();
-				mDuckDuckGoContainer.webviewShowing = false;					
-			}
-			
-			displayHomeScreen();
+		else if(view.equals(leftHomeTextView)){
+			handleLeftHomeTextViewClick();
 		}
-		else if(v.equals(leftStoriesTextView)){
+		else if(view.equals(leftStoriesTextView)){
 			viewPager.switchPage();		
 			displayScreen(SCREEN.SCR_STORIES, false);
 		}
-		else if(v.equals(leftSavedTextView)){
+		else if(view.equals(leftSavedTextView)){
 			viewPager.switchPage();		
 			displayScreen(SCREEN.SCR_SAVED_FEED, false);
 		}
-		else if(v.equals(leftSettingsTextView) || v.equals(leftRecentHeaderView)){
+		else if(view.equals(leftSettingsTextView) || view.equals(leftRecentHeaderView)){
 			viewPager.switchPage();		
 			displayScreen(SCREEN.SCR_SETTINGS, false);
 		}
+	}
+
+	private void handleLeftHomeTextViewClick() {
+		viewPager.switchPage();
+					
+		if (mDuckDuckGoContainer.webviewShowing) {
+
+			//We are going home!
+			mainWebView.clearHistory();
+			mainWebView.clearView();
+			clearSearchBar();
+			mDuckDuckGoContainer.webviewShowing = false;					
+		}
+		
+		displayHomeScreen();
+	}
+
+	private void handleHomeSettingsButtonClick() {
+		hideKeyboard(searchField);
+		
+		if(DDGControlVar.homeScreenShowing){
+			viewPager.switchPage();
+		}
+		else {
+			// going home
+			displayHomeScreen();
+		}
+	}
+
+	private void handleShareButtonClick() {
+		hideKeyboard(searchField);
+					
+		boolean isPageSaved;
+		
+		final String pageTitle;
+		final String pageUrl;
+		final String pageType;
+		
+		// XXX should make Page Options button disabled if the page is not loaded yet
+		// url = null case
+		String webViewUrl = mainWebView.getOriginalUrl();
+		if(webViewUrl == null)
+			webViewUrl = "";
+		
+		final String query = DDGUtils.isSERP(webViewUrl);
+		
+		// direct displaying after feed item is clicked
+		// the rest will arrive as SESSION_BROWSE
+		// so we should save this feed item with target redirected URL
+		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED
+				|| 
+				( mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_BROWSE 
+					&& mDuckDuckGoContainer.lastFeedUrl.equals(webViewUrl) 
+				)
+		  ) {
+			pageTitle = getString(R.string.StoryOptionsTitle);
+			pageUrl = currentFeedObject.getUrl();
+			pageType = "F";
+			isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
+			
+			mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
+		}						
+		else if(query != null) {
+			pageTitle = getString(R.string.SearchOptionsTitle);
+			pageUrl = webViewUrl;
+			pageType = "R";
+			isPageSaved = DDGApplication.getDB().isSavedSearch(query);
+		}
+		else {
+			// in case it's not a query or feed item
+			pageTitle = getString(R.string.PageOptionsTitle);
+			pageUrl = webViewUrl;
+			pageType = "W";
+			isPageSaved = false;
+		}
+		
+		final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview-"+pageType, isPageSaved);
+		
+		AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
+		ab.setTitle(pageTitle);
+		
+		ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int item) {
+				Item it = ((Item) contextAdapter.getItem(item));
+				if(it.type == Item.ItemType.SHARE) {
+					if(pageType.equals("R") && query != null) {
+						DDGUtils.shareSavedSearch(DuckDuckGo.this, query, pageUrl);
+					}
+					else {
+						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+					}
+				}
+				else if(it.type == Item.ItemType.SAVE) {
+					if(pageType.equals("F")) {
+						itemSaveFeed(currentFeedObject, null);
+					}
+					else if(pageType.equals("R")){
+						itemSaveSearch(query);
+					}
+					syncAdapters();
+				}
+				else if(it.type == Item.ItemType.UNSAVE) {
+					long delHistory = 0;
+					if(pageType.equals("F")) {
+						delHistory = DDGApplication.getDB().makeItemHidden(currentFeedObject.getId());
+					}
+					else if(pageType.equals("R") && query != null){
+						delHistory = DDGApplication.getDB().deleteSavedSearch(query);
+					}
+					if(delHistory != 0) {							
+						syncAdapters();
+					}	
+				}
+				else if(it.type == Item.ItemType.EXTERNAL) {
+		        	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
+		        	startActivity(browserIntent);
+				}
+				else if(it.type == Item.ItemType.REFRESH) {
+					reloadAction();
+				}
+				else if(it.type == Item.ItemType.READABLE && pageType.equals("F")) {
+					new ReadableFeedTask(new FeedListener() {
+						
+						@Override
+						public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
+							mainWebView.loadDataWithBaseURL(feed.get(0).getUrl(), feed.get(0).getHtml(), "text/html", "utf8", mainWebView.getUrl());
+						}
+						
+						@Override
+						public void onFeedRetrievalFailed() {
+							// TODO Auto-generated method stub
+							
+						}
+					}, currentFeedObject).execute();
+				}					
+			}
+		});
+		ab.show();
 	}
 
 	@Override
