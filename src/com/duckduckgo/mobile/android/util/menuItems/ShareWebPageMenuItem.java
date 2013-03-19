@@ -5,6 +5,7 @@ import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.util.Action;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.Item;
+import com.duckduckgo.mobile.android.util.Sharer;
 
 public class ShareWebPageMenuItem extends Item {
 	private final DuckDuckGo context;
@@ -28,7 +29,7 @@ public class ShareWebPageMenuItem extends Item {
 		return new Action() {
 			@Override
 			public void Execute() {
-				DDGUtils.shareWebPage(context, pageData, pageUrl);
+				Sharer.shareWebPage(context, pageData, pageUrl);
 			};
 		};
 	}

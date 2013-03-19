@@ -115,6 +115,7 @@ import com.duckduckgo.mobile.android.util.DDGViewPager;
 import com.duckduckgo.mobile.android.util.Item;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.builders.OptionsDialogBuilder;
 import com.duckduckgo.mobile.android.views.DDGWebView;
@@ -2071,10 +2072,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				Item it = ((Item) contextAdapter.getItem(item));
 				if(it.type == Item.ItemType.SHARE) {
 					if(pageType.equals("R") && query != null) {
-						DDGUtils.shareSavedSearch(DuckDuckGo.this, query, pageUrl);
+						Sharer.shareSavedSearch(DuckDuckGo.this, query, pageUrl);
 					}
 					else {
-						DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+						Sharer.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
 					}
 				}
 				else if(it.type == Item.ItemType.SAVE) {
