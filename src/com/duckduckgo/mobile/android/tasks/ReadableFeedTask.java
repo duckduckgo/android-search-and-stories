@@ -13,7 +13,6 @@ import android.util.Log;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
-import com.duckduckgo.mobile.android.util.DDGConstants;
 
 public class ReadableFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 

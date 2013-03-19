@@ -269,7 +269,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				DDGApplication.getDB().insertFeedItem(feedObject);
 				syncAdapters();			
 			}
-			searchOrGoToUrl(url);
+			searchOrGoToUrl(url, currentFeedObject);
 		}
 		
 		// record article as read
@@ -375,6 +375,20 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			alertDialogBuilder.show();
     	}
     };
+    
+    private FeedListener mReadableListener = new FeedListener() {
+		
+		@Override
+		public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
+			mainWebView.loadDataWithBaseURL(feed.get(0).getUrl(), feed.get(0).getHtml(), "text/html", "utf8", mainWebView.getUrl());
+		}
+		
+		@Override
+		public void onFeedRetrievalFailed() {
+			// TODO Auto-generated method stub
+			
+		}
+	};
     
     /**
      * save feed by object or by the feed id
@@ -1512,6 +1526,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void searchOrGoToUrl(String text) {
+		searchOrGoToUrl(text, null);
+	}
+	
+	public void searchOrGoToUrl(String text, FeedObject feedObject) {
 		
 //		mainWebView.resumeView();
 		
@@ -1554,14 +1572,20 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				if (modifiedText != null) {
 					//Show the modified url text
 					if (modifiedText.contains(".") && modifiedText.length() > (modifiedText.indexOf(".") + 2)) {
-						showWebUrl(modifiedText);
+						if(feedObject == null || feedObject.getArticleUrl().length() == 0)
+							showWebUrl(modifiedText);
+						else
+							showFeed(feedObject);
 					} else {
 						searchWebTerm(text);
 					}
 				} else {
 					if (text.contains(".") && text.length() > (text.indexOf(".") + 2)) {
 						//Show the url text
-						showWebUrl(text);
+						if(feedObject == null || feedObject.getArticleUrl().length() == 0)
+							showWebUrl(text);
+						else
+							showFeed(feedObject);
 					} else {
 						searchWebTerm(text);
 					}
@@ -1646,6 +1670,19 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		if(!savedState)
 //			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
 			mainWebView.loadUrl(url);
+	}
+	
+	public void showFeed(FeedObject feedObject) {	
+		displayWebView();
+		
+		if(!savedState) {
+			if(sharedPreferences.getBoolean("readablePref", false)) {
+				new ReadableFeedTask(mReadableListener, feedObject).execute();
+			}
+			else {
+				mainWebView.loadUrl(feedObject.getUrl());
+			}
+		}
 	}
 
 	public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
@@ -2000,9 +2037,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					)
 			  ) {
 				pageTitle = getString(R.string.StoryOptionsTitle);
-				pageUrl = currentFeedObject.getUrl();
-				pageType = "F";
+				pageUrl = currentFeedObject.getUrl();				
 				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
+				
+				if(currentFeedObject.getArticleUrl().length() != 0)
+					pageType = "FR";
+				else
+					pageType = "F";
 				
 				mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
 			}						
@@ -2064,20 +2105,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					else if(it.type == Item.ItemType.REFRESH) {
 						reloadAction();
 					}
-					else if(it.type == Item.ItemType.READABLE && pageType.equals("F")) {
-						new ReadableFeedTask(new FeedListener() {
-							
-							@Override
-							public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
-								mainWebView.loadDataWithBaseURL(feed.get(0).getUrl(), feed.get(0).getHtml(), "text/html", "utf8", mainWebView.getUrl());
-							}
-							
-							@Override
-							public void onFeedRetrievalFailed() {
-								// TODO Auto-generated method stub
-								
-							}
-						}, currentFeedObject).execute();
+					else if(it.type == Item.ItemType.READABLE && pageType.equals("FR")) {
+						new ReadableFeedTask(mReadableListener, currentFeedObject).execute();
 					}					
 				}
 			});

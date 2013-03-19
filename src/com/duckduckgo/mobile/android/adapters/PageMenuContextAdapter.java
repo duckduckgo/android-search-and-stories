@@ -79,7 +79,7 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 			else
 				add(dialogItems.get(ItemType.SAVE));
 		}
-		else if(pageType.equals("webview-F") || pageType.equals("webview-R")) {
+		else if(pageType.contains("webview-F") || pageType.equals("webview-R")) {
 			add(dialogItems.get(ItemType.SHARE));
 			add(dialogItems.get(ItemType.EXTERNAL));
 			add(dialogItems.get(ItemType.REFRESH));
@@ -90,7 +90,7 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 				add(dialogItems.get(ItemType.SAVE));
 			
 			// enable readability button
-			if(pageType.equals("webview-F")) {
+			if(pageType.equals("webview-FR")) {
 				add(dialogItems.get(ItemType.READABLE));
 			}
 		}

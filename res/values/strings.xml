@@ -38,6 +38,8 @@
     <string name="PrefSearchResults">Search results</string>
     <string name="PrefTurnOffAutocomplete">Turn off autocomplete</string>
     
+    <string name="PrefReadable">Always show readable story</string>
+    
     <string name="ShareStory">Share story</string>
     <string name="ShareSearch">Share search</string>
     <string name="SharePage">Share page</string>
