@@ -42,6 +42,8 @@
     <string name="ShareSearch">Share search</string>
     <string name="SharePage">Share page</string>
     
+    <string name="ShareFormat">%1$s %2$s via DuckDuckGo for Android</string>
+    
     <string name="Yes">Yes</string>
     <string name="No">No</string>
     
