@@ -5,6 +5,7 @@ import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.util.Action;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.Item;
+import com.duckduckgo.mobile.android.util.Sharer;
 
 public class ShareFeedMenuItem extends Item {
 	private final String title;
@@ -27,7 +28,7 @@ public class ShareFeedMenuItem extends Item {
 		return new Action() {
 			@Override
 			public void Execute() {
-				DDGUtils.shareStory(context, title, url);
+				Sharer.shareStory(context, title, url);
 			};
 		};
 	}

@@ -5,6 +5,7 @@ import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.util.Action;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.Item;
+import com.duckduckgo.mobile.android.util.Sharer;
 
 public class ShareSearchMenuItem extends Item {
 	private final String query;
@@ -26,7 +27,7 @@ public class ShareSearchMenuItem extends Item {
 		return new Action() {
 			@Override
 			public void Execute() {
-				DDGUtils.shareSavedSearch(context, query);
+				Sharer.shareSavedSearch(context, query);
 			};
 		};
 	}
