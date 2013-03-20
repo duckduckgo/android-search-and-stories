@@ -2122,10 +2122,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					Item it = ((Item) contextAdapter.getItem(item));
 					if(it.type == Item.ItemType.SHARE) {
 						if(pageType.equals("R") && query != null) {
-							DDGUtils.shareSavedSearch(DuckDuckGo.this, query, pageUrl);
+							Sharer.shareSavedSearch(DuckDuckGo.this, query, pageUrl);
 						}
 						else {
-							DDGUtils.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
+							Sharer.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
 						}
 					}
 					else if(it.type == Item.ItemType.SAVE) {
