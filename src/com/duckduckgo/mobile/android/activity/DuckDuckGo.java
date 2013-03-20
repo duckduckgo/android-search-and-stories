@@ -262,11 +262,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private void feedItemSelected(FeedObject feedObject) {
 		// keep a reference, so that we can reuse details while saving
 		currentFeedObject = feedObject;
-		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
+		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;		
 		
 		String url = feedObject.getUrl();
 		if (url != null) {
-			if(!DDGApplication.getDB().existsFeedById(feedObject.getId())) {
+			if(!DDGApplication.getDB().existsVisibleFeedById(feedObject.getId())) {
 				DDGApplication.getDB().insertFeedItem(feedObject);
 				syncAdapters();			
 			}
@@ -365,7 +365,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			OptionsDialogBuilder alertDialogBuilder;
 						
 			final PageMenuContextAdapter contextAdapter;
-			if(pageType.equals("F") && pageFeedId != null && pageFeedId.length() != 0) {
+			if(pageType.startsWith("F") && pageFeedId != null && pageFeedId.length() != 0) {
 				contextAdapter = new HistoryFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, historyObject);
 				alertDialogBuilder = new OptionsDialogBuilder(DuckDuckGo.this, contextAdapter, R.string.StoryOptionsTitle);
 			}
@@ -383,7 +383,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
 			if(feed.size() != 0) {
 				currentFeedObject = feed.get(0);
-				mainWebView.loadDataWithBaseURL(currentFeedObject.getUrl(), currentFeedObject.getHtml(), "text/html", "utf8", mainWebView.getUrl());
+				mDuckDuckGoContainer.lastFeedUrl = currentFeedObject.getUrl();
+				mainWebView.loadDataWithBaseURL(currentFeedObject.getUrl(), currentFeedObject.getHtml(), "text/html", "utf8", currentFeedObject.getUrl());
+				mainWebView.isReadable = true;
 			}
 		}
 		
@@ -402,7 +404,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
      */
     public void itemSaveFeed(FeedObject feedObject, String pageFeedId) {
     	if(feedObject != null) {
-    		if(DDGApplication.getDB().existsFeedById(feedObject.getId())) {
+    		if(DDGApplication.getDB().existsAllFeedById(feedObject.getId())) {
     			DDGApplication.getDB().makeItemVisible(feedObject.getId());
     		}
     		else {
@@ -860,6 +862,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         }
         
         mainWebView.setWebViewClient(new WebViewClient() {
+        	
+        	boolean isLoadingReadable = false;
+        	        	
         	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
         		if(!savedState) {
         			// handle mailto: and tel: links with native apps
@@ -889,7 +894,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         					Toast.makeText(DuckDuckGo.this, "No related app found!", Toast.LENGTH_LONG).show();
 //        					view.loadUrl(url);
         				}
-        			}      			
+        			}
         		}
         		return false;
         	}
@@ -897,6 +902,22 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         	@SuppressLint("NewApi")
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
         		super.onPageStarted(view, url, favicon);      
+        		
+        		if(url.equals(mDuckDuckGoContainer.lastFeedUrl))
+        			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
+        		
+    			if(sharedPreferences.getBoolean("readablePref", false) 
+    					&& !isLoadingReadable
+    					&& mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED) {   
+    				isLoadingReadable = true;
+    				new ReadableFeedTask(mReadableListener, currentFeedObject).execute();  
+    				return;
+    			}
+    			
+    			if(!isLoadingReadable)
+    				mainWebView.isReadable = false;
+    			
+    			isLoadingReadable = false;
         		
         		// Omnibar like behavior.
         		if (url.contains("duckduckgo.com")) {
@@ -1441,7 +1462,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			Editor editor = sharedPreferences.edit();
 			editor.putString("readarticles", combined);
 			editor.commit();
-		}		
+		}
+		
+		// XXX keep these for low memory conditions
+		saveAppState(sharedPreferences);
 	}
 	
 	@Override
@@ -1457,12 +1481,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 				
 		super.onStop();
-	}
-	
-	@Override
-	protected void onStart() {
-		super.onStart();
-		Log.v(TAG, "started");
 	}
 	
 	@Override
@@ -1523,7 +1541,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 //		mainWebView.resumeView();
         mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
 		searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
-		mainWebView.reload(); 
+		
+		if(!mainWebView.isReadable)
+			mainWebView.reload(); 
+		else {
+			new ReadableFeedTask(mReadableListener, currentFeedObject).execute();
+		}
 	}
 	
 	private void stopAction() {
@@ -1689,7 +1712,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void showFeed(FeedObject feedObject) {	
-		displayWebView();
+		if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW)
+			displayWebView();
 		
 		if(!savedState) {
 			if(sharedPreferences.getBoolean("readablePref", false)) {
@@ -2129,7 +2153,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						}
 					}
 					else if(it.type == Item.ItemType.SAVE) {
-						if(pageType.equals("F")) {
+						if(pageType.startsWith("F")) {
 							itemSaveFeed(currentFeedObject, null);
 						}
 						else if(pageType.equals("R")){
@@ -2139,7 +2163,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					}
 					else if(it.type == Item.ItemType.UNSAVE) {
 						long delHistory = 0;
-						if(pageType.equals("F")) {
+						if(pageType.startsWith("F")) {
 							delHistory = DDGApplication.getDB().makeItemHidden(currentFeedObject.getId());
 						}
 						else if(pageType.equals("R") && query != null){
@@ -2183,19 +2207,102 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	       // return page container, holding all non-view data
 	       return mDuckDuckGoContainer;
 	}
+	
+	private void saveAppState(SharedPreferences prefs) {
+		Editor editor = prefs.edit();
+		editor.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
+		editor.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
+		editor.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
+		editor.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
+		editor.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
+		editor.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
+		if(currentFeedObject != null) {
+			editor.putString("currentFeedObjectId", currentFeedObject.getId());
+		}
+		editor.commit();
+	}
+	
+	private void saveAppState(Bundle bundle) {
+		bundle.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
+		bundle.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
+		bundle.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
+		bundle.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
+		bundle.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
+		bundle.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
+		if(currentFeedObject != null) {
+			bundle.putString("currentFeedObjectId", currentFeedObject.getId());
+		}
+	}
+	
+	private void recoverAppState(Object state) {
+		Bundle bundle = null; 
+		SharedPreferences prefs = null; 
+		
+		String feedId = null; 
+		
+		if(state instanceof Bundle) {
+			bundle = (Bundle) state;
+			
+			DDGControlVar.homeScreenShowing = bundle.getBoolean("homeScreenShowing");
+			mDuckDuckGoContainer.webviewShowing = bundle.getBoolean("webviewShowing");
+			mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(bundle.getInt("currentScreen"));
+			mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(bundle.getInt("prevScreen"));
+			mDuckDuckGoContainer.allowInHistory = bundle.getBoolean("allowInHistory");
+			mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(bundle.getInt("sessionType"));
+			feedId = bundle.getString("currentFeedObjectId");
+			
+			clearLeftSelect();
+			markLeftSelect(mDuckDuckGoContainer.currentScreen);
+			
+			// Restore the state of the WebView
+	    	if(mDuckDuckGoContainer.webviewShowing) {
+	    		mainWebView.restoreState(bundle);
+	    	}
+		}
+		else if(state instanceof SharedPreferences) {
+			prefs = (SharedPreferences) state;
+			
+			DDGControlVar.homeScreenShowing = prefs.getBoolean("homeScreenShowing", false);
+			mDuckDuckGoContainer.webviewShowing = prefs.getBoolean("webviewShowing", false);
+			mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(prefs.getInt("currentScreen", SCREEN.SCR_STORIES.getCode()));
+			mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(prefs.getInt("prevScreen", SCREEN.SCR_STORIES.getCode()));
+			mDuckDuckGoContainer.allowInHistory = prefs.getBoolean("allowInHistory", false);
+			mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(prefs.getInt("sessionType", SESSIONTYPE.SESSION_BROWSE.getCode()));
+			feedId = prefs.getString("currentFeedObjectId", null);
+			
+			clearLeftSelect();
+			markLeftSelect(mDuckDuckGoContainer.currentScreen);			
+		}
+		
+		Log.v(TAG, "feedId: " + feedId);
+		
+		if(feedId != null && feedId.length() != 0) {
+			FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
+			if(feedObject != null)
+				currentFeedObject = feedObject;
+			
+//			if(mDuckDuckGoContainer.webviewShowing && mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED) {
+//				showFeed(currentFeedObject);
+//			}
+			
+		}			
+		
+		if(mDuckDuckGoContainer.webviewShowing)
+			return;
+		
+		// arbitrary choice to not display Settings on comeback
+    	if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS) {
+    		displayHomeScreen();
+    	}
+    	else {
+			displayScreen(mDuckDuckGoContainer.currentScreen, true);
+    	}
+	}
     
 	@Override
 	protected void onSaveInstanceState(Bundle outState)
 	{
-		outState.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
-		outState.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
-		outState.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
-		outState.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
-		outState.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
-		outState.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
-		if(currentFeedObject != null)
-			outState.putString("currentFeedObjectId", currentFeedObject.getId());
-		
+		saveAppState(outState);					
 		super.onSaveInstanceState(outState);
 
 		// Save the state of the WebView
@@ -2207,44 +2314,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	{
 		super.onRestoreInstanceState(savedInstanceState);
 		
-		DDGControlVar.homeScreenShowing = savedInstanceState.getBoolean("homeScreenShowing");
-		mDuckDuckGoContainer.webviewShowing = savedInstanceState.getBoolean("webviewShowing");
-		mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(savedInstanceState.getInt("currentScreen"));
-		mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(savedInstanceState.getInt("prevScreen"));
-		mDuckDuckGoContainer.allowInHistory = savedInstanceState.getBoolean("allowInHistory");
-		mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(savedInstanceState.getInt("sessionType"));
-		
-		String feedId = savedInstanceState.getString("readablePref");
-		if(feedId != null && feedId.length() != 0) {
-			FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
-			if(feedObject != null)
-				currentFeedObject = feedObject;
-		}
-		
-		clearLeftSelect();
-		markLeftSelect(mDuckDuckGoContainer.currentScreen);
-		
-		// Restore the state of the WebView
-    	if(mDuckDuckGoContainer.webviewShowing) {
-    		mainWebView.restoreState(savedInstanceState);
-    		Log.v(TAG, "alfeed: " + SESSIONTYPE.SESSION_FEED);
-    		
-    		if(currentFeedObject != null)
-    			Log.v(TAG, "curfeed: " + currentFeedObject.getId());
-    		
-    		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED) {
-    			showFeed(currentFeedObject);
-    		}
-    		return;
-    	}
-		    	    	
-    	// arbitrary choice to not display Settings on comeback
-    	if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS) {
-    		displayHomeScreen();
-    	}
-    	else {
-			displayScreen(mDuckDuckGoContainer.currentScreen, true);
-    	}
+		recoverAppState(savedInstanceState);
 		
 	}
 	

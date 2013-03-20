@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
+import android.util.Log;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.objects.FeedObject;
@@ -24,7 +25,7 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 13;
+	private static final int DATABASE_VERSION = 14;
 	private static final String FEED_TABLE = "feed";
 	private static final String APP_TABLE = "apps";
 	private static final String HISTORY_TABLE = "history";
@@ -33,9 +34,7 @@ public class DdgDB {
 	
 	private SQLiteDatabase db;
 
-	private SQLiteStatement insertStmt, insertStmtApp;
-	// private static final String INSERT = "insert or ignore into " + FEED_TABLE + " (_id,title,description,feed,url,imageurl,favicon,timestamp,category,type) values (?,?,?,?,?,?,?,?,?,?)";
-	private static final String INSERT = "insert or replace into " + FEED_TABLE + " (_id,title,description,feed,url,imageurl,favicon,timestamp,category,type, hidden) values (?,?,?,?,?,?,?,?,?,?,?)";
+	private SQLiteStatement insertStmtApp;
 	
 	private static final String APP_INSERT = "insert or replace into " + APP_TABLE + " (title,package) values (?,?)";
 	
@@ -47,7 +46,6 @@ public class DdgDB {
 	public DdgDB(Context context) {
 	      OpenHelper openHelper = new OpenHelper(context);
 	      this.db = openHelper.getWritableDatabase();
-	      this.insertStmt = this.db.compileStatement(INSERT);
 	      this.insertStmtApp = this.db.compileStatement(APP_INSERT);
 	}
 	
@@ -82,19 +80,34 @@ public class DdgDB {
 		if(title == null) {
 			title = e.getUrl();
 		}
-	      this.insertStmt.bindString(1, e.getId());
-	      this.insertStmt.bindString(2, title);
-	      this.insertStmt.bindString(3, e.getDescription());
-	      this.insertStmt.bindString(4, e.getFeed());
-	      this.insertStmt.bindString(5, e.getUrl());
-	      this.insertStmt.bindString(6, e.getImageUrl());
-	      this.insertStmt.bindString(7, e.getFavicon());
-	      this.insertStmt.bindString(8, e.getTimestamp());
-	      this.insertStmt.bindString(9, e.getCategory());
-	      this.insertStmt.bindString(10, e.getType());
-	      this.insertStmt.bindString(11, hidden);
-	      long result = this.insertStmt.executeInsert();
-	      return result;
+		
+		ContentValues contentValues = new ContentValues();
+		contentValues.put("_id", e.getId());
+		Log.v("insert", e.getId());
+		contentValues.put("title", title);
+		Log.v("insert", title);
+		contentValues.put("description", e.getDescription());
+		Log.v("insert", e.getDescription());
+		contentValues.put("feed", e.getFeed());
+		Log.v("insert", e.getFeed());
+		contentValues.put("url", e.getUrl());
+		Log.v("insert", e.getUrl());
+		contentValues.put("imageurl", e.getImageUrl());
+		Log.v("insert", e.getImageUrl());
+		contentValues.put("favicon", e.getFavicon());
+		Log.v("insert", e.getFavicon());
+		contentValues.put("timestamp", e.getTimestamp());
+		Log.v("insert", e.getTimestamp());
+		contentValues.put("category", e.getCategory());
+		Log.v("insert", e.getCategory());
+		contentValues.put("type", e.getType());
+		Log.v("insert", e.getType());
+		contentValues.put("articleurl", e.getArticleUrl());
+		Log.v("insert", e.getArticleUrl());
+		contentValues.put("hidden", hidden);
+		Log.v("insert", hidden);
+		long result = this.db.insert(FEED_TABLE, null, contentValues);
+		return result;
 	}
 	
 	/**
@@ -259,8 +272,19 @@ public class DdgDB {
 	}
 	
 	private FeedObject getFeedObject(Cursor c) {
-		return new FeedObject(c.getString(0), c.getString(1), c.getString(2), c.getString(3),
-				c.getString(4), c.getString(5), c.getString(6), c.getString(7), c.getString(8), c.getString(9), c.getString(10), "", c.getString(11));
+		final String id = c.getString(c.getColumnIndex("_id"));
+		final String title = c.getString(c.getColumnIndex("title"));
+		final String description = c.getString(c.getColumnIndex("description"));
+		final String feed = c.getString(c.getColumnIndex("feed"));
+		final String url = c.getString(c.getColumnIndex("url"));
+		final String imageurl = c.getString(c.getColumnIndex("imageurl"));
+		final String favicon = c.getString(c.getColumnIndex("favicon"));
+		final String timestamp = c.getString(c.getColumnIndex("timestamp"));
+		final String category = c.getString(c.getColumnIndex("category"));
+		final String type = c.getString(c.getColumnIndex("type"));
+		final String articleurl = c.getString(c.getColumnIndex("articleurl"));
+		final String hidden = c.getString(c.getColumnIndex("hidden"));
+		return new FeedObject(id, title, description, feed, url, imageurl, favicon, timestamp, category, type, articleurl, "", hidden);
 	}
 	
 	private AppShortInfo getAppShortInfo(Cursor c) {
@@ -372,8 +396,16 @@ public class DdgDB {
 		return null;
 	}
 	
-	public boolean existsFeedById(String id){
+	public boolean existsVisibleFeedById(String id){
 		Cursor c = this.db.query(FEED_TABLE, new String[]{"_id"}, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
+		if(c.moveToFirst()) {
+			return true;
+		}
+		return false;
+	}
+	
+	public boolean existsAllFeedById(String id){
+		Cursor c = this.db.query(FEED_TABLE, new String[]{"_id"}, "_id=?", new String[]{id} , null, null, null);
 		if(c.moveToFirst()) {
 			return true;
 		}

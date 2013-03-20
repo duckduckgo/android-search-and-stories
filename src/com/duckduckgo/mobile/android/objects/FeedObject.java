@@ -144,7 +144,8 @@ public class FeedObject {
 		this.category = cursor.getString(cursor.getColumnIndex("category"));
 		this.type = cursor.getString(cursor.getColumnIndex("type"));
 		this.articleUrl = cursor.getString(cursor.getColumnIndex("articleurl"));
-		this.html = cursor.getString(cursor.getColumnIndex("html"));
+//		this.html = cursor.getString(cursor.getColumnIndex("html"));
+		this.html = "";
 		this.hidden = cursor.getString(cursor.getColumnIndex("hidden"));;
 	}
 	
