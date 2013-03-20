@@ -380,7 +380,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 		@Override
 		public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
-			mainWebView.loadDataWithBaseURL(feed.get(0).getUrl(), feed.get(0).getHtml(), "text/html", "utf8", mainWebView.getUrl());
+			if(feed.size() != 0) {
+				currentFeedObject = feed.get(0);
+				mainWebView.loadDataWithBaseURL(currentFeedObject.getUrl(), currentFeedObject.getHtml(), "text/html", "utf8", mainWebView.getUrl());
+			}
 		}
 		
 		@Override
@@ -1450,6 +1453,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.v(TAG, "started");
+	}
+	
+	@Override
 	protected void onDestroy() {
 		DDGApplication.getImageDownloader().clearAllDownloads();
 		DDGApplication.getImageCache().purge();
@@ -2169,6 +2178,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		outState.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
 		outState.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
 		outState.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
+		if(currentFeedObject != null)
+			outState.putString("currentFeedObjectId", currentFeedObject.getId());
 		
 		super.onSaveInstanceState(outState);
 
@@ -2188,12 +2199,27 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		mDuckDuckGoContainer.allowInHistory = savedInstanceState.getBoolean("allowInHistory");
 		mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(savedInstanceState.getInt("sessionType"));
 		
+		String feedId = savedInstanceState.getString("readablePref");
+		if(feedId != null && feedId.length() != 0) {
+			FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
+			if(feedObject != null)
+				currentFeedObject = feedObject;
+		}
+		
 		clearLeftSelect();
 		markLeftSelect(mDuckDuckGoContainer.currentScreen);
 		
 		// Restore the state of the WebView
     	if(mDuckDuckGoContainer.webviewShowing) {
     		mainWebView.restoreState(savedInstanceState);
+    		Log.v(TAG, "alfeed: " + SESSIONTYPE.SESSION_FEED);
+    		
+    		if(currentFeedObject != null)
+    			Log.v(TAG, "curfeed: " + currentFeedObject.getId());
+    		
+    		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED) {
+    			showFeed(currentFeedObject);
+    		}
     		return;
     	}
 		    	    	
