@@ -22,7 +22,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -270,7 +269,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				DDGApplication.getDB().insertFeedItem(feedObject);
 				syncAdapters();			
 			}
-			searchOrGoToUrl(url, currentFeedObject);
+			searchOrGoToUrl(url);
 		}
 		
 		// record article as read
@@ -386,6 +385,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				mDuckDuckGoContainer.lastFeedUrl = currentFeedObject.getUrl();
 				mainWebView.loadDataWithBaseURL(currentFeedObject.getUrl(), currentFeedObject.getHtml(), "text/html", "utf8", currentFeedObject.getUrl());
 				mainWebView.isReadable = true;
+				mDuckDuckGoContainer.forceOriginalFormat = false;
 			}
 		}
 		
@@ -498,6 +498,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
             mDuckDuckGoContainer.pageAdapter = new DDGPagerAdapter(this);
             
             mDuckDuckGoContainer.webviewShowing = false;
+            mDuckDuckGoContainer.forceOriginalFormat = false;
     		
     		mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
 //    		mDuckDuckGoContainer.reloadDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.reload);
@@ -908,14 +909,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         		
     			if(sharedPreferences.getBoolean("readablePref", false) 
     					&& !isLoadingReadable
+    					&& !mDuckDuckGoContainer.forceOriginalFormat
     					&& mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED) {   
     				isLoadingReadable = true;
     				new ReadableFeedTask(mReadableListener, currentFeedObject).execute();  
     				return;
     			}
-    			
-    			if(!isLoadingReadable)
-    				mainWebView.isReadable = false;
     			
     			isLoadingReadable = false;
         		
@@ -1057,6 +1056,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         		if(hr != null && hr.getExtra() != null) {            	
         			mDuckDuckGoContainer.allowInHistory = true; 
         			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
+        			mainWebView.isReadable = false;
+        			mDuckDuckGoContainer.forceOriginalFormat = false;
         			Log.i(TAG, "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
         		}
 
@@ -1565,10 +1566,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void searchOrGoToUrl(String text) {
-		searchOrGoToUrl(text, null);
-	}
-	
-	public void searchOrGoToUrl(String text, FeedObject feedObject) {
 		
 //		mainWebView.resumeView();
 		
@@ -1578,6 +1575,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		if (text.length() > 0) {
 			
 			savedState = false;
+			
+			mDuckDuckGoContainer.forceOriginalFormat = false;
+			mainWebView.isReadable = false;
 			
 			URL searchAsUrl = null;
 			String modifiedText = null;
@@ -1611,20 +1611,14 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				if (modifiedText != null) {
 					//Show the modified url text
 					if (modifiedText.contains(".") && modifiedText.length() > (modifiedText.indexOf(".") + 2)) {
-						if(feedObject == null || feedObject.getArticleUrl().length() == 0)
-							showWebUrl(modifiedText);
-						else
-							showFeed(feedObject);
+						showWebUrl(modifiedText);
 					} else {
 						searchWebTerm(text);
 					}
 				} else {
 					if (text.contains(".") && text.length() > (text.indexOf(".") + 2)) {
 						//Show the url text
-						if(feedObject == null || feedObject.getArticleUrl().length() == 0)
-							showWebUrl(text);
-						else
-							showFeed(feedObject);
+						showWebUrl(text);
 					} else {
 						searchWebTerm(text);
 					}
@@ -1665,6 +1659,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		displayWebView();
 		
 		if(!savedState){
+			mainWebView.isReadable = false;
+			mDuckDuckGoContainer.forceOriginalFormat = false;
+			
 			if(DDGControlVar.regionString == "wt-wt"){	// default
 				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
 			}
@@ -1706,9 +1703,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 		displayWebView();
 		
-		if(!savedState)
+		if(!savedState) {
+			mainWebView.isReadable = false;
+			mDuckDuckGoContainer.forceOriginalFormat = false;
+			
 //			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
 			mainWebView.loadUrl(url);
+		}
 	}
 	
 	public void showFeed(FeedObject feedObject) {	
@@ -2136,7 +2137,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				isPageSaved = false;
 			}
 			
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview-"+pageType, isPageSaved);
+			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview-"+pageType, isPageSaved, mainWebView.isReadable);
 			
 			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
 			ab.setTitle(pageTitle);
@@ -2180,9 +2181,14 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					else if(it.type == Item.ItemType.REFRESH) {
 						reloadAction();
 					}
-					else if(it.type == Item.ItemType.READABLE && pageType.equals("FR")) {
+					else if(it.type == Item.ItemType.READABILITY_ON && pageType.equals("FR")) {
 						new ReadableFeedTask(mReadableListener, currentFeedObject).execute();
-					}					
+					}	
+					else if(it.type == Item.ItemType.READABILITY_OFF && pageType.equals("FR")) {
+						mDuckDuckGoContainer.forceOriginalFormat = true;
+						mainWebView.isReadable = false;
+						mainWebView.loadUrl(pageUrl);
+					}
 				}
 			});
 			ab.show();

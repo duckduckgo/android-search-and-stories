@@ -131,7 +131,8 @@
     <string name="OnlyOnPhone">Only on phone</string>
     <string name="SelectAppToSend">Select application to send</string>
     
-    <string name="Readable">Readable</string>
+    <string name="ReadabilityOn">Readability (On)</string>
+    <string name="ReadabilityOff">Readability (Off)</string>
     
     <string name="SavedResults">Saved Results</string>
     <string name="SavedStories">Saved Stories</string>

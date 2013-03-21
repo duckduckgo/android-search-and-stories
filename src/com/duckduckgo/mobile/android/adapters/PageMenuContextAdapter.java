@@ -1,7 +1,5 @@
 package com.duckduckgo.mobile.android.adapters;
 
-import static com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter.dialogItems;
-
 import java.util.HashMap;
 
 import android.content.Context;
@@ -25,7 +23,8 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
         dialogItems.put(ItemType.DELETE, new Item(context.getResources().getString(R.string.Delete), android.R.drawable.ic_menu_close_clear_cancel, ItemType.DELETE));
         dialogItems.put(ItemType.EXTERNAL, new Item(context.getResources().getString(R.string.OpenInExternalBrowser), android.R.drawable.ic_menu_rotate, ItemType.EXTERNAL));
         dialogItems.put(ItemType.REFRESH, new Item(context.getResources().getString(R.string.Refresh), R.drawable.icon_reload, ItemType.REFRESH));
-        dialogItems.put(ItemType.READABLE, new Item(context.getResources().getString(R.string.Readable), android.R.drawable.ic_menu_add, ItemType.READABLE));
+        dialogItems.put(ItemType.READABILITY_ON, new Item(context.getResources().getString(R.string.ReadabilityOn), android.R.drawable.ic_menu_add, ItemType.READABILITY_ON));
+        dialogItems.put(ItemType.READABILITY_OFF, new Item(context.getResources().getString(R.string.ReadabilityOff), android.R.drawable.ic_menu_add, ItemType.READABILITY_OFF));
 	}
 	
 	protected Item getItem(ItemType itemType){
@@ -45,12 +44,12 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 	}
 	
 	public PageMenuContextAdapter(Context context, int resource, 
-			int textViewResourceId, String pageType, boolean isItemSaved) {
+			int textViewResourceId, String pageType, boolean isItemSaved, boolean isReadable) {
 		this(context, resource, textViewResourceId);
-		setType(pageType, isItemSaved);
+		setType(pageType, isItemSaved, isReadable);
 	}
 	
-	public void setType(String pageType, boolean isItemSaved) {
+	public void setType(String pageType, boolean isItemSaved, boolean isReadable) {
 		if(pageType.equals("mainfeed")) {
 			add(dialogItems.get(ItemType.SHARE));
 			add(dialogItems.get(ItemType.EXTERNAL));			
@@ -91,7 +90,10 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 			
 			// enable readability button
 			if(pageType.equals("webview-FR")) {
-				add(dialogItems.get(ItemType.READABLE));
+				if(!isReadable)
+					add(dialogItems.get(ItemType.READABILITY_ON));
+				else
+					add(dialogItems.get(ItemType.READABILITY_OFF));
 			}
 		}
 		else if(pageType.equals("webview-W")) {

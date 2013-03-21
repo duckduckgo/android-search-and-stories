@@ -43,5 +43,7 @@ public class DuckDuckGoContainer {
 	public DDGPagerAdapter pageAdapter = null;
 	
 	public SavedResultCursorAdapter savedSearchAdapter = null;
-	public SavedFeedCursorAdapter savedFeedAdapter = null;	
+	public SavedFeedCursorAdapter savedFeedAdapter = null;
+	
+	public boolean forceOriginalFormat = false;
 }

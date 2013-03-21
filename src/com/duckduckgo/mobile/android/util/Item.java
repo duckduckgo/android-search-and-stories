@@ -16,7 +16,7 @@ public class Item {
     }
     
     public static enum ItemType {
-    	SHARE, SAVE, EXTERNAL, UNSAVE, REFRESH, DELETE, READABLE
+    	SHARE, SAVE, EXTERNAL, UNSAVE, REFRESH, DELETE, READABILITY_ON, READABILITY_OFF
     }
     
     public Action ActionToExecute;
