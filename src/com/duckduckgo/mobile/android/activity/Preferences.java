@@ -49,7 +49,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
     	addPreferencesFromResource(R.xml.preferences);
     	getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-    	Preference clearHistoryPref = (Preference) findPreference("clearHistoryPref");
+    	Preference clearHistoryPref = findPreference("clearHistoryPref");
     	clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
     		public boolean onPreferenceClick(Preference preference) {
     			showDialog(CONFIRM_CLEAR_HISTORY);		
@@ -57,7 +57,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
     		}
     	});
     	
-		Preference sourcesPref = (Preference) findPreference("sourcesPref");
+		Preference sourcesPref = findPreference("sourcesPref");
 		sourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			public boolean onPreferenceClick(Preference preference) {
@@ -69,7 +69,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 		});
 		
 		
-		Preference sendFeedbackPref = (Preference) findPreference("sendFeedbackPref");
+		Preference sendFeedbackPref = findPreference("sendFeedbackPref");
 		sendFeedbackPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			public boolean onPreferenceClick(Preference preference) {
@@ -82,7 +82,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			}
 		});
 		
-		Preference ratePref = (Preference) findPreference("ratePref");
+		Preference ratePref = findPreference("ratePref");
 		ratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			public boolean onPreferenceClick(Preference preference) {
@@ -93,7 +93,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			}
 		});
 		
-		Preference mainFontSizePref = (Preference) findPreference("mainFontSizePref");
+		Preference mainFontSizePref = findPreference("mainFontSizePref");
 		mainFontSizePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			public boolean onPreferenceClick(Preference preference) {

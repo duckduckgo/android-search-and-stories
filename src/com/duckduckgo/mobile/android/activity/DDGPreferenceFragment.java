@@ -50,7 +50,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	}
 
 	private void whenClearingHistoryShowsClearHistoryConfirmDialog() {
-		Preference clearHistoryPref = (Preference) findPreference("clearHistoryPref");
+		Preference clearHistoryPref = findPreference("clearHistoryPref");
 		clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 		    public boolean onPreferenceClick(Preference preference) {		    	
 		    	showClearHistoryConfirm();		    	
@@ -60,7 +60,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	}
 
 	private void whenChangingStorySourcesGoesToSourcePreferences() {
-		Preference sourcesPref = (Preference) findPreference("sourcesPref");
+		Preference sourcesPref = findPreference("sourcesPref");
 		sourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			public boolean onPreferenceClick(Preference preference) {
@@ -73,7 +73,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	}
 
 	private void whenSendingFeedBackLaunchesEmailIntent() {
-		Preference sendFeedbackPref = (Preference) findPreference("sendFeedbackPref");
+		Preference sendFeedbackPref = findPreference("sendFeedbackPref");
 		sendFeedbackPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			public boolean onPreferenceClick(Preference preference) {
@@ -88,7 +88,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	}
 
 	private void whenRatingGoesToMarket() {
-		Preference ratePref = (Preference) findPreference("ratePref");
+		Preference ratePref = findPreference("ratePref");
 		ratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			public boolean onPreferenceClick(Preference preference) {
@@ -101,9 +101,9 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	}
 
 	private void whenTurningOffAutoCompleteSyncsOtherAutoCompletePreferences() {
-		final Preference appSearchPreference = (Preference)findPreference("appSearchPref");
-		final Preference directQueryPreference = (Preference)findPreference("directQueryPref");
-		Preference turnOffAutoCompletePreference = (Preference)findPreference("turnOffAutocompletePref");
+		final Preference appSearchPreference = findPreference("appSearchPref");
+		final Preference directQueryPreference = findPreference("directQueryPref");
+		Preference turnOffAutoCompletePreference = findPreference("turnOffAutocompletePref");
 		turnOffAutoCompletePreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
