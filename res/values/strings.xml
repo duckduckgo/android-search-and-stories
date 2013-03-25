@@ -15,7 +15,7 @@
     <string name="PrefThemeDark">Dark</string>
     <string name="PrefStartScreen">Home screen view</string>
     <string name="PrefStories">Stories</string>
-    <string name="PrefWaterCoolerStories">Water Cooler (stories)</string>
+    <string name="PrefWaterCoolerStories">Stories</string>
     <string name="PrefSavedItems">Saved items</string>
     <string name="PrefRecentSearch">Recent searches</string>
     <string name="PrefRecordHistory">Save recent searches</string>
@@ -33,7 +33,7 @@
     <string name="PrefAcraDisabled">Reporting disabled</string>
     <string name="PrefAcraEnabled">Reporting enabled</string>
     
-    <string name="PrefWaterCooler">Water Cooler</string>
+    <string name="PrefWaterCooler">Stories</string>
     <string name="PrefAutocomplete">Autocomplete</string>
     <string name="PrefSearchResults">Search results</string>
     <string name="PrefTurnOffAutocomplete">Turn off autocomplete</string>
@@ -66,7 +66,7 @@
     
     <string name="Defaults">Defaults</string>
     <string name="SuggestSource">Suggest a source</string>
-    <string name="SuggestedSources">Please include these sources in Water Cooler:</string>
+    <string name="SuggestedSources">Please include these sources in the Stories:</string>
     
     <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
@@ -100,21 +100,20 @@
     <string name="SuggestSourceToast">To be implemented.</string>    
     
     <string name="SummaryWaterCooler">
-        Water Cooler is a stream of interesting stories you won\'t find in the news apps. 
-        All of the stories come from special feeds like most shared or up-voted. 
+        Stories is a stream of interesting media you won\'t find in regular news apps. 
+        All of the media comes from special feeds like most shared or up-voted. 
         Check it out when you\'re waiting around for five minutes. 
-        Note: you can take Water Cooler off your home screen using the \"Home screen view\" setting.
+        Note: you can take Stories off your home screen using the \"Home screen view\" setting.
     </string>
     
     <string name="LongWaterCooler">
-        Water Cooler is a stream of interesting stories you won\'t find in the news apps. 
-        All of the stories come from special feeds like most shared or up-voted. 
-        Select the feeds you want to see below. 
-        We\'re also always looking for more sources, which you can suggest below as well. 
-        Note: you can take Water Cooler off your home screen using the \"Home screen view\" setting on the previous screen.
- 	</string>
+	Stories is a stream of interesting media you won\'t find in regular news apps.
+	All of the media comes from special feeds like most shared or up-voted.
+	Check it out when you\'re waiting around for five minutes.
+	Note: you can take Stories off your home screen using the \"Home screen view\" setting.
+    </string>
  	
-    <string name="WaterCoolerSources">Water Cooler sources</string>
+    <string name="WaterCoolerSources">Story sources</string>
     
     <string name="InformHistory"><i>Save recent searches</i> is disabled. You can enable it in <i>Settings.</i></string>
     
