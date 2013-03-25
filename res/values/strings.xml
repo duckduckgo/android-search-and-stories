@@ -36,7 +36,7 @@
     <string name="PrefWaterCooler">Stories</string>
     <string name="PrefAutocomplete">Autocomplete</string>
     <string name="PrefSearchResults">Search Results</string>
-    <string name="PrefAutocompleteToggle">Autocomplete</string>
+    <string name="PrefTurnOffAutocomplete">Disable Autocomplete</string>
     
     <string name="PrefReadable">Use Readability</string>
     
