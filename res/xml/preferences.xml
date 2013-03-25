@@ -11,7 +11,7 @@
 	<CheckBoxPreference
 	android:title="@string/PrefReadable"
 	android:key="readablePref"
-	android:defaultValue="false" />
+	android:defaultValue="true" />
   </PreferenceCategory> 
   <PreferenceCategory android:title="@string/PrefGroupAppFlow">
 	<ListPreference 
