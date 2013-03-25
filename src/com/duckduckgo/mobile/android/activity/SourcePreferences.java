@@ -53,7 +53,7 @@ public class SourcePreferences extends Activity implements SourcesListener {
 		TextView titleTv = ((TextView) headerView.findViewById(android.R.id.title));
 		titleTv.setText(R.string.WaterCoolerSources);
 		TextView summaryTv = ((TextView) headerView.findViewById(android.R.id.summary));
-		summaryTv.setText(R.string.LongWaterCooler);
+		summaryTv.setText(R.string.SummaryWaterCooler);
 		sourcesView.addHeaderView(headerView);
 			
 		View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
