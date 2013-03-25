@@ -18,6 +18,7 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 
 import android.app.AlertDialog;
@@ -151,22 +152,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
   }
 
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if(key.equals("startScreenPref")){
-			DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString(key, "0")));
-		}
-		else if(key.equals("regionPref")){
-			DDGControlVar.regionString = sharedPreferences.getString(key, "wt-wt");
-		}
-		else if(key.equals("appSearchPref")){
-			DDGControlVar.includeAppsInSearch = sharedPreferences.getBoolean(key, false);
-		}
-		else if(key.equals("externalBrowserPref")){
-			DDGControlVar.alwaysUseExternalBrowser = sharedPreferences.getBoolean(key, false);
-		}
-		else if(key.equals("turnOffAutocompletePref")){
-			DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean(key, false);
-		}
-
-	}
+        PreferencesManager.onSharedPreferenceChanged(sharedPreferences, key);
+    }
 	
 }
