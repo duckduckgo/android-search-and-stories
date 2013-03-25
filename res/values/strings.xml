@@ -29,7 +29,7 @@
     <string name="PrefRate">Rate App</string>
     <string name="PrefAppSearch">Include Apps</string>
     <string name="PrefMainFontSize">Font Size</string>
-    <string name="PrefEnableAcra">Error Reporting</string>
+    <string name="PrefEnableAcra">Report Crashes</string>
     <string name="PrefAcraDisabled">Reporting Disabled</string>
     <string name="PrefAcraEnabled">Reporting Enabled</string>
     
