@@ -26,6 +26,7 @@ import com.duckduckgo.mobile.android.fragment.ConfirmClearHistoryDialog;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 
 @TargetApi(11)
@@ -50,7 +51,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	}
 
 	private void whenClearingHistoryShowsClearHistoryConfirmDialog() {
-		Preference clearHistoryPref = (Preference) findPreference("clearHistoryPref");
+		Preference clearHistoryPref = findPreference("clearHistoryPref");
 		clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 		    public boolean onPreferenceClick(Preference preference) {		    	
 		    	showClearHistoryConfirm();		    	
@@ -60,7 +61,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	}
 
 	private void whenChangingStorySourcesGoesToSourcePreferences() {
-		Preference sourcesPref = (Preference) findPreference("sourcesPref");
+		Preference sourcesPref = findPreference("sourcesPref");
 		sourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			public boolean onPreferenceClick(Preference preference) {
@@ -73,7 +74,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	}
 
 	private void whenSendingFeedBackLaunchesEmailIntent() {
-		Preference sendFeedbackPref = (Preference) findPreference("sendFeedbackPref");
+		Preference sendFeedbackPref = findPreference("sendFeedbackPref");
 		sendFeedbackPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			public boolean onPreferenceClick(Preference preference) {
@@ -88,7 +89,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	}
 
 	private void whenRatingGoesToMarket() {
-		Preference ratePref = (Preference) findPreference("ratePref");
+		Preference ratePref = findPreference("ratePref");
 		ratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			
 			public boolean onPreferenceClick(Preference preference) {
@@ -101,9 +102,9 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	}
 
 	private void whenTurningOffAutoCompleteSyncsOtherAutoCompletePreferences() {
-		final Preference appSearchPreference = (Preference)findPreference("appSearchPref");
-		final Preference directQueryPreference = (Preference)findPreference("directQueryPref");
-		Preference turnOffAutoCompletePreference = (Preference)findPreference("turnOffAutocompletePref");
+		final Preference appSearchPreference = findPreference("appSearchPref");
+		final Preference directQueryPreference = findPreference("directQueryPref");
+		Preference turnOffAutoCompletePreference = findPreference("turnOffAutocompletePref");
 		turnOffAutoCompletePreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
 			
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
@@ -139,26 +140,11 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
     }
 	
 	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-		if(key.equals("startScreenPref")){
-			DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString(key, "0")));
-		}
-		else if(key.equals("regionPref")){
-			DDGControlVar.regionString = sharedPreferences.getString(key, "wt-wt");
-		}
-		else if(key.equals("appSearchPref")){
-			DDGControlVar.includeAppsInSearch = sharedPreferences.getBoolean(key, false);
-		}
-		else if(key.equals("externalBrowserPref")){
-			DDGControlVar.alwaysUseExternalBrowser = sharedPreferences.getBoolean(key, false);
-		}
-		else if(key.equals("turnOffAutocompletePref")){
-			DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean(key, false);
-		}
+        PreferencesManager.onSharedPreferenceChanged(sharedPreferences, key);
 		
 		if(customChangeListener != null) {
 			customChangeListener.onPreferenceChange(key);
 		}
-
 	}
 	
 	@Override
