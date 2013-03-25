@@ -38,7 +38,7 @@
     <string name="PrefSearchResults">Search results</string>
     <string name="PrefTurnOffAutocomplete">Turn off autocomplete</string>
     
-    <string name="PrefReadable">Readability View</string>
+    <string name="PrefReadable">Readability view</string>
     
     <string name="ShareStory">Share story</string>
     <string name="ShareSearch">Share search</string>
@@ -113,7 +113,7 @@
 	Note: you can take Stories off your home screen using the \"Home screen view\" setting.
     </string>
  	
-    <string name="WaterCoolerSources">Story sources</string>
+    <string name="WaterCoolerSources">Stories</string>
     
     <string name="InformHistory"><i>Save recent searches</i> is disabled. You can enable it in <i>Settings.</i></string>
     
