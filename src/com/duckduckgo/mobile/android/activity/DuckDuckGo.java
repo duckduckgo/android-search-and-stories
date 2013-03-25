@@ -36,7 +36,6 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTabHost;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
@@ -102,6 +101,7 @@ import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
+import com.duckduckgo.mobile.android.tabhost.TabHostExt;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
@@ -204,7 +204,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	AlertDialog.Builder cacheDialogBuilder;
 	
-	private FragmentTabHost savedTabHost = null;
+	private TabHostExt savedTabHost = null;
 	
 	class TabFactory implements TabContentFactory {
 
@@ -2513,16 +2513,16 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	 * Step 2: Setup TabHost
 	 */
 	private void initialiseTabHost(Bundle args) {
-		savedTabHost = (FragmentTabHost) contentView.findViewById(android.R.id.tabhost);
+		savedTabHost = (TabHostExt) contentView.findViewById(android.R.id.tabhost);
 		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 		        
 		addTab(savedTabHost, getResources().getString(R.string.SavedResults), SavedResultTabFragment.class);
 		addTab(savedTabHost, getResources().getString(R.string.SavedStories), SavedFeedTabFragment.class);
 	}
 	
-	private void addTab(FragmentTabHost tabHost, String label, Class<?> intentClass) {
+	private void addTab(TabHostExt tabHost, String label, Class<?> intentClass) {
 		Intent intent = new Intent(this, intentClass);
-		FragmentTabHost.TabSpec spec = (FragmentTabHost.TabSpec) tabHost.newTabSpec(label);
+		TabHostExt.TabSpec spec = (TabHostExt.TabSpec) tabHost.newTabSpec(label);
 
 		View tabIndicator = LayoutInflater.from(this).inflate(R.layout.tab_indicator, tabHost.getTabWidget(), false);
 		TextView title = (TextView) tabIndicator.findViewById(R.id.title);
