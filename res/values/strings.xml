@@ -18,16 +18,16 @@
     <string name="PrefWaterCoolerStories">Stories</string>
     <string name="PrefSavedItems">Saved Items</string>
     <string name="PrefRecentSearch">Recent Searches</string>
-    <string name="PrefRecordHistory">Save Recents</string>
-    <string name="PrefClearHistory">Clear Recents</string>
+    <string name="PrefRecordHistory">Save Recent</string>
+    <string name="PrefClearHistory">Clear Recent</string>
     <string name="PrefSources">Change Sources</string>
     <string name="PrefResetSources">Reset Sources</string>
     <string name="PrefRegion">Region Boost</string>
-    <string name="PrefDirectQuery">Search from Autocomplete</string>
+    <string name="PrefDirectQuery">Search on Tap</string>
     <string name="PrefExternalBrowser">Use External Browser</string>
     <string name="PrefSendFeedback">Send Feedback</string>
     <string name="PrefRate">Rate Us</string>
-    <string name="PrefAppSearch">Apps in Autocomplete</string>
+    <string name="PrefAppSearch">Include Apps</string>
     <string name="PrefMainFontSize">Font Size</string>
     <string name="PrefEnableAcra">Error Reporting</string>
     <string name="PrefAcraDisabled">Reporting Disabled</string>
@@ -36,7 +36,7 @@
     <string name="PrefWaterCooler">Stories</string>
     <string name="PrefAutocomplete">Autocomplete</string>
     <string name="PrefSearchResults">Search Results</string>
-    <string name="PrefTurnOffAutocomplete">Disable Autocomplete</string>
+    <string name="PrefTurnOffAutocomplete">Disable</string>
     
     <string name="PrefReadable">Use Readability</string>
     
@@ -100,9 +100,9 @@
     <string name="SuggestSourceToast">To be implemented.</string>    
     
     <string name="SummaryWaterCooler">
-        This is a stream of interesting stories you won\'t find in regular news apps. 
-        All of the stories come from special feeds like \"most shared\" or \"up-voted\". 
-        Check it out when you\'re waiting around for five minutes. 
+        These sources create a stream of interesting stories you won\'t find in regular news apps.
+        All of the sources are special feeds like \"most shared\" or \"most up-voted\".
+        Check it out when you\'re waiting around for five minutes.
         Note: you can remove Stories from your home screen using the \"Home Screen\" setting.
     </string>
 
