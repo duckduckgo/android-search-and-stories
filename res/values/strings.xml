@@ -26,7 +26,7 @@
     <string name="PrefDirectQuery">Search on Tap</string>
     <string name="PrefExternalBrowser">Use External Browser</string>
     <string name="PrefSendFeedback">Send Feedback</string>
-    <string name="PrefRate">Rate Us</string>
+    <string name="PrefRate">Rate App</string>
     <string name="PrefAppSearch">Include Apps</string>
     <string name="PrefMainFontSize">Font Size</string>
     <string name="PrefEnableAcra">Error Reporting</string>
