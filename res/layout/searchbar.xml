@@ -46,6 +46,7 @@
    	    
    	    <ImageButton android:layout_width="30dp"
    	        		 android:layout_height="40dp"
+   	        		 android:layout_marginLeft="-6dp"
    	        		 android:scaleType="fitCenter"
    	        		 android:id="@+id/shareButton"
    	        		 android:background="@android:color/transparent"
