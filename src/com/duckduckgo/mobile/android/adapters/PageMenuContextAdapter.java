@@ -23,8 +23,8 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
         dialogItems.put(ItemType.DELETE, new Item(context.getResources().getString(R.string.Delete), android.R.drawable.ic_menu_close_clear_cancel, ItemType.DELETE));
         dialogItems.put(ItemType.EXTERNAL, new Item(context.getResources().getString(R.string.OpenInExternalBrowser), android.R.drawable.ic_menu_rotate, ItemType.EXTERNAL));
         dialogItems.put(ItemType.REFRESH, new Item(context.getResources().getString(R.string.Refresh), R.drawable.icon_reload, ItemType.REFRESH));
-        dialogItems.put(ItemType.READABILITY_ON, new Item(context.getResources().getString(R.string.ReadabilityOn), android.R.drawable.ic_menu_add, ItemType.READABILITY_ON));
-        dialogItems.put(ItemType.READABILITY_OFF, new Item(context.getResources().getString(R.string.ReadabilityOff), android.R.drawable.ic_menu_add, ItemType.READABILITY_OFF));
+        dialogItems.put(ItemType.READABILITY_ON, new Item(context.getResources().getString(R.string.ReadabilityOn), R.drawable.icon_readability_on, ItemType.READABILITY_ON));
+        dialogItems.put(ItemType.READABILITY_OFF, new Item(context.getResources().getString(R.string.ReadabilityOff), R.drawable.icon_readability_off, ItemType.READABILITY_OFF));
 	}
 	
 	protected Item getItem(ItemType itemType){
