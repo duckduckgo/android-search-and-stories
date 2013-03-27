@@ -269,7 +269,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				DDGApplication.getDB().insertFeedItem(feedObject);
 				syncAdapters();			
 			}
-			searchOrGoToUrl(url);
+			searchOrGoToUrl(url, SESSIONTYPE.SESSION_FEED);
 		}
 		
 		// record article as read
@@ -1566,11 +1566,17 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void searchOrGoToUrl(String text) {
+		searchOrGoToUrl(text, SESSIONTYPE.SESSION_BROWSE);
+	}
+	
+	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
 		
 //		mainWebView.resumeView();
 		
 		hideKeyboard(mainWebView);
 		clearBrowserState();
+		
+		mDuckDuckGoContainer.sessionType = sessionType;		
 				
 		if (text.length() > 0) {
 			
