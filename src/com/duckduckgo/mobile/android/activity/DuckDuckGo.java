@@ -396,7 +396,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 	};
 	
-	private void readableAction(FeedObject feedObject) {
+	private void readableAction(FeedObject feedObject) {		
 		mainWebView.isReadable = true;
 		mainWebView.loadDataWithBaseURL(feedObject.getUrl(), feedObject.getHtml(), "text/html", "utf8", feedObject.getUrl());
 		mDuckDuckGoContainer.forceOriginalFormat = false;
@@ -908,17 +908,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
         		super.onPageStarted(view, url, favicon);      
         		
-        		// XXX **** related: ugly hack in onBackPressed method ****** 
-        		if(mainWebView.historyRewindRead) {
-        			mainWebView.historyRewindRead = false;
-        			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
-        			readableAction(currentFeedObject);
-        			return;
-        		}
-        		// ***********************************************************
-        		
         		if(url.equals(mDuckDuckGoContainer.lastFeedUrl)) {
         			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
+        			
+        			if(mainWebView.isReadable)
+        				mainWebView.clearHistory();
         		}
     			        		
         		// Omnibar like behavior.
@@ -1509,22 +1503,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				WebBackForwardList history = mainWebView.copyBackForwardList();
 				int currentIndex = history.getCurrentIndex();
 				WebHistoryItem prevItem = history.getItemAtIndex(currentIndex-1);				
-				WebHistoryItem currentItem = history.getCurrentItem();
 				
-				if(prevItem.getOriginalUrl().equals(mDuckDuckGoContainer.lastFeedUrl)) {				
-					if(prevItem.getOriginalUrl().equals(currentItem.getOriginalUrl())) {
-						if(currentIndex == 1)
-							displayScreen(mDuckDuckGoContainer.currentScreen, true);
-						else
-							mainWebView.goBackOrForward(-2);
-					}
-					else if(canDoReadability(currentFeedObject)) {
-						int prevIndex = 0;
-						if(currentIndex > 1)
-							prevIndex = currentIndex - 2;									
-						mainWebView.historyRewindRead = true;
-						mainWebView.goBackOrForward(prevIndex - currentIndex);
-					}
+				if(prevItem.getOriginalUrl().equals(mDuckDuckGoContainer.lastFeedUrl)
+						&& canDoReadability(currentFeedObject)) {									
+					readableAction(currentFeedObject);
 				}
 				// **********************************************************************************
 				else {
