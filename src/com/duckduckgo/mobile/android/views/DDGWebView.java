@@ -10,6 +10,8 @@ public class DDGWebView extends WebView {
 	
 	OnTouchListener extraTouchListener;
 	public boolean isReadable = false;
+	
+	public boolean historyRewindRead = false;
 
 	public DDGWebView(Context context, AttributeSet attrs) {
 		super(context, attrs);
