@@ -1508,21 +1508,23 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				// XXX  ****** Beware : ugly hack to avoid displaying a readability page twice ***** 
 				WebBackForwardList history = mainWebView.copyBackForwardList();
 				int currentIndex = history.getCurrentIndex();
-				WebHistoryItem prevItem = history.getItemAtIndex(currentIndex-1);
+				WebHistoryItem prevItem = history.getItemAtIndex(currentIndex-1);				
+				WebHistoryItem currentItem = history.getCurrentItem();
 				
-				if(prevItem.getOriginalUrl().equals(history.getCurrentItem().getOriginalUrl())) {
-					if(currentIndex == 1)
-						displayScreen(mDuckDuckGoContainer.currentScreen, true);
-					else
-						mainWebView.goBackOrForward(-2);
-				}
-				else if(prevItem.getOriginalUrl().equals(mDuckDuckGoContainer.lastFeedUrl)
-						&& canDoReadability(currentFeedObject)) {
-					int prevIndex = 0;
-					if(currentIndex > 1)
-						prevIndex = currentIndex - 2;									
-					mainWebView.historyRewindRead = true;
-					mainWebView.goBackOrForward(prevIndex - currentIndex);
+				if(prevItem.getOriginalUrl().equals(mDuckDuckGoContainer.lastFeedUrl)) {				
+					if(prevItem.getOriginalUrl().equals(currentItem.getOriginalUrl())) {
+						if(currentIndex == 1)
+							displayScreen(mDuckDuckGoContainer.currentScreen, true);
+						else
+							mainWebView.goBackOrForward(-2);
+					}
+					else if(canDoReadability(currentFeedObject)) {
+						int prevIndex = 0;
+						if(currentIndex > 1)
+							prevIndex = currentIndex - 2;									
+						mainWebView.historyRewindRead = true;
+						mainWebView.goBackOrForward(prevIndex - currentIndex);
+					}
 				}
 				// **********************************************************************************
 				else {
