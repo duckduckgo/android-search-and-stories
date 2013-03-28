@@ -1511,7 +1511,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				WebHistoryItem prevItem = history.getItemAtIndex(currentIndex-1);
 				
 				if(prevItem.getOriginalUrl().equals(history.getCurrentItem().getOriginalUrl())) {
-					displayScreen(mDuckDuckGoContainer.currentScreen, true);
+					if(currentIndex == 1)
+						displayScreen(mDuckDuckGoContainer.currentScreen, true);
+					else
+						mainWebView.goBackOrForward(-2);
 				}
 				else if(prevItem.getOriginalUrl().equals(mDuckDuckGoContainer.lastFeedUrl)
 						&& canDoReadability(currentFeedObject)) {
