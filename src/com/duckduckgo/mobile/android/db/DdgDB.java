@@ -627,21 +627,10 @@ public class DdgDB {
 		  					  					  					  			
 		  			// ***** saved feed items *****
 		  			db.execSQL("DELETE FROM " + FEED_TABLE + "_old WHERE feed='' ");
-		  			db.execSQL("INSERT INTO " + FEED_TABLE + " SELECT *,'F' FROM " + FEED_TABLE + "_old");
+		  			db.execSQL("INSERT INTO " + FEED_TABLE + " SELECT *,'','F' FROM " + FEED_TABLE + "_old");
 		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
 		  			// ****************************
-		  			
-		  			
-		  			// clear old sharedPreferences values, types can conflict (int -> float)
-		  			Editor editor = sharedPreferences.edit();
-					editor.putInt("fontPrevProgress", DDGConstants.FONT_SEEKBAR_MID);
-					editor.remove("mainFontSize");
-					editor.remove("recentFontSize");
-					editor.remove("webViewFontSize");
-					editor.remove("ptrHeaderTextSize");
-					editor.remove("ptrHeaderSubTextSize");
-					editor.remove("leftTitleTextSize");
-		  			editor.commit();
+		  					  					  		
 		  		}
 		  		else {
 		  			dropTables(db);
