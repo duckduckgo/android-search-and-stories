@@ -84,7 +84,7 @@ public class DuckDuckGoProvider extends ContentProvider {
 		HttpResponse resp = null;
 		ByteArrayOutputStream baostream = null;
 		try {
-			resp = client.execute(new HttpGet("http://va-l3.duckduckgo.com:6767/face/suggest/?q="+query));
+			resp = client.execute(new HttpGet("https://duckduckgo.com/ac/?q="+query));
 			org.apache.http.StatusLine status = resp.getStatusLine();
 			if (status.getStatusCode() != 200) {
 			    Log.d(TAG, "HTTP error, invalid server status code: " + resp.getStatusLine());
