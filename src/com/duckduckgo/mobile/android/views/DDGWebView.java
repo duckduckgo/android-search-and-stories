@@ -1,9 +1,11 @@
 package com.duckduckgo.mobile.android.views;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebBackForwardList;
 import android.webkit.WebView;
 
 public class DDGWebView extends WebView {
@@ -70,6 +72,18 @@ public class DDGWebView extends WebView {
         }
 	    catch (Exception e) {}
 	    this.resumeTimers();
+	}
+	
+	@Override
+	public WebBackForwardList saveState(Bundle outState) {
+		outState.putBoolean("isReadable", isReadable);
+		return super.saveState(outState);
+	}
+	
+	@Override
+	public WebBackForwardList restoreState(Bundle inState) {
+		isReadable = inState.getBoolean("isReadable");
+		return super.restoreState(inState);
 	}
 	
 //	public void onDetachedFromWindow()
