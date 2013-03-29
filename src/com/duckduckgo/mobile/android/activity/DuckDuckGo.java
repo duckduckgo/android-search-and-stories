@@ -2529,7 +2529,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		savedTabHost = (TabHostExt) contentView.findViewById(android.R.id.tabhost);
 		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 		        
-		addTab(savedTabHost, getResources().getString(R.string.SavedResults), SavedResultTabFragment.class);
+		addTab(savedTabHost, getResources().getString(R.string.SavedSearches), SavedResultTabFragment.class);
 		addTab(savedTabHost, getResources().getString(R.string.SavedStories), SavedFeedTabFragment.class);
 	}
 	
