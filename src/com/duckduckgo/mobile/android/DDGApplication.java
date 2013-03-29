@@ -8,6 +8,7 @@ import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
@@ -46,6 +47,19 @@ public class DDGApplication extends Application {
 	
 	private static String DB_FOLDER_NAME = "database";
 	
+	private void onUpgrade() {
+		// clear old sharedPreferences values, types can conflict (int -> float)
+		Editor editor = sharedPreferences.edit();
+		editor.putInt("fontPrevProgress", DDGConstants.FONT_SEEKBAR_MID);
+		editor.remove("mainFontSize");
+		editor.remove("recentFontSize");
+		editor.remove("webViewFontSize");
+		editor.remove("ptrHeaderTextSize");
+		editor.remove("ptrHeaderSubTextSize");
+		editor.remove("leftTitleTextSize");
+		editor.commit();
+	}
+	
 	@Override
 	public void onCreate() {
 		ACRA.init(this);
@@ -60,6 +74,14 @@ public class DDGApplication extends Application {
 			PackageInfo pInfo;
 			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			String appVersion = pInfo.versionName;
+			int appVersionCode = pInfo.versionCode;
+			int oldVersionCode = sharedPreferences.getInt("appVersionCode", 0);
+			
+			if(oldVersionCode == 0 || oldVersionCode != appVersionCode) {
+				// upgrade
+				onUpgrade();
+			}
+			
 			DDGConstants.USER_AGENT.replace("%version", appVersion);
 		} catch (NameNotFoundException e) {
 			// at least specify new Android version
