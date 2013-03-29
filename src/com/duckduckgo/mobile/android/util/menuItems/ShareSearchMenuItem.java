@@ -27,7 +27,7 @@ public class ShareSearchMenuItem extends Item {
 		return new Action() {
 			@Override
 			public void Execute() {
-				Sharer.shareSavedSearch(context, query);
+				Sharer.shareSearch(context, query);
 			};
 		};
 	}

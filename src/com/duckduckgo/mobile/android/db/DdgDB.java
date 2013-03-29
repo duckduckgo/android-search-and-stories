@@ -616,7 +616,7 @@ public class DdgDB {
 		  			Cursor c = db.query(FEED_TABLE + "_old", new String[]{"url"}, "feed=''", null, null, null, null);
 		  			while(c.moveToNext()) {
 		  				final String url = c.getString(0);
-		  				final String query = DDGUtils.isSERP(url);
+		  				final String query = DDGUtils.getQueryIfSerp(url);
 		  				if(query == null)
 		  					continue;
 		  				contentValues.clear();

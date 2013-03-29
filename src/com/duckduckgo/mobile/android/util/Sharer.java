@@ -13,7 +13,7 @@ public class Sharer {
 	  public static void shareWebPage(Context context, String title, String url) {
 		  Intent sendIntent = new Intent();
 			sendIntent.setAction(Intent.ACTION_SEND);
-			sendIntent.putExtra(Intent.EXTRA_TEXT, "Story link via DuckDuckGo for Android: "+ url);
+			sendIntent.putExtra(Intent.EXTRA_TEXT, url + " via DuckDuckGo for Android");
 			sendIntent.putExtra(Intent.EXTRA_SUBJECT, title);
 			sendIntent.setType("text/plain");
 			context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.SharePage)));
@@ -32,15 +32,15 @@ public class Sharer {
 		return String.format(context.getResources().getString(R.string.ShareFormat), title, url);
 	}
 	  
-	  public static void shareSavedSearch(Context context, String query) {
-		  shareSavedSearch(context, query, "https://duckduckgo.com/?q=" + query);
+	  public static void shareSearch(Context context, String query) {
+		  shareSearch(context, query, "https://duckduckgo.com/?q=" + query);
 	  }
 	  
-	  public static void shareSavedSearch(Context context, String query, String url) {
+	  public static void shareSearch(Context context, String query, String url) {
 		  Intent sendIntent = new Intent();
 			sendIntent.setAction(Intent.ACTION_SEND);
-			sendIntent.putExtra(Intent.EXTRA_TEXT, "Saved search via DuckDuckGo for Android: " + url);
-			sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Saved search: " + query);
+			sendIntent.putExtra(Intent.EXTRA_TEXT, String.format("%s %s via DuckDuckGo for Android", query, url));
+			sendIntent.putExtra(Intent.EXTRA_SUBJECT, String.format("DuckDuckGo Search for \"%s\"", query));
 			sendIntent.setType("text/plain");
 			context.startActivity(Intent.createChooser(sendIntent, context.getResources().getText(R.string.ShareSearch)));
 	  }

@@ -225,4 +225,9 @@ public class FeedObject {
 	public String getHidden() {		
 		return hidden;
 	}
+
+	// TODO: is this possible or certain? Better ask Cagatay.
+	public boolean hasPossibleReadability() {
+		return getArticleUrl().length() != 0;
+	}
 }

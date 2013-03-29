@@ -29,7 +29,7 @@ public class ShareWebPageMenuItem extends Item {
 		return new Action() {
 			@Override
 			public void Execute() {
-				Sharer.shareWebPage(context, pageData, pageUrl);
+				Sharer.shareWebPage(context, pageUrl, pageUrl);
 			};
 		};
 	}

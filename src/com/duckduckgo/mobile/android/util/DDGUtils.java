@@ -427,12 +427,12 @@ public final class DDGUtils {
 	  	  
 		/**
 		 * Checks to see if URL is DuckDuckGo SERP
-		 * Returns the query if it's a SERP
+		 * Returns the query if it's a SERP, otherwise null
 		 * 
 		 * @param url
 		 * @return
 		 */
-		static public String isSERP(String url) {
+		static public String getQueryIfSerp(String url) {
 			if(!url.contains("duckduckgo.com"))
 				return null;
 			

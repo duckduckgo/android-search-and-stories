@@ -92,6 +92,9 @@ import com.duckduckgo.mobile.android.adapters.menuAdapters.HistorySearchMenuAdap
 import com.duckduckgo.mobile.android.adapters.menuAdapters.MainFeedMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.SavedFeedMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.SavedSearchMenuAdapter;
+import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewQueryMenuAdapter;
+import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewStoryMenuAdapter;
+import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewWebPageMenuAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
@@ -101,6 +104,7 @@ import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.objects.PageTypes;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.tabhost.TabHostExt;
@@ -1549,7 +1553,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		return false;
 	}
 	
-	private void reloadAction() {
+	public void reloadAction() {
 		mCleanSearchBar = false;
 //		mainWebView.resumeView();
         mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
@@ -2126,6 +2130,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						
 			boolean isPageSaved;
 			
+			final String alertTitle;
 			final String pageTitle;
 			final String pageUrl;
 			final String pageType;
@@ -2136,95 +2141,70 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			if(webViewUrl == null)
 				webViewUrl = "";
 			
-			final String query = DDGUtils.isSERP(webViewUrl);
+			final String query = DDGUtils.getQueryIfSerp(webViewUrl);
+			final PageMenuContextAdapter contextAdapter;
 			
 			// direct displaying after feed item is clicked
 			// the rest will arrive as SESSION_BROWSE
 			// so we should save this feed item with target redirected URL
-			if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED
-					|| 
-					( mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_BROWSE 
-						&& mDuckDuckGoContainer.lastFeedUrl.equals(webViewUrl) 
-					)
+			if(isStorySessionOrStoryUrl()
 			  ) {
-				pageTitle = getString(R.string.StoryOptionsTitle);
+				alertTitle = getString(R.string.StoryOptionsTitle);
 				pageUrl = currentFeedObject.getUrl();				
 				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
 				
-				if(currentFeedObject.getArticleUrl().length() != 0)
-					pageType = "FR";
+				if(currentFeedObject.hasPossibleReadability())
+					pageType = PageTypes.StoryWithReadability;
 				else
-					pageType = "F";
+					pageType = PageTypes.StoryWithoutReadability;
 				
 				mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
+				contextAdapter  = new WebViewStoryMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1,
+						currentFeedObject, isPageSaved, mainWebView.isReadable);
+				
 			}						
 			else if(query != null) {
-				pageTitle = getString(R.string.SearchOptionsTitle);
+				alertTitle = getString(R.string.SearchOptionsTitle);
 				pageUrl = webViewUrl;
-				pageType = "R";
+				pageType = PageTypes.Query;
 				isPageSaved = DDGApplication.getDB().isSavedSearch(query);
+				contextAdapter  = new WebViewQueryMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1,
+						query, isPageSaved);
 			}
 			else {
 				// in case it's not a query or feed item
-				pageTitle = getString(R.string.PageOptionsTitle);
+				alertTitle = getString(R.string.PageOptionsTitle);
 				pageUrl = webViewUrl;
-				pageType = "W";
+				pageType = PageTypes.WebPage;
 				isPageSaved = false;
+				contextAdapter = new WebViewWebPageMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, pageUrl);
 			}
 			
-			final PageMenuContextAdapter contextAdapter = new PageMenuContextAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "webview-"+pageType, isPageSaved, mainWebView.isReadable);
 			
-			AlertDialog.Builder ab=new AlertDialog.Builder(DuckDuckGo.this);
-			ab.setTitle(pageTitle);
+			AlertDialog.Builder alertDialogBuilder =new AlertDialog.Builder(DuckDuckGo.this);
+			alertDialogBuilder.setTitle(alertTitle);
 			
-			ab.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+			alertDialogBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int item) {
-					Item it = ((Item) contextAdapter.getItem(item));
-					if(it.type == Item.ItemType.SHARE) {
-						if(pageType.equals("R") && query != null) {
-							Sharer.shareSavedSearch(DuckDuckGo.this, query, pageUrl);
-						}
-						else {
-							Sharer.shareWebPage(DuckDuckGo.this, pageTitle, pageUrl);
-						}
-					}
-					else if(it.type == Item.ItemType.SAVE) {
-						if(pageType.startsWith("F")) {
-							itemSaveFeed(currentFeedObject, null);
-						}
-						else if(pageType.equals("R")){
-							itemSaveSearch(query);
-						}
-						syncAdapters();
-					}
-					else if(it.type == Item.ItemType.UNSAVE) {
-						long delHistory = 0;
-						if(pageType.startsWith("F")) {
-							delHistory = DDGApplication.getDB().makeItemHidden(currentFeedObject.getId());
-						}
-						else if(pageType.equals("R") && query != null){
-							delHistory = DDGApplication.getDB().deleteSavedSearch(query);
-						}
-						if(delHistory != 0) {							
-							syncAdapters();
-						}	
-					}
-					else if(it.type == Item.ItemType.EXTERNAL) {
-    	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(pageUrl));
-    	            	startActivity(browserIntent);
-					}
-					else if(it.type == Item.ItemType.REFRESH) {
-						reloadAction();
-					}
-					else if(it.type == Item.ItemType.READABILITY_ON && pageType.equals("FR")) {
-						new ReadableFeedTask(mReadableListener, currentFeedObject).execute();
-					}	
-					else if(it.type == Item.ItemType.READABILITY_OFF && pageType.equals("FR")) {
-						showWebUrl(pageUrl);
-					}
+					Item clickedItem = ((Item) contextAdapter.getItem(item));
+					clickedItem.ActionToExecute.Execute();
 				}
+
+				
 			});
-			ab.show();
+			alertDialogBuilder.show();
+	}
+	
+	public void launchReadableFeedTask(FeedObject feedObject) {
+		new ReadableFeedTask(mReadableListener, feedObject).execute();
+	}
+
+	private boolean isStorySessionOrStoryUrl() {
+		return mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED
+				|| 
+				( mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_BROWSE 
+					&& mDuckDuckGoContainer.lastFeedUrl.equals(mainWebView.getOriginalUrl()) 
+				);
 	}
 
 	@Override
