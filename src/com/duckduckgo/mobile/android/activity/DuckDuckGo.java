@@ -1734,10 +1734,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 	}
 	
-	public void showFeed(FeedObject feedObject) {	
-		if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW)
-			displayWebView();
-		
+	public void showFeed(FeedObject feedObject) {
 		if(!savedState) {
 			if(sharedPreferences.getBoolean("readablePref", false)
 					&& !mDuckDuckGoContainer.forceOriginalFormat
