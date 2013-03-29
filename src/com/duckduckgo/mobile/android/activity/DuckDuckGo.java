@@ -1736,7 +1736,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	public void showFeed(FeedObject feedObject) {
 		if(!savedState) {
-			if(sharedPreferences.getBoolean("readablePref", false)
+			if(!DDGControlVar.alwaysUseExternalBrowser
+					&& sharedPreferences.getBoolean("readablePref", false)
 					&& !mDuckDuckGoContainer.forceOriginalFormat
 					&& feedObject.getArticleUrl().length() != 0) {
 				
