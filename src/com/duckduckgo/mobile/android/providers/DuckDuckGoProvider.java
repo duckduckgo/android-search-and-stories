@@ -48,7 +48,7 @@ public class DuckDuckGoProvider extends ContentProvider {
             return null;
         }
 /*
-		final String url = "http://va-l3.duckduckgo.com:6767/face/suggest/?q="+query;
+		final String url = "https://duckduckgo.com/ac/?q="+query;
 		HttpClient client = new HttpClient();
 		HttpMethod get = new GetMethod(url);
 		int result;
