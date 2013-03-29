@@ -104,7 +104,7 @@ public class DDGApplication extends Application {
 		
 		String strReadArticles = sharedPreferences.getString("readarticles", null);
 		if(strReadArticles != null){
-			for(String strId : strReadArticles.split(".")){
+			for(String strId : strReadArticles.split("-")){
 				if(strId != null && strId.length() != 0){
 					DDGControlVar.readArticles.add(strId);
 				}
