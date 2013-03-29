@@ -28,7 +28,6 @@ public class WebViewQueryMenuAdapter extends PageMenuContextAdapter {
 	}
 	
 	public void addMenuItems() {
-		// TODO: shouldn't we check if this has actually been saved?
 		add(new ShareSearchMenuItem(context, query));
 		add(new SearchExternalMenuItem(context, query));
 		add(new ReloadMenuItem(context));
