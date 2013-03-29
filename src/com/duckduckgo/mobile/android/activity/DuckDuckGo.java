@@ -1443,6 +1443,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				showKeyboard(searchField);
 			}
 			else if(mDuckDuckGoContainer.webviewShowing){
+				shareButton.setVisibility(View.VISIBLE);
 				viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 			}
 		
