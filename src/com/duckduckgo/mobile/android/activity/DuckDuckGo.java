@@ -1656,10 +1656,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void searchExternal(String term) {
 		String url;
 		if(DDGControlVar.regionString == "wt-wt"){	// default
-			url = DDGConstants.SEARCH_URL + URLEncoder.encode(term);
+			url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term);
 		}
 		else {
-			url = DDGConstants.SEARCH_URL + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
+			url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
 		}
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
     	startActivity(browserIntent);
