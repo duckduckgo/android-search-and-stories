@@ -1656,10 +1656,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void searchExternal(String term) {
 		String url;
 		if(DDGControlVar.regionString == "wt-wt"){	// default
-			url = DDGConstants.SEARCH_URL + URLEncoder.encode(term);
+			url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term);
 		}
 		else {
-			url = DDGConstants.SEARCH_URL + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
+			url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
 		}
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
     	startActivity(browserIntent);
@@ -2529,7 +2529,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		savedTabHost = (TabHostExt) contentView.findViewById(android.R.id.tabhost);
 		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 		        
-		addTab(savedTabHost, getResources().getString(R.string.SavedResults), SavedResultTabFragment.class);
+		addTab(savedTabHost, getResources().getString(R.string.SavedSearches), SavedResultTabFragment.class);
 		addTab(savedTabHost, getResources().getString(R.string.SavedStories), SavedFeedTabFragment.class);
 	}
 	
