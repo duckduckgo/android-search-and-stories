@@ -1145,7 +1145,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					fontSizeSeekBar.setExtraText(getResources().getString(R.string.NoChange));
 				}
 				else if(progress == DDGConstants.FONT_SEEKBAR_MID) {
-					fontSizeSeekBar.setExtraText(getResources().getString(R.string.Defaults));
+					fontSizeSeekBar.setExtraText(getResources().getString(R.string.Default));
 				}
 				else if(progress > DDGConstants.FONT_SEEKBAR_MID) {
 					fontSizeSeekBar.setExtraText("+" + (progress-DDGConstants.FONT_SEEKBAR_MID));
