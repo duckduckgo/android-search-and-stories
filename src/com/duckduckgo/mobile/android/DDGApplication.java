@@ -47,7 +47,13 @@ public class DDGApplication extends Application {
 	
 	private static String DB_FOLDER_NAME = "database";
 	
-	private void onUpgrade() {
+	/**
+	 * Changes after application upgrade
+	 * Also records current app version code to "appVersionCode" sharedPreferences 
+	 * 
+	 * @param appVersionCode
+	 */
+	private void onUpgrade(int appVersionCode) {
 		// clear old sharedPreferences values, types can conflict (int -> float)
 		Editor editor = sharedPreferences.edit();
 		editor.putInt("fontPrevProgress", DDGConstants.FONT_SEEKBAR_MID);
@@ -57,6 +63,7 @@ public class DDGApplication extends Application {
 		editor.remove("ptrHeaderTextSize");
 		editor.remove("ptrHeaderSubTextSize");
 		editor.remove("leftTitleTextSize");
+		editor.putInt("appVersionCode", appVersionCode);
 		editor.commit();
 	}
 	
@@ -79,7 +86,7 @@ public class DDGApplication extends Application {
 			
 			if(oldVersionCode == 0 || oldVersionCode != appVersionCode) {
 				// upgrade
-				onUpgrade();
+				onUpgrade(appVersionCode);
 			}
 			
 			DDGConstants.USER_AGENT.replace("%version", appVersion);
