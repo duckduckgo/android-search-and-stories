@@ -39,8 +39,12 @@ public class HistoryFeedMenuAdapter extends PageMenuContextAdapter {
 	public void addItems() {
 		FeedObject feedObject = new FeedObject(historyObject.getFeedId());
 		add(new ShareFeedMenuItem(context, historyObject.getData(), historyObject.getUrl()));
-		add(new SaveStoryMenuItem(context, feedObject));
-		add(new UnSaveStoryMenuItem(context, historyObject.getFeedId()));
+		if (feedObject.isSaved()) {
+			add(new UnSaveStoryMenuItem(context, historyObject.getFeedId()));
+		}
+		else {
+			add(new SaveStoryMenuItem(context, feedObject));
+		}
 		add(new DeleteStoryInHistoryMenuItem(context, historyObject.getFeedId()));
 		add(new SendToExternalBrowserMenuItem(context, historyObject.getUrl()));
 	}
