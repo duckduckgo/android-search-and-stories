@@ -24,6 +24,7 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
@@ -65,7 +66,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 			// main, preference-based filter
 			Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
 
-			if(sharedPreferences.contains("sourceset_size")){
+			if(PreferencesManager.containsSourcesetSize()){
 				if(!sourceSet.isEmpty()) {
 					String paramString = "";
 					for(String s : sourceSet){

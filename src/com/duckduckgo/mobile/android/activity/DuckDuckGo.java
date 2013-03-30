@@ -118,6 +118,7 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DDGViewPager;
 import com.duckduckgo.mobile.android.util.Item;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
@@ -452,7 +453,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         
         sharedPreferences = DDGApplication.getSharedPreferences();
         
-        String themeName = sharedPreferences.getString("themePref", "DDGDark");
+        String themeName = PreferencesManager.getThemeName();
 		int themeId = getResources().getIdentifier(themeName, "style", getPackageName());
 		if(themeId != 0) {
 			setTheme(themeId);
@@ -472,7 +473,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         if(savedInstanceState != null)
         	savedState = true;
         
-        DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean("turnOffAutocompletePref", false);
+        DDGControlVar.isAutocompleteActive = !PreferencesManager.getTurnOffAutocomplete();
                
         //set caching task to run after at least a news feed item loads
         // cache prev/next 3 images
@@ -585,7 +586,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	getTheme().resolveAttribute(R.attr.leftButtonTextSize, tmpTypedValue, true);
     	// XXX getDimension returns in PIXELS !
     	float defLeftTitleTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
-    	DDGControlVar.leftTitleTextSize = sharedPreferences.getFloat("leftTitleTextSize", defLeftTitleTextSize);
+    	DDGControlVar.leftTitleTextSize = PreferencesManager.getLeftTitleTextSize(defLeftTitleTextSize);
     	
     	leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
     	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
@@ -684,7 +685,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if(sharedPreferences.getBoolean("directQueryPref", true)){
+				if(PreferencesManager.getDirectQuery()){
 					//Hide the keyboard and perform a search
 					hideKeyboard(searchField);
 					searchField.dismissDropDown();
@@ -767,8 +768,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         
         
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) contentView.findViewById(R.id.mainFeedItems);
-		DDGControlVar.ptrHeaderSize = sharedPreferences.getInt("ptrHeaderTextSize", mPullRefreshFeedView.getHeaderTextSize());
-		DDGControlVar.ptrSubHeaderSize = sharedPreferences.getInt("ptrHeaderSubTextSize", mPullRefreshFeedView.getHeaderSubTextSize());
+		DDGControlVar.ptrHeaderSize = PreferencesManager.getPtrHeaderTextSize(mPullRefreshFeedView.getHeaderTextSize());
+		DDGControlVar.ptrSubHeaderSize = PreferencesManager.getPtrHeaderSubTextSize(mPullRefreshFeedView.getHeaderSubTextSize());
 		
 		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
 		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
@@ -862,7 +863,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         
         // read and configure web view font size
         if(DDGControlVar.webViewTextSize == -1) {
-        	DDGControlVar.webViewTextSize = sharedPreferences.getInt("webViewFontSize", -1);
+        	DDGControlVar.webViewTextSize = PreferencesManager.getWebviewFontSize();
         }
         
         if(DDGControlVar.webViewTextSize != -1) {
@@ -1114,11 +1115,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         
     	getTheme().resolveAttribute(R.attr.mainTextSize, tmpTypedValue, true);
     	float defMainTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
-    	DDGControlVar.mainTextSize = sharedPreferences.getFloat("mainFontSize", defMainTextSize);
+    	DDGControlVar.mainTextSize = PreferencesManager.getMainFontSize(defMainTextSize);
     	
     	getTheme().resolveAttribute(R.attr.recentTextSize, tmpTypedValue, true);
     	float defRecentTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
-    	DDGControlVar.recentTextSize = sharedPreferences.getFloat("recentFontSize", defRecentTextSize);
+    	DDGControlVar.recentTextSize = PreferencesManager.getRecentFontSize(defRecentTextSize);
         
         fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
         fontSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -1669,7 +1670,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_SEARCH;
 		
 		// save recent query if "record history" is enabled
-		if(sharedPreferences.getBoolean("recordHistoryPref", true)){
+		if(PreferencesManager.getRecordHistory()){
 				Log.v(TAG, "Search: " + term);		
 				DDGApplication.getDB().insertRecentSearch(term);
 				syncHistoryAdapters();
@@ -1738,7 +1739,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void showFeed(FeedObject feedObject) {
 		if(!savedState) {
 			if(!DDGControlVar.alwaysUseExternalBrowser
-					&& sharedPreferences.getBoolean("readablePref", true)
+					&& PreferencesManager.getReadable()
 					&& !mDuckDuckGoContainer.forceOriginalFormat
 					&& feedObject.getArticleUrl().length() != 0) {
 				
@@ -1760,7 +1761,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	private boolean canDoReadability(FeedObject feedObject) {
-		return sharedPreferences.getBoolean("readablePref", true) 
+		return PreferencesManager.getReadable() 
 				&& !mDuckDuckGoContainer.forceOriginalFormat
 				&& feedObject.getArticleUrl().length() != 0;
 	}
@@ -1860,7 +1861,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
             	@Override
             	public void onPreferenceChange(String key) {
             		if(key.equals("themePref")){
-            			String themeName = sharedPreferences.getString(key, "DDGDark");
+            			String themeName = PreferencesManager.getThemeName();
             			int themeId = getResources().getIdentifier(themeName, "style", getPackageName());
             			if(themeId != 0) {
             				Intent intent = new Intent(getApplicationContext(), DuckDuckGo.class);
@@ -2374,7 +2375,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private void keepFeedUpdated()
 	{
 		if (!DDGControlVar.hasUpdatedFeed) {
-			if(sharedPreferences.contains("sourceset_size") && sharedPreferences.getInt("sourceset_size", 0) == 0) {
+			if(PreferencesManager.containsSourcesetSize() && PreferencesManager.getSourcesetSize() == 0) {
 				// respect user choice of empty source list: show nothing
 				onFeedRetrieved(new ArrayList<FeedObject>(), true);
 			}
@@ -2496,7 +2497,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	 * Displays "not recording" indicator in left-menu if Save Searches option is disabled  
 	 */
 	public void displayRecordHistoryDisabled() {
-		if(sharedPreferences.getBoolean("recordHistoryPref", true)) {
+		if(PreferencesManager.getRecordHistory()) {
 			// user changed the setting, got it
     		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) != null) {
         		leftRecentView.removeHeaderView(leftRecentHeaderView);
