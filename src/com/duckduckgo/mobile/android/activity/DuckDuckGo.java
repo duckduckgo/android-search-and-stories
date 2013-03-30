@@ -1194,16 +1194,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				DDGControlVar.fontPrevProgress = DDGControlVar.fontProgress;
 				fontSizeSeekBar.setExtraText(null);
 				
-				// save adjusted text size
-				Editor editor = sharedPreferences.edit();
-				editor.putInt("fontPrevProgress", DDGControlVar.fontPrevProgress);
-				editor.putFloat("mainFontSize", DDGControlVar.mainTextSize);
-				editor.putFloat("recentFontSize", DDGControlVar.recentTextSize);
-				editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
-				editor.putInt("ptrHeaderTextSize", DDGControlVar.ptrHeaderSize);
-				editor.putInt("ptrHeaderSubTextSize", DDGControlVar.ptrSubHeaderSize);
-				editor.putFloat("leftTitleTextSize", DDGControlVar.leftTitleTextSize);
-				editor.commit();
+				PreferencesManager.saveAdjustedTextSizes();
 				
 				DDGControlVar.prevMainTextSize = 0;
 				DDGControlVar.prevRecentTextSize = 0;
@@ -1452,6 +1443,16 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 	}
 
+	private void saveReadArticles() {
+		String combined = "";
+		for(String id : DDGControlVar.readArticles){
+			combined += id + "-";
+		}
+		if(combined.length() != 0){
+			PreferencesManager.saveReadArticles(combined);
+		}
+	}
+
 	@Override
 	public void onPause() {
 		super.onPause();
@@ -1460,15 +1461,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			mDuckDuckGoContainer.mainFeedTask = null;
 		}
 		
-		String combined = "";
-		for(String id : DDGControlVar.readArticles){
-			combined += id + "-";
-		}
-		if(combined.length() != 0){
-			Editor editor = sharedPreferences.edit();
-			editor.putString("readarticles", combined);
-			editor.commit();
-		}
+		saveReadArticles();
 		
 		// XXX keep these for low memory conditions
 		saveAppState(sharedPreferences);
@@ -1476,16 +1469,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	@Override
 	protected void onStop() {
-		String combined = "";
-		for(String id : DDGControlVar.readArticles){
-			combined += id + "-";
-		}
-		if(combined.length() != 0){
-			Editor editor = sharedPreferences.edit();
-			editor.putString("readarticles", combined);
-			editor.commit();
-		}
-				
+		saveReadArticles();
 		super.onStop();
 	}
 	
