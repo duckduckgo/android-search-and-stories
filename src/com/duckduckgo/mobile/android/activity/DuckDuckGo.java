@@ -1738,7 +1738,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void showFeed(FeedObject feedObject) {
 		if(!savedState) {
 			if(!DDGControlVar.alwaysUseExternalBrowser
-					&& sharedPreferences.getBoolean("readablePref", false)
+					&& sharedPreferences.getBoolean("readablePref", true)
 					&& !mDuckDuckGoContainer.forceOriginalFormat
 					&& feedObject.getArticleUrl().length() != 0) {
 				
@@ -1760,7 +1760,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	private boolean canDoReadability(FeedObject feedObject) {
-		return sharedPreferences.getBoolean("readablePref", false) 
+		return sharedPreferences.getBoolean("readablePref", true) 
 				&& !mDuckDuckGoContainer.forceOriginalFormat
 				&& feedObject.getArticleUrl().length() != 0;
 	}

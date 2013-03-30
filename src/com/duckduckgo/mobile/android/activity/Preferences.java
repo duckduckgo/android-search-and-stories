@@ -14,18 +14,11 @@
 
 package com.duckduckgo.mobile.android.activity;
 
-import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
-import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
-import com.duckduckgo.mobile.android.util.SCREEN;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
@@ -35,6 +28,12 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+
+import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	
