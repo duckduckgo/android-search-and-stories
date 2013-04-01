@@ -538,11 +538,9 @@ public class DdgDB {
 		  		db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
 		  		db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE);
 	      	}
-
-		    @Override
-		  	public void onCreate(SQLiteDatabase db) {
-		  			  
-		  			  db.execSQL("CREATE TABLE " + FEED_TABLE + "(" 
+	      	
+	      	private void createFeedTable(SQLiteDatabase db) {
+	      		db.execSQL("CREATE TABLE " + FEED_TABLE + "(" 
 		  			    +"_id VARCHAR(300) UNIQUE, "
 		  			    +"title VARCHAR(300), "
 		  			    +"description VARCHAR(300), "
@@ -560,25 +558,38 @@ public class DdgDB {
 		  			  
 		  			  db.execSQL("CREATE INDEX idx_id ON " + FEED_TABLE + " (_id) ");
 		  			  db.execSQL("CREATE INDEX idx_idtype ON " + FEED_TABLE + " (_id, type) ");
-		  			  
-		  			db.execSQL("CREATE VIRTUAL TABLE " + APP_TABLE + " USING FTS3 (" 
-			  			    +"title VARCHAR(300), "
-			  			    +"package VARCHAR(300) "
-			  			    +")"
-			  			    );
-		  			
-		  			db.execSQL("CREATE TABLE " + HISTORY_TABLE + "("
-		  					+"_id INTEGER PRIMARY KEY, "
-			  			    +"type VARCHAR(300), "
-			  			    +"data VARCHAR(300), "
-			  			    +"url VARCHAR(300), "
-			  			    +"extraType VARCHAR(300), "
-			  			    +"feedId VARCHAR(300)"
-			  			    +")"
-			  			    );
-		  			
-		  			  db.execSQL("CREATE TABLE " + SAVED_SEARCH_TABLE + "(_id INTEGER PRIMARY KEY, query VARCHAR(300) UNIQUE)");  
+	      	}
+	      	
+	      	private void createAppTable(SQLiteDatabase db) {
+	      		db.execSQL("CREATE VIRTUAL TABLE " + APP_TABLE + " USING FTS3 (" 
+		  			    +"title VARCHAR(300), "
+		  			    +"package VARCHAR(300) "
+		  			    +")"
+		  			    );
+	      	}
+	      	
+	      	private void createHistoryTable(SQLiteDatabase db) {
+	      		db.execSQL("CREATE TABLE " + HISTORY_TABLE + "("
+	  					+"_id INTEGER PRIMARY KEY, "
+		  			    +"type VARCHAR(300), "
+		  			    +"data VARCHAR(300), "
+		  			    +"url VARCHAR(300), "
+		  			    +"extraType VARCHAR(300), "
+		  			    +"feedId VARCHAR(300)"
+		  			    +")"
+		  			    );
+	      	}
+	      	
+	      	private void createSavedSearchTable(SQLiteDatabase db) {
+	  			  db.execSQL("CREATE TABLE " + SAVED_SEARCH_TABLE + "(_id INTEGER PRIMARY KEY, query VARCHAR(300) UNIQUE)");  
+	      	}
 
+		    @Override
+		  	public void onCreate(SQLiteDatabase db) {		  			  
+		  			createFeedTable(db);	
+		  			createAppTable(db);
+		  			createHistoryTable(db);		  			
+		  			createSavedSearchTable(db); 
 		  	}
 	
 		  	@Override
@@ -630,6 +641,22 @@ public class DdgDB {
 		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
 		  			// ****************************
 		  					  					  		
+		  		}
+		  		else if(oldVersion == 12 && newVersion >= 14) {		  			
+		  			// shape old FEED_TABLE like the new, and rename it as FEED_TABLE_old
+		  			db.execSQL("DROP INDEX IF EXISTS idx_id");
+		      		db.execSQL("DROP INDEX IF EXISTS idx_idtype");
+		  			db.execSQL("ALTER TABLE " + FEED_TABLE + " RENAME TO " + FEED_TABLE + "_old");
+		  			
+		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
+		  			createFeedTable(db);
+		  			
+		  			// ***** saved feed items *****
+		  			db.execSQL("DELETE FROM " + FEED_TABLE + "_old WHERE feed='' ");
+		  			db.execSQL("INSERT INTO " + FEED_TABLE + " SELECT _id, title, description, feed, url, imageurl," +
+		  					"favicon, timestamp, category, type, '' AS articleurl, hidden FROM " + FEED_TABLE + "_old");
+		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
+		  			// ****************************
 		  		}
 		  		else {
 		  			dropTables(db);
