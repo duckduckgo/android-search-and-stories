@@ -8,12 +8,25 @@ import android.content.SharedPreferences.Editor;
 public class PreferencesManager {
 	
 	/* Settings */
+	
 	public static String getThemeName() {
 		return DDGApplication.getSharedPreferences().getString("themePref", "DDGDark");
 	}
 	
+	public static String getStartScreen() {
+		return DDGApplication.getSharedPreferences().getString("startScreenPref", "0");
+	}
+	
+	public static String getRegion() {
+		return DDGApplication.getSharedPreferences().getString("regionPref", "wt-wt");
+	}
+	
 	public static boolean getReadable() {
 		return DDGApplication.getSharedPreferences().getBoolean("readablePref", true);
+	}
+	
+	public static boolean getExternalBrowser() {
+		return DDGApplication.getSharedPreferences().getBoolean("externalBrowserPref", false);
 	}
 	
 	public static boolean getTurnOffAutocomplete() {
@@ -34,6 +47,10 @@ public class PreferencesManager {
 	
 	public static int getSourcesetSize() {
 		return DDGApplication.getSharedPreferences().getInt("sourceset_size", 0);
+	}
+	
+	public static int getFontPrevProgress(int defaultValue) {
+		return DDGApplication.getSharedPreferences().getInt("fontPrevProgress", defaultValue);
 	}
 	
 	/* Text sizes */
@@ -61,6 +78,16 @@ public class PreferencesManager {
 		return DDGApplication.getSharedPreferences().getInt("ptrHeaderSubTextSize", defaultValue);
 	}
 	
+	public static int getAppVersionCode() {
+		return DDGApplication.getSharedPreferences().getInt("appVersionCode", 0);
+	}
+	
+	public static void saveAppVersionCode(int appVersionCode) {
+		Editor editor = DDGApplication.getSharedPreferences().edit();
+		editor.putInt("appVersionCode", appVersionCode);
+		editor.commit();
+	}
+	
 	public static void saveAdjustedTextSizes() {
 		Editor editor = DDGApplication.getSharedPreferences().edit();
 		editor.putInt("fontPrevProgress", DDGControlVar.fontPrevProgress);
@@ -70,6 +97,18 @@ public class PreferencesManager {
 		editor.putInt("ptrHeaderTextSize", DDGControlVar.ptrHeaderSize);
 		editor.putInt("ptrHeaderSubTextSize", DDGControlVar.ptrSubHeaderSize);
 		editor.putFloat("leftTitleTextSize", DDGControlVar.leftTitleTextSize);
+		editor.commit();
+	}
+	
+	public static void clearValues() {
+		Editor editor = DDGApplication.getSharedPreferences().edit();
+		editor.putInt("fontPrevProgress", DDGConstants.FONT_SEEKBAR_MID);
+		editor.remove("mainFontSize");
+		editor.remove("recentFontSize");
+		editor.remove("webViewFontSize");
+		editor.remove("ptrHeaderTextSize");
+		editor.remove("ptrHeaderSubTextSize");
+		editor.remove("leftTitleTextSize");
 		editor.commit();
 	}
 	
@@ -91,6 +130,11 @@ public class PreferencesManager {
             DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean(key, false);
         }
     }
+    
+    /* Collections */
+    public static String getReadArticles() {
+		return DDGApplication.getSharedPreferences().getString("readarticles", null);
+	}
     
     public static void saveReadArticles(String combinedArticles) {
     	Editor editor = DDGApplication.getSharedPreferences().edit();

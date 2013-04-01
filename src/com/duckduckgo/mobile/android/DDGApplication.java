@@ -8,7 +8,6 @@ import org.acra.annotation.ReportsCrashes;
 
 import android.app.Application;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,6 +23,7 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 
 @ReportsCrashes(formKey="",
@@ -55,16 +55,8 @@ public class DDGApplication extends Application {
 	 */
 	private void onUpgrade(int appVersionCode) {
 		// clear old sharedPreferences values, types can conflict (int -> float)
-		Editor editor = sharedPreferences.edit();
-		editor.putInt("fontPrevProgress", DDGConstants.FONT_SEEKBAR_MID);
-		editor.remove("mainFontSize");
-		editor.remove("recentFontSize");
-		editor.remove("webViewFontSize");
-		editor.remove("ptrHeaderTextSize");
-		editor.remove("ptrHeaderSubTextSize");
-		editor.remove("leftTitleTextSize");
-		editor.putInt("appVersionCode", appVersionCode);
-		editor.commit();
+		PreferencesManager.clearValues();
+		PreferencesManager.saveAppVersionCode(appVersionCode);
 	}
 	
 	@Override
@@ -82,7 +74,7 @@ public class DDGApplication extends Application {
 			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
 			String appVersion = pInfo.versionName;
 			int appVersionCode = pInfo.versionCode;
-			int oldVersionCode = sharedPreferences.getInt("appVersionCode", 0);
+			int oldVersionCode = PreferencesManager.getAppVersionCode();
 			
 			if(oldVersionCode == 0 || oldVersionCode != appVersionCode) {
 				// upgrade
@@ -101,15 +93,15 @@ public class DDGApplication extends Application {
 		DDGConstants.TTF_ROBOTO_BOLD = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Bold.ttf");		
 		DDGConstants.TTF_ROBOTO_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Medium.ttf");	
 		
-		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString("startScreenPref", "0")));
-		DDGControlVar.regionString = sharedPreferences.getString("regionPref", "wt-wt");
+		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(PreferencesManager.getStartScreen()));
+		DDGControlVar.regionString = PreferencesManager.getRegion();
 		DDGControlVar.useDefaultSources = !DDGUtils.existsSet(sharedPreferences, "sourceset");
 		DDGControlVar.defaultSourceSet = DDGUtils.loadSet(sharedPreferences, "defaultset");
-		DDGControlVar.alwaysUseExternalBrowser = sharedPreferences.getBoolean("externalBrowserPref", false);
-		DDGControlVar.fontPrevProgress = sharedPreferences.getInt("fontPrevProgress", DDGConstants.FONT_SEEKBAR_MID);
+		DDGControlVar.alwaysUseExternalBrowser = PreferencesManager.getExternalBrowser();
+		DDGControlVar.fontPrevProgress = PreferencesManager.getFontPrevProgress(DDGConstants.FONT_SEEKBAR_MID);
 		DDGControlVar.fontProgress = DDGControlVar.fontPrevProgress;
 		
-		String strReadArticles = sharedPreferences.getString("readarticles", null);
+		String strReadArticles = PreferencesManager.getReadArticles();
 		if(strReadArticles != null){
 			for(String strId : strReadArticles.split("-")){
 				if(strId != null && strId.length() != 0){
