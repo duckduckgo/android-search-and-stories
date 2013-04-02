@@ -12,14 +12,12 @@
                   android:layout_height="fill_parent"
                   android:divider="@android:color/white"
                   android:dividerHeight="1dp"
- 
                   android:fadingEdge="none"
         		  android:fastScrollEnabled="false"
         		  android:footerDividersEnabled="false"
         		  android:headerDividersEnabled="false"
         		  android:smoothScrollbar="true"
-        		  
-                  android:id="@+id/savedFeedItems">
+                  android:id="@android:id/list">
             
 	</com.duckduckgo.mobile.android.views.MainFeedListView>
 
