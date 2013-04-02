@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#F0FFFFFF"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    
+    <ImageView android:src="@drawable/icon_close" 
+        android:id="@+id/closeWelcomeBut"
+        android:layout_width="30dp"
+    	android:layout_height="30dp"
+    	android:layout_gravity="top|right"
+    	android:paddingRight="15dp"
+    	android:paddingTop="15dp"
+    	android:scaleType="centerInside"/>
+    
+    <ImageView android:src="@drawable/ddg_red_logo" 
+        android:layout_width="230dp"
+    	android:layout_height="230dp"
+    	android:paddingTop="60dp"
+    	android:paddingBottom="10dp"
+    	android:layout_gravity="center_horizontal"
+    	android:scaleType="centerInside"/>
+    
+    <TextView 
+        android:text="Introducing"
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:textSize="30sp"
+    	android:textColor="#3a3e46"
+    	android:paddingBottom="20dp"
+    	android:layout_gravity="center_horizontal"/>
+    
+    <TextView 
+        android:text="DuckDuckGo Search &amp; Stories"
+        android:textSize="22sp"
+        android:textColor="#585b61"
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:paddingBottom="20dp"
+    	android:layout_gravity="center_horizontal"/>
+    
+    
+    <TextView 
+        android:text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat."
+        android:textSize="18sp"
+        android:textColor="#b8bfcc"
+        android:layout_width="wrap_content"
+    	android:layout_height="wrap_content"
+    	android:paddingBottom="35dp"
+    	android:paddingLeft="20dp"
+    	android:paddingRight="20dp"
+    	android:layout_gravity="center_horizontal"
+    	android:gravity="center_horizontal"/>
+    
+    <Button android:background="@drawable/btn_get_started" 
+        android:layout_width="202dp"
+    	android:layout_height="50dp"
+    	android:textColor="#FFF"
+    	android:text="Get Started"
+    	android:layout_gravity="center_horizontal"
+    	android:scaleType="centerInside"/>
+    
+</LinearLayout>

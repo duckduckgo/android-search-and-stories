@@ -69,6 +69,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -179,6 +180,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	// font scaling
 	private LinearLayout fontSizeLayout = null;
+	
+	// welcome screen
+	private LinearLayout welcomeScreenLayout = null;
 	
 	// notification for "Save Recent Searches" feature awareness
 	private View leftRecentHeaderView = null;
@@ -536,9 +540,21 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	// always refresh on start
     	DDGControlVar.hasUpdatedFeed = false;
     	
+    	welcomeScreenLayout = (LinearLayout) findViewById(R.id.welcome);
+    	ImageView closeWelcomeBut = (ImageView) welcomeScreenLayout.findViewById(R.id.closeWelcomeBut);
+    	closeWelcomeBut.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {				
+				welcomeScreenLayout.setVisibility(View.GONE);	
+				viewPager.setDispatchTouch(true);
+			}
+		});
+    	
         viewPager = (DDGViewPager) findViewById(R.id.mainpager);
         viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
         viewPager.setCurrentItem(1);
+        viewPager.setDispatchTouch(false);
         
         leftMenuView = mDuckDuckGoContainer.pageAdapter.getPageView(0);
         contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);    

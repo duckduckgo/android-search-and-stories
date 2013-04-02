@@ -8,10 +8,12 @@ import android.view.MotionEvent;
 public class DDGViewPager extends ViewPager {
 
 	private boolean enabled;
+	private boolean dispatchTouch;
 	
     public DDGViewPager(Context context) {
 		super(context);
 		this.enabled = true;
+		this.dispatchTouch = true;
 	}
 
     public DDGViewPager(Context context, AttributeSet attrs) {
@@ -51,5 +53,16 @@ public class DDGViewPager extends ViewPager {
     public void switchPage() {
     	int otherItem = getCurrentItem() == 0 ? 1 : 0;
 		setCurrentItem(otherItem);
+    }
+    
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+    	if(dispatchTouch)
+    		return super.dispatchTouchEvent(ev);
+    	return false;
+    }
+    
+    public void setDispatchTouch(boolean dispatchTouch) {
+    	this.dispatchTouch = dispatchTouch;
     }
 }
