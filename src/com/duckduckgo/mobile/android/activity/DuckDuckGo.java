@@ -1655,7 +1655,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 		// save recent query if "record history" is enabled
 		if(PreferencesManager.getRecordHistory()){
-				Log.v(TAG, "Search: " + term);		
+				// Log.v(TAG, "Search: " + term);		
 				DDGApplication.getDB().insertRecentSearch(term);
 				syncHistoryAdapters();
 		}
