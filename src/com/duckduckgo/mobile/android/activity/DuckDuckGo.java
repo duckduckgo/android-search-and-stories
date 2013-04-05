@@ -876,7 +876,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         }
         
         mainWebView.setWebViewClient(new WebViewClient() {
-        	
+        	String anchorUrl = null;
+        	boolean killAnchorUrl = false;        	
+        	        	
         	private void clickedAnchorAction() {
         		mDuckDuckGoContainer.allowInHistory = true; 
     			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
@@ -884,10 +886,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         	}
         	        	        	        	
         	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
-    			// Log.i(TAG, "shouldOverrideUrl  " + url);
+    			// Log.i(TAG, "shouldOverrideUrl  " + url);        		        		
 
         		if(!savedState) {
-        			clickedAnchorAction();
+        			if(anchorUrl == null) {
+        				anchorUrl = url;
+        				clickedAnchorAction();
+        			}
         			
         			// handle mailto: and tel: links with native apps
         			if(url.startsWith("mailto:")){
@@ -925,11 +930,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
         		super.onPageStarted(view, url, favicon);
         		
+        		if(anchorUrl != null && anchorUrl.equals(url)) {
+        			killAnchorUrl = true;
+        		}
+        		        		
         		if(url.equals(mDuckDuckGoContainer.lastFeedUrl)) {
         			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
-        			
-//        			if(mainWebView.isReadable)
-//        				mainWebView.clearHistory();
         		}
     			        		
         		// Omnibar like behavior.
@@ -1017,7 +1023,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         	}
         	
         	public void onPageFinished (WebView view, String url) {
-        		super.onPageFinished(view, url);     
+        		super.onPageFinished(view, url);
+        		
+        		if(killAnchorUrl)
+        			anchorUrl = null;
         		
         		mCleanSearchBar = false;
         		
@@ -1504,6 +1513,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					return;
 				}				
 				else if(prevReadable && canDoReadability(currentFeedObject)) {
+					mainWebView.stackReadable.pop();
 					readableAction(currentFeedObject);
 				}
 				// **********************************************************************************
