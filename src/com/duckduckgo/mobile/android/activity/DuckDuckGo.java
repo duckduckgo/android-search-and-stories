@@ -401,8 +401,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 	};
 	
-	private void readableAction(FeedObject feedObject) {		
-		mainWebView.isReadable = true;
+	private void readableAction(FeedObject feedObject) {
+		if(!mainWebView.isReadable)
+			mainWebView.setIsReadable(true);
+		mDuckDuckGoContainer.allowInHistory = true;
 		mainWebView.loadDataWithBaseURL(feedObject.getUrl(), feedObject.getHtml(), "text/html", "utf8", feedObject.getUrl());
 		mDuckDuckGoContainer.forceOriginalFormat = false;
 	}
@@ -874,9 +876,19 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         }
         
         mainWebView.setWebViewClient(new WebViewClient() {
+        	
+        	private void clickedAnchorAction() {
+        		mDuckDuckGoContainer.allowInHistory = true; 
+    			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
+    			resetReadabilityState();
+        	}
         	        	        	        	
         	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
-        		if(!savedState) {        			        			
+    			// Log.i(TAG, "shouldOverrideUrl  " + url);
+
+        		if(!savedState) {
+        			clickedAnchorAction();
+        			
         			// handle mailto: and tel: links with native apps
         			if(url.startsWith("mailto:")){
                         MailTo mt = MailTo.parse(url);
@@ -911,13 +923,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         	
         	@SuppressLint("NewApi")
 			public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        		super.onPageStarted(view, url, favicon);      
+        		super.onPageStarted(view, url, favicon);
         		
         		if(url.equals(mDuckDuckGoContainer.lastFeedUrl)) {
         			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
         			
-        			if(mainWebView.isReadable)
-        				mainWebView.clearHistory();
+//        			if(mainWebView.isReadable)
+//        				mainWebView.clearHistory();
         		}
     			        		
         		// Omnibar like behavior.
@@ -1049,23 +1061,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         		}
 
         	}
-        });
-        
-        mainWebView.setExtraTouchListener(new View.OnTouchListener() {
-
-        	public boolean onTouch(View v, MotionEvent event) {
-
-        		HitTestResult hr = ((DDGWebView) v).getHitTestResult();
-        		if(hr != null && hr.getExtra() != null) {            	
-        			mDuckDuckGoContainer.allowInHistory = true; 
-        			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
-        			resetReadabilityState();
-        			Log.i(TAG, "getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
-        		}
-
-        		return false;
-        	}
-        });
+        });        
 
         
         mainWebView.setOnLongClickListener(new OnLongClickListener() {
@@ -1281,7 +1277,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 //		mainWebView.clearHistory();
 		mainWebView.clearView();
 		
-		resetReadabilityState();
+		clearReadabilityState();
 	}
 	
 	public void setSearchBarText(String text) {
@@ -1489,15 +1485,25 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		else if (mDuckDuckGoContainer.webviewShowing) {
 			if (mainWebView.canGoBack()) {
 				
-				// XXX  ****** Beware : ugly hack to avoid displaying a readability page twice ***** 
-				WebBackForwardList history = mainWebView.copyBackForwardList();
-				int currentIndex = history.getCurrentIndex();
-				WebHistoryItem prevItem = history.getItemAtIndex(currentIndex-1);				
+				// remove current readable flag from stack
+				if(mainWebView.stackReadable.size() >= 2) {
+					mainWebView.stackReadable.pop();
+				}
+				else {
+					displayScreen(mDuckDuckGoContainer.currentScreen, true);
+					return;
+				}
 				
-				String prevUrl = prevItem.getUrl();				
-				if(prevUrl != null
-						&& prevUrl.equals(mDuckDuckGoContainer.lastFeedUrl)
-						&& canDoReadability(currentFeedObject)) {									
+				boolean prevReadable = false;
+				if(mainWebView.stackReadable.peek()) {
+					prevReadable = true;
+				}
+				
+				if(prevReadable && mainWebView.isReadable) {
+					displayScreen(mDuckDuckGoContainer.currentScreen, true);
+					return;
+				}				
+				else if(prevReadable && canDoReadability(currentFeedObject)) {
 					readableAction(currentFeedObject);
 				}
 				// **********************************************************************************
@@ -1670,7 +1676,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		displayWebView();
 		
 		if(!savedState){
-			resetReadabilityState();
+			clearReadabilityState();
 			
 			if(DDGControlVar.regionString == "wt-wt"){	// default
 				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
@@ -1715,7 +1721,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			displayWebView();
 		
 		if(!savedState) {
-			resetReadabilityState();
+			clearReadabilityState();
 			
 //			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
 			mainWebView.loadUrl(url);
@@ -1732,7 +1738,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW)
 					displayWebView();
 				
-				mainWebView.isReadable = true;
 				new ReadableFeedTask(mReadableListener, feedObject).execute();
 			}
 			else {
@@ -1742,7 +1747,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	private void resetReadabilityState() {
+		mainWebView.setIsReadable(false);
+		mDuckDuckGoContainer.forceOriginalFormat = false;
+	}
+	
+	private void clearReadabilityState() {
 		mainWebView.isReadable = false;
+		mainWebView.stackReadable.clear();
 		mDuckDuckGoContainer.forceOriginalFormat = false;
 	}
 	

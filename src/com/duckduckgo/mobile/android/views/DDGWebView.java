@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android.views;
 
+import java.util.Stack;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -12,14 +14,21 @@ public class DDGWebView extends WebView {
 	
 	OnTouchListener extraTouchListener;
 	public boolean isReadable = false;
+	public Stack<Boolean> stackReadable;
 	
 	public DDGWebView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		attrSet = attrs;
+		stackReadable = new Stack<Boolean>();
 	}
 
 	public boolean is_gone=true;
 	public AttributeSet attrSet = null;
+	
+	public void setIsReadable(boolean isReadable) {
+		this.stackReadable.push(isReadable);
+		this.isReadable = isReadable;
+	}
 	
 	public void onWindowVisibilityChanged(int visibility)
 	       {super.onWindowVisibilityChanged(visibility);
@@ -43,19 +52,6 @@ public class DDGWebView extends WebView {
 	
 	public AttributeSet getAttributes() {
 		return attrSet;
-	}
-	
-	public void setExtraTouchListener(OnTouchListener listener) {
-		extraTouchListener = listener;
-	}
-	
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {            
-	    boolean consumed = super.onTouchEvent(event);
-	    if(extraTouchListener != null) {
-	    	extraTouchListener.onTouch(this, event);
-	    }
-	    return consumed;
 	}
 	
 	public void stopView() {
