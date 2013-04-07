@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.net.MailTo;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -24,7 +25,7 @@ import android.widget.Toast;
 
 public class DDGWebViewClient extends WebViewClient {
 	String anchorUrl = null;
-	boolean killAnchorUrl = false;      
+	boolean killAnchorUrl = false;      	
 	
 	DuckDuckGo activity;
 	
@@ -92,7 +93,7 @@ public class DDGWebViewClient extends WebViewClient {
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
 		
-		if(anchorUrl != null && anchorUrl.equals(url)) {
+		if(anchorUrl != null && anchorUrl.equals(url) && url.equals(view.getOriginalUrl())) {
 			killAnchorUrl = true;
 		}
 		        		
