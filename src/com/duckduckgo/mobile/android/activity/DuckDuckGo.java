@@ -392,7 +392,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			if(feed.size() != 0) {
 				currentFeedObject = feed.get(0);
 				mDuckDuckGoContainer.lastFeedUrl = currentFeedObject.getUrl();
-				readableAction(currentFeedObject);
+				mainWebView.readableAction(currentFeedObject);
 			}
 		}
 		
@@ -402,14 +402,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			
 		}
 	};
-	
-	private void readableAction(FeedObject feedObject) {
-		if(!mainWebView.isReadable)
-			mainWebView.setIsReadable(true);
-		mDuckDuckGoContainer.allowInHistory = true;
-		mainWebView.loadDataWithBaseURL(feedObject.getUrl(), feedObject.getHtml(), "text/html", "utf8", feedObject.getUrl());
-		mDuckDuckGoContainer.forceOriginalFormat = false;
-	}
     
     /**
      * save feed by object or by the feed id
@@ -513,7 +505,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
             mDuckDuckGoContainer.pageAdapter = new DDGPagerAdapter(this);
             
             mDuckDuckGoContainer.webviewShowing = false;
-            mDuckDuckGoContainer.forceOriginalFormat = false;
     		
     		mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
 //    		mDuckDuckGoContainer.reloadDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.reload);
@@ -1087,16 +1078,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 	}
 	
-	private void clearBrowserState() {		
-		mainWebView.stopLoading();
-		mDuckDuckGoContainer.allowInHistory = false;
-//		mainWebView.clearHistory();
-		mainWebView.clearView();
-		mainWebView.getWebViewClient().resetAnchorUrl();
-		
-		clearReadabilityState();
-	}
-	
 	public void setSearchBarText(String text) {
 		searchField.setFocusable(false);
 		searchField.setFocusableInTouchMode(false);
@@ -1108,7 +1089,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private void resetScreenState() {
 		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		clearSearchBar();
-		clearBrowserState();
+		mainWebView.clearBrowserState();
 	}
 	
 	private void cancelFontScaling() {
@@ -1318,7 +1299,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			}				
 			else if(prevReadable && canDoReadability(currentFeedObject)) {
 				mainWebView.stackReadable.pop();
-				readableAction(currentFeedObject);
+				mainWebView.readableAction(currentFeedObject);
 			}
 			// **********************************************************************************
 			else {
@@ -1408,7 +1389,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 //		mainWebView.resumeView();
 		
 		hideKeyboard(mainWebView);
-		clearBrowserState();
+		mainWebView.clearBrowserState();
 		savedState = false;
 		
 		mDuckDuckGoContainer.sessionType = sessionType;
@@ -1500,7 +1481,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		displayWebView();
 		
 		if(!savedState){
-			clearReadabilityState();
+			mainWebView.clearReadabilityState();
 			
 			if(DDGControlVar.regionString == "wt-wt"){	// default
 				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
@@ -1545,7 +1526,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			displayWebView();
 		
 		if(!savedState) {
-			clearReadabilityState();
+			mainWebView.clearReadabilityState();
 			
 //			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
 			mainWebView.loadUrl(url);
@@ -1556,7 +1537,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		if(!savedState) {
 			if(!DDGControlVar.alwaysUseExternalBrowser
 					&& PreferencesManager.getReadable()
-					&& !mDuckDuckGoContainer.forceOriginalFormat
+					&& !mainWebView.isOriginalRequired()
 					&& feedObject.getArticleUrl().length() != 0) {
 				
 				if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW)
@@ -1570,20 +1551,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 	}
 	
-	public void resetReadabilityState() {
-		mainWebView.setIsReadable(false);
-		mDuckDuckGoContainer.forceOriginalFormat = false;
-	}
-	
-	private void clearReadabilityState() {
-		mainWebView.isReadable = false;
-		mainWebView.stackReadable.clear();
-		mDuckDuckGoContainer.forceOriginalFormat = false;
-	}
-	
 	private boolean canDoReadability(FeedObject feedObject) {
 		return PreferencesManager.getReadable() 
-				&& !mDuckDuckGoContainer.forceOriginalFormat
+				&& !mainWebView.isOriginalRequired()
 				&& feedObject.getArticleUrl().length() != 0;
 	}
 
@@ -2055,7 +2025,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		editor.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
 		editor.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
 		editor.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
-		editor.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
+		editor.putBoolean("allowInHistory", mainWebView.allowInHistory);
 		editor.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
 		if(currentFeedObject != null) {
 			editor.putString("currentFeedObjectId", currentFeedObject.getId());
@@ -2068,7 +2038,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		bundle.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
 		bundle.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
 		bundle.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
-		bundle.putBoolean("allowInHistory", mDuckDuckGoContainer.allowInHistory);
+		bundle.putBoolean("allowInHistory", mainWebView.allowInHistory);
 		bundle.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
 		if(currentFeedObject != null) {
 			bundle.putString("currentFeedObjectId", currentFeedObject.getId());
@@ -2088,7 +2058,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			mDuckDuckGoContainer.webviewShowing = bundle.getBoolean("webviewShowing");
 			mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(bundle.getInt("currentScreen"));
 			mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(bundle.getInt("prevScreen"));
-			mDuckDuckGoContainer.allowInHistory = bundle.getBoolean("allowInHistory");
+			mainWebView.allowInHistory = bundle.getBoolean("allowInHistory");
 			mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(bundle.getInt("sessionType"));
 			feedId = bundle.getString("currentFeedObjectId");
 			
@@ -2107,7 +2077,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			mDuckDuckGoContainer.webviewShowing = prefs.getBoolean("webviewShowing", false);
 			mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(prefs.getInt("currentScreen", SCREEN.SCR_STORIES.getCode()));
 			mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(prefs.getInt("prevScreen", SCREEN.SCR_STORIES.getCode()));
-			mDuckDuckGoContainer.allowInHistory = prefs.getBoolean("allowInHistory", false);
+			mainWebView.allowInHistory = prefs.getBoolean("allowInHistory", false);
 			mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(prefs.getInt("sessionType", SESSIONTYPE.SESSION_BROWSE.getCode()));
 			feedId = prefs.getString("currentFeedObjectId", null);
 			

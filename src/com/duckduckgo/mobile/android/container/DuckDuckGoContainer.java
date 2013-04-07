@@ -34,7 +34,6 @@ public class DuckDuckGoContainer {
 	
 	public MainFeedAdapter feedAdapter = null;
 	public MainFeedTask mainFeedTask = null;
-	public boolean allowInHistory = false;
 		
 	public DownloadSourceIconTask sourceIconTask = null;
 	
@@ -43,7 +42,5 @@ public class DuckDuckGoContainer {
 	public DDGPagerAdapter pageAdapter = null;
 	
 	public SavedResultCursorAdapter savedSearchAdapter = null;
-	public SavedFeedCursorAdapter savedFeedAdapter = null;
-	
-	public boolean forceOriginalFormat = false;
+	public SavedFeedCursorAdapter savedFeedAdapter = null;	
 }

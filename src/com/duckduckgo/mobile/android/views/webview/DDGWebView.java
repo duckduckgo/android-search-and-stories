@@ -2,6 +2,8 @@ package com.duckduckgo.mobile.android.views.webview;
 
 import java.util.Stack;
 
+import com.duckduckgo.mobile.android.objects.FeedObject;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -14,6 +16,8 @@ public class DDGWebView extends WebView {
 	OnTouchListener extraTouchListener;
 	public boolean isReadable = false;
 	public Stack<Boolean> stackReadable;
+	private boolean forceOriginalFormat = false;
+	public boolean allowInHistory = false; 
 	
 	private DDGWebViewClient webViewClient = null;
 	
@@ -102,4 +106,42 @@ public class DDGWebView extends WebView {
 //	           }
 //	       }
 
+	
+	public void readableAction(FeedObject feedObject) {
+		if(!isReadable)
+			setIsReadable(true);
+		allowInHistory = true;
+		loadDataWithBaseURL(feedObject.getUrl(), feedObject.getHtml(), "text/html", "utf8", feedObject.getUrl());
+		forceOriginalFormat = false;
+	}
+	
+	/**
+	 * Whether original format of the web page is required (no readability)
+	 * @return true if original format is required, false otherwise 
+	 */
+	public boolean isOriginalRequired() {
+		return forceOriginalFormat;
+	}
+	
+	public void resetReadabilityState() {
+		setIsReadable(false);
+		forceOriginalFormat = false;
+	}
+	
+	public void clearReadabilityState() {
+		isReadable = false;
+		stackReadable.clear();
+		forceOriginalFormat = false;
+	}
+	
+	public void clearBrowserState() {		
+		stopLoading();
+		allowInHistory = false;
+//		clearHistory();
+		clearView();
+		getWebViewClient().resetAnchorUrl();
+		
+		clearReadabilityState();
+	}
+	
 }

@@ -37,10 +37,10 @@ public class DDGWebViewClient extends WebViewClient {
 		killAnchorUrl = false;
 	}
 	        	
-	private void clickedAnchorAction() {
-		activity.mDuckDuckGoContainer.allowInHistory = true; 
+	private void clickedAnchorAction(DDGWebView view) {
+		view.allowInHistory = true; 
 		activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
-		activity.resetReadabilityState();
+		view.resetReadabilityState();
 	}
 	        	        	        	
 	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
@@ -49,7 +49,7 @@ public class DDGWebViewClient extends WebViewClient {
 		if(!activity.savedState) {
 			if(anchorUrl == null) {
 				anchorUrl = url;
-				clickedAnchorAction();
+				clickedAnchorAction((DDGWebView) view);
 			}
 			
 			// handle mailto: and tel: links with native apps
@@ -189,7 +189,7 @@ public class DDGWebViewClient extends WebViewClient {
 		
 		activity.mCleanSearchBar = false;
 		
-		if(!activity.mDuckDuckGoContainer.allowInHistory) {
+		if(!((DDGWebView) view).allowInHistory) {
 			view.clearHistory();
 		}
 		

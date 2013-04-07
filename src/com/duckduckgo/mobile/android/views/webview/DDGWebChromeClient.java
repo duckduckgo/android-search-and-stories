@@ -18,7 +18,7 @@ public class DDGWebChromeClient extends WebChromeClient {
 	public void onProgressChanged(WebView view, int newProgress) {
 		super.onProgressChanged(view, newProgress);
 		
-		if(!activity.mDuckDuckGoContainer.allowInHistory) {
+		if(!((DDGWebView) view).allowInHistory) {
 			view.clearHistory();
 		}
 		
