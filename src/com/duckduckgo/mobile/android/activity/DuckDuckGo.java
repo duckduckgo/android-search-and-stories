@@ -124,7 +124,6 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.builders.OptionsDialogBuilder;
-import com.duckduckgo.mobile.android.views.DDGWebView;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelectedListener;
@@ -132,6 +131,8 @@ import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemLongClickListener;
+import com.duckduckgo.mobile.android.views.webview.DDGWebView;
+import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
@@ -144,9 +145,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public DuckDuckGoContainer mDuckDuckGoContainer;
 	
 	// keeps default User-Agent for WebView
-	private String mWebViewDefaultUA = null;
+	public String mWebViewDefaultUA = null;
 		
-	private AutoCompleteTextView searchField = null;
+	public AutoCompleteTextView searchField = null;
 	private MainFeedListView feedView = null;
 	private HistoryListView leftRecentView = null;
 	
@@ -185,7 +186,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 	private SharedPreferences sharedPreferences;
 		
-	private boolean savedState = false;
+	public boolean savedState = false;
 		
 	private final int PREFERENCES_RESULT = 0;
 	
@@ -207,7 +208,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	// keep prev progress in font seek bar, to make incremental changes available
 	SeekBarHint fontSizeSeekBar;
 	
-	boolean mCleanSearchBar = false;
+	public boolean mCleanSearchBar = false;
 	
 	AlertDialog.Builder cacheDialogBuilder;
 	
@@ -875,176 +876,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         	DDGControlVar.webViewTextSize = mainWebView.getSettings().getDefaultFontSize();
         }
         
-        mainWebView.setWebViewClient(new WebViewClient() {
-        	String anchorUrl = null;
-        	boolean killAnchorUrl = false;        	
-        	        	
-        	private void clickedAnchorAction() {
-        		mDuckDuckGoContainer.allowInHistory = true; 
-    			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
-    			resetReadabilityState();
-        	}
-        	        	        	        	
-        	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
-    			// Log.i(TAG, "shouldOverrideUrl  " + url);        		        		
-
-        		if(!savedState) {
-        			if(anchorUrl == null) {
-        				anchorUrl = url;
-        				clickedAnchorAction();
-        			}
-        			
-        			// handle mailto: and tel: links with native apps
-        			if(url.startsWith("mailto:")){
-                        MailTo mt = MailTo.parse(url);
-                        Intent i = DDGUtils.newEmailIntent(mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
-                        startActivity(i);
-                        return true;
-                    }
-        			else if(url.startsWith("tel:")){
-                        Intent i = DDGUtils.newTelIntent(url);
-                        startActivity(i);
-                        return true;
-        			}
-        			else if(url.startsWith("file:///android_asset/webkit/")){
-        				return false;
-        			}
-        			else if(!(url.startsWith("http:") || url.startsWith("https:"))) {
-        				// custom handling, there can be a related app
-        				try {
-        					Intent customIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        					startActivity(customIntent);
-        					return true;
-        				}
-        				catch(ActivityNotFoundException ae) {
-        					// no related app, inform and still try to load in browser
-        					Toast.makeText(DuckDuckGo.this, "No related app found!", Toast.LENGTH_LONG).show();
-//        					view.loadUrl(url);
-        				}
-        			}
-        		}
-        		return false;
-        	}
-        	
-        	@SuppressLint("NewApi")
-			public void onPageStarted(WebView view, String url, Bitmap favicon) {
-        		super.onPageStarted(view, url, favicon);
-        		
-        		if(anchorUrl != null && anchorUrl.equals(url)) {
-        			killAnchorUrl = true;
-        		}
-        		        		
-        		if(url.equals(mDuckDuckGoContainer.lastFeedUrl)) {
-        			mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
-        		}
-    			        		
-        		// Omnibar like behavior.
-        		if (url.contains("duckduckgo.com")) {
-        			mainWebView.getSettings().setUserAgentString(DDGConstants.USER_AGENT);
-        			
-        	        mainWebView.getSettings().setSupportZoom(true);
-        	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
-        	        mainWebView.getSettings().setBuiltInZoomControls(false);
-        	        mainWebView.getSettings().setUseWideViewPort(false);
-        	        mainWebView.getSettings().setLoadWithOverviewMode(false);
-        	        
-        	        mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
-        	        mainWebView.getSettings().setPluginsEnabled(true); 
-
-        	        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
-            	        mainWebView.getSettings().setEnableSmoothTransition(false);
-            	        mainWebView.getSettings().setDisplayZoomControls(false);
-        	        }
-        	        
-        			URL fullURL = null;
-        			try {
-						fullURL = new URL(url);
-					} catch (MalformedURLException e) {
-						e.printStackTrace();
-					}
-
-        			if (fullURL != null) {
-        				//Okay, it's a valid url, which we already knew...
-        				
-        				// disambiguations appear directly as path string
-        				String path = fullURL.getPath();
-        				
-        				String query = fullURL.getQuery();
-        				if (query != null) {
-        					//Get the actual query string now...
-        					int index = query.indexOf("q=");
-        					if (index != -1) {
-            					String text = query.substring(query.indexOf("q=") + 2);
-            					if (text.contains("&")) {
-            						text = text.substring(0, text.indexOf("&"));
-            					}
-            					String realText = URLDecoder.decode(text);
-            					setSearchBarText(realText);
-        					}
-        					else if(path != null && !path.equals("/")){
-            					String text = path.substring(path.lastIndexOf("/") + 1).replace("_", " ");
-            					setSearchBarText(text);
-            				}
-        					else {
-        						setSearchBarText(url);
-        					}
-        				}
-        				else {
-        					setSearchBarText(url);
-        				}
-        			} else {
-        				//Just in case...
-        				setSearchBarText(url);
-        			}
-        		} else {
-        			//This isn't duckduck go...
-        			mainWebView.getSettings().setUserAgentString(mWebViewDefaultUA);
-        			// This is a bit strange, but necessary to load Twitter in the app
-        			//TODO: Figure out a better way, it has something to do with JS with errors
-        			if (url.contains("twitter.com")) {
-        				mainWebView.getSettings().setUserAgentString(DDGConstants.USER_AGENT);
-        			}
-        			
-        	        mainWebView.getSettings().setSupportZoom(true);
-        	        mainWebView.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
-        	        mainWebView.getSettings().setBuiltInZoomControls(true);
-        	        mainWebView.getSettings().setUseWideViewPort(true);
-        	        mainWebView.getSettings().setLoadWithOverviewMode(true);
-        	        mainWebView.getSettings().setPluginState(WebSettings.PluginState.ON);
-        	        mainWebView.getSettings().setPluginsEnabled(true); 
-        	        
-        	        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
-            	        mainWebView.getSettings().setEnableSmoothTransition(true);
-            	        mainWebView.getSettings().setDisplayZoomControls(false);
-        	        }
-        	        
-        			setSearchBarText(url);
-        		}
-        	}
-        	
-        	public void onPageFinished (WebView view, String url) {
-        		super.onPageFinished(view, url);
-        		
-        		if(killAnchorUrl)
-        			anchorUrl = null;
-        		
-        		mCleanSearchBar = false;
-        		
-        		if(!mDuckDuckGoContainer.allowInHistory) {
-        			mainWebView.clearHistory();
-        		}
-        		
-        		if(mainWebView.getVisibility() != View.VISIBLE) {
-        			return;
-        		}
-        		
-				searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
-				
-//				// This makes a little (X) to clear the search bar.
-//				mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
-//		        searchField.setCompoundDrawables(null, null, mDuckDuckGoContainer.reloadDrawable, null);
-        	}
-        });
+        mainWebView.setWebViewClient(new DDGWebViewClient(DuckDuckGo.this));
                 
         mainWebView.setWebChromeClient(new WebChromeClient(){
         	@Override
@@ -1285,6 +1117,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		mDuckDuckGoContainer.allowInHistory = false;
 //		mainWebView.clearHistory();
 		mainWebView.clearView();
+		mainWebView.getWebViewClient().resetAnchorUrl();
 		
 		clearReadabilityState();
 	}
@@ -1485,6 +1318,43 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		super.onDestroy();
 	}
 	
+	private void webViewBackAction() {
+		mainWebView.getWebViewClient().resetAnchorUrl();
+		
+		if (mainWebView.canGoBack()) {
+			
+			// remove current readable flag from stack
+			if(mainWebView.stackReadable.size() >= 2) {
+				mainWebView.stackReadable.pop();
+			}
+			else {
+				displayScreen(mDuckDuckGoContainer.currentScreen, true);
+				return;
+			}
+			
+			boolean prevReadable = false;
+			if(mainWebView.stackReadable.peek()) {
+				prevReadable = true;
+			}
+			
+			if(prevReadable && mainWebView.isReadable) {
+				displayScreen(mDuckDuckGoContainer.currentScreen, true);
+				return;
+			}				
+			else if(prevReadable && canDoReadability(currentFeedObject)) {
+				mainWebView.stackReadable.pop();
+				readableAction(currentFeedObject);
+			}
+			// **********************************************************************************
+			else {
+				mainWebView.goBack();
+			}
+		}
+		else {
+			displayScreen(mDuckDuckGoContainer.currentScreen, true);
+		}
+	}
+	
 	@Override
 	public void onBackPressed() {
 		// close left nav if it's open
@@ -1492,38 +1362,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			viewPager.setCurrentItem(SCREEN.SCR_STORIES.getFlipOrder());
 		}
 		else if (mDuckDuckGoContainer.webviewShowing) {
-			if (mainWebView.canGoBack()) {
-				
-				// remove current readable flag from stack
-				if(mainWebView.stackReadable.size() >= 2) {
-					mainWebView.stackReadable.pop();
-				}
-				else {
-					displayScreen(mDuckDuckGoContainer.currentScreen, true);
-					return;
-				}
-				
-				boolean prevReadable = false;
-				if(mainWebView.stackReadable.peek()) {
-					prevReadable = true;
-				}
-				
-				if(prevReadable && mainWebView.isReadable) {
-					displayScreen(mDuckDuckGoContainer.currentScreen, true);
-					return;
-				}				
-				else if(prevReadable && canDoReadability(currentFeedObject)) {
-					mainWebView.stackReadable.pop();
-					readableAction(currentFeedObject);
-				}
-				// **********************************************************************************
-				else {
-					mainWebView.goBack();
-				}
-			}
-			else {
-				displayScreen(mDuckDuckGoContainer.currentScreen, true);
-			}
+			webViewBackAction();
 		}
 		else if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS){
 			// go back to where we left of
@@ -1756,7 +1595,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
 	}
 	
-	private void resetReadabilityState() {
+	public void resetReadabilityState() {
 		mainWebView.setIsReadable(false);
 		mDuckDuckGoContainer.forceOriginalFormat = false;
 	}

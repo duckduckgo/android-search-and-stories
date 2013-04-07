@@ -1,20 +1,22 @@
-package com.duckduckgo.mobile.android.views;
+package com.duckduckgo.mobile.android.views.webview;
 
 import java.util.Stack;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 public class DDGWebView extends WebView {
 	
 	OnTouchListener extraTouchListener;
 	public boolean isReadable = false;
 	public Stack<Boolean> stackReadable;
+	
+	private DDGWebViewClient webViewClient = null;
 	
 	public DDGWebView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -24,6 +26,15 @@ public class DDGWebView extends WebView {
 
 	public boolean is_gone=true;
 	public AttributeSet attrSet = null;
+	
+	public void setWebViewClient(DDGWebViewClient client) {
+		webViewClient = client;
+		super.setWebViewClient(client);
+	}
+	
+	public DDGWebViewClient getWebViewClient() {
+		return webViewClient;
+	}
 	
 	public void setIsReadable(boolean isReadable) {
 		this.stackReadable.push(isReadable);
