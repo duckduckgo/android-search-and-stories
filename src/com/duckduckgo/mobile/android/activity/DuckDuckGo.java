@@ -1525,9 +1525,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW)
 			displayWebView();
 		
-		if(!savedState) {
-			mainWebView.clearReadabilityState();
-			
+		if(!savedState) {			
 //			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
 			mainWebView.loadUrl(url);
 		}

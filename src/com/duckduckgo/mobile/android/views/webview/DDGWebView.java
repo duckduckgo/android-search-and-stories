@@ -134,12 +134,19 @@ public class DDGWebView extends WebView {
 		forceOriginalFormat = false;
 	}
 	
+	public void forceOriginal() {
+		isReadable = false;
+		stackReadable.pop();
+		stackReadable.push(false);
+		forceOriginalFormat = true;
+	}
+	
 	public void clearBrowserState() {		
 		stopLoading();
 		allowInHistory = false;
 //		clearHistory();
 		clearView();
-		getWebViewClient().resetAnchorUrl();
+		getWebViewClient().clearState();
 		
 		clearReadabilityState();
 	}

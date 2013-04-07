@@ -36,6 +36,10 @@ public class DDGWebViewClient extends WebViewClient {
 		anchorUrl = null;
 		killAnchorUrl = false;
 	}
+	
+	public void clearState() {
+		resetAnchorUrl();
+	}
 	        	
 	private void clickedAnchorAction(DDGWebView view) {
 		view.allowInHistory = true; 

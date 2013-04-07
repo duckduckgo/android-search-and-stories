@@ -21,6 +21,7 @@ public class TurnReadabilityOffMenuItem extends Item {
 		return new Action() {
 			@Override
 			public void Execute() {
+				context.mainWebView.forceOriginal();
 				context.showWebUrl(url);
 			};
 		};
