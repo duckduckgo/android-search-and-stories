@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 public class DDGWebView extends WebView {
 	

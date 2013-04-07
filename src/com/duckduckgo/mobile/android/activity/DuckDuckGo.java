@@ -131,6 +131,7 @@ import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemLongClickListener;
+import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
@@ -876,34 +877,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         	DDGControlVar.webViewTextSize = mainWebView.getSettings().getDefaultFontSize();
         }
         
-        mainWebView.setWebViewClient(new DDGWebViewClient(DuckDuckGo.this));
-                
-        mainWebView.setWebChromeClient(new WebChromeClient(){
-        	@Override
-        	public void onProgressChanged(WebView view, int newProgress) {
-        		super.onProgressChanged(view, newProgress);
-        		
-        		if(!mDuckDuckGoContainer.allowInHistory) {
-        			mainWebView.clearHistory();
-        		}
-        		
-        		if(mainWebView.getVisibility() != View.VISIBLE) {
-        			return;
-        		}
-        		
-        		if(newProgress == 100){
-        			searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);        			
-        		}
-        		else {
-        			if(!mCleanSearchBar) {
-        				mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
-        				searchField.setBackgroundDrawable(mDuckDuckGoContainer.progressDrawable);
-        			}
-        		}
-
-        	}
-        });        
-
+        mainWebView.setWebViewClient(new DDGWebViewClient(DuckDuckGo.this));            
+        mainWebView.setWebChromeClient(new DDGWebChromeClient(DuckDuckGo.this));
         
         mainWebView.setOnLongClickListener(new OnLongClickListener() {
 
