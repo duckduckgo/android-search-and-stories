@@ -191,7 +191,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 	private final int PREFERENCES_RESULT = 0;
 	
-	FeedObject currentFeedObject = null;
+	public FeedObject currentFeedObject = null;
 //	boolean isFeedObject = false;
 	
 	
@@ -851,6 +851,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         // Possibly also related to CSS Transforms (bug 21305)
         // http://code.google.com/p/android/issues/detail?id=21305
         mainWebView = (DDGWebView) contentView.findViewById(R.id.mainWebView);
+        mainWebView.setParentActivity(DuckDuckGo.this);
         mainWebView.getSettings().setJavaScriptEnabled(true);
         
         // get default User-Agent string for reuse later
@@ -1133,7 +1134,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	 * @param screenToDisplay Screen to display
 	 * @param clean Whether screen state (searchbar, browser etc.) states will get cleaned
 	 */
-	private void displayScreen(SCREEN screenToDisplay, boolean clean) {
+	public void displayScreen(SCREEN screenToDisplay, boolean clean) {
 			if(clean) {
 				resetScreenState();
 			}
@@ -1274,43 +1275,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		super.onDestroy();
 	}
 	
-	private void webViewBackAction() {
-		mainWebView.getWebViewClient().resetAnchorUrl();
-		
-		if (mainWebView.canGoBack()) {
-			
-			// remove current readable flag from stack
-			if(mainWebView.stackReadable.size() >= 2) {
-				mainWebView.stackReadable.pop();
-			}
-			else {
-				displayScreen(mDuckDuckGoContainer.currentScreen, true);
-				return;
-			}
-			
-			boolean prevReadable = false;
-			if(mainWebView.stackReadable.peek()) {
-				prevReadable = true;
-			}
-			
-			if(prevReadable && mainWebView.isReadable) {
-				displayScreen(mDuckDuckGoContainer.currentScreen, true);
-				return;
-			}				
-			else if(prevReadable && canDoReadability(currentFeedObject)) {
-				mainWebView.stackReadable.pop();
-				mainWebView.readableAction(currentFeedObject);
-			}
-			// **********************************************************************************
-			else {
-				mainWebView.goBack();
-			}
-		}
-		else {
-			displayScreen(mDuckDuckGoContainer.currentScreen, true);
-		}
-	}
-	
 	@Override
 	public void onBackPressed() {
 		// close left nav if it's open
@@ -1318,7 +1282,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			viewPager.setCurrentItem(SCREEN.SCR_STORIES.getFlipOrder());
 		}
 		else if (mDuckDuckGoContainer.webviewShowing) {
-			webViewBackAction();
+			mainWebView.backPressAction();
 		}
 		else if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS){
 			// go back to where we left of
@@ -1481,8 +1445,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		displayWebView();
 		
 		if(!savedState){
-			mainWebView.clearReadabilityState();
-			
 			if(DDGControlVar.regionString == "wt-wt"){	// default
 				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
 			}
@@ -1497,6 +1459,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void showHistoryObject(HistoryObject object) {
+		mainWebView.clearBrowserState();
+		
 		if(object.getType().equals("R")) {
 			searchWebTerm(object.getData());
 		}
@@ -1533,6 +1497,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	public void showFeed(FeedObject feedObject) {
 		if(!savedState) {
+			
 			if(!DDGControlVar.alwaysUseExternalBrowser
 					&& PreferencesManager.getReadable()
 					&& !mainWebView.isOriginalRequired()
@@ -1547,12 +1512,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				showWebUrl(feedObject.getUrl());
 			}
 		}
-	}
-	
-	private boolean canDoReadability(FeedObject feedObject) {
-		return PreferencesManager.getReadable() 
-				&& !mainWebView.isOriginalRequired()
-				&& feedObject.getArticleUrl().length() != 0;
 	}
 
 	public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
