@@ -65,6 +65,8 @@
         <item name="tabTextSelector">@color/tab_text_selector</item>
         
         <item name="emptyListIcon">@drawable/icon_light_no_saved_items</item>
+        <item name="emptyListTitleColor">#596067</item>
+        <item name="emptyListSubTitleColor">#92979c</item>
     </style>
     
     <style name="DDGDark" parent="@style/DDGTheme">
@@ -104,6 +106,8 @@
         <item name="tabTextSelector">@android:color/tab_indicator_text</item>
         
         <item name="emptyListIcon">@drawable/icon_dark_no_saved_items</item>
+        <item name="emptyListTitleColor">#fff</item>
+        <item name="emptyListSubTitleColor">#b8bfcc</item>
     </style>
     
 </resources>

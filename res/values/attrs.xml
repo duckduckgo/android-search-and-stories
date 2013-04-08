@@ -70,5 +70,6 @@
         <attr name="recentTextSize" format="dimension" />
         
         <attr name="emptyListIcon" format="reference" />
-    
+        <attr name="emptyListTitleColor" format="color" />
+        <attr name="emptyListSubTitleColor" format="color" />
 </resources>
