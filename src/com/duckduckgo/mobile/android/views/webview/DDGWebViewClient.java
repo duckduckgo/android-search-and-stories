@@ -24,24 +24,15 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 public class DDGWebViewClient extends WebViewClient {
-	String anchorUrl = null;
-	boolean killAnchorUrl = false;      	
-	
+	boolean loadingFinished = true;
+	boolean redirect = false;
+		
 	DuckDuckGo activity;
 	
 	public DDGWebViewClient(DuckDuckGo activity) {
 		this.activity = activity;
 	}
-	
-	public void resetAnchorUrl() {
-		anchorUrl = null;
-		killAnchorUrl = false;
-	}
-	
-	public void clearState() {
-		resetAnchorUrl();
-	}
-	        	
+	 	
 	private void clickedAnchorAction(DDGWebView view) {
 		view.allowInHistory = true; 
 		activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
@@ -49,13 +40,16 @@ public class DDGWebViewClient extends WebViewClient {
 	}
 	        	        	        	
 	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
-		// Log.i(TAG, "shouldOverrideUrl  " + url);      
+		// Log.i(TAG, "shouldOverrideUrl  " + url);
 		
-		if(!activity.savedState) {
-			if(anchorUrl == null) {
-				anchorUrl = url;
+		if(!activity.savedState) {			
+			if (!loadingFinished) {
+				redirect = true;
+			}
+			else {
 				clickedAnchorAction((DDGWebView) view);
 			}
+			loadingFinished = false;
 			
 			// handle mailto: and tel: links with native apps
 			if(url.startsWith("mailto:")){
@@ -93,9 +87,7 @@ public class DDGWebViewClient extends WebViewClient {
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
 		
-		if(anchorUrl != null && anchorUrl.equals(url) && url.equals(view.getOriginalUrl())) {
-			killAnchorUrl = true;
-		}
+		loadingFinished = false;
 		        		
 		if(url.equals(activity.mDuckDuckGoContainer.lastFeedUrl)) {
 			activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
@@ -188,8 +180,12 @@ public class DDGWebViewClient extends WebViewClient {
 	public void onPageFinished (WebView view, String url) {
 		super.onPageFinished(view, url);
 		
-		if(killAnchorUrl) {
-			resetAnchorUrl();
+		if(!redirect){
+			loadingFinished = true;
+		}
+
+		if(!loadingFinished || redirect){
+			redirect = false; 
 		}
 		
 		activity.mCleanSearchBar = false;

@@ -149,7 +149,6 @@ public class DDGWebView extends WebView {
 		allowInHistory = false;
 //		clearHistory();
 		clearView();
-		getWebViewClient().clearState();
 		
 		clearReadabilityState();
 	}
@@ -158,9 +157,7 @@ public class DDGWebView extends WebView {
 		this.activity = activity;
 	}
 	
-	public void backPressAction() {
-		getWebViewClient().resetAnchorUrl();
-		
+	public void backPressAction() {		
 		if (canGoBack()) {
 			
 			// remove current readable flag from stack
