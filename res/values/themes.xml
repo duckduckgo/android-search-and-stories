@@ -62,7 +62,9 @@
         <item name="ptrDivider">@drawable/refresh_dotted_line_light</item>
         
         <item name="tabIndicator">@drawable/tab_indicator_light</item>
-         <item name="tabTextSelector">@color/tab_text_selector</item>        
+        <item name="tabTextSelector">@color/tab_text_selector</item>
+        
+        <item name="emptyListIcon">@drawable/icon_light_no_saved_items</item>
     </style>
     
     <style name="DDGDark" parent="@style/DDGTheme">
@@ -100,6 +102,8 @@
         
         <item name="tabIndicator">@drawable/tab_indicator_dark</item>        
         <item name="tabTextSelector">@android:color/tab_indicator_text</item>
+        
+        <item name="emptyListIcon">@drawable/icon_dark_no_saved_items</item>
     </style>
     
 </resources>

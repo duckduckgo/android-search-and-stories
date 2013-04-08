@@ -68,5 +68,7 @@
         
         <attr name="mainTextSize" format="dimension" />
         <attr name="recentTextSize" format="dimension" />
+        
+        <attr name="emptyListIcon" format="reference" />
     
 </resources>

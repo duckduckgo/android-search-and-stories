@@ -28,7 +28,7 @@
    	    		  android:paddingBottom="50dp">
    	    <ImageView android:layout_width="wrap_content"
    	        	   android:layout_height="wrap_content"
-   	        	   android:src="@drawable/icon_lg_dark_no_saved_items" />
+   	        	   android:src="?attr/emptyListIcon" />
    	    <TextView android:layout_width="wrap_content"
    	        	  android:layout_height="wrap_content"
    	        	  android:layout_marginBottom="20dp"
