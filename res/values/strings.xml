@@ -72,7 +72,10 @@
     <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
     
-    <string name="SavedFeedEmpty">No saved items yet!</string>
+    <string name="SavedFeedEmptyTitle">You have no saved stories</string>
+    <string name="SavedFeedEmptySubTitle">You can save stories in the search bar\'s actions menu.</string>
+    <string name="SavedResultsEmptyTitle">You have no saved results</string>
+    <string name="SavedResultsEmptySubTitle">You can save your search results in the search bar\'s actions menu.</string>
     
     <string name="MoreMenuTitle">Page Options</string>
     
