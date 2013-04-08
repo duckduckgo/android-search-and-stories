@@ -12,7 +12,7 @@
         	   android:layout_height="50dp"
         	   android:layout_margin="2dp"
         	   android:layout_gravity="center_vertical"
-        	   app:cornerRadius="5dp"
+        	   app:cornerRadius="3dp"
         	   android:id="@+id/autoCompleteImage" />
     
     <View android:layout_width="2dp" android:layout_height="match_parent" />
