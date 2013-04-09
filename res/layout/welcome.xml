@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout
     android:orientation="vertical"
     android:background="#F0FFFFFF"
     android:layout_width="fill_parent"
@@ -24,7 +25,7 @@
     	android:scaleType="centerInside"/>
     
     <TextView 
-        android:text="Introducing"
+        android:text="@string/WelcomeHeader"
         android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
     	android:textSize="30sp"
@@ -33,7 +34,7 @@
     	android:layout_gravity="center_horizontal"/>
     
     <TextView 
-        android:text="DuckDuckGo Search &amp; Stories"
+        android:text="@string/WelcomeTitle"
         android:textSize="22sp"
         android:textColor="#585b61"
         android:layout_width="wrap_content"
@@ -43,7 +44,7 @@
     
     
     <TextView 
-        android:text="Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat."
+        android:text="@string/WelcomeDescription"
         android:textSize="18sp"
         android:textColor="#b8bfcc"
         android:layout_width="wrap_content"
@@ -64,3 +65,4 @@
     	android:scaleType="centerInside"/>
     
 </LinearLayout>
+</merge>
