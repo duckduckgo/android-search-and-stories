@@ -33,13 +33,13 @@
    	        	  android:layout_height="wrap_content"
    	        	  android:layout_marginBottom="20dp"
    	        	  android:textSize="8.94pt"
-   	        	  android:textColor="#fff"
+   	        	  android:textColor="?attr/emptyListTitleColor"
    	        	  android:text="@string/SavedFeedEmptyTitle" />
    	    <TextView android:layout_width="wrap_content"
    	        	  android:layout_height="wrap_content"
    	        	  android:gravity="center_horizontal"
    	        	  android:textSize="6.59pt"
-   	        	  android:textColor="#b8bfcc"
+   	        	  android:textColor="?attr/emptyListSubTitleColor"
    	        	  android:text="@string/SavedFeedEmptySubTitle" />
    	</LinearLayout> 
 
