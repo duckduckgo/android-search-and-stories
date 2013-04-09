@@ -8,7 +8,6 @@ import com.duckduckgo.mobile.android.util.menuItems.DeleteUrlInHistoryMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SaveSearchMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SendToExternalBrowserMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.ShareSearchMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.ShareWebPageMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.UnSaveSearchMenuItem;
 
 public class HistorySearchMenuAdapter extends PageMenuContextAdapter {

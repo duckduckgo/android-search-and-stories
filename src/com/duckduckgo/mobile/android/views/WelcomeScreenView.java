@@ -1,7 +1,6 @@
 package com.duckduckgo.mobile.android.views;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.Button;

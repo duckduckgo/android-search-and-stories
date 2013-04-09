@@ -3,18 +3,12 @@ package com.duckduckgo.mobile.android.adapters.menuAdapters;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.objects.FeedObject;
-import com.duckduckgo.mobile.android.objects.PageTypes;
-import com.duckduckgo.mobile.android.util.Item.ItemType;
 import com.duckduckgo.mobile.android.util.menuItems.ReloadMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SaveStoryMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.SearchExternalMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SendToExternalBrowserMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.ShareFeedMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.ShareSearchMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.ShareWebPageMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.TurnReadabilityOffMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.TurnReadabilityOnMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.UnSaveSearchMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.UnSaveStoryMenuItem;
 
 public class WebViewStoryMenuAdapter extends PageMenuContextAdapter {

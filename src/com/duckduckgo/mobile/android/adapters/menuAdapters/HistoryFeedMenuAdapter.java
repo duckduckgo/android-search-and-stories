@@ -1,23 +1,14 @@
 package com.duckduckgo.mobile.android.adapters.menuAdapters;
 
-import android.content.Intent;
-import android.net.Uri;
-
-import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
-import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.Item;
 import com.duckduckgo.mobile.android.util.menuItems.DeleteStoryInHistoryMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SaveStoryMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.SearchExternalMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SendToExternalBrowserMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.ShareFeedMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.ShareSearchMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.UnSaveStoryMenuItem;
-import com.duckduckgo.mobile.android.util.menuItems.UnSaveSearchMenuItem;
 
 public class HistoryFeedMenuAdapter extends PageMenuContextAdapter {
 	private DuckDuckGo context;
