@@ -19,6 +19,7 @@ public class DDGViewPager extends ViewPager {
     public DDGViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.enabled = true;
+        this.dispatchTouch = true;
     }
 
     @Override

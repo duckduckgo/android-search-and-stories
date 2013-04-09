@@ -538,23 +538,39 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	}
     	
     	// always refresh on start
-    	DDGControlVar.hasUpdatedFeed = false;
-    	
-    	welcomeScreenLayout = (LinearLayout) findViewById(R.id.welcome);
-    	ImageView closeWelcomeBut = (ImageView) welcomeScreenLayout.findViewById(R.id.closeWelcomeBut);
-    	closeWelcomeBut.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {				
-				welcomeScreenLayout.setVisibility(View.GONE);	
-				viewPager.setDispatchTouch(true);
-			}
-		});
+    	DDGControlVar.hasUpdatedFeed = false;    	
     	
         viewPager = (DDGViewPager) findViewById(R.id.mainpager);
         viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
         viewPager.setCurrentItem(1);
-        viewPager.setDispatchTouch(false);
+        
+    	if(!PreferencesManager.isWelcomeShown()) {
+            viewPager.setDispatchTouch(false);
+
+            // add welcome screen
+            FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
+            View.inflate(this, R.layout.welcome, rootLayout);
+            
+	    	welcomeScreenLayout = (LinearLayout) findViewById(R.id.welcomeLayout);
+	    	ImageView closeWelcomeBut = (ImageView) welcomeScreenLayout.findViewById(R.id.closeWelcomeBut);
+	    	Button getStartedBut = (Button) welcomeScreenLayout.findViewById(R.id.getStartedBut);
+	    	OnClickListener closeListener = new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {				
+					welcomeScreenLayout.setVisibility(View.GONE);	
+					viewPager.setDispatchTouch(true);					
+					PreferencesManager.setWelcomeShown();
+					
+					// remove welcome screen
+					FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
+					rootLayout.removeView(welcomeScreenLayout);
+					welcomeScreenLayout = null;
+				}
+			};
+	    	closeWelcomeBut.setOnClickListener(closeListener);
+	    	getStartedBut.setOnClickListener(closeListener);
+    	}
         
         leftMenuView = mDuckDuckGoContainer.pageAdapter.getPageView(0);
         contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);    

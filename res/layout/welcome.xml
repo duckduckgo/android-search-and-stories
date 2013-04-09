@@ -3,7 +3,8 @@
     android:orientation="vertical"
     android:background="#F0FFFFFF"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:id="@+id/welcomeLayout">
     
     <ImageView android:src="@drawable/icon_close" 
         android:id="@+id/closeWelcomeBut"
@@ -53,7 +54,8 @@
     	android:layout_gravity="center_horizontal"
     	android:gravity="center_horizontal"/>
     
-    <Button android:background="@drawable/btn_get_started" 
+    <Button android:background="@drawable/btn_get_started"
+        android:id="@+id/getStartedBut" 
         android:layout_width="202dp"
     	android:layout_height="50dp"
     	android:textColor="#FFF"

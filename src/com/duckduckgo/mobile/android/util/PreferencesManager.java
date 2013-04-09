@@ -45,6 +45,16 @@ public class PreferencesManager {
 		return DDGApplication.getSharedPreferences().contains("sourceset_size");
 	}
 	
+	public static boolean isWelcomeShown() {
+		return DDGApplication.getSharedPreferences().contains("welcomeShown");
+	}
+	
+	public static void setWelcomeShown() {
+		Editor editor = DDGApplication.getSharedPreferences().edit();
+		editor.putBoolean("welcomeShown", true);
+		editor.commit();
+	}
+	
 	public static int getSourcesetSize() {
 		return DDGApplication.getSharedPreferences().getInt("sourceset_size", 0);
 	}
