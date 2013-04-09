@@ -142,5 +142,10 @@
     <string name="ToastSaveSearch">Your search was saved.</string>
     <string name="ToastDeleteStoryInHistory">The story has been removed from your history.</string>
     <string name="ToastDeleteUrlInHistory">The url has been removed from your history.</string>
+    
+    <string name="WelcomeHeader">Introducing</string>
+    <string name="WelcomeTitle">DuckDuckGo Search &amp; Stories</string>
+    <string name="WelcomeDescription">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, 
+        sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</string>
 
 </resources>

@@ -69,6 +69,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -135,6 +136,7 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
+import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
@@ -181,6 +183,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	// font scaling
 	private LinearLayout fontSizeLayout = null;
+	
+	// welcome screen
+	private WelcomeScreenView welcomeScreenLayout = null;
+	OnClickListener welcomeCloseListener = null;
 	
 	// notification for "Save Recent Searches" feature awareness
 	private View leftRecentHeaderView = null;
@@ -441,6 +447,35 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
 		mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
     }
+    
+    /**
+     * Adds welcome screen on top of content view
+     * Also disables dispatching of touch events from viewPager to children views
+     */
+    private void addWelcomeScreen() {
+    	viewPager.setDispatchTouch(false);
+    	
+    	// add welcome screen
+        welcomeScreenLayout = new WelcomeScreenView(this);
+        FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
+        rootLayout.addView(welcomeScreenLayout);
+    	welcomeScreenLayout.setOnCloseListener(welcomeCloseListener);
+    }
+    
+    /**
+     * Removes welcome screen from content view
+     * Also enables dispatching of touch events from viewPager
+     */
+    private void removeWelcomeScreen() {
+    	welcomeScreenLayout.setVisibility(View.GONE);	
+		viewPager.setDispatchTouch(true);					
+		PreferencesManager.setWelcomeShown();
+    	
+    	// remove welcome screen
+		FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
+		rootLayout.removeView(welcomeScreenLayout);
+		welcomeScreenLayout = null;
+    }
 				
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -529,11 +564,23 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	}
     	
     	// always refresh on start
-    	DDGControlVar.hasUpdatedFeed = false;
+    	DDGControlVar.hasUpdatedFeed = false;    	
     	
         viewPager = (DDGViewPager) findViewById(R.id.mainpager);
         viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
         viewPager.setCurrentItem(1);
+        
+        welcomeCloseListener = new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {		
+				removeWelcomeScreen();
+			}
+		};
+        
+    	if(!PreferencesManager.isWelcomeShown()) {            
+            addWelcomeScreen();
+    	}
         
         leftMenuView = mDuckDuckGoContainer.pageAdapter.getPageView(0);
         contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);    
@@ -2149,6 +2196,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		mDuckDuckGoContainer.feedAdapter.scrolling = false;
+		if(welcomeScreenLayout != null) {
+			removeWelcomeScreen();
+			addWelcomeScreen();
+		}
 		super.onConfigurationChanged(newConfig);
 	}	
 	
