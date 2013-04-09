@@ -7,6 +7,8 @@ import android.content.SharedPreferences.Editor;
 
 public class PreferencesManager {
 	
+	private static int WELCOME_VERSION = 1;
+	
 	/* Settings */
 	
 	public static String getThemeName() {
@@ -46,12 +48,12 @@ public class PreferencesManager {
 	}
 	
 	public static boolean isWelcomeShown() {
-		return DDGApplication.getSharedPreferences().contains("welcomeShown");
+		return DDGApplication.getSharedPreferences().getInt("welcomeShown", 0) == WELCOME_VERSION;
 	}
 	
 	public static void setWelcomeShown() {
 		Editor editor = DDGApplication.getSharedPreferences().edit();
-		editor.putBoolean("welcomeShown", true);
+		editor.putInt("welcomeShown", WELCOME_VERSION);
 		editor.commit();
 	}
 	
