@@ -42,6 +42,11 @@
     	android:paddingBottom="20dp"
     	android:layout_gravity="center_horizontal"/>
     
+    <ScrollView
+    android:layout_width="wrap_content"
+    android:layout_height="160dp"
+    android:scrollbars="vertical"
+    android:fillViewport="true">
     
     <TextView 
         android:text="@string/WelcomeDescription"
@@ -55,12 +60,14 @@
     	android:layout_gravity="center_horizontal"
     	android:gravity="center_horizontal"/>
     
+    </ScrollView>
+    
     <Button android:background="@drawable/btn_get_started"
         android:id="@+id/getStartedBut" 
         android:layout_width="202dp"
     	android:layout_height="50dp"
     	android:textColor="#FFF"
-    	android:text="Get Started"
+    	android:text="@string/GetStarted"
     	android:layout_gravity="center_horizontal"
     	android:scaleType="centerInside"/>
     

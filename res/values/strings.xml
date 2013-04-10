@@ -145,7 +145,12 @@
     
     <string name="WelcomeHeader">Introducing</string>
     <string name="WelcomeTitle">DuckDuckGo Search &amp; Stories</string>
-    <string name="WelcomeDescription">Lorem ipsum dolor sit amet, consectetuer adipiscing elit, 
-        sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat.</string>
+    <string name="WelcomeDescription">
+        Whether you\'re settling a bet or have a few free minutes, DuckDuckGo has you covered. 
+        Our search results are packed with instant answers and our home screen only 
+        shows you the most interesting stories. Best of all: it\'s completely private – unlike other search 
+        and stories apps, we don\'t track you.</string>
+        
+    <string name="GetStarted">Get Started</string>
 
 </resources>
