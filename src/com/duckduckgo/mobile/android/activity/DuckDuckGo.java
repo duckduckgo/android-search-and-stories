@@ -1482,6 +1482,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		displayWebView();
 		
 		if(!savedState){
+			mainWebView.setIsReadable(false);
 			if(DDGControlVar.regionString == "wt-wt"){	// default
 				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
 			}
@@ -1527,6 +1528,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			displayWebView();
 		
 		if(!savedState) {			
+			mainWebView.setIsReadable(false);
+			
 //			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
 			mainWebView.loadUrl(url);
 		}

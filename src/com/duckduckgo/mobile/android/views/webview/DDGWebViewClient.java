@@ -24,8 +24,10 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 public class DDGWebViewClient extends WebViewClient {
-	boolean loadingFinished = true;
-	boolean redirect = false;
+	boolean isLoading = false;
+	
+	// keeps current form of the URL that is loading
+	String urlCurrentState = null;
 		
 	DuckDuckGo activity;
 	
@@ -43,13 +45,14 @@ public class DDGWebViewClient extends WebViewClient {
 		// Log.i(TAG, "shouldOverrideUrl  " + url);
 		
 		if(!activity.savedState) {			
-			if (!loadingFinished) {
-				redirect = true;
+			if (isLoading) {
+				urlCurrentState = url;
 			}
 			else {
+				urlCurrentState = null;
 				clickedAnchorAction((DDGWebView) view);
 			}
-			loadingFinished = false;
+			isLoading = true;
 			
 			// handle mailto: and tel: links with native apps
 			if(url.startsWith("mailto:")){
@@ -87,7 +90,8 @@ public class DDGWebViewClient extends WebViewClient {
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
 		
-		loadingFinished = false;
+		isLoading = true;
+		urlCurrentState = url;
 		        		
 		if(url.equals(activity.mDuckDuckGoContainer.lastFeedUrl)) {
 			activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
@@ -180,12 +184,10 @@ public class DDGWebViewClient extends WebViewClient {
 	public void onPageFinished (WebView view, String url) {
 		super.onPageFinished(view, url);
 		
-		if(!redirect){
-			loadingFinished = true;
-		}
-
-		if(!loadingFinished || redirect){
-			redirect = false; 
+		// if(!redirect){
+		if(urlCurrentState != null && url.equals(urlCurrentState)) {
+			isLoading = false;
+			urlCurrentState = null;
 		}
 		
 		activity.mCleanSearchBar = false;
