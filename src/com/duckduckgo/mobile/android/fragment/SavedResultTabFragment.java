@@ -20,10 +20,6 @@ public class SavedResultTabFragment extends ListFragment {
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		if (container == null) {
-			// no reason to try to create its view hierarchy because it won't be displayed.
-            return null;
-        }
 		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
 		return fragmentLayout;
 	}
