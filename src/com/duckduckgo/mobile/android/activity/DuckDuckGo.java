@@ -37,6 +37,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -90,8 +91,6 @@ import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewWebPageMenuAda
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
-import com.duckduckgo.mobile.android.fragment.SavedFeedTabFragment;
-import com.duckduckgo.mobile.android.fragment.SavedResultTabFragment;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
@@ -132,7 +131,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
 
 public class DuckDuckGo extends FragmentActivity implements OnEditorActionListener, FeedListener, OnClickListener {
-
 	protected final String TAG = "DuckDuckGo";
 	
 	public DuckDuckGoContainer mDuckDuckGoContainer;
@@ -576,7 +574,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);    
         
 		// XXX Step 2: Setup TabHost
-		initialiseTabHost(savedInstanceState);
+		initialiseTabHost();
 		if (savedInstanceState != null) {
             savedTabHost.setCurrentTabByTag(savedInstanceState.getString("simple")); //set the tab as per the saved state
 		}
@@ -2318,25 +2316,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	/**
 	 * Step 2: Setup TabHost
 	 */
-	private void initialiseTabHost(Bundle args) {
+	private void initialiseTabHost() {
 		savedTabHost = (TabHostExt) contentView.findViewById(android.R.id.tabhost);
 		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-		        
-		addTab(savedTabHost, getResources().getString(R.string.SavedSearches), SavedResultTabFragment.class);
-		addTab(savedTabHost, getResources().getString(R.string.SavedStories), SavedFeedTabFragment.class);
+		savedTabHost.addDefaultTabs();
 	}
 	
-	private void addTab(TabHostExt tabHost, String label, Class<?> intentClass) {
-		Intent intent = new Intent(this, intentClass);
-		TabHostExt.TabSpec spec = (TabHostExt.TabSpec) tabHost.newTabSpec(label);
 
-		View tabIndicator = LayoutInflater.from(this).inflate(R.layout.tab_indicator, tabHost.getTabWidget(), false);
-		TextView title = (TextView) tabIndicator.findViewById(R.id.title);
-		title.setText(label);
-
-		spec.setIndicator(tabIndicator);
-		spec.setContent(intent);
-		tabHost.addTab(spec, intentClass, null);
-	}
 
 }
