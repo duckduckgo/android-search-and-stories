@@ -214,5 +214,15 @@ public class DDGWebViewClient extends WebViewClient {
 			wv.shouldClearHistory = false;
 		}
 	}
+	
+	@Override
+	public void doUpdateVisitedHistory(WebView view, String url,
+			boolean isReload) {
+		DDGWebView wv = ((DDGWebView) view);
+		if(wv.shouldClearHistory) {
+			wv.clearHistory();
+		}
+		super.doUpdateVisitedHistory(view, url, isReload);
+	}
 
 }
