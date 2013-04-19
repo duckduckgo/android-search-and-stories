@@ -1,33 +1,37 @@
 package com.duckduckgo.mobile.android.views.webview;
 
-import java.util.Stack;
-
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.objects.FeedObject;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
+import java.util.HashSet;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
 import android.webkit.WebBackForwardList;
+import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
+
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DDGWebView extends WebView {
 	
-	OnTouchListener extraTouchListener;
 	public boolean isReadable = false;
-	public Stack<Boolean> stackReadable;
 	private boolean forceOriginalFormat = false;
-	public boolean allowInHistory = false; 
+		
+	private HashSet<String> readableList = new HashSet<String>();
 	
 	private DDGWebViewClient webViewClient = null;
 	private DuckDuckGo activity;
 	
+	public boolean readableBackState = false;
+	public boolean loadingReadableBack = false;
+	
+	public boolean shouldClearHistory = false;
+	
 	public DDGWebView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		attrSet = attrs;
-		stackReadable = new Stack<Boolean>();
 	}
 
 	public boolean is_gone=true;
@@ -43,7 +47,6 @@ public class DDGWebView extends WebView {
 	}
 	
 	public void setIsReadable(boolean isReadable) {
-		this.stackReadable.push(isReadable);
 		this.isReadable = isReadable;
 	}
 	
@@ -113,9 +116,15 @@ public class DDGWebView extends WebView {
 	public void readableAction(FeedObject feedObject) {
 		if(!isReadable)
 			setIsReadable(true);
-		allowInHistory = true;
+		readableList.add(feedObject.getUrl());
 		loadDataWithBaseURL(feedObject.getUrl(), feedObject.getHtml(), "text/html", "utf8", feedObject.getUrl());
 		forceOriginalFormat = false;
+//		clearHistory();
+	}
+	
+	public void readableActionBack(FeedObject feedObject) {
+		readableBackState = true;
+		goBack();
 	}
 	
 	/**
@@ -126,29 +135,24 @@ public class DDGWebView extends WebView {
 		return forceOriginalFormat;
 	}
 	
-	public void resetReadabilityState() {
-		setIsReadable(false);
-		forceOriginalFormat = false;
-	}
-	
 	public void clearReadabilityState() {
 		isReadable = false;
-		stackReadable.clear();
 		forceOriginalFormat = false;
+		
+		readableBackState = false;
+		loadingReadableBack = false;
 	}
 	
 	public void forceOriginal() {
 		isReadable = false;
-		stackReadable.pop();
-		stackReadable.push(false);
 		forceOriginalFormat = true;
 	}
 	
 	public void clearBrowserState() {		
 		stopLoading();
-		allowInHistory = false;
-//		clearHistory();
+		clearHistory();
 		clearView();
+		shouldClearHistory = true;
 		
 		clearReadabilityState();
 	}
@@ -158,31 +162,22 @@ public class DDGWebView extends WebView {
 	}
 	
 	public void backPressAction() {		
-		if (canGoBack()) {
+		WebBackForwardList history = copyBackForwardList();
+		int lastIndex = history.getCurrentIndex();
+		
+		if(lastIndex > 0) {
+			WebHistoryItem prevItem = history.getItemAtIndex(lastIndex-1);
 			
-			// remove current readable flag from stack
-			if(stackReadable.size() >= 2) {
-				stackReadable.pop();
+			if(prevItem != null) {
+				String prevUrl = prevItem.getUrl();
+				if(readableList.contains(prevUrl) && canDoReadability(prevUrl) && activity.currentFeedObject != null) {
+//					readableAction(activity.currentFeedObject);
+					readableActionBack(activity.currentFeedObject);
+				}
+				else {
+					goBack();
+				}
 			}
-			else {
-				activity.displayScreen(activity.mDuckDuckGoContainer.currentScreen, true);
-				return;
-			}
-			
-			boolean prevReadable = false;
-			if(stackReadable.peek()) {
-				prevReadable = true;
-			}
-			
-			if(prevReadable && isReadable) {
-				activity.displayScreen(activity.mDuckDuckGoContainer.currentScreen, true);
-				return;
-			}				
-			else if(prevReadable && canDoReadability(activity.currentFeedObject)) {
-				stackReadable.pop();
-				readableAction(activity.currentFeedObject);
-			}
-			// **********************************************************************************
 			else {
 				goBack();
 			}
@@ -192,10 +187,11 @@ public class DDGWebView extends WebView {
 		}
 	}
 	
-	private boolean canDoReadability(FeedObject feedObject) {
+	private boolean canDoReadability(String articleUrl) {
 		return PreferencesManager.getReadable() 
 				&& !isOriginalRequired()
-				&& feedObject.getArticleUrl().length() != 0;
+				&& articleUrl != null
+				&& articleUrl.length() != 0;
 	}
 	
 }

@@ -1128,6 +1128,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		clearSearchBar();
 		mainWebView.clearBrowserState();
+		currentFeedObject = null;
+		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
 	
 	private void cancelFontScaling() {
@@ -1390,7 +1392,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 //		mainWebView.resumeView();
 		
 		hideKeyboard(mainWebView);
-		mainWebView.clearBrowserState();
+//		mainWebView.clearBrowserState();
 		savedState = false;
 		
 		mDuckDuckGoContainer.sessionType = sessionType;
@@ -1482,7 +1484,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		displayWebView();
 		
 		if(!savedState){
-			mainWebView.setIsReadable(false);
 			if(DDGControlVar.regionString == "wt-wt"){	// default
 				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
 			}
@@ -1497,7 +1498,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void showHistoryObject(HistoryObject object) {
-		mainWebView.clearBrowserState();
+//		mainWebView.clearBrowserState();
 		
 		if(object.getType().equals("R")) {
 			searchWebTerm(object.getData());
@@ -1527,9 +1528,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW)
 			displayWebView();
 		
-		if(!savedState) {			
-			mainWebView.setIsReadable(false);
-			
+		if(!savedState) {						
 //			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
 			mainWebView.loadUrl(url);
 		}
@@ -2022,7 +2021,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		editor.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
 		editor.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
 		editor.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
-		editor.putBoolean("allowInHistory", mainWebView.allowInHistory);
 		editor.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
 		if(currentFeedObject != null) {
 			editor.putString("currentFeedObjectId", currentFeedObject.getId());
@@ -2035,7 +2033,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		bundle.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
 		bundle.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
 		bundle.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
-		bundle.putBoolean("allowInHistory", mainWebView.allowInHistory);
 		bundle.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
 		if(currentFeedObject != null) {
 			bundle.putString("currentFeedObjectId", currentFeedObject.getId());
@@ -2055,7 +2052,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			mDuckDuckGoContainer.webviewShowing = bundle.getBoolean("webviewShowing");
 			mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(bundle.getInt("currentScreen"));
 			mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(bundle.getInt("prevScreen"));
-			mainWebView.allowInHistory = bundle.getBoolean("allowInHistory");
 			mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(bundle.getInt("sessionType"));
 			feedId = bundle.getString("currentFeedObjectId");
 			
@@ -2074,7 +2070,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			mDuckDuckGoContainer.webviewShowing = prefs.getBoolean("webviewShowing", false);
 			mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(prefs.getInt("currentScreen", SCREEN.SCR_STORIES.getCode()));
 			mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(prefs.getInt("prevScreen", SCREEN.SCR_STORIES.getCode()));
-			mainWebView.allowInHistory = prefs.getBoolean("allowInHistory", false);
 			mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(prefs.getInt("sessionType", SESSIONTYPE.SESSION_BROWSE.getCode()));
 			feedId = prefs.getString("currentFeedObjectId", null);
 			
