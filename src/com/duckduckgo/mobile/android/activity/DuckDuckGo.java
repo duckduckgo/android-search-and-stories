@@ -2049,12 +2049,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 
 	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState)
-	{
+	protected void onRestoreInstanceState(Bundle savedInstanceState){
 		super.onRestoreInstanceState(savedInstanceState);
-		
 		recoverAppState(savedInstanceState);
-		
 	}
 	
 	private void markLeftSelect(SCREEN current) {
@@ -2134,19 +2131,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
-	
-	public Bitmap getBitmapFromView(View view) {
-        Bitmap returnedBitmap = Bitmap.createBitmap(DDGUtils.feedItemWidth, DDGUtils.feedItemHeight,Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(returnedBitmap);
-        Drawable bgDrawable = view.getBackground();
-        if (bgDrawable!=null) {
-			bgDrawable.draw(canvas);
-		} else {
-			canvas.drawColor(Color.TRANSPARENT);
-		}
-        view.draw(canvas);
-        return returnedBitmap;
-    }
 	
 	/**
 	 * Displays "not recording" indicator in left-menu if Save Searches option is disabled  
