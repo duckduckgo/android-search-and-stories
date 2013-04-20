@@ -37,7 +37,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
-import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
@@ -96,7 +95,6 @@ import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
-import com.duckduckgo.mobile.android.objects.PageTypes;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.tabhost.TabHostExt;
@@ -109,7 +107,6 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DDGViewPager;
-import com.duckduckgo.mobile.android.util.Item;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
@@ -1084,16 +1081,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		keepFeedUpdated();
 	}
 	
-	private View buildLabel(String text) {
-		    TextView result=new TextView(this);
-		    result.setText(text);
-		    return(result);
-	}
-	
-	private View buildFromResource(int resId){
-		return getLayoutInflater().inflate(resId, null);
-	}
-	
 	private void clearSearchBar() {
 		searchField.setText("");
     	searchField.setCompoundDrawables(null, null, null, null);
@@ -1904,15 +1891,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			boolean isPageSaved;
 			
 			final String alertTitle;
-			final String pageTitle;
 			final String pageUrl;
-			final String pageType;
-			
 			// XXX should make Page Options button disabled if the page is not loaded yet
 			// url = null case
 			String webViewUrl = mainWebView.getOriginalUrl();
-			if(webViewUrl == null)
+			if(webViewUrl == null){
 				webViewUrl = "";
+			}
 			
 			final String query = DDGUtils.getQueryIfSerp(webViewUrl);
 			final PageMenuContextAdapter contextAdapter;
@@ -1920,16 +1905,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			// direct displaying after feed item is clicked
 			// the rest will arrive as SESSION_BROWSE
 			// so we should save this feed item with target redirected URL
-			if(isStorySessionOrStoryUrl()
-			  ) {
+			if(isStorySessionOrStoryUrl()) {
 				alertTitle = getString(R.string.StoryOptionsTitle);
 				pageUrl = currentFeedObject.getUrl();				
 				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
-				
-				if(currentFeedObject.hasPossibleReadability())
-					pageType = PageTypes.StoryWithReadability;
-				else
-					pageType = PageTypes.StoryWithoutReadability;
 				
 				mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
 				contextAdapter  = new WebViewStoryMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1,
@@ -1939,7 +1918,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			else if(query != null) {
 				alertTitle = getString(R.string.SearchOptionsTitle);
 				pageUrl = webViewUrl;
-				pageType = PageTypes.Query;
 				isPageSaved = DDGApplication.getDB().isSavedSearch(query);
 				contextAdapter  = new WebViewQueryMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1,
 						query, isPageSaved);
@@ -1948,7 +1926,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				// in case it's not a query or feed item
 				alertTitle = getString(R.string.PageOptionsTitle);
 				pageUrl = webViewUrl;
-				pageType = PageTypes.WebPage;
 				isPageSaved = false;
 				contextAdapter = new WebViewWebPageMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, pageUrl);
 			}
