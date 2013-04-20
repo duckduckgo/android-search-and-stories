@@ -91,6 +91,7 @@ import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewWebPageMenuAda
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
+import com.duckduckgo.mobile.android.listener.ExecuteActionOnClickListener;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
@@ -208,7 +209,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	AlertDialog.Builder cacheDialogBuilder;
 	
 	private TabHostExt savedTabHost = null;
-	
+
 	class TabFactory implements TabContentFactory {
 
 		private final Context mContext;
@@ -309,12 +310,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			final PageMenuContextAdapter contextAdapter = new MainFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, 
 					android.R.id.text1, "mainfeed", feedObject);
 			
-			alertBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					Item clickedItem = ((Item) contextAdapter.getItem(item));
-					clickedItem.ActionToExecute.Execute();
-				}
-			});
+			alertBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
 			alertBuilder.show();
 		}
     };
@@ -327,12 +323,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			
 			final PageMenuContextAdapter contextAdapter = new SavedFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedfeed", feedObject);
 			
-			alertBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					Item clickedItem = ((Item) contextAdapter.getItem(item));
-					clickedItem.ActionToExecute.Execute();
-				}
-			});
+			alertBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
 			alertBuilder .show();
 		}
     };
@@ -347,12 +338,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						
 			final PageMenuContextAdapter contextAdapter = new SavedSearchMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedsearch", query);
 			
-			alertDialogBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					Item clickedItem = ((Item) contextAdapter.getItem(item));
-					clickedItem.ActionToExecute.Execute();
-				}
-			});
+			alertDialogBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
 			alertDialogBuilder.show();
     	}
     };
@@ -1968,17 +1954,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			}
 			
 			
-			AlertDialog.Builder alertDialogBuilder =new AlertDialog.Builder(DuckDuckGo.this);
+			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DuckDuckGo.this);
 			alertDialogBuilder.setTitle(alertTitle);
-			
-			alertDialogBuilder.setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int item) {
-					Item clickedItem = ((Item) contextAdapter.getItem(item));
-					clickedItem.ActionToExecute.Execute();
-				}
-
-				
-			});
+			alertDialogBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
 			alertDialogBuilder.show();
 	}
 	
