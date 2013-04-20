@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.activity;
 
-import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -14,7 +13,6 @@ import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.FragmentManager;
 import android.app.SearchManager;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -67,7 +65,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -89,10 +86,10 @@ import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewStoryMenuAdapt
 import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewWebPageMenuAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.download.ContentDownloader;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.listener.ExecuteActionOnClickListener;
 import com.duckduckgo.mobile.android.listener.FeedListener;
-import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
@@ -100,7 +97,6 @@ import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.tabhost.TabHostExt;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
-import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
 import com.duckduckgo.mobile.android.util.DDGConstants;
@@ -379,6 +375,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			
 		}
 	};
+
+	private ContentDownloader contentDownloader;
     
     /**
      * save feed by object or by the feed id
@@ -927,7 +925,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
                     String contentDisposition, String mimetype, 
                     long contentLength) { 
             	
-            	DuckDuckGo.this.downloadContent(url, mimetype);
+            	contentDownloader.downloadContent(url, mimetype);
             } 
         }); 
                         
@@ -1215,11 +1213,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			new ScanAppsTask(getApplicationContext()).execute();
 			DDGControlVar.hasAppsIndexed = true;
 		}
-		
-		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD) {
-			initDownloadManager();
-		}
-		
+		contentDownloader = new ContentDownloader(this);
 		// global search intent
         Intent intent = getIntent(); 
         
@@ -1495,28 +1489,25 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         	return;
 		}
 		
-		if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW)
+		if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW){
 			displayWebView();
+		}
 		
 		if(!savedState) {			
 			mainWebView.setIsReadable(false);
-			
-//			mainWebView.loadUrl(url, DDGNetworkConstants.extraHeaders);
 			mainWebView.loadUrl(url);
 		}
 	}
 	
 	public void showFeed(FeedObject feedObject) {
 		if(!savedState) {
-			
 			if(!DDGControlVar.alwaysUseExternalBrowser
 					&& PreferencesManager.getReadable()
 					&& !mainWebView.isOriginalRequired()
 					&& feedObject.getArticleUrl().length() != 0) {
-				
-				if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW)
+				if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW) {
 					displayWebView();
-				
+				}
 				new ReadableFeedTask(mReadableListener, feedObject).execute();
 			}
 			else {
@@ -1526,7 +1517,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 
 	public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
-		
 		if(!fromCache) {
 			synchronized(mDuckDuckGoContainer.feedAdapter) {
 				DDGApplication.getImageDownloader().clearAllDownloads();				
@@ -1566,12 +1556,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	public void onFeedRetrievalFailed() {
-
 		//If the mainFeedTask is null, we are currently paused
 		//Otherwise, we can try again
 		if (mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mDuckDuckGoContainer.mainFeedTask != null) {
-			
-			// Create the AlertDialog
 			AlertDialog failDialog = cacheDialogBuilder.create();
 			failDialog.show();
 		}
@@ -1579,13 +1566,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	@TargetApi(11)
 	public void showPrefFragment(){
-//      	getFragmentManager().beginTransaction().replace(R.id.prefFragment,
-//                new DDGPreferenceFragment()).commit();    	
-      	
-        FragmentManager fm = getFragmentManager();
+        FragmentManager fragmentManager = getFragmentManager();
 
         // Check to see if we have retained the worker fragment.
-        DDGPreferenceFragment mWorkFragment = (DDGPreferenceFragment)fm.findFragmentById(R.id.prefFragment);
+        DDGPreferenceFragment mWorkFragment = (DDGPreferenceFragment)fragmentManager.findFragmentById(R.id.prefFragment);
 
         // If not retained (or first time running), we need to create it.
         if (mWorkFragment == null) {
@@ -1611,8 +1595,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					}
 					else if(preference.getKey().equals("recordHistoryPref")){
 						displayRecordHistoryDisabled();
-					}
-					
+					}					
 					return false;
 				}
 			});
@@ -1646,10 +1629,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
             		}
             	}
             });
-            fm.beginTransaction().replace(R.id.prefFragment,
+            fragmentManager.beginTransaction().replace(R.id.prefFragment,
                     mWorkFragment).commit();  
         }
-        
         makePreferencesVisible();
 	}
 	
@@ -1707,7 +1689,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     		leftRecentTextView.setVisibility(View.GONE);
         	leftRecentView.setVisibility(View.GONE);
     	}
-
 	}
 	
 	
@@ -1739,9 +1720,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void displayNewsFeed(){
 		resetScreenState();
 		
-    	// show recent queries on slide-out menu
-//    	lMainAdapter.remove(getString(R.string.LeftRecentQueries));
-    	
 		// left side menu visibility changes
 		changeLeftMenuVisibility(SCREEN.SCR_STORIES);
     	
@@ -1886,55 +1864,55 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 
 	private void handleShareButtonClick() {
-			hideKeyboard(searchField);
-						
-			boolean isPageSaved;
+		hideKeyboard(searchField);
+					
+		boolean isPageSaved;
+		
+		final String alertTitle;
+		final String pageUrl;
+		// XXX should make Page Options button disabled if the page is not loaded yet
+		// url = null case
+		String webViewUrl = mainWebView.getOriginalUrl();
+		if(webViewUrl == null){
+			webViewUrl = "";
+		}
+		
+		final String query = DDGUtils.getQueryIfSerp(webViewUrl);
+		final PageMenuContextAdapter contextAdapter;
+		
+		// direct displaying after feed item is clicked
+		// the rest will arrive as SESSION_BROWSE
+		// so we should save this feed item with target redirected URL
+		if(isStorySessionOrStoryUrl()) {
+			alertTitle = getString(R.string.StoryOptionsTitle);
+			pageUrl = currentFeedObject.getUrl();				
+			isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
 			
-			final String alertTitle;
-			final String pageUrl;
-			// XXX should make Page Options button disabled if the page is not loaded yet
-			// url = null case
-			String webViewUrl = mainWebView.getOriginalUrl();
-			if(webViewUrl == null){
-				webViewUrl = "";
-			}
+			mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
+			contextAdapter  = new WebViewStoryMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1,
+					currentFeedObject, isPageSaved, mainWebView.isReadable);
 			
-			final String query = DDGUtils.getQueryIfSerp(webViewUrl);
-			final PageMenuContextAdapter contextAdapter;
-			
-			// direct displaying after feed item is clicked
-			// the rest will arrive as SESSION_BROWSE
-			// so we should save this feed item with target redirected URL
-			if(isStorySessionOrStoryUrl()) {
-				alertTitle = getString(R.string.StoryOptionsTitle);
-				pageUrl = currentFeedObject.getUrl();				
-				isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
-				
-				mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
-				contextAdapter  = new WebViewStoryMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1,
-						currentFeedObject, isPageSaved, mainWebView.isReadable);
-				
-			}						
-			else if(query != null) {
-				alertTitle = getString(R.string.SearchOptionsTitle);
-				pageUrl = webViewUrl;
-				isPageSaved = DDGApplication.getDB().isSavedSearch(query);
-				contextAdapter  = new WebViewQueryMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1,
-						query, isPageSaved);
-			}
-			else {
-				// in case it's not a query or feed item
-				alertTitle = getString(R.string.PageOptionsTitle);
-				pageUrl = webViewUrl;
-				isPageSaved = false;
-				contextAdapter = new WebViewWebPageMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, pageUrl);
-			}
-			
-			
-			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DuckDuckGo.this);
-			alertDialogBuilder.setTitle(alertTitle);
-			alertDialogBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
-			alertDialogBuilder.show();
+		}						
+		else if(query != null) {
+			alertTitle = getString(R.string.SearchOptionsTitle);
+			pageUrl = webViewUrl;
+			isPageSaved = DDGApplication.getDB().isSavedSearch(query);
+			contextAdapter  = new WebViewQueryMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1,
+					query, isPageSaved);
+		}
+		else {
+			// in case it's not a query or feed item
+			alertTitle = getString(R.string.PageOptionsTitle);
+			pageUrl = webViewUrl;
+			isPageSaved = false;
+			contextAdapter = new WebViewWebPageMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, pageUrl);
+		}
+		
+		
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DuckDuckGo.this);
+		alertDialogBuilder.setTitle(alertTitle);
+		alertDialogBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
+		alertDialogBuilder.show();
 	}
 	
 	public void launchReadableFeedTask(FeedObject feedObject) {
@@ -2147,75 +2125,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			addWelcomeScreen();
 		}
 		super.onConfigurationChanged(newConfig);
-	}	
-	
-	@SuppressLint("NewApi")
-	private void downloadContent(final String url, final String mimeType) {
-		// use mimeType to figure out an extension for temporary file
-		int idxSlash = mimeType.indexOf('/') + 1;
-		String ext = "tmp";
-		if(idxSlash != -1) {
-			ext = mimeType.substring(idxSlash);
-		}
-		String fileName = "down." + ext;
-		
-		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD) {
-			Uri uri = Uri.parse(url);
-			DownloadManager.Request r = new DownloadManager.Request(uri);
-
-			// This put the download in the same Download dir the browser uses
-			// r.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-
-			// When downloading music and videos they will be listed in the player
-			// (Seems to be available since Honeycomb only)
-			if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
-				r.allowScanningByMediaScanner();
-
-				// Notify user when download is completed
-				// (Seems to be available since Honeycomb only)
-				r.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-			}
-
-			// Start download
-			downloadManager.enqueue(r);
-		}
-		else {
-			// manual download for devices below GINGERBREAD
-			
-			// TODO AsyncTask here
-			
-			MimeDownloadListener mimeListener = new MimeDownloadListener() {
-				
-				@Override
-				public void onDownloadFailed() {
-					// TODO Fail gracefully here... inform the user about failed download!
-					Toast.makeText(DuckDuckGo.this, R.string.ErrorDownloadFailed, Toast.LENGTH_LONG).show();
-				}
-				
-				@Override
-				public void onDownloadComplete(String filePath) {
-					// intent to view content
-					Intent viewIntent = new Intent(Intent.ACTION_VIEW); 
-					File file = new File(filePath);
-					viewIntent.setDataAndType(Uri.fromFile(file), mimeType); 
-					viewIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					try {
-						startActivity(viewIntent);
-					}
-					catch(ActivityNotFoundException e) {	
-						Toast.makeText(DuckDuckGo.this, R.string.ErrorActivityNotFound, Toast.LENGTH_LONG).show();
-					}					
-				}
-			};
-			
-			MimeDownloadTask mimeTask = new MimeDownloadTask(mimeListener, url, fileName);
-			mimeTask.execute();
-		}		
-	}
-	
-	@TargetApi(11)
-	private void initDownloadManager() {
-		downloadManager = (DownloadManager) getSystemService(DuckDuckGo.DOWNLOAD_SERVICE);        
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -2230,10 +2139,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         Bitmap returnedBitmap = Bitmap.createBitmap(DDGUtils.feedItemWidth, DDGUtils.feedItemHeight,Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(returnedBitmap);
         Drawable bgDrawable = view.getBackground();
-        if (bgDrawable!=null) 
-            bgDrawable.draw(canvas);
-        else 
-            canvas.drawColor(Color.TRANSPARENT);
+        if (bgDrawable!=null) {
+			bgDrawable.draw(canvas);
+		} else {
+			canvas.drawColor(Color.TRANSPARENT);
+		}
         view.draw(canvas);
         return returnedBitmap;
     }
@@ -2243,7 +2153,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	 */
 	public void displayRecordHistoryDisabled() {
 		if(PreferencesManager.getRecordHistory()) {
-			// user changed the setting, got it
     		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) != null) {
         		leftRecentView.removeHeaderView(leftRecentHeaderView);
     		}
@@ -2266,7 +2175,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		showKeyboard(searchField);
 		viewPager.setCurrentItem(1);
 	}
-
 	
 	/**
 	 * Step 2: Setup TabHost
@@ -2276,7 +2184,4 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 		savedTabHost.addDefaultTabs();
 	}
-	
-
-
 }
