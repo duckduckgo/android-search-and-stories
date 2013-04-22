@@ -1748,8 +1748,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		// left side menu visibility changes
 		changeLeftMenuVisibility(SCREEN.SCR_SAVED_FEED);
     	
+		shareButton.setVisibility(View.GONE);
     	viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());
-    	
     	mDuckDuckGoContainer.webviewShowing = false;
 		clearLeftSelect();
     	    	
