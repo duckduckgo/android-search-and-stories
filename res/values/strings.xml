@@ -147,10 +147,8 @@
     <string name="WelcomeTitle">DuckDuckGo Search &amp; Stories</string>
     <string name="WelcomeDescription">
         Whether you\'re settling a bet or have a few free minutes, DuckDuckGo has you covered. 
-        Our search results are packed with instant answers and our home screen only 
-        shows you the most interesting stories. Best of all: it\'s completely private – unlike other search 
-        and stories apps, we don\'t track you.</string>
-        
+        Our search results are packed with instant answers and our home screen has the most talked about stories. 
+        Also, DuckDuckGo is completely private!  We don\'t track you</string>
     <string name="GetStarted">Get Started</string>
 
 </resources>

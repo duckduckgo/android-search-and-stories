@@ -7,7 +7,7 @@ import android.content.SharedPreferences.Editor;
 
 public class PreferencesManager {
 	
-	private static int WELCOME_VERSION = 0;
+	private static int WELCOME_VERSION = 1;
 	
 	/* Settings */
 	
