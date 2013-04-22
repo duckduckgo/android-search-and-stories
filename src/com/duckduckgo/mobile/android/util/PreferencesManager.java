@@ -148,9 +148,14 @@ public class PreferencesManager {
 		return DDGApplication.getSharedPreferences().getString("readarticles", null);
 	}
     
-    public static void saveReadArticles(String combinedArticles) {
-    	Editor editor = DDGApplication.getSharedPreferences().edit();
-		editor.putString("readarticles", combinedArticles);
-		editor.commit();
+    public static void saveReadArticles() {
+    	String combinedStringForReadArticles = ReadArticlesManager.getCombinedStringForReadArticles();
+    	if(combinedStringForReadArticles.length() != 0){
+	    	Editor editor = DDGApplication.getSharedPreferences().edit();
+			editor.putString("readarticles", combinedStringForReadArticles);
+			editor.commit();
+    	}
 	}
+    
+    
 }

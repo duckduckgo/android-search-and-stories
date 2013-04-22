@@ -104,6 +104,7 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DDGViewPager;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.SuggestType;
@@ -269,10 +270,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			searchOrGoToUrl(url, SESSIONTYPE.SESSION_FEED);
 		}
 		
-		// record article as read
-		String feedId = feedObject.getId();
-		if(feedId != null){
-			DDGControlVar.readArticles.add(feedId);
+		if(ReadArticlesManager.addReadArticle(feedObject)){
 			mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
 		}
 	}
@@ -1240,15 +1238,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 	}
 
-	private void saveReadArticles() {
-		String combined = "";
-		for(String id : DDGControlVar.readArticles){
-			combined += id + "-";
-		}
-		if(combined.length() != 0){
-			PreferencesManager.saveReadArticles(combined);
-		}
-	}
+	
 
 	@Override
 	public void onPause() {
@@ -1258,7 +1248,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			mDuckDuckGoContainer.mainFeedTask = null;
 		}
 		
-		saveReadArticles();
+		PreferencesManager.saveReadArticles();
 		
 		// XXX keep these for low memory conditions
 		saveAppState(sharedPreferences);
@@ -1266,7 +1256,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	@Override
 	protected void onStop() {
-		saveReadArticles();
+		PreferencesManager.saveReadArticles();
 		super.onStop();
 	}
 	
@@ -1464,10 +1454,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void showHistoryObject(HistoryObject object) {
 		mainWebView.clearBrowserState();
 		
-		if(object.getType().equals("R")) {
+		if(object.isWebSearch()) {
 			searchWebTerm(object.getData());
 		}
-		else if(object.getType().equals("F")) {
+		else if(object.isFeedObject()) {
 			DDGApplication.getDB().insertHistoryObject(object);
 			syncHistoryAdapters();
 			String feedId = object.getFeedId();

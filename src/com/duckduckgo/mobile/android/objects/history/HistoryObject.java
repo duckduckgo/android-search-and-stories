@@ -88,5 +88,13 @@ public class HistoryObject {
 	public String getFeedId() {
 		return feedId;
 	}
+
+	public boolean isWebSearch() {
+		return getType().equals("R");
+	}
+	
+	public boolean isFeedObject(){
+		return getType().equals("F");
+	}
 }
 

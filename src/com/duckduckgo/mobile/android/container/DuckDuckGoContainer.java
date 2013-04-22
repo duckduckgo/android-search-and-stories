@@ -17,8 +17,6 @@ public class DuckDuckGoContainer {
 	
 	public boolean webviewShowing = false;
 	
-	// denotes following browsing session is triggered by a search 
-//	public boolean searchSession = false;
 	public SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;
 	public String lastFeedUrl = "";
 	
@@ -27,7 +25,6 @@ public class DuckDuckGoContainer {
 	
 	public Drawable progressDrawable, searchFieldDrawable;
 	public Drawable stopDrawable;
-//	public Drawable reloadDrawable;
 	
 	public HistoryCursorAdapter recentSearchAdapter = null;
 	public HistoryCursorAdapter historyAdapter = null;
