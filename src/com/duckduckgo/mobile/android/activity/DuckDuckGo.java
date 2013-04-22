@@ -99,6 +99,7 @@ import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
+import com.duckduckgo.mobile.android.util.AppStateManager;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -1251,7 +1252,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		PreferencesManager.saveReadArticles();
 		
 		// XXX keep these for low memory conditions
-		saveAppState(sharedPreferences);
+		AppStateManager.saveAppState(sharedPreferences, mDuckDuckGoContainer, mainWebView, currentFeedObject);
 	}
 	
 	@Override
@@ -1937,87 +1938,49 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	       return mDuckDuckGoContainer;
 	}
 	
-	private void saveAppState(SharedPreferences prefs) {
-		Editor editor = prefs.edit();
-		editor.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
-		editor.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
-		editor.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
-		editor.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
-		editor.putBoolean("allowInHistory", mainWebView.allowInHistory);
-		editor.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
-		if(currentFeedObject != null) {
-			editor.putString("currentFeedObjectId", currentFeedObject.getId());
-		}
-		editor.commit();
+	
+	
+	
+	
+	
+    
+	@Override
+	protected void onSaveInstanceState(Bundle outState)
+	{
+		AppStateManager.saveAppState(outState, mDuckDuckGoContainer, mainWebView, currentFeedObject);					
+		super.onSaveInstanceState(outState);
+
+		// Save the state of the WebView
+		mainWebView.saveState(outState);
 	}
 	
-	private void saveAppState(Bundle bundle) {
-		bundle.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
-		bundle.putBoolean("webviewShowing", mDuckDuckGoContainer.webviewShowing);
-		bundle.putInt("currentScreen", mDuckDuckGoContainer.currentScreen.ordinal());
-		bundle.putInt("prevScreen", mDuckDuckGoContainer.prevScreen.ordinal());
-		bundle.putBoolean("allowInHistory", mainWebView.allowInHistory);
-		bundle.putInt("sessionType", mDuckDuckGoContainer.sessionType.ordinal());
-		if(currentFeedObject != null) {
-			bundle.putString("currentFeedObjectId", currentFeedObject.getId());
-		}
-	}
-	
-	private void recoverAppState(Object state) {
-		Bundle bundle = null; 
-		SharedPreferences prefs = null; 
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState){
+		super.onRestoreInstanceState(savedInstanceState);
 		
-		String feedId = null; 
+		AppStateManager.recoverAppState(savedInstanceState, mDuckDuckGoContainer, mainWebView, currentFeedObject);
+		String feedId = AppStateManager.getCurrentFeedObjectId(savedInstanceState);
 		
-		if(state instanceof Bundle) {
-			bundle = (Bundle) state;
-			
-			DDGControlVar.homeScreenShowing = bundle.getBoolean("homeScreenShowing");
-			mDuckDuckGoContainer.webviewShowing = bundle.getBoolean("webviewShowing");
-			mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(bundle.getInt("currentScreen"));
-			mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(bundle.getInt("prevScreen"));
-			mainWebView.allowInHistory = bundle.getBoolean("allowInHistory");
-			mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(bundle.getInt("sessionType"));
-			feedId = bundle.getString("currentFeedObjectId");
-			
-			clearLeftSelect();
-			markLeftSelect(mDuckDuckGoContainer.currentScreen);
-			
-			// Restore the state of the WebView
-	    	if(mDuckDuckGoContainer.webviewShowing) {
-	    		mainWebView.restoreState(bundle);
-	    	}
-		}
-		else if(state instanceof SharedPreferences) {
-			prefs = (SharedPreferences) state;
-			
-			DDGControlVar.homeScreenShowing = prefs.getBoolean("homeScreenShowing", false);
-			mDuckDuckGoContainer.webviewShowing = prefs.getBoolean("webviewShowing", false);
-			mDuckDuckGoContainer.currentScreen = SCREEN.getByCode(prefs.getInt("currentScreen", SCREEN.SCR_STORIES.getCode()));
-			mDuckDuckGoContainer.prevScreen = SCREEN.getByCode(prefs.getInt("prevScreen", SCREEN.SCR_STORIES.getCode()));
-			mainWebView.allowInHistory = prefs.getBoolean("allowInHistory", false);
-			mDuckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(prefs.getInt("sessionType", SESSIONTYPE.SESSION_BROWSE.getCode()));
-			feedId = prefs.getString("currentFeedObjectId", null);
-			
-			clearLeftSelect();
-			markLeftSelect(mDuckDuckGoContainer.currentScreen);			
-		}
+		clearLeftSelect();
+		markLeftSelect(mDuckDuckGoContainer.currentScreen);
+		
+		// Restore the state of the WebView
+    	if(mDuckDuckGoContainer.webviewShowing) {
+    		mainWebView.restoreState(savedInstanceState);
+    	}
 		
 		Log.v(TAG, "feedId: " + feedId);
 		
 		if(feedId != null && feedId.length() != 0) {
 			FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
-			if(feedObject != null)
+			if(feedObject != null) {
 				currentFeedObject = feedObject;
-			
-//			if(mDuckDuckGoContainer.webviewShowing && mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED) {
-//				showFeed(currentFeedObject);
-//			}
-			
+			}
 		}			
 		
-		if(mDuckDuckGoContainer.webviewShowing)
+		if(mDuckDuckGoContainer.webviewShowing) {
 			return;
+		}
 		
 		// arbitrary choice to not display Settings on comeback
     	if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS) {
@@ -2026,22 +1989,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	else {
 			displayScreen(mDuckDuckGoContainer.currentScreen, true);
     	}
-	}
-    
-	@Override
-	protected void onSaveInstanceState(Bundle outState)
-	{
-		saveAppState(outState);					
-		super.onSaveInstanceState(outState);
-
-		// Save the state of the WebView
-		mainWebView.saveState(outState);
-	}
-
-	@Override
-	protected void onRestoreInstanceState(Bundle savedInstanceState){
-		super.onRestoreInstanceState(savedInstanceState);
-		recoverAppState(savedInstanceState);
 	}
 	
 	private void markLeftSelect(SCREEN current) {
