@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 
@@ -49,9 +50,17 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 		Cursor c = null;
 		HistoryObject obj = null;
 		
-		if(adapter instanceof HistoryCursorAdapter) {		
-			c = (Cursor) ((HistoryCursorAdapter) adapter).getItem(position);
+		if(adapter instanceof MultiHistoryAdapter) {		
+			c = (Cursor) ((MultiHistoryAdapter) adapter).getItem(position);
 			obj = new HistoryObject(c);
+		}
+		// XXX Recent Search view has a header view, so we receive HeaderviewListAdapter
+		else if(adapter instanceof HeaderViewListAdapter) {			
+			c = (Cursor) ((HeaderViewListAdapter) adapter).getItem(position);
+			obj = new HistoryObject(c);
+		}
+		
+		if (obj != null) {
 			if (listener != null)
 				listener.onHistoryItemSelected(obj);
 		}
@@ -65,8 +74,8 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 		Cursor c = null;
 		HistoryObject obj = null;
 		
-		if(adapter instanceof HistoryCursorAdapter) {		
-			c = (Cursor) ((HistoryCursorAdapter) adapter).getItem(position);
+		if(adapter instanceof MultiHistoryAdapter) {		
+			c = (Cursor) ((MultiHistoryAdapter) adapter).getItem(position);
 			obj = new HistoryObject(c);
 		}
 		// XXX Recent Search view has a header view, so we receive HeaderviewListAdapter

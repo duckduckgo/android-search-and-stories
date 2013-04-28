@@ -19,6 +19,7 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.AppShortInfo;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DdgDB {
 
@@ -147,20 +148,23 @@ public class DdgDB {
 	}
 	
 	public long insertRecentSearch(String query) {
-		ContentValues contentValues = new ContentValues();
-		contentValues.put("type", "R");
-		contentValues.put("data", query);
-		contentValues.put("url", "");
-		contentValues.put("extraType", "");
-		contentValues.put("feedId", "");
-		// delete old record if exists
-		this.db.delete(HISTORY_TABLE, "type='R' AND data=?", new String[]{query});
-		return this.db.insert(HISTORY_TABLE, null, contentValues);
+		if(PreferencesManager.getRecordHistory()) {
+			ContentValues contentValues = new ContentValues();
+			contentValues.put("type", "R");
+			contentValues.put("data", query);
+			contentValues.put("url", "");
+			contentValues.put("extraType", "");
+			contentValues.put("feedId", "");
+			// delete old record if exists
+			this.db.delete(HISTORY_TABLE, "type='R' AND data=?", new String[]{query});
+			return this.db.insert(HISTORY_TABLE, null, contentValues);
+		}
+		return -1l;
 	}
 	
 	public long insertHistoryObject(HistoryObject object) {
 		if(object.getType().equals("F")) {
-			return insertFeedItem(object.getData(), object.getUrl(), object.getExtraType(), object.getFeedId());
+			return insertFeedItemToHistory(object.getData(), object.getUrl(), object.getExtraType(), object.getFeedId());
 		}
 		else if(object.getType().equals("W")) {
 			return insertWebPage(object.getData(), object.getUrl());
@@ -172,44 +176,42 @@ public class DdgDB {
 	}
 	
 	public long insertWebPage(String title, String url) {
-		ContentValues contentValues = new ContentValues();
-		contentValues.put("type", "W");
-		contentValues.put("data", title);
-		contentValues.put("url", url);
-		contentValues.put("extraType", "");
-		contentValues.put("feedId", "");
-		// delete old record if exists
-		this.db.delete(HISTORY_TABLE, "type='W' AND data=? AND url=?", new String[]{title, url});
-		return this.db.insert(HISTORY_TABLE, null, contentValues);
+		if(PreferencesManager.getRecordHistory()) {
+			ContentValues contentValues = new ContentValues();
+			contentValues.put("type", "W");
+			contentValues.put("data", title);
+			contentValues.put("url", url);
+			contentValues.put("extraType", "");
+			contentValues.put("feedId", "");
+			// delete old record if exists
+			this.db.delete(HISTORY_TABLE, "type='W' AND data=? AND url=?", new String[]{title, url});
+			return this.db.insert(HISTORY_TABLE, null, contentValues);
+		}
+		return -1l;
 	}
 	
-	public long insertFeedItem(String title, String url, String extraType, String feedId) {		
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("type", "F");
-        contentValues.put("data", title);
-        contentValues.put("url", url);
-        contentValues.put("extraType", extraType);
-        contentValues.put("feedId", feedId);
-        // delete old record if exists
-     	this.db.delete(HISTORY_TABLE, "type='F' AND feedId=?", new String[]{feedId});
-        long res = this.db.insertOrThrow(HISTORY_TABLE, null, contentValues);        
-        return res;
+	public long insertFeedItemToHistory(String title, String url, String extraType, String feedId) {		
+		if(PreferencesManager.getRecordHistory()) {
+	        ContentValues contentValues = new ContentValues();
+	        contentValues.put("type", "F");
+	        contentValues.put("data", title);
+	        contentValues.put("url", url);
+	        contentValues.put("extraType", extraType);
+	        contentValues.put("feedId", feedId);
+	        // delete old record if exists
+	     	this.db.delete(HISTORY_TABLE, "type='F' AND feedId=?", new String[]{feedId});
+	        long res = this.db.insertOrThrow(HISTORY_TABLE, null, contentValues);        
+	        return res;
+		}
+		return -1l;
 	}
 	
 	public long insertFeedItem(FeedObject feedObject) {
 		this.deleteFeedObject(feedObject);
-		this.insert(feedObject);
-		
-		String feedId = feedObject.getId();		
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("type", "F");
-        contentValues.put("data", feedObject.getTitle());
-        contentValues.put("url", feedObject.getUrl());
-        contentValues.put("extraType", feedObject.getType());
-        contentValues.put("feedId", feedId);
-        // delete old record if exists
-     	this.db.delete(HISTORY_TABLE, "type='F' AND feedId=?", new String[]{feedId});
-        long res = this.db.insertOrThrow(HISTORY_TABLE, null, contentValues);        
+		long res = this.insert(feedObject);
+		long resHistory = insertFeedItemToHistory(feedObject.getTitle(), feedObject.getUrl(), feedObject.getType(), feedObject.getId());
+		if(res == -1l)
+			res = resHistory;
         return res;
 	}
 	

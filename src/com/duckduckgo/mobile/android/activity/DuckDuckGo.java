@@ -17,11 +17,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -39,7 +35,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,7 +49,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -139,8 +133,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private HistoryListView leftRecentView = null;
 	
 	private PullToRefreshMainFeedListView mPullRefreshFeedView = null;
-	
-	ArrayAdapter<String> lRecentAdapter;
 	
 	private DDGViewPager viewPager;
 	private View contentView = null;
@@ -1410,12 +1402,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void searchWebTerm(String term) {
 		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_SEARCH;
 		
-		// save recent query if "record history" is enabled
-		if(PreferencesManager.getRecordHistory()){
-				// Log.v(TAG, "Search: " + term);		
-				DDGApplication.getDB().insertRecentSearch(term);
-				mDuckDuckGoContainer.historyAdapter.sync();
-		}
+		DDGApplication.getDB().insertRecentSearch(term);
+		mDuckDuckGoContainer.historyAdapter.sync();
 		
 		if(DDGControlVar.alwaysUseExternalBrowser) {
 			searchExternal(term);
