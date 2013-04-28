@@ -170,9 +170,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	// welcome screen
 	private WelcomeScreenView welcomeScreenLayout = null;
 	OnClickListener welcomeCloseListener = null;
-	
-	// notification for "Save Recent Searches" feature awareness
-	private View leftRecentHeaderView = null;
 		
 	private SharedPreferences sharedPreferences;
 		
@@ -629,12 +626,19 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	leftSettingsTextView.setOnClickListener(this);
     	
     	leftRecentView = (HistoryListView) leftMenuView.findViewById(R.id.LeftRecentView);
-    	
-		leftRecentHeaderView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.recentsearch_notrecording_layout, null, false);
-		leftRecentHeaderView.setOnClickListener(this);	
 		
 		leftRecentView.setDivider(null);
     	leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
+    	
+    	// "Save Recents" not enabled notification click listener
+    	leftRecentView.setOnHeaderClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				viewPager.switchPage();		
+				displayScreen(SCREEN.SCR_SETTINGS, false);
+			}
+		});
     	leftRecentView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
 			
 			public void onHistoryItemSelected(HistoryObject historyObject) {
@@ -1568,7 +1572,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						displayHomeScreen();
 					}
 					else if(preference.getKey().equals("recordHistoryPref")){
-						displayRecordHistoryDisabled();
+						leftRecentView.displayRecordHistoryDisabled();
 					}					
 					return false;
 				}
@@ -1696,7 +1700,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		changeLeftMenuVisibility(SCREEN.SCR_STORIES);
     	
     	// adjust "not recording" indicator
-    	displayRecordHistoryDisabled();
+		leftRecentView.displayRecordHistoryDisabled();
     	
     	// ensures feed refresh every time user switches to Stories screen
     	DDGControlVar.hasUpdatedFeed = false;
@@ -1802,7 +1806,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			viewPager.switchPage();		
 			displayScreen(SCREEN.SCR_SAVED_FEED, false);
 		}
-		else if(view.equals(leftSettingsTextView) || view.equals(leftRecentHeaderView)){
+		else if(view.equals(leftSettingsTextView)){
 			viewPager.switchPage();		
 			displayScreen(SCREEN.SCR_SETTINGS, false);
 		}
@@ -2045,24 +2049,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
-	}
-	
-	/**
-	 * Displays "not recording" indicator in left-menu if Save Searches option is disabled  
-	 */
-	public void displayRecordHistoryDisabled() {
-		if(PreferencesManager.getRecordHistory()) {
-    		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) != null) {
-        		leftRecentView.removeHeaderView(leftRecentHeaderView);
-    		}
-    	}
-    	else {
-    		if(leftRecentView.findViewById(leftRecentHeaderView.getId()) == null) {
-    			leftRecentView.setAdapter(null);
-    			leftRecentView.addHeaderView(leftRecentHeaderView);
-    			leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
-    		}
-    	}
 	}
 	
 	/**
