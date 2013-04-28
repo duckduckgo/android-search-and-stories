@@ -5,7 +5,7 @@
     android:layout_height="fill_parent"
     android:id="@+id/LeftRelativeLayout">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -19,7 +19,7 @@
     
 	    <ImageView style="@style/LeftDivTop" />
 	
-	    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+	    <TextView 
 		    style="@style/LeftItemText"
 		    android:id="@+id/LeftHomeTextView" 
 		    android:drawableLeft="?attr/leftDrawableHome"
@@ -37,7 +37,7 @@
     
     	<ImageView style="@style/LeftDivTop" />
     
-	    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+	    <TextView 
 		    style="@style/LeftItemText"
 		    android:id="@+id/LeftStoriesTextView" 
 		    android:drawableLeft="@android:drawable/ic_menu_rotate"
@@ -53,7 +53,7 @@
         
         <ImageView style="@style/LeftDivTop" />
     
-	    <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+	    <TextView
 		    style="@style/LeftItemText"
 		    android:id="@+id/LeftSavedTextView" 
 		    android:drawableLeft="?attr/leftDrawableSaved"
@@ -69,7 +69,7 @@
             
        	 <ImageView style="@style/LeftDivTop" />
     
-	     <TextView xmlns:android="http://schemas.android.com/apk/res/android" 
+	     <TextView 
 		    style="@style/LeftItemText"
 		    android:id="@+id/LeftSettingsTextView" 
 		    android:drawableLeft="?attr/leftDrawableSettings"
@@ -78,11 +78,6 @@
          <ImageView style="@style/LeftDivBottom" />
      
      </LinearLayout>
-    
-    <TextView 
-        style="@style/LeftTitleText"
-        android:text="@string/LeftRecent"
-        android:id="@+id/LeftRecentTextView" />
     
     <com.duckduckgo.mobile.android.views.HistoryListView
         android:layout_width="fill_parent" 

@@ -150,5 +150,8 @@
         Our search results are packed with instant answers and our home screen has the most talked about stories. 
         Also, DuckDuckGo is completely private!  We don\'t track you</string>
     <string name="GetStarted">Get Started</string>
+    
+    <string name="LeftRecentSearches">Recent Searches</string>
+    <string name="LeftRecentStories">Recent Stories</string>
 
 </resources>

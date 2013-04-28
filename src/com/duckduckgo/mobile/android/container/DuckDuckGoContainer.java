@@ -6,6 +6,7 @@ import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
+import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
@@ -26,8 +27,7 @@ public class DuckDuckGoContainer {
 	public Drawable progressDrawable, searchFieldDrawable;
 	public Drawable stopDrawable;
 	
-	public HistoryCursorAdapter recentSearchAdapter = null;
-	public HistoryCursorAdapter historyAdapter = null;
+	public MultiHistoryAdapter historyAdapter = null;
 	
 	public MainFeedAdapter feedAdapter = null;
 	public MainFeedTask mainFeedTask = null;
