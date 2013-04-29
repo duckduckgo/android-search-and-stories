@@ -16,6 +16,7 @@
 ### Stories
 - Images
 - Long press
+- Make sure new sources come in and ones marked default are turned on.
 
 ### Readability
 - Toggle only shows for story
