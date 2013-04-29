@@ -12,6 +12,15 @@ import android.widget.Adapter;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 
+/**
+ * Separated List Adapter
+ * 
+ * Allows having multiple ListAdapters in one ListView with section headers
+ * 
+ * @author Jeff Sharkey
+ * @link http://jsharkey.org/blog/2008/08/18/separating-lists-with-headers-in-android-09/
+ *
+ */
 public class SeparatedListAdapter extends BaseAdapter {
 	
 	public final Map<String,Adapter> sections = new LinkedHashMap<String,Adapter>();
