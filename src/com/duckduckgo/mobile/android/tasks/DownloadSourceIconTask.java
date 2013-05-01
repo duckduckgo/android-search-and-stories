@@ -1,11 +1,9 @@
 package com.duckduckgo.mobile.android.tasks;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,11 +19,11 @@ import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
-import com.duckduckgo.mobile.android.objects.SourceProcessor;
 import com.duckduckgo.mobile.android.objects.SourcesObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 
@@ -35,9 +33,6 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 	
 	FileCache fileCache;
 	private Context context;
-		
-	private boolean readSimpleSourceMap = false;
-	private boolean readDefaultSourceSet = false;
 			
 	public DownloadSourceIconTask(Context context, ImageCache cache) {
 		this.cache = cache;
@@ -49,52 +44,16 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 	protected List<SourcesObject> doInBackground(Void... arg0) {
 		JSONArray json = null;
 		List<SourcesObject> returnFeed = new ArrayList<SourcesObject>();
-		Map<String, String> simpleFeed = new HashMap<String, String>();
+		Set<String> defaultSet = new HashSet<String>(); 
+		
 		try {
 			if (isCancelled()) return null;
 			
 			String body = null;
-			
-			
-			if(!DDGControlVar.hasUpdatedSources) {
-				// if an update is triggered, directly fetch from URL
-				body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
-				fileCache.saveStringToInternal(DDGConstants.SOURCE_JSON_PATH, body);
-				DDGControlVar.sourceJSON = body;
-			}
-			
-			else {
-				body = DDGControlVar.sourceJSON;
-			
-				if(body == null){
-					body = fileCache.getStringFromInternal(DDGConstants.SOURCE_JSON_PATH);
-					
-					if(body == null){	// still null
-						body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
-						fileCache.saveStringToInternal(DDGConstants.SOURCE_JSON_PATH, body);
-					}
-					
-					DDGControlVar.sourceJSON = body;
-				}
-			
-			}
-			
-			if(!DDGControlVar.hasUpdatedSources || DDGControlVar.simpleSourceMap == null){
-				// read dump object line by line and create simple source map
-				fileCache.processFromInternal(DDGConstants.SOURCE_SIMPLE_PATH, new SourceProcessor());
-				
-				if(DDGControlVar.simpleSourceMap == null || DDGControlVar.simpleSourceMap.isEmpty()){
-					readSimpleSourceMap = true;
-				}
-			}
-			
-			if(!DDGControlVar.hasUpdatedSources || DDGControlVar.defaultSourceSet == null 
-					|| DDGControlVar.defaultSourceSet.isEmpty()){
-				readDefaultSourceSet = true;
-			}
-			
-			DDGControlVar.hasUpdatedSources = true;
-			
+						
+			// get source response (type_info=1)
+			body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
+						
 			json = new JSONArray(body);
 		} catch (JSONException jex) {
 			Log.e(TAG, jex.getMessage(), jex);
@@ -113,23 +72,18 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 						
 						String imageUrl = nextObj.optString("image");			
 						String id = nextObj.getString("id");
-						String title = nextObj.getString("title");
 						int def = nextObj.getInt("default");
 						
 						if(id != null && !id.equals("null")){
-							
-							simpleFeed.put(id, title);
-							
+							// record new default list
 							if(def == 1){
-								DDGControlVar.defaultSourceSet.add(id);
+								defaultSet.add(id);
 							}
 																					
 							if(imageUrl != null && imageUrl.length() != 0){
 								// if mode = reading simple source map, then do not exit upon icon cache detection
 								if(cache.getBitmapFromCache("DUCKDUCKICO--"+id, false) != null){
-									if(!readSimpleSourceMap && !readDefaultSourceSet) {
-										return returnFeed;
-									}
+									// pass
 								}
 								else {
 									Bitmap bitmap = DDGUtils.downloadBitmap(this, imageUrl);
@@ -147,44 +101,14 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 			}
 		}
 		
-		dumpSimpleSourceMap(simpleFeed);
-		
+		DDGControlVar.defaultSources = defaultSet;
+						
 		// default source related
-		synchronized (DDGControlVar.defaultSourceSet) {
-			DDGControlVar.defaultSourceSet.notify();
+		synchronized (DDGControlVar.defaultSources) {
+			DDGControlVar.defaultSources.notify();
 		}
-		
-		if(readDefaultSourceSet){
-			DDGUtils.saveSet(DDGApplication.getSharedPreferences(), DDGControlVar.defaultSourceSet, "defaultset");
-		}
-		
+				
 		return returnFeed;
-	}
-	
-	private void dumpSimpleSourceMap(Map<String,String> sourceMap) {
-		
-		// dump simple source list serialization before method exit
-		if(!DDGControlVar.hasUpdatedFeed || DDGControlVar.simpleSourceMap == null || DDGControlVar.simpleSourceMap.isEmpty()) {
-			
-			try {
-
-				FileOutputStream fos = context.openFileOutput(DDGConstants.SOURCE_SIMPLE_PATH, Context.MODE_PRIVATE);
-				String line;
-
-				for(Map.Entry<String,String> e : sourceMap.entrySet()) {
-					line = e.getKey() + "__" + e.getValue() + "\n";
-					fos.write(line.getBytes());
-				}
-
-				fos.close();
-
-			}
-			catch(IOException e){
-				e.printStackTrace();
-			}
-		}
-		
-		DDGControlVar.simpleSourceMap = sourceMap;
 	}
 
 }

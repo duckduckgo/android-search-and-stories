@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android;
 
 import java.io.File;
+import java.util.HashSet;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
@@ -20,6 +21,7 @@ import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
+import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -95,11 +97,17 @@ public class DDGApplication extends Application {
 		
 		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(PreferencesManager.getStartScreen()));
 		DDGControlVar.regionString = PreferencesManager.getRegion();
-		DDGControlVar.useDefaultSources = !DDGUtils.existsSet(sharedPreferences, "sourceset");
-		DDGControlVar.defaultSourceSet = DDGUtils.loadSet(sharedPreferences, "defaultset");
 		DDGControlVar.alwaysUseExternalBrowser = PreferencesManager.getExternalBrowser();
 		DDGControlVar.fontPrevProgress = PreferencesManager.getFontPrevProgress(DDGConstants.FONT_SEEKBAR_MID);
 		DDGControlVar.fontProgress = DDGControlVar.fontPrevProgress;
+		
+		DDGControlVar.userAllowedSources = PreferencesManager.getUserAllowedSources();
+		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();
+		
+		// not executed on global search for quick response
+		DownloadSourceIconTask sourceIconTask = new DownloadSourceIconTask(this, getImageCache());
+		sourceIconTask.execute();
+		
 		
 		String strReadArticles = PreferencesManager.getReadArticles();
 		if(strReadArticles != null){

@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.tasks;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -64,43 +65,21 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		}
 		else {
 			// main, preference-based filter
-			Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
-
-			if(PreferencesManager.containsSourcesetSize()){
-				if(!sourceSet.isEmpty()) {
-					String paramString = "";
-					for(String s : sourceSet){
-						paramString += s + ",";
-					}
-					if(paramString.length() > 0){
-						paramString = paramString.substring(0,paramString.length()-1);
-					}
-	
-					feedUrl += "&s=" + paramString;
-				}
-				else {
-					feedUrl = null;
+			if(DDGControlVar.defaultSources == null || DDGControlVar.defaultSources.isEmpty()){
+				synchronized (DDGControlVar.defaultSources) {
+					DDGControlVar.defaultSources.wait();
 				}
 			}
-			else {
-				// this case is when default sources are not loaded
-				if(DDGControlVar.defaultSourceSet == null || DDGControlVar.defaultSourceSet.isEmpty()){
-					synchronized (DDGControlVar.defaultSourceSet) {
-						DDGControlVar.defaultSourceSet.wait();
-					}
-				}
-				
-				String paramString = "";
-				for(String s : DDGControlVar.defaultSourceSet){
-					paramString += s + ",";
-				}
-				if(paramString.length() > 0){
-					paramString = paramString.substring(0,paramString.length()-1);
-				}
-
-				feedUrl += "&s=" + paramString;
-				
+			
+			String paramString = "";
+			for(String s : DDGControlVar.getRequestSources()){
+				paramString += s + ",";
 			}
+			if(paramString.length() > 0){
+				paramString = paramString.substring(0,paramString.length()-1);
+			}
+
+			feedUrl += "&s=" + paramString;
 		}
 		
 		return feedUrl;

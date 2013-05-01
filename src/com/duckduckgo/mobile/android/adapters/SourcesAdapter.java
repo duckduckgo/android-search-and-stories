@@ -32,6 +32,7 @@ import com.duckduckgo.mobile.android.objects.SectionedListItem;
 import com.duckduckgo.mobile.android.objects.SourcesObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 
 public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {	
@@ -55,17 +56,11 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 		
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
 	protected final ImageDownloader imageDownloader;
-	
-	private SharedPreferences sharedPreferences;
-	public Set<String> sourceSet;
-				
+					
 	public SourcesAdapter(Context context) {
 		super(context, 0);
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageDownloader = DDGApplication.getImageDownloader();
-		
-		sharedPreferences = DDGApplication.getSharedPreferences();
-		sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
+		imageDownloader = DDGApplication.getImageDownloader();		
 	}
 	
 	 public boolean areAllItemsEnabled() 
@@ -126,7 +121,8 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 				holder.id = feedId;
 				
 				
-				if(sourceSet.contains(holder.id)){
+				if(DDGControlVar.userAllowedSources.contains(holder.id) 
+						|| (!DDGControlVar.userDisallowedSources.contains(holder.id) && DDGControlVar.defaultSources.contains(holder.id)) ){
 					holder.checkbox.setChecked(true);
 				}
 				else {
@@ -140,16 +136,16 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 				holder.checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-						
-						DDGControlVar.useDefaultSources = false;
-																
+																						
 						if(isChecked){
-							sourceSet.add(holder.id);
-							DDGUtils.saveSet(sharedPreferences, sourceSet, "sourceset");
+							DDGControlVar.userAllowedSources.add(holder.id);
+							DDGControlVar.userDisallowedSources.remove(holder.id);
+							PreferencesManager.saveUserAllowedSources(DDGControlVar.userAllowedSources);
 						}
 						else {
-							sourceSet.remove(holder.id);
-							DDGUtils.saveSet(sharedPreferences, sourceSet, "sourceset");
+							DDGControlVar.userDisallowedSources.add(holder.id);
+							DDGControlVar.userAllowedSources.remove(holder.id);
+							PreferencesManager.saveUserDisallowedSources(DDGControlVar.userDisallowedSources);
 						}
 						
 						DDGControlVar.hasUpdatedFeed = false;

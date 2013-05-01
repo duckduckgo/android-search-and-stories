@@ -100,7 +100,6 @@ import com.duckduckgo.mobile.android.objects.PageTypes;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.tabhost.TabHostExt;
-import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
@@ -1260,9 +1259,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			searchWebTerm(query);
 		}
 		else {
-			// not executed on global search for quick response
-			mDuckDuckGoContainer.sourceIconTask = new DownloadSourceIconTask(getApplicationContext(), DDGApplication.getImageCache());
-			mDuckDuckGoContainer.sourceIconTask.execute();
 		
 			if(intent.getBooleanExtra("widget", false)) {
 				viewFlipper.setDisplayedChild(DDGControlVar.START_SCREEN.getFlipOrder());
@@ -2158,7 +2154,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private void keepFeedUpdated()
 	{
 		if (!DDGControlVar.hasUpdatedFeed) {
-			if(PreferencesManager.containsSourcesetSize() && PreferencesManager.getSourcesetSize() == 0) {
+			if(DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
 				// respect user choice of empty source list: show nothing
 				onFeedRetrieved(new ArrayList<FeedObject>(), true);
 			}

@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android.util;
 
+import java.util.Set;
+
 import com.duckduckgo.mobile.android.DDGApplication;
 
 import android.content.SharedPreferences;
@@ -43,10 +45,6 @@ public class PreferencesManager {
 		return DDGApplication.getSharedPreferences().getBoolean("directQueryPref", true);
 	}
 	
-	public static boolean containsSourcesetSize() {
-		return DDGApplication.getSharedPreferences().contains("sourceset_size");
-	}
-	
 	public static boolean isWelcomeShown() {
 		return DDGApplication.getSharedPreferences().getInt("welcomeShown", 0) == WELCOME_VERSION;
 	}
@@ -55,10 +53,6 @@ public class PreferencesManager {
 		Editor editor = DDGApplication.getSharedPreferences().edit();
 		editor.putInt("welcomeShown", WELCOME_VERSION);
 		editor.commit();
-	}
-	
-	public static int getSourcesetSize() {
-		return DDGApplication.getSharedPreferences().getInt("sourceset_size", 0);
 	}
 	
 	public static int getFontPrevProgress(int defaultValue) {
@@ -152,5 +146,22 @@ public class PreferencesManager {
     	Editor editor = DDGApplication.getSharedPreferences().edit();
 		editor.putString("readarticles", combinedArticles);
 		editor.commit();
+	}
+    
+    /* User sources */
+    public static Set<String> getUserAllowedSources() {
+		return DDGUtils.loadSet(DDGApplication.getSharedPreferences(), "allowset");
+	}
+    
+    public static boolean saveUserAllowedSources(Set<String> userSources) {
+		return DDGUtils.saveSet(DDGApplication.getSharedPreferences(), userSources, "allowset");
+	}
+    
+    public static Set<String> getUserDisallowedSources() {
+		return DDGUtils.loadSet(DDGApplication.getSharedPreferences(), "disallowset");
+	}
+    
+    public static boolean saveUserDisallowedSources(Set<String> userSources) {
+		return DDGUtils.saveSet(DDGApplication.getSharedPreferences(), userSources, "disallowset");
 	}
 }
