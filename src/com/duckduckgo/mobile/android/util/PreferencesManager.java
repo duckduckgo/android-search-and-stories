@@ -43,7 +43,7 @@ public class PreferencesManager {
 		return DDGApplication.getSharedPreferences().getBoolean("directQueryPref", true);
 	}
 	
-	public static boolean containsSourcesetSize() {
+	public static boolean containsSourceSetSize() {
 		return DDGApplication.getSharedPreferences().contains("sourceset_size");
 	}
 	

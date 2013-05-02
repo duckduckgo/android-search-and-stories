@@ -66,7 +66,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 			// main, preference-based filter
 			Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
 
-			if(PreferencesManager.containsSourcesetSize()){
+			if(PreferencesManager.containsSourceSetSize()){
 				if(!sourceSet.isEmpty()) {
 					String paramString = "";
 					for(String s : sourceSet){

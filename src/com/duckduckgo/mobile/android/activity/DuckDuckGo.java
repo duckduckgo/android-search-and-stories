@@ -1998,7 +1998,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	private void keepFeedUpdated()
 	{
 		if (!DDGControlVar.hasUpdatedFeed) {
-			if(PreferencesManager.containsSourcesetSize() && PreferencesManager.getSourcesetSize() == 0) {
+			if(PreferencesManager.containsSourceSetSize() && PreferencesManager.getSourcesetSize() == 0) {
 				// respect user choice of empty source list: show nothing
 				onFeedRetrieved(new ArrayList<FeedObject>(), true);
 			}
