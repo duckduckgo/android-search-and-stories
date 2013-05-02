@@ -23,7 +23,6 @@ import com.duckduckgo.mobile.android.objects.SourcesObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 
@@ -102,13 +101,14 @@ public class DownloadSourceIconTask extends AsyncTask<Void, Void, List<SourcesOb
 		}
 		
 		DDGControlVar.defaultSources = defaultSet;
-						
-		// default source related
-		synchronized (DDGControlVar.defaultSources) {
-			DDGControlVar.defaultSources.notify();
-		}
 				
 		return returnFeed;
+	}
+	
+	@Override
+	protected void onPostExecute(List<SourcesObject> result) {
+		super.onPostExecute(result);
+		DDGControlVar.isDefaultsChecked = true;
 	}
 
 }

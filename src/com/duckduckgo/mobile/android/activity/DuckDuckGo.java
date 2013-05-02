@@ -100,6 +100,7 @@ import com.duckduckgo.mobile.android.objects.PageTypes;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.tabhost.TabHostExt;
+import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
@@ -1225,6 +1226,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void onResume() {
 		super.onResume();
 		
+		// lock button etc. can cause MainFeedTask results to be useless for the Activity
+		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
+		// ensure we refresh in such cases
+		keepFeedUpdated();
+		
 		// update feeds
 		// https://app.asana.com/0/2891531242889/2858723303746
 		DDGControlVar.hasUpdatedFeed = false;
@@ -1269,7 +1275,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 			}
 		
-		}
+		}		
 		
 	}
 
@@ -2158,7 +2164,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				// respect user choice of empty source list: show nothing
 				onFeedRetrieved(new ArrayList<FeedObject>(), true);
 			}
-			else {
+			else {				
 				// cache
 				MainFeedTask cacheTask = new MainFeedTask(DuckDuckGo.this, this, true);
 			

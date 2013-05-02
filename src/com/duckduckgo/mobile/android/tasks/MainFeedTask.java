@@ -1,22 +1,17 @@
 package com.duckduckgo.mobile.android.tasks;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
@@ -24,8 +19,6 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
-import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
@@ -33,9 +26,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	
 	private Context context = null;
 	private FeedListener listener = null;
-	
-	private SharedPreferences sharedPreferences;
-	
+		
 	private FileCache fileCache = null;
 		
 	private boolean fromCache = false;
@@ -51,9 +42,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		this.listener = listener;
 		this.fileCache = DDGApplication.getFileCache();
 		
-		this.fromCache = fromCache;
-		
-		sharedPreferences = DDGApplication.getSharedPreferences();
+		this.fromCache = fromCache;		
 	}
 	
 	private String getFeedUrl() throws InterruptedException {
@@ -64,13 +53,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 			feedUrl += "&s=" + DDGControlVar.targetSource;
 		}
 		else {
-			// main, preference-based filter
-			if(DDGControlVar.defaultSources == null || DDGControlVar.defaultSources.isEmpty()){
-				synchronized (DDGControlVar.defaultSources) {
-					DDGControlVar.defaultSources.wait();
-				}
-			}
-			
+			// main, preference-based filter			
 			String paramString = "";
 			for(String s : DDGControlVar.getRequestSources()){
 				paramString += s + ",";
@@ -105,12 +88,28 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		}
 		else {
 
-			try {				
+			try {								
+				
+				// using Thread.sleep instead of wait()
+				// 
+				// Reason: notify-wait does not work as expected for AsyncTask
+				// (synchronized block causing IllegalMonitorStateException)
+				while(!DDGControlVar.isDefaultsChecked){
+					 try{
+					  Thread.sleep(200);
+					  Log.v(TAG, "waiting isDefaultsCheck");
+					 }catch(InterruptedException e){
+					  e.printStackTrace();
+					 }
+				}
+				
+				Log.v(TAG, "exec isDefaultsCheck");
+				
 				// if an update is triggered, directly fetch from URL
 				String feedUrl = getFeedUrl();
 				if(feedUrl == null)
 					return returnFeed;
-				body = DDGNetworkConstants.mainClient.doGetString(getFeedUrl());
+				body = DDGNetworkConstants.mainClient.doGetString(feedUrl);
 				synchronized(fileCache) {
 					fileCache.saveStringToInternal(DDGConstants.STORIES_JSON_PATH, body);
 					DDGControlVar.storiesJSON = new String(body);

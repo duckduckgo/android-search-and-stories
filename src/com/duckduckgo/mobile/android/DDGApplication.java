@@ -105,6 +105,7 @@ public class DDGApplication extends Application {
 		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();
 		
 		// not executed on global search for quick response
+		// this also sets DDGControlVar.defaultSources
 		DownloadSourceIconTask sourceIconTask = new DownloadSourceIconTask(this, getImageCache());
 		sourceIconTask.execute();
 		

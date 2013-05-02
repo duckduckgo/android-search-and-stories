@@ -11,6 +11,7 @@ public class DDGControlVar {
 	public static String regionString = "wt-wt";	// world traveler (none) as default
 	
 	public static String storiesJSON = null;
+	public static boolean isDefaultsChecked = false;
 	public static Set<String> defaultSources = null;
 	public static Set<String> userAllowedSources = null;
 	public static Set<String> userDisallowedSources = null;
@@ -36,7 +37,7 @@ public class DDGControlVar {
 		
 	public static boolean hasAppsIndexed = false;
 	
-	public static Set<String> getRequestSources() {
+	public static Set<String> getRequestSources() throws InterruptedException {
 		Set<String> requestSources = new HashSet<String>(DDGControlVar.defaultSources);
 		requestSources.removeAll(DDGControlVar.userDisallowedSources);
 		requestSources.addAll(DDGControlVar.userAllowedSources);
