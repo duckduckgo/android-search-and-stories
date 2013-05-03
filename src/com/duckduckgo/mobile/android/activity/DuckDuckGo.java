@@ -100,7 +100,7 @@ import com.duckduckgo.mobile.android.objects.PageTypes;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.tabhost.TabHostExt;
-import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
+import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
@@ -544,7 +544,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
     		
     		mDuckDuckGoContainer.mainFeedTask = null;
-    		mDuckDuckGoContainer.sourceIconTask = null;    		
     		
     		mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
     		
@@ -2166,10 +2165,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			}
 			else {				
 				// cache
-				MainFeedTask cacheTask = new MainFeedTask(DuckDuckGo.this, this, true);
+				CacheFeedTask cacheTask = new CacheFeedTask(this);
 			
 				// for HTTP request
-				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(DuckDuckGo.this, this);
+				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
 				
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 					cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

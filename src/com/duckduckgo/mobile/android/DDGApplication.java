@@ -15,16 +15,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.duckduckgo.mobile.android.db.DdgDB;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
-import com.duckduckgo.mobile.android.tasks.DownloadSourceIconTask;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
-import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 
@@ -58,6 +57,7 @@ public class DDGApplication extends Application {
 	private void onUpgrade(int appVersionCode) {
 		// clear old sharedPreferences values, types can conflict (int -> float)
 		PreferencesManager.clearValues();
+		PreferencesManager.migrateAllowedSources();
 		PreferencesManager.saveAppVersionCode(appVersionCode);
 	}
 	
@@ -78,7 +78,10 @@ public class DDGApplication extends Application {
 			int appVersionCode = pInfo.versionCode;
 			int oldVersionCode = PreferencesManager.getAppVersionCode();
 			
+			Log.v("APP", "oldversion: " + oldVersionCode + " new: " + appVersionCode);
 			if(oldVersionCode == 0 || oldVersionCode != appVersionCode) {
+				Log.v("APP", "onupgrade: " + oldVersionCode + " " + appVersionCode);
+				
 				// upgrade
 				onUpgrade(appVersionCode);
 			}
@@ -102,13 +105,7 @@ public class DDGApplication extends Application {
 		DDGControlVar.fontProgress = DDGControlVar.fontPrevProgress;
 		
 		DDGControlVar.userAllowedSources = PreferencesManager.getUserAllowedSources();
-		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();
-		
-		// not executed on global search for quick response
-		// this also sets DDGControlVar.defaultSources
-		DownloadSourceIconTask sourceIconTask = new DownloadSourceIconTask(this, getImageCache());
-		sourceIconTask.execute();
-		
+		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();		
 		
 		String strReadArticles = PreferencesManager.getReadArticles();
 		if(strReadArticles != null){

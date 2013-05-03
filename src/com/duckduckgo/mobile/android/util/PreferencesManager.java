@@ -6,6 +6,7 @@ import com.duckduckgo.mobile.android.DDGApplication;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.util.Log;
 
 public class PreferencesManager {
 	
@@ -116,6 +117,17 @@ public class PreferencesManager {
 		editor.remove("ptrHeaderSubTextSize");
 		editor.remove("leftTitleTextSize");
 		editor.commit();
+	}
+	
+	public static void migrateAllowedSources() {
+		Log.v("PREF", "migrating sources...");
+		SharedPreferences prefs = DDGApplication.getSharedPreferences();
+		if(prefs.contains("sourceset")) {
+			Log.v("PREF", "sourceset processing..");
+			Set<String> oldSources = DDGUtils.loadSet(prefs, "sourceset");
+			DDGUtils.deleteSet(prefs, "sourceset");			
+			saveUserAllowedSources(oldSources);
+		}		
 	}
 	
 	/* Events */
