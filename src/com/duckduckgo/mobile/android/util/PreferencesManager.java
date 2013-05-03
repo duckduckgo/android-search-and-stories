@@ -7,7 +7,6 @@ import com.duckduckgo.mobile.android.DDGApplication;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 
 public class PreferencesManager {
 	
