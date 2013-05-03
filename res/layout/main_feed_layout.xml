@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" 
         		android:layout_width="match_parent"
-        		android:layout_height="135dp">
+        		android:layout_height="155dp">
         
 	<com.duckduckgo.mobile.android.download.AsyncImageView android:layout_width="match_parent"
-               android:layout_height="135dp"
-               android:maxHeight="135dp"
+               android:layout_height="155dp"
+               android:maxHeight="155dp"
                android:scaleType="centerCrop"
                android:id="@+id/feedItemBackground" />
 				
