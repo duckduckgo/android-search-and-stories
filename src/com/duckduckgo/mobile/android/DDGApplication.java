@@ -1,7 +1,6 @@
 package com.duckduckgo.mobile.android;
 
 import java.io.File;
-import java.util.HashSet;
 
 import org.acra.ACRA;
 import org.acra.ReportingInteractionMode;
@@ -79,9 +78,7 @@ public class DDGApplication extends Application {
 			int oldVersionCode = PreferencesManager.getAppVersionCode();
 			
 			Log.v("APP", "oldversion: " + oldVersionCode + " new: " + appVersionCode);
-			if(oldVersionCode == 0 || oldVersionCode != appVersionCode) {
-				Log.v("APP", "onupgrade: " + oldVersionCode + " " + appVersionCode);
-				
+			if(oldVersionCode == 0 || oldVersionCode != appVersionCode) {				
 				// upgrade
 				onUpgrade(appVersionCode);
 			}

@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.util;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -119,14 +120,25 @@ public class PreferencesManager {
 		editor.commit();
 	}
 	
+	private static boolean shouldMigrateSources() {
+		return DDGApplication.getSharedPreferences().contains("sourceset_size");
+	}
+	
 	public static void migrateAllowedSources() {
-		Log.v("PREF", "migrating sources...");
 		SharedPreferences prefs = DDGApplication.getSharedPreferences();
-		if(prefs.contains("sourceset")) {
-			Log.v("PREF", "sourceset processing..");
-			Set<String> oldSources = DDGUtils.loadSet(prefs, "sourceset");
+		if(PreferencesManager.shouldMigrateSources()) {
+			Set<String> oldAllowed = DDGUtils.loadSet(prefs, "sourceset");
 			DDGUtils.deleteSet(prefs, "sourceset");			
-			saveUserAllowedSources(oldSources);
+			saveUserAllowedSources(oldAllowed);
+			
+			Set<String> cachedSources = DDGUtils.getCachedSources();
+			// XXX cachedSources is not expected to be null during a migration
+			// since before APP VERSION_CODE 43, source response is always cached 
+			if(cachedSources != null) {
+				Set<String> oldDisallowed = new HashSet<String>(cachedSources);
+				oldDisallowed.removeAll(oldAllowed);
+				saveUserDisallowedSources(oldDisallowed);
+			}
 		}		
 	}
 	

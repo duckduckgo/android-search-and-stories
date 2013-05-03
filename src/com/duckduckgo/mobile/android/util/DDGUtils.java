@@ -12,6 +12,10 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -450,5 +454,37 @@ public final class DDGUtils {
 			}
 			
 			return null;
+		}
+		
+		/**
+		 * Read cached sources from file cache
+		 * 
+		 * @return Cached source set, if not readable from cache returns null
+		 */
+		static public Set<String> getCachedSources() {
+			String body = DDGApplication.getFileCache().getStringFromInternal(DDGConstants.SOURCE_JSON_PATH);
+			if(body == null)
+				return null;
+			
+			try {
+				JSONArray json = new JSONArray(body);
+				Set<String> cachedSources = new HashSet<String>();
+
+				for (int i = 0; i < json.length(); i++) {
+					JSONObject nextObj = json.getJSONObject(i);
+					if (nextObj != null) {
+						String id = nextObj.getString("id");
+
+						if(id != null && !id.equals("null")){
+							cachedSources.add(id);
+						}
+					}
+				}
+				
+				return cachedSources;
+				
+			} catch (JSONException e) {
+				return null;
+			}
 		}
 }
