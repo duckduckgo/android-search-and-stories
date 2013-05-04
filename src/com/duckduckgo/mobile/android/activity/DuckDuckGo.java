@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -404,6 +405,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     private void addWelcomeScreen() {
     	viewPager.setDispatchTouch(false);
     	
+    	if(!getResources().getBoolean(R.bool.welcomeScreen_allowLandscape)){
+			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+		}
+    	
     	// add welcome screen
         welcomeScreenLayout = new WelcomeScreenView(this);
         FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
@@ -523,6 +528,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			@Override
 			public void onClick(View v) {		
 				removeWelcomeScreen();
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
 			}
 		};
         
