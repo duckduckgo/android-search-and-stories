@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.tasks;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -8,15 +9,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.FileCache;
+import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
@@ -24,35 +23,23 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
 	private static String TAG = "MainFeedTask";
 	
-	private Context context = null;
 	private FeedListener listener = null;
-	
-	private SharedPreferences sharedPreferences;
-	
-	private FileCache fileCache = null;
 		
-	private boolean fromCache = false;
+	ImageCache cache;
+	private FileCache fileCache = null;
+	
 	
 	private boolean requestFailed = false;
 	
-	public MainFeedTask(Context context, FeedListener listener) {
-		this(context, listener, false);
-	}	
-			
-	public MainFeedTask(Context context, FeedListener listener, boolean fromCache) {
-		this.context = context;
+	public MainFeedTask(FeedListener listener) {
+		this.cache = DDGApplication.getImageCache();
 		this.listener = listener;
 		this.fileCache = DDGApplication.getFileCache();
-		
-		this.fromCache = fromCache;
-		
-		sharedPreferences = DDGApplication.getSharedPreferences();
 	}
 	
 	private String getFeedUrl() throws InterruptedException {
@@ -63,48 +50,88 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 			feedUrl += "&s=" + DDGControlVar.targetSource;
 		}
 		else {
-			// main, preference-based filter
-			Set<String> sourceSet = DDGUtils.loadSet(sharedPreferences, "sourceset");
-
-			if(PreferencesManager.containsSourceSetSize()){
-				if(!sourceSet.isEmpty()) {
-					String paramString = "";
-					for(String s : sourceSet){
-						paramString += s + ",";
-					}
-					if(paramString.length() > 0){
-						paramString = paramString.substring(0,paramString.length()-1);
-					}
-	
-					feedUrl += "&s=" + paramString;
-				}
-				else {
-					feedUrl = null;
-				}
+			// main, preference-based filter			
+			String paramString = "";
+			for(String s : DDGControlVar.getRequestSources()){
+				paramString += s + ",";
 			}
-			else {
-				// this case is when default sources are not loaded
-				if(DDGControlVar.defaultSourceSet == null || DDGControlVar.defaultSourceSet.isEmpty()){
-					synchronized (DDGControlVar.defaultSourceSet) {
-						DDGControlVar.defaultSourceSet.wait();
-					}
-				}
-				
-				String paramString = "";
-				for(String s : DDGControlVar.defaultSourceSet){
-					paramString += s + ",";
-				}
-				if(paramString.length() > 0){
-					paramString = paramString.substring(0,paramString.length()-1);
-				}
-
-				feedUrl += "&s=" + paramString;
-				
+			if(paramString.length() > 0){
+				paramString = paramString.substring(0,paramString.length()-1);
 			}
+
+			feedUrl += "&s=" + paramString;
 		}
 		
 		return feedUrl;
 	}
+	
+	
+	/**
+	 * Retrieves source response (type_info=1) from Watrcoolr
+	 * and initializes:
+	 * 1. Source icons (high-quality icons from Watrcoolr)
+	 * 2. Default sources
+	 */
+	private void initializeSources() {
+		JSONArray json = null;
+		Set<String> defaultSet = new HashSet<String>(); 
+		
+		try {			
+			String body = null;
+						
+			// get source response (type_info=1)
+			body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
+						
+			json = new JSONArray(body);
+		} catch (JSONException jex) {
+			Log.e(TAG, jex.getMessage(), jex);
+		} catch (DDGHttpException conException) {
+			Log.e(TAG, "Unable to execute Query: " + conException.getMessage(), conException);
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage(), e);
+		}
+
+		if (json != null) {
+			for (int i = 0; i < json.length(); i++) {
+				try {
+					JSONObject nextObj = json.getJSONObject(i);
+					if (nextObj != null) {
+						
+						String imageUrl = nextObj.optString("image");			
+						String id = nextObj.getString("id");
+						int def = nextObj.getInt("default");
+						
+						if(id != null && !id.equals("null")){
+							// record new default list
+							if(def == 1){
+								defaultSet.add(id);
+							}
+														
+							// ***** save source icon to ImageCache if needed ****  
+							if(imageUrl != null && imageUrl.length() != 0){
+								if(cache.getBitmapFromCache("DUCKDUCKICO--"+id, false) != null){
+									// pass
+								}
+								else {
+									Bitmap bitmap = DDGUtils.downloadBitmap(this, imageUrl);
+									if(bitmap != null){
+										cache.addBitmapToCache("DUCKDUCKICO--"+id, bitmap);
+									}
+								}
+							}
+							// ***************************************************
+						
+						}
+					}
+				} catch (JSONException e) {
+					Log.e(TAG, "Failed to create object with info at index " + i);
+				}
+			}
+		}
+		
+		DDGControlVar.defaultSources = defaultSet;
+	}
+	
 	
 	@Override
 	protected List<FeedObject> doInBackground(Void... arg0) {
@@ -113,34 +140,28 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		String body = null;
 		
 		if (isCancelled()) return null;
-
-		if(this.fromCache) {
-			body = DDGControlVar.storiesJSON;
-
-			// try getting JSON from file cache
-			if(body == null){
-				synchronized(fileCache) {
-					body = fileCache.getStringFromInternal(DDGConstants.STORIES_JSON_PATH);
-				}
-			}
+		
+		
+		if(!DDGControlVar.isDefaultsChecked) {
+			initializeSources();
+			DDGControlVar.isDefaultsChecked = true;
 		}
-		else {
+		
 
-			try {				
-				// if an update is triggered, directly fetch from URL
-				String feedUrl = getFeedUrl();
-				if(feedUrl == null)
-					return returnFeed;
-				body = DDGNetworkConstants.mainClient.doGetString(getFeedUrl());
-				synchronized(fileCache) {
-					fileCache.saveStringToInternal(DDGConstants.STORIES_JSON_PATH, body);
-					DDGControlVar.storiesJSON = new String(body);
-				}
-			}				
-			catch (Exception e) {
-				requestFailed = true;
-				Log.e(TAG, e.getMessage(), e);
+		try {
+			// if an update is triggered, directly fetch from URL
+			String feedUrl = getFeedUrl();
+			if(feedUrl == null)
+				return returnFeed;
+			body = DDGNetworkConstants.mainClient.doGetString(feedUrl);
+			synchronized(fileCache) {
+				fileCache.saveStringToInternal(DDGConstants.STORIES_JSON_PATH, body);
+				DDGControlVar.storiesJSON = new String(body);
 			}
+		}				
+		catch (Exception e) {
+			requestFailed = true;
+			Log.e(TAG, e.getMessage(), e);
 		}
 
 		if(body != null) {	
@@ -151,7 +172,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 			}
 		}
 		else {
-			Log.e(TAG, "body: null - fromCache:" + fromCache);
+			Log.e(TAG, "mainFeed body: null");
 		}
 
 		if (json != null) {
@@ -183,7 +204,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		}
 		
 		if (this.listener != null && feed != null) {
-			this.listener.onFeedRetrieved(feed, fromCache);
+			this.listener.onFeedRetrieved(feed, false);
 		}
 	}
 	

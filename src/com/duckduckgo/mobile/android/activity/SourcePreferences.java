@@ -1,8 +1,6 @@
 package com.duckduckgo.mobile.android.activity;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import android.app.Activity;
 import android.content.Context;
@@ -77,14 +75,10 @@ public class SourcePreferences extends Activity implements SourcesListener {
 
 				DDGUtils.deleteSet(DDGApplication.getSharedPreferences(), "sourceset");
 				DDGControlVar.hasUpdatedFeed = false;
-				DDGControlVar.useDefaultSources = true;
-				DDGControlVar.hasUpdatedSources = false;
 				
 				// copy defaults				
-				sourcePrefContainer.sourcesAdapter.sourceSet.clear();
-				for(String s : DDGControlVar.defaultSourceSet) {
-					sourcePrefContainer.sourcesAdapter.sourceSet.add(s);
-				}
+				DDGControlVar.userAllowedSources.clear();
+				DDGControlVar.userDisallowedSources.clear();
 				
 				// reset source set of underlying list adapter
 				sourcePrefContainer.sourcesAdapter.notifyDataSetChanged();
@@ -107,31 +101,11 @@ public class SourcePreferences extends Activity implements SourcesListener {
 	protected void onResume() {
 		super.onResume();
 		
-		sourcePrefContainer.sourcesTask = new SourcesTask(getApplicationContext(), this);
+		sourcePrefContainer.sourcesTask = new SourcesTask(this);
 		sourcePrefContainer.sourcesTask.execute();
 	}
 
 	public void onSourcesRetrieved(List<SourcesObject> feed) {
-		
-		// if using defaults, should repopulate source set with default list
-		if(DDGControlVar.useDefaultSources){
-			Set<String> sourceSet = new HashSet<String>();
-			DDGControlVar.defaultSourceSet.clear();
-			
-			for(SourcesObject sobj : feed){
-				if(sobj.getDefault() == 1) {
-					sourceSet.add(sobj.getId());
-					DDGControlVar.defaultSourceSet.add(sobj.getId());
-				}
-			}
-			
-			DDGUtils.saveSet(DDGApplication.getSharedPreferences(), sourceSet, "sourceset");
-			DDGUtils.saveSet(DDGApplication.getSharedPreferences(), sourceSet, "defaultset");
-			
-			// reset source set of underlying list adapter
-			sourcePrefContainer.sourcesAdapter.sourceSet = sourceSet;
-		}
-		
 		sourcePrefContainer.sourcesAdapter.setList(feed);
 		sourcePrefContainer.sourcesAdapter.notifyDataSetChanged();
 		
@@ -141,7 +115,7 @@ public class SourcePreferences extends Activity implements SourcesListener {
 		//If the sourcesTask is null, we are currently paused
 		//Otherwise, we can try again
 		if (sourcePrefContainer.sourcesTask != null) {
-			sourcePrefContainer.sourcesTask = new SourcesTask(getApplicationContext(), this);
+			sourcePrefContainer.sourcesTask = new SourcesTask(this);
 			sourcePrefContainer.sourcesTask.execute();
 		}
 		

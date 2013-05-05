@@ -18,10 +18,6 @@ public class DDGWebChromeClient extends WebChromeClient {
 	public void onProgressChanged(WebView view, int newProgress) {
 		super.onProgressChanged(view, newProgress);
 		
-		if(!((DDGWebView) view).allowInHistory) {
-			view.clearHistory();
-		}
-		
 		if(view.getVisibility() != View.VISIBLE) {
 			return;
 		}

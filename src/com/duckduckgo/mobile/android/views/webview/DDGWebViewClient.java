@@ -24,11 +24,8 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 public class DDGWebViewClient extends WebViewClient {
-	boolean isLoading = false;
+	private boolean mLoaded = false;
 	
-	// keeps current form of the URL that is loading
-	String urlCurrentState = null;
-		
 	DuckDuckGo activity;
 	
 	public DDGWebViewClient(DuckDuckGo activity) {
@@ -36,24 +33,13 @@ public class DDGWebViewClient extends WebViewClient {
 	}
 	 	
 	private void clickedAnchorAction(DDGWebView view) {
-		view.allowInHistory = true; 
 		activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
-		view.resetReadabilityState();
 	}
 	        	        	        	
 	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
 		// Log.i(TAG, "shouldOverrideUrl  " + url);
 		
-		if(!activity.savedState) {			
-			if (isLoading) {
-				urlCurrentState = url;
-			}
-			else {
-				urlCurrentState = null;
-				clickedAnchorAction((DDGWebView) view);
-			}
-			isLoading = true;
-			
+		if(!activity.savedState && mLoaded) {			
 			// handle mailto: and tel: links with native apps
 			if(url.startsWith("mailto:")){
                 MailTo mt = MailTo.parse(url);
@@ -82,6 +68,9 @@ public class DDGWebViewClient extends WebViewClient {
 //					view.loadUrl(url);
 				}
 			}
+			else {
+				clickedAnchorAction((DDGWebView) view);
+			}
 		}
 		return false;
 	}
@@ -89,10 +78,14 @@ public class DDGWebViewClient extends WebViewClient {
 	@SuppressLint("NewApi")
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
+		mLoaded = false;
 		
-		isLoading = true;
-		urlCurrentState = url;
-		        		
+		DDGWebView wv = ((DDGWebView) view);
+		if(wv.loadingReadableBack) {
+			wv.stopLoading();	
+			return;
+		}
+				        		
 		if(url.equals(activity.mDuckDuckGoContainer.lastFeedUrl)) {
 			activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
 		}
@@ -184,17 +177,9 @@ public class DDGWebViewClient extends WebViewClient {
 	public void onPageFinished (WebView view, String url) {
 		super.onPageFinished(view, url);
 		
-		// if(!redirect){
-		if(urlCurrentState != null && url.equals(urlCurrentState)) {
-			isLoading = false;
-			urlCurrentState = null;
-		}
+		mLoaded = true;
 		
 		activity.mCleanSearchBar = false;
-		
-		if(!((DDGWebView) view).allowInHistory) {
-			view.clearHistory();
-		}
 		
 		if(view.getVisibility() != View.VISIBLE) {
 			return;
@@ -205,5 +190,39 @@ public class DDGWebViewClient extends WebViewClient {
 //		// This makes a little (X) to clear the search bar.
 //		mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
 //        searchField.setCompoundDrawables(null, null, mDuckDuckGoContainer.reloadDrawable, null);
+		
+		DDGWebView wv = ((DDGWebView) view);
+		
+		if(wv.readableBackState) {
+			wv.readableBackState = false;
+			if(wv.canGoBack()) {
+				wv.loadingReadableBack = true;
+				wv.goBack();
+			}
+			else {
+				wv.shouldClearHistory = true;
+				wv.readableAction(activity.currentFeedObject);
+			}
+		}
+		else if(wv.loadingReadableBack) {
+			wv.loadingReadableBack = false;
+			wv.readableAction(activity.currentFeedObject);
+		}				
+		
+		if(wv.shouldClearHistory) {
+			wv.clearHistory();
+			wv.shouldClearHistory = false;
+		}
 	}
+	
+	@Override
+	public void doUpdateVisitedHistory(WebView view, String url,
+			boolean isReload) {
+		DDGWebView wv = ((DDGWebView) view);
+		if(wv.shouldClearHistory) {
+			wv.clearHistory();
+		}
+		super.doUpdateVisitedHistory(view, url, isReload);
+	}
+
 }

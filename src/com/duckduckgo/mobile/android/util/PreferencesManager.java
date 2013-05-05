@@ -1,5 +1,8 @@
 package com.duckduckgo.mobile.android.util;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import com.duckduckgo.mobile.android.DDGApplication;
 
 import android.content.SharedPreferences;
@@ -55,10 +58,6 @@ public class PreferencesManager {
 		Editor editor = DDGApplication.getSharedPreferences().edit();
 		editor.putInt("welcomeShown", WELCOME_VERSION);
 		editor.commit();
-	}
-	
-	public static int getSourcesetSize() {
-		return DDGApplication.getSharedPreferences().getInt("sourceset_size", 0);
 	}
 	
 	public static int getFontPrevProgress(int defaultValue) {
@@ -124,6 +123,28 @@ public class PreferencesManager {
 		editor.commit();
 	}
 	
+	private static boolean shouldMigrateSources() {
+		return DDGApplication.getSharedPreferences().contains("sourceset_size");
+	}
+	
+	public static void migrateAllowedSources() {
+		SharedPreferences prefs = DDGApplication.getSharedPreferences();
+		if(PreferencesManager.shouldMigrateSources()) {
+			Set<String> oldAllowed = DDGUtils.loadSet(prefs, "sourceset");
+			DDGUtils.deleteSet(prefs, "sourceset");			
+			saveUserAllowedSources(oldAllowed);
+			
+			Set<String> cachedSources = DDGUtils.getCachedSources();
+			// XXX cachedSources is not expected to be null during a migration
+			// since before APP VERSION_CODE 43, source response is always cached 
+			if(cachedSources != null) {
+				Set<String> oldDisallowed = new HashSet<String>(cachedSources);
+				oldDisallowed.removeAll(oldAllowed);
+				saveUserDisallowedSources(oldDisallowed);
+			}
+		}		
+	}
+	
 	/* Events */
     public static void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(key.equals("startScreenPref")){
@@ -157,5 +178,20 @@ public class PreferencesManager {
     	}
 	}
     
+    /* User sources */
+    public static Set<String> getUserAllowedSources() {
+		return DDGUtils.loadSet(DDGApplication.getSharedPreferences(), "allowset");
+	}
     
+    public static boolean saveUserAllowedSources(Set<String> userSources) {
+		return DDGUtils.saveSet(DDGApplication.getSharedPreferences(), userSources, "allowset");
+	}
+    
+    public static Set<String> getUserDisallowedSources() {
+		return DDGUtils.loadSet(DDGApplication.getSharedPreferences(), "disallowset");
+	}
+    
+    public static boolean saveUserDisallowedSources(Set<String> userSources) {
+		return DDGUtils.saveSet(DDGApplication.getSharedPreferences(), userSources, "disallowset");
+	}
 }

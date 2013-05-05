@@ -7,7 +7,6 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.util.Action;
 import com.duckduckgo.mobile.android.util.Item;
-import com.duckduckgo.mobile.android.util.Item.ItemType;
 
 public class DeleteUrlInHistoryMenuItem extends Item {
 	private DuckDuckGo context;

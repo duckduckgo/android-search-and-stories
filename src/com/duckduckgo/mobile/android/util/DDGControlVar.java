@@ -1,7 +1,6 @@
 package com.duckduckgo.mobile.android.util;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class DDGControlVar {
@@ -11,16 +10,14 @@ public class DDGControlVar {
 	public static boolean hasUpdatedFeed = false;
 	public static String regionString = "wt-wt";	// world traveler (none) as default
 	
-	public static String sourceJSON = null;
 	public static String storiesJSON = null;
-	public static Map<String,String> simpleSourceMap = null;
-	public static Set<String> defaultSourceSet = null;
+	public static boolean isDefaultsChecked = false;
+	public static Set<String> defaultSources = null;
+	public static Set<String> userAllowedSources = null;
+	public static Set<String> userDisallowedSources = null;
 	
 	public static String targetSource = null; 
-	
-	public static boolean useDefaultSources = true;
-	public static boolean hasUpdatedSources = false;
-	
+		
 	public static Set<String> readArticles = new HashSet<String>(); 
 	
 	public static boolean homeScreenShowing = true;
@@ -37,8 +34,13 @@ public class DDGControlVar {
 	public static int ptrHeaderSize, prevPtrHeaderSize;
 	public static int ptrSubHeaderSize, prevPtrSubHeaderSize;
 	public static float leftTitleTextSize, prevLeftTitleTextSize;
-	
-//	public static TaskCompleteSignal taskCompleteSignal = new TaskCompleteSignal();
-	
+		
 	public static boolean hasAppsIndexed = false;
+	
+	public static Set<String> getRequestSources() throws InterruptedException {
+		Set<String> requestSources = new HashSet<String>(DDGControlVar.defaultSources);
+		requestSources.removeAll(DDGControlVar.userDisallowedSources);
+		requestSources.addAll(DDGControlVar.userAllowedSources);
+		return requestSources;
+	}
 }

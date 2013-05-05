@@ -16,7 +16,6 @@ public class AppStateManager {
 		editor.putBoolean("webviewShowing", duckDuckGoContainer.webviewShowing);
 		editor.putInt("currentScreen", duckDuckGoContainer.currentScreen.ordinal());
 		editor.putInt("prevScreen", duckDuckGoContainer.prevScreen.ordinal());
-		editor.putBoolean("allowInHistory", webView.allowInHistory);
 		editor.putInt("sessionType", duckDuckGoContainer.sessionType.ordinal());
 		if(currentFeedObject != null) {
 			editor.putString("currentFeedObjectId", currentFeedObject.getId());
@@ -30,7 +29,6 @@ public class AppStateManager {
 		bundle.putBoolean("webviewShowing", duckDuckGoContainer.webviewShowing);
 		bundle.putInt("currentScreen", duckDuckGoContainer.currentScreen.ordinal());
 		bundle.putInt("prevScreen", duckDuckGoContainer.prevScreen.ordinal());
-		bundle.putBoolean("allowInHistory", webView.allowInHistory);
 		bundle.putInt("sessionType", duckDuckGoContainer.sessionType.ordinal());
 		if(currentFeedObject != null) {
 			bundle.putString("currentFeedObjectId", currentFeedObject.getId());
@@ -50,7 +48,6 @@ public class AppStateManager {
 			duckDuckGoContainer.webviewShowing = bundle.getBoolean("webviewShowing");
 			duckDuckGoContainer.currentScreen = SCREEN.getByCode(bundle.getInt("currentScreen"));
 			duckDuckGoContainer.prevScreen = SCREEN.getByCode(bundle.getInt("prevScreen"));
-			webView.allowInHistory = bundle.getBoolean("allowInHistory");
 			duckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(bundle.getInt("sessionType"));
 		}
 		// do we ever get here?
@@ -61,7 +58,6 @@ public class AppStateManager {
 			duckDuckGoContainer.webviewShowing = prefs.getBoolean("webviewShowing", false);
 			duckDuckGoContainer.currentScreen = SCREEN.getByCode(prefs.getInt("currentScreen", SCREEN.SCR_STORIES.getCode()));
 			duckDuckGoContainer.prevScreen = SCREEN.getByCode(prefs.getInt("prevScreen", SCREEN.SCR_STORIES.getCode()));
-			webView.allowInHistory = prefs.getBoolean("allowInHistory", false);
 			duckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(prefs.getInt("sessionType", SESSIONTYPE.SESSION_BROWSE.getCode()));
 		}
 	}

@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
 

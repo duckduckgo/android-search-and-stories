@@ -1,7 +1,5 @@
 package com.duckduckgo.mobile.android.util.menuItems;
 
-import javax.xml.datatype.Duration;
-
 import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
