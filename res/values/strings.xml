@@ -152,5 +152,9 @@
         and stories apps, we don\'t track you.</string>
         
     <string name="GetStarted">Get Started</string>
+    
+    <string name="NewSources">We have added some new sources!</string>
+    <string name="NewSourcesOk">Cool!</string>
+    <string name="NewSourcesNoThx">No Thanks</string>
 
 </resources>

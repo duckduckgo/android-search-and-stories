@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -11,6 +12,8 @@ import android.content.SharedPreferences.Editor;
 public class PreferencesManager {
 	
 	private static int WELCOME_VERSION = 0;
+	private static boolean NEW_SOURCES = true;
+	private static boolean sourcesWereMigratedRightNow = false;
 	
 	/* Settings */
 	
@@ -138,7 +141,16 @@ public class PreferencesManager {
 				oldDisallowed.removeAll(oldAllowed);
 				saveUserDisallowedSources(oldDisallowed);
 			}
+			sourcesWereMigratedRightNow = true;
 		}		
+	}
+	
+	public static boolean shouldShowNewSourcesDialog(){
+		return NEW_SOURCES && sourcesWereMigratedRightNow;
+	}
+	
+	public static void newSourcesDialogWasShown(){
+		NEW_SOURCES = false;
 	}
 	
 	/* Events */

@@ -88,6 +88,7 @@ import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewQueryMenuAdapt
 import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewStoryMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewWebPageMenuAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
+import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.fragment.SavedFeedTabFragment;
@@ -471,6 +472,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_PROGRESS);
+        
+        showNewSourcesDialog();
         
         sharedPreferences = DDGApplication.getSharedPreferences();
         
@@ -1062,6 +1065,13 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         displayHomeScreen();
     }	
 	
+	private void showNewSourcesDialog() {
+		if(PreferencesManager.shouldShowNewSourcesDialog()){
+			new NewSourcesDialogBuilder(this).show();
+			PreferencesManager.newSourcesDialogWasShown();
+		}
+	}
+
 	/**
 	 * Cache previous/next N images
 	 */
