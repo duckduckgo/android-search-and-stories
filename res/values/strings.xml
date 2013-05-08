@@ -153,5 +153,8 @@
     
     <string name="LeftRecentSearches">Recent Searches</string>
     <string name="LeftRecentStories">Recent Stories</string>
+    <string name="NewSources">We\'ve added some cool new story sources!</string>
+    <string name="NewSourcesOk">Show me</string>
+    <string name="NewSourcesNoThx">Later</string>
 
 </resources>

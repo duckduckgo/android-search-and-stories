@@ -1,5 +1,9 @@
 package com.duckduckgo.mobile.android.util.menuItems;
 
+import android.content.Intent;
+import android.widget.ShareActionProvider;
+import android.widget.ShareActionProvider.OnShareTargetSelectedListener;
+
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.util.Action;
@@ -15,7 +19,7 @@ public class ShareSearchMenuItem extends Item {
 		this.context = context;
 		this.query = query;
 		
-		this.ActionToExecute = getActionToExecute();
+		this.ActionToExecute = getActionToExecute();		
 	}
 
 	/** 
@@ -26,7 +30,16 @@ public class ShareSearchMenuItem extends Item {
 		return new Action() {
 			@Override
 			public void Execute() {
-				Sharer.shareSearch(context, query);
+				//Sharer.shareSearch(context, query);
+				ShareActionProvider provider = new ShareActionProvider(context);
+				provider.setOnShareTargetSelectedListener(new OnShareTargetSelectedListener() {
+					
+					@Override
+					public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+				});
 			};
 		};
 	}
