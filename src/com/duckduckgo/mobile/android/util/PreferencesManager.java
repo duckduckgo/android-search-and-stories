@@ -98,6 +98,14 @@ public class PreferencesManager {
 		editor.commit();
 	}
 	
+	public static void saveDefaultSources(Set<String> sources) {
+		DDGUtils.saveSet(DDGApplication.getSharedPreferences(), sources, "defaultsources");
+	}
+	
+	public static Set<String> getDefaultSources() {
+		return DDGUtils.loadSet(DDGApplication.getSharedPreferences(), "defaultsources");
+	}
+	
 	public static void saveAdjustedTextSizes() {
 		Editor editor = DDGApplication.getSharedPreferences().edit();
 		editor.putInt("fontPrevProgress", DDGControlVar.fontPrevProgress);
