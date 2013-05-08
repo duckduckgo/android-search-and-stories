@@ -101,6 +101,7 @@ public class DDGApplication extends Application {
 		DDGControlVar.fontPrevProgress = PreferencesManager.getFontPrevProgress(DDGConstants.FONT_SEEKBAR_MID);
 		DDGControlVar.fontProgress = DDGControlVar.fontPrevProgress;
 		
+		DDGControlVar.defaultSources = PreferencesManager.getDefaultSources();
 		DDGControlVar.userAllowedSources = PreferencesManager.getUserAllowedSources();
 		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();		
 		

@@ -23,6 +23,7 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
@@ -130,6 +131,8 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		}
 		
 		DDGControlVar.defaultSources = defaultSet;
+		
+		PreferencesManager.saveDefaultSources(defaultSet);
 	}
 	
 	
