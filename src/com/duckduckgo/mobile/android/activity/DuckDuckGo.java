@@ -29,6 +29,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
@@ -301,7 +302,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     public OnHistoryItemLongClickListener mHistoryLongClickListener = new OnHistoryItemLongClickListener() {
     	@Override
     	public void onHistoryItemLongClick(HistoryObject historyObject) {
-            new HistoryMenuDialog(DuckDuckGo.this, historyObject).show();
+            if(historyObject.isFeedObject() && TextUtils.isEmpty(historyObject.getFeedId())) {
+                new HistoryFeedMenuDialog(DuckDuckGo.this, historyObject).show();
+            }
+            else{
+                new HistorySearchMenuDialog(DuckDuckGo.this, historyObject).show();
+            }
     	}
     };
     

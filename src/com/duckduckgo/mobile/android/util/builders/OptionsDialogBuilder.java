@@ -13,13 +13,20 @@ public class OptionsDialogBuilder extends Builder {
 	public OptionsDialogBuilder(DuckDuckGo context, PageMenuContextAdapter contextAdapter, int title){
 		super(context);
 		setTitle(title);
-		this.contextAdapter = contextAdapter;
-		
-		setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int item) {
-				Item clickedItem = OptionsDialogBuilder.this.contextAdapter.getItem(item);
-				clickedItem.ActionToExecute.Execute();
-			}
-		});
+		setContextAdapter(contextAdapter);
 	}
+
+    public OptionsDialogBuilder(DuckDuckGo context, int title){
+        super(context);
+        setTitle(title);
+    }
+
+    public void setContextAdapter(PageMenuContextAdapter contextAdapter){
+        setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int item) {
+                Item clickedItem = OptionsDialogBuilder.this.contextAdapter.getItem(item);
+                clickedItem.ActionToExecute.Execute();
+            }
+        });
+    }
 }
