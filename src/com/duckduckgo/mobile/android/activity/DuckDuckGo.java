@@ -1,15 +1,7 @@
 package com.duckduckgo.mobile.android.activity;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.DownloadManager;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
@@ -45,31 +37,14 @@ import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.DownloadListener;
 import android.webkit.WebView.HitTestResult;
-import android.widget.AbsListView;
+import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.LinearLayout;
-import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.TabHost.TabContentFactory;
-import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.ViewFlipper;
-
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
-import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
-import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
-import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
-import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
-import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
-import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.*;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
@@ -88,23 +63,13 @@ import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
-import com.duckduckgo.mobile.android.util.AppStateManager;
-import com.duckduckgo.mobile.android.util.DDGConstants;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
-import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.DDGViewPager;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
-import com.duckduckgo.mobile.android.util.ReadArticlesManager;
-import com.duckduckgo.mobile.android.util.SCREEN;
-import com.duckduckgo.mobile.android.util.SESSIONTYPE;
-import com.duckduckgo.mobile.android.util.SuggestType;
+import com.duckduckgo.mobile.android.util.*;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelectedListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
-import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemLongClickListener;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
@@ -113,6 +78,13 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
+
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DuckDuckGo extends FragmentActivity implements OnEditorActionListener, FeedListener, OnClickListener {
 	protected final String TAG = "DuckDuckGo";
@@ -545,7 +517,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				}
 				
 				if(historyObject != null){
-					showHistoryObject((HistoryObject) historyObject);
+					showHistoryObject(historyObject);
 				}				
 			}
 		});
@@ -594,8 +566,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					SuggestType suggestType = suggestObject.getType();
 					if (suggestObject != null) {
 						if(suggestType == SuggestType.TEXT) {
-							String text = suggestObject.getPhrase();
-							text.trim();
+							String text = suggestObject.getPhrase().trim();
 							searchOrGoToUrl(text);
 						}
 						else if(suggestType == SuggestType.APP) {
@@ -660,7 +631,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				}
 				
 				if(historyObject != null){
-					showHistoryObject((HistoryObject) historyObject);
+					showHistoryObject(historyObject);
 				}				
 			}
 		});
@@ -1500,8 +1471,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		
 		}
 	}
-	
-	
+
 	/** 
 	 * change button visibility in left-side navigation menu
 	 * according to screen
@@ -1531,8 +1501,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         	leftRecentView.setVisibility(View.GONE);
     	}
 	}
-	
-	
+
 	/**
 	 * helper method to control visibility states etc. of other views in DuckDuckGo activity
 	 */
@@ -1762,8 +1731,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
     
 	@Override
-	protected void onSaveInstanceState(Bundle outState)
-	{
+	protected void onSaveInstanceState(Bundle outState)	{
 		AppStateManager.saveAppState(outState, mDuckDuckGoContainer, mainWebView, currentFeedObject);					
 		super.onSaveInstanceState(outState);
 
@@ -1808,7 +1776,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	}
 	}
 	
-	private void markLeftSelect(SCREEN current) {
+	private void markLeftSelect(SCREEN current){
 		if(DDGControlVar.START_SCREEN == current) {
 			leftHomeTextView.setSelected(true);
 			
@@ -1839,8 +1807,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	 * Refresh feed if it's not marked as updated
 	 */
 	@SuppressLint("NewApi")
-	public void keepFeedUpdated()
-	{
+	public void keepFeedUpdated(){
 		if (!DDGControlVar.hasUpdatedFeed) {
 			if(DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
 				// respect user choice of empty source list: show nothing
