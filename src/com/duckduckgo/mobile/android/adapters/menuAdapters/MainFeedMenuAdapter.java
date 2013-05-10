@@ -18,8 +18,8 @@ public class MainFeedMenuAdapter extends PageMenuContextAdapter {
 		this.context = context;
 	}
 	
-	public MainFeedMenuAdapter(DuckDuckGo context, int resource, 
-			int textViewResourceId, String pageType, FeedObject feedObject) {
+	public MainFeedMenuAdapter(DuckDuckGo context, int resource,
+                               int textViewResourceId, FeedObject feedObject) {
 		this(context, resource, textViewResourceId);
 		this.feedObject = feedObject;
 		addItems();

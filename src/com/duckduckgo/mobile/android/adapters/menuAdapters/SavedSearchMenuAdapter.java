@@ -16,8 +16,8 @@ public class SavedSearchMenuAdapter extends PageMenuContextAdapter {
 		this.context = context;
 	}
 	
-	public SavedSearchMenuAdapter(DuckDuckGo context, int resource, 
-			int textViewResourceId, String pageType, String query) {
+	public SavedSearchMenuAdapter(DuckDuckGo context, int resource,
+                                  int textViewResourceId, String query) {
 		this(context, resource, textViewResourceId);
 		this.query = query;
 		addItems();

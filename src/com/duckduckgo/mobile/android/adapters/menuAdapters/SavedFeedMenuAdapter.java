@@ -17,8 +17,8 @@ public class SavedFeedMenuAdapter extends PageMenuContextAdapter {
 		this.context = context;
 	}
 	
-	public SavedFeedMenuAdapter(DuckDuckGo context, int resource, 
-			int textViewResourceId, String pageType, FeedObject feedObject) {
+	public SavedFeedMenuAdapter(DuckDuckGo context, int resource,
+                                int textViewResourceId, FeedObject feedObject) {
 		this(context, resource, textViewResourceId);
 		this.feedObject = feedObject;
 		addItems();
