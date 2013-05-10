@@ -232,8 +232,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
 		feedItemSelected(feedObject);
 	}
-	
-	
+
+
 	public OnMainFeedItemSelectedListener mFeedItemSelectedListener = new OnMainFeedItemSelectedListener() {
 		public void onMainFeedItemSelected(FeedObject feedObject) {
 			// close left nav if it's open
@@ -244,20 +244,14 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
     };
     
-    public OnMainFeedItemLongClickListener mFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
+    private OnMainFeedItemLongClickListener mFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
 		public void onMainFeedItemLongClick(FeedObject feedObject) {
 			new MainFeedMenuDialog(DuckDuckGo.this, feedObject).show();
 		}
     };
 
-    public OnMainFeedItemLongClickListener mSavedFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
-		public void onMainFeedItemLongClick(FeedObject feedObject) {
-            new SavedStoryMenuDialog(DuckDuckGo.this, feedObject).show();
-		}
-    };
-    
-    
-    public OnHistoryItemLongClickListener mHistoryLongClickListener = new OnHistoryItemLongClickListener() {
+
+    private OnHistoryItemLongClickListener mHistoryLongClickListener = new OnHistoryItemLongClickListener() {
     	@Override
     	public void onHistoryItemLongClick(HistoryObject historyObject) {
             if(historyObject.isFeedObject() && TextUtils.isEmpty(historyObject.getFeedId())) {

@@ -12,6 +12,7 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 
@@ -35,11 +36,17 @@ public class SavedFeedTabFragment extends ListFragment {
 		final Activity activity = getActivity();
 				
 		if(activity instanceof DuckDuckGo) {
+            final DuckDuckGo duckDuckGoActivity = (DuckDuckGo)activity;
     		savedFeedView = (MainFeedListView) getListView();
-    		savedFeedView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedFeedAdapter);
+    		savedFeedView.setAdapter(duckDuckGoActivity.mDuckDuckGoContainer.savedFeedAdapter);
 
-    		savedFeedView.setOnMainFeedItemSelectedListener(((DuckDuckGo) activity).mFeedItemSelectedListener);
-    		savedFeedView.setOnMainFeedItemLongClickListener(((DuckDuckGo) activity).mSavedFeedItemLongClickListener);
+    		savedFeedView.setOnMainFeedItemSelectedListener(duckDuckGoActivity.mFeedItemSelectedListener);
+    		savedFeedView.setOnMainFeedItemLongClickListener(new MainFeedListView.OnMainFeedItemLongClickListener() {
+                @Override
+                public void onMainFeedItemLongClick(FeedObject feedObject) {
+                    new SavedStoryMenuDialog(duckDuckGoActivity, feedObject).show();
+                }
+            });
 		}
 	}
 
