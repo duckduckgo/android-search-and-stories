@@ -437,8 +437,9 @@ public final class DDGUtils {
 		 * @return
 		 */
 		static public String getQueryIfSerp(String url) {
-			if(!url.contains("duckduckgo.com"))
-				return null;
+			if(isSerpUrl(url)) {
+                return null;
+            }
 			
 			Uri uri = Uri.parse(url);
 			String query = uri.getQueryParameter("q");
@@ -455,8 +456,12 @@ public final class DDGUtils {
 			
 			return null;
 		}
-		
-		/**
+
+    public static boolean isSerpUrl(String url) {
+        return !url.contains("duckduckgo.com");
+    }
+
+    /**
 		 * Read cached sources from file cache
 		 * 
 		 * @return Cached source set, if not readable from cache returns null

@@ -77,10 +77,7 @@ import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistoryMenuDialog;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.MainFeedMenuDialog;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedFeedMenuDialog;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.*;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
 import com.duckduckgo.mobile.android.download.Holder;
@@ -1780,43 +1777,22 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		if(webViewUrl == null){
 			webViewUrl = "";
 		}
-		
-		final String query = DDGUtils.getQueryIfSerp(webViewUrl);
+
 		final PageMenuContextAdapter contextAdapter;
 		
 		// direct displaying after feed item is clicked
 		// the rest will arrive as SESSION_BROWSE
 		// so we should save this feed item with target redirected URL
 		if(isStorySessionOrStoryUrl()) {
-			alertTitle = getString(R.string.StoryOptionsTitle);
-			pageUrl = currentFeedObject.getUrl();				
-			isPageSaved = DDGApplication.getDB().isSaved(currentFeedObject.getId());
-			
-			mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
-			contextAdapter  = new WebViewStoryMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1,
-					currentFeedObject, isPageSaved, mainWebView.isReadable);
-			
+            mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
+			new WebViewStoryMenuDialog(this, currentFeedObject, mainWebView.isReadable).show();
 		}						
-		else if(query != null) {
-			alertTitle = getString(R.string.SearchOptionsTitle);
-			pageUrl = webViewUrl;
-			isPageSaved = DDGApplication.getDB().isSavedSearch(query);
-			contextAdapter  = new WebViewQueryMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1,
-					query, isPageSaved);
+		else if(DDGUtils.isSerpUrl(webViewUrl)) {
+            new WebViewQueryMenuDialog(this, webViewUrl).show();
 		}
 		else {
-			// in case it's not a query or feed item
-			alertTitle = getString(R.string.PageOptionsTitle);
-			pageUrl = webViewUrl;
-			isPageSaved = false;
-			contextAdapter = new WebViewWebPageMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, pageUrl);
+			new WebViewWebPageMenuDialog(this, webViewUrl).show();
 		}
-		
-		
-		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DuckDuckGo.this);
-		alertDialogBuilder.setTitle(alertTitle);
-		alertDialogBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
-		alertDialogBuilder.show();
 	}
 	
 	public void launchReadableFeedTask(FeedObject feedObject) {
