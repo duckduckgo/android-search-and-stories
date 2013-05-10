@@ -14,7 +14,6 @@ import android.app.DownloadManager;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
@@ -80,6 +79,7 @@ import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewQueryMenuAdapt
 import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewStoryMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewWebPageMenuAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
+import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
@@ -191,8 +191,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	SeekBarHint fontSizeSeekBar;
 	
 	public boolean mCleanSearchBar = false;
-	
-	AlertDialog.Builder cacheDialogBuilder;
 	
 	private TabHostExt savedTabHost = null;
 
@@ -549,24 +547,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		}
         
         viewFlipper = (ViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
-        // viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
-//        viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());       
-        		
-		cacheDialogBuilder = new AlertDialog.Builder(this);
-		// Add the buttons
-		cacheDialogBuilder.setTitle(R.string.ErrorFeedTitle);
-		cacheDialogBuilder.setMessage(R.string.ErrorFeedDetail);
-		cacheDialogBuilder.setPositiveButton(R.string.Continue, new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		        	   dialog.dismiss();
-		           }
-		       });
-		cacheDialogBuilder.setNegativeButton(R.string.Retry, new DialogInterface.OnClickListener() {
-		           public void onClick(DialogInterface dialog, int id) {
-		        	   DDGControlVar.hasUpdatedFeed = false;
-		        	   keepFeedUpdated();
-		           }
-		       });
     	    	
     	leftHomeTextView = (TextView) leftMenuView.findViewById(R.id.LeftHomeTextView);
     	leftStoriesTextView = (TextView) leftMenuView.findViewById(R.id.LeftStoriesTextView);
@@ -1522,10 +1502,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	public void onFeedRetrievalFailed() {
 		//If the mainFeedTask is null, we are currently paused
-		//Otherwise, we can try again
+		//Otherwise, we can ask the user to try again
 		if (mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mDuckDuckGoContainer.mainFeedTask != null) {
-			AlertDialog failDialog = cacheDialogBuilder.create();
-			failDialog.show();
+			new FeedRequestFailureDialogBuilder(this).show();
 		}
 	}
 	
@@ -1994,7 +1973,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	 * Refresh feed if it's not marked as updated
 	 */
 	@SuppressLint("NewApi")
-	private void keepFeedUpdated()
+	public void keepFeedUpdated()
 	{
 		if (!DDGControlVar.hasUpdatedFeed) {
 			if(DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
