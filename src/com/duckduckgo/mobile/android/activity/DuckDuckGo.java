@@ -283,14 +283,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     };
     
     public OnMainFeedItemLongClickListener mFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
-		public void onMainFeedItemLongClick(FeedObject feedObject) {	
-			
+		public void onMainFeedItemLongClick(FeedObject feedObject) {
+            final PageMenuContextAdapter contextAdapter = new MainFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item,
+                    android.R.id.text1, "mainfeed", feedObject);
+
 			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(DuckDuckGo.this);
 			alertBuilder.setTitle(R.string.StoryOptionsTitle);
-			
-			final PageMenuContextAdapter contextAdapter = new MainFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, 
-					android.R.id.text1, "mainfeed", feedObject);
-			
 			alertBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
 			alertBuilder.show();
 		}
@@ -298,12 +296,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     
     public OnMainFeedItemLongClickListener mSavedFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
 		public void onMainFeedItemLongClick(FeedObject feedObject) {
-			
-			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(DuckDuckGo.this);
+            final PageMenuContextAdapter contextAdapter = new SavedFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedfeed", feedObject);
+
+            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(DuckDuckGo.this);
 			alertBuilder.setTitle(R.string.StoryOptionsTitle);
-			
-			final PageMenuContextAdapter contextAdapter = new SavedFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedfeed", feedObject);
-			
 			alertBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
 			alertBuilder .show();
 		}
@@ -313,12 +309,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     public OnSavedSearchItemLongClickListener mSavedSearchLongClickListener = new OnSavedSearchItemLongClickListener() {
     	@Override
     	public void onSavedSearchItemLongClick(final String query) {
-    		    
+            final PageMenuContextAdapter contextAdapter = new SavedSearchMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedsearch", query);
+
 			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DuckDuckGo.this);
 			alertDialogBuilder.setTitle(R.string.SearchOptionsTitle);
-						
-			final PageMenuContextAdapter contextAdapter = new SavedSearchMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, "savedsearch", query);
-			
 			alertDialogBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
 			alertDialogBuilder.show();
     	}
