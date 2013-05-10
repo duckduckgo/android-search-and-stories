@@ -70,11 +70,6 @@ import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
-import com.duckduckgo.mobile.android.adapters.menuAdapters.HistoryFeedMenuAdapter;
-import com.duckduckgo.mobile.android.adapters.menuAdapters.HistorySearchMenuAdapter;
-import com.duckduckgo.mobile.android.adapters.menuAdapters.MainFeedMenuAdapter;
-import com.duckduckgo.mobile.android.adapters.menuAdapters.SavedFeedMenuAdapter;
-import com.duckduckgo.mobile.android.adapters.menuAdapters.SavedSearchMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewQueryMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewStoryMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewWebPageMenuAdapter;
@@ -82,6 +77,10 @@ import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistoryMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.MainFeedMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedFeedMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
 import com.duckduckgo.mobile.android.download.Holder;
@@ -106,7 +105,6 @@ import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.SuggestType;
-import com.duckduckgo.mobile.android.util.builders.OptionsDialogBuilder;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelectedListener;
@@ -284,37 +282,21 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     
     public OnMainFeedItemLongClickListener mFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
 		public void onMainFeedItemLongClick(FeedObject feedObject) {
-            final PageMenuContextAdapter contextAdapter = new MainFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item,
-                    android.R.id.text1, feedObject);
-
-			AlertDialog.Builder alertBuilder = new AlertDialog.Builder(DuckDuckGo.this);
-			alertBuilder.setTitle(R.string.StoryOptionsTitle);
-			alertBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
-			alertBuilder.show();
+			new MainFeedMenuDialog(DuckDuckGo.this, feedObject).show();
 		}
     };
-    
+
     public OnMainFeedItemLongClickListener mSavedFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
 		public void onMainFeedItemLongClick(FeedObject feedObject) {
-            final PageMenuContextAdapter contextAdapter = new SavedFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, feedObject);
-
-            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(DuckDuckGo.this);
-			alertBuilder.setTitle(R.string.StoryOptionsTitle);
-			alertBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
-			alertBuilder .show();
+            new SavedFeedMenuDialog(DuckDuckGo.this, feedObject).show();
 		}
     };
-    
-    
+
+
     public OnSavedSearchItemLongClickListener mSavedSearchLongClickListener = new OnSavedSearchItemLongClickListener() {
     	@Override
     	public void onSavedSearchItemLongClick(final String query) {
-            final PageMenuContextAdapter contextAdapter = new SavedSearchMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, query);
-
-			AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(DuckDuckGo.this);
-			alertDialogBuilder.setTitle(R.string.SearchOptionsTitle);
-			alertDialogBuilder.setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
-			alertDialogBuilder.show();
+            new SavedSearchMenuDialog(DuckDuckGo.this, query);
     	}
     };
     
@@ -322,21 +304,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     public OnHistoryItemLongClickListener mHistoryLongClickListener = new OnHistoryItemLongClickListener() {
     	@Override
     	public void onHistoryItemLongClick(HistoryObject historyObject) {
-			final String pageFeedId = historyObject.getFeedId();
-			final String pageType = historyObject.getType();
-    
-			OptionsDialogBuilder alertDialogBuilder;
-						
-			final PageMenuContextAdapter contextAdapter;
-			if(pageType.startsWith("F") && pageFeedId != null && pageFeedId.length() != 0) {
-				contextAdapter = new HistoryFeedMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, historyObject);
-				alertDialogBuilder = new OptionsDialogBuilder(DuckDuckGo.this, contextAdapter, R.string.StoryOptionsTitle);
-			}
-			else{
-				contextAdapter = new HistorySearchMenuAdapter(DuckDuckGo.this, android.R.layout.select_dialog_item, android.R.id.text1, historyObject);
-				alertDialogBuilder = new OptionsDialogBuilder(DuckDuckGo.this, contextAdapter, R.string.SearchOptionsTitle);
-			}
-			alertDialogBuilder.show();
+            new HistoryMenuDialog(DuckDuckGo.this, historyObject).show();
     	}
     };
     
@@ -1400,24 +1368,24 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		mDuckDuckGoContainer.historyAdapter.sync();
 	}
 	
-	public void showHistoryObject(HistoryObject object) {
+	public void showHistoryObject(HistoryObject historyObject) {
 //		mainWebView.clearBrowserState();
 		
-		if(object.isWebSearch()) {
-			searchWebTerm(object.getData());
+		if(historyObject.isWebSearch()) {
+			searchWebTerm(historyObject.getData());
 		}
-		else if(object.isFeedObject()) {
-			DDGApplication.getDB().insertHistoryObject(object);
+		else if(historyObject.isFeedObject()) {
+			DDGApplication.getDB().insertHistoryObject(historyObject);
 			mDuckDuckGoContainer.historyAdapter.sync();
-			String feedId = object.getFeedId();
+			String feedId = historyObject.getFeedId();
 			if(feedId != null) {
 				feedItemSelected(feedId);
 			}
 		}
 		else {
-			DDGApplication.getDB().insertHistoryObject(object);
+			DDGApplication.getDB().insertHistoryObject(historyObject);
 			mDuckDuckGoContainer.historyAdapter.sync();
-			showWebUrl(object.getUrl());
+			showWebUrl(historyObject.getUrl());
 		}		
 	}
 	

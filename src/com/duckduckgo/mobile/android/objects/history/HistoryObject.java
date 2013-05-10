@@ -94,7 +94,7 @@ public class HistoryObject {
 	}
 	
 	public boolean isFeedObject(){
-		return getType().equals("F");
+		return getType().startsWith("F");
 	}
 }
 
