@@ -9,7 +9,6 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.FragmentManager;
 import android.app.SearchManager;
@@ -71,9 +70,6 @@ import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
-import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewQueryMenuAdapter;
-import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewStoryMenuAdapter;
-import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewWebPageMenuAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
@@ -82,7 +78,6 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.*;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
 import com.duckduckgo.mobile.android.download.Holder;
-import com.duckduckgo.mobile.android.listener.ExecuteActionOnClickListener;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
@@ -286,7 +281,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 
     public OnMainFeedItemLongClickListener mSavedFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
 		public void onMainFeedItemLongClick(FeedObject feedObject) {
-            new SavedFeedMenuDialog(DuckDuckGo.this, feedObject).show();
+            new SavedStoryMenuDialog(DuckDuckGo.this, feedObject).show();
 		}
     };
 
@@ -303,7 +298,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     	@Override
     	public void onHistoryItemLongClick(HistoryObject historyObject) {
             if(historyObject.isFeedObject() && TextUtils.isEmpty(historyObject.getFeedId())) {
-                new HistoryFeedMenuDialog(DuckDuckGo.this, historyObject).show();
+                new HistoryStoryMenuDialog(DuckDuckGo.this, historyObject).show();
             }
             else{
                 new HistorySearchMenuDialog(DuckDuckGo.this, historyObject).show();

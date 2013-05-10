@@ -7,18 +7,18 @@ import com.duckduckgo.mobile.android.util.menuItems.SendToExternalBrowserMenuIte
 import com.duckduckgo.mobile.android.util.menuItems.ShareFeedMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.UnSaveStoryMenuItem;
 
-public class SavedFeedMenuAdapter extends PageMenuContextAdapter {
+public class SavedStoryMenuAdapter extends PageMenuContextAdapter {
 	private DuckDuckGo context;
 	private FeedObject feedObject;
 
-	public SavedFeedMenuAdapter(DuckDuckGo context, int resource,
-			int textViewResourceId) {
+	public SavedStoryMenuAdapter(DuckDuckGo context, int resource,
+                                 int textViewResourceId) {
 		super(context, resource, textViewResourceId);
 		this.context = context;
 	}
 	
-	public SavedFeedMenuAdapter(DuckDuckGo context, int resource,
-                                int textViewResourceId, FeedObject feedObject) {
+	public SavedStoryMenuAdapter(DuckDuckGo context, int resource,
+                                 int textViewResourceId, FeedObject feedObject) {
 		this(context, resource, textViewResourceId);
 		this.feedObject = feedObject;
 		addItems();

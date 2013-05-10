@@ -1,11 +1,7 @@
 package com.duckduckgo.mobile.android.dialogs.menuDialogs;
 
-import android.app.AlertDialog;
-import android.text.TextUtils;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
-import com.duckduckgo.mobile.android.adapters.menuAdapters.HistoryFeedMenuAdapter;
 import com.duckduckgo.mobile.android.adapters.menuAdapters.HistorySearchMenuAdapter;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.builders.OptionsDialogBuilder;
