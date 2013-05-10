@@ -81,6 +81,7 @@ import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewStoryMenuAdapt
 import com.duckduckgo.mobile.android.adapters.menuAdapters.WebViewWebPageMenuAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
+import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
 import com.duckduckgo.mobile.android.download.Holder;
@@ -436,9 +437,9 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_PROGRESS);
-        
+
         showNewSourcesDialog();
-        
+
         sharedPreferences = DDGApplication.getSharedPreferences();
         
         String themeName = PreferencesManager.getThemeName();
@@ -883,28 +884,12 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 
         	@Override
         	public boolean onLongClick(View v) {
-        		HitTestResult hr = ((DDGWebView) v).getHitTestResult();
-        		if(hr != null && hr.getExtra() != null) {
-        			Log.i(TAG, "LONG getExtra = "+ hr.getExtra() + "\t\t Type=" + hr.getType());
-        			final String touchedUrl = hr.getExtra();
-        			
-        			AlertDialog dialog = new AlertDialog.Builder(DuckDuckGo.this).create();
-        	        dialog.setTitle(getResources().getString(R.string.OpenInExternalBrowser));
-        	        dialog.setMessage(getResources().getString(R.string.ConfirmExternalBrowser));
-        	        dialog.setCancelable(false);
-        	        dialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.Yes), new DialogInterface.OnClickListener() {
-        	            public void onClick(DialogInterface dialog, int buttonId) {
-        	            	Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(touchedUrl));
-        	            	startActivity(browserIntent);
-        	            }
-        	        });
-        	        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.No), new DialogInterface.OnClickListener() {
-        	            public void onClick(DialogInterface dialog, int buttonId) {
-        	                dialog.dismiss();
-        	            }
-        	        });
-        	        dialog.setIcon(android.R.drawable.ic_dialog_info);
-        	        dialog.show();
+        		HitTestResult hitTestResult = ((DDGWebView) v).getHitTestResult();
+        		if(hitTestResult != null && hitTestResult.getExtra() != null) {
+        			Log.i(TAG, "LONG getExtra = "+ hitTestResult.getExtra() + "\t\t Type=" + hitTestResult.getType());
+        			final String touchedUrl = hitTestResult.getExtra();
+
+                    new OpenInExternalDialogBuilder(DuckDuckGo.this, touchedUrl).show();
         		}
 
         		return false;
@@ -1024,21 +1009,17 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 				cancelFontScaling();
 			}
 		});
-		
-        
-        
-        // show Home screen
         displayHomeScreen();
-    }	
-	
-	private void showNewSourcesDialog() {
-		if(PreferencesManager.shouldShowNewSourcesDialog()){
-			new NewSourcesDialogBuilder(this).show();
-			PreferencesManager.newSourcesDialogWasShown();
-		}
-	}
+    }
 
-	/**
+    private void showNewSourcesDialog() {
+        if(PreferencesManager.shouldShowNewSourcesDialog()){
+            new NewSourcesDialogBuilder(this).show();
+            PreferencesManager.newSourcesDialogWasShown();
+        }
+    }
+
+    /**
 	 * Cache previous/next N images
 	 */
 	private void cachePrevNextImages(int nImages) {
