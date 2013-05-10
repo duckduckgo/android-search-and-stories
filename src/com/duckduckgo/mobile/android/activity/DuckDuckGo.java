@@ -13,6 +13,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
@@ -110,6 +112,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	public DDGWebView mainWebView = null;
 	private ImageButton homeSettingsButton = null;
+	private ImageButton bangButton = null;
 	private ImageButton shareButton = null;
 	
 	private TextView leftHomeTextView = null;
@@ -525,6 +528,14 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         
         homeSettingsButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
         homeSettingsButton.setOnClickListener(this);
+        bangButton = (ImageButton)contentView.findViewById(R.id.bangButton);
+        bangButton.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				searchField.setText("! " + searchField.getText());
+				searchField.setSelection(searchField.getText().length());
+			}
+		});
         
         if(mDuckDuckGoContainer.webviewShowing) {
         	homeSettingsButton.setImageResource(R.drawable.home_button);
@@ -543,7 +554,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         searchField.setOnEditorActionListener(this);
         
         searchField.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				// close left nav if it's open
@@ -554,7 +564,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		});
 
         searchField.setOnItemClickListener(new OnItemClickListener() {
-
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if(PreferencesManager.getDirectQuery()){
@@ -574,7 +583,14 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						}
 					}		
 				}
-				
+			}
+		});
+        
+        searchField.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				homeSettingsButton.setVisibility(hasFocus ? View.GONE: View.VISIBLE);
+				bangButton.setVisibility(hasFocus ? View.VISIBLE: View.GONE);
 			}
 		});
 
