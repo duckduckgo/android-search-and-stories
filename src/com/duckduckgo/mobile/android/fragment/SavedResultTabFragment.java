@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemSelectedListener;
 
@@ -34,21 +35,27 @@ public class SavedResultTabFragment extends ListFragment {
 		// setup for real work
 		final Activity activity = getActivity();
 
-		if(activity instanceof DuckDuckGo) {	
+		if(activity instanceof DuckDuckGo) {
+            final DuckDuckGo duckDuckGoActivity = (DuckDuckGo)activity;
 			savedSearchView = (SavedSearchListView) getListView();
 			savedSearchView.setDivider(null);
 			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedSearchAdapter);
 			savedSearchView.setOnSavedSearchItemSelectedListener(new OnSavedSearchItemSelectedListener() {
 				public void onSavedSearchItemSelected(String query) {
 					if(query != null){							
-						((DuckDuckGo) activity).searchWebTerm(query);	
-						((DuckDuckGo) activity).itemSaveSearch(query);
-						((DuckDuckGo) activity).syncAdapters();
+						duckDuckGoActivity.searchWebTerm(query);
+						duckDuckGoActivity.itemSaveSearch(query);
+                        duckDuckGoActivity.syncAdapters();
 					}			
 				}
 			});
 			
-			savedSearchView.setOnSavedSearchItemLongClickListener(((DuckDuckGo) activity).mSavedSearchLongClickListener);
+			savedSearchView.setOnSavedSearchItemLongClickListener(new SavedSearchListView.OnSavedSearchItemLongClickListener() {
+                @Override
+                public void onSavedSearchItemLongClick(String query) {
+                    new SavedSearchMenuDialog(duckDuckGoActivity, query);
+                }
+            });
 		}
 	}
 
