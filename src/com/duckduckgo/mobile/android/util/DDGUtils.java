@@ -125,6 +125,9 @@ public final class DDGUtils {
 	
 	@TargetApi(10)
 	private static Bitmap decodeRegion(FileDescriptor fd) {
+		if(fd == null || !fd.valid())
+			return null;
+		
 		// Log.v("REGION","region decoder : ");
 		int useWidth, useHeight;
 		
@@ -220,15 +223,8 @@ public final class DDGUtils {
 					if(fileDesc == null)
 						return null;
 					
-					// for API level 10, there is BitmapRegionDecoder
-					// http://developer.android.com/reference/android/graphics/BitmapRegionDecoder.html
+					resultBitmap = decodeImage(fileDesc, filePath);
 					
-				    if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.GINGERBREAD_MR1) {
-				    	resultBitmap = decodeRegion(fileDesc);
-				    }
-				    else {
-				    	resultBitmap = decodeImage(fileDesc, filePath);
-				    }
 				    fileCache.removeFile(fname);
 			    	return resultBitmap;
 				}

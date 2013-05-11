@@ -54,15 +54,6 @@ public class DownloadBitmapTask extends AsyncTask<String, Void, Bitmap> {
 			bitmap = null;
 			isCompleted = true;
 			
-//			// signal task completion
-//			while(true) {
-//				synchronized (DDGControlVar.taskCompleteSignal) {
-//					DDGControlVar.taskCompleteSignal.task = this;
-//					DDGControlVar.taskCompleteSignal.notifyAll();
-//					break;
-//				}
-//			}
-			
 			return null;
 		}
 
