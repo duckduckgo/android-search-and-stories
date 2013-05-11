@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -102,8 +101,8 @@ public class PreferencesManager {
 		editor.commit();
 	}
 	
-	public static void saveDefaultSources(Set<String> sources) {
-		DDGUtils.saveSet(DDGApplication.getSharedPreferences(), sources, "defaultsources");
+	public static boolean saveDefaultSources(Set<String> sources) {
+		return DDGUtils.saveSet(DDGApplication.getSharedPreferences(), sources, "defaultsources");
 	}
 	
 	public static Set<String> getDefaultSources() {

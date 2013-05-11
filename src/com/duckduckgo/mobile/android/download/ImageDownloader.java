@@ -59,26 +59,6 @@ public class ImageDownloader {
 		this.executor = new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
 			                    TimeUnit.SECONDS, sPoolWorkQueue, sThreadFactory);
 		this.queuedTasks = new ArrayList<DownloadBitmapTask>(6);
-//		this.taskWatcher = new Runnable() {
-//			
-//			@Override
-//			public void run() {
-//				while(true) {
-//					synchronized(DDGControlVar.taskCompleteSignal) {
-//						try {
-//							DDGControlVar.taskCompleteSignal.wait();
-//						} catch (InterruptedException e) {
-//							e.printStackTrace();
-//						}
-//						
-//						if(DDGControlVar.taskCompleteSignal != null) {
-//							DownloadBitmapTask task = DDGControlVar.taskCompleteSignal.task;
-//							queuedTasks.remove(task);
-//						}
-//					}
-//				}
-//			}
-//		};
 	}
 	
     boolean imageViewReused(DownloadableImage image, String url){
