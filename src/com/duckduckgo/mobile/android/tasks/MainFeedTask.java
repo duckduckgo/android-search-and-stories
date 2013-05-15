@@ -15,7 +15,6 @@ import android.util.Log;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.download.FileCache;
-import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
@@ -31,14 +30,12 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	
 	private FeedListener listener = null;
 		
-	ImageCache cache;
 	private FileCache fileCache = null;
 	
 	
 	private boolean requestFailed = false;
 	
 	public MainFeedTask(FeedListener listener) {
-		this.cache = DDGApplication.getImageCache();
 		this.listener = listener;
 		this.fileCache = DDGApplication.getFileCache();
 	}
@@ -76,6 +73,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	private void initializeSources() {
 		JSONArray json = null;
 		Set<String> defaultSet = new HashSet<String>(); 
+		DDGControlVar.sourceIconUrlMap.clear();
 		
 		try {			
 			String body = null;
@@ -110,15 +108,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 														
 							// ***** save source icon to ImageCache if needed ****  
 							if(imageUrl != null && imageUrl.length() != 0){
-								if(cache.getBitmapFromCache("DUCKDUCKICO--"+id, false) != null){
-									// pass
-								}
-								else {
-									Bitmap bitmap = DDGUtils.downloadBitmap(this, imageUrl);
-									if(bitmap != null){
-										cache.addBitmapToCache("DUCKDUCKICO--"+id, bitmap);
-									}
-								}
+								DDGControlVar.sourceIconUrlMap.put(id, imageUrl);
 							}
 							// ***************************************************
 						

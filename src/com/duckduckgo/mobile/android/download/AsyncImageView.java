@@ -1,7 +1,5 @@
 package com.duckduckgo.mobile.android.download;
 
-import java.lang.ref.WeakReference;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -65,38 +63,6 @@ public class AsyncImageView extends ImageView {
 			this.setVisibility(View.GONE);
 		}
 	}
-	
-	
-	public void setBitmap(Bitmap bitmap) {
-		//Don't show a null bitmap
-		if (bitmap == null) {
-			setDefault();
-			return;
-		}
-		
-		if (this.getVisibility() == View.GONE && this.hideOnDefault) {
-			this.setVisibility(View.VISIBLE);
-		}
-		                                               
-		if(cornerRadius != 0) {
-			ViewGroup.LayoutParams layoutParams = this.getLayoutParams();
-			layoutWidth = layoutParams.width;   
-			layoutHeight = layoutParams.height;
-			
-			Bitmap roundedImage = DDGUtils.getRoundedCornerImage(bitmap, cornerRadius, layoutWidth, layoutHeight);
-			if(roundedImage != null) {
-				setImageBitmap(roundedImage);
-			}
-			else {
-				// TODO take a look at scaleCenterCrop method to fix this failure
-				setDefault();
-			}
-			return;
-		}
-		
-		setImageBitmap(bitmap);         
-	}
-
 	
 	public boolean shouldHideOnDefault() {
 		return this.hideOnDefault;

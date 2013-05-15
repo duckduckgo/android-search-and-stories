@@ -86,7 +86,8 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 			holder.autoCompleteDetail.setText(suggestion.getSnippet());
 			holder.autoCompleteDetail.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
 			Drawable acDrawable = suggestion.getDrawable();
-			if(acDrawable == null) {
+			String imageUrl = suggestion.getImageUrl();
+			if(acDrawable == null && imageUrl != null && imageUrl.length() != 0) {
 				Picasso.with(context)
 				.load(suggestion.getImageUrl())
 				.placeholder(android.R.color.transparent)

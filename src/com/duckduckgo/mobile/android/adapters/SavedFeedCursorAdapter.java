@@ -118,10 +118,12 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
     				host = host.substring(host.indexOf(".")+1);
     			}
 
-    			Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + feedType, false);
-    			if(bitmap != null){
-    				imageViewFeedIcon.setBitmap(bitmap);
-    			}
+    			if(DDGControlVar.sourceIconUrlMap.containsKey(feedType)) {
+					Picasso.with(context)
+			    	.load(DDGControlVar.sourceIconUrlMap.get(feedType))
+			    	.placeholder(android.R.color.transparent)
+			    	.into(imageViewFeedIcon);
+				}
     			else {
     				Picasso.with(context)
     				.load(DDGConstants.ICON_LOOKUP_URL + host + ".ico")

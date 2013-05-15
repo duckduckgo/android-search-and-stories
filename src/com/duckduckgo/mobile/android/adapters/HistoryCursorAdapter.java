@@ -74,9 +74,11 @@ public class HistoryCursorAdapter extends CursorAdapter {
 							host = host.substring(host.indexOf(".")+1);
 						}
 						
-						Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + extraType, false);
-						if(bitmap != null){
-							imageViewHistory.setBitmap(bitmap);
+						if(DDGControlVar.sourceIconUrlMap.containsKey(extraType)) {
+							Picasso.with(context)
+					    	.load(DDGControlVar.sourceIconUrlMap.get(extraType))
+					    	.placeholder(android.R.color.transparent)
+					    	.into(imageViewHistory);
 						}
 						else {
 							Picasso.with(context)

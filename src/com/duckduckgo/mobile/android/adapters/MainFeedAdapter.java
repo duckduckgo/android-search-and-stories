@@ -144,9 +144,11 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 							host = host.substring(host.indexOf(".")+1);
 						}
 						
-						Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + feedType, false);
-						if(bitmap != null){
-							holder.imageViewFeedIcon.setBitmap(bitmap);
+						if(DDGControlVar.sourceIconUrlMap.containsKey(feedType)) {
+							Picasso.with(context)
+					    	.load(DDGControlVar.sourceIconUrlMap.get(feedType))
+					    	.placeholder(android.R.color.transparent)
+					    	.into(holder.imageViewFeedIcon);
 						}
 						else {							
 							Picasso.with(context)

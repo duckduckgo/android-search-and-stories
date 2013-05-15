@@ -94,21 +94,23 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 				
 				if(feedId != null && !feedId.equals("null")){
 										
-						Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + feed.getId(), false);
-						if(bitmap != null){
-							holder.imageViewBackground.setBitmap(bitmap);
+					if(DDGControlVar.sourceIconUrlMap.containsKey(feed.getId())) {
+						Picasso.with(context)
+						.load(DDGControlVar.sourceIconUrlMap.get(feed.getId()))
+						.placeholder(android.R.color.transparent)
+						.into(holder.imageViewBackground);
+					}
+					else {
+						// fallback - happens after an update to the source list
+
+						//Download the background image
+						if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
+							Picasso.with(context)
+							.load(feed.getImageUrl())
+							.placeholder(android.R.color.transparent)
+							.into(holder.imageViewBackground);
 						}
-						else {
-							// fallback - happens after an update to the source list
-							
-							//Download the background image
-							if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
-								Picasso.with(context)
-								.load(feed.getImageUrl())
-								.placeholder(android.R.color.transparent)
-								.into(holder.imageViewBackground);
-							}
-						}
+					}
 						
 				}
 	
