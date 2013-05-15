@@ -43,11 +43,12 @@ public class SeparatedListAdapter extends BaseAdapter {
 	public Object getItem(int position) {
 		for(Object section : this.sections.keySet()) {
 			Adapter adapter = sections.get(section);
-			int size = adapter.getCount() + 1;
+			int headerCount = (adapter.isEmpty()?0:1);
+			int size = adapter.getCount() + headerCount;
 			
 			// check if position inside this section 
-			if(position == 0) return section;
-			if(position < size) return adapter.getItem(position - 1);
+			if(position == 0  && !adapter.isEmpty()) return section;
+			if(position < size) return adapter.getItem(position - headerCount);
 
 			// otherwise jump into next section
 			position -= size;
