@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.TypedValue;
@@ -23,13 +22,13 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.squareup.picasso.Picasso;
 
 
@@ -86,6 +85,8 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
 				Picasso.with(context)
 		    	.load(feed.getImageUrl())
+		    	.resize(DDGUtils.feedItemWidth, DDGUtils.feedItemHeight)
+		    	.centerCrop()
 		    	.placeholder(android.R.color.transparent)
 		    	.into(holder.imageViewBackground);
 			}
