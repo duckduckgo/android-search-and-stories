@@ -30,16 +30,7 @@ public class ShareSearchMenuItem extends Item {
 		return new Action() {
 			@Override
 			public void Execute() {
-				//Sharer.shareSearch(context, query);
-				ShareActionProvider provider = new ShareActionProvider(context);
-				provider.setOnShareTargetSelectedListener(new OnShareTargetSelectedListener() {
-					
-					@Override
-					public boolean onShareTargetSelected(ShareActionProvider source, Intent intent) {
-						// TODO Auto-generated method stub
-						return false;
-					}
-				});
+				Sharer.shareSearch(context, query);
 			};
 		};
 	}
