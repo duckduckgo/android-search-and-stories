@@ -10,6 +10,7 @@ import android.widget.ImageView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.squareup.picasso.Picasso;
 
 //TODO: Instead of using DownloadDrawable, we can just subclass ImageView with an AsyncImageView or some such...
 public class AsyncImageView extends ImageView {
@@ -81,5 +82,11 @@ public class AsyncImageView extends ImageView {
 	public String getType(){
 		return type;
 	}	
+	
+	@Override
+	protected void onDetachedFromWindow() {
+		super.onDetachedFromWindow();
+		Picasso.with(getContext()).cancelRequest(this);
+	}
 
 }
