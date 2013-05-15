@@ -532,8 +532,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         bangButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				searchField.setText("! " + searchField.getText());
-				searchField.setSelection(searchField.getText().length());
+				int start =searchField.getSelectionStart();
+				searchField.getText().insert(start, "!");
 			}
 		});
         
@@ -1633,9 +1633,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		 getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 		 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//		 imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
 		 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-		 
 	}
 	
 	public void onClick(View view) {
