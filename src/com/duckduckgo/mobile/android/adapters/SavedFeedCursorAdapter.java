@@ -19,19 +19,16 @@ import android.widget.TextView;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.squareup.picasso.Picasso;
 
 public class SavedFeedCursorAdapter extends CursorAdapter {
 	Activity parentActivity;
-	
-	protected final ImageDownloader imageDownloader;
-	
+		
     public SavedFeedCursorAdapter(Activity parentActivity, Context context, Cursor c) {
         super(context, c);
         this.parentActivity = parentActivity; 
-        imageDownloader = DDGApplication.getImageDownloader();
     }
 
     @Override
@@ -64,9 +61,10 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
 
     	//Download the background image
     	if (imageUrl != null && !imageUrl.equals("null")) {
-    		imageDownloader.download(imageUrl, imageViewBackground, false);
-    	} else {
-    		imageDownloader.download(null, imageViewBackground, false);
+    		Picasso.with(context)
+    		.load(imageUrl)
+    		.placeholder(android.R.color.transparent)
+    		.into(imageViewBackground);
     	}
 
     	imageViewFeedIcon.setType(feedType);	// stored source id in imageview
@@ -125,13 +123,12 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
     				imageViewFeedIcon.setBitmap(bitmap);
     			}
     			else {
-    				imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", imageViewFeedIcon, false);
+    				Picasso.with(context)
+    				.load(DDGConstants.ICON_LOOKUP_URL + host + ".ico")
+    				.placeholder(android.R.color.transparent)
+    				.into(imageViewFeedIcon);
     			}
-    		} else {
-    			imageDownloader.download(null, imageViewFeedIcon, false);
     		}
-    	} else {
-    		imageDownloader.download(null, imageViewFeedIcon, false);
     	}
 
 

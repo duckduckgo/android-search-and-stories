@@ -21,6 +21,7 @@ import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.squareup.picasso.Picasso;
 
 public class HistoryCursorAdapter extends CursorAdapter {
 	Activity parentActivity;
@@ -78,13 +79,13 @@ public class HistoryCursorAdapter extends CursorAdapter {
 							imageViewHistory.setBitmap(bitmap);
 						}
 						else {
-							DDGApplication.getImageDownloader().download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", imageViewHistory, false);
+							Picasso.with(context)
+							.load(DDGConstants.ICON_LOOKUP_URL + host + ".ico")
+							.placeholder(android.R.color.transparent)
+							.into(imageViewHistory);
 						}
 	        	  	}
-	          }
-	          else {
-	        	  DDGApplication.getImageDownloader().download(null, imageViewHistory, false);
-				}     
+	          } 
         }
         else {
         	imageViewHistory.setImageResource(R.drawable.icon_history_search);

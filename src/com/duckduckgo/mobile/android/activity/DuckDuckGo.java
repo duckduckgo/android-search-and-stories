@@ -146,7 +146,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	int m_yOffset;
 	
 	boolean mScrollCancelLock = false;
-	Runnable cachePrevNextTask = null, cachePrevNextHeadTask = null;
 	
 	// keep prev progress in font seek bar, to make incremental changes available
 	SeekBarHint fontSizeSeekBar;
@@ -353,33 +352,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         	savedState = true;
         
         DDGControlVar.isAutocompleteActive = !PreferencesManager.getTurnOffAutocomplete();
-               
-        //set caching task to run after at least a news feed item loads
-        // cache prev/next 3 images
-//		if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
-	        cachePrevNextTask = new Runnable() {
-				
-				@Override
-				public void run() {
-					DDGApplication.getImageDownloader().clearQueueDownloads();
-					cachePrevNextImages(3);
-				}
-			};
-			
-			// task for the list "head rendering" case
-			cachePrevNextHeadTask = new Runnable() {
-				
-				@Override
-				public void run() {
-					DDGApplication.getImageDownloader().clearQueueDownloads();
-					cachePrevNextImages(3);
-				}
-			};
-//		}
-		// TODO caching prev/next images requires API Level 11 for now, because of  executeOnExecutor
-		// in  ImageDownloader.queueUrls() , task.executeOnExecutor(this.executor, url);
-		// implement cache prev/next for devices below API level 11
-		// may need to use a modified copy of AsyncTask class to achieve this 
         
 		mDuckDuckGoContainer = (DuckDuckGoContainer) getLastCustomNonConfigurationInstance();
     	if(mDuckDuckGoContainer == null){
@@ -682,60 +654,8 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		feedView = mPullRefreshFeedView.getRefreshableView();
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
         // context and LayoutParams for this cache task (to instantiate AsyncImageViews) will be set in feedView
-        feedView.setAfterRenderTask(cachePrevNextHeadTask);
         feedView.setOnMainFeedItemSelectedListener(mFeedItemSelectedListener);
         feedView.setOnMainFeedItemLongClickListener(mFeedItemLongClickListener);
-        feedView.setOnScrollListener(new OnScrollListener() {
-			
-        	int firstVisibleItem;
-        	
-        	public void onScroll(AbsListView view, int firstVisibleItem,
-        			int visibleItemCount, int totalItemCount) {
-        		if(visibleItemCount > 0){
-        			mDuckDuckGoContainer.feedAdapter.scrolling = true;
-        		}
-        	}
-
-        	public void onScrollStateChanged(AbsListView view, int scrollState) {
-        		Holder holder = null;
-        		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
-        			mScrollCancelLock = false;
-        				mDuckDuckGoContainer.feedAdapter.scrolling = false;
-        				final int count = feedView.getChildCount();        
-        				firstVisibleItem = feedView.getFirstVisiblePosition()-feedView.getHeaderViewsCount();
-        				
-        				for(int i=0;i<count;++i){
-        					View cv = feedView.getChildAt(i);
-        					
-        					if(cv instanceof FrameLayout)
-        						continue;
-        					
-        					holder = (Holder) cv.getTag();
-        					
-        					if(!holder.imageViewBackground.getMemCacheDrawn()){
-        						mDuckDuckGoContainer.feedAdapter.getView(firstVisibleItem+i, cv, view);
-        					}
-        				}
-        				
-        				if(holder != null) {
-	        				// cache prev/next 3 images
-	        				if(cachePrevNextTask != null) {
-	        					cachePrevNextTask.run();		
-	        				}
-        				}
-        	    }
-        		else {
-        			mDuckDuckGoContainer.feedAdapter.scrolling = true;        			
-        			// clear all downloads related with visible views        			
-        			// check if this is part of smooth scroll event after source filtering
-        			if(!mScrollCancelLock) {
-        				DDGApplication.getImageDownloader().clearQueueDownloads();
-        				DDGApplication.getImageDownloader().clearVisibleDownloads();
-        			}
-        		}
-        		
-        	}
-		});
         
         // NOTE: After loading url multiple times on the device, it may crash
         // Related to android bug report 21266 - Watch this ticket for possible resolutions
@@ -902,33 +822,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
             PreferencesManager.newSourcesDialogWasShown();
         }
     }
-
-    /**
-	 * Cache previous/next N images
-	 */
-	private void cachePrevNextImages(int nImages) {
-		// download/cache invisible feed items from -N to +N 
-		int firstPos = feedView.getFirstVisiblePosition()-feedView.getHeaderViewsCount();
-		int lastPos = feedView.getLastVisiblePosition()-feedView.getHeaderViewsCount();
-		ArrayList<String> imageUrls = new ArrayList<String>();
-		int startIndex = firstPos - nImages;
-		int endIndex = lastPos + nImages;
-		int totalCount = mDuckDuckGoContainer.feedAdapter.getCount();
-		startIndex = (startIndex > 0) ? startIndex : 0;
-		endIndex = (endIndex < totalCount) ? endIndex : (totalCount-1);
-		// up
-		for(int i=startIndex;i<firstPos;++i) {
-			imageUrls.add(mDuckDuckGoContainer.feedAdapter.getItem(i).getImageUrl());
-		}
-		// down
-		if(lastPos != totalCount-1) {
-			for(int i=lastPos+1;i<=endIndex;++i) {
-				imageUrls.add(mDuckDuckGoContainer.feedAdapter.getItem(i).getImageUrl());
-			}
-		}
-		
-		DDGApplication.getImageDownloader().queueUrls(getApplicationContext(), imageUrls);
-	}
 	
 	/**
 	 * Cancels source filter applied with source icon click from feed item
@@ -955,7 +848,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	}
 	
 	private void resetScreenState() {
-		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		clearSearchBar();
 		mainWebView.clearBrowserState();
 		currentFeedObject = null;
@@ -1061,9 +953,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		// update feeds
 		// https://app.asana.com/0/2891531242889/2858723303746
 		DDGControlVar.hasUpdatedFeed = false;
-		if(mDuckDuckGoContainer.feedAdapter != null) {
-			mDuckDuckGoContainer.feedAdapter.scrolling = false;
-		}
 		
 		// check autocomplete 
 		if(!DDGControlVar.isAutocompleteActive) {
@@ -1121,7 +1010,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	
 	@Override
 	protected void onDestroy() {
-		DDGApplication.getImageDownloader().clearAllDownloads();
 		DDGApplication.getImageCache().purge();
 		super.onDestroy();
 	}
@@ -1350,12 +1238,10 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
 		if(!fromCache) {
 			synchronized(mDuckDuckGoContainer.feedAdapter) {
-				DDGApplication.getImageDownloader().clearAllDownloads();				
 				mDuckDuckGoContainer.feedAdapter.clear();
 			}
 		}
 		
-		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		mDuckDuckGoContainer.feedAdapter.addData(feed);
 		mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
 		
@@ -1850,7 +1736,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
     
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
-		mDuckDuckGoContainer.feedAdapter.scrolling = false;
 		if(welcomeScreenLayout != null) {
 			removeWelcomeScreen();
 			addWelcomeScreen();

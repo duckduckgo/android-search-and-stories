@@ -24,28 +24,28 @@ import android.widget.TextView;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.util.AppShortInfo;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.squareup.picasso.Picasso;
 
 public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> implements Filterable {
 	private final LayoutInflater inflater;
+	private Context context;
 	
 	protected final String TAG = "AutoCompleteResultsAdapter";
 	public List<SuggestObject> mResultList = Collections.synchronizedList(new ArrayList<SuggestObject>());
 	
 	//TODO: We need an image downloader & cache that is held globally for the application
 	// Should this be a singleton or part of ApplicationContext? probably AppContext...
-	protected final ImageDownloader imageDownloader;
 	
 	public AutoCompleteResultsAdapter(Context context) {
 		super(context, 0);
+		this.context = context; 
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageDownloader = DDGApplication.getImageDownloader();
 	}
 	
 	@Override
@@ -87,7 +87,10 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 			holder.autoCompleteDetail.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
 			Drawable acDrawable = suggestion.getDrawable();
 			if(acDrawable == null) {
-				imageDownloader.download(suggestion.getImageUrl(), holder.autoCompleteImage, false);
+				Picasso.with(context)
+				.load(suggestion.getImageUrl())
+				.placeholder(android.R.color.transparent)
+				.into(holder.autoCompleteImage);
 			}
 			else {
 				holder.autoCompleteImage.setImageDrawable(acDrawable);

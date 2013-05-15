@@ -11,14 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.tasks.DownloadBitmapTask;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
 //TODO: Instead of using DownloadDrawable, we can just subclass ImageView with an AsyncImageView or some such...
-public class AsyncImageView extends ImageView implements DownloadableImage {
-	private WeakReference<DownloadBitmapTask> downloadTaskReference;
+public class AsyncImageView extends ImageView {
 	private boolean hideOnDefault = false;
-	public boolean cachedrawn = false;
 	public String type = null;
 	
 	/**
@@ -62,16 +59,13 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 	    this.cornerRadius = radius;
 	  }
 	
-	public void setDownloadBitmapTask(DownloadBitmapTask task) {
-		downloadTaskReference = new WeakReference<DownloadBitmapTask>(task);
+	public void setDefault() {
+		setImageBitmap(null);
+		if (hideOnDefault) {
+			this.setVisibility(View.GONE);
+		}
 	}
 	
-	public DownloadBitmapTask getDownloadBitmapTask() {
-		if (downloadTaskReference != null) {
-			return downloadTaskReference.get();
-		}
-		return null;
-	}
 	
 	public void setBitmap(Bitmap bitmap) {
 		//Don't show a null bitmap
@@ -79,36 +73,30 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 			setDefault();
 			return;
 		}
+		
 		if (this.getVisibility() == View.GONE && this.hideOnDefault) {
 			this.setVisibility(View.VISIBLE);
 		}
-						
+		                                               
 		if(cornerRadius != 0) {
-		    ViewGroup.LayoutParams layoutParams = this.getLayoutParams();
-		    layoutWidth = layoutParams.width;	
-		    layoutHeight = layoutParams.height;
-		    
-		    Bitmap roundedImage = DDGUtils.getRoundedCornerImage(bitmap, cornerRadius, layoutWidth, layoutHeight);
-		    if(roundedImage != null) {
-		    	setImageBitmap(roundedImage);
-		    }
-		    else {
-		    	// TODO take a look at scaleCenterCrop method to fix this failure
-		    	setDefault();
-		    }
+			ViewGroup.LayoutParams layoutParams = this.getLayoutParams();
+			layoutWidth = layoutParams.width;   
+			layoutHeight = layoutParams.height;
+			
+			Bitmap roundedImage = DDGUtils.getRoundedCornerImage(bitmap, cornerRadius, layoutWidth, layoutHeight);
+			if(roundedImage != null) {
+				setImageBitmap(roundedImage);
+			}
+			else {
+				// TODO take a look at scaleCenterCrop method to fix this failure
+				setDefault();
+			}
 			return;
 		}
 		
-		setImageBitmap(bitmap);		
+		setImageBitmap(bitmap);         
+	}
 
-	}
-	
-	public void setDefault() {
-		setImageBitmap(null);
-		if (hideOnDefault) {
-			this.setVisibility(View.GONE);
-		}
-	}
 	
 	public boolean shouldHideOnDefault() {
 		return this.hideOnDefault;
@@ -118,14 +106,6 @@ public class AsyncImageView extends ImageView implements DownloadableImage {
 	//		It may then override other visibility settings given externally
 	public void setShouldHideOnDefault(boolean hideOnDefault) {
 		this.hideOnDefault = hideOnDefault;
-	}
-
-	public void setMemCacheDrawn(boolean flag) {
-		cachedrawn = flag;		
-	}
-
-	public boolean getMemCacheDrawn() {
-		return cachedrawn;
 	}
 	
 	public void setType(String type){

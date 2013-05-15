@@ -27,19 +27,18 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
-import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.squareup.picasso.Picasso;
 
 
 public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	private static final String TAG = "MainFeedAdapter";
 	
+	private Context context;
 	private final LayoutInflater inflater;
-	
-	public boolean scrolling = false;
-	
+		
 	public OnClickListener sourceClickListener;
 	
 	private SimpleDateFormat dateFormat;
@@ -50,12 +49,11 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	private AlphaAnimation blinkanimation = null;
 	
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
-	protected final ImageDownloader imageDownloader;
 				
 	public MainFeedAdapter(Context context, OnClickListener sourceClickListener) {
 		super(context, 0);
+		this.context = context; 
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageDownloader = DDGApplication.getImageDownloader();
 		this.sourceClickListener = sourceClickListener;
 		this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		
@@ -84,10 +82,12 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		if (feed != null) {			
 			
 			//Download the background image
+			
 			if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
-				imageDownloader.download(feed.getImageUrl(), holder.imageViewBackground, scrolling);
-			} else {
-				imageDownloader.download(null, holder.imageViewBackground, scrolling);
+				Picasso.with(context)
+		    	.load(feed.getImageUrl())
+		    	.placeholder(android.R.color.transparent)
+		    	.into(holder.imageViewBackground);
 			}
 			
 			String feedType = feed.getType();
@@ -148,14 +148,13 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 						if(bitmap != null){
 							holder.imageViewFeedIcon.setBitmap(bitmap);
 						}
-						else {
-							imageDownloader.download(DDGConstants.ICON_LOOKUP_URL + host + ".ico", holder.imageViewFeedIcon, scrolling);
+						else {							
+							Picasso.with(context)
+							.load(DDGConstants.ICON_LOOKUP_URL + host + ".ico")
+							.placeholder(android.R.color.transparent)
+							.into(holder.imageViewFeedIcon);
 						}
-				} else {
-					imageDownloader.download(null, holder.imageViewFeedIcon, scrolling);
 				}
-			} else {
-				imageDownloader.download(null, holder.imageViewFeedIcon, scrolling);
 			}
 		}
 		

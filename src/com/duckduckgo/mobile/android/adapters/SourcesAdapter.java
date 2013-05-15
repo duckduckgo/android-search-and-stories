@@ -23,13 +23,13 @@ import android.widget.TextView;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.download.SourceHolder;
 import com.duckduckgo.mobile.android.objects.Section;
 import com.duckduckgo.mobile.android.objects.SectionedListItem;
 import com.duckduckgo.mobile.android.objects.SourcesObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.squareup.picasso.Picasso;
 
 
 public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {	
@@ -50,14 +50,14 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 	private static final String TAG = "SourcesAdapter";
 	
 	private final LayoutInflater inflater;
+	private Context context;
 		
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
-	protected final ImageDownloader imageDownloader;
 					
 	public SourcesAdapter(Context context) {
 		super(context, 0);
+		this.context = context;
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		imageDownloader = DDGApplication.getImageDownloader();		
 	}
 	
 	 public boolean areAllItemsEnabled() 
@@ -103,9 +103,10 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 							
 							//Download the background image
 							if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
-								imageDownloader.download(feed.getImageUrl(), holder.imageViewBackground, false, "DUCKDUCKICO--"+feed.getId());
-							} else {
-								imageDownloader.download(null, holder.imageViewBackground, false);
+								Picasso.with(context)
+								.load(feed.getImageUrl())
+								.placeholder(android.R.color.transparent)
+								.into(holder.imageViewBackground);
 							}
 						}
 						

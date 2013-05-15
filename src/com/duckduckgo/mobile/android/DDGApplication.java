@@ -19,7 +19,6 @@ import android.util.Log;
 import com.duckduckgo.mobile.android.db.DdgDB;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
-import com.duckduckgo.mobile.android.download.ImageDownloader;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -41,7 +40,6 @@ public class DDGApplication extends Application {
 
 	private static final ImageCache imageCache = new ImageCache(null);
 	private static FileCache fileCache = null;
-	private static final ImageDownloader imageDownloader = new ImageDownloader(imageCache);
 	private static SharedPreferences sharedPreferences = null;
 	private static DdgDB db = null;
 	
@@ -114,10 +112,6 @@ public class DDGApplication extends Application {
 			}
 		}
      
-	}
-	
-	public static ImageDownloader getImageDownloader() {
-		return imageDownloader;
 	}
 	
 	public static ImageCache getImageCache() {
