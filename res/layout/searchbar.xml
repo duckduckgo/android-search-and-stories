@@ -24,7 +24,7 @@
    	        android:background="@android:color/transparent"
    	        android:scaleType="fitCenter"
    	        android:visibility="gone"
-   	        android:src="@drawable/bang_button"/>
+   	        android:src="@drawable/bang_button" />
  
    	    <FrameLayout
    	        android:layout_width="0dip"
@@ -34,23 +34,29 @@
    	        android:layout_marginRight="5dp"
    	        android:layout_weight="1"
    	        android:background="@android:color/white" >
+   	        
+  	    <EditText android:layout_width="0dp" android:layout_height="0dp"
+  	        android:inputType="none"
+  	        android:focusable="true"
+  	        android:focusableInTouchMode="true" />
    	    
-   	    <AutoCompleteTextView android:layout_width="match_parent"
-			   	        	  android:layout_height="match_parent"
-			   	        	  android:background="@drawable/searchfield"
-			   	        	  android:paddingLeft="5dp"
-			   	        	  android:singleLine="true"
-			   	        	  android:textSize="14sp"
-			   	        	  android:selectAllOnFocus="true"
-			   	        	  android:dropDownWidth="match_parent"
-			   	        	  android:dropDownAnchor="@+id/searchBar"
-			   	        	  android:dropDownHorizontalOffset="0dp"
-			   	        	  android:dropDownVerticalOffset="0dp"
-			   	        	  android:completionThreshold="1"
-			   	        	  android:inputType="textAutoComplete"
-			   	        	  android:imeOptions="actionGo"
-			   	        	  android:hint="@string/SearchString"
-			   	        	  android:id="@+id/searchEditText" />
+   	    <com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView 
+   	        android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@drawable/searchfield"
+			android:paddingLeft="5dp"
+			android:singleLine="true"
+			android:textSize="14sp"
+			android:selectAllOnFocus="true"
+			android:dropDownWidth="match_parent"
+			android:dropDownAnchor="@+id/searchBar"
+			android:dropDownHorizontalOffset="0dp"
+			android:dropDownVerticalOffset="0dp"
+			android:completionThreshold="1"
+			android:inputType="textAutoComplete"
+			android:imeOptions="actionGo"
+			android:hint="@string/SearchString"
+			android:id="@+id/searchEditText" />
    	    
    	    </FrameLayout>
    	    
