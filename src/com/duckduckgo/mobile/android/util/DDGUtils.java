@@ -314,6 +314,7 @@ public final class DDGUtils {
 		    float xScale = (float) newWidth / sourceWidth;
 		    float yScale = (float) newHeight / sourceHeight;
 		    float scale = Math.max(xScale, yScale);
+//		    float scale = xScale;
 
 		    // Now get the size of the source bitmap when scaled
 		    float scaledWidth = scale * sourceWidth;
