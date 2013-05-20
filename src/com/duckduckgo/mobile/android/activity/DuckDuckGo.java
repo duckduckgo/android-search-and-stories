@@ -106,6 +106,8 @@ import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongCl
 import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.WelcomeScreenView;
+import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
+import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
@@ -121,7 +123,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 	// keeps default User-Agent for WebView
 	public String mWebViewDefaultUA = null;
 		
-	public AutoCompleteTextView searchField = null;
+	public DDGAutoCompleteTextView searchField = null;
 	private MainFeedListView feedView = null;
 	private HistoryListView leftRecentView = null;
 	
@@ -346,6 +348,11 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		rootLayout.removeView(welcomeScreenLayout);
 		welcomeScreenLayout = null;
     }
+    
+    private void showBangButton(boolean visible){
+    	homeSettingsButton.setVisibility(visible ? View.GONE: View.VISIBLE);
+		bangButton.setVisibility(visible ? View.VISIBLE: View.GONE);
+    }
 				
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -529,8 +536,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         bangButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				searchField.setText("! " + searchField.getText());
-				searchField.setSelection(searchField.getText().length());
+				searchField.addBang();
 			}
 		});
         
@@ -546,19 +552,35 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         	shareButton.setVisibility(View.VISIBLE);
         }
         
-        searchField = (AutoCompleteTextView) contentView.findViewById(R.id.searchEditText);
+        searchField = (DDGAutoCompleteTextView) contentView.findViewById(R.id.searchEditText);
         searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
         searchField.setOnEditorActionListener(this);
         
         searchField.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// close left nav if it's open
+				// close left n	av if it's open
 				if(viewPager.isLeftMenuOpen()){
 					viewPager.setCurrentItem(1);
-				}				
+				}
+				showBangButton(true);
 			}
 		});
+        searchField.setOnFocusChangeListener(new OnFocusChangeListener() {
+			@Override
+			public void onFocusChange(View v, boolean hasFocus) {
+				showBangButton(hasFocus);
+			}
+		});
+        
+        searchField.setOnBackButtoPressedEventListener(new BackButtonPressedEventListener() {
+			@Override
+			public void onBackButtonPressed() {
+				if(!searchField.isPopupShowing()){
+					showBangButton(false);
+				}
+			}
+        });
 
         searchField.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -580,14 +602,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 						}
 					}		
 				}
-			}
-		});
-        
-        searchField.setOnFocusChangeListener(new OnFocusChangeListener() {
-			@Override
-			public void onFocusChange(View v, boolean hasFocus) {
-				homeSettingsButton.setVisibility(hasFocus ? View.GONE: View.VISIBLE);
-				bangButton.setVisibility(hasFocus ? View.VISIBLE: View.GONE);
 			}
 		});
 
@@ -1538,9 +1552,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 		 getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
 		 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-//		 imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
 		 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-		 
 	}
 	
 	public void onClick(View view) {
