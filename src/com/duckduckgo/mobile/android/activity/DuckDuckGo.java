@@ -1706,7 +1706,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 
 		// XXX should make Page Options button disabled if the page is not loaded yet
 		// url = null case
-		String webViewUrl = mainWebView.getOriginalUrl();
+		String webViewUrl = mainWebView.getUrl();
 		if(webViewUrl == null){
 			webViewUrl = "";
 		}
