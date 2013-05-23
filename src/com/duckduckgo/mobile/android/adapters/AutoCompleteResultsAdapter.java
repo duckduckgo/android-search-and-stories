@@ -24,6 +24,8 @@ import android.widget.TextView;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.image.transformations.RoundCornersTransformation;
+import com.duckduckgo.mobile.android.image.transformations.ScaleWidthTransformation;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
@@ -39,13 +41,17 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 	protected final String TAG = "AutoCompleteResultsAdapter";
 	public List<SuggestObject> mResultList = Collections.synchronizedList(new ArrayList<SuggestObject>());
 	
-	//TODO: We need an image downloader & cache that is held globally for the application
-	// Should this be a singleton or part of ApplicationContext? probably AppContext...
+	RoundCornersTransformation roundTransform; 
+	ScaleWidthTransformation scaleTransform; 
 	
 	public AutoCompleteResultsAdapter(Context context) {
 		super(context, 0);
 		this.context = context; 
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		
+		// Picasso transformations
+		roundTransform = new RoundCornersTransformation(); 
+		scaleTransform = new ScaleWidthTransformation(); 
 	}
 	
 	@Override
@@ -88,9 +94,14 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 			Drawable acDrawable = suggestion.getDrawable();
 			String imageUrl = suggestion.getImageUrl();
 			if(acDrawable == null && imageUrl != null && imageUrl.length() != 0) {
+				roundTransform.setRadius(holder.autoCompleteImage.getCornerRadius()); 
+				scaleTransform.setTarget(holder.autoCompleteImage); 
+				
 				Picasso.with(context)
 				.load(suggestion.getImageUrl())
 				.placeholder(android.R.color.transparent)
+				.transform(scaleTransform)
+				.transform(roundTransform)
 				.into(holder.autoCompleteImage);
 			}
 			else {

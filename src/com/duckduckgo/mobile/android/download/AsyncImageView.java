@@ -2,14 +2,11 @@ package com.duckduckgo.mobile.android.download;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.squareup.picasso.Picasso;
 
 //TODO: Instead of using DownloadDrawable, we can just subclass ImageView with an AsyncImageView or some such...
@@ -21,9 +18,7 @@ public class AsyncImageView extends ImageView {
 	   * The corner radius of the view (in pixel).
 	   */
 	private float cornerRadius = 0;
-	
-	private int layoutWidth = 0, layoutHeight = 0;
-	
+		
 	public AsyncImageView(Context context, AttributeSet attr) {
 		super (context, attr);
 	    getXMLAttribute(context, attr);
@@ -57,6 +52,10 @@ public class AsyncImageView extends ImageView {
 	  public void setCornerRadius(int radius) {
 	    this.cornerRadius = radius;
 	  }
+	  
+	  public float getCornerRadius() {
+		    return this.cornerRadius;
+		  }
 	
 	public void setDefault() {
 		setImageBitmap(null);

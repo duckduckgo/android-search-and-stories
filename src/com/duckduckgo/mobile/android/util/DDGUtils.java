@@ -297,82 +297,18 @@ public final class DDGUtils {
 		  String manufacturer = "Manufacturer: " + Build.MANUFACTURER + "\n";
 		  
 		  return appVersion + board + bootloader + brand + device + display + product + model + manufacturer;
-	  }
+	  }	  
 	  
-	  public static Bitmap scaleCenterCrop(Bitmap source, int newWidth, int newHeight) {
-		  Paint paint = new Paint();
-		  paint.setAntiAlias(true);
-		  paint.setDither(true);
-		  paint.setFilterBitmap(true);
-		  
-		    int sourceWidth = source.getWidth();
-		    int sourceHeight = source.getHeight();
-
-		    // Compute the scaling factors to fit the new height and width, respectively.
-		    // To cover the final image, the final scaling will be the bigger 
-		    // of these two.
-		    float xScale = (float) newWidth / sourceWidth;
-		    float yScale = (float) newHeight / sourceHeight;
-		    float scale = Math.max(xScale, yScale);
-
-		    // Now get the size of the source bitmap when scaled
-		    float scaledWidth = scale * sourceWidth;
-		    float scaledHeight = scale * sourceHeight;
-
-		    // Let's find out the upper left coordinates if the scaled bitmap
-		    // should be centered in the new size give by the parameters
-		    float left = (newWidth - scaledWidth) / 2;
-		    float top = (newHeight - scaledHeight) / 2;
-
-		    // The target rectangle for the new, scaled version of the source bitmap will now
-		    // be
-		    RectF targetRect = new RectF(left, top, left + scaledWidth, top + scaledHeight);
-
-		    // Finally, we create a new bitmap of the specified size and draw our new,
-		    // scaled bitmap onto it.
-		    Bitmap dest = null;
-		    Bitmap.Config destConfig = source.getConfig();
-		    if(destConfig == null) {
-		    	destConfig = Bitmap.Config.ARGB_8888;
-		    }
- 
-		    try {
-		    	// just in case illegal arguments (width, height) arrive
-		    	dest = Bitmap.createBitmap(newWidth, newHeight, destConfig);
-		    }
-		    catch(Exception e){
-		    	return null;
-		    }
-		    
-		    if(dest == null)
-		    	return null;
-		    
-		    Canvas canvas = new Canvas(dest);
-		    canvas.drawBitmap(source, null, targetRect, paint);
-
-		    return dest;
-		}
-	  
-	  public static Bitmap getRoundedCornerImage(Bitmap bitmap, float radius, int targetWidth, int targetHeight) {
-		  // crop input 
-          
+	  public static Bitmap roundCorners(Bitmap bitmap, float radius) {
           Paint paint = new Paint();    
 		  paint.setAntiAlias(true);
-      
-          Bitmap targetBitmap = scaleCenterCrop(bitmap, targetWidth, targetHeight);
-          if(targetBitmap == null) {
-        	// the case when scaleCenterCrop fails
-        	  return null;
-          }
 		  
-          // round
-		  
-		  Bitmap output = Bitmap.createBitmap(targetBitmap.getWidth(),
-				  targetBitmap.getHeight(), Config.ARGB_8888);
+		  Bitmap output = Bitmap.createBitmap(bitmap.getWidth(),
+				  bitmap.getHeight(), bitmap.getConfig());
 		  Canvas canvas = new Canvas(output);
 
 		  final int color = 0xff424242;
-		  final Rect rect = new Rect(0, 0, targetBitmap.getWidth(), targetBitmap.getHeight());
+		  final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
 		  final RectF rectF = new RectF(rect);
 
 		  canvas.drawARGB(0, 0, 0, 0);
@@ -380,11 +316,10 @@ public final class DDGUtils {
 		  canvas.drawRoundRect(rectF, radius, radius, paint);
 
 		  paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
-		  canvas.drawBitmap(targetBitmap, rect, rect, paint);
+		  canvas.drawBitmap(bitmap, rect, rect, paint);
 
 		  return output;
-
-		  }
+	  }
 	  
 	  public static List<AppShortInfo> getInstalledComponents(Context context) {
 		  final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
