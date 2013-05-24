@@ -87,7 +87,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			
 			public boolean onPreferenceClick(Preference preference) {
 				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setData(Uri.parse("market://details?id=com.duckduckgo.mobile.android"));
+				intent.setData(Uri.parse(getString(R.string.LinkToApp_Google)));
 				startActivity(intent);
 				return true;
 			}

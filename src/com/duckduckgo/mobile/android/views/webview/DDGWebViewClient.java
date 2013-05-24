@@ -30,6 +30,7 @@ public class DDGWebViewClient extends WebViewClient {
 	
 	public DDGWebViewClient(DuckDuckGo activity) {
 		this.activity = activity;
+
 	}
 	 	
 	private void clickedAnchorAction(DDGWebView view) {
@@ -79,6 +80,7 @@ public class DDGWebViewClient extends WebViewClient {
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
 		mLoaded = false;
+        view.getSettings().setDomStorageEnabled(true);
 		
 		DDGWebView wv = ((DDGWebView) view);
 		if(wv.loadingReadableBack) {
@@ -89,7 +91,7 @@ public class DDGWebViewClient extends WebViewClient {
 		if(url.equals(activity.mDuckDuckGoContainer.lastFeedUrl)) {
 			activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
 		}
-		        		
+
 		// Omnibar like behavior.
 		if (url.contains("duckduckgo.com")) {
 			view.getSettings().setUserAgentString(DDGConstants.USER_AGENT);
@@ -163,7 +165,7 @@ public class DDGWebViewClient extends WebViewClient {
 	        view.getSettings().setUseWideViewPort(true);
 	        view.getSettings().setLoadWithOverviewMode(true);
 	        view.getSettings().setPluginState(WebSettings.PluginState.ON);
-	        view.getSettings().setPluginsEnabled(true); 
+	        view.getSettings().setPluginsEnabled(true);
 	        
 	        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
     	        view.getSettings().setEnableSmoothTransition(true);

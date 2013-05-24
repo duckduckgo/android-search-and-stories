@@ -368,7 +368,7 @@ public final class DDGUtils {
 		 * @return
 		 */
 		static public String getQueryIfSerp(String url) {
-			if(isSerpUrl(url)) {
+			if(!isSerpUrl(url)) {
                 return null;
             }
 			
@@ -389,7 +389,7 @@ public final class DDGUtils {
 		}
 
     public static boolean isSerpUrl(String url) {
-        return !url.contains("duckduckgo.com");
+        return url.contains("duckduckgo.com");
     }
 
     /**
