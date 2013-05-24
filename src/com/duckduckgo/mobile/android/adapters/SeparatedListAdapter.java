@@ -91,7 +91,7 @@ public class SeparatedListAdapter extends BaseAdapter {
 
 			// otherwise jump into next section
 			position -= size;
-			type += adapter.getViewTypeCount();
+			type += adapter.isEmpty()?0:adapter.getViewTypeCount();
 		}
 		return type;
 	}
