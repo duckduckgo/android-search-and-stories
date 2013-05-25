@@ -63,6 +63,12 @@ public class SuggestObject {
 		return type;
 	}
 	
+	public boolean hasOnlyBangQuery(){
+		// matches if the text starts with !, 
+		// optionally directly followed by one or more repeats of an alphanumeric character
+		return getPhrase().trim().matches("![a-zA-Z0-9]*");
+	}
+	
 	@Override
 	public String toString() {
 		return this.phrase;

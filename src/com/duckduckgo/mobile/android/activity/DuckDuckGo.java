@@ -90,7 +90,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DuckDuckGo extends FragmentActivity implements OnEditorActionListener, FeedListener, OnClickListener {
+public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClickListener {
 	protected final String TAG = "DuckDuckGo";
 	
 	public DuckDuckGoContainer mDuckDuckGoContainer;
@@ -557,7 +557,17 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
         
         searchField = (DDGAutoCompleteTextView) contentView.findViewById(R.id.searchEditText);
         searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
-        searchField.setOnEditorActionListener(this);
+        searchField.setOnEditorActionListener(new OnEditorActionListener() {
+			@Override
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+				if(textView == searchField) {
+					hideKeyboard(searchField);
+					searchField.dismissDropDown();
+					searchOrGoToUrl(searchField.getTrimmedText());
+				}
+				return false;
+			}
+		});
         
         searchField.setOnClickListener(new OnClickListener() {
 			@Override
@@ -576,7 +586,7 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			}
 		});
         
-        searchField.setOnBackButtoPressedEventListener(new BackButtonPressedEventListener() {
+        searchField.setOnBackButtonPressedEventListener(new BackButtonPressedEventListener() {
 			@Override
 			public void onBackButtonPressed() {
 				if(!searchField.isPopupShowing()){
@@ -590,7 +600,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if(PreferencesManager.getDirectQuery()){
 					//Hide the keyboard and perform a search
-					hideKeyboard(searchField);
 					searchField.dismissDropDown();
 					
 					SuggestObject suggestObject = mDuckDuckGoContainer.acAdapter.getItem(position);
@@ -598,12 +607,17 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 					if (suggestObject != null) {
 						if(suggestType == SuggestType.TEXT) {
 							String text = suggestObject.getPhrase().trim();
-							searchOrGoToUrl(text);
+							if(suggestObject.hasOnlyBangQuery()){
+								searchField.addTextWithTrailingSpace(suggestObject.getPhrase());
+							}else{
+								hideKeyboard(searchField);
+								searchOrGoToUrl(text);	
+							}
 						}
 						else if(suggestType == SuggestType.APP) {
 							DDGUtils.launchApp(DuckDuckGo.this, suggestObject.getSnippet());
 						}
-					}		
+					}
 				}
 			}
 		});
@@ -1164,19 +1178,6 @@ public class DuckDuckGo extends FragmentActivity implements OnEditorActionListen
 			DDGControlVar.hasUpdatedFeed = false;
 			super.onBackPressed();
 		}
-	}
-	
-	public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-		if (textView == searchField) {
-			InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-			imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-			searchField.dismissDropDown();
-
-			String searchText = searchField.getText().toString().trim();
-			searchOrGoToUrl(searchText);
-		}
-		
-		return false;
 	}
 	
 	public void reloadAction() {
