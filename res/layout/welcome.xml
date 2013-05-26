@@ -1,78 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <ScrollView
+    <!--
+     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true"
         android:scrollbars="vertical" >
+    -->
+
+    <LinearLayout
+        android:id="@+id/welcomeLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#FFFFFFFF"
+        android:orientation="vertical" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="0px"
+            android:layout_gravity="top"
+            android:layout_weight="0.65"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/WelcomeDescription"
+            android:paddingLeft="55dp"
+            android:paddingRight="55dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/welcome_logo" />
 
         <LinearLayout
-            android:id="@+id/welcomeLayout"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="#F0FFFFFF"
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="0.30"
+            android:gravity="bottom"
             android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/closeWelcomeBut"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="top|right"
-                android:paddingRight="15dp"
-                android:paddingTop="15dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/icon_close" />
-
-            <ImageView
-                android:layout_width="230dp"
-                android:layout_height="230dp"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="10dp"
-                android:paddingTop="60dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/ddg_red_logo" />
-
             <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="20dp"
-                android:text="@string/WelcomeHeader"
-                android:textColor="#3a3e46"
-                android:textSize="30sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:paddingBottom="20dp"
-                android:text="@string/WelcomeTitle"
-                android:textColor="#585b61"
-                android:textSize="22sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_height="0px"
+                android:layout_gravity="bottom|center_horizontal"
+                android:layout_weight="0.5"
                 android:gravity="center_horizontal"
-                android:paddingBottom="35dp"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:lineSpacingExtra="2dp"
                 android:text="@string/WelcomeDescription"
-                android:textColor="#b8bfcc"
+                android:textColor="#3a3e46"
                 android:textSize="18sp" />
 
-            <Button
-                android:id="@+id/getStartedBut"
-                android:layout_width="202dp"
-                android:layout_height="50dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/btn_get_started"
-                android:scaleType="centerInside"
-                android:text="@string/GetStarted"
-                android:textColor="#FFF" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0px"
+                android:layout_weight="0.5"
+                android:gravity="top|center"
+                android:orientation="vertical" >
+
+                <Button
+                    android:id="@+id/getStartedBut"
+                    android:layout_width="202dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/btn_get_started"
+                    android:scaleType="centerInside"
+                    android:text="@string/GetStarted"
+                    android:textColor="#FFF"
+                    android:textSize="21sp" />
+
+            </LinearLayout>
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
+    <!-- </ScrollView> -->
 
 </merge>

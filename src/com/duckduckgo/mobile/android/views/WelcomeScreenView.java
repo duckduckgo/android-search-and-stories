@@ -13,8 +13,7 @@ public class WelcomeScreenView extends LinearLayout {
 	
 	Context context;
 	
-	ImageView closeWelcomeBut;
-	Button getStartedBut;
+	Button getStartedButton;
 	
 	OnClickListener closeListener;
 	
@@ -32,15 +31,13 @@ public class WelcomeScreenView extends LinearLayout {
 	
 	private void initView(Context context) {
 		LayoutInflater.from(context).inflate(R.layout.welcome, this, true);		
-		closeWelcomeBut = (ImageView) findViewById(R.id.closeWelcomeBut);
-    	getStartedBut = (Button) findViewById(R.id.getStartedBut); 
+    	getStartedButton = (Button) findViewById(R.id.getStartedBut); 
 	}
 	
 	public void setOnCloseListener(OnClickListener closeListener) {
 		this.closeListener = closeListener;
 		if(closeListener != null) {
-			closeWelcomeBut.setOnClickListener(closeListener);
-	    	getStartedBut.setOnClickListener(closeListener);
+	    	getStartedButton.setOnClickListener(closeListener);
 		}
 	}
 

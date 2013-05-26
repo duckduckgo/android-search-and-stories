@@ -21,8 +21,12 @@ public class DDGAutoCompleteTextView extends AutoCompleteTextView {
 
 	private BackButtonPressedEventListener backButtonPressedEventListener;
 
-	public void setOnBackButtoPressedEventListener(BackButtonPressedEventListener eventListener) {
+	public void setOnBackButtonPressedEventListener(BackButtonPressedEventListener eventListener) {
 		backButtonPressedEventListener = eventListener;
+	}
+	
+	public String getTrimmedText(){
+		return getText().toString().trim();
 	}
 
 	@Override
@@ -53,6 +57,9 @@ public class DDGAutoCompleteTextView extends AutoCompleteTextView {
 	private boolean isCursorAtEnd() {
 		return getSelectionStart() == getText().length();
 	}
-	
-	
+
+	public void addTextWithTrailingSpace(String phrase) {
+		setText(phrase.trim() + " ");
+		setSelection(getText().length());
+	}
 }

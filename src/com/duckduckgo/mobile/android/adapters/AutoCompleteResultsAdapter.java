@@ -61,9 +61,9 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 	
 	@Override
 	public SuggestObject getItem(int index) {
-		SuggestObject obj = getSuggestionObject(index);
-		if (obj != null) {
-			return obj;
+		SuggestObject suggestObject = getSuggestionObject(index);
+		if (suggestObject != null) {
+			return suggestObject;
 		} else {
 			return null;
 		}
@@ -74,15 +74,15 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 	}
 	
 	@Override
-	public View getView(int position, View cv, ViewGroup parent) {
-		if (cv == null) {
-			cv = inflater.inflate(R.layout.autocomplete_list_layout, null);
-			cv.setTag(new Holder((AsyncImageView)cv.findViewById(R.id.autoCompleteImage), (TextView)cv.findViewById(R.id.autoCompleteResultText), (TextView)cv.findViewById(R.id.autoCompleteDetailText)));
+	public View getView(int position, View view, ViewGroup parent) {
+		if (view == null) {
+			view = inflater.inflate(R.layout.autocomplete_list_layout, null);
+			view.setTag(new Holder((AsyncImageView)view.findViewById(R.id.autoCompleteImage), (TextView)view.findViewById(R.id.autoCompleteResultText), (TextView)view.findViewById(R.id.autoCompleteDetailText)));
 		}
 		
 		SuggestObject suggestion = getSuggestionObject(position);
 		
-		final Holder holder = (Holder) cv.getTag();
+		final Holder holder = (Holder) view.getTag();
 		
 		if (suggestion != null) {
 			holder.autoCompleteResult.setText(suggestion.getPhrase());
@@ -108,8 +108,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 				holder.autoCompleteImage.setImageDrawable(acDrawable);
 			}
 		}
-		
-		return cv;
+		return view;
 	}
 	
 	class Holder {
@@ -131,16 +130,11 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 			@Override
 			protected FilterResults performFiltering(CharSequence constraint) {
 				FilterResults results = new FilterResults();
-
 				ArrayList<SuggestObject> newResults = new ArrayList<SuggestObject>();
 				
 				if (constraint != null) {
-
 					//TODO: Check if this constraint is already in the cache
-										
 					JSONArray json = getJSONResultForConstraint(constraint);
-					
-					
 					// also search in apps
 					if(DDGControlVar.includeAppsInSearch) {
 						Context context = getContext();
@@ -170,11 +164,8 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 					}
 					//TODO: Cache the results for later
 				}
-				
-				
 				results.values = newResults;
 				results.count = newResults.size();
-				
 				return results;
 			}
 
@@ -208,11 +199,9 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 				} catch (Exception e) {
 					Log.e(TAG, e.getMessage(), e);
 				}
-
 				return json;
 		    }
 		};
-		
 		return webFilter;
 	}
 }
