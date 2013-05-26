@@ -26,7 +26,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
@@ -156,13 +155,13 @@ public final class DDGUtils {
 		}
 	}
 	
-	private static Bitmap decodeImage(FileDescriptor fd, String filePath) {
+	private static Bitmap decodeImage(String filePath) {
 		final String TAG = "decodeImage";
 
 		//Decode image size
         BitmapFactory.Options o = new BitmapFactory.Options();
         o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFileDescriptor(fd, null, o);
+        BitmapFactory.decodeFile(filePath, o);
         
         // Log.v(TAG,"IMAGE width height: " + o.outWidth + " " + o.outHeight);
         
@@ -175,20 +174,16 @@ public final class DDGUtils {
                 
         while(o.outWidth/scale/2>=maxItemWidthHeight || o.outHeight/scale/2>=maxItemWidthHeight)
             scale*=2;
-        
+
         // Log.v(TAG,"Scale: " + scale);
 					
 			BitmapFactory.Options options=new BitmapFactory.Options();
 	        //Decode with inSampleSize
 	        options.inSampleSize=scale;
 	        
-	        try {
+	        synchronized (DDGControlVar.DECODE_LOCK) {
 				Bitmap result = BitmapFactory.decodeFile(filePath, options);
 				return result;
-	        }
-	        catch(OutOfMemoryError oomError) {
-	        	oomError.printStackTrace();
-	        	return null;
 	        }
 	}
 	
@@ -196,7 +191,6 @@ public final class DDGUtils {
 		final String TAG = "downloadBitmap";
 		
 		FileCache fileCache = DDGApplication.getFileCache();
-		FileDescriptor fileDesc;
 		Bitmap resultBitmap;
 		
 		try {
@@ -215,15 +209,11 @@ public final class DDGUtils {
 					String fname = "tmp" + nURL;
 										
 					fileCache.saveStreamToInternal(fname, inputStream);
-					fileDesc = fileCache.getFd(fname);
 					inputStream.close();
 					
 					String filePath = fileCache.getPath(fname);
 					
-					if(fileDesc == null)
-						return null;
-					
-					resultBitmap = decodeImage(fileDesc, filePath);
+					resultBitmap = decodeImage(filePath);
 					
 				    fileCache.removeFile(fname);
 			    	return resultBitmap;

@@ -17,6 +17,7 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.FileProcessor;
 
@@ -62,7 +63,9 @@ public class FileCache {
 		File file = new File(externalImageDirectory, name);
 		if (file.exists() && file.isFile()) {
 			Log.e("FileCache", "Getting File from path " + file.getPath());
-			return BitmapFactory.decodeFile(file.getPath());
+			synchronized (DDGControlVar.DECODE_LOCK) {
+				return BitmapFactory.decodeFile(file.getPath());
+			}
 		}
 		
 		return null;

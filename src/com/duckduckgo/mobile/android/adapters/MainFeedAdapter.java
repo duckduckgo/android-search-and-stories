@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.util.TypedValue;
@@ -22,6 +23,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
@@ -145,11 +147,9 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 							host = host.substring(host.indexOf(".")+1);
 						}
 						
-						if(DDGControlVar.sourceIconUrlMap.containsKey(feedType)) {
-							Picasso.with(context)
-					    	.load(DDGControlVar.sourceIconUrlMap.get(feedType))
-					    	.placeholder(android.R.color.transparent)
-					    	.into(holder.imageViewFeedIcon);
+						Bitmap bitmap = DDGApplication.getImageCache().getBitmapFromCache("DUCKDUCKICO--" + feedType, false);
+						if(bitmap != null){
+							holder.imageViewFeedIcon.setBitmap(bitmap);
 						}
 						else {							
 							Picasso.with(context)

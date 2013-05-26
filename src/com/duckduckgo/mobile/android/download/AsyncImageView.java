@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.download;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,6 +19,8 @@ public class AsyncImageView extends ImageView {
 	   * The corner radius of the view (in pixel).
 	   */
 	private float cornerRadius = 0;
+	
+	private boolean usePicasso = true;
 		
 	public AsyncImageView(Context context, AttributeSet attr) {
 		super (context, attr);
@@ -41,7 +44,8 @@ public class AsyncImageView extends ImageView {
 	  private void getXMLAttribute(Context context, AttributeSet attrs) {
 	    // Get proportion.
 	    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AsyncImageView);
-	    cornerRadius = a.getDimension(R.styleable.AsyncImageView_cornerRadius, 0);		   
+	    cornerRadius = a.getDimension(R.styleable.AsyncImageView_cornerRadius, 0);		 
+	    usePicasso = a.getBoolean(R.styleable.AsyncImageView_usePicasso, true);		 
 	    a.recycle();
 	  }
 	  
@@ -64,6 +68,22 @@ public class AsyncImageView extends ImageView {
 		}
 	}
 	
+	
+	public void setBitmap(Bitmap bitmap) {
+		//Don't show a null bitmap
+		if (bitmap == null) {
+			setDefault();
+			return;
+		}
+		
+		if (this.getVisibility() == View.GONE && this.hideOnDefault) {
+			this.setVisibility(View.VISIBLE);
+		}
+		
+		setImageBitmap(bitmap);         
+	}
+
+	
 	public boolean shouldHideOnDefault() {
 		return this.hideOnDefault;
 	}
@@ -85,7 +105,18 @@ public class AsyncImageView extends ImageView {
 	@Override
 	protected void onDetachedFromWindow() {
 		super.onDetachedFromWindow();
-		Picasso.with(getContext()).cancelRequest(this);
+		if(usePicasso) {
+			Picasso.with(getContext()).cancelRequest(this);
+		}
+	}
+	
+	@Override
+	protected void onVisibilityChanged(View changedView, int visibility) {
+		super.onVisibilityChanged(changedView, visibility);
+		
+		if(visibility != View.VISIBLE && usePicasso) {
+			Picasso.with(getContext()).cancelRequest(this);
+		}
 	}
 
 }

@@ -3,13 +3,14 @@
         		android:layout_width="fill_parent"
         		android:layout_height="50dp"
         		android:paddingTop="2dp"
-        		android:paddingBottom="2dp">
+        		android:paddingBottom="2dp" xmlns:app="http://schemas.android.com/apk/res/com.duckduckgo.mobile.android">
         
 	<com.duckduckgo.mobile.android.download.AsyncImageView android:layout_width="0dp"
 	    android:layout_weight="20"
                android:layout_height="match_parent"
                android:scaleType="fitStart"
-               android:src="@drawable/testbackground" 
+               android:src="@drawable/testbackground"
+               app:usePicasso="false" 
                android:id="@+id/sourceItemBackground"
                />
 	

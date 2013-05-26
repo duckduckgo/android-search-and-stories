@@ -1,8 +1,6 @@
 package com.duckduckgo.mobile.android.util;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 public class DDGControlVar {
@@ -17,8 +15,6 @@ public class DDGControlVar {
 	public static Set<String> defaultSources = null;
 	public static Set<String> userAllowedSources = null;
 	public static Set<String> userDisallowedSources = null;
-	
-	public static Map<String, String> sourceIconUrlMap = new HashMap<String, String>();
 	
 	public static String targetSource = null; 
 		
@@ -47,4 +43,6 @@ public class DDGControlVar {
 		requestSources.addAll(DDGControlVar.userAllowedSources);
 		return requestSources;
 	}
+	
+	public static final Object DECODE_LOCK = new Object();
 }

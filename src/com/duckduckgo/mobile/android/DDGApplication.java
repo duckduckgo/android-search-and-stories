@@ -18,6 +18,7 @@ import android.util.Log;
 
 import com.duckduckgo.mobile.android.db.DdgDB;
 import com.duckduckgo.mobile.android.download.FileCache;
+import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -37,6 +38,7 @@ resDialogOkToast = R.string.crash_dialog_ok_toast // optional. displays a Toast 
 )
 public class DDGApplication extends Application {
 
+	private static final ImageCache imageCache = new ImageCache(null);
 	private static FileCache fileCache = null;
 	private static SharedPreferences sharedPreferences = null;
 	private static DdgDB db = null;
@@ -64,6 +66,7 @@ public class DDGApplication extends Application {
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		db = new DdgDB(this);
 		fileCache = new FileCache(this.getApplicationContext());
+		imageCache.setFileCache(fileCache);
 		
 		try {
 			PackageInfo pInfo;
@@ -111,6 +114,10 @@ public class DDGApplication extends Application {
      
 	}
 	
+	public static ImageCache getImageCache() {
+		return imageCache;
+	}
+	
 	public static SharedPreferences getSharedPreferences() {
 		return sharedPreferences;
 	}
@@ -130,5 +137,11 @@ public class DDGApplication extends Application {
 	    File externalFilesDir = getDir(DB_FOLDER_NAME, MODE_PRIVATE);
 	    File dbFile = new File(externalFilesDir, name);
 	    return SQLiteDatabase.openDatabase(dbFile.getAbsolutePath(), null, SQLiteDatabase.CREATE_IF_NECESSARY);
+	}
+	
+	@Override
+	public void onLowMemory() {
+		DDGApplication.getImageCache().purge();
+		super.onLowMemory();
 	}
 }
