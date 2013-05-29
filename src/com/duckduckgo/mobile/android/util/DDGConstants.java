@@ -5,7 +5,7 @@ import android.graphics.Typeface;
 public class DDGConstants {
 	public static String USER_AGENT = "DDG-Android-%version";
 //	public static final String USER_AGENT = "Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)";
-	public static final String AUTO_COMPLETE_URL = "https://duckduckgo.com/ac/?q=";
+	public static final String AUTO_COMPLETE_URL = "http://rundmc.duckduckgo.com:6767/face/suggest/?q=";
 	public static final String SEARCH_URL = "https://www.duckduckgo.com/?ko=-1&q=";
 	public static final String MAIN_FEED_URL = "http://watrcoolr.duckduckgo.com/watrcoolr.js?o=json";
 	public static final String SOURCES_URL = "http://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&type_info=1";
