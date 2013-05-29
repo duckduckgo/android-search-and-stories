@@ -866,6 +866,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 			}
 		});
         displayHomeScreen();
+        
+        if (getIntent().getAction().equals(Intent.ACTION_ASSIST)) {
+			showKeyboard(searchField);
+		}
     }
 
     private void showNewSourcesDialog() {
