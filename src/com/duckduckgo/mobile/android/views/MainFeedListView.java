@@ -8,7 +8,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.squareup.picasso.Picasso;
 
 public class MainFeedListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
@@ -123,5 +126,16 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 	
 	public void enableAfterRender() {
 		isAfterRenderRun = false;
+	}
+	
+	public void cleanImageTasks() {
+		int count = getCount();
+		for(int i=0;i<count;i++) {
+			View v = getChildAt(i);
+			if(v != null) {
+				AsyncImageView iv = (AsyncImageView) v.findViewById(R.id.feedItemBackground);
+				Picasso.with(getContext()).cancelRequest(iv);
+			}
+		}
 	}
 }

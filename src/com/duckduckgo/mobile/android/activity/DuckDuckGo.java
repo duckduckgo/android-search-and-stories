@@ -1,5 +1,12 @@
 package com.duckduckgo.mobile.android.activity;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
@@ -13,7 +20,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -39,22 +45,38 @@ import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.DownloadListener;
 import android.webkit.WebView.HitTestResult;
-import android.widget.*;
-import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.ViewFlipper;
+
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.*;
+import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
+import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
+import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
+import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
+import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.*;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistorySearchMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistoryStoryMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.MainFeedMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewQueryMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
-import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
@@ -65,7 +87,16 @@ import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
-import com.duckduckgo.mobile.android.util.*;
+import com.duckduckgo.mobile.android.util.AppStateManager;
+import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.DDGViewPager;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.duckduckgo.mobile.android.util.ReadArticlesManager;
+import com.duckduckgo.mobile.android.util.SCREEN;
+import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelectedListener;
@@ -82,13 +113,6 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
-
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClickListener {
 	protected final String TAG = "DuckDuckGo";
@@ -1377,7 +1401,8 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	 * main method that triggers display of Preferences screen or fragment
 	 */
 	private void displaySettings() {
-		if(!((mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS))){					
+		if(!((mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS))){
+			feedView.cleanImageTasks();
 			if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
 		        Intent intent = new Intent(getBaseContext(), Preferences.class);
 		        startActivityForResult(intent, PREFERENCES_RESULT);
