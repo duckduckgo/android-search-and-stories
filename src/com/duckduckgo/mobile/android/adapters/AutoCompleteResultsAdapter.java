@@ -15,14 +15,17 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.image.transformations.RoundCornersTransformation;
 import com.duckduckgo.mobile.android.image.transformations.ScaleWidthTransformation;
@@ -36,7 +39,7 @@ import com.squareup.picasso.Picasso;
 
 public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> implements Filterable {
 	private final LayoutInflater inflater;
-	private Context context;
+	private DuckDuckGo context;
 	
 	protected final String TAG = "AutoCompleteResultsAdapter";
 	public List<SuggestObject> mResultList = Collections.synchronizedList(new ArrayList<SuggestObject>());
@@ -44,7 +47,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 	RoundCornersTransformation roundTransform; 
 	ScaleWidthTransformation scaleTransform; 
 	
-	public AutoCompleteResultsAdapter(Context context) {
+	public AutoCompleteResultsAdapter(DuckDuckGo context) {
 		super(context, 0);
 		this.context = context; 
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -77,10 +80,14 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 	public View getView(int position, View view, ViewGroup parent) {
 		if (view == null) {
 			view = inflater.inflate(R.layout.autocomplete_list_layout, null);
-			view.setTag(new Holder((AsyncImageView)view.findViewById(R.id.autoCompleteImage), (TextView)view.findViewById(R.id.autoCompleteResultText), (TextView)view.findViewById(R.id.autoCompleteDetailText)));
+			view.setTag(new Holder(
+					(AsyncImageView)view.findViewById(R.id.autoCompleteImage), 
+					(TextView)view.findViewById(R.id.autoCompleteResultText), 
+					(TextView)view.findViewById(R.id.autoCompleteDetailText),
+					(ImageView)view.findViewById(R.id.autoCompletePlusButton)));
 		}
 		
-		SuggestObject suggestion = getSuggestionObject(position);
+		final SuggestObject suggestion = getSuggestionObject(position);
 		
 		final Holder holder = (Holder) view.getTag();
 		
@@ -91,6 +98,12 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 			holder.autoCompleteResult.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize+pixelValue);
 			holder.autoCompleteDetail.setText(suggestion.getSnippet());
 			holder.autoCompleteDetail.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
+			holder.plusImage.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					context.preSearch(suggestion.getPhrase());
+				}
+			});
 			Drawable acDrawable = suggestion.getDrawable();
 			String imageUrl = suggestion.getImageUrl();
 			if(acDrawable == null && imageUrl != null && imageUrl.length() != 0) {
@@ -115,11 +128,14 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 		final AsyncImageView autoCompleteImage;
 		final TextView autoCompleteResult;
 		final TextView autoCompleteDetail;
+		final ImageView plusImage;
 		
-		public Holder(final AsyncImageView autoCompleteImage, final TextView autoCompleteResult, final TextView autoCompleteDetail) {
+		public Holder(final AsyncImageView autoCompleteImage, final TextView autoCompleteResult, final TextView autoCompleteDetail,
+				final ImageView plusImage) {
 			this.autoCompleteImage = autoCompleteImage;
 			this.autoCompleteResult = autoCompleteResult;
 			this.autoCompleteDetail = autoCompleteDetail;
+			this.plusImage = plusImage;
 		}
 	}
 
