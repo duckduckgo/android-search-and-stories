@@ -9,7 +9,6 @@
 	    android:layout_weight="20"
                android:layout_height="match_parent"
                android:scaleType="fitStart"
-               android:src="@drawable/testbackground"
                app:usePicasso="false" 
                android:id="@+id/sourceItemBackground"
                />

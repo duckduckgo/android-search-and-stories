@@ -180,6 +180,8 @@ public final class DDGUtils {
 			BitmapFactory.Options options=new BitmapFactory.Options();
 	        //Decode with inSampleSize
 	        options.inSampleSize=scale;
+	        options.inPurgeable = true;
+	        options.inInputShareable = true;
 	        
 	        synchronized (DDGControlVar.DECODE_LOCK) {
 				Bitmap result = BitmapFactory.decodeFile(filePath, options);
