@@ -149,6 +149,8 @@
         Search Anonymously.\nFind Instantly.\nStay Informed.</string>
     <string name="GetStarted">Get Started</string>
     
+    <string name="BangButtonExplanation">!bang commands allow you to try this search on other sites, like Amazon (!a)</string>
+    
     <string name="LeftRecentSearches">Recent Searches</string>
     <string name="LeftRecentStories">Recent Stories</string>
     <string name="NewSources">We\'ve added some cool new story sources!</string>

@@ -33,13 +33,16 @@ import android.text.format.DateUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager.LayoutParams;
 import android.view.inputmethod.InputMethodManager;
@@ -51,6 +54,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -110,6 +114,7 @@ import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
+import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
@@ -282,6 +287,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	};
 
 	private ContentDownloader contentDownloader;
+
+	private boolean shouldShowBangButtonExplanation;
+
+	private BangButtonExplanationPopup bangButtonExplanationPopup;
     
     /**
      * save feed by object or by the feed id
@@ -330,7 +339,13 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         welcomeScreenLayout = new WelcomeScreenView(this);
         FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
         rootLayout.addView(welcomeScreenLayout);
-    	welcomeScreenLayout.setOnCloseListener(welcomeCloseListener);
+    	welcomeScreenLayout.setOnCloseListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {		
+				removeWelcomeScreen();
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+			}
+		});
     }
     
     /**
@@ -341,7 +356,6 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
     	welcomeScreenLayout.setVisibility(View.GONE);	
 		viewPager.setDispatchTouch(true);					
 		PreferencesManager.setWelcomeShown();
-    	
     	// remove welcome screen
 		FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
 		rootLayout.removeView(welcomeScreenLayout);
@@ -351,6 +365,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
     private void showBangButton(boolean visible){
     	homeSettingsButton.setVisibility(visible ? View.GONE: View.VISIBLE);
 		bangButton.setVisibility(visible ? View.VISIBLE: View.GONE);
+		if(shouldShowBangButtonExplanation && visible){
+			bangButtonExplanationPopup = BangButtonExplanationPopup.showPopup(DuckDuckGo.this, bangButton);
+			shouldShowBangButtonExplanation = false;
+		}
     }
 				
 	@Override
@@ -419,17 +437,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
         viewPager.setCurrentItem(1);
         
-        welcomeCloseListener = new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {		
-				removeWelcomeScreen();
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-			}
-		};
         
     	if(!PreferencesManager.isWelcomeShown()) {            
             addWelcomeScreen();
+            shouldShowBangButtonExplanation = true;
     	}
         
         leftMenuView = mDuckDuckGoContainer.pageAdapter.getPageView(0);
@@ -535,7 +546,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         bangButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				searchField.addBang();
+				searchField.addBang();				
 			}
 		});
         
@@ -1124,6 +1135,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
 		hideKeyboard(mainWebView);
 		savedState = false;
+		shouldShowBangButtonExplanation = false;
+		if(bangButtonExplanationPopup!=null){
+			bangButtonExplanationPopup.dismiss();
+		}
 		
 		mDuckDuckGoContainer.sessionType = sessionType;
 		
@@ -1133,10 +1148,8 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		}
 				
 		if (text.length() > 0) {						
-
 			URL searchAsUrl = null;
 			String modifiedText = null;
-
 			try {
 				searchAsUrl = new URL(text);
 				searchAsUrl.toURI();
@@ -1329,7 +1342,6 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 
         // Check to see if we have retained the worker fragment.
         DDGPreferenceFragment mWorkFragment = (DDGPreferenceFragment)fragmentManager.findFragmentById(R.id.prefFragment);
-
         // If not retained (or first time running), we need to create it.
         if (mWorkFragment == null) {
             mWorkFragment = new DDGPreferenceFragment();
