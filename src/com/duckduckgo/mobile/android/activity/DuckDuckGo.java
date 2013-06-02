@@ -1135,7 +1135,6 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
 		hideKeyboard(mainWebView);
 		savedState = false;
-		shouldShowBangButtonExplanation = false;
 		if(bangButtonExplanationPopup!=null){
 			bangButtonExplanationPopup.dismiss();
 		}

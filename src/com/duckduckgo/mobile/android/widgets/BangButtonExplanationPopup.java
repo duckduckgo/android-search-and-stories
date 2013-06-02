@@ -16,9 +16,8 @@ import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 public class BangButtonExplanationPopup extends PopupWindow {
 	protected BangButtonExplanationPopup(DuckDuckGo context, View explanationLayout) {
 		super(explanationLayout, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		ImageView closeButton = (ImageView)explanationLayout.findViewById(R.id.closeButton);
         
-        closeButton.setOnClickListener(new OnClickListener() {
+        explanationLayout.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				BangButtonExplanationPopup.this.dismiss();
