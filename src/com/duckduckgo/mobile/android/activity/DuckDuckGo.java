@@ -1345,7 +1345,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         // If not retained (or first time running), we need to create it.
         if (mWorkFragment == null) {
             mWorkFragment = new DDGPreferenceFragment();
-            mWorkFragment.setRetainInstance(true);
+            mWorkFragment.setRetainInstance(false);
             mWorkFragment.setCustomPreferenceClickListener(new OnPreferenceClickListener() {
 				
 				@Override
