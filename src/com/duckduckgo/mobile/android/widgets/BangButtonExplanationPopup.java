@@ -9,18 +9,28 @@ import android.view.WindowManager.LayoutParams;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 
 public class BangButtonExplanationPopup extends PopupWindow {
+	private DuckDuckGo context;
+
 	protected BangButtonExplanationPopup(DuckDuckGo context, View explanationLayout) {
 		super(explanationLayout, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-        
-        explanationLayout.setOnClickListener(new OnClickListener() {
+		this.context = context;
+		ImageView closeButton = (ImageView)explanationLayout.findViewById(R.id.bangButtonPopupCloseButton);
+        closeButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				BangButtonExplanationPopup.this.dismiss();
+			}
+		});
+        explanationLayout.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				BangButtonExplanationPopup.this.context.searchOrGoToUrl("!amazon lego");
 			}
 		});
 	}
@@ -30,6 +40,7 @@ public class BangButtonExplanationPopup extends PopupWindow {
 		View layout = inflater.inflate(R.layout.bangbutton_explanation_popup,
                 (ViewGroup) context.findViewById(R.id.bangbuttonexplanation));
 		BangButtonExplanationPopup popup = new BangButtonExplanationPopup(context, layout);
+		popup.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
 		popup.showAsDropDown(bangButton);
 		return popup;
 	}
