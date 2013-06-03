@@ -369,6 +369,11 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 			bangButtonExplanationPopup = BangButtonExplanationPopup.showPopup(DuckDuckGo.this, bangButton);
 			shouldShowBangButtonExplanation = false;
 		}
+		if(!visible){
+			if(bangButtonExplanationPopup!=null){
+				bangButtonExplanationPopup.dismiss();
+			}
+		}
     }
 				
 	@Override
