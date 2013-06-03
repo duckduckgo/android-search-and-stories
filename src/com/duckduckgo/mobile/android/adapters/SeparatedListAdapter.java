@@ -43,15 +43,16 @@ public class SeparatedListAdapter extends BaseAdapter {
 	public Object getItem(int position) {
 		for(Object section : this.sections.keySet()) {
 			Adapter adapter = sections.get(section);
-			int headerCount = (adapter.isEmpty()?0:1);
-			int size = adapter.getCount() + headerCount;
-			
-			// check if position inside this section 
-			if(position == 0  && !adapter.isEmpty()) return section;
-			if(position < size) return adapter.getItem(position - headerCount);
-
-			// otherwise jump into next section
-			position -= size;
+			if(!adapter.isEmpty()) {
+				int size = adapter.getCount() + 1;
+				
+				// check if position inside this section 
+				if(position == 0) return section;
+				if(position < size) return adapter.getItem(position - 1);
+	
+				// otherwise jump into next section
+				position -= size;
+			}
 		}
 		return null;
 	}
@@ -67,14 +68,10 @@ public class SeparatedListAdapter extends BaseAdapter {
 
 	public int getViewTypeCount() {
 		// assume that headers count as one, then total all sections
-		int total = 0;
-		boolean notEmpty = false;
+		int total = 1;
 		for(Adapter adapter : this.sections.values()) {
-			if(!adapter.isEmpty())
-				notEmpty = true;
 			total += adapter.getViewTypeCount();
 		}
-		if(notEmpty) total += 1;
 		return total;
 	}
 	
@@ -82,16 +79,17 @@ public class SeparatedListAdapter extends BaseAdapter {
 		int type = 1;
 		for(Object section : this.sections.keySet()) {
 			Adapter adapter = sections.get(section);
-			int headerCount = (adapter.isEmpty()?0:1);
-			int size = adapter.getCount() + headerCount;
-			
-			// check if position inside this section 
-			if(position == 0 && !adapter.isEmpty()) return TYPE_SECTION_HEADER;
-			if(position < size) return type + adapter.getItemViewType(position - headerCount);
-
-			// otherwise jump into next section
-			position -= size;
-			type += adapter.isEmpty()?0:adapter.getViewTypeCount();
+			if(!adapter.isEmpty()) {
+				int size = adapter.getCount() + 1;
+				
+				// check if position inside this section 
+				if(position == 0) return TYPE_SECTION_HEADER;
+				if(position < size) return type + adapter.getItemViewType(position - 1);
+	
+				// otherwise jump into next section
+				position -= size;
+				type += adapter.getViewTypeCount();
+			}
 		}
 		return type;
 	}
@@ -109,16 +107,17 @@ public class SeparatedListAdapter extends BaseAdapter {
 		int sectionnum = 0;
 		for(Object section : this.sections.keySet()) {
 			Adapter adapter = sections.get(section);
-			int headerCount = (adapter.isEmpty()?0:1);
-			int size = adapter.getCount() + headerCount;
-			
-			// check if position inside this section 
-			if(position == 0 && !adapter.isEmpty()) return headers.getView(sectionnum, convertView, parent);
-			if(position < size) return adapter.getView(position - headerCount, convertView, parent);
-
-			// otherwise jump into next section
-			position -= size;
-			sectionnum++;
+			if(!adapter.isEmpty()) {
+				int size = adapter.getCount() + 1;
+				
+				// check if position inside this section 
+				if(position == 0 && !adapter.isEmpty()) return headers.getView(sectionnum, convertView, parent);
+				if(position < size) return adapter.getView(position - 1, convertView, parent);
+	
+				// otherwise jump into next section
+				position -= size;
+				sectionnum++;
+			}
 		}
 		return null;
 	}
