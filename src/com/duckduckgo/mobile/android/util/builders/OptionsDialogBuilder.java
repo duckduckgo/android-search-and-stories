@@ -22,6 +22,7 @@ public class OptionsDialogBuilder extends Builder {
     }
 
     public void setContextAdapter(PageMenuContextAdapter contextAdapter){
+    	this.contextAdapter = contextAdapter;
         setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 Item clickedItem = OptionsDialogBuilder.this.contextAdapter.getItem(item);
