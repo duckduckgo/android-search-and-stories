@@ -30,6 +30,7 @@ public class BangButtonExplanationPopup extends PopupWindow {
 		View layout = inflater.inflate(R.layout.bangbutton_explanation_popup,
                 (ViewGroup) context.findViewById(R.id.bangbuttonexplanation));
 		BangButtonExplanationPopup popup = new BangButtonExplanationPopup(context, layout);
+		popup.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
 		popup.showAsDropDown(bangButton);
 		return popup;
 	}
