@@ -259,7 +259,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
     private OnHistoryItemLongClickListener mHistoryLongClickListener = new OnHistoryItemLongClickListener() {
     	@Override
     	public void onHistoryItemLongClick(HistoryObject historyObject) {
-            if(historyObject.isFeedObject() && TextUtils.isEmpty(historyObject.getFeedId())) {
+            if(historyObject.isFeedObject()) {
                 new HistoryStoryMenuDialog(DuckDuckGo.this, historyObject).show();
             }
             else{

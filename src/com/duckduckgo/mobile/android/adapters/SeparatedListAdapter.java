@@ -116,8 +116,8 @@ public class SeparatedListAdapter extends BaseAdapter {
 	
 				// otherwise jump into next section
 				position -= size;
-				sectionnum++;
 			}
+			sectionnum++;
 		}
 		return null;
 	}
