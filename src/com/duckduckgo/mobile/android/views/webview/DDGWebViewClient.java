@@ -82,7 +82,7 @@ public class DDGWebViewClient extends WebViewClient {
 		super.onPageStarted(view, url, favicon);
 		mLoaded = false;
         view.getSettings().setDomStorageEnabled(true);
-        view.getSettings().setPluginState(PluginState.ON);
+        view.getSettings().setPluginState(PluginState.ON_DEMAND);
 		
 		DDGWebView wv = ((DDGWebView) view);
 		if(wv.loadingReadableBack) {
