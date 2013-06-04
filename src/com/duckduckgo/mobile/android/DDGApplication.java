@@ -56,6 +56,7 @@ public class DDGApplication extends Application {
 		PreferencesManager.clearValues();
 		PreferencesManager.migrateAllowedSources();
 		PreferencesManager.saveAppVersionCode(appVersionCode);
+		fileCache.removeThrashOnMigration();
 	}
 	
 	@Override

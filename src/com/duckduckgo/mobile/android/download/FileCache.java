@@ -23,11 +23,15 @@ import com.duckduckgo.mobile.android.util.FileProcessor;
 
 public class FileCache {
 
+	private final File cacheDirectory;
 	private final File externalImageDirectory;
 	private final Context context;
 	
 	public FileCache(Context context) {
 		this.context = context;
+		cacheDirectory = this.context.getCacheDir();
+		
+		// deprecated from now on 2013-06-04 (Version Code: 45)
 		externalImageDirectory = this.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES); 
 	}
 	
@@ -35,7 +39,7 @@ public class FileCache {
 		if (!allowedToSaveToFile())
 			return false;
 		
-		File saveFile = new File(externalImageDirectory, name);
+		File saveFile = new File(cacheDirectory, name);
 
 		//This will overwrite any existing files, i think...
 		boolean saved = false;
@@ -60,7 +64,7 @@ public class FileCache {
 	public Bitmap getBitmapFromImageFile(String name) {
 		if (!allowedToReadFromFile()) return null;
 		
-		File file = new File(externalImageDirectory, name);
+		File file = new File(cacheDirectory, name);
 		if (file.exists() && file.isFile()) {
 			Log.e("FileCache", "Getting File from path " + file.getPath());
 			synchronized (DDGControlVar.DECODE_LOCK) {
@@ -183,5 +187,15 @@ public class FileCache {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	/**
+	 * Remove files that have become unnecessary upon migration 
+	 */
+	public void removeThrashOnMigration() {
+		File[] files = this.externalImageDirectory.listFiles();
+		for(File file : files) {
+			file.delete();
+		}
 	}
 }
