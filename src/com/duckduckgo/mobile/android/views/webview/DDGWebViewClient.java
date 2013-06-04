@@ -21,6 +21,7 @@ import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebSettings.PluginState;
 import android.widget.Toast;
 
 public class DDGWebViewClient extends WebViewClient {
@@ -81,6 +82,7 @@ public class DDGWebViewClient extends WebViewClient {
 		super.onPageStarted(view, url, favicon);
 		mLoaded = false;
         view.getSettings().setDomStorageEnabled(true);
+        view.getSettings().setPluginState(PluginState.ON);
 		
 		DDGWebView wv = ((DDGWebView) view);
 		if(wv.loadingReadableBack) {
