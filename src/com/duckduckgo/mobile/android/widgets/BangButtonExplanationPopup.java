@@ -32,7 +32,8 @@ public class BangButtonExplanationPopup extends PopupWindow {
         tryBangButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				BangButtonExplanationPopup.this.context.searchOrGoToUrl("!amazon lego");
+				BangButtonExplanationPopup.this.context.getSearchField().setText("!amazon lego");
+				BangButtonExplanationPopup.this.dismiss();
 			}
 		});
 	}

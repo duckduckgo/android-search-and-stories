@@ -27,6 +27,7 @@ import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
@@ -127,7 +128,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	// keeps default User-Agent for WebView
 	public String mWebViewDefaultUA = null;
 		
-	public DDGAutoCompleteTextView searchField = null;
+	private DDGAutoCompleteTextView searchField = null;
 	private MainFeedListView feedView = null;
 	private HistoryListView leftRecentView = null;
 	
@@ -551,7 +552,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         bangButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				searchField.addBang();				
+				getSearchField().addBang();				
 			}
 		});
         
@@ -568,20 +569,20 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         }
         
         searchField = (DDGAutoCompleteTextView) contentView.findViewById(R.id.searchEditText);
-        searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
-        searchField.setOnEditorActionListener(new OnEditorActionListener() {
+        getSearchField().setAdapter(mDuckDuckGoContainer.acAdapter);
+        getSearchField().setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-				if(textView == searchField) {
-					hideKeyboard(searchField);
-					searchField.dismissDropDown();
-					searchOrGoToUrl(searchField.getTrimmedText());
+				if(textView == getSearchField()) {
+					hideKeyboard(getSearchField());
+					getSearchField().dismissDropDown();
+					searchOrGoToUrl(getSearchField().getTrimmedText());
 				}
 				return false;
 			}
 		});
         
-        searchField.setOnClickListener(new OnClickListener() {
+        getSearchField().setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				// close left n	av if it's open
@@ -591,28 +592,28 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 				showBangButton(true);
 			}
 		});
-        searchField.setOnFocusChangeListener(new OnFocusChangeListener() {
+        getSearchField().setOnFocusChangeListener(new OnFocusChangeListener() {
 			@Override
 			public void onFocusChange(View v, boolean hasFocus) {
 				showBangButton(hasFocus);
 			}
 		});
         
-        searchField.setOnBackButtonPressedEventListener(new BackButtonPressedEventListener() {
+        getSearchField().setOnBackButtonPressedEventListener(new BackButtonPressedEventListener() {
 			@Override
 			public void onBackButtonPressed() {
-				if(!searchField.isPopupShowing()){
+				if(!getSearchField().isPopupShowing()){
 					showBangButton(false);
 				}
 			}
         });
 
-        searchField.setOnItemClickListener(new OnItemClickListener() {
+        getSearchField().setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				if(PreferencesManager.getDirectQuery()){
 					//Hide the keyboard and perform a search
-					searchField.dismissDropDown();
+					getSearchField().dismissDropDown();
 					
 					SuggestObject suggestObject = mDuckDuckGoContainer.acAdapter.getItem(position);
 					SuggestType suggestType = suggestObject.getType();
@@ -620,9 +621,9 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 						if(suggestType == SuggestType.TEXT) {
 							String text = suggestObject.getPhrase().trim();
 							if(suggestObject.hasOnlyBangQuery()){
-								searchField.addTextWithTrailingSpace(suggestObject.getPhrase());
+								getSearchField().addTextWithTrailingSpace(suggestObject.getPhrase());
 							}else{
-								hideKeyboard(searchField);
+								hideKeyboard(getSearchField());
 								searchOrGoToUrl(text);	
 							}
 						}
@@ -636,23 +637,23 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 
         // This makes a little (X) to clear the search bar.
         mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
-        searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
+        getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
 
-        searchField.setOnTouchListener(new OnTouchListener() {
+        getSearchField().setOnTouchListener(new OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
             	if (event.getAction() == MotionEvent.ACTION_DOWN) {
     				mCleanSearchBar = true;
-                	searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+                	getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
                 }
             	
-                if (searchField.getCompoundDrawables()[2] == null) {
+                if (getSearchField().getCompoundDrawables()[2] == null) {
                     return false;
                 }
                 if (event.getAction() != MotionEvent.ACTION_UP) {
                     return false;
                 }
-                if (event.getX() > searchField.getWidth() - searchField.getPaddingRight() - mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()) {
-                	if(searchField.getCompoundDrawables()[2] == mDuckDuckGoContainer.stopDrawable) {
+                if (event.getX() > getSearchField().getWidth() - getSearchField().getPaddingRight() - mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()) {
+                	if(getSearchField().getCompoundDrawables()[2] == mDuckDuckGoContainer.stopDrawable) {
 	                	stopAction();
                 	}
                 	else {
@@ -664,9 +665,9 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 
         });
 
-        searchField.addTextChangedListener(new TextWatcher() {
+        getSearchField().addTextChangedListener(new TextWatcher() {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-            	searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
+            	getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
             }
 
             public void afterTextChanged(Editable arg0) {
@@ -884,7 +885,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         displayHomeScreen();
         
         if (getIntent().getAction().equals(Intent.ACTION_ASSIST)) {
-			showKeyboard(searchField);
+			showKeyboard(getSearchField());
 		}
     }
 
@@ -906,17 +907,17 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	}
 	
 	private void clearSearchBar() {
-		searchField.setText("");
-    	searchField.setCompoundDrawables(null, null, null, null);
-		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+		getSearchField().setText("");
+    	getSearchField().setCompoundDrawables(null, null, null, null);
+		getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 	}
 	
 	public void setSearchBarText(String text) {
-		searchField.setFocusable(false);
-		searchField.setFocusableInTouchMode(false);
-		searchField.setText(text);            
-		searchField.setFocusable(true);
-		searchField.setFocusableInTouchMode(true);
+		getSearchField().setFocusable(false);
+		getSearchField().setFocusableInTouchMode(false);
+		getSearchField().setText(text);            
+		getSearchField().setFocusable(true);
+		getSearchField().setFocusableInTouchMode(true);
 	}
 	
 	private void resetScreenState() {
@@ -1008,7 +1009,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_SEARCH
 				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED) {
 			// previous screen was a SERP
-			showKeyboard(searchField);
+			showKeyboard(getSearchField());
 		}
         mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
@@ -1028,10 +1029,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		
 		// check autocomplete 
 		if(!DDGControlVar.isAutocompleteActive) {
-			searchField.setAdapter(null);
+			getSearchField().setAdapter(null);
 		}
 		else {
-	        searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
+	        getSearchField().setAdapter(mDuckDuckGoContainer.acAdapter);
 		}
 		
 		if(DDGControlVar.includeAppsInSearch && !DDGControlVar.hasAppsIndexed) {
@@ -1051,7 +1052,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		else {
 			if(intent.getBooleanExtra("widget", false)) {
 				viewFlipper.setDisplayedChild(DDGControlVar.START_SCREEN.getFlipOrder());
-				showKeyboard(searchField);
+				showKeyboard(getSearchField());
 			}
 			else if(mDuckDuckGoContainer.webviewShowing){
 				shareButton.setVisibility(View.VISIBLE);
@@ -1115,7 +1116,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	public void reloadAction() {
 		mCleanSearchBar = false;
         mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
-		searchField.setCompoundDrawables(null, null, searchField.getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
+		getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
 		
 		if(!mainWebView.isReadable)
 			mainWebView.reload(); 
@@ -1126,11 +1127,11 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	
 	private void stopAction() {
 		mCleanSearchBar = true;
-    	searchField.setText("");
+    	getSearchField().setText("");
 
     	// This makes a little (X) to clear the search bar.
-    	searchField.setCompoundDrawables(null, null, null, null);
-    	searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+    	getSearchField().setCompoundDrawables(null, null, null, null);
+    	getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 	}
 	
 	public void searchOrGoToUrl(String text) {
@@ -1389,10 +1390,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
             		else if(key.equals("turnOffAutocompletePref")) {
 	        			// check autocomplete 
 	        			if(!DDGControlVar.isAutocompleteActive) {
-	        				searchField.setAdapter(null);
+	        				getSearchField().setAdapter(null);
 	        			}
 	        			else {
-	        		        searchField.setAdapter(mDuckDuckGoContainer.acAdapter);
+	        		        getSearchField().setAdapter(mDuckDuckGoContainer.acAdapter);
 	        			}
             		}
             		else if(key.equals("appSearchPref")) {
@@ -1471,7 +1472,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		viewFlipper.setDisplayedChild(SCREEN.SCR_SETTINGS.getFlipOrder());
 		shareButton.setVisibility(View.GONE);
 				
-		searchField.setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+		getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 		mDuckDuckGoContainer.webviewShowing = false;
 		
 		clearLeftSelect();
@@ -1622,7 +1623,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	}
 
 	private void handleHomeSettingsButtonClick() {
-		hideKeyboard(searchField);
+		hideKeyboard(getSearchField());
 		
 		if(DDGControlVar.homeScreenShowing){
 			viewPager.switchPage();
@@ -1634,7 +1635,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	}
 
 	private void handleShareButtonClick() {
-		hideKeyboard(searchField);
+		hideKeyboard(getSearchField());
 
 		// XXX should make Page Options button disabled if the page is not loaded yet
 		// url = null case
@@ -1815,7 +1816,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	 */
 	public void preSearch(String query) {
 		setSearchBarText(query);
-		showKeyboard(searchField);
+		showKeyboard(getSearchField());
 		viewPager.setCurrentItem(1);
 	}
 	
@@ -1826,5 +1827,9 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		savedTabHost = (TabHostExt) contentView.findViewById(android.R.id.tabhost);
 		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
 		savedTabHost.addDefaultTabs();
+	}
+
+	public DDGAutoCompleteTextView getSearchField() {
+		return searchField;
 	}
 }

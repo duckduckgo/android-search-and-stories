@@ -38,6 +38,7 @@
   	    <EditText android:layout_width="0dp" android:layout_height="0dp"
   	        android:inputType="none"
   	        android:focusable="true"
+  	        android:imeOptions="actionSearch"
   	        android:focusableInTouchMode="true" />
    	    
    	    <com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView 

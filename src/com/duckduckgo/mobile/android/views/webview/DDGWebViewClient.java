@@ -189,7 +189,7 @@ public class DDGWebViewClient extends WebViewClient {
 			return;
 		}
 		
-		activity.searchField.setBackgroundDrawable(activity.mDuckDuckGoContainer.searchFieldDrawable);
+		activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.searchFieldDrawable);
 		
 //		// This makes a little (X) to clear the search bar.
 //		mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));

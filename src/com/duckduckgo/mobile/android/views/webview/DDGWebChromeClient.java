@@ -23,12 +23,12 @@ public class DDGWebChromeClient extends WebChromeClient {
 		}
 		
 		if(newProgress == 100){
-			activity.searchField.setBackgroundDrawable(activity.mDuckDuckGoContainer.searchFieldDrawable);        			
+			activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.searchFieldDrawable);        			
 		}
 		else {
 			if(!activity.mCleanSearchBar) {
 				activity.mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
-				activity.searchField.setBackgroundDrawable(activity.mDuckDuckGoContainer.progressDrawable);
+				activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.progressDrawable);
 			}
 		}
 
