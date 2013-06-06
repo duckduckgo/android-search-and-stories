@@ -17,10 +17,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
+            android:layout_centerHorizontal="true"
             android:singleLine="false"
             android:text="@string/BangButtonExplanation"
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:textColor="@android:color/black" />
+
+        <Button
+            android:id="@+id/bangButtonTryBangButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/bangButtonPopupText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btn_try_bang"
+            android:text="Try !amazon lego"
+            android:textColor="#FFFFFF" />
+            
     </RelativeLayout>
 
     <ImageView

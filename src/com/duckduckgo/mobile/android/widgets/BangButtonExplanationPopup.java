@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
@@ -21,13 +22,14 @@ public class BangButtonExplanationPopup extends PopupWindow {
 		super(explanationLayout, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		this.context = context;
 		ImageView closeButton = (ImageView)explanationLayout.findViewById(R.id.bangButtonPopupCloseButton);
+		Button tryBangButton = (Button)explanationLayout.findViewById(R.id.bangButtonTryBangButton);
         closeButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				BangButtonExplanationPopup.this.dismiss();
 			}
 		});
-        explanationLayout.setOnClickListener(new OnClickListener() {
+        tryBangButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				BangButtonExplanationPopup.this.context.searchOrGoToUrl("!amazon lego");

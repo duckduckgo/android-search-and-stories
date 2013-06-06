@@ -149,7 +149,7 @@
         Search Anonymously.\nFind Instantly.\nStay Informed.</string>
     <string name="GetStarted">Get Started</string>
     
-    <string name="BangButtonExplanation">Searching on other sites is easy with !bang commands. Try !amazon lego</string>
+    <string name="BangButtonExplanation">Searching on other sites is easy with !bang commands.</string>
     
     <string name="LeftRecentSearches">Recent Searches</string>
     <string name="LeftRecentStories">Recent Stories</string>
