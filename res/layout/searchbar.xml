@@ -14,7 +14,7 @@
    	        android:layout_marginLeft="5dp"
    	        android:background="@android:color/transparent"
    	        android:scaleType="fitCenter"
-   	        android:src="@drawable/menu_button" />
+   	        android:src="@drawable/btn_menu_states" />
    	    
    	    <ImageButton 
    	        android:id="@+id/bangButton"
@@ -24,7 +24,7 @@
    	        android:background="@android:color/transparent"
    	        android:scaleType="fitCenter"
    	        android:visibility="gone"
-   	        android:src="@drawable/bang_button" />
+   	        android:src="@drawable/btn_bang_states" />
  
    	    <FrameLayout
    	        android:layout_width="0dip"

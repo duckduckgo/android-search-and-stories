@@ -58,7 +58,7 @@
                     android:layout_width="202dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center_horizontal"
-                    android:background="@drawable/btn_get_started"
+                    android:background="@drawable/btn_get_started_states"
                     android:scaleType="centerInside"
                     android:text="@string/GetStarted"
                     android:textColor="#FFF"

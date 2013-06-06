@@ -30,7 +30,7 @@
             android:layout_below="@id/bangButtonPopupText"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10dp"
-            android:background="@drawable/btn_try_bang"
+            android:background="@drawable/btn_try_bang_states"
             android:text="Try !amazon lego"
             android:textColor="#FFFFFF" />
             
