@@ -35,13 +35,9 @@ public class FileCache {
 		externalImageDirectory = this.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES); 
 	}
 	
-	public boolean saveBitmapAsFile(String name, Bitmap bitmap) {
-		if (!allowedToSaveToFile())
-			return false;
-		
+	public boolean saveBitmapAsFile(String name, Bitmap bitmap) {		
 		File saveFile = new File(cacheDirectory, name);
 
-		//This will overwrite any existing files, i think...
 		boolean saved = false;
 		FileOutputStream os = null;
 		try {
@@ -61,9 +57,7 @@ public class FileCache {
 		return saved;
 	}
 	
-	public Bitmap getBitmapFromImageFile(String name) {
-		if (!allowedToReadFromFile()) return null;
-		
+	public Bitmap getBitmapFromImageFile(String name) {		
 		File file = new File(cacheDirectory, name);
 		if (file.exists() && file.isFile()) {
 			Log.e("FileCache", "Getting File from path " + file.getPath());
@@ -73,24 +67,6 @@ public class FileCache {
 		}
 		
 		return null;
-	}
-	
-	public boolean allowedToSaveToFile() {
-		String state = Environment.getExternalStorageState();
-		if (Environment.MEDIA_MOUNTED.equals(state)) {
-			return true;
-		}
-		
-		return false;
-	}
-	
-	public boolean allowedToReadFromFile() {
-		String state = Environment.getExternalStorageState();
-		if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state)) {
-			return true;
-		}
-		
-		return false;
 	}
 	
 	public boolean saveStringToInternal(String name, String file){		
@@ -193,9 +169,11 @@ public class FileCache {
 	 * Remove files that have become unnecessary upon migration 
 	 */
 	public void removeThrashOnMigration() {
-		File[] files = this.externalImageDirectory.listFiles();
-		for(File file : files) {
-			file.delete();
+		if(this.externalImageDirectory != null) {
+			File[] files = this.externalImageDirectory.listFiles();
+			for(File file : files) {
+				file.delete();
+			}
 		}
 	}
 }
