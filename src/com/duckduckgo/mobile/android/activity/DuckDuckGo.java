@@ -366,7 +366,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
     private void showBangButton(boolean visible){
     	homeSettingsButton.setVisibility(visible ? View.GONE: View.VISIBLE);
 		bangButton.setVisibility(visible ? View.VISIBLE: View.GONE);
-		if(shouldShowBangButtonExplanation && visible){
+		if(shouldShowBangButtonExplanation && visible && welcomeScreenLayout == null){
 			bangButtonExplanationPopup = BangButtonExplanationPopup.showPopup(DuckDuckGo.this, bangButton);
 			shouldShowBangButtonExplanation = false;
 		}
