@@ -60,7 +60,7 @@ public class FileCache {
 	public Bitmap getBitmapFromImageFile(String name) {		
 		File file = new File(cacheDirectory, name);
 		if (file.exists() && file.isFile()) {
-			Log.e("FileCache", "Getting File from path " + file.getPath());
+			Log.d("FileCache", "Getting File from path " + file.getPath());
 			synchronized (DDGControlVar.DECODE_LOCK) {
 				return BitmapFactory.decodeFile(file.getPath());
 			}
