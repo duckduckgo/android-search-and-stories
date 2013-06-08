@@ -41,7 +41,7 @@ public class FileCache {
 		boolean saved = false;
 		FileOutputStream os = null;
 		try {
-			Log.e("FileCache", "Saving File To Cache " + saveFile.getPath());
+			Log.d("FileCache", "Saving File To Cache " + saveFile.getPath());
 			os = new FileOutputStream(saveFile);
 			bitmap.compress(CompressFormat.PNG, 100, os);
 			os.flush();
