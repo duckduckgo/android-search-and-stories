@@ -1579,13 +1579,17 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
 	}
 	
-	public void showKeyboard(View view) {
-		view.requestFocus();
-		
-		 getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+	public void showKeyboard(final View view) {
+		view.post(new Runnable() {
+			@Override
+			public void run() {
+				view.requestFocus();
+				getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
-		 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		 imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+			}
+		});
 	}
 	
 	public void onClick(View view) {
