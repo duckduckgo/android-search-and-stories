@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
-import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
 import ch.boye.httpclientandroidlib.HttpEntity;
@@ -88,9 +87,9 @@ public class FileCache {
 		return false;
 	}
 	
-	public boolean saveHttpEntityToCache(String name, HttpEntity entity){	
+	public boolean saveHttpEntityToFolder(String name, HttpEntity entity, File targetFolder){	
 		try {
-			FileOutputStream fos = new FileOutputStream(new File(cacheDirectory, name));
+			FileOutputStream fos = new FileOutputStream(new File(targetFolder, name));
 			BufferedHttpEntity bufferedEntity = new BufferedHttpEntity(entity);
 			bufferedEntity.writeTo(fos);
 			fos.close();
@@ -100,6 +99,20 @@ public class FileCache {
 			e.printStackTrace();
 			Log.e(TAG, "saveHttpEntityToInternal: " + name);
 		}
+		return false;
+	}
+	
+	public boolean saveHttpEntityToCache(String name, HttpEntity entity) {
+		return saveHttpEntityToFolder(name, entity, cacheDirectory);
+	}
+	
+	public boolean saveHttpEntityToDownloads(String name, HttpEntity entity) {
+		File downloadDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		if(downloadDirectory != null) {
+			return saveHttpEntityToFolder(name, entity, downloadDirectory);
+		}
+		// silently fail when no (emulated or not) public download directory available
+		// case: 2.2 device without (even emulated) SD card support
 		return false;
 	}
 	

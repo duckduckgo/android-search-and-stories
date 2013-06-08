@@ -1227,7 +1227,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		displayWebView();
 		
 		if(!savedState){
-			if(DDGControlVar.regionString == "wt-wt"){	// default
+			if(DDGControlVar.regionString.equals("wt-wt")){	// default
 				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
 			}
 			else {

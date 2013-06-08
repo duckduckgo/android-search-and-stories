@@ -25,7 +25,7 @@ public class MimeDownloadTask extends AsyncTask<Void, Void, String> {
 		try {
 			HttpEntity entity = DDGNetworkConstants.mainClient.doGet(url);
 			FileCache fileCache = DDGApplication.getFileCache();
-			fileCache.saveHttpEntityToCache(fileName, entity);
+			fileCache.saveHttpEntityToDownloads(fileName, entity);
 			return fileCache.getPath(fileName);
 		}
 		catch(DDGHttpException e){		
