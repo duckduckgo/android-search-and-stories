@@ -884,10 +884,15 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		});
         displayHomeScreen();
         
-        if (getIntent().getAction().equals(Intent.ACTION_ASSIST)) {
+        checkForAssistAction();
+    }
+
+	// Assist action is better known as Google Now gesture
+	private void checkForAssistAction() {
+		if (getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_ASSIST)) {
 			showKeyboard(getSearchField());
 		}
-    }
+	}
 
     private void showNewSourcesDialog() {
         if(PreferencesManager.shouldShowNewSourcesDialog()){
