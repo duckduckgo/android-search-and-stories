@@ -61,37 +61,12 @@ public class AsyncImageView extends ImageView {
 		    return this.cornerRadius;
 		  }
 	
-	public void setDefault() {
-		setImageBitmap(null);
-		if (hideOnDefault) {
-			this.setVisibility(View.GONE);
-		}
-	}
-	
 	
 	public void setBitmap(Bitmap bitmap) {
-		//Don't show a null bitmap
-		if (bitmap == null) {
-			setDefault();
+		if(bitmap == null)
 			return;
-		}
-		
-		if (this.getVisibility() == View.GONE && this.hideOnDefault) {
-			this.setVisibility(View.VISIBLE);
-		}
 		
 		setImageBitmap(bitmap);         
-	}
-
-	
-	public boolean shouldHideOnDefault() {
-		return this.hideOnDefault;
-	}
-	
-	//NOTE: Setting Hide on default gives visibility control to this ImageView
-	//		It may then override other visibility settings given externally
-	public void setShouldHideOnDefault(boolean hideOnDefault) {
-		this.hideOnDefault = hideOnDefault;
 	}
 	
 	public void setType(String type){

@@ -39,6 +39,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
+import ch.boye.httpclientandroidlib.HttpEntity;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
@@ -49,9 +50,7 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 public final class DDGUtils {
 	
 	public static int feedItemWidth = 0, feedItemHeight = 0;
-	public static int maxItemWidthHeight = 0;
-	
-    private static final Pattern PUNC_PATTERN = Pattern.compile("[:.,/]");
+	public static int maxItemWidthHeight = 0;	
 	
 	public static boolean saveArray(SharedPreferences prefs, String[] array, String arrayName) {   
 	    SharedPreferences.Editor editor = prefs.edit();  
@@ -155,80 +154,49 @@ public final class DDGUtils {
 		}
 	}
 	
-	private static Bitmap decodeImage(String filePath) {
-		final String TAG = "decodeImage";
-
+	public static Bitmap decodeImage(String filePath) {
 		//Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(filePath, o);
-        
-        // Log.v(TAG,"IMAGE width height: " + o.outWidth + " " + o.outHeight);
-        
-        //The new size we want to scale to
+		BitmapFactory.Options o = new BitmapFactory.Options();
+		o.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(filePath, o);
 
-        //Find the correct scale value. It should be the power of 2.
-        int scale=1;
-//        while(o.outWidth/scale/2>=REQUIRED_SIZE && o.outHeight/scale/2>=REQUIRED_SIZE)
-//        while(o.outWidth/scale>=REQUIRED_SIZE)
-                
-        while(o.outWidth/scale/2>=maxItemWidthHeight || o.outHeight/scale/2>=maxItemWidthHeight)
-            scale*=2;
+		int scale=1;                
+		while(o.outWidth/scale/2>=maxItemWidthHeight || o.outHeight/scale/2>=maxItemWidthHeight)
+			scale*=2;
 
-        // Log.v(TAG,"Scale: " + scale);
-					
-			BitmapFactory.Options options=new BitmapFactory.Options();
-	        //Decode with inSampleSize
-	        options.inSampleSize=scale;
-	        options.inPurgeable = true;
-	        options.inInputShareable = true;
-	        
-	        synchronized (DDGControlVar.DECODE_LOCK) {
-				Bitmap result = BitmapFactory.decodeFile(filePath, options);
-				return result;
-	        }
+		BitmapFactory.Options options=new BitmapFactory.Options();
+		//Decode with inSampleSize
+		options.inSampleSize=scale;
+		options.inPurgeable = true;
+		options.inInputShareable = true;
+
+		synchronized (DDGControlVar.DECODE_LOCK) {
+			Bitmap result = BitmapFactory.decodeFile(filePath, options);
+			return result;
+		}
 	}
 	
-	public static Bitmap downloadBitmap(AsyncTask<?, ?, ?> task, String url) {
-		final String TAG = "downloadBitmap";
+	public static boolean downloadAndSaveBitmapToCache(AsyncTask<?, ?, ?> task, String url, String targetName) {
+		final String TAG = "downloadAndSaveBitmapToCache";
 		
 		FileCache fileCache = DDGApplication.getFileCache();
-		Bitmap resultBitmap;
 		
 		try {
 
-			if (task.isCancelled()) return null;
+			if (task.isCancelled()) return false;
 				
-			InputStream inputStream = null;
+			HttpEntity entity = null;
 			try {
-				inputStream = DDGNetworkConstants.mainClient.doGetStream(url);
-				if (inputStream != null) {
-					// FIXME large bitmaps cause OutOfMemoryErrors
-					// see: http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
-										
-					Matcher matcher = PUNC_PATTERN.matcher(url);
-					String nURL = matcher.replaceAll("_");
-					String fname = "tmp" + nURL;
-										
-					fileCache.saveStreamToInternal(fname, inputStream);
-					inputStream.close();
-					
-					String filePath = fileCache.getPath(fname);
-					
-					resultBitmap = decodeImage(filePath);
-					
-				    fileCache.removeFile(fname);
-			    	return resultBitmap;
+				entity = DDGNetworkConstants.mainClient.doGet(url);
+				if (entity != null) {																			
+					Log.v("SAVE", "Saving stream to internal file: " + url);
+					fileCache.saveHttpEntityToCache(targetName, entity);
+			    	return true;
 				}
 			} 
 			catch(DDGHttpException conex) {
 				Log.e(TAG, "Http Call Returned Bad Status. " + conex.getHttpStatus());
 				throw conex;
-			}
-			finally {
-				if (inputStream != null) {
-					inputStream.close();
-				}
 			}
 		} catch (DDGHttpException conException) {
 			Log.e(TAG, conException.getMessage(), conException);
@@ -236,7 +204,7 @@ public final class DDGUtils {
 			Log.e(TAG, e.getMessage(), e);
 		}
 		
-		return null;
+		return false;
 	}
 	
 	  public static String readStream(InputStream is) {

@@ -114,10 +114,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 									// pass
 								}
 								else {
-									Bitmap bitmap = DDGUtils.downloadBitmap(this, imageUrl);
-									if(bitmap != null){
-										cache.addBitmapToCache("DUCKDUCKICO--"+id, bitmap);
-									}
+									DDGUtils.downloadAndSaveBitmapToCache(this, imageUrl, "DUCKDUCKICO--"+id);
 								}
 							}
 							// ***************************************************

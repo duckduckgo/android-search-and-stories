@@ -170,24 +170,6 @@ public class DDGHttpClient extends DefaultHttpClient {
 			throw new DDGHttpException(ex.getMessage());
 		}
 	}
-	
-	public InputStream doPostStream(String url, List<NameValuePair> params) throws DDGHttpException
-	{	
-		try {
-			HttpEntity entity = doPost(url,params);
-			InputStream content = entity.getContent();
-//			EntityUtils.consume(entity);
-			return content;
-		}
-		catch(DDGHttpException ddgEx){
-			throw ddgEx;
-		}
-		catch(IOException ex){
-			// io
-			throw new DDGHttpException(ex.getMessage());
-		}
-	}
-	
 
 	public String doPostString(String url, List<NameValuePair> params) throws DDGHttpException
 	{	
@@ -226,22 +208,6 @@ public class DDGHttpClient extends DefaultHttpClient {
 		}
 		catch(Exception ex){
 			// clientprotocol, io
-			throw new DDGHttpException(ex.getMessage());
-		}
-	}
-	
-	public InputStream doGetStream(String url) throws DDGHttpException {
-		try {			
-			entity = doGet(url);
-			InputStream content = entity.getContent();
-//			EntityUtils.consume(entity);
-			return content;
-		}
-		catch(DDGHttpException ddgEx){
-			throw ddgEx;
-		}
-		catch(IOException ex){
-			// io
 			throw new DDGHttpException(ex.getMessage());
 		}
 	}
@@ -300,22 +266,6 @@ public class DDGHttpClient extends DefaultHttpClient {
 		}
 		catch(Exception ex){
 			// clientprotocol, io
-			throw new DDGHttpException(ex.getMessage());
-		}
-	}
-	
-	public InputStream doGetStream(String url, List<NameValuePair> params) throws DDGHttpException {
-		try {			
-			entity = doGet(url, params,false);
-			InputStream content = entity.getContent();
-//			EntityUtils.consume(entity);
-			return content;
-		}
-		catch(DDGHttpException ddgEx){
-			throw ddgEx;
-		}
-		catch(IOException ex){
-			// io
 			throw new DDGHttpException(ex.getMessage());
 		}
 	}

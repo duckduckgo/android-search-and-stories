@@ -1,8 +1,7 @@
 package com.duckduckgo.mobile.android.tasks;
 
-import java.io.InputStream;
-
 import android.os.AsyncTask;
+import ch.boye.httpclientandroidlib.HttpEntity;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.download.FileCache;
@@ -24,9 +23,9 @@ public class MimeDownloadTask extends AsyncTask<Void, Void, String> {
 	@Override
 	protected String doInBackground(Void... params) {
 		try {
-			InputStream is = DDGNetworkConstants.mainClient.doGetStream(url);
+			HttpEntity entity = DDGNetworkConstants.mainClient.doGet(url);
 			FileCache fileCache = DDGApplication.getFileCache();
-			fileCache.saveStreamToInternal(fileName, is);
+			fileCache.saveHttpEntityToCache(fileName, entity);
 			return fileCache.getPath(fileName);
 		}
 		catch(DDGHttpException e){		

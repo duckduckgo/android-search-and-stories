@@ -7,7 +7,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import android.content.Context;
@@ -16,12 +15,17 @@ import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.os.Environment;
 import android.util.Log;
+import ch.boye.httpclientandroidlib.HttpEntity;
+import ch.boye.httpclientandroidlib.entity.BufferedHttpEntity;
+import ch.boye.httpclientandroidlib.util.EntityUtils;
 
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.FileProcessor;
 
 public class FileCache {
+	
+	protected final String TAG = "FileCache";
 
 	private final File cacheDirectory;
 	private final File externalImageDirectory;
@@ -62,7 +66,7 @@ public class FileCache {
 		if (file.exists() && file.isFile()) {
 			Log.d("FileCache", "Getting File from path " + file.getPath());
 			synchronized (DDGControlVar.DECODE_LOCK) {
-				return BitmapFactory.decodeFile(file.getPath());
+				return DDGUtils.decodeImage(file.getPath());
 			}
 		}
 		
@@ -84,20 +88,19 @@ public class FileCache {
 		return false;
 	}
 	
-	public boolean saveStreamToInternal(String name, InputStream is){		
-		byte[] bucket = new byte[1024];
-	    try {
-			FileOutputStream fos = this.context.openFileOutput(name, Context.MODE_PRIVATE);
-		      int readSize;
-		      while((readSize = is.read(bucket)) != -1) {
-		    	  fos.write(bucket,0,readSize);
-		      }
-		      fos.close();
-		      return true;
-		    } catch (IOException e) {
-		    	e.printStackTrace();
-		      return false;
-		    }	
+	public boolean saveHttpEntityToCache(String name, HttpEntity entity){	
+		try {
+			FileOutputStream fos = new FileOutputStream(new File(cacheDirectory, name));
+			BufferedHttpEntity bufferedEntity = new BufferedHttpEntity(entity);
+			bufferedEntity.writeTo(fos);
+			fos.close();
+			EntityUtils.consume(bufferedEntity);
+			return true;
+		} catch(Exception e) {
+			e.printStackTrace();
+			Log.e(TAG, "saveHttpEntityToInternal: " + name);
+		}
+		return false;
 	}
 	
 	public String getPath(String name) {

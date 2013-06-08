@@ -2,9 +2,7 @@ package com.duckduckgo.mobile.android.download;
 
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import android.graphics.Bitmap;
@@ -19,12 +17,9 @@ public class ImageCache {
 	private static final int PURGE_DELAY = 60000; //milliseconds before we purge all items (60 seconds)
 
 	private FileCache fileCache = null;
-	
-	private Set<String> failedUrlSet = null;
-	
+		
 	public ImageCache(FileCache fileCache) {
 		this.fileCache = fileCache;
-		this.failedUrlSet = new HashSet<String>();
 	}
 	
 	//The hard cache will hold references that we don't want to lose (in our case the 50 most recent)
@@ -74,22 +69,6 @@ public class ImageCache {
 				fileCache.saveBitmapAsFile(getCleanFileName(url), bitmap);
 			}			
 		}
-		else {
-			// some kind of failure, called cache with null bitmap
-			failedUrlSet.add(url);
-		}
-	}
-	
-	public void addFailedUrl(String url){
-		failedUrlSet.add(url);
-	}
-	
-	/**
-	 * checks if this url download failed before
-	 * @return
-	 */
-	public boolean checkFail(String url){
-		return failedUrlSet.contains(url);
 	}
 	
 	public Bitmap getBitmapFromCache(String url, boolean onlyUseMemCache) {
