@@ -43,66 +43,6 @@ public class PageMenuContextAdapter extends ArrayAdapter<Item> {
 		}
 	}
 	
-	public PageMenuContextAdapter(Context context, int resource, 
-			int textViewResourceId, String pageType, boolean isItemSaved, boolean isReadable) {
-		this(context, resource, textViewResourceId);
-		setType(pageType, isItemSaved, isReadable);
-	}
-	
-	public void setType(String pageType, boolean isItemSaved, boolean isReadable) {
-		if(pageType.equals("mainfeed")) {
-			add(dialogItems.get(ItemType.SHARE));
-			add(dialogItems.get(ItemType.EXTERNAL));			
-			if(isItemSaved)
-				add(dialogItems.get(ItemType.UNSAVE));
-			else
-				add(dialogItems.get(ItemType.SAVE));
-		}
-		else if(pageType.equals("savedfeed")) {
-			add(dialogItems.get(ItemType.SHARE));
-			add(dialogItems.get(ItemType.EXTERNAL));			
-			add(dialogItems.get(ItemType.UNSAVE));
-		}
-		else if(pageType.equals("savedsearch")) {
-			add(dialogItems.get(ItemType.SHARE));
-			add(dialogItems.get(ItemType.EXTERNAL));
-			add(dialogItems.get(ItemType.UNSAVE));
-		}
-		else if(pageType.equals("history")) {
-			add(dialogItems.get(ItemType.SHARE));
-			add(dialogItems.get(ItemType.EXTERNAL));
-			add(dialogItems.get(ItemType.DELETE));
-			
-			if(isItemSaved)
-				add(dialogItems.get(ItemType.UNSAVE));
-			else
-				add(dialogItems.get(ItemType.SAVE));
-		}
-		else if(pageType.contains("webview-F") || pageType.equals("webview-R")) {
-			add(dialogItems.get(ItemType.SHARE));
-			add(dialogItems.get(ItemType.EXTERNAL));
-			add(dialogItems.get(ItemType.REFRESH));
-			
-			if(isItemSaved)
-				add(dialogItems.get(ItemType.UNSAVE));
-			else
-				add(dialogItems.get(ItemType.SAVE));
-			
-			// enable readability button
-			if(pageType.equals("webview-FR")) {
-				if(!isReadable)
-					add(dialogItems.get(ItemType.READABILITY_ON));
-				else
-					add(dialogItems.get(ItemType.READABILITY_OFF));
-			}
-		}
-		else if(pageType.equals("webview-W")) {
-			add(dialogItems.get(ItemType.SHARE));
-			add(dialogItems.get(ItemType.EXTERNAL));
-			add(dialogItems.get(ItemType.REFRESH));
-		}
-	}
-	
 	public View getView(int position, View convertView, android.view.ViewGroup parent) {		
 		View v = super.getView(position, convertView, parent);
 		TextView tv = (TextView)v.findViewById(android.R.id.text1);

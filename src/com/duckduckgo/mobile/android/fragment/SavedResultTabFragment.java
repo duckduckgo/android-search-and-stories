@@ -53,7 +53,7 @@ public class SavedResultTabFragment extends ListFragment {
 			savedSearchView.setOnSavedSearchItemLongClickListener(new SavedSearchListView.OnSavedSearchItemLongClickListener() {
                 @Override
                 public void onSavedSearchItemLongClick(String query) {
-                    new SavedSearchMenuDialog(duckDuckGoActivity, query);
+                    new SavedSearchMenuDialog(duckDuckGoActivity, query).show();
                 }
             });
 		}
