@@ -1044,19 +1044,18 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         Intent intent = getIntent(); 
         
 		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+			intent.setAction(Intent.ACTION_MAIN);
 			String query = intent.getStringExtra(SearchManager.QUERY);
 			setSearchBarText(query);
 			searchWebTerm(query);
 		}
-		else {
-			if(intent.getBooleanExtra("widget", false)) {
-				viewFlipper.setDisplayedChild(DDGControlVar.START_SCREEN.getFlipOrder());
-				showKeyboard(getSearchField());
-			}
-			else if(mDuckDuckGoContainer.webviewShowing){
-				shareButton.setVisibility(View.VISIBLE);
-				viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
-			}
+		else if(intent.getBooleanExtra("widget", false)) {
+			viewFlipper.setDisplayedChild(DDGControlVar.START_SCREEN.getFlipOrder());
+			showKeyboard(getSearchField());
+		}
+		else if(mDuckDuckGoContainer.webviewShowing){
+			shareButton.setVisibility(View.VISIBLE);
+			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 		}
 	}
 
