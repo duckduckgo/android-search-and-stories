@@ -42,7 +42,8 @@ public class DDGAutoCompleteTextView extends AutoCompleteTextView {
 		if(isCursorAtEnd() && !lastCharIsSpaceOrNull()){
 			getText().insert(getSelectionStart(), " !");	
 		}else{
-			getText().insert(getSelectionStart(), "!");
+			getText().replace(getSelectionStart(), getSelectionEnd(), "!");
+			setSelection(getSelectionStart());
 		}
 	}
 	
