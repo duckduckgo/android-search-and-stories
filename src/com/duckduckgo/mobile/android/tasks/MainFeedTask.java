@@ -9,9 +9,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.download.FileCache;
@@ -34,10 +38,12 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	ImageCache cache;
 	private FileCache fileCache = null;
 	
+	ListView mainFeedView = null;
 	
 	private boolean requestFailed = false;
 	
-	public MainFeedTask(FeedListener listener) {
+	public MainFeedTask(ListView mainFeedView, FeedListener listener) {
+		this.mainFeedView = mainFeedView;
 		this.cache = DDGApplication.getImageCache();
 		this.listener = listener;
 		this.fileCache = DDGApplication.getFileCache();
@@ -64,74 +70,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		}
 		
 		return feedUrl;
-	}
-	
-	
-	/**
-	 * Retrieves source response (type_info=1) from Watrcoolr
-	 * and initializes:
-	 * 1. Source icons (high-quality icons from Watrcoolr)
-	 * 2. Default sources
-	 */
-	private void initializeSources() {
-		JSONArray json = null;
-		Set<String> defaultSet = new HashSet<String>(); 
-		
-		try {			
-			String body = null;
-						
-			// get source response (type_info=1)
-			body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
-						
-			json = new JSONArray(body);
-		} catch (JSONException jex) {
-			Log.e(TAG, jex.getMessage(), jex);
-		} catch (DDGHttpException conException) {
-			Log.e(TAG, "Unable to execute Query: " + conException.getMessage(), conException);
-		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
-		}
-
-		if (json != null) {
-			for (int i = 0; i < json.length(); i++) {
-				try {
-					JSONObject nextObj = json.getJSONObject(i);
-					if (nextObj != null) {
-						
-						String imageUrl = nextObj.optString("image");			
-						String id = nextObj.getString("id");
-						int def = nextObj.getInt("default");
-						
-						if(id != null && !id.equals("null")){
-							// record new default list
-							if(def == 1){
-								defaultSet.add(id);
-							}
-														
-							// ***** save source icon to ImageCache if needed ****  
-							if(imageUrl != null && imageUrl.length() != 0){
-								if(cache.getBitmapFromCache("DUCKDUCKICO--"+id, false) != null){
-									// pass
-								}
-								else {
-									DDGUtils.downloadAndSaveBitmapToCache(this, imageUrl, "DUCKDUCKICO--"+id);
-								}
-							}
-							// ***************************************************
-						
-						}
-					}
-				} catch (JSONException e) {
-					Log.e(TAG, "Failed to create object with info at index " + i);
-				}
-			}
-		}
-		
-		DDGControlVar.defaultSources = defaultSet;
-		
-		PreferencesManager.saveDefaultSources(defaultSet);
-	}
-	
+	}	
 	
 	@Override
 	protected List<FeedObject> doInBackground(Void... arg0) {
@@ -143,7 +82,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		
 		
 		if(!DDGControlVar.isDefaultsChecked) {
-			initializeSources();
+			new SourceIconsTask(mainFeedView).execute();
 			DDGControlVar.isDefaultsChecked = true;
 		}
 		

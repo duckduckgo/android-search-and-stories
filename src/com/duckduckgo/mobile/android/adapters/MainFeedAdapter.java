@@ -153,7 +153,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 						}
 						else {							
 							Picasso.with(context)
-							.load(DDGConstants.ICON_LOOKUP_URL + host + ".ico")
+							.load(R.drawable.ddg_source_icon)
 							.placeholder(android.R.color.transparent)
 							.into(holder.imageViewFeedIcon);
 						}

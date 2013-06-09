@@ -1781,7 +1781,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 				CacheFeedTask cacheTask = new CacheFeedTask(this);
 			
 				// for HTTP request
-				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
+				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(mPullRefreshFeedView.getRefreshableView(), this);
 				
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 					cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
