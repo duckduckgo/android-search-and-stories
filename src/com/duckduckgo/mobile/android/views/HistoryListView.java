@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
@@ -50,13 +51,9 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 		Cursor c = null;
 		HistoryObject obj = null;
 		
-		if(adapter instanceof MultiHistoryAdapter) {		
-			c = (Cursor) ((MultiHistoryAdapter) adapter).getItem(position);
-			obj = new HistoryObject(c);
-		}
-		// XXX Recent Search view has a header view, so we receive HeaderviewListAdapter
-		else if(adapter instanceof HeaderViewListAdapter) {			
-			c = (Cursor) ((HeaderViewListAdapter) adapter).getItem(position);
+		Object itemClicked = ((Adapter) adapter).getItem(position);		
+		if(itemClicked instanceof Cursor) {
+			c = (Cursor) itemClicked;
 			obj = new HistoryObject(c);
 		}
 		
@@ -74,13 +71,9 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 		Cursor c = null;
 		HistoryObject obj = null;
 		
-		if(adapter instanceof MultiHistoryAdapter) {		
-			c = (Cursor) ((MultiHistoryAdapter) adapter).getItem(position);
-			obj = new HistoryObject(c);
-		}
-		// XXX Recent Search view has a header view, so we receive HeaderviewListAdapter
-		else if(adapter instanceof HeaderViewListAdapter) {			
-			c = (Cursor) ((HeaderViewListAdapter) adapter).getItem(position);
+		Object itemClicked = ((Adapter) adapter).getItem(position);		
+		if(itemClicked instanceof Cursor) {
+			c = (Cursor) itemClicked;
 			obj = new HistoryObject(c);
 		}
 		
