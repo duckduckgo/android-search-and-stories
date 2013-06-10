@@ -151,12 +151,6 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 						if(bitmap != null){
 							holder.imageViewFeedIcon.setBitmap(bitmap);
 						}
-						else {							
-							Picasso.with(context)
-							.load(R.drawable.ddg_source_icon)
-							.placeholder(android.R.color.transparent)
-							.into(holder.imageViewFeedIcon);
-						}
 				}
 			}
 		}
