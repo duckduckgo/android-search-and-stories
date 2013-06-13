@@ -31,8 +31,4 @@ public class DDGNetworkConstants {
         // initialize referrer headers to use with WebView
 //        extraHeaders.put("Referer", "http://www.google.com/");
 	}
-	
-	public static DDGHttpClient getNewClient(){
-		return new DDGHttpClient(mainConnManager,httpParams);
-	}
 }
