@@ -24,6 +24,7 @@ import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.objects.SourceInfoPair;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -70,7 +71,67 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		}
 		
 		return feedUrl;
-	}	
+	}
+	
+	
+	/**
+	 * Retrieves source response (type_info=1) from Watrcoolr
+	 * and initializes:
+	 * 1. Source icons (high-quality icons from Watrcoolr)
+	 * 2. Default sources
+	 */
+	private Set<SourceInfoPair> initializeSources() {
+		JSONArray json = null;
+		Set<String> defaultSet = new HashSet<String>(); 
+		Set<SourceInfoPair> sourceInfoPairs = new HashSet<SourceInfoPair>();
+		
+		try {			
+			String body = null;
+						
+			// get source response (type_info=1)
+			body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
+						
+			json = new JSONArray(body);
+		} catch (JSONException jex) {
+			Log.e(TAG, jex.getMessage(), jex);
+		} catch (DDGHttpException conException) {
+			Log.e(TAG, "Unable to execute Query: " + conException.getMessage(), conException);
+		} catch (Exception e) {
+			Log.e(TAG, e.getMessage(), e);
+		}
+
+		if (json != null) {
+			for (int i = 0; i < json.length(); i++) {
+				try {
+					JSONObject nextObj = json.getJSONObject(i);
+					if (nextObj != null) {
+						
+						String imageUrl = nextObj.optString("image");			
+						String id = nextObj.getString("id");
+						int def = nextObj.getInt("default");
+						
+						if(id != null && !id.equals("null")){
+							// record new default list
+							if(def == 1){
+								defaultSet.add(id);
+							}
+							
+							sourceInfoPairs.add(new SourceInfoPair(id, imageUrl));		
+						}
+					}
+				} catch (JSONException e) {
+					Log.e(TAG, "Failed to create object with info at index " + i);
+				}
+			}
+		}
+		
+		DDGControlVar.defaultSources = defaultSet;
+		
+		PreferencesManager.saveDefaultSources(defaultSet);
+		
+		return sourceInfoPairs;
+	}
+	
 	
 	@Override
 	protected List<FeedObject> doInBackground(Void... arg0) {
@@ -82,7 +143,8 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		
 		
 		if(!DDGControlVar.isDefaultsChecked) {
-			new SourceIconsTask(mainFeedView).execute();
+			Set<SourceInfoPair> sourceInfoPairs = initializeSources();
+			new SourceIconsTask(mainFeedView, sourceInfoPairs).execute();
 			DDGControlVar.isDefaultsChecked = true;
 		}
 		
