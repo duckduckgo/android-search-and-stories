@@ -338,7 +338,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 			@Override
 			public void onClick(View v) {		
 				removeWelcomeScreen();
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
 		});
     }
