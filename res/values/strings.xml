@@ -157,4 +157,8 @@
     <string name="NewSourcesOk">Show me</string>
     <string name="NewSourcesNoThx">Later</string>
 
+    <string name="WarnSSLTitle">Warning: SSL certificate</string>
+    <string name="WarnSSLDetail">SSL certificate of the server is not listed as trusted. 
+        You can still choose to continue or cancel the request.</string>
+    
 </resources>
