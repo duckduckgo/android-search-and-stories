@@ -3,6 +3,8 @@ package com.duckduckgo.mobile.android.network;
 import java.io.InputStream;
 import java.security.KeyStore;
 
+import javax.net.ssl.HttpsURLConnection;
+
 import android.content.Context;
 import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.conn.params.ConnManagerParams;
@@ -40,7 +42,15 @@ public class DDGNetworkConstants {
 	        InputStream in = context.getResources().openRawResource(R.raw.trust_store);
 	        mTrustStore.load(in, clientPassword);	    
 	        SSLSocketFactory sslSocketFactory = new SSLSocketFactory(mTrustStore);
-	        schemeRegistry.register(new Scheme("https", 443, sslSocketFactory));
+	        schemeRegistry.register(new Scheme("https", 443, sslSocketFactory));	        
+	        
+	        javax.net.ssl.TrustManagerFactory tmf = javax.net.ssl.TrustManagerFactory
+                    .getInstance(javax.net.ssl.TrustManagerFactory.getDefaultAlgorithm());
+	        tmf.init(mTrustStore);
+	        
+	        javax.net.ssl.SSLContext sslContext = javax.net.ssl.SSLContext.getInstance("TLS");
+	        sslContext.init(null, tmf.getTrustManagers(), null);
+	        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
         }
         catch(Exception e) {
         	e.printStackTrace();
