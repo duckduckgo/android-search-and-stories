@@ -160,4 +160,39 @@
     <string name="NewSourcesOk">Show me</string>
     <string name="NewSourcesNoThx">Later</string>
 
+    
+    <!-- SSL Certificate dialogs -->
+    <!-- Title for an SSL Certificate dialog -->
+    <string name="ssl_certificate">Security certificate</string>
+    <!-- Message on an SSL Certificate dialog -->
+    <string name="ssl_certificate_is_valid">This certificate is valid.</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_to">Issued to:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="common_name">Common name:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="org_name">Organization:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="org_unit">Organizational unit:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_by">Issued by:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="validity_period">Validity:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_on">Issued on:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="expires_on">Expires on:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="serial_number">Serial number:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="fingerprints">Fingerprints:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="sha256_fingerprint">SHA-256 fingerprint:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="sha1_fingerprint">SHA-1 fingerprint:</string>
+    
+    <string name="WarnSSLTitle">Warning: SSL certificate</string>
+    <string name="WarnSSLDetail">SSL certificate of the server is not listed as trusted. 
+        You can still choose to continue or cancel the request.</string>
+    
 </resources>
