@@ -5,6 +5,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.dialogs.SSLCertificateDialog;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
@@ -15,9 +16,11 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.MailTo;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.util.Log;
 import android.view.View;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -227,6 +230,15 @@ public class DDGWebViewClient extends WebViewClient {
 			wv.clearHistory();
 		}
 		super.doUpdateVisitedHistory(view, url, isReload);
+	}
+	
+	@Override
+	public void onReceivedSslError (WebView view, SslErrorHandler handler, SslError error) {
+		if(Build.VERSION.SDK_INT == Build.VERSION_CODES.FROYO) {
+			new SSLCertificateDialog(view.getContext(), handler, error).show();
+			return;
+		}
+		super.onReceivedSslError(view, handler, error);
 	}
 
 }
