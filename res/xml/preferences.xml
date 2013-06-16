@@ -87,4 +87,15 @@
     android:summaryOff="@string/PrefAcraDisabled"
     android:defaultValue="false"/>
 </PreferenceCategory>
+<PreferenceCategory android:title="@string/PrefGroupTor">
+	<CheckBoxPreference 
+	android:title="@string/PrefEnableTor"
+	android:key="enableTor"
+	android:defaultValue="false" />
+	<Preference 
+	android:title="@string/PrefCheckOrbotStatus"
+	android:key="checkOrbotStatus"
+	android:enabled="false"
+	android:defaultValue="" />
+</PreferenceCategory>
 </PreferenceScreen>

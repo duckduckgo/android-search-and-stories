@@ -1,5 +1,8 @@
 package com.duckduckgo.mobile.android.activity;
 
+import info.guardianproject.onionkit.ui.OrbotHelper;
+import info.guardianproject.onionkit.web.WebkitProxy;
+
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -1013,9 +1016,30 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
 	
+	public void enableTorIntegration(){
+		OrbotHelper orbotHelper = new OrbotHelper(this);
+        if (!orbotHelper.isOrbotInstalled()){
+            orbotHelper.promptToInstall(this);
+        }
+        else if (!orbotHelper.isOrbotRunning()){
+            orbotHelper.requestOrbotStart(this);
+        }
+        
+        try {
+			WebkitProxy.setProxy(this);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		if(PreferencesManager.getEnableTor()){
+			enableTorIntegration();
+		}
 		
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
@@ -1347,7 +1371,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         DDGPreferenceFragment mWorkFragment = (DDGPreferenceFragment)fragmentManager.findFragmentById(R.id.prefFragment);
         // If not retained (or first time running), we need to create it.
         if (mWorkFragment == null) {
-            mWorkFragment = new DDGPreferenceFragment();
+            mWorkFragment = new DDGPreferenceFragment(this);
             mWorkFragment.setRetainInstance(false);
             mWorkFragment.setCustomPreferenceClickListener(new OnPreferenceClickListener() {
 				
@@ -1833,5 +1857,14 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 
 	public DDGAutoCompleteTextView getSearchField() {
 		return searchField;
+	}
+
+	public void resetProxy() {
+		try {
+			WebkitProxy.resetProxy(getApplicationContext());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

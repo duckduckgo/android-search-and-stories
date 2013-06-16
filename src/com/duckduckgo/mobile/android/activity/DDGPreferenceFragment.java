@@ -1,5 +1,8 @@
 package com.duckduckgo.mobile.android.activity;
 
+import info.guardianproject.onionkit.OnionKitHelper;
+import info.guardianproject.onionkit.ui.OrbotHelper;
+import info.guardianproject.onionkit.web.WebkitProxy;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -23,6 +26,7 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.fragment.ConfirmClearHistoryDialog;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
+import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
@@ -32,7 +36,12 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 	
 	OnPreferenceClickListener customListener = null;
 	PreferenceChangeListener customChangeListener = null;
+	private final DuckDuckGo context;
 	
+	public DDGPreferenceFragment(DuckDuckGo context) {
+		this.context = context;
+	}
+
 	@TargetApi(11)
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,38 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		whenSendingFeedBackLaunchesEmailIntent();
 		whenRatingGoesToMarket();
 		whenTurningOffAutoCompleteSyncsOtherAutoCompletePreferences();
+		whenChangingTorChecksForOrbot();
+		whenCheckingOrbotStatusStartsOrbotAndSetsProxy();
+	}
+
+	private void whenCheckingOrbotStatusStartsOrbotAndSetsProxy() {
+		Preference checkOrbotPreference = findPreference("checkOrbotStatus");
+		checkOrbotPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+				if (PreferencesManager.getEnableTor()) {
+					context.enableTorIntegration();
+					DDGNetworkConstants.initialize((DDGApplication)context.getApplication());
+					return true;
+				}
+				return false;
+			}
+		});
+	}
+
+	private void whenChangingTorChecksForOrbot() {
+		Preference enableTorPreference = findPreference("enableTor");
+		enableTorPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				if((Boolean)newValue){
+					context.enableTorIntegration();
+				}else{
+					context.resetProxy();
+				}
+				DDGNetworkConstants.initialize((DDGApplication)context.getApplication());
+				return true;
+			}
+		});
 	}
 
 	private void whenClearingHistoryShowsClearHistoryConfirmDialog() {

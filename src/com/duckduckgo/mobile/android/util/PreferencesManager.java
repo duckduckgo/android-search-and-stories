@@ -32,6 +32,10 @@ public class PreferencesManager {
 		return DDGApplication.getSharedPreferences().getBoolean("readablePref", true);
 	}
 	
+	public static boolean getEnableTor(){
+		return DDGApplication.getSharedPreferences().getBoolean("enableTor", false);
+	}
+	
 	public static boolean getExternalBrowser() {
 		return DDGApplication.getSharedPreferences().getBoolean("externalBrowserPref", false);
 	}

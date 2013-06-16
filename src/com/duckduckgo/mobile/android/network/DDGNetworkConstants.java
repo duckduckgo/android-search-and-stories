@@ -1,8 +1,16 @@
 package com.duckduckgo.mobile.android.network;
 
+import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
+
+import info.guardianproject.onionkit.trust.StrongHttpsClient;
+import info.guardianproject.onionkit.web.WebkitProxy;
 import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.conn.params.ConnManagerParams;
 import ch.boye.httpclientandroidlib.conn.params.ConnPerRouteBean;
+import ch.boye.httpclientandroidlib.conn.params.ConnRoutePNames;
+import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.impl.conn.tsccm.ThreadSafeClientConnManager;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;
@@ -11,10 +19,12 @@ public class DDGNetworkConstants {
 	public static DDGHttpClient mainClient = null;
 	private static ClientConnectionManager mainConnManager = null;
     private static HttpParams httpParams = new BasicHttpParams();
+    private final static String PROXY_HOST = "127.0.0.1";
+    private final static int PROXY_HTTP_PORT = 8118; // default for Orbot/Tor
     
 //    public static Map<String, String> extraHeaders = new HashMap<String, String>();
 	
-	public static void initialize(){
+	public static void initialize(DDGApplication application){
 		// Create and initialize HTTP parameters
         httpParams = new BasicHttpParams();
         ConnManagerParams.setMaxTotalConnections(httpParams, 100);
@@ -25,7 +35,13 @@ public class DDGNetworkConstants {
         // This connection manager must be used if more than one thread will
         // be using the HttpClient.
         mainConnManager = new ThreadSafeClientConnManager();
-        mainClient = new DDGHttpClient(mainConnManager, httpParams);
+        mainClient = new DDGHttpClient(application.getApplicationContext(), mainConnManager, httpParams);
+        if(PreferencesManager.getEnableTor()){
+        	mainClient.getStrongTrustManager().setNotifyVerificationFail(true);
+        	mainClient.getStrongTrustManager().setNotifyVerificationSuccess(true);
+        	mainClient.useProxy(true, ConnRoutePNames.DEFAULT_PROXY, PROXY_HOST, PROXY_HTTP_PORT);
+        }
+        
         
         
         // initialize referrer headers to use with WebView

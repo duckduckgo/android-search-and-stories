@@ -87,7 +87,7 @@ public class DDGApplication extends Application {
 			// at least specify new Android version
 			DDGConstants.USER_AGENT.replace("%version", "2+");
 		}
-		DDGNetworkConstants.initialize();
+		DDGNetworkConstants.initialize(this);
 		
 		// set Helvetica Neue Medium
 //		DDGConstants.TTF_HELVETICA_NEUE_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeue_Medium.ttf");

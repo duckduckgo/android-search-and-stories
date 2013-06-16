@@ -76,6 +76,11 @@
 		    </intent-filter>
 		</receiver>
 		
+		<activity android:name="info.guardianproject.onionkit.ui.CertDisplayActivity"
+            android:configChanges="locale|orientation"
+            android:theme="@android:style/Theme.Dialog"
+            android:taskAffinity="" />
+		
     </application>
 
 </manifest>
