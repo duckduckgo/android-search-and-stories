@@ -72,6 +72,8 @@ public class TorIntegration {
     }
 
     private boolean isTorEnabledAndOrbotRunning(){
-        return isTorSettingEnabled() && orbotHelper.isOrbotRunning();
+        return isTorSettingEnabled() &&
+                orbotHelper.isOrbotInstalled() &&
+                orbotHelper.isOrbotRunning();
     }
 }
