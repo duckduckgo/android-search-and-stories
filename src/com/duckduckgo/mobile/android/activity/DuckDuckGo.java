@@ -1,6 +1,6 @@
 package com.duckduckgo.mobile.android.activity;
 
-import info.guardianproject.onionkit.ui.OrbotHelper;
+import com.duckduckgo.mobile.android.util.*;
 import info.guardianproject.onionkit.web.WebkitProxy;
 
 import java.net.MalformedURLException;
@@ -89,16 +89,6 @@ import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
-import com.duckduckgo.mobile.android.util.AppStateManager;
-import com.duckduckgo.mobile.android.util.DDGConstants;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
-import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.DDGViewPager;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
-import com.duckduckgo.mobile.android.util.ReadArticlesManager;
-import com.duckduckgo.mobile.android.util.SCREEN;
-import com.duckduckgo.mobile.android.util.SESSIONTYPE;
-import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelectedListener;
@@ -182,6 +172,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	public boolean mCleanSearchBar = false;
 	
 	private TabHostExt savedTabHost = null;
+    private TorIntegration torIntegration;
 	
 	class SourceClickListener implements OnClickListener {
 		public void onClick(View v) {
@@ -377,6 +368,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        torIntegration = new TorIntegration(this);
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
         showNewSourcesDialog();
@@ -1016,35 +1008,20 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
 	
-	public void enableTorIntegration(){
-		OrbotHelper orbotHelper = new OrbotHelper(this);
-        if (!orbotHelper.isOrbotInstalled()){
-            orbotHelper.promptToInstall(this);
-        }
-        else if (!orbotHelper.isOrbotRunning()){
-            orbotHelper.requestOrbotStart(this);
-        }
-        
-        try {
-			WebkitProxy.setProxy(this);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		if(PreferencesManager.getEnableTor()){
-			enableTorIntegration();
-		}
+
+        torIntegration.prepareTorSettings();
 		
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
-		keepFeedUpdated();
+        if(torIntegration.isOrbotRunningAccordingToSettings()){
+		    keepFeedUpdated();
+        }
 		
 		// update feeds
 		// https://app.asana.com/0/2891531242889/2858723303746
@@ -1371,7 +1348,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         DDGPreferenceFragment mWorkFragment = (DDGPreferenceFragment)fragmentManager.findFragmentById(R.id.prefFragment);
         // If not retained (or first time running), we need to create it.
         if (mWorkFragment == null) {
-            mWorkFragment = new DDGPreferenceFragment(this);
+            mWorkFragment = new DDGPreferenceFragment(torIntegration);
             mWorkFragment.setRetainInstance(false);
             mWorkFragment.setCustomPreferenceClickListener(new OnPreferenceClickListener() {
 				
@@ -1508,7 +1485,6 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
     	// main view visibility changes and keep feed updated
 		viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
 		shareButton.setVisibility(View.GONE);
-    	keepFeedUpdated();
     	mDuckDuckGoContainer.webviewShowing = false;
 	}
 	

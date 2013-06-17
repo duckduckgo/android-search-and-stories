@@ -5,6 +5,7 @@ import java.security.KeyStore;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import android.app.Application;
 import android.content.Context;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
@@ -37,49 +38,48 @@ public class DDGNetworkConstants {
 //    public static Map<String, String> extraHeaders = new HashMap<String, String>();
 	
 	public static void initialize(DDGApplication application){
-		// Create and initialize HTTP parameters
+        initializeMainClient(application, PreferencesManager.getEnableTor());
+	}
+
+    public static void initializeMainClient(Application application, boolean enableTor){
+        // Create and initialize HTTP parameters
         httpParams = new BasicHttpParams();
         ConnManagerParams.setMaxTotalConnections(httpParams, 100);
         // Increase default max connection per route to 20
-        ConnManagerParams.setMaxConnectionsPerRoute(httpParams, new ConnPerRouteBean(10));        
+        ConnManagerParams.setMaxConnectionsPerRoute(httpParams, new ConnPerRouteBean(10));
 
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
-         
+
         try {
-        	char[] clientPassword = new String("daxtheduck").toCharArray();
-	        KeyStore mTrustStore = KeyStore.getInstance("BKS");
-	        InputStream in = application.getResources().openRawResource(R.raw.trust_store);
-	        mTrustStore.load(in, clientPassword);	    
-	        SSLSocketFactory sslSocketFactory = new SSLSocketFactory(mTrustStore);
-	        schemeRegistry.register(new Scheme("https", 443, sslSocketFactory));	        
-	        
-	        javax.net.ssl.TrustManagerFactory tmf = javax.net.ssl.TrustManagerFactory
+            char[] clientPassword = "daxtheduck".toCharArray();
+            KeyStore mTrustStore = KeyStore.getInstance("BKS");
+            InputStream in = application.getResources().openRawResource(R.raw.trust_store);
+            mTrustStore.load(in, clientPassword);
+            SSLSocketFactory sslSocketFactory = new SSLSocketFactory(mTrustStore);
+            schemeRegistry.register(new Scheme("https", 443, sslSocketFactory));
+
+            javax.net.ssl.TrustManagerFactory tmf = javax.net.ssl.TrustManagerFactory
                     .getInstance(javax.net.ssl.TrustManagerFactory.getDefaultAlgorithm());
-	        tmf.init(mTrustStore);
-	        
-	        javax.net.ssl.SSLContext sslContext = javax.net.ssl.SSLContext.getInstance("TLS");
-	        sslContext.init(null, tmf.getTrustManagers(), null);
-	        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
+            tmf.init(mTrustStore);
+
+            javax.net.ssl.SSLContext sslContext = javax.net.ssl.SSLContext.getInstance("TLS");
+            sslContext.init(null, tmf.getTrustManagers(), null);
+            HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
         }
         catch(Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
         }
-         
+
         // Create an HttpClient with the ThreadSafeClientConnManager.
         // This connection manager must be used if more than one thread will
         // be using the HttpClient.
         mainConnManager = new ThreadSafeClientConnManager(schemeRegistry);
         mainClient = new DDGHttpClient(application.getApplicationContext(), mainConnManager, httpParams);
-        if(PreferencesManager.getEnableTor()){
-        	mainClient.getStrongTrustManager().setNotifyVerificationFail(true);
-        	mainClient.getStrongTrustManager().setNotifyVerificationSuccess(true);
-        	mainClient.useProxy(true, ConnRoutePNames.DEFAULT_PROXY, PROXY_HOST, PROXY_HTTP_PORT);
+        if(enableTor){
+            mainClient.getStrongTrustManager().setNotifyVerificationFail(true);
+            mainClient.getStrongTrustManager().setNotifyVerificationSuccess(true);
+            mainClient.useProxy(true, ConnRoutePNames.DEFAULT_PROXY, PROXY_HOST, PROXY_HTTP_PORT);
         }
-        
-        
-        
-        // initialize referrer headers to use with WebView
-//        extraHeaders.put("Referer", "http://www.google.com/");
-	}
+    }
 }
