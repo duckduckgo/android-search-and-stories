@@ -81,6 +81,8 @@
             android:theme="@android:style/Theme.Dialog"
             android:taskAffinity="" />
 		
+		<service android:name="com.duckduckgo.mobile.android.subscribers.MainSubscriber" />
+		
     </application>
 
 </manifest>

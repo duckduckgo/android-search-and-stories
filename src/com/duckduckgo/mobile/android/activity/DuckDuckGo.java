@@ -67,6 +67,7 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
@@ -79,11 +80,13 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
+import com.duckduckgo.mobile.android.events.KillService;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
+import com.duckduckgo.mobile.android.subscribers.MainSubscriber;
 import com.duckduckgo.mobile.android.tabhost.TabHostExt;
 import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
@@ -368,6 +371,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        startService(new Intent(this, MainSubscriber.class));
         torIntegration = new TorIntegration(this);
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
@@ -1013,6 +1017,8 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+		BusProvider.getInstance().register(this);
 
         torIntegration.prepareTorSettings();
 		
@@ -1063,6 +1069,9 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	@Override
 	public void onPause() {
 		super.onPause();
+		
+		BusProvider.getInstance().unregister(this);
+		
 		if (mDuckDuckGoContainer.mainFeedTask != null) {
 			mDuckDuckGoContainer.mainFeedTask.cancel(false);
 			mDuckDuckGoContainer.mainFeedTask = null;
@@ -1083,6 +1092,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	@Override
 	protected void onDestroy() {
 		DDGApplication.getImageCache().purge();
+		BusProvider.getInstance().post(new KillService());
 		super.onDestroy();
 	}
 	
@@ -1834,6 +1844,26 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	public DDGAutoCompleteTextView getSearchField() {
 		return searchField;
 	}
+	 
+	 public SESSIONTYPE getCurrentSessionType(String webViewUrl) {
+		 SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;			
+		 if(isStorySessionOrStoryUrl()) {
+			 mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
+			 sessionType = SESSIONTYPE.SESSION_FEED;
+		 }						
+		 else if(DDGUtils.isSerpUrl(webViewUrl)) {
+			 sessionType = SESSIONTYPE.SESSION_SEARCH;
+		 }
+		 return sessionType;
+	 }
+	 
+	 @SuppressLint("NewApi")
+	private void setWebviewShowing(boolean isShowing) {
+		 mDuckDuckGoContainer.webviewShowing = isShowing;
+		 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			 invalidateOptionsMenu();
+		 }		
+	 }
 
 	public void resetProxy() {
 		try {

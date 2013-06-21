@@ -10,5 +10,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="lib" path="libs/httpclientandroidlib-1.1.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/OnionKit"/>
+	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/otto"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
