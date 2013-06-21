@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android.util;
 
+import com.duckduckgo.mobile.android.events.Event;
+
 
 public class Item {
     public final String text;
@@ -19,5 +21,5 @@ public class Item {
     	SHARE, SAVE, EXTERNAL, UNSAVE, REFRESH, DELETE, READABILITY_ON, READABILITY_OFF
     }
     
-    public Action ActionToExecute;
+    public Event EventToFire;
 }
