@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.activity;
 
-import com.duckduckgo.mobile.android.util.*;
 import info.guardianproject.onionkit.web.WebkitProxy;
 
 import java.net.MalformedURLException;
@@ -69,7 +68,6 @@ import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
-import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistorySearchMenuDialog;
@@ -80,6 +78,7 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
+import com.duckduckgo.mobile.android.events.FeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.KillService;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
@@ -92,6 +91,18 @@ import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
+import com.duckduckgo.mobile.android.util.AppStateManager;
+import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.DDGViewPager;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
+import com.duckduckgo.mobile.android.util.ReadArticlesManager;
+import com.duckduckgo.mobile.android.util.SCREEN;
+import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.util.SuggestType;
+import com.duckduckgo.mobile.android.util.TorIntegration;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
 import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelectedListener;
@@ -110,7 +121,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
 
-public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClickListener {
+public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	protected final String TAG = "DuckDuckGo";
 	
 	public DuckDuckGoContainer mDuckDuckGoContainer;
@@ -122,7 +133,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	public MainFeedListView feedView = null;
 	private HistoryListView leftRecentView = null;
 	
-	private PullToRefreshMainFeedListView mPullRefreshFeedView = null;
+	public PullToRefreshMainFeedListView mPullRefreshFeedView = null;
 	
 	private DDGViewPager viewPager;
 	private View contentView = null;
@@ -163,12 +174,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	public FeedObject currentFeedObject = null;
 
 	// for keeping filter source at same position
-	String m_objectId = null;
-	int m_itemHeight;
-	int m_yOffset;
-	
-	boolean mScrollCancelLock = false;
-	
+	public String m_objectId = null;
+	public int m_itemHeight;
+	public int m_yOffset;
+		
 	// keep prev progress in font seek bar, to make incremental changes available
 	SeekBarHint fontSizeSeekBar;
 	
@@ -1304,39 +1313,6 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 			}
 		}
 	}
-
-	public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
-		if(!fromCache) {
-			synchronized(mDuckDuckGoContainer.feedAdapter) {
-				mDuckDuckGoContainer.feedAdapter.clear();
-			}
-		}
-		
-		mDuckDuckGoContainer.feedAdapter.addData(feed);
-		mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
-		
-		// update pull-to-refresh header to reflect task completion
-		mPullRefreshFeedView.onRefreshComplete();
-				
-		DDGControlVar.hasUpdatedFeed = true;
-		
-		// do this upon filter completion
-		if(DDGControlVar.targetSource != null && m_objectId != null) {
-			int nPos = feedView.getSelectionPosById(m_objectId);
-			mScrollCancelLock = true;			
-			feedView.setSelectionFromTop(nPos,m_yOffset);
-			// mark for blink animation (as a visual cue after list update)
-			mDuckDuckGoContainer.feedAdapter.mark(m_objectId);
-		}
-	}
-	
-	public void onFeedRetrievalFailed() {
-		//If the mainFeedTask is null, we are currently paused
-		//Otherwise, we can ask the user to try again
-		if (mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mDuckDuckGoContainer.mainFeedTask != null) {
-			new FeedRequestFailureDialogBuilder(this).show();
-		}
-	}
 	
 	@TargetApi(11)
 	public void showPrefFragment(){
@@ -1772,14 +1748,15 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		if (!DDGControlVar.hasUpdatedFeed) {
 			if(DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
 				// respect user choice of empty source list: show nothing
-				onFeedRetrieved(new ArrayList<FeedObject>(), true);
+				BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(new ArrayList<FeedObject>(), 
+						REQUEST_TYPE.FROM_CACHE, this));
 			}
 			else {				
 				// cache
 				CacheFeedTask cacheTask = new CacheFeedTask(this);
 			
 				// for HTTP request
-				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(mPullRefreshFeedView.getRefreshableView(), this);
+				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
 				
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 					cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

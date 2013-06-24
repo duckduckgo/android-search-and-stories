@@ -9,44 +9,39 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
-import com.duckduckgo.mobile.android.listener.FeedListener;
+import com.duckduckgo.mobile.android.events.FeedRetrieveErrorEvent;
+import com.duckduckgo.mobile.android.events.FeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SourceInfoPair;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
-import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
 
 public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
 	private static String TAG = "MainFeedTask";
-	
-	private FeedListener listener = null;
-		
+			
 	ImageCache cache;
 	private FileCache fileCache = null;
 	
-	ListView mainFeedView = null;
+	DuckDuckGo activity;
 	
 	private boolean requestFailed = false;
 	
-	public MainFeedTask(ListView mainFeedView, FeedListener listener) {
-		this.mainFeedView = mainFeedView;
+	public MainFeedTask(DuckDuckGo activity) {
+		this.activity = activity;
 		this.cache = DDGApplication.getImageCache();
-		this.listener = listener;
 		this.fileCache = DDGApplication.getFileCache();
 	}
 	
@@ -144,7 +139,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		
 		if(!DDGControlVar.isDefaultsChecked) {
 			Set<SourceInfoPair> sourceInfoPairs = initializeSources();
-			new SourceIconsTask(mainFeedView, sourceInfoPairs).execute();
+			new SourceIconsTask(activity.mPullRefreshFeedView.getRefreshableView(), sourceInfoPairs).execute();
 			DDGControlVar.isDefaultsChecked = true;
 		}
 		
@@ -200,13 +195,13 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	protected void onPostExecute(List<FeedObject> feed) {		
 		
 		if(requestFailed) {
-			this.listener.onFeedRetrievalFailed();
+			BusProvider.getInstance().post(new FeedRetrieveErrorEvent(activity));
 			return;
 		}
 		
-		if (this.listener != null && feed != null) {
-			this.listener.onFeedRetrieved(feed, false);
-		}
+		if (feed != null) {
+			BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(feed, REQUEST_TYPE.FROM_NETWORK, activity));
+		}			
 	}
 	
 }
