@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.util;
 
 import android.app.Activity;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import info.guardianproject.onionkit.web.WebkitProxy;
@@ -14,12 +15,12 @@ import info.guardianproject.onionkit.web.WebkitProxy;
  */
 public class TorIntegration {
 
-    private final Activity activity;
+    private final DuckDuckGo context;
     private final OrbotHelper orbotHelper;
 
-    public TorIntegration(Activity activity){
-        this.activity = activity;
-        orbotHelper = new OrbotHelper(this.activity);
+    public TorIntegration(DuckDuckGo context){
+        this.context = context;
+        orbotHelper = new OrbotHelper(this.context);
     }
 
     public void prepareTorSettings(){
@@ -27,19 +28,19 @@ public class TorIntegration {
     }
 
     public void prepareTorSettings(boolean enableTor){
+        DDGNetworkConstants.initializeMainClient(context.getApplication(), enableTor);
         if(enableTor){
-            requestOrbotStart();
             enableOrbotProxy();
+            requestOrbotInstallAndStart();
         }
         else{
             resetProxy();
         }
-        DDGNetworkConstants.initializeMainClient(activity.getApplication(), enableTor);
     }
 
     private void resetProxy() {
         try {
-            WebkitProxy.resetProxy(activity.getApplicationContext());
+            WebkitProxy.resetProxy(context.getApplication());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -47,19 +48,19 @@ public class TorIntegration {
 
     private void enableOrbotProxy() {
         try {
-            WebkitProxy.setProxy(activity.getApplication());
+            WebkitProxy.setProxy(context.getApplication());
         } catch (Exception e) {
             // what should we do here? Discuss!
             e.printStackTrace();
         }
     }
 
-    private void requestOrbotStart() {
+    private void requestOrbotInstallAndStart() {
         if (!orbotHelper.isOrbotInstalled()){
-            orbotHelper.promptToInstall(activity);
+            orbotHelper.promptToInstall(context);
         }
         else if (!orbotHelper.isOrbotRunning()){
-            orbotHelper.requestOrbotStart(activity);
+            orbotHelper.requestOrbotStart(context);
         }
     }
 

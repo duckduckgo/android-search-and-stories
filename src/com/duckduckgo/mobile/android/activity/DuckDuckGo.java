@@ -364,8 +364,17 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 			}
 		}
     }
-				
-	@Override
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        if(!torIntegration.isOrbotRunningAccordingToSettings()){
+            torIntegration.prepareTorSettings();
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         torIntegration = new TorIntegration(this);
@@ -396,37 +405,14 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         	savedState = true;
         
         DDGControlVar.isAutocompleteActive = !PreferencesManager.getTurnOffAutocomplete();
-        
-		mDuckDuckGoContainer = (DuckDuckGoContainer) getLastCustomNonConfigurationInstance();
+        // always refresh on start
+        DDGControlVar.hasUpdatedFeed = false;
+        mDuckDuckGoContainer = (DuckDuckGoContainer) getLastCustomNonConfigurationInstance();
     	if(mDuckDuckGoContainer == null){
-    		mDuckDuckGoContainer = new DuckDuckGoContainer();
-    		
-            mDuckDuckGoContainer.pageAdapter = new DDGPagerAdapter(this);
-            
-            mDuckDuckGoContainer.webviewShowing = false;
-    		
-    		mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
-//    		mDuckDuckGoContainer.reloadDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.reload);
-    		mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
-    		mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
-    		mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
-    		
-    		mDuckDuckGoContainer.historyAdapter = new MultiHistoryAdapter(DuckDuckGo.this, this);
-    		
-    		SourceClickListener sourceClickListener = new SourceClickListener();			
-    		mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
-    		
-    		mDuckDuckGoContainer.mainFeedTask = null;
-    		
-    		mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
-    		
-    		mDuckDuckGoContainer.savedSearchAdapter = new SavedResultCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorSavedSearch());    	
-    		mDuckDuckGoContainer.savedFeedAdapter = new SavedFeedCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorStoryFeed());
-    		
+            initializeContainer();
     	}
     	
-    	// always refresh on start
-    	DDGControlVar.hasUpdatedFeed = false;    	
+
     	
         viewPager = (DDGViewPager) findViewById(R.id.mainpager);
         viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
@@ -876,7 +862,33 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         checkForAssistAction();
     }
 
-	// Assist action is better known as Google Now gesture
+    private void initializeContainer() {
+        mDuckDuckGoContainer = new DuckDuckGoContainer();
+
+        mDuckDuckGoContainer.pageAdapter = new DDGPagerAdapter(this);
+
+        mDuckDuckGoContainer.webviewShowing = false;
+
+        mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
+//    		mDuckDuckGoContainer.reloadDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.reload);
+        mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
+        mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
+        mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
+
+        mDuckDuckGoContainer.historyAdapter = new MultiHistoryAdapter(DuckDuckGo.this, this);
+
+        SourceClickListener sourceClickListener = new SourceClickListener();
+        mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
+
+        mDuckDuckGoContainer.mainFeedTask = null;
+
+        mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
+
+        mDuckDuckGoContainer.savedSearchAdapter = new SavedResultCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorSavedSearch());
+        mDuckDuckGoContainer.savedFeedAdapter = new SavedFeedCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorStoryFeed());
+    }
+
+    // Assist action is better known as Google Now gesture
 	private void checkForAssistAction() {
 		if (getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_ASSIST)) {
 			showKeyboard(getSearchField());
@@ -1007,21 +1019,18 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		}
         mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
-	
 
-	
+
+
 	@Override
 	public void onResume() {
 		super.onResume();
-
-        torIntegration.prepareTorSettings();
 		
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
-        if(torIntegration.isOrbotRunningAccordingToSettings()){
-		    keepFeedUpdated();
-        }
+
+        keepFeedUpdated();
 		
 		// update feeds
 		// https://app.asana.com/0/2891531242889/2858723303746
@@ -1114,7 +1123,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	
 	public void reloadAction() {
 		mCleanSearchBar = false;
-        mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
+        mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int) Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth() / 1.5), (int) Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight() / 1.5));
 		getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
 		
 		if(!mainWebView.isReadable)
@@ -1348,7 +1357,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         DDGPreferenceFragment mWorkFragment = (DDGPreferenceFragment)fragmentManager.findFragmentById(R.id.prefFragment);
         // If not retained (or first time running), we need to create it.
         if (mWorkFragment == null) {
-            mWorkFragment = new DDGPreferenceFragment(torIntegration);
+            mWorkFragment = new DDGPreferenceFragment(torIntegration, this);
             mWorkFragment.setRetainInstance(false);
             mWorkFragment.setCustomPreferenceClickListener(new OnPreferenceClickListener() {
 				
@@ -1771,29 +1780,35 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	 */
 	@SuppressLint("NewApi")
 	public void keepFeedUpdated(){
-		if (!DDGControlVar.hasUpdatedFeed) {
-			if(DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
-				// respect user choice of empty source list: show nothing
-				onFeedRetrieved(new ArrayList<FeedObject>(), true);
-			}
-			else {				
-				// cache
-				CacheFeedTask cacheTask = new CacheFeedTask(this);
-			
-				// for HTTP request
-				mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(mPullRefreshFeedView.getRefreshableView(), this);
-				
-				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-					cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-					mDuckDuckGoContainer.mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-				}
-				else {
-					cacheTask.execute();
-					mDuckDuckGoContainer.mainFeedTask.execute();
-				}
-			}
-		}
-	}
+        if(torIntegration.isOrbotRunningAccordingToSettings()){
+            if (!DDGControlVar.hasUpdatedFeed) {
+                if(DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
+                    // respect user choice of empty source list: show nothing
+                    onFeedRetrieved(new ArrayList<FeedObject>(), true);
+                }
+                else {
+                    // cache
+                    CacheFeedTask cacheTask = new CacheFeedTask(this);
+
+                    // for HTTP request
+                    mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(mPullRefreshFeedView.getRefreshableView(), this);
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                        mDuckDuckGoContainer.mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                    }
+                    else {
+                        cacheTask.execute();
+                        mDuckDuckGoContainer.mainFeedTask.execute();
+                    }
+                }
+            }
+        }
+        else{
+            // complete the action anyway
+            mPullRefreshFeedView.onRefreshComplete();
+        }
+    }
     
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {

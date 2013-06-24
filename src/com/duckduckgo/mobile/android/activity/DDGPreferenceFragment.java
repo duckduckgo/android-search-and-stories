@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.activity;
 
+import com.duckduckgo.mobile.android.dialogs.OrbotStatusOkDialogBuilder;
 import com.duckduckgo.mobile.android.util.TorIntegration;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
@@ -32,12 +33,14 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 public class DDGPreferenceFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
 
     private final TorIntegration torIntegration;
+    private final DuckDuckGo context;
     OnPreferenceClickListener customListener = null;
 	PreferenceChangeListener customChangeListener = null;
 	
-	public DDGPreferenceFragment(TorIntegration torIntegration) {
+	public DDGPreferenceFragment(TorIntegration torIntegration, DuckDuckGo context) {
 		this.torIntegration = torIntegration;
-	}
+        this.context = context;
+    }
 
 	@TargetApi(11)
 	@Override
@@ -61,23 +64,25 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		checkOrbotPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 			@Override
 			public boolean onPreferenceClick(Preference preference) {
-				if (PreferencesManager.getEnableTor()) {
+                if(!torIntegration.isOrbotRunningAccordingToSettings()){
                     torIntegration.prepareTorSettings();
-					return true;
-				}
-				return false;
-			}
+                }
+                else{
+                    context.searchOrGoToUrl(getString(R.string.OrbotCheckSite));
+                }
+                return true;
+            }
 		});
 	}
 
 	private void whenChangingTorChecksForOrbot() {
 		Preference enableTorPreference = findPreference("enableTor");
 		enableTorPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
-			public boolean onPreferenceChange(Preference preference, Object newValue) {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
                 torIntegration.prepareTorSettings((Boolean) newValue);
-				return true;
-			}
-		});
+                return true;
+            }
+        });
 	}
 
 	private void whenClearingHistoryShowsClearHistoryConfirmDialog() {
