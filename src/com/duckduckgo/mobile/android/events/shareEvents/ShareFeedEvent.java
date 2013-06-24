@@ -1,4 +1,4 @@
-package com.duckduckgo.mobile.android.events;
+package com.duckduckgo.mobile.android.events.shareEvents;
 
 import android.content.Context;
 

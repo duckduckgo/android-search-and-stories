@@ -1,4 +1,4 @@
-package com.duckduckgo.mobile.android.events;
+package com.duckduckgo.mobile.android.events.externalEvents;
 
 import android.content.Intent;
 import android.net.Uri;

@@ -2,7 +2,7 @@ package com.duckduckgo.mobile.android.util.menuItems;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.events.ShareWebPageEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
 import com.duckduckgo.mobile.android.util.Item;
 
 public class ShareWebPageMenuItem extends Item {

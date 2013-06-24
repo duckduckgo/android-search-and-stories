@@ -119,7 +119,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	public String mWebViewDefaultUA = null;
 		
 	private DDGAutoCompleteTextView searchField = null;
-	private MainFeedListView feedView = null;
+	public MainFeedListView feedView = null;
 	private HistoryListView leftRecentView = null;
 	
 	private PullToRefreshMainFeedListView mPullRefreshFeedView = null;
@@ -1323,22 +1323,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		// do this upon filter completion
 		if(DDGControlVar.targetSource != null && m_objectId != null) {
 			int nPos = feedView.getSelectionPosById(m_objectId);
-			mScrollCancelLock = true;
-			
-//			if(android.os.Build.VERSION.SDK_INT >= 11) {
-//				feedView.smoothScrollToPositionFromTop(nPos, m_yOffset);
-//			}
-//			else {
-				feedView.setSelectionFromTop(nPos,m_yOffset);
-//			}
-			
+			mScrollCancelLock = true;			
+			feedView.setSelectionFromTop(nPos,m_yOffset);
 			// mark for blink animation (as a visual cue after list update)
 			mDuckDuckGoContainer.feedAdapter.mark(m_objectId);
-		}
-		else {
-			// scroll triggers pre-caching for source filtering case
-			// this is for the static, no-scroll case
-			feedView.enableAfterRender();
 		}
 	}
 	

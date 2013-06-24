@@ -2,7 +2,6 @@ package com.duckduckgo.mobile.android.views;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteCursor;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,10 +16,7 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 
 	private OnMainFeedItemSelectedListener listener;
 	private OnMainFeedItemLongClickListener longClickListener;
-	
-	private boolean isAfterRenderRun = false;
-	private Runnable afterRenderTask = null;
-	
+		
 	public MainFeedListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
@@ -34,14 +30,6 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 	
 	public void setOnMainFeedItemLongClickListener(OnMainFeedItemLongClickListener longClickListener) {
         this.longClickListener = longClickListener;
-	}
-	
-	/**
-	 * A task (Runnable) to run after at least a view is rendered can be set
-	 * @param task
-	 */
-	public void setAfterRenderTask(Runnable task) {
-		afterRenderTask = task;
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -112,20 +100,6 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		}
 		
 		return -1;
-	}
-	
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-				
-		if(afterRenderTask != null && !isAfterRenderRun) {
-			afterRenderTask.run();
-			isAfterRenderRun = true;
-		}
-	}
-	
-	public void enableAfterRender() {
-		isAfterRenderRun = false;
 	}
 	
 	public void cleanImageTasks() {

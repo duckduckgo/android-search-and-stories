@@ -2,7 +2,7 @@ package com.duckduckgo.mobile.android.util.menuItems;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.events.ShareSearchEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.util.Item;
 
 public class ShareSearchMenuItem extends Item {
