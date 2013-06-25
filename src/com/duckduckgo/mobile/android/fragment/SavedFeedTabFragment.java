@@ -12,7 +12,8 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.SavedFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 
@@ -39,14 +40,6 @@ public class SavedFeedTabFragment extends ListFragment {
             final DuckDuckGo duckDuckGoActivity = (DuckDuckGo)activity;
     		savedFeedView = (MainFeedListView) getListView();
     		savedFeedView.setAdapter(duckDuckGoActivity.mDuckDuckGoContainer.savedFeedAdapter);
-
-    		savedFeedView.setOnMainFeedItemSelectedListener(duckDuckGoActivity.mFeedItemSelectedListener);
-    		savedFeedView.setOnMainFeedItemLongClickListener(new MainFeedListView.OnMainFeedItemLongClickListener() {
-                @Override
-                public void onMainFeedItemLongClick(FeedObject feedObject) {
-                    new SavedStoryMenuDialog(duckDuckGoActivity, feedObject).show();
-                }
-            });
 		}
 	}
 
@@ -64,10 +57,7 @@ public class SavedFeedTabFragment extends ListFragment {
 		}
 		
 		if (obj != null) {
-			final Activity activity = getActivity();
-			if (((DuckDuckGo) activity).mFeedItemSelectedListener != null) {
-				((DuckDuckGo) activity).mFeedItemSelectedListener.onMainFeedItemSelected(obj);
-			}
+			BusProvider.getInstance().post(new SavedFeedItemSelectedEvent(obj));
 		}
 	}
 }

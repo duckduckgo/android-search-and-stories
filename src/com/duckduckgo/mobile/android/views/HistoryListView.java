@@ -7,21 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
-import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class HistoryListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
-	private OnHistoryItemSelectedListener listener;
-	private OnHistoryItemLongClickListener listenerLongClick;
-	
 	// notification for "Save Recent Searches" feature awareness
 	private View leftRecentHeaderView = null;
 	
@@ -32,14 +29,6 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 		
 		this.setOnItemClickListener(this);
 		this.setOnItemLongClickListener(this);
-	}
-	
-	public void setOnHistoryItemSelectedListener(OnHistoryItemSelectedListener listener) {
-		this.listener = listener;
-	}
-	
-	public void setOnHistoryItemLongClickListener(OnHistoryItemLongClickListener listener) {
-		this.listenerLongClick = listener;
 	}
 	
 	public void setOnHeaderClickListener(OnClickListener listener) {
@@ -58,8 +47,7 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 		}
 		
 		if (obj != null) {
-			if (listener != null)
-				listener.onHistoryItemSelected(obj);
+			BusProvider.getInstance().post(new HistoryItemSelectedEvent(obj));
 		}
 		
 	}
@@ -78,20 +66,10 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 		}
 		
 		if (obj != null) {
-			if (listenerLongClick != null) {
-				listenerLongClick.onHistoryItemLongClick(obj);
-			}
+			BusProvider.getInstance().post(new HistoryItemLongClickEvent(obj));
 		}
 		
 		return false;
-	}
-	
-	public interface OnHistoryItemSelectedListener {
-		public void onHistoryItemSelected(HistoryObject historyObject);
-	}
-	
-	public interface OnHistoryItemLongClickListener {
-		public void onHistoryItemLongClick(HistoryObject historyObject);
 	}
 	
 	/**

@@ -7,7 +7,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -75,15 +74,21 @@ import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistorySearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistoryStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.MainFeedMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewQueryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
+import com.duckduckgo.mobile.android.events.FeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.FeedRetrieveErrorEvent;
 import com.duckduckgo.mobile.android.events.FeedRetrieveSuccessEvent;
+import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
+import com.duckduckgo.mobile.android.events.SavedFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteUrlInHistoryEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
@@ -97,7 +102,6 @@ import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
-import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
@@ -121,11 +125,7 @@ import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegration;
 import com.duckduckgo.mobile.android.views.HistoryListView;
-import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemLongClickListener;
-import com.duckduckgo.mobile.android.views.HistoryListView.OnHistoryItemSelectedListener;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
-import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemLongClickListener;
-import com.duckduckgo.mobile.android.views.MainFeedListView.OnMainFeedItemSelectedListener;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
@@ -255,55 +255,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private void feedItemSelected(String feedId) {
 		FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
 		feedItemSelected(feedObject);
-	}
-
-
-	public OnMainFeedItemSelectedListener mFeedItemSelectedListener = new OnMainFeedItemSelectedListener() {
-		public void onMainFeedItemSelected(FeedObject feedObject) {
-			// close left nav if it's open
-			if(viewPager.isLeftMenuOpen()){
-				viewPager.setCurrentItem(1);
-			}
-			feedItemSelected(feedObject);
-		}
-    };
-    
-    private OnMainFeedItemLongClickListener mFeedItemLongClickListener = new OnMainFeedItemLongClickListener() {
-		public void onMainFeedItemLongClick(FeedObject feedObject) {
-			new MainFeedMenuDialog(DuckDuckGo.this, feedObject).show();
-		}
-    };
-
-
-    private OnHistoryItemLongClickListener mHistoryLongClickListener = new OnHistoryItemLongClickListener() {
-    	@Override
-    	public void onHistoryItemLongClick(HistoryObject historyObject) {
-            if(historyObject.isFeedObject()) {
-                new HistoryStoryMenuDialog(DuckDuckGo.this, historyObject).show();
-            }
-            else{
-                new HistorySearchMenuDialog(DuckDuckGo.this, historyObject).show();
-            }
-    	}
-    };
-    
-    private FeedListener mReadableListener = new FeedListener() {
-		
-		@Override
-		public void onFeedRetrieved(List<FeedObject> feed, boolean fromCache) {
-			if(feed.size() != 0) {
-				currentFeedObject = feed.get(0);
-				mDuckDuckGoContainer.lastFeedUrl = currentFeedObject.getUrl();
-				mainWebView.readableAction(currentFeedObject);
-			}
-		}
-		
-		@Override
-		public void onFeedRetrievalFailed() {
-			// TODO Auto-generated method stub
-			
-		}
-	};
+	}    
 
 	private ContentDownloader contentDownloader;
 
@@ -551,19 +503,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				displayScreen(SCREEN.SCR_SETTINGS, false);
 			}
 		});
-    	leftRecentView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
-			
-			public void onHistoryItemSelected(HistoryObject historyObject) {
-				if(viewPager.isLeftMenuOpen()){
-					viewPager.setCurrentItem(1);
-				}
-				
-				if(historyObject != null){
-					showHistoryObject(historyObject);
-				}				
-			}
-		});
-    	leftRecentView.setOnHistoryItemLongClickListener(mHistoryLongClickListener);
         
         homeSettingsButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
         homeSettingsButton.setOnClickListener(this);
@@ -699,19 +638,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         recentSearchView = (HistoryListView) contentView.findViewById(R.id.recentSearchItems);
         recentSearchView.setDivider(null);
         recentSearchView.setAdapter(mDuckDuckGoContainer.historyAdapter.getRecentSearchAdapter());
-        recentSearchView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
-			
-			public void onHistoryItemSelected(HistoryObject historyObject) {
-				if(viewPager.isLeftMenuOpen()){
-					viewPager.setCurrentItem(1);
-				}
-				
-				if(historyObject != null){
-					showHistoryObject(historyObject);
-				}				
-			}
-		});
-        recentSearchView.setOnHistoryItemLongClickListener(mHistoryLongClickListener);
         
         
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) contentView.findViewById(R.id.mainFeedItems);
@@ -741,9 +667,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         		
 		feedView = mPullRefreshFeedView.getRefreshableView();
         feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
-        // context and LayoutParams for this cache task (to instantiate AsyncImageViews) will be set in feedView
-        feedView.setOnMainFeedItemSelectedListener(mFeedItemSelectedListener);
-        feedView.setOnMainFeedItemLongClickListener(mFeedItemLongClickListener);
         
         // NOTE: After loading url multiple times on the device, it may crash
         // Related to android bug report 21266 - Watch this ticket for possible resolutions
@@ -1988,6 +1911,48 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			syncAdapters();
 		}
 		Toast.makeText(this, R.string.ToastUnSaveStory, Toast.LENGTH_SHORT).show();
+	}
+	
+	/**
+	 * Handling both MainFeedItemSelectedEvent and SavedFeedItemSelectedEvent.
+	 * (modify to handle independently when necessary)
+	 * @param event
+	 */
+	@Subscribe
+	public void onFeedItemSelected(FeedItemSelectedEvent event) {
+		// close left nav if it's open
+		if(viewPager.isLeftMenuOpen()){
+			viewPager.setCurrentItem(1);
+		}
+		feedItemSelected(event.feedObject);
+	}
+	
+	@Subscribe
+	public void onMainFeedItemLongClick(MainFeedItemLongClickEvent event) {
+		new MainFeedMenuDialog(DuckDuckGo.this, event.feedObject).show();
+	}
+	
+	@Subscribe
+	public void onSavedFeedItemLongClick(SavedFeedItemLongClickEvent event) {
+        new SavedStoryMenuDialog(DuckDuckGo.this, event.feedObject).show();
+    }
+	
+	@Subscribe
+	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
+		if(viewPager.isLeftMenuOpen()){
+			viewPager.setCurrentItem(1);
+		}		
+		showHistoryObject(event.historyObject);
+	}
+	
+	@Subscribe
+	public void onHistoryItemLongClick(HistoryItemLongClickEvent event) {
+        if(event.historyObject.isFeedObject()) {
+            new HistoryStoryMenuDialog(DuckDuckGo.this, event.historyObject).show();
+        }
+        else{
+            new HistorySearchMenuDialog(DuckDuckGo.this, event.historyObject).show();
+        }
 	}
 	
 }

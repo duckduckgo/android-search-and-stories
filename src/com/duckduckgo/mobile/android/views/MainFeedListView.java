@@ -8,28 +8,22 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.events.MainFeedItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.MainFeedItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.SavedFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.squareup.picasso.Picasso;
 
 public class MainFeedListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
-	private OnMainFeedItemSelectedListener listener;
-	private OnMainFeedItemLongClickListener longClickListener;
-		
 	public MainFeedListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		this.setOnItemClickListener(this);
 		this.setOnItemLongClickListener(this);
-	}
-	
-	public void setOnMainFeedItemSelectedListener(OnMainFeedItemSelectedListener listener) {
-		this.listener = listener;
-	}
-	
-	public void setOnMainFeedItemLongClickListener(OnMainFeedItemLongClickListener longClickListener) {
-        this.longClickListener = longClickListener;
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -42,10 +36,8 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 			obj = new FeedObject(((SQLiteCursor) item));
 		}
 		
-		if (obj != null) {
-			if (listener != null) {
-				listener.onMainFeedItemSelected(obj);
-			}
+		if (obj != null) {			
+			BusProvider.getInstance().post(new MainFeedItemSelectedEvent(obj));
 		}
 	}
 
@@ -60,19 +52,14 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		}
 
 		if (obj != null) {
-			if (longClickListener != null) {
-				longClickListener.onMainFeedItemLongClick(obj);
+			if(getAdapter().getClass() == SavedFeedCursorAdapter.class) {
+				BusProvider.getInstance().post(new SavedFeedItemLongClickEvent(obj));
+			}
+			else {
+				BusProvider.getInstance().post(new MainFeedItemLongClickEvent(obj));
 			}
 		}
 		return true;
-	}
-
-	public interface OnMainFeedItemSelectedListener {
-		public void onMainFeedItemSelected(FeedObject feedObject);
-	}
-
-	public interface OnMainFeedItemLongClickListener {
-		public void onMainFeedItemLongClick(FeedObject feedObject);
 	}
 
 	public void setSelectionById(String id) {
