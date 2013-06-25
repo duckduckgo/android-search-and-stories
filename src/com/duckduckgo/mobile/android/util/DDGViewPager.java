@@ -4,22 +4,40 @@ import android.content.Context;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 
 public class DDGViewPager extends ViewPager {
 
-	private boolean enabled;
+    private final DuckDuckGo context;
+    private boolean enabled;
 	private boolean dispatchTouch;
 	
     public DDGViewPager(Context context) {
 		super(context);
-		this.enabled = true;
+        this.context = (DuckDuckGo)context;
+        this.enabled = true;
 		this.dispatchTouch = true;
+        initOnPageChangeListener();
 	}
 
     public DDGViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.context = (DuckDuckGo)context;
         this.enabled = true;
         this.dispatchTouch = true;
+        initOnPageChangeListener();
+    }
+
+    private void initOnPageChangeListener() {
+        setOnPageChangeListener(new SimpleOnPageChangeListener(){
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                if(isLeftMenuOpen()){
+                    context.hideKeyboard(context.getSearchField());
+                }
+            }
+        });
     }
 
     @Override
