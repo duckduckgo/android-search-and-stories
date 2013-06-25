@@ -48,6 +48,21 @@ public class DDGNetworkConstants {
         // Increase default max connection per route to 20
         ConnManagerParams.setMaxConnectionsPerRoute(httpParams, new ConnPerRouteBean(10));
 
+        SchemeRegistry schemeRegistry = prepareSchemeRegistry(application);
+
+        // Create an HttpClient with the ThreadSafeClientConnManager.
+        // This connection manager must be used if more than one thread will
+        // be using the HttpClient.
+        mainConnManager = new ThreadSafeClientConnManager(schemeRegistry);
+        mainClient = new DDGHttpClient(application.getApplicationContext(), mainConnManager, httpParams);
+        if(enableTor){
+            mainClient.getStrongTrustManager().setNotifyVerificationFail(true);
+            mainClient.getStrongTrustManager().setNotifyVerificationSuccess(true);
+            mainClient.useProxy(true, ConnRoutePNames.DEFAULT_PROXY, PROXY_HOST, PROXY_HTTP_PORT);
+        }
+    }
+
+    private static SchemeRegistry prepareSchemeRegistry(Application application) {
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));
 
@@ -70,16 +85,6 @@ public class DDGNetworkConstants {
         catch(Exception e) {
             e.printStackTrace();
         }
-
-        // Create an HttpClient with the ThreadSafeClientConnManager.
-        // This connection manager must be used if more than one thread will
-        // be using the HttpClient.
-        mainConnManager = new ThreadSafeClientConnManager(schemeRegistry);
-        mainClient = new DDGHttpClient(application.getApplicationContext(), mainConnManager, httpParams);
-        if(enableTor){
-            mainClient.getStrongTrustManager().setNotifyVerificationFail(true);
-            mainClient.getStrongTrustManager().setNotifyVerificationSuccess(true);
-            mainClient.useProxy(true, ConnRoutePNames.DEFAULT_PROXY, PROXY_HOST, PROXY_HTTP_PORT);
-        }
+        return schemeRegistry;
     }
 }

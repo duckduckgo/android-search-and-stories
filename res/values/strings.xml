@@ -42,6 +42,9 @@
     <string name="PrefGroupTor">Tor</string>
     <string name="PrefEnableTor">Enable Tor</string>
     <string name="PrefCheckOrbotStatus">Check Orbot status</string>
+    <string name="OrbotStatusOkTitle">Orbot status</string>
+    <string name="OrbotStatusOkMessage">Orbot seems to be running fine!</string>
+    <string name="OrbotCheckSite">https://check.torproject.org</string>
     
     <string name="ShareStory">Share Story</string>
     <string name="ShareSearch">Share Search</string>
