@@ -9,7 +9,7 @@ public class SaveSearchMenuItem extends Item {
 
 	public SaveSearchMenuItem(DuckDuckGo context, String pageData){
 		super(context.getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE);		
-		EventToFire = new SaveSearchEvent(context, pageData);
+		EventToFire = new SaveSearchEvent(pageData);
 	}
 	
 }

@@ -9,7 +9,7 @@ public class DeleteStoryInHistoryMenuItem extends Item {
 
 	public DeleteStoryInHistoryMenuItem(DuckDuckGo context, String feedObjectId){
 		super(context.getResources().getString(R.string.Delete), android.R.drawable.ic_menu_close_clear_cancel, ItemType.DELETE);
-		this.EventToFire = new DeleteStoryInHistoryEvent(context, feedObjectId);
+		this.EventToFire = new DeleteStoryInHistoryEvent(feedObjectId);
 	}
-	
+
 }

@@ -10,7 +10,7 @@ public class SaveStoryMenuItem extends Item {
 
 	public SaveStoryMenuItem(DuckDuckGo context, FeedObject feedObject){
 		super(context.getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE);
-		EventToFire = new SaveStoryEvent(context, feedObject);
+		EventToFire = new SaveStoryEvent(feedObject);
 	}
-	
+
 }

@@ -10,7 +10,7 @@ public class TurnReadabilityOnMenuItem extends Item {
 	
 	public TurnReadabilityOnMenuItem(DuckDuckGo context, FeedObject feedObject){
 		super(context.getResources().getString(R.string.ReadabilityOn), R.drawable.icon_readability_on, ItemType.READABILITY_ON);	
-		this.EventToFire = new TurnReadabilityOnEvent(context, feedObject);
+		this.EventToFire = new TurnReadabilityOnEvent(feedObject);
 	}
 	
 }

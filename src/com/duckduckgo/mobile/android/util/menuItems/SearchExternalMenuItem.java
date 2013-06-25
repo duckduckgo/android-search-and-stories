@@ -9,7 +9,7 @@ public class SearchExternalMenuItem extends Item {
 	
 	public SearchExternalMenuItem(DuckDuckGo context, String query){
 		super(context.getResources().getString(R.string.OpenInExternalBrowser), android.R.drawable.ic_menu_rotate, ItemType.EXTERNAL);
-		this.EventToFire = new SearchExternalEvent(context, query);
+		this.EventToFire = new SearchExternalEvent(query);
 	}
-	
+
 }

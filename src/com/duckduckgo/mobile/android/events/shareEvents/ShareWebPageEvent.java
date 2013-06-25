@@ -1,21 +1,11 @@
 package com.duckduckgo.mobile.android.events.shareEvents;
 
-import android.content.Context;
-
-import com.duckduckgo.mobile.android.util.Sharer;
-
 public class ShareWebPageEvent extends ShareEvent {
-	private final Context context;
-	private String url;
-	private String title;
+	public String url;
+	public String title;
 	
-	public ShareWebPageEvent(Context context, String title, String url){
-		this.context = context;
+	public ShareWebPageEvent(String title, String url){
 		this.title = title;
 		this.url = url;
 	}
-
-	public void process() {
-		Sharer.shareWebPage(context, title, url);
-	};
 }

@@ -12,5 +12,5 @@ public class ReloadMenuItem  extends Item {
 		super(context.getResources().getString(R.string.Refresh), R.drawable.icon_reload, ItemType.REFRESH);
 		this.EventToFire = new ReloadEvent(context);
 	}
-	
+
 }

@@ -195,12 +195,12 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	protected void onPostExecute(List<FeedObject> feed) {		
 		
 		if(requestFailed) {
-			BusProvider.getInstance().post(new FeedRetrieveErrorEvent(activity));
+			BusProvider.getInstance().post(new FeedRetrieveErrorEvent());
 			return;
 		}
 		
 		if (feed != null) {
-			BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(feed, REQUEST_TYPE.FROM_NETWORK, activity));
+			BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(feed, REQUEST_TYPE.FROM_NETWORK));
 		}			
 	}
 	

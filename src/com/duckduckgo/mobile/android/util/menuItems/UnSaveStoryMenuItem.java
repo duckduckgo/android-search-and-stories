@@ -9,7 +9,7 @@ public class UnSaveStoryMenuItem extends Item {
 	
 	public UnSaveStoryMenuItem(DuckDuckGo context, String feedObjectId){
 		super(context.getResources().getString(R.string.Unsave), android.R.drawable.ic_menu_delete, ItemType.UNSAVE);
-		this.EventToFire = new UnSaveStoryEvent(context, feedObjectId);
+		this.EventToFire = new UnSaveStoryEvent(feedObjectId);
 	}
 	
 }

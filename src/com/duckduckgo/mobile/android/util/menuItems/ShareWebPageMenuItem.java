@@ -9,7 +9,7 @@ public class ShareWebPageMenuItem extends Item {
 	
 	public ShareWebPageMenuItem(DuckDuckGo context, String pageData, String pageUrl){
 		super(context.getResources().getString(R.string.Share), android.R.drawable.ic_menu_share, ItemType.SHARE);
-		this.EventToFire = new ShareWebPageEvent(context, pageUrl, pageUrl);
+		this.EventToFire = new ShareWebPageEvent(pageUrl, pageUrl);
 	}
 
 }

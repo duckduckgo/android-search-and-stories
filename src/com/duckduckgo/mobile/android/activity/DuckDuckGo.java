@@ -56,6 +56,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -68,6 +69,7 @@ import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
+import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistorySearchMenuDialog;
@@ -78,14 +80,28 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
+import com.duckduckgo.mobile.android.events.FeedRetrieveErrorEvent;
 import com.duckduckgo.mobile.android.events.FeedRetrieveSuccessEvent;
-import com.duckduckgo.mobile.android.events.KillService;
+import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
+import com.duckduckgo.mobile.android.events.ReloadEvent;
+import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEvent;
+import com.duckduckgo.mobile.android.events.deleteEvents.DeleteUrlInHistoryEvent;
+import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
+import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
+import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOffEvent;
+import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOnEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.SaveSearchEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.UnSaveSearchEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
 import com.duckduckgo.mobile.android.listener.FeedListener;
 import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
-import com.duckduckgo.mobile.android.subscribers.MainSubscriber;
 import com.duckduckgo.mobile.android.tabhost.TabHostExt;
 import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
@@ -101,6 +117,7 @@ import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
 import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegration;
 import com.duckduckgo.mobile.android.views.HistoryListView;
@@ -120,6 +137,7 @@ import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
+import com.squareup.otto.Subscribe;
 
 public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	protected final String TAG = "DuckDuckGo";
@@ -380,7 +398,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        startService(new Intent(this, MainSubscriber.class));
         torIntegration = new TorIntegration(this);
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
@@ -1101,7 +1118,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		DDGApplication.getImageCache().purge();
-		BusProvider.getInstance().post(new KillService());
 		super.onDestroy();
 	}
 	
@@ -1139,7 +1155,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(!mainWebView.isReadable)
 			mainWebView.reload(); 
 		else {
-			new ReadableFeedTask(mReadableListener, currentFeedObject).execute();
+			new ReadableFeedTask(currentFeedObject).execute();
 		}
 	}
 	
@@ -1306,7 +1322,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW) {
 					displayWebView();
 				}
-				new ReadableFeedTask(mReadableListener, feedObject).execute();
+				new ReadableFeedTask(feedObject).execute();
 			}
 			else {
 				showWebUrl(feedObject.getUrl());
@@ -1636,7 +1652,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void launchReadableFeedTask(FeedObject feedObject) {
-		new ReadableFeedTask(mReadableListener, feedObject).execute();
+		new ReadableFeedTask(feedObject).execute();
 	}
 
 	private boolean isStorySessionOrStoryUrl() {
@@ -1749,7 +1765,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			if(DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
 				// respect user choice of empty source list: show nothing
 				BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(new ArrayList<FeedObject>(), 
-						REQUEST_TYPE.FROM_CACHE, this));
+						REQUEST_TYPE.FROM_CACHE));
 			}
 			else {				
 				// cache
@@ -1838,4 +1854,140 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			e.printStackTrace();
 		}
 	}
+	
+	@Subscribe
+	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {
+		if(event.requestType == REQUEST_TYPE.FROM_NETWORK) {
+			synchronized(mDuckDuckGoContainer.feedAdapter) {
+				mDuckDuckGoContainer.feedAdapter.clear();
+			}
+		}
+
+		mDuckDuckGoContainer.feedAdapter.addData(event.feed);
+		mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
+
+		// update pull-to-refresh header to reflect task completion
+		mPullRefreshFeedView.onRefreshComplete();
+		
+		DDGControlVar.hasUpdatedFeed = true;
+
+		// do this upon filter completion
+		if(DDGControlVar.targetSource != null && m_objectId != null) {
+			int nPos = feedView.getSelectionPosById(m_objectId);
+			feedView.setSelectionFromTop(nPos,m_yOffset);
+			// mark for blink animation (as a visual cue after list update)
+			mDuckDuckGoContainer.feedAdapter.mark(m_objectId);
+		}
+
+	}
+	
+	@Subscribe
+	public void onFeedRetrieveErrorEvent(FeedRetrieveErrorEvent event) {
+		if (mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mDuckDuckGoContainer.mainFeedTask != null) {
+			new FeedRequestFailureDialogBuilder(this).show();
+		}
+
+	}
+	
+	@Subscribe
+	public void onReadabilityFeedRetrieveSuccessEvent(ReadabilityFeedRetrieveSuccessEvent event) {
+		if(event.feed.size() != 0) {
+			currentFeedObject = event.feed.get(0);
+			mDuckDuckGoContainer.lastFeedUrl = currentFeedObject.getUrl();
+			mainWebView.readableAction(currentFeedObject);
+		}
+	}
+	
+	@Subscribe
+	public void onDeleteStoryInHistoryEvent(DeleteStoryInHistoryEvent event) {
+		final long delResult = DDGApplication.getDB().deleteHistoryByFeedId(event.feedObjectId);
+		if(delResult != 0) {							
+			syncAdapters();
+		}
+		Toast.makeText(this, R.string.ToastDeleteStoryInHistory, Toast.LENGTH_SHORT).show();
+	}
+	
+	@Subscribe
+	public void onDeleteUrlInHistoryEvent(DeleteUrlInHistoryEvent event) {
+		final long delHistory = DDGApplication.getDB().deleteHistoryByDataUrl(event.pageData, event.pageUrl);				
+		if(delHistory != 0) {							
+			syncAdapters();
+		}	
+		Toast.makeText(this, R.string.ToastDeleteUrlInHistory, Toast.LENGTH_SHORT).show();
+	}
+	
+	@Subscribe
+	public void onReloadEvent(ReloadEvent event) {
+		reloadAction();
+	}
+	
+	@Subscribe
+	public void onSaveSearchEvent(SaveSearchEvent event) {
+		itemSaveSearch(event.pageData);
+		syncAdapters();
+		Toast.makeText(this, R.string.ToastSaveSearch, Toast.LENGTH_SHORT).show();
+	}
+	
+	@Subscribe
+	public void onSaveStoryEvent(SaveStoryEvent event) {
+		itemSaveFeed(event.feedObject, null);
+		syncAdapters();
+		Toast.makeText(this, R.string.ToastSaveStory, Toast.LENGTH_SHORT).show();
+	}
+	
+	@Subscribe
+	public void onSearchExternalEvent(SearchExternalEvent event) {
+		searchExternal(event.query);
+	}
+	
+	@Subscribe
+	public void onSendToExternalBrowserEvent(SendToExternalBrowserEvent event) {
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.url));
+    	startActivity(browserIntent);
+	}
+	
+	@Subscribe
+	public void onShareFeedEvent(ShareFeedEvent event) {
+		Sharer.shareStory(this, event.title, event.url);
+	}
+	
+	@Subscribe
+	public void onShareSearchEvent(ShareSearchEvent event) {
+		Sharer.shareSearch(this, event.query);
+	}
+	
+	@Subscribe
+	public void onShareWebPageEvent(ShareWebPageEvent event) {
+		Sharer.shareWebPage(this, event.url, event.url);
+	}
+	
+	@Subscribe
+	public void onTurnReadabilityOffEvent(TurnReadabilityOffEvent event) {
+		mainWebView.forceOriginal();
+		showWebUrl(event.url);
+	}
+	
+	@Subscribe
+	public void onTurnReadabilityOnEvent(TurnReadabilityOnEvent event) {
+		launchReadableFeedTask(event.feedObject);
+	}
+	
+	@Subscribe
+	public void onUnSaveSearchEvent(UnSaveSearchEvent event) {
+		final long delHistory = DDGApplication.getDB().deleteSavedSearch(event.query);
+		if(delHistory != 0) {							
+			syncAdapters();
+		}	
+		Toast.makeText(this, R.string.ToastUnSaveSearch, Toast.LENGTH_SHORT).show();
+	}
+	
+	@Subscribe
+	public void onUnSaveStoryEvent(UnSaveStoryEvent event) {
+		final long delResult = DDGApplication.getDB().makeItemHidden(event.feedObjectId);
+		if(delResult != 0) {							
+			syncAdapters();
+		}
+		Toast.makeText(this, R.string.ToastUnSaveStory, Toast.LENGTH_SHORT).show();
+	}
+	
 }

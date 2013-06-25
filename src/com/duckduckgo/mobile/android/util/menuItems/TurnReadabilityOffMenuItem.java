@@ -9,7 +9,7 @@ public class TurnReadabilityOffMenuItem extends Item {
 
 	public TurnReadabilityOffMenuItem(DuckDuckGo context, String url){
 		super(context.getResources().getString(R.string.ReadabilityOff), R.drawable.icon_readability_off, ItemType.READABILITY_OFF);
-		this.EventToFire = new TurnReadabilityOffEvent(context, url);
+		this.EventToFire = new TurnReadabilityOffEvent(url);
 	}
 	
 }

@@ -10,22 +10,21 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.duckduckgo.mobile.android.listener.FeedListener;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveErrorEvent;
+import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 
 public class ReadableFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
 	private static String TAG = "ReadableFeedTask";
-	
-	private FeedListener listener = null;
-					
+						
 	private boolean requestFailed = false;
 	
 	private String articleUrl = null;
 	
-	public ReadableFeedTask(FeedListener listener, FeedObject currentFeedObject) {
-		this.listener = listener;
+	public ReadableFeedTask(FeedObject currentFeedObject) {
 		this.articleUrl = currentFeedObject.getArticleUrl();
 	}	
 	
@@ -84,12 +83,12 @@ public class ReadableFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	protected void onPostExecute(List<FeedObject> feed) {		
 		
 		if(requestFailed) {
-			this.listener.onFeedRetrievalFailed();
+			BusProvider.getInstance().post(new ReadabilityFeedRetrieveErrorEvent());
 			return;
 		}
 		
-		if (this.listener != null && feed != null) {
-			this.listener.onFeedRetrieved(feed, false);
+		if (feed != null) {
+			BusProvider.getInstance().post(new ReadabilityFeedRetrieveSuccessEvent(feed));
 		}
 	}
 	

@@ -1,19 +1,10 @@
 package com.duckduckgo.mobile.android.events.shareEvents;
 
-import android.content.Context;
-
-import com.duckduckgo.mobile.android.util.Sharer;
 
 public class ShareSearchEvent extends ShareEvent {
-	private final String query;
-	private final Context context;
+	public final String query;
 	
-	public ShareSearchEvent(Context context, String query){
-		this.context = context;
+	public ShareSearchEvent(String query){
 		this.query = query;
 	}
-
-	public void process() {
-		Sharer.shareSearch(context, query);
-	};
 }
