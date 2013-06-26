@@ -1651,7 +1651,9 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		// so we should save this feed item with target redirected URL
 		if(isStorySessionOrStoryUrl()) {
             mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
-			new WebViewStoryMenuDialog(this, currentFeedObject, mainWebView.isReadable).show();
+            if(currentFeedObject != null) {
+            	new WebViewStoryMenuDialog(this, currentFeedObject, mainWebView.isReadable).show();
+            }
 		}						
 		else if(DDGUtils.isSerpUrl(webViewUrl)) {
             new WebViewQueryMenuDialog(this, webViewUrl).show();
