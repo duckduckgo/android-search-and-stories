@@ -117,39 +117,6 @@ public final class DDGUtils {
 	    	editor.remove(setName + "_" + i);  
 	    editor.remove(setName + "_size");
 	    editor.commit();  
-	} 
-	
-	@TargetApi(10)
-	private static Bitmap decodeRegion(FileDescriptor fd) {
-		if(fd == null || !fd.valid())
-			return null;
-		
-		// Log.v("REGION","region decoder : ");
-		int useWidth, useHeight;
-		
-		useWidth = feedItemWidth;
-		useHeight = feedItemHeight;
-		
-		//Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFileDescriptor(fd, null, o);
-        
-        // use original sizes if image is not bigger than feed item view
-        if(o.outWidth < feedItemWidth) useWidth = o.outWidth;
-        if(o.outHeight < feedItemHeight) useHeight = o.outHeight;
-		
-		BitmapRegionDecoder decoder;
-		try {
-			decoder = BitmapRegionDecoder.newInstance(fd, false);
-			// Log.v("REGION","IMAGE width height: " + useWidth + " " + useHeight);
-			Rect innerTile = new Rect(0, 0, useWidth, useHeight);
-			Bitmap region = decoder.decodeRegion(innerTile, null);
-			return region;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		}
 	}
 	
 	static int calculateInSampleSize(BitmapFactory.Options bitmapOptions, int reqWidth, int reqHeight) {

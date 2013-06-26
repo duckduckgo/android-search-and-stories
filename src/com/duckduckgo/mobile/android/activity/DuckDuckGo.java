@@ -392,8 +392,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         DDGUtils.feedItemWidth = displaymetrics.widthPixels;
         
-        DDGUtils.feedItemHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
-                (float) 135.0, getResources().getDisplayMetrics());
+        DDGUtils.feedItemHeight = getResources().getDimensionPixelSize(R.dimen.feed_item_height);
         
         DDGUtils.maxItemWidthHeight = Math.max(DDGUtils.feedItemWidth, DDGUtils.feedItemHeight);
         
