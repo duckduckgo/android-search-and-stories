@@ -54,7 +54,6 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-import android.widget.ViewFlipper;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
@@ -110,6 +109,7 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
+import com.duckduckgo.mobile.android.widgets.SafeViewFlipper;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
@@ -132,7 +132,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	private View contentView = null;
 	private View leftMenuView = null;
 	
-	private ViewFlipper viewFlipper = null;
+	private SafeViewFlipper viewFlipper = null;
 	
 	private HistoryListView recentSearchView = null;
 	
@@ -452,7 +452,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
             savedTabHost.setCurrentTabByTag(savedInstanceState.getString("simple")); //set the tab as per the saved state
 		}
         
-        viewFlipper = (ViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
+        viewFlipper = (SafeViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
     	    	
     	leftHomeTextView = (TextView) leftMenuView.findViewById(R.id.LeftHomeTextView);
     	leftStoriesTextView = (TextView) leftMenuView.findViewById(R.id.LeftStoriesTextView);
