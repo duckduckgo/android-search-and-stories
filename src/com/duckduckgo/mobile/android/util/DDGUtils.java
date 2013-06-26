@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -154,15 +152,25 @@ public final class DDGUtils {
 		}
 	}
 	
+	static int calculateInSampleSize(BitmapFactory.Options bitmapOptions, int reqWidth, int reqHeight) {
+		final int height = bitmapOptions.outHeight;
+		final int width = bitmapOptions.outWidth;
+		int sampleSize = 1;
+		if (height > reqHeight || width > reqWidth) {
+			final int heightRatio = Math.round((float) height / (float) reqHeight);
+			final int widthRatio = Math.round((float) width / (float) reqWidth);
+			sampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+		}
+		return sampleSize;
+	}
+	
 	public static Bitmap decodeImage(String filePath) {
 		//Decode image size
 		BitmapFactory.Options o = new BitmapFactory.Options();
 		o.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(filePath, o);
 
-		int scale=1;                
-		while(o.outWidth/scale/2>=maxItemWidthHeight || o.outHeight/scale/2>=maxItemWidthHeight)
-			scale*=2;
+		int scale=calculateInSampleSize(o, maxItemWidthHeight, maxItemWidthHeight);
 
 		BitmapFactory.Options options=new BitmapFactory.Options();
 		//Decode with inSampleSize
