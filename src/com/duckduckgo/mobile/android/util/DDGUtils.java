@@ -1,7 +1,6 @@
 package com.duckduckgo.mobile.android.util;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -14,7 +13,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +23,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
@@ -47,8 +44,7 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 
 public final class DDGUtils {
 	
-	public static int feedItemWidth = 0, feedItemHeight = 0;
-	public static int maxItemWidthHeight = 0;	
+	public static DisplayStats displayStats;
 	
 	public static boolean saveArray(SharedPreferences prefs, String[] array, String arrayName) {   
 	    SharedPreferences.Editor editor = prefs.edit();  
@@ -137,7 +133,7 @@ public final class DDGUtils {
 		o.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(filePath, o);
 
-		int scale=calculateInSampleSize(o, maxItemWidthHeight, maxItemWidthHeight);
+		int scale=calculateInSampleSize(o, displayStats.maxItemWidthHeight, displayStats.maxItemWidthHeight);
 
 		BitmapFactory.Options options=new BitmapFactory.Options();
 		//Decode with inSampleSize

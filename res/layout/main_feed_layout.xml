@@ -5,7 +5,6 @@
         
 	<com.duckduckgo.mobile.android.download.AsyncImageView android:layout_width="match_parent"
                android:layout_height="@dimen/feed_item_height"
-               android:maxHeight="@dimen/feed_item_height"
                android:scaleType="centerCrop"
                android:id="@+id/feedItemBackground" />
 				

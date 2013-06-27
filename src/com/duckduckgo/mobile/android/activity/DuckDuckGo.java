@@ -90,6 +90,7 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DDGViewPager;
+import com.duckduckgo.mobile.android.util.DisplayStats;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
@@ -116,7 +117,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
 
 public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClickListener {
 	protected final String TAG = "DuckDuckGo";
-	
+		
 	public DuckDuckGoContainer mDuckDuckGoContainer;
 	
 	// keeps default User-Agent for WebView
@@ -386,15 +387,9 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 			setTheme(themeId);
 		}
         		        
-        setContentView(R.layout.pager);
-          
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        DDGUtils.feedItemWidth = displaymetrics.widthPixels;
+        setContentView(R.layout.pager);       
         
-        DDGUtils.feedItemHeight = getResources().getDimensionPixelSize(R.dimen.feed_item_height);
-        
-        DDGUtils.maxItemWidthHeight = Math.max(DDGUtils.feedItemWidth, DDGUtils.feedItemHeight);
+        DDGUtils.displayStats = new DisplayStats(this);        
         
         if(savedInstanceState != null)
         	savedState = true;
@@ -1015,6 +1010,8 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	@Override
 	public void onResume() {
 		super.onResume();
+		
+        DDGUtils.displayStats.refreshStats(this);
 		
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
@@ -1798,6 +1795,8 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
     
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+		DDGUtils.displayStats.refreshStats(this);
+		
 		if(welcomeScreenLayout != null) {
 			removeWelcomeScreen();
 			addWelcomeScreen();
