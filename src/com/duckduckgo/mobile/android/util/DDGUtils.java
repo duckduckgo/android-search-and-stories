@@ -1,7 +1,6 @@
 package com.duckduckgo.mobile.android.util;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -9,14 +8,11 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.annotation.TargetApi;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +23,6 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapRegionDecoder;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff.Mode;
@@ -49,8 +44,7 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 
 public final class DDGUtils {
 	
-	public static int feedItemWidth = 0, feedItemHeight = 0;
-	public static int maxItemWidthHeight = 0;	
+	public static DisplayStats displayStats;
 	
 	public static boolean saveArray(SharedPreferences prefs, String[] array, String arrayName) {   
 	    SharedPreferences.Editor editor = prefs.edit();  
@@ -119,39 +113,18 @@ public final class DDGUtils {
 	    	editor.remove(setName + "_" + i);  
 	    editor.remove(setName + "_size");
 	    editor.commit();  
-	} 
+	}
 	
-	@TargetApi(10)
-	private static Bitmap decodeRegion(FileDescriptor fd) {
-		if(fd == null || !fd.valid())
-			return null;
-		
-		// Log.v("REGION","region decoder : ");
-		int useWidth, useHeight;
-		
-		useWidth = feedItemWidth;
-		useHeight = feedItemHeight;
-		
-		//Decode image size
-        BitmapFactory.Options o = new BitmapFactory.Options();
-        o.inJustDecodeBounds = true;
-        BitmapFactory.decodeFileDescriptor(fd, null, o);
-        
-        // use original sizes if image is not bigger than feed item view
-        if(o.outWidth < feedItemWidth) useWidth = o.outWidth;
-        if(o.outHeight < feedItemHeight) useHeight = o.outHeight;
-		
-		BitmapRegionDecoder decoder;
-		try {
-			decoder = BitmapRegionDecoder.newInstance(fd, false);
-			// Log.v("REGION","IMAGE width height: " + useWidth + " " + useHeight);
-			Rect innerTile = new Rect(0, 0, useWidth, useHeight);
-			Bitmap region = decoder.decodeRegion(innerTile, null);
-			return region;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
+	static int calculateInSampleSize(BitmapFactory.Options bitmapOptions, int reqWidth, int reqHeight) {
+		final int height = bitmapOptions.outHeight;
+		final int width = bitmapOptions.outWidth;
+		int sampleSize = 1;
+		if (height > reqHeight || width > reqWidth) {
+			final int heightRatio = Math.round((float) height / (float) reqHeight);
+			final int widthRatio = Math.round((float) width / (float) reqWidth);
+			sampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
 		}
+		return sampleSize;
 	}
 	
 	public static Bitmap decodeImage(String filePath) {
@@ -160,9 +133,7 @@ public final class DDGUtils {
 		o.inJustDecodeBounds = true;
 		BitmapFactory.decodeFile(filePath, o);
 
-		int scale=1;                
-		while(o.outWidth/scale/2>=maxItemWidthHeight || o.outHeight/scale/2>=maxItemWidthHeight)
-			scale*=2;
+		int scale=calculateInSampleSize(o, displayStats.maxItemWidthHeight, displayStats.maxItemWidthHeight);
 
 		BitmapFactory.Options options=new BitmapFactory.Options();
 		//Decode with inSampleSize

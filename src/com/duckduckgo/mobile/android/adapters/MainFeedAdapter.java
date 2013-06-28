@@ -86,7 +86,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			if (feed.getImageUrl() != null && !feed.getImageUrl().equals("null")) {
 				Picasso.with(context)
 		    	.load(feed.getImageUrl())
-		    	.resize(DDGUtils.feedItemWidth, DDGUtils.feedItemHeight)
+		    	.resize(DDGUtils.displayStats.feedItemWidth, DDGUtils.displayStats.feedItemHeight)
 		    	.centerCrop()
 		    	.placeholder(android.R.color.transparent)
 		    	.into(holder.imageViewBackground);

@@ -187,8 +187,10 @@ public class FileCache {
 	public void removeThrashOnMigration() {
 		if(this.externalImageDirectory != null) {
 			File[] files = this.externalImageDirectory.listFiles();
-			for(File file : files) {
-				file.delete();
+			if(files != null) {
+				for(File file : files) {
+					file.delete();
+				}
 			}
 		}
 	}

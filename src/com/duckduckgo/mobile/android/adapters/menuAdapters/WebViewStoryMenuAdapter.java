@@ -26,12 +26,12 @@ public class WebViewStoryMenuAdapter extends PageMenuContextAdapter {
 	}
 	
 	public WebViewStoryMenuAdapter(DuckDuckGo context, int resource, 
-			int textViewResourceId, FeedObject feedObject, Boolean isItemSaved, Boolean isInReadabilityMode) {
+			int textViewResourceId, FeedObject feedObject, Boolean isInReadabilityMode) {
 		this(context, resource, textViewResourceId);
 		this.feedObject = feedObject;
 		this.hasReadability = feedObject.hasPossibleReadability();
 		this.url = feedObject.getUrl();
-		this.isItemSaved = isItemSaved;
+		this.isItemSaved = feedObject.isSaved();
 		this.isInReadabilityMode = isInReadabilityMode;
 		addMenuItems();
 	}

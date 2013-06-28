@@ -30,7 +30,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -124,6 +123,12 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegration;
+import com.duckduckgo.mobile.android.util.DisplayStats;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.duckduckgo.mobile.android.util.ReadArticlesManager;
+import com.duckduckgo.mobile.android.util.SCREEN;
+import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
@@ -134,6 +139,7 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
+import com.duckduckgo.mobile.android.widgets.SafeViewFlipper;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
@@ -141,7 +147,7 @@ import com.squareup.otto.Subscribe;
 
 public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	protected final String TAG = "DuckDuckGo";
-	
+		
 	public DuckDuckGoContainer mDuckDuckGoContainer;
 	
 	// keeps default User-Agent for WebView
@@ -157,7 +163,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private View contentView = null;
 	private View leftMenuView = null;
 	
-	private ViewFlipper viewFlipper = null;
+	private SafeViewFlipper viewFlipper = null;
 	
 	private HistoryListView recentSearchView = null;
 	
@@ -314,7 +320,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			@Override
 			public void onClick(View v) {		
 				removeWelcomeScreen();
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
 		});
     }
@@ -372,16 +378,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			setTheme(themeId);
 		}
         		        
-        setContentView(R.layout.pager);
-          
-        DisplayMetrics displaymetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-        DDGUtils.feedItemWidth = displaymetrics.widthPixels;
+        setContentView(R.layout.pager);       
         
-        DDGUtils.feedItemHeight = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
-                (float) 135.0, getResources().getDisplayMetrics());
-        
-        DDGUtils.maxItemWidthHeight = Math.max(DDGUtils.feedItemWidth, DDGUtils.feedItemHeight);
+        DDGUtils.displayStats = new DisplayStats(this);        
         
         if(savedInstanceState != null)
         	savedState = true;
@@ -415,7 +414,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             savedTabHost.setCurrentTabByTag(savedInstanceState.getString("simple")); //set the tab as per the saved state
 		}
         
-        viewFlipper = (ViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
+        viewFlipper = (SafeViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
     	    	
     	leftHomeTextView = (TextView) leftMenuView.findViewById(R.id.LeftHomeTextView);
     	leftStoriesTextView = (TextView) leftMenuView.findViewById(R.id.LeftStoriesTextView);
@@ -979,6 +978,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public void onResume() {
 		super.onResume();
 		BusProvider.getInstance().register(this);
+		
+        DDGUtils.displayStats.refreshStats(this);
 		
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
@@ -1572,7 +1573,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		// so we should save this feed item with target redirected URL
 		if(isStorySessionOrStoryUrl()) {
             mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
-			new WebViewStoryMenuDialog(this, currentFeedObject, mainWebView.isReadable).show();
+            if(currentFeedObject != null) {
+            	new WebViewStoryMenuDialog(this, currentFeedObject, mainWebView.isReadable).show();
+            }
 		}						
 		else if(DDGUtils.isSerpUrl(webViewUrl)) {
             new WebViewQueryMenuDialog(this, webViewUrl).show();
@@ -1725,6 +1728,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+		DDGUtils.displayStats.refreshStats(this);
+		
 		if(welcomeScreenLayout != null) {
 			removeWelcomeScreen();
 			addWelcomeScreen();
