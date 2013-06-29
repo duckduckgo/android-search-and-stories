@@ -18,7 +18,7 @@
             android:name=".activity.DuckDuckGo"
             android:label="@string/AppName"
             android:windowSoftInputMode="stateHidden"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
