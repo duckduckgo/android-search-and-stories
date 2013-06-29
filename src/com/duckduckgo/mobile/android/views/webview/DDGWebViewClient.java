@@ -217,6 +217,7 @@ public class DDGWebViewClient extends WebViewClient {
 			wv.clearHistory();
 			wv.shouldClearHistory = false;
 		}
+        wv.requestFocus();
 	}
 	
 	@Override
