@@ -1581,9 +1581,14 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		}
 	}
 	
-	public void hideKeyboard(View view) {
-		InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-		imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+	public void hideKeyboard(final View view) {
+        view.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        }, 200);
 	}
 	
 	public void showKeyboard(final View view) {
