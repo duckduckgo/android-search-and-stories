@@ -378,10 +378,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
     @Override
     protected void onStart() {
         super.onStart();
-
-        if(!torIntegration.isOrbotRunningAccordingToSettings()){
-            torIntegration.prepareTorSettings();
-        }
+        torIntegration.prepareTorSettings();
     }
 
     @Override
