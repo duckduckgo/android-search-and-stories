@@ -34,80 +34,113 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.duckduckgo.mobile.android.util.TorIntegration;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	
 	public static final int CONFIRM_CLEAR_HISTORY = 100;
-	private boolean hasClearedHistory = false; 
+    private final TorIntegration torIntegration;
+    private boolean result_hasClearedHistory = false;
+    private boolean result_startOrbotCheck = false;
+
+    public Preferences() {
+        this.torIntegration = new TorIntegration(this);
+    }
 	
   @SuppressWarnings("deprecation")
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
 
-    if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
-    	addPreferencesFromResource(R.xml.preferences);
-    	getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+      addPreferencesFromResource(R.xml.preferences);
+      getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
-    	Preference clearHistoryPref = findPreference("clearHistoryPref");
-    	clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-    		public boolean onPreferenceClick(Preference preference) {
-    			showDialog(CONFIRM_CLEAR_HISTORY);		
-    			return true;
-    		}
-    	});
-    	
-		Preference sourcesPref = findPreference("sourcesPref");
-		sourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			
-			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(getBaseContext(), SourcePreferences.class);
-		        startActivity(intent);
-				
-				return true;
-			}
-		});
-		
-		
-		Preference sendFeedbackPref = findPreference("sendFeedbackPref");
-		sendFeedbackPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			
-			public boolean onPreferenceClick(Preference preference) {
-				Context context = getPreferenceScreen().getContext();
-				
-				Intent intent = DDGUtils.newEmailIntent(context.getResources().getString(R.string.FeedbackTo), 
-						context.getResources().getString(R.string.FeedbackSubject), DDGUtils.getBuildInfo(context), "");
-		        startActivity(Intent.createChooser(intent, "Select application to send"));
-				return true;
-			}
-		});
-		
-		Preference ratePref = findPreference("ratePref");
-		ratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			
-			public boolean onPreferenceClick(Preference preference) {
-				Intent intent = new Intent(Intent.ACTION_VIEW);
-				intent.setData(Uri.parse(getString(R.string.LinkToApp_Google)));
-				startActivity(intent);
-				return true;
-			}
-		});
-		
-		Preference mainFontSizePref = findPreference("mainFontSizePref");
-		mainFontSizePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
-			
-			public boolean onPreferenceClick(Preference preference) {
-				DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
-				DDGControlVar.prevWebViewTextSize = DDGControlVar.webViewTextSize;
-				DDGControlVar.prevLeftTitleTextSize = DDGControlVar.leftTitleTextSize;
-				finish();
-				return true;
-			}
-		});
-		
-    }
+      Preference clearHistoryPref = findPreference("clearHistoryPref");
+      clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+          public boolean onPreferenceClick(Preference preference) {
+              showDialog(CONFIRM_CLEAR_HISTORY);
+              return true;
+          }
+      });
+
+      Preference sourcesPref = findPreference("sourcesPref");
+      sourcesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+          public boolean onPreferenceClick(Preference preference) {
+              Intent intent = new Intent(getBaseContext(), SourcePreferences.class);
+              startActivity(intent);
+
+              return true;
+          }
+      });
+
+
+      Preference sendFeedbackPref = findPreference("sendFeedbackPref");
+      sendFeedbackPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+          public boolean onPreferenceClick(Preference preference) {
+              Context context = getPreferenceScreen().getContext();
+
+              Intent intent = DDGUtils.newEmailIntent(context.getResources().getString(R.string.FeedbackTo),
+                      context.getResources().getString(R.string.FeedbackSubject), DDGUtils.getBuildInfo(context), "");
+              startActivity(Intent.createChooser(intent, "Select application to send"));
+              return true;
+          }
+      });
+
+      Preference ratePref = findPreference("ratePref");
+      ratePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+          public boolean onPreferenceClick(Preference preference) {
+              Intent intent = new Intent(Intent.ACTION_VIEW);
+              intent.setData(Uri.parse(getString(R.string.LinkToApp_Google)));
+              startActivity(intent);
+              return true;
+          }
+      });
+
+      Preference mainFontSizePref = findPreference("mainFontSizePref");
+      mainFontSizePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+
+          public boolean onPreferenceClick(Preference preference) {
+              DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
+              DDGControlVar.prevWebViewTextSize = DDGControlVar.webViewTextSize;
+              DDGControlVar.prevLeftTitleTextSize = DDGControlVar.leftTitleTextSize;
+              finish();
+              return true;
+          }
+      });
+      whenChangingTorChecksForOrbot();
+      whenCheckingOrbotStatusStartsOrbotAndSetsProxy();
   }
-  
+
+    private void whenCheckingOrbotStatusStartsOrbotAndSetsProxy() {
+        Preference checkOrbotPreference = findPreference("checkOrbotStatus");
+        checkOrbotPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if(!torIntegration.isOrbotRunningAccordingToSettings()){
+                    torIntegration.prepareTorSettings();
+                }
+                else{
+                    result_startOrbotCheck = true;
+                    finish();
+                }
+                return true;
+            }
+        });
+    }
+
+    private void whenChangingTorChecksForOrbot() {
+        Preference enableTorPreference = findPreference("enableTor");
+        enableTorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                torIntegration.prepareTorSettings((Boolean) newValue);
+                return true;
+            }
+        });
+    }
+
   @Override
   public Dialog onCreateDialog(int id) {
 	  Dialog d;
@@ -120,10 +153,8 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 			  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 	
 				  public void onClick(DialogInterface dialog, int whichButton) {
-					  
 					  DDGApplication.getDB().deleteHistory();
-		    		  hasClearedHistory = true;
-					  
+                      result_hasClearedHistory = true;
 				  }})
 				  .setNegativeButton(android.R.string.no, new OnClickListener() {
 					
@@ -144,13 +175,14 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
   
   @Override
   public void finish() {
-	  Intent res = new Intent();
-	  res.putExtra("hasClearedHistory", hasClearedHistory);
-	  setResult(RESULT_OK, res);
-	  super.finish();
+      Intent res = new Intent();
+      res.putExtra("startOrbotCheck", result_startOrbotCheck);
+      res.putExtra("hasClearedHistory", result_hasClearedHistory);
+      setResult(RESULT_OK, res);
+      super.finish();
   }
 
-	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         PreferencesManager.onSharedPreferenceChanged(sharedPreferences, key);
     }
 	

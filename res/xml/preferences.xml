@@ -51,15 +51,18 @@
         <CheckBoxPreference
                 android:title="@string/PrefTurnOffAutocomplete"
                 android:key="turnOffAutocompletePref"
-                android:defaultValue="false" />
+                android:defaultValue="false"
+                android:disableDependentsState="true" />
         <CheckBoxPreference
                 android:title="@string/PrefAppSearch"
                 android:key="appSearchPref"
-                android:defaultValue="false" />
+                android:defaultValue="false"
+                android:dependency="turnOffAutocompletePref" />
         <CheckBoxPreference
                 android:title="@string/PrefDirectQuery"
                 android:key="directQueryPref"
-                android:defaultValue="true" />
+                android:defaultValue="true"
+                android:dependency="turnOffAutocompletePref" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/PrefGroupPrivacy">
         <CheckBoxPreference

@@ -504,7 +504,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 			@Override
 			public void onClick(View v) {
 				viewPager.switchPage();		
-				displayScreen(SCREEN.SCR_SETTINGS, false);
+				displaySettings();
 			}
 		});
     	leftRecentView.setOnHistoryItemSelectedListener(new OnHistoryItemSelectedListener() {
@@ -1350,8 +1350,11 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 			new FeedRequestFailureDialogBuilder(this).show();
 		}
 	}
-	
-	@TargetApi(11)
+
+    /* TODO: check if anything is missing in Preference Activity that is in here
+    * Currently I only think that immediate theme switching isn't included yet, but better double-check!
+     */
+	/*@TargetApi(11)
 	public void showPrefFragment(){
         FragmentManager fragmentManager = getFragmentManager();
 
@@ -1362,14 +1365,14 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
             mWorkFragment = new DDGPreferenceFragment(torIntegration, this);
             mWorkFragment.setRetainInstance(false);
             mWorkFragment.setCustomPreferenceClickListener(new OnPreferenceClickListener() {
-				
+
 				@Override
 				public boolean onPreferenceClick(Preference preference) {
 					// close left nav if it's open
 					if(viewPager.isLeftMenuOpen()){
 						viewPager.setCurrentItem(1);
 					}
-					
+
 					if(preference.getKey().equals("mainFontSizePref")) {
 						DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
 						DDGControlVar.prevRecentTextSize = DDGControlVar.recentTextSize;
@@ -1381,7 +1384,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 					}
 					else if(preference.getKey().equals("recordHistoryPref")){
 						leftRecentView.displayRecordHistoryDisabled();
-					}					
+					}
 					return false;
 				}
 			});
@@ -1398,7 +1401,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
             			}
             		}
             		else if(key.equals("turnOffAutocompletePref")) {
-	        			// check autocomplete 
+	        			// check autocomplete
 	        			if(!DDGControlVar.isAutocompleteActive) {
 	        				getSearchField().setAdapter(null);
 	        			}
@@ -1416,10 +1419,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
             	}
             });
             fragmentManager.beginTransaction().replace(R.id.prefFragment,
-                    mWorkFragment).commit();  
+                    mWorkFragment).commit();
         }
         makePreferencesVisible();
-	}
+	}*/
 	
 	private void clearLeftSelect() {
 		leftHomeTextView.setSelected(false);
@@ -1431,19 +1434,13 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	/**
 	 * main method that triggers display of Preferences screen or fragment
 	 */
-	private void displaySettings() {
-		if(!((mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS))){
-			feedView.cleanImageTasks();
-			if (Build.VERSION.SDK_INT<Build.VERSION_CODES.HONEYCOMB) {
-		        Intent intent = new Intent(getBaseContext(), Preferences.class);
-		        startActivityForResult(intent, PREFERENCES_RESULT);
-			}
-			else {
-				showPrefFragment();
-			}
-		
-		}
-	}
+    private void displaySettings() {
+        if(!((mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS))){
+            feedView.cleanImageTasks();
+            Intent intent = new Intent(getBaseContext(), Preferences.class);
+            startActivityForResult(intent, PREFERENCES_RESULT);
+        }
+    }
 
 	/** 
 	 * change button visibility in left-side navigation menu
@@ -1477,7 +1474,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 
 	/**
 	 * helper method to control visibility states etc. of other views in DuckDuckGo activity
-	 */
+	 *//*
 	public void makePreferencesVisible(){		
 		viewFlipper.setDisplayedChild(SCREEN.SCR_SETTINGS.getFlipOrder());
 		shareButton.setVisibility(View.GONE);
@@ -1487,7 +1484,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		
 		clearLeftSelect();
 		leftSettingsTextView.setSelected(true);
-	}
+	}*/
 	
 	/**
 	 * Method that switches visibility of views for Home or Saved feed
@@ -1620,8 +1617,8 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 			displayScreen(SCREEN.SCR_SAVED_FEED, false);
 		}
 		else if(view.equals(leftSettingsTextView)){
-			viewPager.switchPage();		
-			displayScreen(SCREEN.SCR_SETTINGS, false);
+			viewPager.switchPage();
+            displaySettings();
 		}
 	}
 
@@ -1701,6 +1698,10 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 				if(clearedHistory){
 					clearRecentSearch();
 				}
+                boolean startOrbotCheck = data.getBooleanExtra("startOrbotCheck",false);
+                if(startOrbotCheck){
+                    searchOrGoToUrl(getString(R.string.OrbotCheckSite));
+                }
 			}
 		}
 	}
