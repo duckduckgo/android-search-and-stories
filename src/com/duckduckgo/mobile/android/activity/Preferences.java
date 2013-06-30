@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -42,6 +41,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
     private final TorIntegration torIntegration;
     private boolean result_hasClearedHistory = false;
     private boolean result_startOrbotCheck = false;
+    private boolean result_switchTheme = false;
 
     public Preferences() {
         this.torIntegration = new TorIntegration(this);
@@ -112,7 +112,19 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
       });
       whenChangingTorChecksForOrbot();
       whenCheckingOrbotStatusStartsOrbotAndSetsProxy();
+      whenSwitchingThemesRestartsDDGActivity();
   }
+
+    private void whenSwitchingThemesRestartsDDGActivity() {
+        Preference checkOrbotPreference = findPreference("themePref");
+        checkOrbotPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                result_switchTheme = true;
+                return true;
+            }
+        });
+    }
 
     private void whenCheckingOrbotStatusStartsOrbotAndSetsProxy() {
         Preference checkOrbotPreference = findPreference("checkOrbotStatus");
@@ -178,6 +190,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
       Intent res = new Intent();
       res.putExtra("startOrbotCheck", result_startOrbotCheck);
       res.putExtra("hasClearedHistory", result_hasClearedHistory);
+      res.putExtra("switchTheme", result_switchTheme);
       setResult(RESULT_OK, res);
       super.finish();
   }

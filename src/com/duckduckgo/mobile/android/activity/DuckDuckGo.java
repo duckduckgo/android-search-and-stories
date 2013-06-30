@@ -1352,7 +1352,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	}
 
     /* TODO: check if anything is missing in Preference Activity that is in here
-    * Currently I only think that immediate theme switching isn't included yet, but better double-check!
+    * Currently I only think everything is included, but better double-check!
      */
 	/*@TargetApi(11)
 	public void showPrefFragment(){
@@ -1701,6 +1701,12 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
                 boolean startOrbotCheck = data.getBooleanExtra("startOrbotCheck",false);
                 if(startOrbotCheck){
                     searchOrGoToUrl(getString(R.string.OrbotCheckSite));
+                }
+                boolean switchTheme = data.getBooleanExtra("switchTheme", false);
+                if(switchTheme){
+                    Intent intent = new Intent(getApplicationContext(), DuckDuckGo.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 }
 			}
 		}
