@@ -181,7 +181,6 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	
 	public boolean mCleanSearchBar = false;
 	
-	private TabHostExt savedTabHost = null;
     private TorIntegration torIntegration;
 	
 	class SourceClickListener implements OnClickListener {
@@ -317,10 +316,11 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
     
     public void syncAdapters() {
     	mDuckDuckGoContainer.historyAdapter.sync();
-		mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
-		mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
-		mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-		mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+    	// TODO !!! Event bus will be great for this - SyncAdapters event !!!
+//		mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
+//		mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
+//		mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+//		mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
     }
     
     /**
@@ -426,12 +426,6 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         
         leftMenuView = mDuckDuckGoContainer.pageAdapter.getPageView(0);
         contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);    
-        
-		// XXX Step 2: Setup TabHost
-		initialiseTabHost();
-		if (savedInstanceState != null) {
-            savedTabHost.setCurrentTabByTag(savedInstanceState.getString("simple")); //set the tab as per the saved state
-		}
         
         viewFlipper = (SafeViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
     	    	
@@ -883,9 +877,6 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
         mDuckDuckGoContainer.mainFeedTask = null;
 
         mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
-
-        mDuckDuckGoContainer.savedSearchAdapter = new SavedResultCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorSavedSearch());
-        mDuckDuckGoContainer.savedFeedAdapter = new SavedFeedCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorStoryFeed());
     }
 
     // Assist action is better known as Google Now gesture
@@ -1522,24 +1513,31 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	}
 	
 	public void displaySavedFeed(){
-		resetScreenState();
+//		resetScreenState();
+//		
+//		// left side menu visibility changes
+//		changeLeftMenuVisibility(SCREEN.SCR_SAVED_FEED);
+//    	
+//		shareButton.setVisibility(View.GONE);
+//    	viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());
+//    	mDuckDuckGoContainer.webviewShowing = false;
+//		clearLeftSelect();
+//    	    	
+//    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
+//    		DDGControlVar.homeScreenShowing = true;
+//    		homeSettingsButton.setImageResource(R.drawable.menu_button);
+//			leftHomeTextView.setSelected(true);
+//    	}
+//    	else {
+//			leftSavedTextView.setSelected(true);
+//    	}
 		
-		// left side menu visibility changes
-		changeLeftMenuVisibility(SCREEN.SCR_SAVED_FEED);
-    	
-		shareButton.setVisibility(View.GONE);
-    	viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());
-    	mDuckDuckGoContainer.webviewShowing = false;
-		clearLeftSelect();
-    	    	
-    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
-    		DDGControlVar.homeScreenShowing = true;
-    		homeSettingsButton.setImageResource(R.drawable.menu_button);
-			leftHomeTextView.setSelected(true);
-    	}
-    	else {
-			leftSavedTextView.setSelected(true);
-    	}
+		if(!((mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SAVED_FEED))){
+            feedView.cleanImageTasks();
+            Intent intent = new Intent(getBaseContext(), SavedActivity.class);
+            startActivity(intent);
+        }
+		
 	}
 	
 	public void displayRecentSearch(){  
@@ -1853,15 +1851,6 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 		setSearchBarText(query);
 		showKeyboard(getSearchField());
 		viewPager.setCurrentItem(1);
-	}
-	
-	/**
-	 * Step 2: Setup TabHost
-	 */
-	private void initialiseTabHost() {
-		savedTabHost = (TabHostExt) contentView.findViewById(android.R.id.tabhost);
-		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-		savedTabHost.addDefaultTabs();
 	}
 
 	public DDGAutoCompleteTextView getSearchField() {

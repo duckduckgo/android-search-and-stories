@@ -32,8 +32,5 @@ public class DuckDuckGoContainer {
 	
 	public AutoCompleteResultsAdapter acAdapter = null;
 	
-	public DDGPagerAdapter pageAdapter = null;
-	
-	public SavedResultCursorAdapter savedSearchAdapter = null;
-	public SavedFeedCursorAdapter savedFeedAdapter = null;	
+	public DDGPagerAdapter pageAdapter = null;	
 }
