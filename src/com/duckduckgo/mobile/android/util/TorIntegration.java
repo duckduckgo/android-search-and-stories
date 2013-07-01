@@ -1,6 +1,8 @@
 package com.duckduckgo.mobile.android.util;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import info.guardianproject.onionkit.ui.OrbotHelper;
@@ -15,10 +17,10 @@ import info.guardianproject.onionkit.web.WebkitProxy;
  */
 public class TorIntegration {
 
-    private final DuckDuckGo context;
+    private final Activity context;
     private final OrbotHelper orbotHelper;
 
-    public TorIntegration(DuckDuckGo context){
+    public TorIntegration(Activity context){
         this.context = context;
         orbotHelper = new OrbotHelper(this.context);
     }
