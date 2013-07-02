@@ -14,7 +14,7 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.SavedSearchItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
 
 public class SavedResultTabFragment extends ListFragment {

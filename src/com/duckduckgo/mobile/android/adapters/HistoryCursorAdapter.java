@@ -2,7 +2,6 @@ package com.duckduckgo.mobile.android.adapters;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -17,18 +16,17 @@ import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.squareup.picasso.Picasso;
 
 public class HistoryCursorAdapter extends CursorAdapter {
-	Activity parentActivity;
 	
-    public HistoryCursorAdapter(Activity parentActivity, Context context, Cursor c) {
+    public HistoryCursorAdapter(Context context, Cursor c) {
         super(context, c);
-        this.parentActivity = parentActivity; 
     }
 
     @Override
@@ -101,10 +99,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
 				
 				@Override
 				public void onClick(View v) {
-					if(parentActivity instanceof DuckDuckGo) {
-						// prepare searchbar with given data and wait for user action
-						((DuckDuckGo) parentActivity).preSearch(data);
-					}
+					BusProvider.getInstance().post(new RecentSearchPasteEvent(data));
 				}
 			});
         }

@@ -9,7 +9,7 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.SavedSearchItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemLongClickEvent;
 
 public class SavedSearchListView extends ListView implements android.widget.AdapterView.OnItemLongClickListener {
 	

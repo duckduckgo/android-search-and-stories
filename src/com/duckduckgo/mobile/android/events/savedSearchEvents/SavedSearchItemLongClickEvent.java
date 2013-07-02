@@ -1,4 +1,4 @@
-package com.duckduckgo.mobile.android.events;
+package com.duckduckgo.mobile.android.events.savedSearchEvents;
 
 public class SavedSearchItemLongClickEvent extends SavedSearchItemEvent {
 	

@@ -84,8 +84,6 @@ import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
-import com.duckduckgo.mobile.android.events.SavedSearchItemLongClickEvent;
-import com.duckduckgo.mobile.android.events.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteUrlInHistoryEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
@@ -95,12 +93,16 @@ import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveErrorEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
+import com.duckduckgo.mobile.android.events.pasteEvents.SuggestionPasteEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOffEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOnEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
+import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
@@ -827,7 +829,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
         mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
 
-        mDuckDuckGoContainer.historyAdapter = new MultiHistoryAdapter(DuckDuckGo.this, this);
+        mDuckDuckGoContainer.historyAdapter = new MultiHistoryAdapter(this);
 
         SourceClickListener sourceClickListener = new SourceClickListener();
         mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
@@ -1996,6 +1998,16 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Subscribe
 	public void onSavedSearchItemLongClick(SavedSearchItemLongClickEvent event) {
 		new SavedSearchMenuDialog(this, event.query).show();
+	}
+	
+	@Subscribe
+	public void onRecentSearchPaste(RecentSearchPasteEvent event) {
+		preSearch(event.query);
+	}
+	
+	@Subscribe
+	public void onSuggestionPaste(SuggestionPasteEvent event) {
+		preSearch(event.query);
 	}
 	
 }

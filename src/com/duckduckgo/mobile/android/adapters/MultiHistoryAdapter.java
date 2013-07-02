@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.adapters;
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -11,10 +10,10 @@ public class MultiHistoryAdapter extends SeparatedListAdapter {
 	HistoryCursorAdapter recentSearchAdapter;
 	HistoryCursorAdapter recentStoryAdapter;
 
-	public MultiHistoryAdapter(Activity parentActivity, Context context) {
+	public MultiHistoryAdapter(Context context) {
 		super(context, R.layout.history_section_header);	
-		recentSearchAdapter = new HistoryCursorAdapter(parentActivity, context, DDGApplication.getDB().getCursorSearchHistory());    		
-		recentStoryAdapter = new HistoryCursorAdapter(parentActivity, context, DDGApplication.getDB().getCursorStoryHistory());
+		recentSearchAdapter = new HistoryCursorAdapter(context, DDGApplication.getDB().getCursorSearchHistory());    		
+		recentStoryAdapter = new HistoryCursorAdapter(context, DDGApplication.getDB().getCursorStoryHistory());
 
 		addSection(context.getString(R.string.LeftRecentSearches), recentSearchAdapter);
 		addSection(context.getString(R.string.LeftRecentStories), recentStoryAdapter);

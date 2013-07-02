@@ -25,8 +25,10 @@ import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
+import com.duckduckgo.mobile.android.events.pasteEvents.SuggestionPasteEvent;
 import com.duckduckgo.mobile.android.image.transformations.RoundCornersTransformation;
 import com.duckduckgo.mobile.android.image.transformations.ScaleWidthTransformation;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
@@ -39,7 +41,6 @@ import com.squareup.picasso.Picasso;
 
 public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> implements Filterable {
 	private final LayoutInflater inflater;
-	private DuckDuckGo context;
 	
 	protected final String TAG = "AutoCompleteResultsAdapter";
 	public List<SuggestObject> mResultList = Collections.synchronizedList(new ArrayList<SuggestObject>());
@@ -47,9 +48,8 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 	RoundCornersTransformation roundTransform; 
 	ScaleWidthTransformation scaleTransform; 
 	
-	public AutoCompleteResultsAdapter(DuckDuckGo context) {
+	public AutoCompleteResultsAdapter(Context context) {
 		super(context, 0);
-		this.context = context; 
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		
 		// Picasso transformations
@@ -101,7 +101,10 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 			holder.plusImage.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {
-					context.preSearch(suggestion.getPhrase());
+					String phrase = suggestion.getPhrase();
+					if(phrase != null) {
+						BusProvider.getInstance().post(new SuggestionPasteEvent(suggestion.getPhrase()));
+					}
 				}
 			});
 			Drawable acDrawable = suggestion.getDrawable();
@@ -110,7 +113,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 				roundTransform.setRadius(holder.autoCompleteImage.getCornerRadius()); 
 				scaleTransform.setTarget(holder.autoCompleteImage); 
 				
-				Picasso.with(context)
+				Picasso.with(getContext())
 				.load(suggestion.getImageUrl())
 				.placeholder(android.R.color.transparent)
 				.transform(scaleTransform)
