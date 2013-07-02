@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.adapters;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -24,9 +25,11 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.squareup.picasso.Picasso;
 
 public class SavedFeedCursorAdapter extends CursorAdapter {
+	Activity parentActivity;
 		
-    public SavedFeedCursorAdapter(Context context, Cursor c) {
+    public SavedFeedCursorAdapter(Activity parentActivity, Context context, Cursor c) {
         super(context, c);
+        this.parentActivity = parentActivity; 
     }
 
     @Override

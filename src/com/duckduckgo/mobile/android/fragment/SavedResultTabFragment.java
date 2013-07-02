@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
@@ -19,14 +18,7 @@ import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemSelectedListener;
 
 public class SavedResultTabFragment extends ListFragment {
-	SavedSearchListView savedSearchView;
-    SavedResultCursorAdapter savedSearchAdapter;
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-    	super.onCreate(savedInstanceState);
-    	setRetainInstance(true);
-    }
+	SavedSearchListView savedSearchView = null;
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
@@ -40,27 +32,31 @@ public class SavedResultTabFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		savedSearchAdapter = new SavedResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
-		
-		savedSearchView = (SavedSearchListView) getListView();
-		savedSearchView.setDivider(null);
-		savedSearchView.setAdapter(savedSearchAdapter);
-//		savedSearchView.setOnSavedSearchItemSelectedListener(new OnSavedSearchItemSelectedListener() {
-//			public void onSavedSearchItemSelected(String query) {
-//				if(query != null){							
-//					duckDuckGoActivity.searchWebTerm(query);
-//					duckDuckGoActivity.itemSaveSearch(query);
-//                    duckDuckGoActivity.syncAdapters();
-//				}			
-//			}
-//		});
-		
-//		savedSearchView.setOnSavedSearchItemLongClickListener(new SavedSearchListView.OnSavedSearchItemLongClickListener() {
-//            @Override
-//            public void onSavedSearchItemLongClick(String query) {
-//                new SavedSearchMenuDialog(duckDuckGoActivity, query).show();
-//            }
-//        });
+		// setup for real work
+		final Activity activity = getActivity();
+
+		if(activity instanceof DuckDuckGo) {
+            final DuckDuckGo duckDuckGoActivity = (DuckDuckGo)activity;
+			savedSearchView = (SavedSearchListView) getListView();
+			savedSearchView.setDivider(null);
+			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedSearchAdapter);
+			savedSearchView.setOnSavedSearchItemSelectedListener(new OnSavedSearchItemSelectedListener() {
+				public void onSavedSearchItemSelected(String query) {
+					if(query != null){							
+						duckDuckGoActivity.searchWebTerm(query);
+						duckDuckGoActivity.itemSaveSearch(query);
+                        duckDuckGoActivity.syncAdapters();
+					}			
+				}
+			});
+			
+			savedSearchView.setOnSavedSearchItemLongClickListener(new SavedSearchListView.OnSavedSearchItemLongClickListener() {
+                @Override
+                public void onSavedSearchItemLongClick(String query) {
+                    new SavedSearchMenuDialog(duckDuckGoActivity, query).show();
+                }
+            });
+		}
 	}
 
 	@Override
@@ -71,14 +67,14 @@ public class SavedResultTabFragment extends ListFragment {
 		Object adapter = getListView().getAdapter();
 		Cursor c = null;
 		
-//		if(adapter instanceof SavedResultCursorAdapter) {
-//			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
-//			String query = c.getString(c.getColumnIndex("query"));
-//			if(query != null){							
-//				((DuckDuckGo) activity).searchWebTerm(query);	
-//				((DuckDuckGo) activity).itemSaveSearch(query);
-//				((DuckDuckGo) activity).syncAdapters();
-//			}
-//		}
+		if(adapter instanceof SavedResultCursorAdapter) {
+			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
+			String query = c.getString(c.getColumnIndex("query"));
+			if(query != null){							
+				((DuckDuckGo) activity).searchWebTerm(query);	
+				((DuckDuckGo) activity).itemSaveSearch(query);
+				((DuckDuckGo) activity).syncAdapters();
+			}
+		}
 	}
 }

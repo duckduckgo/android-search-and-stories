@@ -10,24 +10,15 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 
 
 public class SavedFeedTabFragment extends ListFragment {
-	MainFeedListView savedFeedView;
-	SavedFeedCursorAdapter savedFeedCursorAdapter;
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
-	}
+	MainFeedListView savedFeedView = null;
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
@@ -41,18 +32,22 @@ public class SavedFeedTabFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		savedFeedCursorAdapter = new SavedFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorStoryFeed());
-		
-		savedFeedView = (MainFeedListView) getListView();
-		savedFeedView.setAdapter(savedFeedCursorAdapter);
+		// setup for real work
+		final Activity activity = getActivity();
+				
+		if(activity instanceof DuckDuckGo) {
+            final DuckDuckGo duckDuckGoActivity = (DuckDuckGo)activity;
+    		savedFeedView = (MainFeedListView) getListView();
+    		savedFeedView.setAdapter(duckDuckGoActivity.mDuckDuckGoContainer.savedFeedAdapter);
 
-//		savedFeedView.setOnMainFeedItemSelectedListener(duckDuckGoActivity.mFeedItemSelectedListener);
-//		savedFeedView.setOnMainFeedItemLongClickListener(new MainFeedListView.OnMainFeedItemLongClickListener() {
-//            @Override
-//            public void onMainFeedItemLongClick(FeedObject feedObject) {
-//                new SavedStoryMenuDialog(duckDuckGoActivity, feedObject).show();
-//            }
-//        });
+    		savedFeedView.setOnMainFeedItemSelectedListener(duckDuckGoActivity.mFeedItemSelectedListener);
+    		savedFeedView.setOnMainFeedItemLongClickListener(new MainFeedListView.OnMainFeedItemLongClickListener() {
+                @Override
+                public void onMainFeedItemLongClick(FeedObject feedObject) {
+                    new SavedStoryMenuDialog(duckDuckGoActivity, feedObject).show();
+                }
+            });
+		}
 	}
 
 	@Override
@@ -68,11 +63,11 @@ public class SavedFeedTabFragment extends ListFragment {
 			obj = new FeedObject(((SQLiteCursor) item));
 		}
 		
-//		if (obj != null) {
-//			final Activity activity = getActivity();
-//			if (((DuckDuckGo) activity).mFeedItemSelectedListener != null) {
-//				((DuckDuckGo) activity).mFeedItemSelectedListener.onMainFeedItemSelected(obj);
-//			}
-//		}
+		if (obj != null) {
+			final Activity activity = getActivity();
+			if (((DuckDuckGo) activity).mFeedItemSelectedListener != null) {
+				((DuckDuckGo) activity).mFeedItemSelectedListener.onMainFeedItemSelected(obj);
+			}
+		}
 	}
 }

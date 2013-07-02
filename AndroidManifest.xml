@@ -81,10 +81,6 @@
             android:theme="@android:style/Theme.Dialog"
             android:taskAffinity="" />
 		
-		<activity 
-            android:name=".activity.SavedActivity" 
-            android:label="@string/SavedStories" />
-		
     </application>
 
 </manifest>
