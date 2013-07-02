@@ -13,7 +13,7 @@ import android.widget.ListView;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.SavedFeedItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 

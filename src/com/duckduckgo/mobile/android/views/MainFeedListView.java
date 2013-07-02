@@ -11,9 +11,9 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.events.MainFeedItemLongClickEvent;
-import com.duckduckgo.mobile.android.events.MainFeedItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.SavedFeedItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.squareup.picasso.Picasso;
 

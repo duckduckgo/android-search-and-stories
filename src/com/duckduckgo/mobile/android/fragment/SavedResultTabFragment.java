@@ -13,9 +13,9 @@ import android.widget.ListView;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
-import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemSelectedListener;
 
 public class SavedResultTabFragment extends ListFragment {
 	SavedSearchListView savedSearchView = null;
@@ -36,26 +36,9 @@ public class SavedResultTabFragment extends ListFragment {
 		final Activity activity = getActivity();
 
 		if(activity instanceof DuckDuckGo) {
-            final DuckDuckGo duckDuckGoActivity = (DuckDuckGo)activity;
 			savedSearchView = (SavedSearchListView) getListView();
 			savedSearchView.setDivider(null);
 			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedSearchAdapter);
-			savedSearchView.setOnSavedSearchItemSelectedListener(new OnSavedSearchItemSelectedListener() {
-				public void onSavedSearchItemSelected(String query) {
-					if(query != null){							
-						duckDuckGoActivity.searchWebTerm(query);
-						duckDuckGoActivity.itemSaveSearch(query);
-                        duckDuckGoActivity.syncAdapters();
-					}			
-				}
-			});
-			
-			savedSearchView.setOnSavedSearchItemLongClickListener(new SavedSearchListView.OnSavedSearchItemLongClickListener() {
-                @Override
-                public void onSavedSearchItemLongClick(String query) {
-                    new SavedSearchMenuDialog(duckDuckGoActivity, query).show();
-                }
-            });
 		}
 	}
 
@@ -63,17 +46,14 @@ public class SavedResultTabFragment extends ListFragment {
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
-		final Activity activity = getActivity();
 		Object adapter = getListView().getAdapter();
 		Cursor c = null;
 		
 		if(adapter instanceof SavedResultCursorAdapter) {
 			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
 			String query = c.getString(c.getColumnIndex("query"));
-			if(query != null){							
-				((DuckDuckGo) activity).searchWebTerm(query);	
-				((DuckDuckGo) activity).itemSaveSearch(query);
-				((DuckDuckGo) activity).syncAdapters();
+			if(query != null){
+				BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));				
 			}
 		}
 	}

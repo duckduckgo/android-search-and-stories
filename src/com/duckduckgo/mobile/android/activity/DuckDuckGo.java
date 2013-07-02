@@ -73,25 +73,28 @@ import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistorySearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistoryStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.MainFeedMenuDialog;
+import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewQueryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
-import com.duckduckgo.mobile.android.events.FeedItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.FeedRetrieveErrorEvent;
-import com.duckduckgo.mobile.android.events.FeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
-import com.duckduckgo.mobile.android.events.SavedFeedItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.SavedSearchItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteUrlInHistoryEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveErrorEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOffEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOnEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveSearchEvent;
@@ -1981,6 +1984,18 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         else{
             new HistorySearchMenuDialog(DuckDuckGo.this, event.historyObject).show();
         }
+	}
+	
+	@Subscribe
+	public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
+		searchWebTerm(event.query);	
+		itemSaveSearch(event.query);
+		syncAdapters();
+	}
+	
+	@Subscribe
+	public void onSavedSearchItemLongClick(SavedSearchItemLongClickEvent event) {
+		new SavedSearchMenuDialog(this, event.query).show();
 	}
 	
 }

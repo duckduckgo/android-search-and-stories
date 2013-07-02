@@ -8,38 +8,14 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.SavedSearchItemLongClickEvent;
 
-public class SavedSearchListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
-
-	private OnSavedSearchItemSelectedListener listener;
-	private OnSavedSearchItemLongClickListener listenerLongClick;
+public class SavedSearchListView extends ListView implements android.widget.AdapterView.OnItemLongClickListener {
 	
 	public SavedSearchListView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		
-		this.setOnItemClickListener(this);
+		super(context, attrs);		
 		this.setOnItemLongClickListener(this);
-	}
-	
-	public void setOnSavedSearchItemSelectedListener(OnSavedSearchItemSelectedListener listener) {
-		this.listener = listener;
-	}
-	
-	public void setOnSavedSearchItemLongClickListener(OnSavedSearchItemLongClickListener listener) {
-		this.listenerLongClick = listener;
-	}
-
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Object adapter = getAdapter();
-		Cursor c = null;
-		
-		if(adapter instanceof SavedResultCursorAdapter) {
-			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
-			String query = c.getString(c.getColumnIndex("query"));
-			if (listener != null)
-				listener.onSavedSearchItemSelected(query);
-		}
-		
 	}
 	
 	@Override
@@ -55,20 +31,10 @@ public class SavedSearchListView extends ListView implements android.widget.Adap
 		}
 		
 		if (query != null) {
-			if (listenerLongClick != null) {
-				listenerLongClick.onSavedSearchItemLongClick(query);
-			}
+			BusProvider.getInstance().post(new SavedSearchItemLongClickEvent(query));
 		}
 		
 		return false;
-	}
-	
-	public interface OnSavedSearchItemSelectedListener {
-		public void onSavedSearchItemSelected(String query);
-	}
-	
-	public interface OnSavedSearchItemLongClickListener {
-		public void onSavedSearchItemLongClick(String query);
 	}
 
 }
