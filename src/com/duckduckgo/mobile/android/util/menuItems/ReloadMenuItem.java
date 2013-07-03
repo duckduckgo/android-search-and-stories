@@ -10,7 +10,7 @@ public class ReloadMenuItem  extends Item {
 
 	public ReloadMenuItem(DuckDuckGo context){
 		super(context.getResources().getString(R.string.Refresh), R.drawable.icon_reload, ItemType.REFRESH);
-		this.EventToFire = new ReloadEvent(context);
+		this.EventToFire = new ReloadEvent();
 	}
 
 }

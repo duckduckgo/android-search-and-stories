@@ -10,22 +10,34 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
+import com.squareup.otto.Subscribe;
 
 public class SavedResultTabFragment extends ListFragment {
-	SavedSearchListView savedSearchView = null;
+	SavedSearchListView savedSearchView;
+	SavedResultCursorAdapter savedSearchAdapter;
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
+		setRetainInstance(true);
+		BusProvider.getInstance().register(this);
 		return fragmentLayout;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		BusProvider.getInstance().unregister(this);
 	}
 
 	@Override
@@ -38,7 +50,8 @@ public class SavedResultTabFragment extends ListFragment {
 		if(activity instanceof DuckDuckGo) {
 			savedSearchView = (SavedSearchListView) getListView();
 			savedSearchView.setDivider(null);
-			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedSearchAdapter);
+			savedSearchAdapter = new SavedResultCursorAdapter(activity, activity, DDGApplication.getDB().getCursorSavedSearch());
+			savedSearchView.setAdapter(savedSearchAdapter);
 		}
 	}
 
@@ -56,5 +69,11 @@ public class SavedResultTabFragment extends ListFragment {
 				BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));				
 			}
 		}
+	}
+	
+	@Subscribe
+	public void onSyncAdapters(SyncAdaptersEvent event) {
+		savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
+		savedSearchAdapter.notifyDataSetChanged();
 	}
 }

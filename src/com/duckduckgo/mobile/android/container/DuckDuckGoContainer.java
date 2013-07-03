@@ -6,8 +6,6 @@ import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
-import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
-import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
@@ -32,8 +30,5 @@ public class DuckDuckGoContainer {
 	
 	public AutoCompleteResultsAdapter acAdapter = null;
 	
-	public DDGPagerAdapter pageAdapter = null;
-	
-	public SavedResultCursorAdapter savedSearchAdapter = null;
-	public SavedFeedCursorAdapter savedFeedAdapter = null;	
+	public DDGPagerAdapter pageAdapter = null;	
 }

@@ -9,8 +9,6 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -24,8 +22,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.Preference.OnPreferenceClickListener;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -55,7 +51,6 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
-import android.widget.ViewFlipper;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
@@ -63,8 +58,6 @@ import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
-import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
-import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
@@ -84,6 +77,7 @@ import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
+import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteUrlInHistoryEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
@@ -106,7 +100,6 @@ import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSel
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
-import com.duckduckgo.mobile.android.listener.PreferenceChangeListener;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
@@ -120,6 +113,7 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DDGViewPager;
+import com.duckduckgo.mobile.android.util.DisplayStats;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
 import com.duckduckgo.mobile.android.util.ReadArticlesManager;
@@ -128,12 +122,6 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegration;
-import com.duckduckgo.mobile.android.util.DisplayStats;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
-import com.duckduckgo.mobile.android.util.ReadArticlesManager;
-import com.duckduckgo.mobile.android.util.SCREEN;
-import com.duckduckgo.mobile.android.util.SESSIONTYPE;
-import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
@@ -300,10 +288,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     
     public void syncAdapters() {
     	mDuckDuckGoContainer.historyAdapter.sync();
-		mDuckDuckGoContainer.savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
-		mDuckDuckGoContainer.savedSearchAdapter.notifyDataSetChanged();
-		mDuckDuckGoContainer.savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-		mDuckDuckGoContainer.savedFeedAdapter.notifyDataSetChanged();
+    	BusProvider.getInstance().post(new SyncAdaptersEvent());
     }
     
     /**
@@ -837,9 +822,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         mDuckDuckGoContainer.mainFeedTask = null;
 
         mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
-
-        mDuckDuckGoContainer.savedSearchAdapter = new SavedResultCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorSavedSearch());
-        mDuckDuckGoContainer.savedFeedAdapter = new SavedFeedCursorAdapter(DuckDuckGo.this, DuckDuckGo.this, DDGApplication.getDB().getCursorStoryFeed());
     }
 
     // Assist action is better known as Google Now gesture

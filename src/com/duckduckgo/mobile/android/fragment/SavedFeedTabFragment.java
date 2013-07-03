@@ -10,23 +10,36 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
+import com.squareup.otto.Subscribe;
 
 
 public class SavedFeedTabFragment extends ListFragment {
-	MainFeedListView savedFeedView = null;
+	MainFeedListView savedFeedView;
+	SavedFeedCursorAdapter savedFeedAdapter;	
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedfeed, container, false);
+		setRetainInstance(true);
+		BusProvider.getInstance().register(this);
 		return fragmentLayout;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		BusProvider.getInstance().unregister(this);
 	}
 
 	@Override
@@ -37,9 +50,9 @@ public class SavedFeedTabFragment extends ListFragment {
 		final Activity activity = getActivity();
 				
 		if(activity instanceof DuckDuckGo) {
-            final DuckDuckGo duckDuckGoActivity = (DuckDuckGo)activity;
     		savedFeedView = (MainFeedListView) getListView();
-    		savedFeedView.setAdapter(duckDuckGoActivity.mDuckDuckGoContainer.savedFeedAdapter);
+    		savedFeedAdapter = new SavedFeedCursorAdapter(activity, activity, DDGApplication.getDB().getCursorStoryFeed());
+    		savedFeedView.setAdapter(savedFeedAdapter);
 		}
 	}
 
@@ -59,5 +72,11 @@ public class SavedFeedTabFragment extends ListFragment {
 		if (obj != null) {
 			BusProvider.getInstance().post(new SavedFeedItemSelectedEvent(obj));
 		}
+	}
+	
+	@Subscribe
+	public void onSyncAdapters(SyncAdaptersEvent event) {
+		savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+		savedFeedAdapter.notifyDataSetChanged();
 	}
 }
