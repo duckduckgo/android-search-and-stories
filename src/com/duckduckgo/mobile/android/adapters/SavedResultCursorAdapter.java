@@ -1,27 +1,25 @@
 package com.duckduckgo.mobile.android.adapters;
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.events.pasteEvents.SavedSearchPasteEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 public class SavedResultCursorAdapter extends CursorAdapter {
-	Activity parentActivity;
 	
-    public SavedResultCursorAdapter(Activity parentActivity, Context context, Cursor c) {
+    public SavedResultCursorAdapter(Context context, Cursor c) {
         super(context, c);
-        this.parentActivity = parentActivity; 
     }
 
     @Override
@@ -55,10 +53,7 @@ public class SavedResultCursorAdapter extends CursorAdapter {
 
         	@Override
         	public void onClick(View v) {
-        		if(parentActivity instanceof DuckDuckGo) {
-        			// prepare searchbar with given data and wait for user action
-        			((DuckDuckGo) parentActivity).preSearch(data);
-        		}
+        		BusProvider.getInstance().post(new SavedSearchPasteEvent(data));
         	}
         });
         

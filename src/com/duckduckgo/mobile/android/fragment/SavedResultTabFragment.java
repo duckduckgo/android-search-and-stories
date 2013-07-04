@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.fragment;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -12,7 +11,6 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
@@ -44,15 +42,10 @@ public class SavedResultTabFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		// setup for real work
-		final Activity activity = getActivity();
-
-		if(activity instanceof DuckDuckGo) {
-			savedSearchView = (SavedSearchListView) getListView();
-			savedSearchView.setDivider(null);
-			savedSearchAdapter = new SavedResultCursorAdapter(activity, activity, DDGApplication.getDB().getCursorSavedSearch());
-			savedSearchView.setAdapter(savedSearchAdapter);
-		}
+		savedSearchView = (SavedSearchListView) getListView();
+		savedSearchView.setDivider(null);
+		savedSearchAdapter = new SavedResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
+		savedSearchView.setAdapter(savedSearchAdapter);
 	}
 
 	@Override

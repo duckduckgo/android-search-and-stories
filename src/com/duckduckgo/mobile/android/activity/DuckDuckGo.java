@@ -88,6 +88,7 @@ import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
+import com.duckduckgo.mobile.android.events.pasteEvents.SavedSearchPasteEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.SuggestionPasteEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOffEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOnEvent;
@@ -1989,6 +1990,11 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	@Subscribe
 	public void onSuggestionPaste(SuggestionPasteEvent event) {
+		preSearch(event.query);
+	}
+	
+	@Subscribe
+	public void onSavedSearchPaste(SavedSearchPasteEvent event) {
 		preSearch(event.query);
 	}
 	

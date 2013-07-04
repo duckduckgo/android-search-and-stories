@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.fragment;
 
-import android.app.Activity;
 import android.database.sqlite.SQLiteCursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -12,7 +11,6 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
@@ -46,14 +44,9 @@ public class SavedFeedTabFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		// setup for real work
-		final Activity activity = getActivity();
-				
-		if(activity instanceof DuckDuckGo) {
-    		savedFeedView = (MainFeedListView) getListView();
-    		savedFeedAdapter = new SavedFeedCursorAdapter(activity, activity, DDGApplication.getDB().getCursorStoryFeed());
-    		savedFeedView.setAdapter(savedFeedAdapter);
-		}
+		savedFeedView = (MainFeedListView) getListView();
+		savedFeedAdapter = new SavedFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorStoryFeed());
+		savedFeedView.setAdapter(savedFeedAdapter);
 	}
 
 	@Override
