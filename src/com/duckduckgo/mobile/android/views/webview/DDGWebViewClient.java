@@ -4,25 +4,22 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.util.DDGConstants;
-import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.SESSIONTYPE;
-
 import android.annotation.SuppressLint;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.MailTo;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
+import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.WebSettings.PluginState;
-import android.widget.Toast;
+
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 
 public class DDGWebViewClient extends WebViewClient {
 	private boolean mLoaded = false;
@@ -59,16 +56,9 @@ public class DDGWebViewClient extends WebViewClient {
 			}
 			else if(!(url.startsWith("http:") || url.startsWith("https:"))) {
 				// custom handling, there can be a related app
-				try {
-					Intent customIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-					activity.startActivity(customIntent);
-					return true;
-				}
-				catch(ActivityNotFoundException ae) {
-					// no related app, inform and still try to load in browser
-					Toast.makeText(activity, "No related app found!", Toast.LENGTH_LONG).show();
-//					view.loadUrl(url);
-				}
+				Intent customIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				DDGUtils.execIntentIfSafe(activity, customIntent);
+				return true;
 			}
 			else {
 				clickedAnchorAction((DDGWebView) view);

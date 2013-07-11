@@ -8,7 +8,6 @@ import java.io.InputStream;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
-import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -19,6 +18,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 
 @SuppressLint("NewApi")
 public class DownloadReceiver extends BroadcastReceiver {
@@ -152,11 +152,6 @@ public class DownloadReceiver extends BroadcastReceiver {
 			viewIntent.setDataAndType(uri, mimeType);
 		}
 		viewIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		try {
-			context.startActivity(viewIntent);
-		}
-		catch(ActivityNotFoundException e) {
-			Toast.makeText(context, R.string.ErrorActivityNotFound, Toast.LENGTH_LONG).show();
-		}
+		DDGUtils.execIntentIfSafe(context, viewIntent);
 	}
 }

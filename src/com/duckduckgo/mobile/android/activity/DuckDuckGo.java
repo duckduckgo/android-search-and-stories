@@ -1258,7 +1258,7 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	public void showWebUrl(String url) {
 		if(DDGControlVar.alwaysUseExternalBrowser) {
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        	startActivity(browserIntent);
+			DDGUtils.execIntentIfSafe(this, browserIntent);
         	return;
 		}
 		

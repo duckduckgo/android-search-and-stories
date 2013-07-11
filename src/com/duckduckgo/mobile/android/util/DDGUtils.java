@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
@@ -354,4 +355,21 @@ public final class DDGUtils {
 				return null;
 			}
 		}
+		
+	private static boolean isIntentSafe(Context context, Intent intent) {
+		// Verify it resolves
+		PackageManager packageManager = context.getPackageManager();
+		List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);
+		return activities.size() > 0;
+	}
+	
+	public static void execIntentIfSafe(Context context, Intent intent) {
+		if(DDGUtils.isIntentSafe(context, intent)) {
+        	context.startActivity(intent);
+        }
+        else {
+        	Toast.makeText(context, R.string.ErrorActivityNotFound, Toast.LENGTH_SHORT).show();
+        }
+	}
+	
 }
