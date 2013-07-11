@@ -4,9 +4,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.activity.SourcePreferences;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 
 public final class OpenInExternalDialogBuilder extends AlertDialog.Builder{
 
@@ -18,7 +19,7 @@ public final class OpenInExternalDialogBuilder extends AlertDialog.Builder{
         setPositiveButton(context.getResources().getString(R.string.Yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int buttonId) {
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(touchedUrl));
-                context.startActivity(browserIntent);
+                DDGUtils.execIntentIfSafe(context, browserIntent);
             }
         });
         setNegativeButton(context.getResources().getString(R.string.No), new DialogInterface.OnClickListener() {

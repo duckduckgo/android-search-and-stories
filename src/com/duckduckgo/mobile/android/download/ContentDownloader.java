@@ -4,7 +4,6 @@ import java.io.File;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -14,6 +13,7 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 
 public class ContentDownloader {
 
@@ -66,11 +66,7 @@ public class ContentDownloader {
 					File file = new File(filePath);
 					viewIntent.setDataAndType(Uri.fromFile(file), mimeType);
 					viewIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					try {
-						duckDuckGoActivity.startActivity(viewIntent);
-					} catch (ActivityNotFoundException e) {
-						Toast.makeText(duckDuckGoActivity, R.string.ErrorActivityNotFound, Toast.LENGTH_LONG).show();
-					}
+					DDGUtils.execIntentIfSafe(duckDuckGoActivity, viewIntent);
 				}
 			};
 

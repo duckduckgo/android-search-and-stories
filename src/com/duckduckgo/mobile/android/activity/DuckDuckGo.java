@@ -1216,7 +1216,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public void showWebUrl(String url) {
 		if(DDGControlVar.alwaysUseExternalBrowser) {
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        	startActivity(browserIntent);
+			DDGUtils.execIntentIfSafe(this, browserIntent);
         	return;
 		}
 		
@@ -1882,7 +1882,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Subscribe
 	public void onSendToExternalBrowserEvent(SendToExternalBrowserEvent event) {
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.url));
-    	startActivity(browserIntent);
+		DDGUtils.execIntentIfSafe(this, browserIntent);
 	}
 	
 	@Subscribe
