@@ -11,7 +11,6 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.app.SearchManager;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -51,7 +50,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
-import android.widget.Toast;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -1259,13 +1257,8 @@ public class DuckDuckGo extends FragmentActivity implements FeedListener, OnClic
 	
 	public void showWebUrl(String url) {
 		if(DDGControlVar.alwaysUseExternalBrowser) {
-			try {
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-	        	startActivity(browserIntent);
-			}
-			catch(ActivityNotFoundException notFoundException) {
-        		Toast.makeText(this, R.string.ErrorActivityNotFound, Toast.LENGTH_SHORT).show();
-        	}
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        	startActivity(browserIntent);
         	return;
 		}
 		

@@ -4,7 +4,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLDecoder;
 
-import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -67,7 +66,7 @@ public class DDGWebViewClient extends WebViewClient {
 				}
 				catch(ActivityNotFoundException ae) {
 					// no related app, inform and still try to load in browser
-					Toast.makeText(activity, R.string.ErrorActivityNotFound, Toast.LENGTH_LONG).show();
+					Toast.makeText(activity, "No related app found!", Toast.LENGTH_LONG).show();
 //					view.loadUrl(url);
 				}
 			}
