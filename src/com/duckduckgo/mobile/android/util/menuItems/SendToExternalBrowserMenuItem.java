@@ -1,7 +1,9 @@
 package com.duckduckgo.mobile.android.util.menuItems;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
+import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
@@ -28,8 +30,13 @@ public class SendToExternalBrowserMenuItem extends Item {
 		return new Action() {
 			@Override
 			public void Execute() {
-				Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            	context.startActivity(browserIntent);
+				try {
+					Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+					context.startActivity(browserIntent);
+				}
+				catch(ActivityNotFoundException e) {
+            		Toast.makeText(context, R.string.ErrorActivityNotFound, Toast.LENGTH_SHORT).show();
+            	}
 			};
 		};
 	}
