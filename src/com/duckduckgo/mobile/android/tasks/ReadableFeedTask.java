@@ -34,21 +34,18 @@ public class ReadableFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		List<FeedObject> returnFeed = new ArrayList<FeedObject>();
 		String body = null;
 		
-		if (isCancelled()) return null;
-		
-		if(articleUrl == null || articleUrl.length() == 0) return null;
+		if (isCancelled()) { return null; }
+		if(articleUrl == null || articleUrl.length() == 0) { return null; }
+        try {
+            // if an update is triggered, directly fetch from URL
+            body = DDGNetworkConstants.mainClient.doGetString(articleUrl);
+        }
+        catch (Exception e) {
+            requestFailed = true;
+            Log.e(TAG, e.getMessage(), e);
+        }
 
-
-			try {				
-				// if an update is triggered, directly fetch from URL
-				body = DDGNetworkConstants.mainClient.doGetString(articleUrl);
-			}				
-			catch (Exception e) {
-				requestFailed = true;
-				Log.e(TAG, e.getMessage(), e);
-			}
-
-		if(body != null) {	
+        if(body != null) {
 			try {
 				json = new JSONArray(body);
 			} catch (JSONException jex) {

@@ -1,7 +1,5 @@
 package com.duckduckgo.mobile.android.activity;
 
-import info.guardianproject.onionkit.web.WebkitProxy;
-
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -384,7 +382,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	
         viewPager = (DDGViewPager) findViewById(R.id.mainpager);
         viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
-        hideMenu();
+        viewPager.hideMenu();
 
 
         if(!PreferencesManager.isWelcomeShown()) {
@@ -517,7 +515,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			public void onClick(View v) {
 				// close left n	av if it's open
 				if(viewPager.isLeftMenuOpen()){
-                    hideMenu();
+                    viewPager.hideMenu();
                 }
 				showBangButton(true);
 			}
@@ -1193,8 +1191,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void showHistoryObject(HistoryObject historyObject) {
-//		mainWebView.clearBrowserState();
-		
 		if(historyObject.isWebSearch()) {
 			searchWebTerm(historyObject.getData());
 		}
@@ -1247,79 +1243,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 	}
 	
-    /* TODO: check if anything is missing in Preference Activity that is in here
-    * Currently I only think everything is included, but better double-check!
-     */
-	/*@TargetApi(11)
-	public void showPrefFragment(){
-        FragmentManager fragmentManager = getFragmentManager();
-
-        // Check to see if we have retained the worker fragment.
-        DDGPreferenceFragment mWorkFragment = (DDGPreferenceFragment)fragmentManager.findFragmentById(R.id.prefFragment);
-        // If not retained (or first time running), we need to create it.
-        if (mWorkFragment == null) {
-            mWorkFragment = new DDGPreferenceFragment(torIntegration, this);
-            mWorkFragment.setRetainInstance(false);
-            mWorkFragment.setCustomPreferenceClickListener(new OnPreferenceClickListener() {
-
-				@Override
-				public boolean onPreferenceClick(Preference preference) {
-					// close left nav if it's open
-					if(viewPager.isLeftMenuOpen()){
-						viewPager.setCurrentItem(1);
-					}
-
-					if(preference.getKey().equals("mainFontSizePref")) {
-						DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
-						DDGControlVar.prevRecentTextSize = DDGControlVar.recentTextSize;
-						DDGControlVar.prevWebViewTextSize = DDGControlVar.webViewTextSize;
-						DDGControlVar.prevPtrHeaderSize = DDGControlVar.ptrHeaderSize;
-						DDGControlVar.prevPtrSubHeaderSize = DDGControlVar.ptrSubHeaderSize;
-						DDGControlVar.prevLeftTitleTextSize = DDGControlVar.leftTitleTextSize;
-						displayHomeScreen();
-					}
-					else if(preference.getKey().equals("recordHistoryPref")){
-						leftRecentView.displayRecordHistoryDisabled();
-					}
-					return false;
-				}
-			});
-            mWorkFragment.setCustomPreferenceChangeListener(new PreferenceChangeListener() {
-            	@Override
-            	public void onPreferenceChange(String key) {
-            		if(key.equals("themePref")){
-            			String themeName = PreferencesManager.getThemeName();
-            			int themeId = getResources().getIdentifier(themeName, "style", getPackageName());
-            			if(themeId != 0) {
-            				Intent intent = new Intent(getApplicationContext(), DuckDuckGo.class);
-            				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            				startActivity(intent);
-            			}
-            		}
-            		else if(key.equals("turnOffAutocompletePref")) {
-	        			// check autocomplete
-	        			if(!DDGControlVar.isAutocompleteActive) {
-	        				getSearchField().setAdapter(null);
-	        			}
-	        			else {
-	        		        getSearchField().setAdapter(mDuckDuckGoContainer.acAdapter);
-	        			}
-            		}
-            		else if(key.equals("appSearchPref")) {
-            			if(DDGControlVar.includeAppsInSearch && !DDGControlVar.hasAppsIndexed) {
-            				// index installed apps
-            				new ScanAppsTask(getApplicationContext()).execute();
-            				DDGControlVar.hasAppsIndexed = true;
-            			}
-            		}
-            	}
-            });
-            fragmentManager.beginTransaction().replace(R.id.prefFragment,
-                    mWorkFragment).commit();
-        }
-        makePreferencesVisible();
-	}*/
-	
 	private void clearLeftSelect() {
 		leftHomeTextView.setSelected(false);
 		leftSavedTextView.setSelected(false);
@@ -1342,7 +1265,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	 * change button visibility in left-side navigation menu
 	 * according to screen
 	 */
-	private void changeLeftMenuVisibility(SCREEN screen) {		
+	private void changeLeftMenuVisibility() {
 		// stories button
 		if(DDGControlVar.START_SCREEN != SCREEN.SCR_STORIES) {
 			leftStoriesButtonLayout.setVisibility(View.VISIBLE);
@@ -1368,20 +1291,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	}
 	}
 
-	/**
-	 * helper method to control visibility states etc. of other views in DuckDuckGo activity
-	 *//*
-	public void makePreferencesVisible(){		
-		viewFlipper.setDisplayedChild(SCREEN.SCR_SETTINGS.getFlipOrder());
-		shareButton.setVisibility(View.GONE);
-				
-		getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
-		mDuckDuckGoContainer.webviewShowing = false;
-		
-		clearLeftSelect();
-		leftSettingsTextView.setSelected(true);
-	}*/
-	
+
 	/**
 	 * Method that switches visibility of views for Home or Saved feed
 	 */
@@ -1396,7 +1306,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		resetScreenState();
 		
 		// left side menu visibility changes
-		changeLeftMenuVisibility(SCREEN.SCR_STORIES);
+		changeLeftMenuVisibility();
     	
     	// adjust "not recording" indicator
 		leftRecentView.displayRecordHistoryDisabled();
@@ -1421,7 +1331,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		resetScreenState();
 		
 		// left side menu visibility changes
-		changeLeftMenuVisibility(SCREEN.SCR_SAVED_FEED);
+		changeLeftMenuVisibility();
     	
 		shareButton.setVisibility(View.GONE);
     	viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());
@@ -1442,7 +1352,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		resetScreenState(); 
 		
 		// left side menu visibility changes
-		changeLeftMenuVisibility(SCREEN.SCR_RECENT_SEARCH);
+		changeLeftMenuVisibility();
 		
     	// main view visibility changes
 		shareButton.setVisibility(View.GONE);
@@ -1718,18 +1628,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
-	
-	/**
-	 * set searchbar text, close left-menu (if open), show keyboard and focus on searchbar
-	 * pre-search actions combined
-	 */
-	public void pasteQueryToSearchField(String query) {
-        hideMenu();
-        setSearchBarText(query);
-        keyboardService.toggleKeyboard(getSearchField());
-	}
-	
-	/**
+
+    /**
 	 * Step 2: Setup TabHost
 	 */
 	private void initialiseTabHost() {
@@ -1741,37 +1641,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public DDGAutoCompleteTextView getSearchField() {
 		return searchField;
 	}
-	 
-	 public SESSIONTYPE getCurrentSessionType(String webViewUrl) {
-		 SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;			
-		 if(isStorySessionOrStoryUrl()) {
-			 mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
-			 sessionType = SESSIONTYPE.SESSION_FEED;
-		 }						
-		 else if(DDGUtils.isSerpUrl(webViewUrl)) {
-			 sessionType = SESSIONTYPE.SESSION_SEARCH;
-		 }
-		 return sessionType;
-	 }
-	 
-	 @SuppressLint("NewApi")
-	private void setWebviewShowing(boolean isShowing) {
-		 mDuckDuckGoContainer.webviewShowing = isShowing;
-		 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-			 invalidateOptionsMenu();
-		 }		
-	 }
 
-	public void resetProxy() {
-		try {
-			WebkitProxy.resetProxy(getApplicationContext());
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	@Subscribe
+    @Subscribe
 	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {
 		if(event.requestType == REQUEST_TYPE.FROM_NETWORK) {
 			synchronized(mDuckDuckGoContainer.feedAdapter) {
@@ -1915,7 +1786,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public void onFeedItemSelected(FeedItemSelectedEvent event) {
 		// close left nav if it's open
 		if(viewPager.isLeftMenuOpen()){
-            hideMenu();
+            viewPager.hideMenu();
         }
 		feedItemSelected(event.feedObject);
 	}
@@ -1933,7 +1804,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Subscribe
 	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
 		if(viewPager.isLeftMenuOpen()){
-            hideMenu();
+            viewPager.hideMenu();
         }
 		showHistoryObject(event.historyObject);
 	}
@@ -1960,27 +1831,23 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		new SavedSearchMenuDialog(this, event.query).show();
 	}
 
-    private void hideMenu() {
-        viewPager.setCurrentItem(1);
-    }
-	
 	@Subscribe
 	public void onRecentSearchPaste(RecentSearchPasteEvent event) {
-        hideMenu();
+        viewPager.hideMenu();
         getSearchField().pasteQuery(event.query);
         keyboardService.showKeyboard(getSearchField());
 	}
 
     @Subscribe
 	public void onSuggestionPaste(SuggestionPasteEvent event) {
-        hideMenu();
+        viewPager.hideMenu();
         getSearchField().pasteQuery(event.query);
 	}
 	
 	@Subscribe
 	public void onSavedSearchPaste(SavedSearchPasteEvent event) {
-        hideMenu();
-        keyboardService.showKeyboard(getSearchField());
+        viewPager.hideMenu();
         getSearchField().pasteQuery(event.query);
+        keyboardService.showKeyboard(getSearchField());
 	}
 }

@@ -73,6 +73,10 @@ public class DDGViewPager extends ViewPager {
     	int otherItem = getCurrentItem() == 0 ? 1 : 0;
 		setCurrentItem(otherItem);
     }
+
+    public void hideMenu() {
+        setCurrentItem(1);
+    }
     
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
