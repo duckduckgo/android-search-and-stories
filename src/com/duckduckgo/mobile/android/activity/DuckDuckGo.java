@@ -999,7 +999,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 		else if(intent.getBooleanExtra("widget", false)) {
 			viewFlipper.setDisplayedChild(DDGControlVar.START_SCREEN.getFlipOrder());
-            keyboardService.toggleKeyboard(getSearchField());
+            keyboardService.showKeyboard(getSearchField());
 		}
 		else if(mDuckDuckGoContainer.webviewShowing){
 			shareButton.setVisibility(View.VISIBLE);
