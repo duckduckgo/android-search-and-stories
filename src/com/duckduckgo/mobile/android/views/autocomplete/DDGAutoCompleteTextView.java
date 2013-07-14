@@ -61,6 +61,22 @@ public class DDGAutoCompleteTextView extends AutoCompleteTextView {
 
 	public void addTextWithTrailingSpace(String phrase) {
 		setText(phrase.trim() + " ");
-		setSelection(getText().length());
-	}
+        setCursorAtEnd();
+    }
+
+    private void setCursorAtEnd() {
+        setSelection(getText().length());
+    }
+
+    public void addSuggestion(String suggestion) {
+        setText(suggestion);
+        addSpaceIfStartsWithBang(suggestion);
+        setCursorAtEnd();
+    }
+
+    private void addSpaceIfStartsWithBang(String suggestion) {
+        if(suggestion.startsWith("!")){
+            append(" ");
+        }
+    }
 }

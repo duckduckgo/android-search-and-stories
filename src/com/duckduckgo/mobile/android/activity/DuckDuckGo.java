@@ -1990,7 +1990,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	@Subscribe
 	public void onSuggestionPaste(SuggestionPasteEvent event) {
-		preSearch(event.query);
+        getSearchField().addSuggestion(event.query);
 	}
 	
 	@Subscribe

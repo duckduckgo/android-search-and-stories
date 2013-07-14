@@ -19,3 +19,4 @@ local.properties
 DuckDuckGo.eml
 DuckDuckGo.iml
 out/
+*.iml
