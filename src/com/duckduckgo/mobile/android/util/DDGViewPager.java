@@ -5,16 +5,19 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.activity.KeyboardService;
 
 public class DDGViewPager extends ViewPager {
 
     private final DuckDuckGo context;
     private boolean enabled;
 	private boolean dispatchTouch;
+    private KeyboardService keyboardService;
 	
     public DDGViewPager(Context context) {
 		super(context);
         this.context = (DuckDuckGo)context;
+        this.keyboardService = new KeyboardService(this.context);
         this.enabled = true;
 		this.dispatchTouch = true;
         initOnPageChangeListener();
@@ -23,6 +26,7 @@ public class DDGViewPager extends ViewPager {
     public DDGViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = (DuckDuckGo)context;
+        this.keyboardService = new KeyboardService(this.context);
         this.enabled = true;
         this.dispatchTouch = true;
         initOnPageChangeListener();
@@ -34,7 +38,7 @@ public class DDGViewPager extends ViewPager {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 if(isLeftMenuOpen()){
-                    context.hideKeyboard(context.getSearchField());
+                    keyboardService.hideKeyboard(context.getSearchField());
                 }
             }
         });
@@ -57,11 +61,7 @@ public class DDGViewPager extends ViewPager {
  
         return false;
     }
- 
-    public void setPagingEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
-    
+
     public boolean isLeftMenuOpen() {
     	return getCurrentItem() == 0;
     }
