@@ -385,10 +385,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	
         viewPager = (DDGViewPager) findViewById(R.id.mainpager);
         viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
-        viewPager.setCurrentItem(1);
-        
-        
-    	if(!PreferencesManager.isWelcomeShown()) {            
+        hideMenu();
+
+
+        if(!PreferencesManager.isWelcomeShown()) {
             addWelcomeScreen();
             shouldShowBangButtonExplanation = true;
     	}
@@ -518,8 +518,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			public void onClick(View v) {
 				// close left n	av if it's open
 				if(viewPager.isLeftMenuOpen()){
-					viewPager.setCurrentItem(1);
-				}
+                    hideMenu();
+                }
 				showBangButton(true);
 			}
 		});
@@ -533,9 +533,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         getSearchField().setOnBackButtonPressedEventListener(new BackButtonPressedEventListener() {
 			@Override
 			public void onBackButtonPressed() {
-				if(!getSearchField().isPopupShowing()){
-					showBangButton(false);
+				if(getSearchField().isPopupShowing()){
+                    getSearchField().dismissDropDown();
 				}
+                showBangButton(false);
 			}
         });
 
@@ -828,7 +829,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     // Assist action is better known as Google Now gesture
 	private void checkForAssistAction() {
 		if (getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_ASSIST)) {
-			showKeyboard(getSearchField());
+			toggleKeyboard(getSearchField());
 		}
 	}
 
@@ -858,7 +859,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public void setSearchBarText(String text) {
 		getSearchField().setFocusable(false);
 		getSearchField().setFocusableInTouchMode(false);
-		getSearchField().setText(text);            
+		getSearchField().setText(text);
 		getSearchField().setFocusable(true);
 		getSearchField().setFocusableInTouchMode(true);
 	}
@@ -952,7 +953,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_SEARCH
 				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED) {
 			// previous screen was a SERP
-			showKeyboard(getSearchField());
+			toggleKeyboard(getSearchField());
 		}
         mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
@@ -1001,7 +1002,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 		else if(intent.getBooleanExtra("widget", false)) {
 			viewFlipper.setDisplayedChild(DDGControlVar.START_SCREEN.getFlipOrder());
-			showKeyboard(getSearchField());
+			toggleKeyboard(getSearchField());
 		}
 		else if(mDuckDuckGoContainer.webviewShowing){
 			shareButton.setVisibility(View.VISIBLE);
@@ -1480,8 +1481,16 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             }
         }, 200);
 	}
+
+    private void showKeyboard(final View view) {
+        view.requestFocus();
+        getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(view, 0);
+    }
 	
-	public void showKeyboard(final View view) {
+	public void toggleKeyboard(final View view) {
 		view.post(new Runnable() {
 			@Override
 			public void run() {
@@ -1746,10 +1755,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	 * set searchbar text, close left-menu (if open), show keyboard and focus on searchbar
 	 * pre-search actions combined
 	 */
-	public void preSearch(String query) {
-		setSearchBarText(query);
-		showKeyboard(getSearchField());
-		viewPager.setCurrentItem(1);
+	public void pasteQueryToSearchField(String query) {
+        hideMenu();
+        setSearchBarText(query);
+		toggleKeyboard(getSearchField());
 	}
 	
 	/**
@@ -1938,8 +1947,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public void onFeedItemSelected(FeedItemSelectedEvent event) {
 		// close left nav if it's open
 		if(viewPager.isLeftMenuOpen()){
-			viewPager.setCurrentItem(1);
-		}
+            hideMenu();
+        }
 		feedItemSelected(event.feedObject);
 	}
 	
@@ -1956,8 +1965,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Subscribe
 	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
 		if(viewPager.isLeftMenuOpen()){
-			viewPager.setCurrentItem(1);
-		}		
+            hideMenu();
+        }
 		showHistoryObject(event.historyObject);
 	}
 	
@@ -1982,20 +1991,28 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public void onSavedSearchItemLongClick(SavedSearchItemLongClickEvent event) {
 		new SavedSearchMenuDialog(this, event.query).show();
 	}
+
+    private void hideMenu() {
+        viewPager.setCurrentItem(1);
+    }
 	
 	@Subscribe
 	public void onRecentSearchPaste(RecentSearchPasteEvent event) {
-		preSearch(event.query);
+        hideMenu();
+        getSearchField().pasteQuery(event.query);
+        showKeyboard(getSearchField());
 	}
-	
-	@Subscribe
+
+    @Subscribe
 	public void onSuggestionPaste(SuggestionPasteEvent event) {
-        getSearchField().addSuggestion(event.query);
+        hideMenu();
+        getSearchField().pasteQuery(event.query);
 	}
 	
 	@Subscribe
 	public void onSavedSearchPaste(SavedSearchPasteEvent event) {
-		preSearch(event.query);
+        hideMenu();
+        showKeyboard(getSearchField());
+        getSearchField().pasteQuery(event.query);
 	}
-	
 }
