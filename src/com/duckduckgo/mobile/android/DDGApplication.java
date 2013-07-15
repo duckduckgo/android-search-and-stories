@@ -82,10 +82,10 @@ public class DDGApplication extends Application {
 				onUpgrade(appVersionCode);
 			}
 			
-			DDGConstants.USER_AGENT.replace("%version", appVersion);
+			DDGConstants.USER_AGENT = DDGConstants.USER_AGENT.replace("%version", appVersion);
 		} catch (NameNotFoundException e) {
 			// at least specify new Android version
-			DDGConstants.USER_AGENT.replace("%version", "2+");
+			DDGConstants.USER_AGENT = DDGConstants.USER_AGENT.replace("%version", "2+");
 		}
 		DDGNetworkConstants.initialize();
 		
