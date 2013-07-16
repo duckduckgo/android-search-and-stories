@@ -19,7 +19,9 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
@@ -96,10 +98,11 @@ import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSel
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
+import com.duckduckgo.mobile.android.fragment.RecentSearchFragment;
+import com.duckduckgo.mobile.android.fragment.SavedMainFragment;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
-import com.duckduckgo.mobile.android.tabhost.TabHostExt;
 import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
@@ -197,7 +200,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	public boolean mCleanSearchBar = false;
 	
-	private TabHostExt savedTabHost = null;
     private TorIntegration torIntegration;
 	
 	class SourceClickListener implements OnClickListener {
@@ -392,12 +394,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         
         leftMenuView = mDuckDuckGoContainer.pageAdapter.getPageView(0);
         contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);    
-        
-		// XXX Step 2: Setup TabHost
-		initialiseTabHost();
-		if (savedInstanceState != null) {
-            savedTabHost.setCurrentTabByTag(savedInstanceState.getString("simple")); //set the tab as per the saved state
-		}
         
         viewFlipper = (SafeViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
     	    	
@@ -928,9 +924,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				case SCR_SAVED_FEED:
 					displaySavedFeed();
 					break;
-				case SCR_SETTINGS:
-					displaySettings();
-					break;
 				default:
 					break;
 			}
@@ -1044,10 +1037,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 		else if (mDuckDuckGoContainer.webviewShowing) {
 			mainWebView.backPressAction();
-		}
-		else if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS){
-			// go back to where we left of
-			displayScreen(mDuckDuckGoContainer.prevScreen, false);
 		}
 		else if(fontSizeLayout.getVisibility() != View.GONE) {
 			cancelFontScaling();
@@ -1254,11 +1243,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	 * main method that triggers display of Preferences screen or fragment
 	 */
     private void displaySettings() {
-        if(!((mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS))){
-            feedView.cleanImageTasks();
-            Intent intent = new Intent(getBaseContext(), Preferences.class);
-            startActivityForResult(intent, PREFERENCES_RESULT);
-        }
+       feedView.cleanImageTasks();
+       Intent intent = new Intent(getBaseContext(), Preferences.class);
+       startActivityForResult(intent, PREFERENCES_RESULT);
     }
 
 	/** 
@@ -1334,7 +1321,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		changeLeftMenuVisibility();
     	
 		shareButton.setVisibility(View.GONE);
-    	viewFlipper.setDisplayedChild(SCREEN.SCR_SAVED_FEED.getFlipOrder());
+		
+    	switchFragments(SCREEN.SCR_SAVED_FEED);
+    	
     	mDuckDuckGoContainer.webviewShowing = false;
 		clearLeftSelect();
     	    	
@@ -1356,7 +1345,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
     	// main view visibility changes
 		shareButton.setVisibility(View.GONE);
-		viewFlipper.setDisplayedChild(SCREEN.SCR_RECENT_SEARCH.getFlipOrder());
+		switchFragments(SCREEN.SCR_RECENT_SEARCH);
     	mDuckDuckGoContainer.webviewShowing = false;
 		
 		clearLeftSelect();
@@ -1538,13 +1527,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			return;
 		}
 		
-		// arbitrary choice to not display Settings on comeback
-    	if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS) {
-    		displayHomeScreen();
-    	}
-    	else {
-			displayScreen(mDuckDuckGoContainer.currentScreen, true);
-    	}
+
+		displayScreen(mDuckDuckGoContainer.currentScreen, true);
 	}
 	
 	private void markLeftSelect(SCREEN current){
@@ -1566,9 +1550,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 					break;
 				case SCR_SAVED_FEED:
 					leftSavedTextView.setSelected(true);
-					break;
-				case SCR_SETTINGS:
-					leftSettingsTextView.setSelected(true);
 					break;
 			}
 		}
@@ -1627,15 +1608,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
-	}
-
-    /**
-	 * Step 2: Setup TabHost
-	 */
-	private void initialiseTabHost() {
-		savedTabHost = (TabHostExt) contentView.findViewById(android.R.id.tabhost);
-		savedTabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-		savedTabHost.addDefaultTabs();
 	}
 
 	public DDGAutoCompleteTextView getSearchField() {
@@ -1850,4 +1822,33 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         getSearchField().pasteQuery(event.query);
         keyboardService.showKeyboard(getSearchField());
 	}
+	
+	
+	public void switchFragments(SCREEN screen) {
+//		FragmentManager fragmentManager = getSupportFragmentManager();
+//		
+//		Fragment mWorkFragment = null;
+//		
+//		switch(screen) {
+//			case SCR_SAVED_FEED:
+//				mWorkFragment = new SavedMainFragment();
+//				break;
+//			case SCR_RECENT_SEARCH:
+//				mWorkFragment = new RecentSearchFragment();
+//				break;
+//		}
+//			
+//		if(mWorkFragment != null) {
+//			mWorkFragment.setRetainInstance(true);
+//			fragmentManager.beginTransaction().replace(R.id.placeholderFragment,
+//	                mWorkFragment).commit();
+//			
+////			viewFlipper.setDisplayedChild(SCREEN.SCR_RECENT_SEARCH.getFlipOrder());
+//
+//		}
+		
+		viewFlipper.setDisplayedChild(screen.getFlipOrder());
+
+	}
+	
 }
