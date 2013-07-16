@@ -29,9 +29,9 @@
     <string name="PrefRate">Rate App</string>
     <string name="PrefAppSearch">Include Apps</string>
     <string name="PrefMainFontSize">Font Size</string>
-    <string name="PrefEnableAcra">Report Crashes</string>
-    <string name="PrefAcraDisabled">Reporting Disabled</string>
-    <string name="PrefAcraEnabled">Reporting Enabled</string>
+    <string name="PrefEnableAcra">Auto Report Crashes</string>
+    <string name="PrefAcraDisabled">Automatic Reporting Disabled</string>
+    <string name="PrefAcraEnabled">Automatic Reporting Enabled</string>
     
     <string name="PrefWaterCooler">Stories</string>
     <string name="PrefAutocomplete">Autocomplete</string>
@@ -89,14 +89,16 @@
     <string name="ConfirmExternalBrowser">Please Confirm</string>
     
     <string name="ChangingFontSize">Changing Font Size...</string>
-    
+
+
     <string name="crash_toast_text">Application crashed! Crash-related data will be collected and reported upon confirmation.</string>
     <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
     <string name="crash_notif_title">DuckDuckGo crash report</string>
     <string name="crash_notif_text">Please click here to help fix the issue.</string>
-    <string name="crash_dialog_text">An unexpected error occurred forcing the application to stop. 
+    <string name="crash_dialog_text">An unexpected error occurred.
         Please help us fix the problem by clicking \'OK\' to send crash-related data. 
-        (IMPORTANT: Sensitive information such as your search query or browsed URL can be included.)</string>
+        The only data we will receive is: APP_VERSION_CODE, APP_VERSION_NAME, ANDROID_VERSION, STACK_TRACE,
+        AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
     <string name="crash_dialog_comment_prompt">Your comment: </string>
     <string name="crash_dialog_ok_toast">Thank you for your help!</string>
     

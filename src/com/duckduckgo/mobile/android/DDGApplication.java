@@ -1,11 +1,5 @@
 package com.duckduckgo.mobile.android;
 
-import java.io.File;
-
-import org.acra.ACRA;
-import org.acra.ReportingInteractionMode;
-import org.acra.annotation.ReportsCrashes;
-
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -15,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.util.Log;
-
 import com.duckduckgo.mobile.android.db.DdgDB;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
@@ -24,10 +17,21 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
+import org.acra.ACRA;
+import org.acra.ACRAConfigurationException;
+import org.acra.ReportField;
+import org.acra.ReportingInteractionMode;
+import org.acra.annotation.ReportsCrashes;
+
+import java.io.File;
 
 @ReportsCrashes(formKey="",
 formUri = "https://collect.duckduckgo.com/collect.js?type=crash",
-mode = ReportingInteractionMode.TOAST,
+mode = ReportingInteractionMode.DIALOG,
+customReportContent = {
+        ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.STACK_TRACE,
+        ReportField.AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, ReportField.LOGCAT
+},
 resToastText = R.string.crash_toast_text, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
 resNotifTickerText = R.string.crash_notif_ticker_text,
 resNotifTitle = R.string.crash_notif_title,
@@ -62,10 +66,9 @@ public class DDGApplication extends Application {
 	@Override
 	public void onCreate() {
 		ACRA.init(this);
-		
 		super.onCreate();
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		db = new DdgDB(this);
+        db = new DdgDB(this);
 		fileCache = new FileCache(this.getApplicationContext());
 		imageCache.setFileCache(fileCache);
 		
@@ -114,8 +117,9 @@ public class DDGApplication extends Application {
 		}
      
 	}
-	
-	public static ImageCache getImageCache() {
+
+
+    public static ImageCache getImageCache() {
 		return imageCache;
 	}
 	

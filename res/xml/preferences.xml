@@ -84,7 +84,7 @@
                 android:title="@string/PrefRate"
                 android:key="ratePref"
                 android:defaultValue="" />
-        <CheckBoxPreference android:key="acra.enable"
+        <CheckBoxPreference android:key="acra.alwaysaccept"
                             android:title="@string/PrefEnableAcra"
                             android:summaryOn="@string/PrefAcraEnabled"
                             android:summaryOff="@string/PrefAcraDisabled"
