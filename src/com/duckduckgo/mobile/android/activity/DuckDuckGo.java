@@ -1382,7 +1382,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void onClick(View view) {
-		if (view.equals(homeSettingsButton)) {			
+		if (view.equals(homeSettingsButton)) {
 			handleHomeSettingsButtonClick();
 		}
 		else if (view.equals(shareButton)) {			
