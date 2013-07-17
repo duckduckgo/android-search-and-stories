@@ -351,7 +351,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	leftRecentView = (HistoryListView) leftMenuView.findViewById(R.id.LeftRecentView);
 		
 		leftRecentView.setDivider(null);
-//    	leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
+    	leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
     	
     	// "Save Recents" not enabled notification click listener
     	leftRecentView.setOnHeaderClickListener(new OnClickListener() {
