@@ -3,9 +3,17 @@ package com.duckduckgo.mobile.android.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.duckduckgo.mobile.android.objects.FeedObject;
+
 public class DDGControlVar {
 	
 	public static SCREEN START_SCREEN = SCREEN.SCR_STORIES;	// stories
+	
+	public static String lastFeedUrl = "";	
+	public static SCREEN currentScreen = SCREEN.SCR_STORIES;
+	public static SCREEN prevScreen = SCREEN.SCR_STORIES;
+	public static FeedObject currentFeedObject = null;
+	public static SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;
 	
 	public static boolean hasUpdatedFeed = false;
 	public static String regionString = "wt-wt";	// world traveler (none) as default

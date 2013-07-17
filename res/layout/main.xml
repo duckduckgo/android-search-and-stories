@@ -34,25 +34,12 @@
             	 android:layout_height="match_parent"
             	 android:id="@+id/mainWebView" />
         
-        <com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView
-            	  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:divider="@android:color/white"
-                  android:dividerHeight="1dp"
-                  
-                  app:ptrAnimationStyle="flip"
-                  app:ptrHeaderTextColor="?attr/leftItemTextColor"
-                  app:ptrHeaderSubTextColor="@color/left_secondary_text"
-                  app:ptrDrawableTop="?attr/ptrDrawable"
-                  app:ptrHeaderSize="10dp"
-                  
-                  android:fadingEdge="none"
-        		  android:fastScrollEnabled="false"
-        		  android:footerDividersEnabled="false"
-        		  android:headerDividersEnabled="false"
-        		  android:smoothScrollbar="true"
-        		  
-                  android:id="@+id/mainFeedItems" />
+        <fragment
+        android:id="@+id/feed_fragment"
+        android:name="com.duckduckgo.mobile.android.fragment.FeedFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/feed_fragment_view" />
         
 <!--         placeholder layout for DDGPreferenceFragment -->
 <!--         <FrameLayout android:id="@+id/placeholderFragment" android:layout_weight="1" -->

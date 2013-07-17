@@ -14,20 +14,10 @@ public class DuckDuckGoContainer {
 	
 	public boolean webviewShowing = false;
 	
-	public SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;
-	public String lastFeedUrl = "";
-	
-	public SCREEN currentScreen = SCREEN.SCR_STORIES;
-	public SCREEN prevScreen = SCREEN.SCR_STORIES;
-	
 	public Drawable progressDrawable, searchFieldDrawable;
 	public Drawable stopDrawable;
-	
+			
 	public MultiHistoryAdapter historyAdapter = null;
-	
-	public MainFeedAdapter feedAdapter = null;
-	public MainFeedTask mainFeedTask = null;
-	
 	public AutoCompleteResultsAdapter acAdapter = null;
 	
 	public DDGPagerAdapter pageAdapter = null;	

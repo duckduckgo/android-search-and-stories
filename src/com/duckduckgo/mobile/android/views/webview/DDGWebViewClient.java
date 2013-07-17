@@ -21,6 +21,7 @@ import android.webkit.WebViewClient;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.dialogs.SSLCertificateDialog;
 import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 
@@ -35,7 +36,7 @@ public class DDGWebViewClient extends WebViewClient {
 	}
 	 	
 	private void clickedAnchorAction(DDGWebView view) {
-		activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
+		DDGControlVar.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
 	        	        	        	
 	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
@@ -83,8 +84,8 @@ public class DDGWebViewClient extends WebViewClient {
 			return;
 		}
 				        		
-		if(url.equals(activity.mDuckDuckGoContainer.lastFeedUrl)) {
-			activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
+		if(url.equals(DDGControlVar.lastFeedUrl)) {
+			DDGControlVar.sessionType = SESSIONTYPE.SESSION_FEED;
 		}
 
 		// Omnibar like behavior.
@@ -198,12 +199,12 @@ public class DDGWebViewClient extends WebViewClient {
 			}
 			else {
 				wv.shouldClearHistory = true;
-				wv.readableAction(activity.currentFeedObject);
+				wv.readableAction(DDGControlVar.currentFeedObject);
 			}
 		}
 		else if(wv.loadingReadableBack) {
 			wv.loadingReadableBack = false;
-			wv.readableAction(activity.currentFeedObject);
+			wv.readableAction(DDGControlVar.currentFeedObject);
 		}				
 		
 		if(wv.shouldClearHistory) {

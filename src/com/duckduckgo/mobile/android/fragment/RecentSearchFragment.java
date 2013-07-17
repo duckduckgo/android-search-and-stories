@@ -7,10 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.FontSizeCancelEvent;
+import com.duckduckgo.mobile.android.events.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.squareup.otto.Subscribe;
 
@@ -19,13 +24,13 @@ public class RecentSearchFragment extends Fragment {
 	private View contentView;
 	
 	private HistoryListView recentSearchView;
-	private MultiHistoryAdapter historyAdapter;
+	private HistoryCursorAdapter recentSearchAdapter;
 	
 	private void initialise() {
-		historyAdapter = new MultiHistoryAdapter(getActivity());		
+		recentSearchAdapter = new HistoryCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory()); 
 		recentSearchView = (HistoryListView) contentView.findViewById(R.id.recentSearchItems);
         recentSearchView.setDivider(null);
-        recentSearchView.setAdapter(historyAdapter.getRecentSearchAdapter());
+        recentSearchView.setAdapter(recentSearchAdapter);
 	}
 	
 	@Override
@@ -50,6 +55,19 @@ public class RecentSearchFragment extends Fragment {
 	
 	@Subscribe
 	public void onSyncAdapters(SyncAdaptersEvent event) {
-		historyAdapter.sync();
+		recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
+	}
+	
+	@Subscribe
+	public void onFontSizeChange(FontSizeChangeEvent event) {
+		DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize + event.diffPixel;
+		recentSearchAdapter.notifyDataSetInvalidated();
+	}
+	
+	@Subscribe
+	public void onFontSizeCancel(FontSizeCancelEvent event) {
+		DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize;
+		recentSearchAdapter.notifyDataSetInvalidated();				
+		DDGControlVar.prevRecentTextSize = 0;
 	}
 }

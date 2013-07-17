@@ -14,9 +14,9 @@ public class AppStateManager {
 		Editor editor = prefs.edit();
 		editor.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
 		editor.putBoolean("webviewShowing", duckDuckGoContainer.webviewShowing);
-		editor.putInt("currentScreen", duckDuckGoContainer.currentScreen.ordinal());
-		editor.putInt("prevScreen", duckDuckGoContainer.prevScreen.ordinal());
-		editor.putInt("sessionType", duckDuckGoContainer.sessionType.ordinal());
+		editor.putInt("currentScreen", DDGControlVar.currentScreen.ordinal());
+		editor.putInt("prevScreen", DDGControlVar.prevScreen.ordinal());
+		editor.putInt("sessionType", DDGControlVar.sessionType.ordinal());
 		if(currentFeedObject != null) {
 			editor.putString("currentFeedObjectId", currentFeedObject.getId());
 		}
@@ -27,9 +27,9 @@ public class AppStateManager {
 			DDGWebView webView, FeedObject currentFeedObject) {
 		bundle.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
 		bundle.putBoolean("webviewShowing", duckDuckGoContainer.webviewShowing);
-		bundle.putInt("currentScreen", duckDuckGoContainer.currentScreen.ordinal());
-		bundle.putInt("prevScreen", duckDuckGoContainer.prevScreen.ordinal());
-		bundle.putInt("sessionType", duckDuckGoContainer.sessionType.ordinal());
+		bundle.putInt("currentScreen", DDGControlVar.currentScreen.ordinal());
+		bundle.putInt("prevScreen", DDGControlVar.prevScreen.ordinal());
+		bundle.putInt("sessionType", DDGControlVar.sessionType.ordinal());
 		if(currentFeedObject != null) {
 			bundle.putString("currentFeedObjectId", currentFeedObject.getId());
 		}
@@ -46,9 +46,9 @@ public class AppStateManager {
 			
 			DDGControlVar.homeScreenShowing = bundle.getBoolean("homeScreenShowing");
 			duckDuckGoContainer.webviewShowing = bundle.getBoolean("webviewShowing");
-			duckDuckGoContainer.currentScreen = SCREEN.getByCode(bundle.getInt("currentScreen"));
-			duckDuckGoContainer.prevScreen = SCREEN.getByCode(bundle.getInt("prevScreen"));
-			duckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(bundle.getInt("sessionType"));
+			DDGControlVar.currentScreen = SCREEN.getByCode(bundle.getInt("currentScreen"));
+			DDGControlVar.prevScreen = SCREEN.getByCode(bundle.getInt("prevScreen"));
+			DDGControlVar.sessionType = SESSIONTYPE.getByCode(bundle.getInt("sessionType"));
 		}
 		// do we ever get here?
 		else if(state instanceof SharedPreferences) {
@@ -56,9 +56,9 @@ public class AppStateManager {
 			
 			DDGControlVar.homeScreenShowing = prefs.getBoolean("homeScreenShowing", false);
 			duckDuckGoContainer.webviewShowing = prefs.getBoolean("webviewShowing", false);
-			duckDuckGoContainer.currentScreen = SCREEN.getByCode(prefs.getInt("currentScreen", SCREEN.SCR_STORIES.getCode()));
-			duckDuckGoContainer.prevScreen = SCREEN.getByCode(prefs.getInt("prevScreen", SCREEN.SCR_STORIES.getCode()));
-			duckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(prefs.getInt("sessionType", SESSIONTYPE.SESSION_BROWSE.getCode()));
+			DDGControlVar.currentScreen = SCREEN.getByCode(prefs.getInt("currentScreen", SCREEN.SCR_STORIES.getCode()));
+			DDGControlVar.prevScreen = SCREEN.getByCode(prefs.getInt("prevScreen", SCREEN.SCR_STORIES.getCode()));
+			DDGControlVar.sessionType = SESSIONTYPE.getByCode(prefs.getInt("sessionType", SESSIONTYPE.SESSION_BROWSE.getCode()));
 		}
 	}
 	

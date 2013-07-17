@@ -4,27 +4,18 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
-import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -53,11 +44,9 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
-import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
-import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistorySearchMenuDialog;
@@ -68,20 +57,24 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewQueryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
-import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
+import com.duckduckgo.mobile.android.events.CleanFeedDownloadsEvent;
+import com.duckduckgo.mobile.android.events.FeedUpdateRequestEvent;
+import com.duckduckgo.mobile.android.events.FontSizeCancelEvent;
+import com.duckduckgo.mobile.android.events.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
+import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
+import com.duckduckgo.mobile.android.events.SearchOrGoToUrlEvent;
+import com.duckduckgo.mobile.android.events.SourceFilterCancelEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteUrlInHistoryEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveErrorEvent;
-import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
@@ -98,13 +91,9 @@ import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSel
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
-import com.duckduckgo.mobile.android.fragment.RecentSearchFragment;
-import com.duckduckgo.mobile.android.fragment.SavedMainFragment;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
-import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
-import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
 import com.duckduckgo.mobile.android.util.AppStateManager;
@@ -114,15 +103,12 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DDGViewPager;
 import com.duckduckgo.mobile.android.util.DisplayStats;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
-import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
-import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
-import com.duckduckgo.mobile.android.util.TorIntegration;
+import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
 import com.duckduckgo.mobile.android.views.HistoryListView;
-import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
@@ -132,9 +118,6 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
 import com.duckduckgo.mobile.android.widgets.SafeViewFlipper;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
 import com.squareup.otto.Subscribe;
 
 public class DuckDuckGo extends FragmentActivity implements OnClickListener {
@@ -147,11 +130,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public String mWebViewDefaultUA = null;
 
 	private DDGAutoCompleteTextView searchField = null;
-	public MainFeedListView feedView = null;
 	private HistoryListView leftRecentView = null;
-	
-	public PullToRefreshMainFeedListView mPullRefreshFeedView = null;
-	
+		
 	private DDGViewPager viewPager;
 	private View contentView = null;
 	private View leftMenuView = null;
@@ -187,103 +167,17 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public boolean savedState = false;
 		
 	private final int PREFERENCES_RESULT = 0;
-	
-	public FeedObject currentFeedObject = null;
-
-	// for keeping filter source at same position
-	public String m_objectId = null;
-	public int m_itemHeight;
-	public int m_yOffset;
-		
+			
 	// keep prev progress in font seek bar, to make incremental changes available
 	SeekBarHint fontSizeSeekBar;
 	
 	public boolean mCleanSearchBar = false;
 	
-    private TorIntegration torIntegration;
-	
-	class SourceClickListener implements OnClickListener {
-		public void onClick(View v) {
-			// source filtering
-
-			if(DDGControlVar.targetSource != null){
-				cancelSourceFilter();
-			}
-			else {
-
-				View itemParent = (View) v.getParent().getParent();
-				int pos = feedView.getPositionForView(itemParent);
-				m_objectId = ((FeedObject) feedView.getItemAtPosition(pos)).getId();
-				m_itemHeight = itemParent.getHeight();
-
-				Rect r = new Rect();
-				Point offset = new Point();
-				feedView.getChildVisibleRect(itemParent, r, offset);
-				m_yOffset = offset.y;
-
-				String sourceType = ((AsyncImageView) v).getType();
-				DDGControlVar.targetSource = sourceType;
-
-				DDGControlVar.hasUpdatedFeed = false;
-				keepFeedUpdated();
-			}
-
-		}
-	}
-	
-	private void feedItemSelected(FeedObject feedObject) {
-		// keep a reference, so that we can reuse details while saving
-		currentFeedObject = feedObject;
-		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;		
-		
-		String url = feedObject.getUrl();
-		if (url != null) {
-			if(!DDGApplication.getDB().existsVisibleFeedById(feedObject.getId())) {
-				DDGApplication.getDB().insertFeedItem(feedObject);
-				syncAdapters();			
-			}
-			searchOrGoToUrl(url, SESSIONTYPE.SESSION_FEED);
-		}
-		
-		if(ReadArticlesManager.addReadArticle(feedObject)){
-			mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
-		}
-	}
-	
-	private void feedItemSelected(String feedId) {
-		FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
-		feedItemSelected(feedObject);
-	}    
-
 	private ContentDownloader contentDownloader;
 
 	private boolean shouldShowBangButtonExplanation;
 
-	private BangButtonExplanationPopup bangButtonExplanationPopup;
-    
-    /**
-     * save feed by object or by the feed id
-     * 
-     * @param feedObject
-     * @param pageFeedId
-     */
-    public void itemSaveFeed(FeedObject feedObject, String pageFeedId) {
-    	if(feedObject != null) {
-    		if(DDGApplication.getDB().existsAllFeedById(feedObject.getId())) {
-    			DDGApplication.getDB().makeItemVisible(feedObject.getId());
-    		}
-    		else {
-    			DDGApplication.getDB().insertVisible(feedObject);
-    		}
-    	}
-    	else if(pageFeedId != null && pageFeedId.length() != 0){
-    		DDGApplication.getDB().makeItemVisible(pageFeedId);
-    	}
-    }
-    
-    public void itemSaveSearch(String query) {
-    	DDGApplication.getDB().insertSavedSearch(query);
-    }
+	private BangButtonExplanationPopup bangButtonExplanationPopup;    
     
     public void syncAdapters() {
     	mDuckDuckGoContainer.historyAdapter.sync();
@@ -345,13 +239,12 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     @Override
     protected void onStart() {
         super.onStart();
-        torIntegration.prepareTorSettings();
+        TorIntegrationProvider.getInstance(this).prepareTorSettings();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        torIntegration = new TorIntegration(this);
         keyboardService = new KeyboardService(this);
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
@@ -458,7 +351,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	leftRecentView = (HistoryListView) leftMenuView.findViewById(R.id.LeftRecentView);
 		
 		leftRecentView.setDivider(null);
-    	leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
+//    	leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
     	
     	// "Save Recents" not enabled notification click listener
     	leftRecentView.setOnHeaderClickListener(new OnClickListener() {
@@ -606,34 +499,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         recentSearchView.setDivider(null);
         recentSearchView.setAdapter(mDuckDuckGoContainer.historyAdapter.getRecentSearchAdapter());
         
-        
-		mPullRefreshFeedView = (PullToRefreshMainFeedListView) contentView.findViewById(R.id.mainFeedItems);
-		DDGControlVar.ptrHeaderSize = PreferencesManager.getPtrHeaderTextSize(mPullRefreshFeedView.getHeaderTextSize());
-		DDGControlVar.ptrSubHeaderSize = PreferencesManager.getPtrHeaderSubTextSize(mPullRefreshFeedView.getHeaderSubTextSize());
-		
-		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
-		
-		// set Loading... font
-		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
-
-		// Set a listener to be invoked when the list should be refreshed.
-		mPullRefreshFeedView.setOnRefreshListener(new OnRefreshListener<MainFeedListView>() {
-			@Override
-			public void onRefresh(PullToRefreshBase<MainFeedListView> refreshView) {
-				mPullRefreshFeedView.setLastUpdatedLabel(DateUtils.formatDateTime(getApplicationContext(),
-						System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
-								| DateUtils.FORMAT_ABBREV_ALL));
-
-				// refresh the list
-				DDGControlVar.hasUpdatedFeed = false;
-				keepFeedUpdated();
-			}
-		});     
-        		
-		feedView = mPullRefreshFeedView.getRefreshableView();
-        feedView.setAdapter(mDuckDuckGoContainer.feedAdapter);
+        // XXX !!! IMPORTANT : Removed feed view code !!!
         
         // NOTE: After loading url multiple times on the device, it may crash
         // Related to android bug report 21266 - Watch this ticket for possible resolutions
@@ -731,28 +597,16 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				else {
 					fontSizeSeekBar.setExtraText(String.valueOf((progress-DDGConstants.FONT_SEEKBAR_MID)));
 				}
-				DDGControlVar.fontProgress = progress;
-				DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize + diffPixel;
-				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
-				
-				DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize + diffPixel;
-				mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
-				
-				DDGControlVar.ptrHeaderSize = DDGControlVar.prevPtrHeaderSize + diff;
-				DDGControlVar.ptrSubHeaderSize = DDGControlVar.prevPtrSubHeaderSize + diff;
-				
-				// adjust Pull-to-Refresh
-				mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
-				mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
-				
-				// set Loading... font
-				mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
-				mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
+				DDGControlVar.fontProgress = progress;																	
 				
 				DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize + diff;
 				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
 				
 				DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize + diffPixel;
+				
+				mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
+				
+				BusProvider.getInstance().post(new FontSizeChangeEvent(diff, diffPixel));
 				
 				leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
 		    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
@@ -810,12 +664,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
 
         mDuckDuckGoContainer.historyAdapter = new MultiHistoryAdapter(this);
-
-        SourceClickListener sourceClickListener = new SourceClickListener();
-        mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(this, sourceClickListener);
-
-        mDuckDuckGoContainer.mainFeedTask = null;
-
+        
         mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
     }
 
@@ -831,17 +680,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             new NewSourcesDialogBuilder(this).show();
             PreferencesManager.newSourcesDialogWasShown();
         }
-    }
-	
-	/**
-	 * Cancels source filter applied with source icon click from feed item
-	 */
-	public void cancelSourceFilter() {
-		DDGControlVar.targetSource = null;
-		mDuckDuckGoContainer.feedAdapter.unmark();
-		DDGControlVar.hasUpdatedFeed = false;
-		keepFeedUpdated();
-	}
+    }	
 	
 	private void clearSearchBar() {
 		getSearchField().setText("");
@@ -857,35 +696,23 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		getSearchField().setFocusableInTouchMode(true);
 	}
 	
-	private void resetScreenState() {
+	private void resetScreenState() {		
 		clearSearchBar();
 		mainWebView.clearBrowserState();
-		currentFeedObject = null;
-		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
+		BusProvider.getInstance().post(new ResetScreenStateEvent());		
+		DDGControlVar.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
 	
 	private void cancelFontScaling() {
 		fontSizeSeekBar.setExtraText(null);
-		DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
-		DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize;
+		BusProvider.getInstance().post(new FontSizeCancelEvent());
+		
 		DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
 		DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize;
-		mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 		mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
 		
-		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.prevPtrHeaderSize);
-		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
-		
-		// set Loading... font
-		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.prevPtrHeaderSize);
-		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
-		
 		mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
-		DDGControlVar.prevMainTextSize = 0;
-		DDGControlVar.prevRecentTextSize = 0;
 		DDGControlVar.prevWebViewTextSize = -1;
-		DDGControlVar.prevPtrHeaderSize = 0;
-		DDGControlVar.prevPtrSubHeaderSize = 0;
 		DDGControlVar.prevLeftTitleTextSize = 0;
 		fontSizeLayout.setVisibility(View.GONE);
 		fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
@@ -933,19 +760,19 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	        	leftRecentView.setVisibility(View.VISIBLE);
 			}
 	        
-			mDuckDuckGoContainer.prevScreen = mDuckDuckGoContainer.currentScreen;
-	        mDuckDuckGoContainer.currentScreen = screenToDisplay;	        			
+			DDGControlVar.prevScreen = DDGControlVar.currentScreen;
+			DDGControlVar.currentScreen = screenToDisplay;	        			
 	}
 	
 	private void displayHomeScreen() {
 		displayScreen(DDGControlVar.START_SCREEN, true);
         
-		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_SEARCH
+		if(DDGControlVar.sessionType == SESSIONTYPE.SESSION_SEARCH
 				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED) {
 			// previous screen was a SERP
             keyboardService.toggleKeyboard(getSearchField());
 		}
-        mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
+		DDGControlVar.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
 
 
@@ -961,7 +788,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
 
-        keepFeedUpdated();
+        BusProvider.getInstance().post(new FeedUpdateRequestEvent());
 		
 		// update feeds
 		// https://app.asana.com/0/2891531242889/2858723303746
@@ -1005,16 +832,11 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		super.onPause();
 		
 		BusProvider.getInstance().unregister(this);
-		
-		if (mDuckDuckGoContainer.mainFeedTask != null) {
-			mDuckDuckGoContainer.mainFeedTask.cancel(false);
-			mDuckDuckGoContainer.mainFeedTask = null;
-		}
-		
+
 		PreferencesManager.saveReadArticles();
 		
 		// XXX keep these for low memory conditions
-		AppStateManager.saveAppState(sharedPreferences, mDuckDuckGoContainer, mainWebView, currentFeedObject);
+		AppStateManager.saveAppState(sharedPreferences, mDuckDuckGoContainer, mainWebView, DDGControlVar.currentFeedObject);
 	}
 	
 	@Override
@@ -1043,7 +865,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 		// main feed showing & source filter is active
 		else if(DDGControlVar.targetSource != null){
-			cancelSourceFilter();
+			BusProvider.getInstance().post(new SourceFilterCancelEvent());
 		}
 		else {
 			DDGControlVar.hasUpdatedFeed = false;
@@ -1059,7 +881,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(!mainWebView.isReadable)
 			mainWebView.reload(); 
 		else {
-			new ReadableFeedTask(currentFeedObject).execute();
+			launchReadableFeedTask(DDGControlVar.currentFeedObject);
 		}
 	}
 	
@@ -1083,10 +905,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			bangButtonExplanationPopup.dismiss();
 		}
 		
-		mDuckDuckGoContainer.sessionType = sessionType;
+		DDGControlVar.sessionType = sessionType;
 		
-		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED) {   
-			showFeed(currentFeedObject);
+		if(DDGControlVar.sessionType == SESSIONTYPE.SESSION_FEED) {   
+			showFeed(DDGControlVar.currentFeedObject);
 			return;
 		}
 				
@@ -1153,7 +975,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void searchWebTerm(String term) {
-		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_SEARCH;
+		DDGControlVar.sessionType = SESSIONTYPE.SESSION_SEARCH;
 		
 		DDGApplication.getDB().insertRecentSearch(term);
 		mDuckDuckGoContainer.historyAdapter.sync();
@@ -1188,7 +1010,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			mDuckDuckGoContainer.historyAdapter.sync();
 			String feedId = historyObject.getFeedId();
 			if(feedId != null) {
-				feedItemSelected(feedId);
+				BusProvider.getInstance().post(new FeedItemSelectedEvent(feedId));
 			}
 		}
 		else {
@@ -1205,7 +1027,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         	return;
 		}
 		
-		if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW){
+		if(DDGControlVar.currentScreen != SCREEN.SCR_WEBVIEW){
 			displayWebView();
 		}
 		
@@ -1221,10 +1043,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 					&& PreferencesManager.getReadable()
 					&& !mainWebView.isOriginalRequired()
 					&& feedObject.getArticleUrl().length() != 0) {
-				if(mDuckDuckGoContainer.currentScreen != SCREEN.SCR_WEBVIEW) {
+				if(DDGControlVar.currentScreen != SCREEN.SCR_WEBVIEW) {
 					displayWebView();
 				}
-				new ReadableFeedTask(feedObject).execute();
+				launchReadableFeedTask(feedObject);
 			}
 			else {
 				showWebUrl(feedObject.getUrl());
@@ -1243,7 +1065,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	 * main method that triggers display of Preferences screen or fragment
 	 */
     private void displaySettings() {
-       feedView.cleanImageTasks();
+       BusProvider.getInstance().post(new CleanFeedDownloadsEvent());
        Intent intent = new Intent(getBaseContext(), Preferences.class);
        startActivityForResult(intent, PREFERENCES_RESULT);
     }
@@ -1435,9 +1257,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		// the rest will arrive as SESSION_BROWSE
 		// so we should save this feed item with target redirected URL
 		if(isStorySessionOrStoryUrl()) {
-            mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
-            if(currentFeedObject != null) {
-            	new WebViewStoryMenuDialog(this, currentFeedObject, mainWebView.isReadable).show();
+            DDGControlVar.lastFeedUrl = webViewUrl;
+            if(DDGControlVar.currentFeedObject != null) {
+            	new WebViewStoryMenuDialog(this, DDGControlVar.currentFeedObject, mainWebView.isReadable).show();
             }
 		}						
 		else if(DDGUtils.isSerpUrl(webViewUrl)) {
@@ -1453,10 +1275,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 
 	private boolean isStorySessionOrStoryUrl() {
-		return mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED
+		return DDGControlVar.sessionType == SESSIONTYPE.SESSION_FEED
 				|| 
-				( mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_BROWSE 
-					&& mDuckDuckGoContainer.lastFeedUrl.equals(mainWebView.getOriginalUrl()) 
+				( DDGControlVar.sessionType == SESSIONTYPE.SESSION_BROWSE 
+					&& DDGControlVar.lastFeedUrl.equals(mainWebView.getOriginalUrl()) 
 				);
 	}
 
@@ -1492,7 +1314,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     
 	@Override
 	protected void onSaveInstanceState(Bundle outState)	{
-		AppStateManager.saveAppState(outState, mDuckDuckGoContainer, mainWebView, currentFeedObject);					
+		AppStateManager.saveAppState(outState, mDuckDuckGoContainer, mainWebView, DDGControlVar.currentFeedObject);					
 		super.onSaveInstanceState(outState);
 
 		// Save the state of the WebView
@@ -1503,11 +1325,11 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	protected void onRestoreInstanceState(Bundle savedInstanceState){
 		super.onRestoreInstanceState(savedInstanceState);
 		
-		AppStateManager.recoverAppState(savedInstanceState, mDuckDuckGoContainer, mainWebView, currentFeedObject);
+		AppStateManager.recoverAppState(savedInstanceState, mDuckDuckGoContainer, mainWebView, DDGControlVar.currentFeedObject);
 		String feedId = AppStateManager.getCurrentFeedObjectId(savedInstanceState);
 		
 		clearLeftSelect();
-		markLeftSelect(mDuckDuckGoContainer.currentScreen);
+		markLeftSelect(DDGControlVar.currentScreen);
 		
 		// Restore the state of the WebView
     	if(mDuckDuckGoContainer.webviewShowing) {
@@ -1519,7 +1341,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(feedId != null && feedId.length() != 0) {
 			FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
 			if(feedObject != null) {
-				currentFeedObject = feedObject;
+				DDGControlVar.currentFeedObject = feedObject;
 			}
 		}			
 		
@@ -1528,7 +1350,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 		
 
-		displayScreen(mDuckDuckGoContainer.currentScreen, true);
+		displayScreen(DDGControlVar.currentScreen, true);
 	}
 	
 	private void markLeftSelect(SCREEN current){
@@ -1553,43 +1375,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 					break;
 			}
 		}
-	}
-	
-	/**
-	 * Refresh feed if it's not marked as updated
-	 */
-	@SuppressLint("NewApi")
-	public void keepFeedUpdated(){
-		if(torIntegration.isOrbotRunningAccordingToSettings()){
-			if (!DDGControlVar.hasUpdatedFeed) {
-				if(DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
-					// respect user choice of empty source list: show nothing
-					BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(new ArrayList<FeedObject>(), 
-							REQUEST_TYPE.FROM_CACHE));
-				}
-				else {				
-					// cache
-					CacheFeedTask cacheTask = new CacheFeedTask(this);
-				
-					// for HTTP request
-					mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
-					
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-						cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-						mDuckDuckGoContainer.mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-					}
-					else {
-						cacheTask.execute();
-						mDuckDuckGoContainer.mainFeedTask.execute();
-					}
-				}
-			}
-		}
-		else{
-            // complete the action anyway
-            mPullRefreshFeedView.onRefreshComplete();
-        }
-	}
+	}	
     
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
@@ -1612,49 +1398,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
 	public DDGAutoCompleteTextView getSearchField() {
 		return searchField;
-	}
-
-    @Subscribe
-	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {
-		if(event.requestType == REQUEST_TYPE.FROM_NETWORK) {
-			synchronized(mDuckDuckGoContainer.feedAdapter) {
-				mDuckDuckGoContainer.feedAdapter.clear();
-			}
-		}
-
-		mDuckDuckGoContainer.feedAdapter.addData(event.feed);
-		mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
-
-		// update pull-to-refresh header to reflect task completion
-		mPullRefreshFeedView.onRefreshComplete();
-		
-		DDGControlVar.hasUpdatedFeed = true;
-
-		// do this upon filter completion
-		if(DDGControlVar.targetSource != null && m_objectId != null) {
-			int nPos = feedView.getSelectionPosById(m_objectId);
-			feedView.setSelectionFromTop(nPos,m_yOffset);
-			// mark for blink animation (as a visual cue after list update)
-			mDuckDuckGoContainer.feedAdapter.mark(m_objectId);
-		}
-
-	}
-	
-	@Subscribe
-	public void onFeedRetrieveErrorEvent(FeedRetrieveErrorEvent event) {
-		if (mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mDuckDuckGoContainer.mainFeedTask != null) {
-			new FeedRequestFailureDialogBuilder(this).show();
-		}
-
-	}
-	
-	@Subscribe
-	public void onReadabilityFeedRetrieveSuccessEvent(ReadabilityFeedRetrieveSuccessEvent event) {
-		if(event.feed.size() != 0) {
-			currentFeedObject = event.feed.get(0);
-			mDuckDuckGoContainer.lastFeedUrl = currentFeedObject.getUrl();
-			mainWebView.readableAction(currentFeedObject);
-		}
 	}
 	
 	@Subscribe
@@ -1682,14 +1425,14 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	@Subscribe
 	public void onSaveSearchEvent(SaveSearchEvent event) {
-		itemSaveSearch(event.pageData);
+		DDGUtils.itemSaveSearch(event.pageData);
 		syncAdapters();
 		Toast.makeText(this, R.string.ToastSaveSearch, Toast.LENGTH_SHORT).show();
 	}
 	
 	@Subscribe
 	public void onSaveStoryEvent(SaveStoryEvent event) {
-		itemSaveFeed(event.feedObject, null);
+		DDGUtils.itemSaveFeed(event.feedObject, null);
 		syncAdapters();
 		Toast.makeText(this, R.string.ToastSaveStory, Toast.LENGTH_SHORT).show();
 	}
@@ -1718,6 +1461,15 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Subscribe
 	public void onShareWebPageEvent(ShareWebPageEvent event) {
 		Sharer.shareWebPage(this, event.url, event.url);
+	}
+	
+	@Subscribe
+	public void onReadabilityFeedRetrieveSuccessEvent(ReadabilityFeedRetrieveSuccessEvent event) {
+		if(event.feed.size() != 0) {
+			DDGControlVar.currentFeedObject = event.feed.get(0);
+			DDGControlVar.lastFeedUrl = DDGControlVar.currentFeedObject.getUrl();
+			mainWebView.readableAction(DDGControlVar.currentFeedObject);
+		}
 	}
 	
 	@Subscribe
@@ -1760,7 +1512,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(viewPager.isLeftMenuOpen()){
             viewPager.hideMenu();
         }
-		feedItemSelected(event.feedObject);
 	}
 	
 	@Subscribe
@@ -1794,7 +1545,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Subscribe
 	public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
 		searchWebTerm(event.query);	
-		itemSaveSearch(event.query);
+		DDGUtils.itemSaveSearch(event.query);
 		syncAdapters();
 	}
 	
@@ -1849,6 +1600,12 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
 		viewFlipper.setDisplayedChild(screen.getFlipOrder());
 
+	}
+	
+	
+	@Subscribe
+	public void onSearchOrGoToUrl(SearchOrGoToUrlEvent event) {
+		searchOrGoToUrl(event.url, event.sessionType);
 	}
 	
 }

@@ -9,11 +9,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
@@ -35,12 +35,12 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	ImageCache cache;
 	private FileCache fileCache = null;
 	
-	DuckDuckGo activity;
+	Context context;
 	
 	private boolean requestFailed = false;
 	
-	public MainFeedTask(DuckDuckGo activity) {
-		this.activity = activity;
+	public MainFeedTask(Context context) {
+		this.context = context;
 		this.cache = DDGApplication.getImageCache();
 		this.fileCache = DDGApplication.getFileCache();
 	}
@@ -139,7 +139,7 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		
 		if(!DDGControlVar.isDefaultsChecked) {
 			Set<SourceInfoPair> sourceInfoPairs = initializeSources();
-			new SourceIconsTask(activity.mPullRefreshFeedView.getRefreshableView(), sourceInfoPairs).execute();
+			new SourceIconsTask(sourceInfoPairs).execute();
 			DDGControlVar.isDefaultsChecked = true;
 		}
 		

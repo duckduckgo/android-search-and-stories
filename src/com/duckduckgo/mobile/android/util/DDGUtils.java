@@ -42,6 +42,7 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
+import com.duckduckgo.mobile.android.objects.FeedObject;
 
 public final class DDGUtils {
 	
@@ -371,5 +372,31 @@ public final class DDGUtils {
         	Toast.makeText(context, R.string.ErrorActivityNotFound, Toast.LENGTH_SHORT).show();
         }
 	}
+	
+	
+	
+    /**
+     * save feed by object or by the feed id
+     * 
+     * @param feedObject
+     * @param pageFeedId
+     */
+    public static void itemSaveFeed(FeedObject feedObject, String pageFeedId) {
+    	if(feedObject != null) {
+    		if(DDGApplication.getDB().existsAllFeedById(feedObject.getId())) {
+    			DDGApplication.getDB().makeItemVisible(feedObject.getId());
+    		}
+    		else {
+    			DDGApplication.getDB().insertVisible(feedObject);
+    		}
+    	}
+    	else if(pageFeedId != null && pageFeedId.length() != 0){
+    		DDGApplication.getDB().makeItemVisible(pageFeedId);
+    	}
+    }
+    
+    public static void itemSaveSearch(String query) {
+    	DDGApplication.getDB().insertSavedSearch(query);
+    }
 	
 }

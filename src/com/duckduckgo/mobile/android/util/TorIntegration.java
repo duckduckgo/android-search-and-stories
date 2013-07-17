@@ -1,12 +1,10 @@
 package com.duckduckgo.mobile.android.util;
 
-import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import info.guardianproject.onionkit.web.WebkitProxy;
+import android.app.Activity;
+
+import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 
 /**
  * Created with IntelliJ IDEA.

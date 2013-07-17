@@ -12,6 +12,7 @@ import android.webkit.WebView;
 
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DDGWebView extends WebView {
@@ -170,9 +171,9 @@ public class DDGWebView extends WebView {
 			
 			if(prevItem != null) {
 				String prevUrl = prevItem.getUrl();
-				if(readableList.contains(prevUrl) && canDoReadability(prevUrl) && activity.currentFeedObject != null) {
+				if(readableList.contains(prevUrl) && canDoReadability(prevUrl) && DDGControlVar.currentFeedObject != null) {
 //					readableAction(activity.currentFeedObject);
-					readableActionBack(activity.currentFeedObject);
+					readableActionBack(DDGControlVar.currentFeedObject);
 				}
 				else {
 					goBack();
@@ -183,7 +184,7 @@ public class DDGWebView extends WebView {
 			}
 		}
 		else {
-			activity.displayScreen(activity.mDuckDuckGoContainer.currentScreen, true);
+			activity.displayScreen(DDGControlVar.currentScreen, true);
 		}
 	}
 	
