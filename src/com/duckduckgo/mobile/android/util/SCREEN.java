@@ -21,6 +21,8 @@ public enum SCREEN {
 				return SCR_RECENT_SEARCH;
 			case 2:
 				return SCR_SAVED_FEED;
+			case 3:
+				return SCR_WEBVIEW;
 			default:
 				return SCR_STORIES;
 		}	

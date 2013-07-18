@@ -10,10 +10,9 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
 public class AppStateManager {
 	public static  void saveAppState(SharedPreferences prefs, DuckDuckGoContainer duckDuckGoContainer,
-			DDGWebView webView, FeedObject currentFeedObject) {
+			FeedObject currentFeedObject) {
 		Editor editor = prefs.edit();
 		editor.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
-		editor.putBoolean("webviewShowing", duckDuckGoContainer.webviewShowing);
 		editor.putInt("currentScreen", DDGControlVar.currentScreen.ordinal());
 		editor.putInt("prevScreen", DDGControlVar.prevScreen.ordinal());
 		editor.putInt("sessionType", DDGControlVar.sessionType.ordinal());
@@ -24,9 +23,8 @@ public class AppStateManager {
 	}
 	
 	public static void saveAppState(Bundle bundle, DuckDuckGoContainer duckDuckGoContainer,
-			DDGWebView webView, FeedObject currentFeedObject) {
+			FeedObject currentFeedObject) {
 		bundle.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
-		bundle.putBoolean("webviewShowing", duckDuckGoContainer.webviewShowing);
 		bundle.putInt("currentScreen", DDGControlVar.currentScreen.ordinal());
 		bundle.putInt("prevScreen", DDGControlVar.prevScreen.ordinal());
 		bundle.putInt("sessionType", DDGControlVar.sessionType.ordinal());
@@ -36,7 +34,7 @@ public class AppStateManager {
 	}
 	
 	public static void recoverAppState(Object state, DuckDuckGoContainer duckDuckGoContainer,
-			DDGWebView webView, FeedObject currentFeedObject) {
+			FeedObject currentFeedObject) {
 		Bundle bundle = null; 
 		SharedPreferences prefs = null; 
 		
@@ -45,7 +43,6 @@ public class AppStateManager {
 			bundle = (Bundle) state;
 			
 			DDGControlVar.homeScreenShowing = bundle.getBoolean("homeScreenShowing");
-			duckDuckGoContainer.webviewShowing = bundle.getBoolean("webviewShowing");
 			DDGControlVar.currentScreen = SCREEN.getByCode(bundle.getInt("currentScreen"));
 			DDGControlVar.prevScreen = SCREEN.getByCode(bundle.getInt("prevScreen"));
 			DDGControlVar.sessionType = SESSIONTYPE.getByCode(bundle.getInt("sessionType"));
@@ -55,7 +52,6 @@ public class AppStateManager {
 			prefs = (SharedPreferences) state;
 			
 			DDGControlVar.homeScreenShowing = prefs.getBoolean("homeScreenShowing", false);
-			duckDuckGoContainer.webviewShowing = prefs.getBoolean("webviewShowing", false);
 			DDGControlVar.currentScreen = SCREEN.getByCode(prefs.getInt("currentScreen", SCREEN.SCR_STORIES.getCode()));
 			DDGControlVar.prevScreen = SCREEN.getByCode(prefs.getInt("prevScreen", SCREEN.SCR_STORIES.getCode()));
 			DDGControlVar.sessionType = SESSIONTYPE.getByCode(prefs.getInt("sessionType", SESSIONTYPE.SESSION_BROWSE.getCode()));

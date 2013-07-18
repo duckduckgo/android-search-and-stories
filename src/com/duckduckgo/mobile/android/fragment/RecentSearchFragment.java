@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
-import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.FontSizeCancelEvent;
 import com.duckduckgo.mobile.android.events.FontSizeChangeEvent;

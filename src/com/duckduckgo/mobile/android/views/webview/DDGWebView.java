@@ -10,7 +10,8 @@ import android.webkit.WebBackForwardList;
 import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
@@ -23,7 +24,6 @@ public class DDGWebView extends WebView {
 	private HashSet<String> readableList = new HashSet<String>();
 	
 	private DDGWebViewClient webViewClient = null;
-	private DuckDuckGo activity;
 	
 	public boolean readableBackState = false;
 	public boolean loadingReadableBack = false;
@@ -158,10 +158,6 @@ public class DDGWebView extends WebView {
 		clearReadabilityState();
 	}
 	
-	public void setParentActivity(DuckDuckGo activity) {
-		this.activity = activity;
-	}
-	
 	public void backPressAction() {		
 		WebBackForwardList history = copyBackForwardList();
 		int lastIndex = history.getCurrentIndex();
@@ -172,7 +168,6 @@ public class DDGWebView extends WebView {
 			if(prevItem != null) {
 				String prevUrl = prevItem.getUrl();
 				if(readableList.contains(prevUrl) && canDoReadability(prevUrl) && DDGControlVar.currentFeedObject != null) {
-//					readableAction(activity.currentFeedObject);
 					readableActionBack(DDGControlVar.currentFeedObject);
 				}
 				else {
@@ -184,7 +179,7 @@ public class DDGWebView extends WebView {
 			}
 		}
 		else {
-			activity.displayScreen(DDGControlVar.currentScreen, true);
+			BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.currentScreen, true));
 		}
 	}
 	

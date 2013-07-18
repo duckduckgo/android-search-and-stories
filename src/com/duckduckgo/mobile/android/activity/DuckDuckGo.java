@@ -1,10 +1,5 @@
 package com.duckduckgo.mobile.android.activity;
 
-import java.net.MalformedURLException;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.net.URLEncoder;
-
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,11 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
-import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
-import android.webkit.DownloadListener;
-import android.webkit.WebView.HitTestResult;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -48,31 +40,30 @@ import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
-import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistorySearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistoryStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.MainFeedMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewQueryMenuDialog;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
-import com.duckduckgo.mobile.android.download.ContentDownloader;
 import com.duckduckgo.mobile.android.events.CleanFeedDownloadsEvent;
+import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
 import com.duckduckgo.mobile.android.events.FeedUpdateRequestEvent;
 import com.duckduckgo.mobile.android.events.FontSizeCancelEvent;
 import com.duckduckgo.mobile.android.events.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
-import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
+import com.duckduckgo.mobile.android.events.SearchBarProgressDrawableEvent;
+import com.duckduckgo.mobile.android.events.SearchBarSearchDrawableEvent;
 import com.duckduckgo.mobile.android.events.SearchOrGoToUrlEvent;
+import com.duckduckgo.mobile.android.events.SearchWebTermEvent;
+import com.duckduckgo.mobile.android.events.ShareButtonClickEvent;
 import com.duckduckgo.mobile.android.events.SourceFilterCancelEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.WebViewBackPressEvent;
+import com.duckduckgo.mobile.android.events.WebViewResetEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteUrlInHistoryEvent;
-import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
@@ -80,21 +71,16 @@ import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEve
 import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.SavedSearchPasteEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.SuggestionPasteEvent;
-import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOffEvent;
-import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOnEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
 import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemLongClickEvent;
-import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
-import com.duckduckgo.mobile.android.objects.history.HistoryObject;
-import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
 import com.duckduckgo.mobile.android.util.AppStateManager;
 import com.duckduckgo.mobile.android.util.DDGConstants;
@@ -113,9 +99,6 @@ import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
-import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
-import com.duckduckgo.mobile.android.views.webview.DDGWebView;
-import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
 import com.duckduckgo.mobile.android.widgets.SafeViewFlipper;
 import com.squareup.otto.Subscribe;
@@ -125,9 +108,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     private KeyboardService keyboardService;
 
     public DuckDuckGoContainer mDuckDuckGoContainer;
-	
-	// keeps default User-Agent for WebView
-	public String mWebViewDefaultUA = null;
 
 	private DDGAutoCompleteTextView searchField = null;
 	private HistoryListView leftRecentView = null;
@@ -137,10 +117,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private View leftMenuView = null;
 	
 	private SafeViewFlipper viewFlipper = null;
-	
-	private HistoryListView recentSearchView = null;
-	
-	public DDGWebView mainWebView = null;
+			
 	private ImageButton homeSettingsButton = null;
 	private ImageButton bangButton = null;
 	private ImageButton shareButton = null;
@@ -163,24 +140,17 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	OnClickListener welcomeCloseListener = null;
 		
 	private SharedPreferences sharedPreferences;
-		
-	public boolean savedState = false;
-		
+				
 	private final int PREFERENCES_RESULT = 0;
 			
 	// keep prev progress in font seek bar, to make incremental changes available
 	SeekBarHint fontSizeSeekBar;
 	
-	public boolean mCleanSearchBar = false;
-	
-	private ContentDownloader contentDownloader;
-
 	private boolean shouldShowBangButtonExplanation;
 
 	private BangButtonExplanationPopup bangButtonExplanationPopup;    
     
-    public void syncAdapters() {
-    	mDuckDuckGoContainer.historyAdapter.sync();
+    public void syncAdapters() {    	
     	BusProvider.getInstance().post(new SyncAdaptersEvent());
     }
     
@@ -260,10 +230,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         		        
         setContentView(R.layout.pager);       
         
-        DDGUtils.displayStats = new DisplayStats(this);        
-        
-        if(savedInstanceState != null)
-        	savedState = true;
+        DDGUtils.displayStats = new DisplayStats(this);
         
         DDGControlVar.isAutocompleteActive = !PreferencesManager.getTurnOffAutocomplete();
         // always refresh on start
@@ -373,7 +340,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			}
 		});
         
-        if(mDuckDuckGoContainer.webviewShowing) {
+        if(DDGControlVar.webviewShowing) {
         	homeSettingsButton.setImageResource(R.drawable.home_button);
         }
         
@@ -381,7 +348,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         shareButton.setOnClickListener(this);
         
         // adjust visibility of share button after screen rotation
-        if(mDuckDuckGoContainer.webviewShowing) {
+        if(DDGControlVar.webviewShowing) {
         	shareButton.setVisibility(View.VISIBLE);
         }
         
@@ -393,7 +360,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				if(textView == getSearchField()) {
                     keyboardService.hideKeyboard(getSearchField());
 					getSearchField().dismissDropDown();
-					searchOrGoToUrl(getSearchField().getTrimmedText());
+					BusProvider.getInstance().post(new SearchOrGoToUrlEvent(getSearchField().getTrimmedText()));
 				}
 				return false;
 			}
@@ -442,7 +409,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 								getSearchField().addTextWithTrailingSpace(suggestObject.getPhrase());
 							}else{
                                 keyboardService.hideKeyboard(getSearchField());
-								searchOrGoToUrl(text);	
+								BusProvider.getInstance().post(new SearchOrGoToUrlEvent(text));
 							}
 						}
 						else if(suggestType == SuggestType.APP) {
@@ -460,7 +427,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         getSearchField().setOnTouchListener(new OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
             	if (event.getAction() == MotionEvent.ACTION_DOWN) {
-    				mCleanSearchBar = true;
+            		DDGControlVar.mCleanSearchBar = true;
                 	getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
                 }
             	
@@ -475,7 +442,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	                	stopAction();
                 	}
                 	else {
-                		reloadAction();
+                		BusProvider.getInstance().post(new ReloadEvent());
                 	}
                 }
                 return false;
@@ -493,65 +460,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
-        });
-
-        recentSearchView = (HistoryListView) contentView.findViewById(R.id.recentSearchItems);
-        recentSearchView.setDivider(null);
-        recentSearchView.setAdapter(mDuckDuckGoContainer.historyAdapter.getRecentSearchAdapter());
-        
-        // XXX !!! IMPORTANT : Removed feed view code !!!
-        
-        // NOTE: After loading url multiple times on the device, it may crash
-        // Related to android bug report 21266 - Watch this ticket for possible resolutions
-        // http://code.google.com/p/android/issues/detail?id=21266
-        // Possibly also related to CSS Transforms (bug 21305)
-        // http://code.google.com/p/android/issues/detail?id=21305
-        mainWebView = (DDGWebView) contentView.findViewById(R.id.mainWebView);
-        mainWebView.setParentActivity(DuckDuckGo.this);
-        mainWebView.getSettings().setJavaScriptEnabled(true);
-        
-        // get default User-Agent string for reuse later
-        mWebViewDefaultUA = mainWebView.getSettings().getUserAgentString();
-        
-        // read and configure web view font size
-        if(DDGControlVar.webViewTextSize == -1) {
-        	DDGControlVar.webViewTextSize = PreferencesManager.getWebviewFontSize();
-        }
-        
-        if(DDGControlVar.webViewTextSize != -1) {
-            mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
-        }
-        else {
-        	DDGControlVar.webViewTextSize = mainWebView.getSettings().getDefaultFontSize();
-        }
-        
-        mainWebView.setWebViewClient(new DDGWebViewClient(DuckDuckGo.this));            
-        mainWebView.setWebChromeClient(new DDGWebChromeClient(DuckDuckGo.this));
-        
-        mainWebView.setOnLongClickListener(new OnLongClickListener() {
-
-        	@Override
-        	public boolean onLongClick(View v) {
-        		HitTestResult hitTestResult = ((DDGWebView) v).getHitTestResult();
-        		if(hitTestResult != null && hitTestResult.getExtra() != null) {
-        			Log.i(TAG, "LONG getExtra = "+ hitTestResult.getExtra() + "\t\t Type=" + hitTestResult.getType());
-        			final String touchedUrl = hitTestResult.getExtra();
-
-                    new OpenInExternalDialogBuilder(DuckDuckGo.this, touchedUrl).show();
-        		}
-
-        		return false;
-        	}
-        });
-        
-        mainWebView.setDownloadListener(new DownloadListener() { 
-            public void onDownloadStart(String url, String userAgent, 
-                    String contentDisposition, String mimetype, 
-                    long contentLength) { 
-            	
-            	contentDownloader.downloadContent(url, mimetype);
-            } 
-        }); 
+        });                        
                         
         fontSizeLayout = (LinearLayout) contentView.findViewById(R.id.fontSeekLayout);
         
@@ -597,10 +506,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				else {
 					fontSizeSeekBar.setExtraText(String.valueOf((progress-DDGConstants.FONT_SEEKBAR_MID)));
 				}
-				DDGControlVar.fontProgress = progress;																	
-				
-				DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize + diff;
-				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
+				DDGControlVar.fontProgress = progress;
 				
 				DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize + diffPixel;
 				
@@ -655,8 +561,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
         mDuckDuckGoContainer.pageAdapter = new DDGPagerAdapter(this);
 
-        mDuckDuckGoContainer.webviewShowing = false;
-
         mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
 //    		mDuckDuckGoContainer.reloadDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.reload);
         mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
@@ -697,8 +601,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 	
 	private void resetScreenState() {		
-		clearSearchBar();
-		mainWebView.clearBrowserState();
+		clearSearchBar();		
 		BusProvider.getInstance().post(new ResetScreenStateEvent());		
 		DDGControlVar.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
@@ -706,13 +609,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private void cancelFontScaling() {
 		fontSizeSeekBar.setExtraText(null);
 		BusProvider.getInstance().post(new FontSizeCancelEvent());
-		
-		DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
+				
 		DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize;
 		mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
 		
-		mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
-		DDGControlVar.prevWebViewTextSize = -1;
 		DDGControlVar.prevLeftTitleTextSize = 0;
 		fontSizeLayout.setVisibility(View.GONE);
 		fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
@@ -807,7 +707,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			new ScanAppsTask(getApplicationContext()).execute();
 			DDGControlVar.hasAppsIndexed = true;
 		}
-		contentDownloader = new ContentDownloader(this);
+		
 		// global search intent
         Intent intent = getIntent(); 
         
@@ -815,13 +715,13 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			intent.setAction(Intent.ACTION_MAIN);
 			String query = intent.getStringExtra(SearchManager.QUERY);
 			setSearchBarText(query);
-			searchWebTerm(query);
+			BusProvider.getInstance().post(new SearchWebTermEvent(query));
 		}
 		else if(intent.getBooleanExtra("widget", false)) {
 			viewFlipper.setDisplayedChild(DDGControlVar.START_SCREEN.getFlipOrder());
             keyboardService.showKeyboard(getSearchField());
 		}
-		else if(mDuckDuckGoContainer.webviewShowing){
+		else if(DDGControlVar.webviewShowing){
 			shareButton.setVisibility(View.VISIBLE);
 			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 		}
@@ -836,7 +736,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		PreferencesManager.saveReadArticles();
 		
 		// XXX keep these for low memory conditions
-		AppStateManager.saveAppState(sharedPreferences, mDuckDuckGoContainer, mainWebView, DDGControlVar.currentFeedObject);
+		AppStateManager.saveAppState(sharedPreferences, mDuckDuckGoContainer, DDGControlVar.currentFeedObject);
 	}
 	
 	@Override
@@ -857,8 +757,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(viewPager.isLeftMenuOpen()){
 			viewPager.setCurrentItem(SCREEN.SCR_STORIES.getFlipOrder());
 		}
-		else if (mDuckDuckGoContainer.webviewShowing) {
-			mainWebView.backPressAction();
+		else if (DDGControlVar.webviewShowing) {
+			BusProvider.getInstance().post(new WebViewBackPressEvent());
 		}
 		else if(fontSizeLayout.getVisibility() != View.GONE) {
 			cancelFontScaling();
@@ -873,186 +773,18 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 	}
 	
-	public void reloadAction() {
-		mCleanSearchBar = false;
-        mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int) Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth() / 1.5), (int) Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight() / 1.5));
-		getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
-		
-		if(!mainWebView.isReadable)
-			mainWebView.reload(); 
-		else {
-			launchReadableFeedTask(DDGControlVar.currentFeedObject);
-		}
-	}
-	
 	private void stopAction() {
-		mCleanSearchBar = true;
+		DDGControlVar.mCleanSearchBar = true;
     	getSearchField().setText("");
 
     	// This makes a little (X) to clear the search bar.
     	getSearchField().setCompoundDrawables(null, null, null, null);
     	getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
-	}
-	
-	public void searchOrGoToUrl(String text) {
-		searchOrGoToUrl(text, SESSIONTYPE.SESSION_BROWSE);
-	}
-	
-	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
-        keyboardService.hideKeyboard(mainWebView);
-		savedState = false;
-		if(bangButtonExplanationPopup!=null){
-			bangButtonExplanationPopup.dismiss();
-		}
-		
-		DDGControlVar.sessionType = sessionType;
-		
-		if(DDGControlVar.sessionType == SESSIONTYPE.SESSION_FEED) {   
-			showFeed(DDGControlVar.currentFeedObject);
-			return;
-		}
-				
-		if (text.length() > 0) {						
-			URL searchAsUrl = null;
-			String modifiedText = null;
-			try {
-				searchAsUrl = new URL(text);
-				searchAsUrl.toURI();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (URISyntaxException e) {
-				e.printStackTrace();
-				searchAsUrl = null;
-			}
-			
-			if (searchAsUrl == null) {
-				modifiedText = "http://" + text;
-				try {
-					searchAsUrl = new URL(modifiedText);
-					searchAsUrl.toURI();
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-					searchAsUrl = null;
-				}
-			}			
-			
-			//We use the . check to determine if this is a single word or not... 
-			//if it doesn't contain a . plus domain (2 more characters) it won't be a URL, even if it's valid, like http://test
-			if (searchAsUrl != null) {
-				if (modifiedText != null) {
-					//Show the modified url text
-					if (modifiedText.contains(".") && modifiedText.length() > (modifiedText.indexOf(".") + 2)) {
-						showWebUrl(modifiedText);
-					} else {
-						searchWebTerm(text);
-					}
-				} else {
-					if (text.contains(".") && text.length() > (text.indexOf(".") + 2)) {
-						//Show the url text
-						showWebUrl(text);
-					} else {
-						searchWebTerm(text);
-					}
-				}
-			} else {
-				searchWebTerm(text);
-			}
-		}
-	}
-	
-	public void searchExternal(String term) {
-		String url;
-		if(DDGControlVar.regionString == "wt-wt"){	// default
-			url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term);
-		}
-		else {
-			url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
-		}
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-    	startActivity(browserIntent);
-	}
-	
-	public void searchWebTerm(String term) {
-		DDGControlVar.sessionType = SESSIONTYPE.SESSION_SEARCH;
-		
-		DDGApplication.getDB().insertRecentSearch(term);
-		mDuckDuckGoContainer.historyAdapter.sync();
-		
-		if(DDGControlVar.alwaysUseExternalBrowser) {
-			searchExternal(term);
-        	return;
-		}
-		
-		displayWebView();
-		
-		if(!savedState){
-			if(DDGControlVar.regionString.equals("wt-wt")){	// default
-				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
-			}
-			else {
-				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString));
-			}
-		}		
-	}
+	}	
 	
 	public void clearRecentSearch() {
 		mDuckDuckGoContainer.historyAdapter.sync();
-	}
-	
-	public void showHistoryObject(HistoryObject historyObject) {
-		if(historyObject.isWebSearch()) {
-			searchWebTerm(historyObject.getData());
-		}
-		else if(historyObject.isFeedObject()) {
-			DDGApplication.getDB().insertHistoryObject(historyObject);
-			mDuckDuckGoContainer.historyAdapter.sync();
-			String feedId = historyObject.getFeedId();
-			if(feedId != null) {
-				BusProvider.getInstance().post(new FeedItemSelectedEvent(feedId));
-			}
-		}
-		else {
-			DDGApplication.getDB().insertHistoryObject(historyObject);
-			mDuckDuckGoContainer.historyAdapter.sync();
-			showWebUrl(historyObject.getUrl());
-		}		
-	}
-	
-	public void showWebUrl(String url) {
-		if(DDGControlVar.alwaysUseExternalBrowser) {
-			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-			DDGUtils.execIntentIfSafe(this, browserIntent);
-        	return;
-		}
-		
-		if(DDGControlVar.currentScreen != SCREEN.SCR_WEBVIEW){
-			displayWebView();
-		}
-		
-		if(!savedState) {			
-			mainWebView.setIsReadable(false);
-			mainWebView.loadUrl(url);
-		}
-	}
-	
-	public void showFeed(FeedObject feedObject) {
-		if(!savedState) {
-			if(!DDGControlVar.alwaysUseExternalBrowser
-					&& PreferencesManager.getReadable()
-					&& !mainWebView.isOriginalRequired()
-					&& feedObject.getArticleUrl().length() != 0) {
-				if(DDGControlVar.currentScreen != SCREEN.SCR_WEBVIEW) {
-					displayWebView();
-				}
-				launchReadableFeedTask(feedObject);
-			}
-			else {
-				showWebUrl(feedObject.getUrl());
-			}
-		}
-	}
+	}	
 	
 	private void clearLeftSelect() {
 		leftHomeTextView.setSelected(false);
@@ -1108,7 +840,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	// main view visibility changes and keep feed updated
 		viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
 		shareButton.setVisibility(View.GONE);
-    	mDuckDuckGoContainer.webviewShowing = false;
+		DDGControlVar.webviewShowing = false;
 	}
 	
 	public void displayNewsFeed(){
@@ -1146,7 +878,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
     	switchFragments(SCREEN.SCR_SAVED_FEED);
     	
-    	mDuckDuckGoContainer.webviewShowing = false;
+    	DDGControlVar.webviewShowing = false;
 		clearLeftSelect();
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
@@ -1168,7 +900,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	// main view visibility changes
 		shareButton.setVisibility(View.GONE);
 		switchFragments(SCREEN.SCR_RECENT_SEARCH);
-    	mDuckDuckGoContainer.webviewShowing = false;
+		DDGControlVar.webviewShowing = false;
 		
 		clearLeftSelect();
     	    	
@@ -1184,12 +916,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		DDGControlVar.homeScreenShowing = false;
 		homeSettingsButton.setImageResource(R.drawable.home_button);	
 		
-		if (!mDuckDuckGoContainer.webviewShowing) {			
-			shareButton.setVisibility(View.VISIBLE);
-			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
-			
-			mDuckDuckGoContainer.webviewShowing = true;
-		}
+		shareButton.setVisibility(View.VISIBLE);
+		switchFragments(SCREEN.SCR_WEBVIEW);			
+		DDGControlVar.webviewShowing = true;
 	}
 	
 	public void onClick(View view) {
@@ -1197,7 +926,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			handleHomeSettingsButtonClick();
 		}
 		else if (view.equals(shareButton)) {			
-			handleShareButtonClick();
+			BusProvider.getInstance().post(new ShareButtonClickEvent());
 		}
 		else if(view.equals(leftHomeTextView)){
 			handleLeftHomeTextViewClick();
@@ -1219,13 +948,12 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private void handleLeftHomeTextViewClick() {
 		viewPager.switchPage();
 					
-		if (mDuckDuckGoContainer.webviewShowing) {
+		if (DDGControlVar.webviewShowing) {
 
 			//We are going home!
-			mainWebView.clearHistory();
-			mainWebView.clearView();
+			BusProvider.getInstance().post(new WebViewResetEvent());
 			clearSearchBar();
-			mDuckDuckGoContainer.webviewShowing = false;					
+			DDGControlVar.webviewShowing = false;					
 		}
 		
 		displayHomeScreen();
@@ -1243,45 +971,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 	}
 
-	private void handleShareButtonClick() {
-        keyboardService.hideKeyboard(getSearchField());
-
-		// XXX should make Page Options button disabled if the page is not loaded yet
-		// url = null case
-		String webViewUrl = mainWebView.getUrl();
-		if(webViewUrl == null){
-			webViewUrl = "";
-		}
-		
-		// direct displaying after feed item is clicked
-		// the rest will arrive as SESSION_BROWSE
-		// so we should save this feed item with target redirected URL
-		if(isStorySessionOrStoryUrl()) {
-            DDGControlVar.lastFeedUrl = webViewUrl;
-            if(DDGControlVar.currentFeedObject != null) {
-            	new WebViewStoryMenuDialog(this, DDGControlVar.currentFeedObject, mainWebView.isReadable).show();
-            }
-		}						
-		else if(DDGUtils.isSerpUrl(webViewUrl)) {
-            new WebViewQueryMenuDialog(this, webViewUrl).show();
-		}
-		else {
-			new WebViewWebPageMenuDialog(this, webViewUrl).show();
-		}
-	}
-	
-	public void launchReadableFeedTask(FeedObject feedObject) {
-		new ReadableFeedTask(feedObject).execute();
-	}
-
-	private boolean isStorySessionOrStoryUrl() {
-		return DDGControlVar.sessionType == SESSIONTYPE.SESSION_FEED
-				|| 
-				( DDGControlVar.sessionType == SESSIONTYPE.SESSION_BROWSE 
-					&& DDGControlVar.lastFeedUrl.equals(mainWebView.getOriginalUrl()) 
-				);
-	}
-
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -1294,7 +983,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				}
                 boolean startOrbotCheck = data.getBooleanExtra("startOrbotCheck",false);
                 if(startOrbotCheck){
-                    searchOrGoToUrl(getString(R.string.OrbotCheckSite));
+                    BusProvider.getInstance().post(new SearchOrGoToUrlEvent(getString(R.string.OrbotCheckSite)));
                 }
                 boolean switchTheme = data.getBooleanExtra("switchTheme", false);
                 if(switchTheme){
@@ -1314,27 +1003,19 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     
 	@Override
 	protected void onSaveInstanceState(Bundle outState)	{
-		AppStateManager.saveAppState(outState, mDuckDuckGoContainer, mainWebView, DDGControlVar.currentFeedObject);					
+		AppStateManager.saveAppState(outState, mDuckDuckGoContainer, DDGControlVar.currentFeedObject);					
 		super.onSaveInstanceState(outState);
-
-		// Save the state of the WebView
-		mainWebView.saveState(outState);
 	}
 	
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState){
 		super.onRestoreInstanceState(savedInstanceState);
 		
-		AppStateManager.recoverAppState(savedInstanceState, mDuckDuckGoContainer, mainWebView, DDGControlVar.currentFeedObject);
+		AppStateManager.recoverAppState(savedInstanceState, mDuckDuckGoContainer, DDGControlVar.currentFeedObject);
 		String feedId = AppStateManager.getCurrentFeedObjectId(savedInstanceState);
 		
 		clearLeftSelect();
-		markLeftSelect(DDGControlVar.currentScreen);
-		
-		// Restore the state of the WebView
-    	if(mDuckDuckGoContainer.webviewShowing) {
-    		mainWebView.restoreState(savedInstanceState);
-    	}
+		markLeftSelect(DDGControlVar.currentScreen);		
 		
 		Log.v(TAG, "feedId: " + feedId);
 		
@@ -1345,7 +1026,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			}
 		}			
 		
-		if(mDuckDuckGoContainer.webviewShowing) {
+		if(DDGControlVar.webviewShowing) {
 			return;
 		}
 		
@@ -1357,7 +1038,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(DDGControlVar.START_SCREEN == current) {
 			leftHomeTextView.setSelected(true);
 			
-			if(mDuckDuckGoContainer.webviewShowing){
+			if(DDGControlVar.webviewShowing){
 	    		homeSettingsButton.setImageResource(R.drawable.home_button);
 			}
 			else {
@@ -1420,7 +1101,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	@Subscribe
 	public void onReloadEvent(ReloadEvent event) {
-		reloadAction();
+		DDGControlVar.mCleanSearchBar = false;
+        mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int) Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth() / 1.5), (int) Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight() / 1.5));
+		getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : mDuckDuckGoContainer.stopDrawable, null);
 	}
 	
 	@Subscribe
@@ -1435,12 +1118,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		DDGUtils.itemSaveFeed(event.feedObject, null);
 		syncAdapters();
 		Toast.makeText(this, R.string.ToastSaveStory, Toast.LENGTH_SHORT).show();
-	}
-	
-	@Subscribe
-	public void onSearchExternalEvent(SearchExternalEvent event) {
-		searchExternal(event.query);
-	}
+	}	
 	
 	@Subscribe
 	public void onSendToExternalBrowserEvent(SendToExternalBrowserEvent event) {
@@ -1461,27 +1139,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Subscribe
 	public void onShareWebPageEvent(ShareWebPageEvent event) {
 		Sharer.shareWebPage(this, event.url, event.url);
-	}
-	
-	@Subscribe
-	public void onReadabilityFeedRetrieveSuccessEvent(ReadabilityFeedRetrieveSuccessEvent event) {
-		if(event.feed.size() != 0) {
-			DDGControlVar.currentFeedObject = event.feed.get(0);
-			DDGControlVar.lastFeedUrl = DDGControlVar.currentFeedObject.getUrl();
-			mainWebView.readableAction(DDGControlVar.currentFeedObject);
-		}
-	}
-	
-	@Subscribe
-	public void onTurnReadabilityOffEvent(TurnReadabilityOffEvent event) {
-		mainWebView.forceOriginal();
-		showWebUrl(event.url);
-	}
-	
-	@Subscribe
-	public void onTurnReadabilityOnEvent(TurnReadabilityOnEvent event) {
-		launchReadableFeedTask(event.feedObject);
-	}
+	}	
 	
 	@Subscribe
 	public void onUnSaveSearchEvent(UnSaveSearchEvent event) {
@@ -1525,14 +1183,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     }
 	
 	@Subscribe
-	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
-		if(viewPager.isLeftMenuOpen()){
-            viewPager.hideMenu();
-        }
-		showHistoryObject(event.historyObject);
-	}
-	
-	@Subscribe
 	public void onHistoryItemLongClick(HistoryItemLongClickEvent event) {
         if(event.historyObject.isFeedObject()) {
             new HistoryStoryMenuDialog(DuckDuckGo.this, event.historyObject).show();
@@ -1540,13 +1190,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         else{
             new HistorySearchMenuDialog(DuckDuckGo.this, event.historyObject).show();
         }
-	}
-	
-	@Subscribe
-	public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
-		searchWebTerm(event.query);	
-		DDGUtils.itemSaveSearch(event.query);
-		syncAdapters();
 	}
 	
 	@Subscribe
@@ -1600,12 +1243,37 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
 		viewFlipper.setDisplayedChild(screen.getFlipOrder());
 
-	}
-	
+	}		
 	
 	@Subscribe
 	public void onSearchOrGoToUrl(SearchOrGoToUrlEvent event) {
-		searchOrGoToUrl(event.url, event.sessionType);
+		if(DDGControlVar.currentScreen != SCREEN.SCR_WEBVIEW) {
+			displayWebView();
+		}
+		
+		if(bangButtonExplanationPopup!=null){
+			bangButtonExplanationPopup.dismiss();
+		}
 	}
 	
+	@Subscribe
+	public void onSyncAdapters(SyncAdaptersEvent event) {
+		mDuckDuckGoContainer.historyAdapter.sync();
+	}
+	
+	@Subscribe
+	public void onDisplayScreen(DisplayScreenEvent event) {
+		displayScreen(event.screenToDisplay, event.clean);
+	}
+	
+	@Subscribe
+	public void onSearchBarSearchDrawable(SearchBarSearchDrawableEvent event) {
+		getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
+	}
+	
+	@Subscribe
+	public void onSearchBarProgressDrawable(SearchBarProgressDrawableEvent event) {
+		mDuckDuckGoContainer.progressDrawable.setLevel(event.level);
+		getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.progressDrawable);
+	}
 }

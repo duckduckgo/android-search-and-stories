@@ -18,8 +18,11 @@ import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.SSLCertificateDialog;
+import com.duckduckgo.mobile.android.events.SearchBarSearchDrawableEvent;
+import com.duckduckgo.mobile.android.events.SearchBarSetTextEvent;
+import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -28,10 +31,10 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 public class DDGWebViewClient extends WebViewClient {
 	private boolean mLoaded = false;
 	
-	DuckDuckGo activity;
+	WebFragment fragment;
 	
-	public DDGWebViewClient(DuckDuckGo activity) {
-		this.activity = activity;
+	public DDGWebViewClient(WebFragment fragment) {
+		this.fragment = fragment;
 
 	}
 	 	
@@ -42,17 +45,17 @@ public class DDGWebViewClient extends WebViewClient {
 	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
 		// Log.i(TAG, "shouldOverrideUrl  " + url);
 		
-		if(!activity.savedState && mLoaded) {			
+		if(!fragment.savedState && mLoaded) {			
 			// handle mailto: and tel: links with native apps
 			if(url.startsWith("mailto:")){
                 MailTo mt = MailTo.parse(url);
                 Intent i = DDGUtils.newEmailIntent(mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
-                activity.startActivity(i);
+                fragment.startActivity(i);
                 return true;
             }
 			else if(url.startsWith("tel:")){
                 Intent i = DDGUtils.newTelIntent(url);
-                activity.startActivity(i);
+                fragment.startActivity(i);
                 return true;
 			}
 			else if(url.startsWith("file:///android_asset/webkit/")){
@@ -61,7 +64,7 @@ public class DDGWebViewClient extends WebViewClient {
 			else if(!(url.startsWith("http:") || url.startsWith("https:"))) {
 				// custom handling, there can be a related app
 				Intent customIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-				DDGUtils.execIntentIfSafe(activity, customIntent);
+				DDGUtils.execIntentIfSafe(fragment.getActivity(), customIntent);
 				return true;
 			}
 			else {
@@ -129,26 +132,26 @@ public class DDGWebViewClient extends WebViewClient {
     						text = text.substring(0, text.indexOf("&"));
     					}
     					String realText = URLDecoder.decode(text);
-    					activity.setSearchBarText(realText);
+    					 BusProvider.getInstance().post(new SearchBarSetTextEvent(realText));
 					}
 					else if(path != null && !path.equals("/")){
     					String text = path.substring(path.lastIndexOf("/") + 1).replace("_", " ");
-    					activity.setSearchBarText(text);
+    					 BusProvider.getInstance().post(new SearchBarSetTextEvent(text));
     				}
 					else {
-						activity.setSearchBarText(url);
+						 BusProvider.getInstance().post(new SearchBarSetTextEvent(url));
 					}
 				}
 				else {
-					activity.setSearchBarText(url);
+					 BusProvider.getInstance().post(new SearchBarSetTextEvent(url));
 				}
 			} else {
 				//Just in case...
-				activity.setSearchBarText(url);
+				 BusProvider.getInstance().post(new SearchBarSetTextEvent(url));
 			}
 		} else {
 			//This isn't duckduck go...
-			view.getSettings().setUserAgentString(activity.mWebViewDefaultUA);
+			view.getSettings().setUserAgentString(fragment.mWebViewDefaultUA);
 			// This is a bit strange, but necessary to load Twitter in the app
 			//TODO: Figure out a better way, it has something to do with JS with errors
 			if (url.contains("twitter.com")) {
@@ -168,7 +171,7 @@ public class DDGWebViewClient extends WebViewClient {
     	        view.getSettings().setDisplayZoomControls(false);
 	        }
 	        
-	        activity.setSearchBarText(url);
+	        BusProvider.getInstance().post(new SearchBarSetTextEvent(url));
 		}
 	}
 	
@@ -177,13 +180,13 @@ public class DDGWebViewClient extends WebViewClient {
 		
 		mLoaded = true;
 		
-		activity.mCleanSearchBar = false;
+		DDGControlVar.mCleanSearchBar = false;
 		
 		if(view.getVisibility() != View.VISIBLE) {
 			return;
 		}
 		
-		activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.searchFieldDrawable);
+		BusProvider.getInstance().post(new SearchBarSearchDrawableEvent());
 		
 //		// This makes a little (X) to clear the search bar.
 //		mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));

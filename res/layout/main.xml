@@ -30,9 +30,12 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent">
         
-        <com.duckduckgo.mobile.android.views.webview.DDGWebView android:layout_width="match_parent"
-            	 android:layout_height="match_parent"
-            	 android:id="@+id/mainWebView" />
+        <fragment
+        android:id="@+id/web_fragment"
+        android:name="com.duckduckgo.mobile.android.fragment.WebFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/web_fragment_view" />
         
         <fragment
         android:id="@+id/feed_fragment"

@@ -9,11 +9,15 @@ public class DDGControlVar {
 	
 	public static SCREEN START_SCREEN = SCREEN.SCR_STORIES;	// stories
 	
+	public static boolean mCleanSearchBar = false;
+	
 	public static String lastFeedUrl = "";	
 	public static SCREEN currentScreen = SCREEN.SCR_STORIES;
 	public static SCREEN prevScreen = SCREEN.SCR_STORIES;
 	public static FeedObject currentFeedObject = null;
 	public static SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;
+	
+	public static boolean webviewShowing = false;
 	
 	public static boolean hasUpdatedFeed = false;
 	public static String regionString = "wt-wt";	// world traveler (none) as default

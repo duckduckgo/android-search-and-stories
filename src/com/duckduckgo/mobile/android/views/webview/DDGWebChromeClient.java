@@ -1,6 +1,10 @@
 package com.duckduckgo.mobile.android.views.webview;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.SearchBarProgressDrawableEvent;
+import com.duckduckgo.mobile.android.events.SearchBarSearchDrawableEvent;
+import com.duckduckgo.mobile.android.fragment.WebFragment;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -8,10 +12,10 @@ import android.webkit.WebView;
 
 public class DDGWebChromeClient extends WebChromeClient {
 	
-	DuckDuckGo activity;
+	WebFragment fragment;
 	
-	public DDGWebChromeClient(DuckDuckGo activity) {
-		this.activity = activity;
+	public DDGWebChromeClient(WebFragment fragment) {
+		this.fragment = fragment;
 	}
 	
 	@Override
@@ -23,12 +27,11 @@ public class DDGWebChromeClient extends WebChromeClient {
 		}
 		
 		if(newProgress == 100){
-			activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.searchFieldDrawable);        			
+			BusProvider.getInstance().post(new SearchBarSearchDrawableEvent());        			
 		}
 		else {
-			if(!activity.mCleanSearchBar) {
-				activity.mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
-				activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.progressDrawable);
+			if(!DDGControlVar.mCleanSearchBar) {
+				BusProvider.getInstance().post(new SearchBarProgressDrawableEvent(newProgress*100));
 			}
 		}
 

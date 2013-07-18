@@ -10,9 +10,7 @@ import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 
-public class DuckDuckGoContainer {
-	
-	public boolean webviewShowing = false;
+public class DuckDuckGoContainer {		
 	
 	public Drawable progressDrawable, searchFieldDrawable;
 	public Drawable stopDrawable;
