@@ -24,6 +24,7 @@ public class SavedMainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+    	setRetainInstance(true);
         contentView = inflater.inflate(R.layout.tab_saved_view, container, false);
         initialiseTabHost();
 		if(savedInstanceState != null) {

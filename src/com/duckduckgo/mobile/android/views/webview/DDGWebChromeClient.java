@@ -1,8 +1,8 @@
 package com.duckduckgo.mobile.android.views.webview;
 
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.SearchBarProgressDrawableEvent;
-import com.duckduckgo.mobile.android.events.SearchBarSearchDrawableEvent;
+import com.duckduckgo.mobile.android.events.searchbarEvents.SearchBarProgressDrawableEvent;
+import com.duckduckgo.mobile.android.events.searchbarEvents.SearchBarSearchDrawableEvent;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 

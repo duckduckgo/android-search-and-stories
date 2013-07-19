@@ -24,9 +24,6 @@ import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.CleanFeedDownloadsEvent;
-import com.duckduckgo.mobile.android.events.FeedUpdateRequestEvent;
-import com.duckduckgo.mobile.android.events.FontSizeCancelEvent;
-import com.duckduckgo.mobile.android.events.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
 import com.duckduckgo.mobile.android.events.SearchOrGoToUrlEvent;
 import com.duckduckgo.mobile.android.events.SourceFilterCancelEvent;
@@ -35,6 +32,9 @@ import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveErrorEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedUpdateRequestEvent;
+import com.duckduckgo.mobile.android.events.fontEvents.FontSizeCancelEvent;
+import com.duckduckgo.mobile.android.events.fontEvents.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
@@ -105,6 +105,7 @@ public class FeedFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+    	setRetainInstance(true);
     	contentView = inflater.inflate(R.layout.feed_fragment_view, container, false);
 		initialise();
         return contentView;

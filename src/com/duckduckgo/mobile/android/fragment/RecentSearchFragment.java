@@ -11,9 +11,9 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.HistoryCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.FontSizeCancelEvent;
-import com.duckduckgo.mobile.android.events.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.fontEvents.FontSizeCancelEvent;
+import com.duckduckgo.mobile.android.events.fontEvents.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.squareup.otto.Subscribe;
@@ -35,6 +35,7 @@ public class RecentSearchFragment extends Fragment {
 	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+		setRetainInstance(true);
         contentView = inflater.inflate(R.layout.recentsearch, container, false);
 		initialise();
         return contentView;

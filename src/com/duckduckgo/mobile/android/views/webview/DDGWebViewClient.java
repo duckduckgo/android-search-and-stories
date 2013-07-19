@@ -20,8 +20,8 @@ import android.webkit.WebViewClient;
 
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.SSLCertificateDialog;
-import com.duckduckgo.mobile.android.events.SearchBarSearchDrawableEvent;
-import com.duckduckgo.mobile.android.events.SearchBarSetTextEvent;
+import com.duckduckgo.mobile.android.events.searchbarEvents.SearchBarSearchDrawableEvent;
+import com.duckduckgo.mobile.android.events.searchbarEvents.SearchBarSetTextEvent;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;

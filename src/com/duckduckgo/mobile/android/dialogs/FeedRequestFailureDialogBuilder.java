@@ -8,7 +8,7 @@ import android.net.Uri;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.FeedUpdateRequestEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedUpdateRequestEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 
