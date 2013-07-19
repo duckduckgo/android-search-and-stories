@@ -27,7 +27,7 @@ public class SavedResultTabFragment extends ListFragment {
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
-		setRetainInstance(true);
+//		setRetainInstance(true);
 		BusProvider.getInstance().register(this);
 		return fragmentLayout;
 	}

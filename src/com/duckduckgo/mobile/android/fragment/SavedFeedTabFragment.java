@@ -29,7 +29,7 @@ public class SavedFeedTabFragment extends ListFragment {
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedfeed, container, false);
-		setRetainInstance(true);
+//		setRetainInstance(true);
 		BusProvider.getInstance().register(this);
 		return fragmentLayout;
 	}

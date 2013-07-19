@@ -23,7 +23,7 @@ public class KeyboardService {
         }, 200);
     }
 
-    void showKeyboard(final View view) {
+    public void showKeyboard(final View view) {
         view.requestFocus();
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 

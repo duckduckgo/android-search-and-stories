@@ -17,7 +17,7 @@ public class SavedMainFragment extends Fragment {
 	
 	private void initialiseTabHost() {
 		savedTabHost = (TabHostExt) contentView.findViewById(R.id.saved_tab_host_ext);
-		savedTabHost.setup(getActivity(), getFragmentManager(), R.id.realtabcontent);
+		savedTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
 		savedTabHost.addDefaultTabs();
 	}
 	

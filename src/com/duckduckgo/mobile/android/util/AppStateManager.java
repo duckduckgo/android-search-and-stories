@@ -6,7 +6,6 @@ import android.os.Bundle;
 
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.objects.FeedObject;
-import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
 public class AppStateManager {
 	public static  void saveAppState(SharedPreferences prefs, DuckDuckGoContainer duckDuckGoContainer,

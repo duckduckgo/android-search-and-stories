@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.duckduckgo.mobile.android.R;
@@ -23,8 +22,8 @@ public class WelcomeScreenView extends LinearLayout {
 		initView(context);
 	}
 
-	public WelcomeScreenView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
+	public WelcomeScreenView(Context context, AttributeSet attrs) {
+		super(context, attrs);
 		this.context = context;
 		initView(context);	
 	}

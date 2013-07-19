@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.duckduckgo.mobile.android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.duckduckgo.mobile.android.DuckDuckGoActivity"
     android:layout_width="fill_parent"
