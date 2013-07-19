@@ -16,9 +16,7 @@ public class DDGControlVar {
 	public static SCREEN prevScreen = SCREEN.SCR_STORIES;
 	public static FeedObject currentFeedObject = null;
 	public static SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;
-	
-	public static boolean webviewShowing = false;
-	
+		
 	public static boolean hasUpdatedFeed = false;
 	public static String regionString = "wt-wt";	// world traveler (none) as default
 	

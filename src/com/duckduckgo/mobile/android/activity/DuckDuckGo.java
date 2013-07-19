@@ -55,6 +55,7 @@ import com.duckduckgo.mobile.android.events.ReloadEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
 import com.duckduckgo.mobile.android.events.SearchBarProgressDrawableEvent;
 import com.duckduckgo.mobile.android.events.SearchBarSearchDrawableEvent;
+import com.duckduckgo.mobile.android.events.SearchBarSetTextEvent;
 import com.duckduckgo.mobile.android.events.SearchOrGoToUrlEvent;
 import com.duckduckgo.mobile.android.events.SearchWebTermEvent;
 import com.duckduckgo.mobile.android.events.ShareButtonClickEvent;
@@ -340,7 +341,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			}
 		});
         
-        if(DDGControlVar.webviewShowing) {
+        if(isWebViewShowing()) {
         	homeSettingsButton.setImageResource(R.drawable.home_button);
         }
         
@@ -348,7 +349,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         shareButton.setOnClickListener(this);
         
         // adjust visibility of share button after screen rotation
-        if(DDGControlVar.webviewShowing) {
+        if(isWebViewShowing()) {
         	shareButton.setVisibility(View.VISIBLE);
         }
         
@@ -721,7 +722,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			viewFlipper.setDisplayedChild(DDGControlVar.START_SCREEN.getFlipOrder());
             keyboardService.showKeyboard(getSearchField());
 		}
-		else if(DDGControlVar.webviewShowing){
+		else if(isWebViewShowing()){
 			shareButton.setVisibility(View.VISIBLE);
 			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 		}
@@ -757,7 +758,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(viewPager.isLeftMenuOpen()){
 			viewPager.setCurrentItem(SCREEN.SCR_STORIES.getFlipOrder());
 		}
-		else if (DDGControlVar.webviewShowing) {
+		else if (isWebViewShowing()) {
 			BusProvider.getInstance().post(new WebViewBackPressEvent());
 		}
 		else if(fontSizeLayout.getVisibility() != View.GONE) {
@@ -837,10 +838,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	 * Method that switches visibility of views for Home or Saved feed
 	 */
 	private void displayFeedCore() {		
-    	// main view visibility changes and keep feed updated
-		viewFlipper.setDisplayedChild(SCREEN.SCR_STORIES.getFlipOrder());
+		switchFragments(SCREEN.SCR_STORIES);
 		shareButton.setVisibility(View.GONE);
-		DDGControlVar.webviewShowing = false;
 	}
 	
 	public void displayNewsFeed(){
@@ -878,7 +877,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
     	switchFragments(SCREEN.SCR_SAVED_FEED);
     	
-    	DDGControlVar.webviewShowing = false;
 		clearLeftSelect();
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
@@ -900,7 +898,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	// main view visibility changes
 		shareButton.setVisibility(View.GONE);
 		switchFragments(SCREEN.SCR_RECENT_SEARCH);
-		DDGControlVar.webviewShowing = false;
 		
 		clearLeftSelect();
     	    	
@@ -918,7 +915,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
 		shareButton.setVisibility(View.VISIBLE);
 		switchFragments(SCREEN.SCR_WEBVIEW);			
-		DDGControlVar.webviewShowing = true;
 	}
 	
 	public void onClick(View view) {
@@ -948,12 +944,11 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private void handleLeftHomeTextViewClick() {
 		viewPager.switchPage();
 					
-		if (DDGControlVar.webviewShowing) {
+		if (isWebViewShowing()) {
 
 			//We are going home!
 			BusProvider.getInstance().post(new WebViewResetEvent());
 			clearSearchBar();
-			DDGControlVar.webviewShowing = false;					
 		}
 		
 		displayHomeScreen();
@@ -1026,7 +1021,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			}
 		}			
 		
-		if(DDGControlVar.webviewShowing) {
+		if(isWebViewShowing()) {
 			return;
 		}
 		
@@ -1038,7 +1033,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(DDGControlVar.START_SCREEN == current) {
 			leftHomeTextView.setSelected(true);
 			
-			if(DDGControlVar.webviewShowing){
+			if(isWebViewShowing()){
 	    		homeSettingsButton.setImageResource(R.drawable.home_button);
 			}
 			else {
@@ -1275,5 +1270,17 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public void onSearchBarProgressDrawable(SearchBarProgressDrawableEvent event) {
 		mDuckDuckGoContainer.progressDrawable.setLevel(event.level);
 		getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.progressDrawable);
+	}
+	
+	@Subscribe
+	public void onSearchBarSetText(SearchBarSetTextEvent event) {
+		setSearchBarText(event.text);
+	}
+	
+	private boolean isWebViewShowing() {
+		int no = viewFlipper.getDisplayedChild();
+		if(no == SCREEN.SCR_WEBVIEW.getFlipOrder())
+			return true;
+		return false;
 	}
 }
