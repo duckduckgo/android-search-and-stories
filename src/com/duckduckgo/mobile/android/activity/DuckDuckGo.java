@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -36,7 +35,6 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
-import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
@@ -48,6 +46,7 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
 import com.duckduckgo.mobile.android.events.CleanFeedDownloadsEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.RecentHeaderClickEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
 import com.duckduckgo.mobile.android.events.SearchOrGoToUrlEvent;
@@ -55,6 +54,7 @@ import com.duckduckgo.mobile.android.events.SearchWebTermEvent;
 import com.duckduckgo.mobile.android.events.ShareButtonClickEvent;
 import com.duckduckgo.mobile.android.events.SourceFilterCancelEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.UpdateVisibilityEvent;
 import com.duckduckgo.mobile.android.events.WebViewBackPressEvent;
 import com.duckduckgo.mobile.android.events.WebViewResetEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEvent;
@@ -66,6 +66,10 @@ import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEven
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.fontEvents.FontSizeCancelEvent;
 import com.duckduckgo.mobile.android.events.fontEvents.FontSizeChangeEvent;
+import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftHomeButtonClickEvent;
+import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftSavedButtonClickEvent;
+import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftSettingsButtonClickEvent;
+import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftStoriesButtonClickEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.SavedSearchPasteEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.SuggestionPasteEvent;
@@ -95,7 +99,6 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
-import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
@@ -111,7 +114,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     public DuckDuckGoContainer mDuckDuckGoContainer;
 
 	private DDGAutoCompleteTextView searchField = null;
-	private HistoryListView leftRecentView = null;
 		
 	private DDGViewPager viewPager;
 	private View contentView = null;
@@ -121,17 +123,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			
 	private ImageButton homeSettingsButton = null;
 	private ImageButton bangButton = null;
-	private ImageButton shareButton = null;
-	
-	private TextView leftHomeTextView = null;
-	private TextView leftStoriesTextView = null;
-	private TextView leftSavedTextView = null;
-	private TextView leftSettingsTextView = null;
-	
-	private LinearLayout leftHomeButtonLayout = null;
-	private LinearLayout leftStoriesButtonLayout = null;
-	private LinearLayout leftSavedButtonLayout = null;
-	private LinearLayout leftSettingsButtonLayout = null;
+	private ImageButton shareButton = null;	
 	
 	// font scaling
 	private LinearLayout fontSizeLayout = null;
@@ -256,80 +248,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         leftMenuView = mDuckDuckGoContainer.pageAdapter.getPageView(0);
         contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);    
         
-        viewFlipper = (SafeViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);
-    	    	
-    	leftHomeTextView = (TextView) leftMenuView.findViewById(R.id.LeftHomeTextView);
-    	leftStoriesTextView = (TextView) leftMenuView.findViewById(R.id.LeftStoriesTextView);
-    	leftSavedTextView = (TextView) leftMenuView.findViewById(R.id.LeftSavedTextView);
-    	leftSettingsTextView = (TextView) leftMenuView.findViewById(R.id.LeftSettingsTextView);
-    	
-    	leftHomeTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
-    	leftStoriesTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
-    	leftSavedTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
-    	leftSettingsTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);    	
-    	
-    	
-    	TypedValue tmpTypedValue = new TypedValue(); 
-    	getTheme().resolveAttribute(R.attr.leftButtonTextSize, tmpTypedValue, true);
-    	// XXX getDimension returns in PIXELS !
-    	float defLeftTitleTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
-    	DDGControlVar.leftTitleTextSize = PreferencesManager.getLeftTitleTextSize(defLeftTitleTextSize);
-    	
-    	leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize); 
-    	    	
-    	leftHomeButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftHomeButtonLayout);
-    	leftStoriesButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftStoriesButtonLayout);
-    	leftSavedButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftSavedButtonLayout);
-    	leftSettingsButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftSettingsButtonLayout);
-    	
-    	
-    	int pixelValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
-                (float) 20.0, getResources().getDisplayMetrics());
-    	
-    	TypedValue typedValue = new TypedValue(); 
-    	getTheme().resolveAttribute(R.attr.leftDrawableHome, typedValue, true);
-    	
-    	Drawable xt = getResources().getDrawable(typedValue.resourceId);
-        xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftHomeTextView.setCompoundDrawables(xt, null, null, null);
-        
-        getTheme().resolveAttribute(R.attr.leftDrawableStories, typedValue, true);
-    	xt = getResources().getDrawable(typedValue.resourceId);
-        xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftStoriesTextView.setCompoundDrawables(xt, null, null, null);        
-        
-        getTheme().resolveAttribute(R.attr.leftDrawableSaved, typedValue, true);
-    	xt = getResources().getDrawable(typedValue.resourceId);
-        xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftSavedTextView.setCompoundDrawables(xt, null, null, null);
-        
-        getTheme().resolveAttribute(R.attr.leftDrawableSettings, typedValue, true);
-    	xt = getResources().getDrawable(typedValue.resourceId);
-        xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftSettingsTextView.setCompoundDrawables(xt, null, null, null);
-    	
-    	leftHomeTextView.setOnClickListener(this);
-    	leftStoriesTextView.setOnClickListener(this);
-    	leftSavedTextView.setOnClickListener(this);
-    	leftSettingsTextView.setOnClickListener(this);
-    	
-    	leftRecentView = (HistoryListView) leftMenuView.findViewById(R.id.LeftRecentView);
-		
-		leftRecentView.setDivider(null);
-    	leftRecentView.setAdapter(mDuckDuckGoContainer.historyAdapter);
-    	
-    	// "Save Recents" not enabled notification click listener
-    	leftRecentView.setOnHeaderClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				viewPager.switchPage();		
-				displaySettings();
-			}
-		});
+        viewFlipper = (SafeViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);    	    	
         
         homeSettingsButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
         homeSettingsButton.setOnClickListener(this);
@@ -467,6 +386,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         
         fontSizeSeekBar = (SeekBarHint) contentView.findViewById(R.id.fontSizeSeekBar);
         
+        TypedValue tmpTypedValue = new TypedValue();
     	getTheme().resolveAttribute(R.attr.mainTextSize, tmpTypedValue, true);
     	float defMainTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
     	DDGControlVar.mainTextSize = PreferencesManager.getMainFontSize(defMainTextSize);
@@ -507,19 +427,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				else {
 					fontSizeSeekBar.setExtraText(String.valueOf((progress-DDGConstants.FONT_SEEKBAR_MID)));
 				}
-				DDGControlVar.fontProgress = progress;
-				
-				DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize + diffPixel;
-				
-				mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
+				DDGControlVar.fontProgress = progress;				
 				
 				BusProvider.getInstance().post(new FontSizeChangeEvent(diff, diffPixel));
-				
-				leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-		    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-		    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-		    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-		    	leftMenuView.invalidate();
 			}
 		});
         
@@ -567,8 +477,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
         mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
         mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
-
-        mDuckDuckGoContainer.historyAdapter = new MultiHistoryAdapter(this);
         
         mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
     }
@@ -609,20 +517,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	private void cancelFontScaling() {
 		fontSizeSeekBar.setExtraText(null);
-		BusProvider.getInstance().post(new FontSizeCancelEvent());
-				
-		DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize;
-		mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
-		
-		DDGControlVar.prevLeftTitleTextSize = 0;
+		BusProvider.getInstance().post(new FontSizeCancelEvent());				
 		fontSizeLayout.setVisibility(View.GONE);
-		fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
-		
-		leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftMenuView.invalidate();
+		fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);				
 	}
 	
 	/**
@@ -656,10 +553,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 					break;
 			}
 			
-			if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH &&
-					!screenToDisplay.equals(SCREEN.SCR_RECENT_SEARCH)){
-	        	leftRecentView.setVisibility(View.VISIBLE);
-			}
+			BusProvider.getInstance().post(new UpdateVisibilityEvent(screenToDisplay));
 	        
 			DDGControlVar.prevScreen = DDGControlVar.currentScreen;
 			DDGControlVar.currentScreen = screenToDisplay;	        			
@@ -781,17 +675,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	// This makes a little (X) to clear the search bar.
     	getSearchField().setCompoundDrawables(null, null, null, null);
     	getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
-	}	
-	
-	public void clearRecentSearch() {
-		mDuckDuckGoContainer.historyAdapter.sync();
-	}	
-	
-	private void clearLeftSelect() {
-		leftHomeTextView.setSelected(false);
-		leftSavedTextView.setSelected(false);
-		leftSettingsTextView.setSelected(false);
-		leftStoriesTextView.setSelected(false);
 	}
 	
 	/**
@@ -803,37 +686,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
        startActivityForResult(intent, PREFERENCES_RESULT);
     }
 
-	/** 
-	 * change button visibility in left-side navigation menu
-	 * according to screen
-	 */
-	private void changeLeftMenuVisibility() {
-		// stories button
-		if(DDGControlVar.START_SCREEN != SCREEN.SCR_STORIES) {
-			leftStoriesButtonLayout.setVisibility(View.VISIBLE);
-		}
-		else {
-	    	leftStoriesButtonLayout.setVisibility(View.GONE);
-		}
-		
-		// saved button
-		if(DDGControlVar.START_SCREEN != SCREEN.SCR_SAVED_FEED) {
-			leftSavedButtonLayout.setVisibility(View.VISIBLE);
-		}
-		else {
-			leftSavedButtonLayout.setVisibility(View.GONE);
-		}
-    	
-		// recent search button
-    	if(DDGControlVar.START_SCREEN != SCREEN.SCR_RECENT_SEARCH) {
-        	leftRecentView.setVisibility(View.VISIBLE);
-    	}
-    	else {
-        	leftRecentView.setVisibility(View.GONE);
-    	}
-	}
-
-
 	/**
 	 * Method that switches visibility of views for Home or Saved feed
 	 */
@@ -843,69 +695,28 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void displayNewsFeed(){
-		resetScreenState();
-		
-		// left side menu visibility changes
-		changeLeftMenuVisibility();
-    	
-    	// adjust "not recording" indicator
-		leftRecentView.displayRecordHistoryDisabled();
+		resetScreenState();    	
     	
     	// ensures feed refresh every time user switches to Stories screen
     	DDGControlVar.hasUpdatedFeed = false;
 		
 		displayFeedCore();
-		clearLeftSelect();
-    	    	
-    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){
-    		DDGControlVar.homeScreenShowing = true;
-    		homeSettingsButton.setImageResource(R.drawable.menu_button);
-			leftHomeTextView.setSelected(true);
-    	}
-    	else {
-			leftStoriesTextView.setSelected(true);
-    	}
 	}
 	
 	public void displaySavedFeed(){
 		resetScreenState();
-		
-		// left side menu visibility changes
-		changeLeftMenuVisibility();
     	
 		shareButton.setVisibility(View.GONE);
 		
     	switchFragments(SCREEN.SCR_SAVED_FEED);
-    	
-		clearLeftSelect();
-    	    	
-    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
-    		DDGControlVar.homeScreenShowing = true;
-    		homeSettingsButton.setImageResource(R.drawable.menu_button);
-			leftHomeTextView.setSelected(true);
-    	}
-    	else {
-			leftSavedTextView.setSelected(true);
-    	}
 	}
 	
 	public void displayRecentSearch(){  
 		resetScreenState(); 
 		
-		// left side menu visibility changes
-		changeLeftMenuVisibility();
-		
     	// main view visibility changes
 		shareButton.setVisibility(View.GONE);
-		switchFragments(SCREEN.SCR_RECENT_SEARCH);
-		
-		clearLeftSelect();
-    	    	
-    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
-    		DDGControlVar.homeScreenShowing = true;
-    		homeSettingsButton.setImageResource(R.drawable.menu_button);
-    		leftHomeTextView.setSelected(true);
-    	}
+		switchFragments(SCREEN.SCR_RECENT_SEARCH);		
 	}
 	
 	public void displayWebView() {		
@@ -924,34 +735,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		else if (view.equals(shareButton)) {			
 			BusProvider.getInstance().post(new ShareButtonClickEvent());
 		}
-		else if(view.equals(leftHomeTextView)){
-			handleLeftHomeTextViewClick();
-		}
-		else if(view.equals(leftStoriesTextView)){
-			viewPager.switchPage();		
-			displayScreen(SCREEN.SCR_STORIES, false);
-		}
-		else if(view.equals(leftSavedTextView)){
-			viewPager.switchPage();		
-			displayScreen(SCREEN.SCR_SAVED_FEED, false);
-		}
-		else if(view.equals(leftSettingsTextView)){
-			viewPager.switchPage();
-            displaySettings();
-		}
-	}
-
-	private void handleLeftHomeTextViewClick() {
-		viewPager.switchPage();
-					
-		if (isWebViewShowing()) {
-
-			//We are going home!
-			BusProvider.getInstance().post(new WebViewResetEvent());
-			clearSearchBar();
-		}
-		
-		displayHomeScreen();
 	}
 
 	private void handleHomeSettingsButtonClick() {
@@ -974,7 +757,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			if (resultCode == RESULT_OK) {
 				boolean clearedHistory = data.getBooleanExtra("hasClearedHistory",false);
 				if(clearedHistory){
-					clearRecentSearch();
+					BusProvider.getInstance().post(new SyncAdaptersEvent());
 				}
                 boolean startOrbotCheck = data.getBooleanExtra("startOrbotCheck",false);
                 if(startOrbotCheck){
@@ -1009,8 +792,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		AppStateManager.recoverAppState(savedInstanceState, mDuckDuckGoContainer, DDGControlVar.currentFeedObject);
 		String feedId = AppStateManager.getCurrentFeedObjectId(savedInstanceState);
 		
-		clearLeftSelect();
-		markLeftSelect(DDGControlVar.currentScreen);		
+		BusProvider.getInstance().post(new UpdateVisibilityEvent(DDGControlVar.currentScreen));
 		
 		Log.v(TAG, "feedId: " + feedId);
 		
@@ -1027,30 +809,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
 
 		displayScreen(DDGControlVar.currentScreen, true);
-	}
-	
-	private void markLeftSelect(SCREEN current){
-		if(DDGControlVar.START_SCREEN == current) {
-			leftHomeTextView.setSelected(true);
-			
-			if(isWebViewShowing()){
-	    		homeSettingsButton.setImageResource(R.drawable.home_button);
-			}
-			else {
-	    		homeSettingsButton.setImageResource(R.drawable.menu_button);
-			}
-		}
-		else {
-    		homeSettingsButton.setImageResource(R.drawable.home_button);
-			switch(current) {
-				case SCR_STORIES:
-					leftStoriesTextView.setSelected(true);
-					break;
-				case SCR_SAVED_FEED:
-					leftSavedTextView.setSelected(true);
-					break;
-			}
-		}
 	}	
     
 	@Override
@@ -1252,11 +1010,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 	
 	@Subscribe
-	public void onSyncAdapters(SyncAdaptersEvent event) {
-		mDuckDuckGoContainer.historyAdapter.sync();
-	}
-	
-	@Subscribe
 	public void onDisplayScreen(DisplayScreenEvent event) {
 		displayScreen(event.screenToDisplay, event.clean);
 	}
@@ -1275,6 +1028,60 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Subscribe
 	public void onSearchBarSetText(SearchBarSetTextEvent event) {
 		setSearchBarText(event.text);
+	}
+	
+	@Subscribe
+	public void onRecentHeaderClick(RecentHeaderClickEvent event) {
+		viewPager.switchPage();		
+		displaySettings();
+	}
+	
+	@Subscribe
+	public void onLeftHomeButtonClick(LeftHomeButtonClickEvent event) {
+		viewPager.switchPage();
+					
+		if (isWebViewShowing()) {
+
+			//We are going home!
+			BusProvider.getInstance().post(new WebViewResetEvent());
+			clearSearchBar();
+		}
+		
+		displayHomeScreen();
+	}
+	
+	@Subscribe
+	public void onLeftStoriesButtonClick(LeftStoriesButtonClickEvent event) {
+		viewPager.switchPage();		
+		displayScreen(SCREEN.SCR_STORIES, false);
+	}
+	
+	@Subscribe
+	public void onLeftSavedButtonClick(LeftSavedButtonClickEvent event) {
+		viewPager.switchPage();		
+		displayScreen(SCREEN.SCR_SAVED_FEED, false);
+	}
+	
+	@Subscribe
+	public void onLeftSettingsButtonClick(LeftSettingsButtonClickEvent event) {
+		viewPager.switchPage();
+        displaySettings();
+	}
+	
+	@Subscribe
+	public void onUpdateVisibility(UpdateVisibilityEvent event) {
+		if(DDGControlVar.START_SCREEN == event.screen) {			
+			DDGControlVar.homeScreenShowing = true;
+			if(isWebViewShowing()){
+	    		homeSettingsButton.setImageResource(R.drawable.home_button);
+			}
+			else {
+	    		homeSettingsButton.setImageResource(R.drawable.menu_button);
+			}
+		}
+		else {
+    		homeSettingsButton.setImageResource(R.drawable.home_button);
+		}
 	}
 	
 	private boolean isWebViewShowing() {

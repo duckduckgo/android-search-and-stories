@@ -11,7 +11,6 @@ public class DuckDuckGoContainer {
 	public Drawable progressDrawable, searchFieldDrawable;
 	public Drawable stopDrawable;
 			
-	public MultiHistoryAdapter historyAdapter = null;
 	public AutoCompleteResultsAdapter acAdapter = null;
 	
 	public DDGPagerAdapter pageAdapter = null;	
