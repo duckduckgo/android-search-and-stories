@@ -33,7 +33,9 @@ import android.graphics.RectF;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.Toast;
 import ch.boye.httpclientandroidlib.HttpEntity;
 
@@ -399,4 +401,8 @@ public final class DDGUtils {
     	DDGApplication.getDB().insertSavedSearch(query);
     }
 	
+    public static int dpToPixel(DisplayMetrics displayMetrics, int dp) {
+    	return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
+                (float) dp, displayMetrics);
+    }
 }

@@ -28,6 +28,7 @@ import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftSettingsBut
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftStoriesButtonClickEvent;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.HistoryListView;
@@ -49,6 +50,26 @@ public class LeftFragment extends Fragment {
 	private LinearLayout leftStoriesButtonLayout = null;
 	private LinearLayout leftSavedButtonLayout = null;
 	private LinearLayout leftSettingsButtonLayout = null;
+	
+	/**
+	 * Resolve drawable associated with attribute value from
+	 * theme and set it as left drawable to the TextView
+	 * 
+	 * @param theme
+	 * @param view
+	 * @param attributeId
+	 * @param sizeInDp
+	 */
+	private void setLeftDrawable(Theme theme, TextView view, int attributeId, int sizeInDp) {
+		TypedValue typedValue = new TypedValue(); 
+    	theme.resolveAttribute(attributeId, typedValue, true);
+    	
+    	int pixelValue = DDGUtils.dpToPixel(getResources().getDisplayMetrics(), sizeInDp);
+    	
+    	Drawable xt = getResources().getDrawable(typedValue.resourceId);
+        xt.setBounds(0, 0, pixelValue, pixelValue);
+        view.setCompoundDrawables(xt, null, null, null);
+	}
 	
 	private void initialise() {
 		
@@ -83,32 +104,10 @@ public class LeftFragment extends Fragment {
     	leftSavedButtonLayout = (LinearLayout) contentView.findViewById(R.id.LeftSavedButtonLayout);
     	leftSettingsButtonLayout = (LinearLayout) contentView.findViewById(R.id.LeftSettingsButtonLayout);
     	
-    	
-    	int pixelValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 
-                (float) 20.0, getResources().getDisplayMetrics());
-    	
-    	TypedValue typedValue = new TypedValue(); 
-    	theme.resolveAttribute(R.attr.leftDrawableHome, typedValue, true);
-    	
-    	Drawable xt = getResources().getDrawable(typedValue.resourceId);
-        xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftHomeTextView.setCompoundDrawables(xt, null, null, null);
-        
-        theme.resolveAttribute(R.attr.leftDrawableStories, typedValue, true);
-    	xt = getResources().getDrawable(typedValue.resourceId);
-        xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftStoriesTextView.setCompoundDrawables(xt, null, null, null);        
-        
-        theme.resolveAttribute(R.attr.leftDrawableSaved, typedValue, true);
-    	xt = getResources().getDrawable(typedValue.resourceId);
-        xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftSavedTextView.setCompoundDrawables(xt, null, null, null);
-        
-        theme.resolveAttribute(R.attr.leftDrawableSettings, typedValue, true);
-    	xt = getResources().getDrawable(typedValue.resourceId);
-        xt.setBounds(0, 0, pixelValue, pixelValue);
-        leftSettingsTextView.setCompoundDrawables(xt, null, null, null);
-    	
+        setLeftDrawable(theme, leftHomeTextView, R.attr.leftDrawableHome, 20);        
+        setLeftDrawable(theme, leftStoriesTextView, R.attr.leftDrawableStories, 20);
+        setLeftDrawable(theme, leftSavedTextView, R.attr.leftDrawableSaved, 20);
+        setLeftDrawable(theme, leftSettingsTextView, R.attr.leftDrawableSettings, 20);    	
         
     	leftHomeTextView.setOnClickListener(new OnClickListener() {
 			
