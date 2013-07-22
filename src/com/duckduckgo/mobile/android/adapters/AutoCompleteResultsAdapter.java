@@ -27,7 +27,6 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.SuggestionPasteEvent;
 import com.duckduckgo.mobile.android.image.transformations.RoundCornersTransformation;
 import com.duckduckgo.mobile.android.image.transformations.ScaleWidthTransformation;

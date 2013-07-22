@@ -6,7 +6,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -16,6 +15,8 @@ import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
@@ -75,7 +76,7 @@ import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
 import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.squareup.otto.Subscribe;
 
-public class DuckDuckGo extends FragmentActivity {
+public class DuckDuckGo extends SherlockFragmentActivity {
 	protected final String TAG = "DuckDuckGo";
 	private DuckDuckGoContainer mDuckDuckGoContainer;
 		
@@ -101,6 +102,9 @@ public class DuckDuckGo extends FragmentActivity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
+        getSupportActionBar().setDisplayShowCustomEnabled(true);
+        getSupportActionBar().setCustomView(R.layout.search_edit);
+        
         showNewSourcesDialog();
 
         sharedPreferences = DDGApplication.getSharedPreferences();
@@ -486,6 +490,11 @@ public class DuckDuckGo extends FragmentActivity {
 		if(viewPager.isLeftMenuOpen()){
             viewPager.hideMenu();
         }
+	}
+	
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getSupportMenuInflater().inflate(R.menu.actionbar, menu);
+		return true;
 	}
 	
 }

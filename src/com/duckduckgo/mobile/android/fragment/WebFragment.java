@@ -9,7 +9,6 @@ import java.net.URLEncoder;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,8 +17,11 @@ import android.view.ViewGroup;
 import android.webkit.DownloadListener;
 import android.webkit.WebView.HitTestResult;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.MenuItem;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.actions.CommonActions;
 import com.duckduckgo.mobile.android.activity.KeyboardService;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
@@ -57,7 +59,7 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.squareup.otto.Subscribe;
 
-public class WebFragment extends Fragment {
+public class WebFragment extends SherlockFragment {
 	
 	protected final String TAG = "WebFragment";
 	
@@ -72,6 +74,13 @@ public class WebFragment extends Fragment {
 	public boolean savedState = false;
 	
 	private KeyboardService keyboardService;
+	
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		super.onActivityCreated(savedInstanceState);
+		initialise();
+		setHasOptionsMenu(true);
+	}
 	
 	private void initialise() {
 		keyboardService = new KeyboardService(getActivity());
@@ -137,7 +146,6 @@ public class WebFragment extends Fragment {
         contentView = inflater.inflate(R.layout.web_fragment_view, container, false);
         if(savedInstanceState != null)
         	savedState = true;
-		initialise();
         return contentView;
     }
 	
@@ -430,5 +438,31 @@ public class WebFragment extends Fragment {
 	public void onWebViewBackPress(WebViewBackPressEvent event) {
 		mainWebView.backPressAction();
 	}
-	
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	
+    	String webViewUrl = mainWebView.getUrl();
+        if(webViewUrl == null){
+                webViewUrl = "";
+        }
+    	
+    	// Handle item selection
+        switch (item.getItemId()) {
+                case R.id.menu_share:
+                    BusProvider.getInstance().post(CommonActions.getShareEvent(DDGControlVar.sessionType, DDGControlVar.currentFeedObject, webViewUrl));
+                    return true;
+                case R.id.menu_external:
+                    BusProvider.getInstance().post(CommonActions.getExternalEvent(DDGControlVar.sessionType, webViewUrl));
+                    return true;
+                case R.id.menu_reload:
+                	BusProvider.getInstance().post(new ReloadEvent());
+                    return true;
+                case R.id.menu_save:
+                    BusProvider.getInstance().post(CommonActions.getSaveEvent(DDGControlVar.sessionType, DDGControlVar.currentFeedObject, webViewUrl));
+                    return true;
+        }
+    	return false;
+    }
+    
 }

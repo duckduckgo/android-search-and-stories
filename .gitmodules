@@ -1,3 +1,6 @@
 [submodule "libs/OnionKit"]
 	path = libs/OnionKit
 	url = https://github.com/koenmetsu/OnionKit.git
+[submodule "libs/ActionBarSherlock"]
+	path = libs/ActionBarSherlock
+	url = git://github.com/JakeWharton/ActionBarSherlock.git

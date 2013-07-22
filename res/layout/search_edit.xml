@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>  
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/topbar_background"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+<FrameLayout
+   	        android:layout_width="0dip"
+   	        android:layout_height="34dp"
+   	        android:layout_gravity="center_vertical"
+   	        android:layout_marginLeft="5dp"
+   	        android:layout_marginRight="5dp"
+   	        android:layout_weight="1"
+   	        android:background="@android:color/white" >
+
+<EditText android:layout_width="0dp" android:layout_height="0dp"
+  	        android:inputType="none"
+  	        android:focusable="true"
+  	        android:imeOptions="actionSearch"
+  	        android:focusableInTouchMode="true" />
+   	    
+   	    <com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView 
+   	        android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@drawable/searchfield"
+			android:paddingLeft="5dp"
+			android:singleLine="true"
+			android:textSize="14sp"
+			android:textColor="@android:color/black"
+			android:selectAllOnFocus="true"
+			android:dropDownWidth="match_parent"
+			android:dropDownHorizontalOffset="0dp"
+			android:dropDownVerticalOffset="0dp"
+			android:completionThreshold="1"
+			android:inputType="textAutoComplete"
+			android:imeOptions="actionGo"
+			android:hint="@string/SearchString"
+			android:id="@+id/searchEditText" />
+   	    
+</FrameLayout>
+
+    </LinearLayout>

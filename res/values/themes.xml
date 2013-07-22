@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="DDGTheme" parent="android:Theme.NoTitleBar">
+    <style name="DDGTheme" parent="Theme.Sherlock">
         <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
         <item name="leftButtonTextSize">18sp</item>
         <item name="leftTitleTextSize">12sp</item>
         <item name="mainTextSize">14sp</item>
         <item name="recentTextSize">14sp</item>
+        <item name="android:actionBarStyle">@style/DDGActionBarStyle</item>
     </style>
 
+    <style name="DDGActionBarStyle" parent="@style/Widget.Sherlock.ActionBar">
+        <item name="displayOptions">showHome|homeAsUp</item>
+        <item name="background">@drawable/topbar_background</item>        
+	    <item name="android:background">@drawable/topbar_background</item>	
+    </style>
+    
     <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">
         <item name="android:popupBackground">@drawable/new_spinner_dropdown_background</item>
     </style>

@@ -7,17 +7,7 @@
     android:baselineAligned="false"
     android:orientation="vertical"
     android:id="@+id/mainLayout" >
-
-    <!-- Main Search View -->
-
-	<include android:id="@+id/searchBar" layout="@layout/searchbar" />
     
-    <ProgressBar android:layout_width="fill_parent"
-    		 	 android:layout_height="5dp"
-    		 	 android:visibility="gone"
-    		 	 style="@android:style/Widget.ProgressBar.Horizontal"
-    		 	 android:id="@+id/pageLoadingProgress" />
-
     <!-- Main View Area -->
     <RelativeLayout android:layout_width="fill_parent"
         		    android:layout_height="0dip"

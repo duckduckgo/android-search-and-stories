@@ -7,7 +7,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 
@@ -37,7 +36,7 @@ public class BangButtonExplanationPopup extends PopupWindow {
 		});
 	}
 	
-	public static BangButtonExplanationPopup showPopup(MainFragment fragment, ImageButton bangButton){
+	public static BangButtonExplanationPopup showPopup(MainFragment fragment, ImageView bangButton){
 		LayoutInflater inflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View layout = inflater.inflate(R.layout.bangbutton_explanation_popup,
                 (ViewGroup) fragment.getActivity().findViewById(R.id.bangbuttonexplanation));

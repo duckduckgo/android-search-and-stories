@@ -4,8 +4,8 @@ package com.duckduckgo.mobile.android.fragment;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
@@ -20,13 +20,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.MenuItem;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.KeyboardService;
 import com.duckduckgo.mobile.android.activity.Preferences;
@@ -43,7 +45,6 @@ import com.duckduckgo.mobile.android.events.ReloadEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
 import com.duckduckgo.mobile.android.events.SearchOrGoToUrlEvent;
 import com.duckduckgo.mobile.android.events.SearchWebTermEvent;
-import com.duckduckgo.mobile.android.events.ShareButtonClickEvent;
 import com.duckduckgo.mobile.android.events.UpdateVisibilityEvent;
 import com.duckduckgo.mobile.android.events.WebViewResetEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedUpdateRequestEvent;
@@ -76,7 +77,7 @@ import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
 import com.duckduckgo.mobile.android.widgets.SafeViewFlipper;
 import com.squareup.otto.Subscribe;
 
-public class MainFragment extends Fragment {
+public class MainFragment extends SherlockFragment {
 	
 	private View contentView;
 	
@@ -90,9 +91,7 @@ public class MainFragment extends Fragment {
 	
 	private SafeViewFlipper viewFlipper = null;
 	
-	private ImageButton homeSettingsButton = null;
-	private ImageButton bangButton = null;
-	private ImageButton shareButton = null;
+	private ImageView homeSettingsButton = null;
 	
 	// font scaling
 	private LinearLayout fontSizeLayout = null;	
@@ -110,6 +109,13 @@ public class MainFragment extends Fragment {
 		return searchField;
 	}
 	
+	private View getHomeButton() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                return getActivity().findViewById(android.R.id.home);
+        }
+        return getActivity().findViewById(R.id.abs__home);
+	}
+	
     // Assist action is better known as Google Now gesture
 	private void checkForAssistAction() {
 		if (getActivity().getIntent() != null 
@@ -123,6 +129,7 @@ public class MainFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		initialise();
+		setHasOptionsMenu(true);
 	}
 	
 	private void initialise() {
@@ -146,7 +153,7 @@ public class MainFragment extends Fragment {
         viewFlipper = (SafeViewFlipper) contentView.findViewById(R.id.ViewFlipperMain);    	    	
 
         
-        homeSettingsButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
+        homeSettingsButton = (ImageView) getHomeButton();
         homeSettingsButton.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -154,33 +161,13 @@ public class MainFragment extends Fragment {
 				BusProvider.getInstance().post(new HomeButtonClickEvent());
 			}
 		});
-        bangButton = (ImageButton)contentView.findViewById(R.id.bangButton);
-        bangButton.setOnClickListener(new OnClickListener() {
-    		@Override
-    		public void onClick(View v) {
-    			getSearchField().addBang();				
-    		}
-    	});
         
         if(isWebViewShowing()) {
         	homeSettingsButton.setImageResource(R.drawable.home_button);
         }
         
-        shareButton = (ImageButton) contentView.findViewById(R.id.shareButton);
-        shareButton.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				BusProvider.getInstance().post(new ShareButtonClickEvent());
-			}
-		});
-        
-        // adjust visibility of share button after screen rotation
-        if(isWebViewShowing()) {
-        	shareButton.setVisibility(View.VISIBLE);
-        }
-        
-        searchField = (DDGAutoCompleteTextView) contentView.findViewById(R.id.searchEditText);
+        searchField = (DDGAutoCompleteTextView) getSherlockActivity().getSupportActionBar()
+        		.getCustomView().findViewById(R.id.searchEditText);
         getSearchField().setAdapter(acAdapter);
         getSearchField().setOnEditorActionListener(new OnEditorActionListener() {
     		@Override
@@ -412,10 +399,8 @@ public class MainFragment extends Fragment {
 	}  
     
     private void showBangButton(boolean visible){
-    	homeSettingsButton.setVisibility(visible ? View.GONE: View.VISIBLE);
-		bangButton.setVisibility(visible ? View.VISIBLE: View.GONE);
 		if(shouldShowBangButtonExplanation && visible && PreferencesManager.isWelcomeShown()){
-			bangButtonExplanationPopup = BangButtonExplanationPopup.showPopup(this, bangButton);
+			bangButtonExplanationPopup = BangButtonExplanationPopup.showPopup(this, homeSettingsButton);
 			shouldShowBangButtonExplanation = false;
 		}
 		if(!visible){
@@ -483,7 +468,7 @@ public class MainFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
+				
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
@@ -517,7 +502,6 @@ public class MainFragment extends Fragment {
             keyboardService.showKeyboard(getSearchField());
 		}
 		else if(isWebViewShowing()){
-			shareButton.setVisibility(View.VISIBLE);
 			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 		}
 	}
@@ -546,7 +530,6 @@ public class MainFragment extends Fragment {
 	 */
 	private void displayFeedCore() {		
 		switchFragments(SCREEN.SCR_STORIES);
-		shareButton.setVisibility(View.GONE);
 	}
 	
 	public void displayNewsFeed(){
@@ -559,10 +542,7 @@ public class MainFragment extends Fragment {
 	}
 	
 	public void displaySavedFeed(){
-		resetScreenState();
-    	
-		shareButton.setVisibility(View.GONE);
-		
+		resetScreenState();		
     	switchFragments(SCREEN.SCR_SAVED_FEED);
 	}
 	
@@ -570,7 +550,6 @@ public class MainFragment extends Fragment {
 		resetScreenState(); 
 		
     	// main view visibility changes
-		shareButton.setVisibility(View.GONE);
 		switchFragments(SCREEN.SCR_RECENT_SEARCH);		
 	}
 	
@@ -579,7 +558,6 @@ public class MainFragment extends Fragment {
 		DDGControlVar.homeScreenShowing = false;
 		homeSettingsButton.setImageResource(R.drawable.home_button);	
 		
-		shareButton.setVisibility(View.VISIBLE);
 		switchFragments(SCREEN.SCR_WEBVIEW);			
 	}
 	
@@ -629,7 +607,6 @@ public class MainFragment extends Fragment {
 			displayHomeScreen();
 		}
 	}
-	
 	
 	@Subscribe
 	public void onRecentSearchPaste(RecentSearchPasteEvent event) {
@@ -759,4 +736,15 @@ public class MainFragment extends Fragment {
     public void onHideKeyboard(HideKeyboardEvent event) {
     	keyboardService.hideKeyboard(getSearchField());
     }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+    	switch(item.getItemId()) {
+    		case R.id.menu_bang:
+	    		getSearchField().addBang();
+	    		return true;
+    	}
+    	return false;
+    }
+    
 }

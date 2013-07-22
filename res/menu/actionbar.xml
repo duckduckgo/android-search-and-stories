@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+    android:id="@+id/menu_bang"
+    android:icon="@drawable/btn_bang_states"
+    android:showAsAction="always"
+    android:orderInCategory="1"
+    android:title="!Bang" />
+    
+    <item
+    android:id="@+id/root_menu"
+    android:icon="@drawable/ic_menu_moreoverflow_normal_holo_light"
+    android:showAsAction="always"
+    android:orderInCategory="2"
+    android:title="More">
+	    <menu>
+	        <item
+	            android:id="@+id/menu_share"
+	            android:icon="@android:drawable/ic_menu_share"
+	            android:showAsAction="never"
+	            android:title="@string/Share" />
+	        <item
+	            android:id="@+id/menu_external"
+	            android:icon="@android:drawable/ic_menu_rotate"
+	            android:showAsAction="never"
+	            android:title="@string/OpenInExternalBrowser"/>
+	        <item
+	            android:id="@+id/menu_reload"
+	            android:icon="@drawable/icon_reload"
+	            android:showAsAction="never"
+	            android:title="@string/Refresh"/>
+	        <item
+	            android:id="@+id/menu_save"
+	            android:icon="@android:drawable/ic_menu_save"
+	            android:showAsAction="never"
+	            android:title="@string/Save"/>	              	                	       
+	   </menu>
+   </item>
+</menu>

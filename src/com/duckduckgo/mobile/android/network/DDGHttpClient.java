@@ -25,7 +25,6 @@ import ch.boye.httpclientandroidlib.client.methods.HttpPost;
 import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.entity.HttpEntityWrapper;
 import ch.boye.httpclientandroidlib.impl.client.DefaultConnectionKeepAliveStrategy;
-import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;
 import ch.boye.httpclientandroidlib.params.HttpProtocolParams;
@@ -33,7 +32,6 @@ import ch.boye.httpclientandroidlib.protocol.HTTP;
 import ch.boye.httpclientandroidlib.protocol.HttpContext;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 
 

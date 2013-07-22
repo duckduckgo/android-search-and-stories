@@ -6,27 +6,21 @@ import java.security.KeyStore;
 import javax.net.ssl.HttpsURLConnection;
 
 import android.app.Application;
-import android.content.Context;
-import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
-
-import info.guardianproject.onionkit.trust.StrongHttpsClient;
-import info.guardianproject.onionkit.web.WebkitProxy;
 import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.conn.params.ConnManagerParams;
 import ch.boye.httpclientandroidlib.conn.params.ConnPerRouteBean;
+import ch.boye.httpclientandroidlib.conn.params.ConnRoutePNames;
 import ch.boye.httpclientandroidlib.conn.scheme.PlainSocketFactory;
 import ch.boye.httpclientandroidlib.conn.scheme.Scheme;
 import ch.boye.httpclientandroidlib.conn.scheme.SchemeRegistry;
 import ch.boye.httpclientandroidlib.conn.ssl.SSLSocketFactory;
-import ch.boye.httpclientandroidlib.conn.params.ConnRoutePNames;
-import ch.boye.httpclientandroidlib.impl.client.DefaultHttpClient;
 import ch.boye.httpclientandroidlib.impl.conn.tsccm.ThreadSafeClientConnManager;
 import ch.boye.httpclientandroidlib.params.BasicHttpParams;
 import ch.boye.httpclientandroidlib.params.HttpParams;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DDGNetworkConstants {
 	public static DDGHttpClient mainClient;
