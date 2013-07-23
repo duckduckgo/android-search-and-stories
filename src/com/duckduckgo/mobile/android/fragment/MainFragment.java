@@ -30,6 +30,7 @@ import android.widget.TextView.OnEditorActionListener;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.activity.KeyboardService;
 import com.duckduckgo.mobile.android.activity.Preferences;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
@@ -400,7 +401,7 @@ public class MainFragment extends SherlockFragment {
     
     private void showBangButton(boolean visible){
 		if(shouldShowBangButtonExplanation && visible && PreferencesManager.isWelcomeShown()){
-			bangButtonExplanationPopup = BangButtonExplanationPopup.showPopup(this, homeSettingsButton);
+			bangButtonExplanationPopup = BangButtonExplanationPopup.showPopup((DuckDuckGo) getActivity(), homeSettingsButton);
 			shouldShowBangButtonExplanation = false;
 		}
 		if(!visible){

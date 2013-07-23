@@ -4,12 +4,10 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 
-import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 
 public class AppStateManager {
-	public static  void saveAppState(SharedPreferences prefs, DuckDuckGoContainer duckDuckGoContainer,
-			FeedObject currentFeedObject) {
+	public static  void saveAppState(SharedPreferences prefs, FeedObject currentFeedObject) {
 		Editor editor = prefs.edit();
 		editor.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
 		editor.putInt("currentScreen", DDGControlVar.currentScreen.ordinal());
@@ -21,8 +19,7 @@ public class AppStateManager {
 		editor.commit();
 	}
 	
-	public static void saveAppState(Bundle bundle, DuckDuckGoContainer duckDuckGoContainer,
-			FeedObject currentFeedObject) {
+	public static void saveAppState(Bundle bundle, FeedObject currentFeedObject) {
 		bundle.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
 		bundle.putInt("currentScreen", DDGControlVar.currentScreen.ordinal());
 		bundle.putInt("prevScreen", DDGControlVar.prevScreen.ordinal());
@@ -32,8 +29,7 @@ public class AppStateManager {
 		}
 	}
 	
-	public static void recoverAppState(Object state, DuckDuckGoContainer duckDuckGoContainer,
-			FeedObject currentFeedObject) {
+	public static void recoverAppState(Object state, FeedObject currentFeedObject) {
 		Bundle bundle = null; 
 		SharedPreferences prefs = null; 
 		

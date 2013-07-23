@@ -11,14 +11,14 @@ import android.widget.ImageView;
 import android.widget.PopupWindow;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.fragment.MainFragment;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 
 public class BangButtonExplanationPopup extends PopupWindow {
-	private MainFragment fragment;
+	private DuckDuckGo context;
 
-	protected BangButtonExplanationPopup(MainFragment fragment, View explanationLayout) {
+	protected BangButtonExplanationPopup(DuckDuckGo context, View explanationLayout) {
 		super(explanationLayout, LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		this.fragment = fragment;
+		this.context = context;
 		ImageView closeButton = (ImageView)explanationLayout.findViewById(R.id.bangButtonPopupCloseButton);
 		Button tryBangButton = (Button)explanationLayout.findViewById(R.id.bangButtonTryBangButton);
         closeButton.setOnClickListener(new OnClickListener() {
@@ -30,17 +30,17 @@ public class BangButtonExplanationPopup extends PopupWindow {
         tryBangButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				BangButtonExplanationPopup.this.fragment.getSearchField().setText("!amazon lego");
+				BangButtonExplanationPopup.this.context.getSearchField().setText("!amazon lego");
 				BangButtonExplanationPopup.this.dismiss();
 			}
 		});
 	}
 	
-	public static BangButtonExplanationPopup showPopup(MainFragment fragment, ImageView bangButton){
-		LayoutInflater inflater = (LayoutInflater) fragment.getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+	public static BangButtonExplanationPopup showPopup(DuckDuckGo context, ImageView bangButton){
+		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View layout = inflater.inflate(R.layout.bangbutton_explanation_popup,
-                (ViewGroup) fragment.getActivity().findViewById(R.id.bangbuttonexplanation));
-		BangButtonExplanationPopup popup = new BangButtonExplanationPopup(fragment, layout);
+                (ViewGroup) context.findViewById(R.id.bangbuttonexplanation));
+		BangButtonExplanationPopup popup = new BangButtonExplanationPopup(context, layout);
 		popup.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
 		popup.showAsDropDown(bangButton);
 		return popup;
