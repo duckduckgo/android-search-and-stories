@@ -47,15 +47,23 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
     public Preferences() {
         this.torIntegration = new TorIntegration(this);
     }
+
+    private boolean isDarkTheme(String themeName){
+        return themeName.equals("DDGDark");
+    }
+
+    private void setHoloTheme(String ddgThemeName){
+        if(isDarkTheme(ddgThemeName)){
+            setTheme(android.R.style.Theme_Holo);
+        }else{
+            setTheme(android.R.style.Theme_Holo_Light);
+        }
+    }
 	
   @SuppressWarnings("deprecation")
   @Override
   public void onCreate(Bundle savedInstanceState) {
-      if(PreferencesManager.getThemeName().equals("DDGDark")){
-          setTheme(android.R.style.Theme_Holo);
-      }else{
-          setTheme(android.R.style.Theme_Holo_Light);
-      }
+      setHoloTheme(PreferencesManager.getThemeName());
       super.onCreate(savedInstanceState);
 
 
