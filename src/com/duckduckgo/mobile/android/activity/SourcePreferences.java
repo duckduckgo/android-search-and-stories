@@ -43,32 +43,16 @@ public class SourcePreferences extends Activity implements SourcesListener {
 			sourcePrefContainer = new SourcePreferencesContainer();
 			sourcePrefContainer.sourcesAdapter = new SourcesAdapter(this);
 		}
-		
-		// create "defaults" button
+
 		sourcesView = (ListView) findViewById(R.id.sourceItems);
-		
-		View headerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.preference_category_summary, null, false);
-		TextView titleTv = ((TextView) headerView.findViewById(android.R.id.title));
-		titleTv.setText(R.string.WaterCoolerSources);
-		TextView summaryTv = ((TextView) headerView.findViewById(android.R.id.summary));
-		summaryTv.setText(R.string.SummaryWaterCooler);
-		sourcesView.addHeaderView(headerView);
-			
-		View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
-		defaultButton = (Button) footerView.findViewById(R.id.sourceDefaultButton);
-		sourcesView.addFooterView(footerView);
-		
-		// create "suggest source" button, using the same layout
-		footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
-		footerView.findViewById(R.id.sourceDefaultButton).setId(R.id.suggestSourceButton);
-		suggestSourceButton = (Button) footerView.findViewById(R.id.suggestSourceButton);
-		suggestSourceButton.setText(R.string.SuggestSource);
-		sourcesView.addFooterView(footerView);
-		
+        sourcesView.addHeaderView(createHeaderView());
+        sourcesView.addFooterView(createFooterView());
+		sourcesView.addFooterView(createSuggestSourceButton());
+
 		sourcesView.setAdapter(sourcePrefContainer.sourcesAdapter);
-		
+
+        defaultButton = (Button) findViewById(R.id.sourceDefaultButton);
 		defaultButton.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(getApplicationContext(), R.string.DefaultsSetToast, Toast.LENGTH_SHORT).show();
@@ -87,7 +71,6 @@ public class SourcePreferences extends Activity implements SourcesListener {
 		});
 		
 		suggestSourceButton.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {				
 				Intent intent = DDGUtils.newEmailIntent(SourcePreferences.this.getResources().getString(R.string.FeedbackTo), 
@@ -96,8 +79,31 @@ public class SourcePreferences extends Activity implements SourcesListener {
 			}
 		});
 	}
-	
-	@Override
+
+    private View createHeaderView() {
+        View headerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.preference_category_summary, null, false);
+        TextView titleTv = ((TextView) headerView.findViewById(android.R.id.title));
+        titleTv.setText(R.string.WaterCoolerSources);
+        TextView summaryTv = ((TextView) headerView.findViewById(android.R.id.summary));
+        summaryTv.setText(R.string.SummaryWaterCooler);
+        return headerView;
+    }
+
+    private View createFooterView() {
+        View footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
+        return footerView;
+    }
+
+    private View createSuggestSourceButton() {
+        View footerView;
+        footerView = ((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
+        footerView.findViewById(R.id.sourceDefaultButton).setId(R.id.suggestSourceButton);
+        suggestSourceButton = (Button) footerView.findViewById(R.id.suggestSourceButton);
+        suggestSourceButton.setText(R.string.SuggestSource);
+        return footerView;
+    }
+
+    @Override
 	protected void onResume() {
 		super.onResume();
 		
