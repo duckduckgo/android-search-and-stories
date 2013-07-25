@@ -31,7 +31,7 @@ public class SourcePreferences extends Activity implements SourcesListener {
 	private ListView sourcesView = null;
 	private Button defaultButton = null;
 	private Button suggestSourceButton = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -108,7 +108,6 @@ public class SourcePreferences extends Activity implements SourcesListener {
 	public void onSourcesRetrieved(List<SourcesObject> feed) {
 		sourcePrefContainer.sourcesAdapter.setList(feed);
 		sourcePrefContainer.sourcesAdapter.notifyDataSetChanged();
-		
 	}
 
 	public void onSourcesRetrievalFailed() {
@@ -118,7 +117,6 @@ public class SourcePreferences extends Activity implements SourcesListener {
 			sourcePrefContainer.sourcesTask = new SourcesTask(this);
 			sourcePrefContainer.sourcesTask.execute();
 		}
-		
 	}
 	
 	@Override
