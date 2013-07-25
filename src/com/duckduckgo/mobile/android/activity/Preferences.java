@@ -137,6 +137,9 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 result_switchTheme = true;
+                Intent intent = new Intent(getApplicationContext(), Preferences.class);
+                finish();
+                startActivity(intent);
                 return true;
             }
         });
