@@ -30,6 +30,7 @@ import android.preference.PreferenceActivity;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
@@ -50,7 +51,14 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
   @SuppressWarnings("deprecation")
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+      if(PreferencesManager.getThemeName().equals("DDGDark")){
+          setTheme(android.R.style.Theme_Holo);
+      }else{
+          setTheme(android.R.style.Theme_Holo_Light);
+      }
+      super.onCreate(savedInstanceState);
+
+
 
       addPreferencesFromResource(R.xml.preferences);
       getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
