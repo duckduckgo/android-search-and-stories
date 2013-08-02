@@ -17,6 +17,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -46,7 +47,9 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.MainFeedMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
 import com.duckduckgo.mobile.android.events.AddWelcomeScreenEvent;
+import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.CleanFeedDownloadsEvent;
+import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
@@ -55,6 +58,7 @@ import com.duckduckgo.mobile.android.events.SearchWebTermEvent;
 import com.duckduckgo.mobile.android.events.SourceFilterCancelEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.UpdateVisibilityEvent;
+import com.duckduckgo.mobile.android.events.WebViewBackPressEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEvent;
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteUrlInHistoryEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
@@ -62,6 +66,7 @@ import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedUpdateRequestEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftHomeButtonClickEvent;
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftSavedButtonClickEvent;
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftSettingsButtonClickEvent;
@@ -215,7 +220,8 @@ public class DuckDuckGo extends SherlockFragmentActivity {
     			if(textView == getSearchField()) {
                     keyboardService.hideKeyboard(getSearchField());
     				getSearchField().dismissDropDown();
-    				BusProvider.getInstance().post(new SearchOrGoToUrlEvent(getSearchField().getTrimmedText()));
+    				BusProvider.getInstance().post(new AfterSwitchPostEvent(SCREEN.SCR_WEBVIEW, 
+    						new SearchOrGoToUrlEvent(getSearchField().getTrimmedText())));
     			}
     			return false;
     		}
@@ -260,7 +266,7 @@ public class DuckDuckGo extends SherlockFragmentActivity {
     							getSearchField().addTextWithTrailingSpace(suggestObject.getPhrase());
     						}else{
                                 keyboardService.hideKeyboard(getSearchField());
-    							BusProvider.getInstance().post(new SearchOrGoToUrlEvent(text));
+    							BusProvider.getInstance().post(new AfterSwitchPostEvent(SCREEN.SCR_WEBVIEW, new SearchOrGoToUrlEvent(text)));
     						}
     					}
     					else if(suggestType == SuggestType.APP) {
@@ -419,13 +425,6 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 			DDGControlVar.hasAppsIndexed = true;
 		}
 		
-		
-		BusProvider.getInstance().post(new FeedUpdateRequestEvent());
-		
-		// update feeds
-		// https://app.asana.com/0/2891531242889/2858723303746
-		DDGControlVar.hasUpdatedFeed = false;
-		
 		// check autocomplete 
 		if(!DDGControlVar.isAutocompleteActive) {
 			getSearchField().setAdapter(null);
@@ -480,12 +479,13 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 	@Override
 	public void onBackPressed() {
 		// close left nav if it's open
-//		if(isDrawerOpen()){
+//		if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
 //			mDrawerLayout.closeDrawer(leftView);
 //		}
-//		else if (mainFragment.isWebViewShowing()) {
-//			BusProvider.getInstance().post(new WebViewBackPressEvent());
-//		}
+		if (DDGControlVar.currentScreen == SCREEN.SCR_WEBVIEW) {
+			BusProvider.getInstance().post(new WebViewBackPressEvent());
+			return;
+		}
 //		else if(mainFragment.inFontChangeMode()) {
 //			BusProvider.getInstance().post(new FontSizeCancelEvent());
 //		}
@@ -511,7 +511,8 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 				}
                 boolean startOrbotCheck = data.getBooleanExtra("startOrbotCheck",false);
                 if(startOrbotCheck){
-                    BusProvider.getInstance().post(new SearchOrGoToUrlEvent(getString(R.string.OrbotCheckSite)));
+                    BusProvider.getInstance().post(new AfterSwitchPostEvent(SCREEN.SCR_WEBVIEW, 
+                    		new SearchOrGoToUrlEvent(getString(R.string.OrbotCheckSite))));
                 }
                 boolean switchTheme = data.getBooleanExtra("switchTheme", false);
                 if(switchTheme){
@@ -640,16 +641,6 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 		Toast.makeText(this, R.string.ToastUnSaveStory, Toast.LENGTH_SHORT).show();
 	}
 	
-	/**
-	 * Handling both MainFeedItemSelectedEvent and SavedFeedItemSelectedEvent.
-	 * (modify to handle independently when necessary)
-	 * @param event
-	 */
-	@Subscribe
-	public void onFeedItemSelected(FeedItemSelectedEvent event) {
-		switchFragments(SCREEN.SCR_WEBVIEW);
-	}
-	
 	@Subscribe
 	public void onMainFeedItemLongClick(MainFeedItemLongClickEvent event) {
 		new MainFeedMenuDialog(DuckDuckGo.this, event.feedObject).show();
@@ -768,7 +759,7 @@ public class DuckDuckGo extends SherlockFragmentActivity {
     }
 
     
-	private void switchFragments(SCREEN screen) {
+	public void switchFragments(SCREEN screen) {
 		FragmentManager fragmentManager = getSupportFragmentManager();		
 		Fragment mWorkFragment = null;
 		
@@ -789,7 +780,10 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 			
 		if(mWorkFragment != null) {			
 			fragmentManager.beginTransaction().replace(R.id.content_fragment,
-	                mWorkFragment).commit();			
+	                mWorkFragment).commit();
+			fragmentManager.executePendingTransactions();
+			DDGControlVar.prevScreen = DDGControlVar.currentScreen;
+			DDGControlVar.currentScreen = screen;
 		}
 		
 	}
@@ -814,6 +808,17 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 		BusProvider.getInstance().post(new CleanFeedDownloadsEvent());
 	    Intent intent = new Intent(this, Preferences.class);
 	    startActivityForResult(intent, PREFERENCES_RESULT);
+	}
+	
+	@Subscribe
+	public void onDisplayScreenEvent(DisplayScreenEvent event) {
+		switchFragments(event.screenToDisplay);
+	}
+	
+	@Subscribe
+	public void onAfterSwitchPost(AfterSwitchPostEvent event) {
+		switchFragments(event.screenToDisplay);
+		BusProvider.getInstance().post(event.postEvent);
 	}
     
 }

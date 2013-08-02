@@ -179,7 +179,7 @@ public class DDGWebView extends WebView {
 			}
 		}
 		else {
-			BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.currentScreen, true));
+			BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.prevScreen));
 		}
 	}
 	

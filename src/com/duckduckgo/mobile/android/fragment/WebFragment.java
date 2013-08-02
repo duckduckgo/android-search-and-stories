@@ -29,6 +29,7 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewQueryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
+import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
@@ -40,6 +41,7 @@ import com.duckduckgo.mobile.android.events.WebViewBackPressEvent;
 import com.duckduckgo.mobile.android.events.WebViewResetEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.fontEvents.FontSizeCancelEvent;
 import com.duckduckgo.mobile.android.events.fontEvents.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.ReadabilityFeedRetrieveSuccessEvent;
@@ -53,6 +55,7 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
@@ -390,6 +393,15 @@ public class WebFragment extends SherlockFragment {
 	@Subscribe
 	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
 		showHistoryObject(event.historyObject);
+	}
+	
+	@Subscribe
+	public void onSavedFeedItemSelected(SavedFeedItemSelectedEvent event) {
+		String url = event.feedObject.getUrl();
+		if(url != null) {	
+			DDGControlVar.currentFeedObject = event.feedObject;
+			searchOrGoToUrl(url, SESSIONTYPE.SESSION_FEED);
+		}
 	}
 	
 	@Subscribe

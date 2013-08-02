@@ -23,6 +23,7 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.CleanFeedDownloadsEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
 import com.duckduckgo.mobile.android.events.SearchOrGoToUrlEvent;
@@ -102,6 +103,16 @@ public class FeedFragment extends Fragment {
         mainFeedTask = null;
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		
+		// update feeds
+		// https://app.asana.com/0/2891531242889/2858723303746
+		DDGControlVar.hasUpdatedFeed = false;
+		keepFeedUpdated();
+	}
+	
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -164,7 +175,8 @@ public class FeedFragment extends Fragment {
 				DDGApplication.getDB().insertFeedItem(feedObject);
 				BusProvider.getInstance().post(new SyncAdaptersEvent());		
 			}
-			BusProvider.getInstance().post(new SearchOrGoToUrlEvent(url, SESSIONTYPE.SESSION_FEED));
+			BusProvider.getInstance().post(new AfterSwitchPostEvent(SCREEN.SCR_WEBVIEW, 
+					new SearchOrGoToUrlEvent(url, SESSIONTYPE.SESSION_FEED)));
 		}
 		
 		if(ReadArticlesManager.addReadArticle(feedObject)){
@@ -330,4 +342,5 @@ public class FeedFragment extends Fragment {
 	public void onCleanFeedDownloads(CleanFeedDownloadsEvent event) {
 		feedView.cleanImageTasks();
 	}
+
 }
