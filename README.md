@@ -10,7 +10,7 @@ Contact us at android@duckduckgo.com if you want to get more involed, have quest
 
 We're currently evaluating a variety of CI systems and suggested development environments. Android provides a rich set of environments, most of which are currently supported.
 
-Working on the following are good ways to help familiarize yourself with the code:
+### Jumping in
 - bug fixes
 - layout fixes
 - security fixes
