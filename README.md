@@ -8,12 +8,7 @@ Contact us at android@duckduckgo.com if you want to get more involed, have quest
 
 ## Getting started
 
-Info to make development easier, which tools we use for 
-- developing
-- building
-- testing
-
-We're currently still setting this up.
+We're currently evaluating a variety of CI systems and suggested development environments.  Android provides a rich set of environments, most of which are currently supported.
 
 ## Things you can help with ( aka low hanging fruit )
 - bug fixes
