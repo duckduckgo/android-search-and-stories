@@ -1,17 +1,10 @@
 # DuckDuckGo for Android
 
-Please review the LICENSE and CONTRIBUTING guidelines.
+Please review the LICENSE and CONTRIBUTING guidelines. If you are trying to make changes to the search results, that happens over at [DuckDuckHack](https://duckduckhack.com).
 
-## Mission statement
+### Discuss
 
-<Insert plan for world domination>
-
-### How to give feedback
-
-Contact us at android@duckduckgo.com if you have questions or want to chat.
-
-<Possibly more information on community platform, mailing lists, ...>
-
+Contact us at android@duckduckgo.com if you want to get more involed, have questions or want to chat.
 
 ## Getting started
 
