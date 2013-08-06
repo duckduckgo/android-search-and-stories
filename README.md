@@ -1,6 +1,6 @@
 # DuckDuckGo for Android
 
-Please review the [CONTRIBUTING](https://github.com/duckduckgo/android/blob/master/CONTRIBUTING.md) guidelines. If you are trying to make changes to the search results, that happens over at [DuckDuckHack](http://duckduckhack.com). Search & Stories is distributed under the Apache 2.0 [license](https://github.com/duckduckgo/android/blob/master/LICENSE).
+Please review the [contributing](https://github.com/duckduckgo/android/blob/master/CONTRIBUTING.md) guidelines. If you are trying to make changes to the search results, that happens over at [DuckDuckHack](http://duckduckhack.com). DuckDuckGo Search & Stories is distributed under the Apache 2.0 [license](https://github.com/duckduckgo/android/blob/master/LICENSE).
 
 ### Discuss
 
