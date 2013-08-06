@@ -1,6 +1,6 @@
 # Contributing
 
-We are excited that you want to help make DuckDuckGo Search & Stories better!
+We are excited that you want to help make DuckDuckGo Search & Stories better. Some of the best features of DuckDuckGo came from the community; so stay in touch!
 
 * If there isn't already an open issue that describes your bug or feature, submit one.
   * If you're submitting a **bug**, please describe a way we can reproduce the problem and the affected versions.
