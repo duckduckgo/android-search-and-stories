@@ -1,6 +1,6 @@
 # DuckDuckGo for Android
 
-Please review the LICENSE and CONTRIBUTING guidelines. If you are trying to make changes to the search results, that happens over at [DuckDuckHack](https://duckduckhack.com).
+Please review the LICENSE and CONTRIBUTING guidelines. If you are trying to make changes to the search results, that happens over at [DuckDuckHack](http://duckduckhack.com).
 
 ### Discuss
 
@@ -21,6 +21,6 @@ We're currently still setting this up.
 - security fixes
 - improving the test suite
 
-Also, check out the issue tracker.
+Also, check out the [issue tracker](https://github.com/duckduckgo/android/issues).
 
 
