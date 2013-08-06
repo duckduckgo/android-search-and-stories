@@ -12,8 +12,6 @@ We are excited that you want to help make DuckDuckGo Search & Stories better. So
   `git checkout -b nilnilnil/NPE-stories-longpress origin/master`
 * **Features** fork the repository on GitHub and create a topic branch from **develop** with your GitHub username in the branch name like:
   `git checkout -b nilnilnil/sooper_feature origin/develop`
-* Don't make huge commits.
-* Check whitespace with `git diff --check` before committing.
 * Add tests that check what you've done.
 * PRs with failing tests will not be accepted.
 
@@ -32,7 +30,7 @@ We are excited that you want to help make DuckDuckGo Search & Stories better. So
     and how the patch fixes the problem when applied.
 ````
 
-## Caveats
+## Notes
 DuckDuckGo Search & Stories represents a ton of hard work from people all around the world. We've spent a long time thinking about exactly what makes a great mobile experience. While we'd love to accept each an every pull request, that probably wouldn't lead to a coherent experience. If you would like to get more involved, mail us at android@duckduckgo.com.
 
 ## Additional Resources
