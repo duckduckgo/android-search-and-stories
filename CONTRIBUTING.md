@@ -1,17 +1,11 @@
 # Contributing
 
-Thanks for helping us make DuckDuckGo for Android! DuckDuckHack has been a
-great success and so we've taken the steps necessary to open sourcing our apps.
+We are excited that you want to help make DuckDuckGo Search & Stories better!
 
-* If **you are a developer**, you're in the right place!
-* If **you are not a developer**, there is still a lot you can do at our [ideas site](http://ideas.duckduckhack.com/) like suggest and comment on prospective features and ideas.
-* Both of these roles are very valuable and will help direct community efforts.
-
-* All developers should make sure to have a [GitHub account](https://github.com/signup/free)
 * If there isn't already an open issue that describes your bug or feature, submit one.
-  * If you're submitting a bug, please describe a way we can reproduce the issue(s).
-  * Be sure to add the version you're experiencing the issue on.
-  * If you're submitting a feature (cool!), make sure you contact us before you do any work to ensure that you aren't duplicating efforts and that your changes are aligned with the goal of the app.
+  * If you're submitting a bug, please describe a way we can reproduce the problem.
+  * Be sure to add the affected versions.
+  * If you're submitting a feature (cool!), make sure you contact us beforehand so that you aren't duplicating effort.
 
 * Some of the best features of DuckDuckGo came from the community; so stay in touch!
 
@@ -41,14 +35,13 @@ great success and so we've taken the steps necessary to open sourcing our apps.
     and how the patch fixes the problem when applied.
 ````
 
-## Caveat(s)
-The DuckDuckGo mobile apps represent a ton of hard work from people all around the world. We've spent a long time thinking about exactly what we think makes a great mobile experience. While we'd love to accept each an every pull request, that almost certainly wouldn't result in a coherent experience. It's really important to sync up with us on what you're trying to do. Every new feature, no matter how excellent, must jive and work with the overall vision.  The only way to do that is to stay in touch.
+## Caveats
+DuckDuckGo Search & Stories represents a ton of hard work from people all around the world. We've spent a long time thinking about exactly what makes a great mobile experience. While we'd love to accept each an every pull request, that probably wouldn't lead to a coherent experience. If you would like to get more involved, mail us at android@duckduckgo.com.
 
 ## Additional Resources
 
-* [Issues]()
+* [Issues](https://github.com/duckduckgo/android/issues)
 * [Chat](https://dukgo.com/blog/using-pidgin-with-xmpp-jabber)
-* [LICENSE]()
 * [General info](http://help.dukgo.com/customer/portal/articles/378777-contributing)
-* [General GitHub documentation](http://help.github.com/)
 * [GitHub pull request documentation](http://help.github.com/send-pull-requests/)
+* [General GitHub documentation](http://help.github.com/)
