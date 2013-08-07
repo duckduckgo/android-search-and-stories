@@ -10,22 +10,21 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.duckduckgo.mobile.android.listener.FeedListener;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveErrorEvent;
+import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 
 public class ReadableFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
 	private static String TAG = "ReadableFeedTask";
-	
-	private FeedListener listener = null;
-					
+						
 	private boolean requestFailed = false;
 	
 	private String articleUrl = null;
 	
-	public ReadableFeedTask(FeedListener listener, FeedObject currentFeedObject) {
-		this.listener = listener;
+	public ReadableFeedTask(FeedObject currentFeedObject) {
 		this.articleUrl = currentFeedObject.getArticleUrl();
 	}	
 	
@@ -35,21 +34,18 @@ public class ReadableFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		List<FeedObject> returnFeed = new ArrayList<FeedObject>();
 		String body = null;
 		
-		if (isCancelled()) return null;
-		
-		if(articleUrl == null || articleUrl.length() == 0) return null;
+		if (isCancelled()) { return null; }
+		if(articleUrl == null || articleUrl.length() == 0) { return null; }
+        try {
+            // if an update is triggered, directly fetch from URL
+            body = DDGNetworkConstants.mainClient.doGetString(articleUrl);
+        }
+        catch (Exception e) {
+            requestFailed = true;
+            Log.e(TAG, e.getMessage(), e);
+        }
 
-
-			try {				
-				// if an update is triggered, directly fetch from URL
-				body = DDGNetworkConstants.mainClient.doGetString(articleUrl);
-			}				
-			catch (Exception e) {
-				requestFailed = true;
-				Log.e(TAG, e.getMessage(), e);
-			}
-
-		if(body != null) {	
+        if(body != null) {
 			try {
 				json = new JSONArray(body);
 			} catch (JSONException jex) {
@@ -84,12 +80,12 @@ public class ReadableFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	protected void onPostExecute(List<FeedObject> feed) {		
 		
 		if(requestFailed) {
-			this.listener.onFeedRetrievalFailed();
+			BusProvider.getInstance().post(new ReadabilityFeedRetrieveErrorEvent());
 			return;
 		}
 		
-		if (this.listener != null && feed != null) {
-			this.listener.onFeedRetrieved(feed, false);
+		if (feed != null) {
+			BusProvider.getInstance().post(new ReadabilityFeedRetrieveSuccessEvent(feed));
 		}
 	}
 	

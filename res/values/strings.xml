@@ -29,9 +29,9 @@
     <string name="PrefRate">Rate App</string>
     <string name="PrefAppSearch">Include Apps</string>
     <string name="PrefMainFontSize">Font Size</string>
-    <string name="PrefEnableAcra">Report Crashes</string>
-    <string name="PrefAcraDisabled">Reporting Disabled</string>
-    <string name="PrefAcraEnabled">Reporting Enabled</string>
+    <string name="PrefEnableAcra">Auto Report Crashes</string>
+    <string name="PrefAcraDisabled">Automatic Reporting Disabled</string>
+    <string name="PrefAcraEnabled">Automatic Reporting Enabled</string>
     
     <string name="PrefWaterCooler">Stories</string>
     <string name="PrefAutocomplete">Autocomplete</string>
@@ -39,6 +39,12 @@
     <string name="PrefTurnOffAutocomplete">Disabled</string>
     
     <string name="PrefReadable">Readability</string>
+    <string name="PrefGroupTor">Tor</string>
+    <string name="PrefEnableTor">Enable Tor</string>
+    <string name="PrefCheckOrbotStatus">Check Orbot status</string>
+    <string name="OrbotStatusOkTitle">Orbot status</string>
+    <string name="OrbotStatusOkMessage">Orbot seems to be running fine!</string>
+    <string name="OrbotCheckSite">https://check.torproject.org</string>
     
     <string name="ShareStory">Share Story</string>
     <string name="ShareSearch">Share Search</string>
@@ -83,14 +89,16 @@
     <string name="ConfirmExternalBrowser">Please Confirm</string>
     
     <string name="ChangingFontSize">Changing Font Size...</string>
-    
+
+
     <string name="crash_toast_text">Application crashed! Crash-related data will be collected and reported upon confirmation.</string>
     <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
     <string name="crash_notif_title">DuckDuckGo crash report</string>
     <string name="crash_notif_text">Please click here to help fix the issue.</string>
-    <string name="crash_dialog_text">An unexpected error occurred forcing the application to stop. 
+    <string name="crash_dialog_text">An unexpected error occurred.
         Please help us fix the problem by clicking \'OK\' to send crash-related data. 
-        (IMPORTANT: Sensitive information such as your search query or browsed URL can be included.)</string>
+        The only data we will receive is: APP_VERSION_CODE, APP_VERSION_NAME, ANDROID_VERSION, STACK_TRACE,
+        AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
     <string name="crash_dialog_comment_prompt">Your comment: </string>
     <string name="crash_dialog_ok_toast">Thank you for your help!</string>
     
@@ -157,4 +165,39 @@
     <string name="NewSourcesOk">Show me</string>
     <string name="NewSourcesNoThx">Later</string>
 
+    
+    <!-- SSL Certificate dialogs -->
+    <!-- Title for an SSL Certificate dialog -->
+    <string name="ssl_certificate">Security certificate</string>
+    <!-- Message on an SSL Certificate dialog -->
+    <string name="ssl_certificate_is_valid">This certificate is valid.</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_to">Issued to:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="common_name">Common name:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="org_name">Organization:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="org_unit">Organizational unit:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_by">Issued by:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="validity_period">Validity:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_on">Issued on:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="expires_on">Expires on:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="serial_number">Serial number:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="fingerprints">Fingerprints:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="sha256_fingerprint">SHA-256 fingerprint:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="sha1_fingerprint">SHA-1 fingerprint:</string>
+    
+    <string name="WarnSSLTitle">Warning: SSL certificate</string>
+    <string name="WarnSSLDetail">SSL certificate of the server is not listed as trusted. 
+        You can still choose to continue or cancel the request.</string>
+    
 </resources>

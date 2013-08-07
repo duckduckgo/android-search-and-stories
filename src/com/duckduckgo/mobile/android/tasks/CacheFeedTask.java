@@ -11,24 +11,28 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.FileCache;
-import com.duckduckgo.mobile.android.listener.FeedListener;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveErrorEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
 
 public class CacheFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
 	private static String TAG = "CacheFeedTask";
-	
-	private FeedListener listener = null;
-		
+			
 	private FileCache fileCache = null;
 			
 	private boolean requestFailed = false;
+	
+	DuckDuckGo activity;
 			
-	public CacheFeedTask(FeedListener listener) {
-		this.listener = listener;
+	public CacheFeedTask(DuckDuckGo activity) {
+		this.activity = activity;
 		this.fileCache = DDGApplication.getFileCache();	
 	}
 	
@@ -84,12 +88,12 @@ public class CacheFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	protected void onPostExecute(List<FeedObject> feed) {		
 		
 		if(requestFailed) {
-			this.listener.onFeedRetrievalFailed();
+			BusProvider.getInstance().post(new FeedRetrieveErrorEvent());
 			return;
 		}
 		
-		if (this.listener != null && feed != null) {
-			this.listener.onFeedRetrieved(feed, true);
+		if (feed != null) {
+			BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(feed, REQUEST_TYPE.FROM_CACHE));
 		}
 	}
 	

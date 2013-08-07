@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.fragment;
 
-import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -10,71 +9,64 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
-import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
-import com.duckduckgo.mobile.android.views.SavedSearchListView.OnSavedSearchItemSelectedListener;
+import com.squareup.otto.Subscribe;
 
 public class SavedResultTabFragment extends ListFragment {
-	SavedSearchListView savedSearchView = null;
+	SavedSearchListView savedSearchView;
+	SavedResultCursorAdapter savedSearchAdapter;
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
+		setRetainInstance(true);
+		BusProvider.getInstance().register(this);
 		return fragmentLayout;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		BusProvider.getInstance().unregister(this);
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		// setup for real work
-		final Activity activity = getActivity();
-
-		if(activity instanceof DuckDuckGo) {
-            final DuckDuckGo duckDuckGoActivity = (DuckDuckGo)activity;
-			savedSearchView = (SavedSearchListView) getListView();
-			savedSearchView.setDivider(null);
-			savedSearchView.setAdapter(((DuckDuckGo) activity).mDuckDuckGoContainer.savedSearchAdapter);
-			savedSearchView.setOnSavedSearchItemSelectedListener(new OnSavedSearchItemSelectedListener() {
-				public void onSavedSearchItemSelected(String query) {
-					if(query != null){							
-						duckDuckGoActivity.searchWebTerm(query);
-						duckDuckGoActivity.itemSaveSearch(query);
-                        duckDuckGoActivity.syncAdapters();
-					}			
-				}
-			});
-			
-			savedSearchView.setOnSavedSearchItemLongClickListener(new SavedSearchListView.OnSavedSearchItemLongClickListener() {
-                @Override
-                public void onSavedSearchItemLongClick(String query) {
-                    new SavedSearchMenuDialog(duckDuckGoActivity, query).show();
-                }
-            });
-		}
+		savedSearchView = (SavedSearchListView) getListView();
+		savedSearchView.setDivider(null);
+		savedSearchAdapter = new SavedResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
+		savedSearchView.setAdapter(savedSearchAdapter);
 	}
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
 		
-		final Activity activity = getActivity();
 		Object adapter = getListView().getAdapter();
 		Cursor c = null;
 		
 		if(adapter instanceof SavedResultCursorAdapter) {
 			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
 			String query = c.getString(c.getColumnIndex("query"));
-			if(query != null){							
-				((DuckDuckGo) activity).searchWebTerm(query);	
-				((DuckDuckGo) activity).itemSaveSearch(query);
-				((DuckDuckGo) activity).syncAdapters();
+			if(query != null){
+				BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));				
 			}
 		}
+	}
+	
+	@Subscribe
+	public void onSyncAdapters(SyncAdaptersEvent event) {
+		savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
+		savedSearchAdapter.notifyDataSetChanged();
 	}
 }

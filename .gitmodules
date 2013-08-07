@@ -1,0 +1,6 @@
+[submodule "libs/OnionKit"]
+	path = libs/OnionKit
+	url = https://github.com/koenmetsu/OnionKit.git
+[submodule "libs/Otto"]
+	path = libs/Otto
+	url = git://github.com/square/otto.git

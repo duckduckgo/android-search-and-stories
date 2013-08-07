@@ -1,5 +1,7 @@
 package com.duckduckgo.mobile.android.activity;
 
+import com.duckduckgo.mobile.android.dialogs.OrbotStatusOkDialogBuilder;
+import com.duckduckgo.mobile.android.util.TorIntegration;
 import android.annotation.TargetApi;
 import android.app.FragmentManager;
 import android.content.Context;
@@ -29,10 +31,17 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 
 @TargetApi(11)
 public class DDGPreferenceFragment extends PreferenceFragment implements OnSharedPreferenceChangeListener {
-	
-	OnPreferenceClickListener customListener = null;
+
+    private final TorIntegration torIntegration;
+    private final DuckDuckGo context;
+    OnPreferenceClickListener customListener = null;
 	PreferenceChangeListener customChangeListener = null;
 	
+	public DDGPreferenceFragment(TorIntegration torIntegration, DuckDuckGo context) {
+		this.torIntegration = torIntegration;
+        this.context = context;
+    }
+
 	@TargetApi(11)
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,6 +55,34 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		whenSendingFeedBackLaunchesEmailIntent();
 		whenRatingGoesToMarket();
 		whenTurningOffAutoCompleteSyncsOtherAutoCompletePreferences();
+		whenChangingTorChecksForOrbot();
+		whenCheckingOrbotStatusStartsOrbotAndSetsProxy();
+	}
+
+	private void whenCheckingOrbotStatusStartsOrbotAndSetsProxy() {
+		Preference checkOrbotPreference = findPreference("checkOrbotStatus");
+		checkOrbotPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+			@Override
+			public boolean onPreferenceClick(Preference preference) {
+                if(!torIntegration.isOrbotRunningAccordingToSettings()){
+                    torIntegration.prepareTorSettings();
+                }
+                else{
+                    context.searchOrGoToUrl(getString(R.string.OrbotCheckSite));
+                }
+                return true;
+            }
+		});
+	}
+
+	private void whenChangingTorChecksForOrbot() {
+		Preference enableTorPreference = findPreference("enableTor");
+		enableTorPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                torIntegration.prepareTorSettings((Boolean) newValue);
+                return true;
+            }
+        });
 	}
 
 	private void whenClearingHistoryShowsClearHistoryConfirmDialog() {
@@ -164,7 +201,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
         if(getActivity() instanceof DuckDuckGo){
         	DuckDuckGo ddg = (DuckDuckGo) getActivity();
         	if(ddg.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS){
-        		ddg.showPrefFragment();
+        		//ddg.showPrefFragment();
         	}
         }
         

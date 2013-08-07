@@ -18,7 +18,7 @@
             android:name=".activity.DuckDuckGo"
             android:label="@string/AppName"
             android:windowSoftInputMode="stateHidden"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTop"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -75,6 +75,13 @@
 		        <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
 		    </intent-filter>
 		</receiver>
+		
+		<activity android:name="info.guardianproject.onionkit.ui.CertDisplayActivity"
+            android:configChanges="locale|orientation"
+            android:theme="@android:style/Theme.Dialog"
+            android:taskAffinity="" />
+		
+		<service android:name="com.duckduckgo.mobile.android.subscribers.MainSubscriber" />
 		
     </application>
 

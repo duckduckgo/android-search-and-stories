@@ -24,6 +24,8 @@ public class DDGAutoCompleteTextView extends AutoCompleteTextView {
 	public void setOnBackButtonPressedEventListener(BackButtonPressedEventListener eventListener) {
 		backButtonPressedEventListener = eventListener;
 	}
+
+
 	
 	public String getTrimmedText(){
 		return getText().toString().trim();
@@ -61,6 +63,30 @@ public class DDGAutoCompleteTextView extends AutoCompleteTextView {
 
 	public void addTextWithTrailingSpace(String phrase) {
 		setText(phrase.trim() + " ");
-		setSelection(getText().length());
-	}
+        setCursorAtEnd();
+    }
+
+    private void setCursorAtEnd() {
+        setSelection(getText().length());
+    }
+
+    public void pasteQuery(String suggestion) {
+        releaseFocus();
+        setText(suggestion);
+        append(" ");
+        obtainFocus();
+        setCursorAtEnd();
+    }
+
+    private void releaseFocus() {
+        setFocusable(false);
+        setFocusableInTouchMode(false);
+    }
+
+    private void obtainFocus() {
+        setFocusable(true);
+        setFocusableInTouchMode(true);
+        this.requestFocus();
+    }
+
 }

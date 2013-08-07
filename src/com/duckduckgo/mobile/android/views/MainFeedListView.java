@@ -2,46 +2,28 @@ package com.duckduckgo.mobile.android.views;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteCursor;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.squareup.picasso.Picasso;
 
 public class MainFeedListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
-	private OnMainFeedItemSelectedListener listener;
-	private OnMainFeedItemLongClickListener longClickListener;
-	
-	private boolean isAfterRenderRun = false;
-	private Runnable afterRenderTask = null;
-	
 	public MainFeedListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
 		this.setOnItemClickListener(this);
 		this.setOnItemLongClickListener(this);
-	}
-	
-	public void setOnMainFeedItemSelectedListener(OnMainFeedItemSelectedListener listener) {
-		this.listener = listener;
-	}
-	
-	public void setOnMainFeedItemLongClickListener(OnMainFeedItemLongClickListener longClickListener) {
-        this.longClickListener = longClickListener;
-	}
-	
-	/**
-	 * A task (Runnable) to run after at least a view is rendered can be set
-	 * @param task
-	 */
-	public void setAfterRenderTask(Runnable task) {
-		afterRenderTask = task;
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -54,10 +36,8 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 			obj = new FeedObject(((SQLiteCursor) item));
 		}
 		
-		if (obj != null) {
-			if (listener != null) {
-				listener.onMainFeedItemSelected(obj);
-			}
+		if (obj != null) {			
+			BusProvider.getInstance().post(new MainFeedItemSelectedEvent(obj));
 		}
 	}
 
@@ -72,19 +52,14 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		}
 
 		if (obj != null) {
-			if (longClickListener != null) {
-				longClickListener.onMainFeedItemLongClick(obj);
+			if(getAdapter().getClass() == SavedFeedCursorAdapter.class) {
+				BusProvider.getInstance().post(new SavedFeedItemLongClickEvent(obj));
+			}
+			else {
+				BusProvider.getInstance().post(new MainFeedItemLongClickEvent(obj));
 			}
 		}
 		return true;
-	}
-
-	public interface OnMainFeedItemSelectedListener {
-		public void onMainFeedItemSelected(FeedObject feedObject);
-	}
-
-	public interface OnMainFeedItemLongClickListener {
-		public void onMainFeedItemLongClick(FeedObject feedObject);
 	}
 
 	public void setSelectionById(String id) {
@@ -112,20 +87,6 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		}
 		
 		return -1;
-	}
-	
-	@Override
-	protected void onDraw(Canvas canvas) {
-		super.onDraw(canvas);
-				
-		if(afterRenderTask != null && !isAfterRenderRun) {
-			afterRenderTask.run();
-			isAfterRenderRun = true;
-		}
-	}
-	
-	public void enableAfterRender() {
-		isAfterRenderRun = false;
 	}
 	
 	public void cleanImageTasks() {

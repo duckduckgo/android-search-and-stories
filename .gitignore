@@ -18,3 +18,5 @@ local.properties
 .idea/
 DuckDuckGo.eml
 DuckDuckGo.iml
+out/
+*.iml

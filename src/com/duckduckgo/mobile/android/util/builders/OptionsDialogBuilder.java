@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.util.builders;
 
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.util.Item;
 
 import android.app.AlertDialog.Builder;
@@ -26,7 +27,7 @@ public class OptionsDialogBuilder extends Builder {
         setAdapter(contextAdapter, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int item) {
                 Item clickedItem = OptionsDialogBuilder.this.contextAdapter.getItem(item);
-                clickedItem.ActionToExecute.Execute();
+                BusProvider.getInstance().post(clickedItem.EventToFire);
             }
         });
     }

@@ -1,11 +1,14 @@
 package com.duckduckgo.mobile.android.network;
 
+import info.guardianproject.onionkit.trust.StrongHttpsClient;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
 
+import android.content.Context;
 import ch.boye.httpclientandroidlib.Header;
 import ch.boye.httpclientandroidlib.HeaderElement;
 import ch.boye.httpclientandroidlib.HttpEntity;
@@ -30,10 +33,11 @@ import ch.boye.httpclientandroidlib.protocol.HTTP;
 import ch.boye.httpclientandroidlib.protocol.HttpContext;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
 
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 
 
-public class DDGHttpClient extends DefaultHttpClient {
+public class DDGHttpClient extends StrongHttpsClient {
 	HttpGet request;
 	HttpEntity entity;
 	public HttpResponse response;
@@ -54,7 +58,8 @@ public class DDGHttpClient extends DefaultHttpClient {
 	/**
 	 * XXX currently UNUSED
 	 */
-	public DDGHttpClient(){
+	public DDGHttpClient(Context context){
+		super(context);
 		HttpParams httpParameters = new BasicHttpParams();
 		//HttpConnectionParams.setConnectionTimeout(httpParameters, timeoutConnection);
 		//HttpConnectionParams.setSoTimeout(httpParameters, timeoutSocket);
@@ -70,8 +75,9 @@ public class DDGHttpClient extends DefaultHttpClient {
 
 	}
 	
-	public DDGHttpClient(ClientConnectionManager cm, HttpParams httpParams){
-		super(cm, httpParams);
+	public DDGHttpClient(Context context, ClientConnectionManager cm, HttpParams httpParams){
+		super(context);
+		setParams(httpParams);
 		connManager = cm;
 		
 		// HttpParams httpParameters = new BasicHttpParams();
