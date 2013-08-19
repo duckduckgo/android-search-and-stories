@@ -151,13 +151,21 @@ public class DDGWebView extends WebView {
 	public void clearBrowserState() {		
 		stopLoading();
 		clearHistory();
-		clearView();
-		shouldClearHistory = true;
+        clearViewReliably();
+        shouldClearHistory = true;
 		
 		clearReadabilityState();
 	}
-	
-	public void setParentActivity(DuckDuckGo activity) {
+
+    /**
+     * The clearView method was deprecated in API level 18. Use this instead
+     * See https://developer.android.com/reference/android/webkit/WebView.html#clearView%28%29
+     */
+    private void clearViewReliably() {
+        loadUrl("about:blank");
+    }
+
+    public void setParentActivity(DuckDuckGo activity) {
 		this.activity = activity;
 	}
 	
@@ -186,7 +194,7 @@ public class DDGWebView extends WebView {
 			activity.displayScreen(activity.mDuckDuckGoContainer.currentScreen, true);
 		}
 	}
-	
+
 	private boolean canDoReadability(String articleUrl) {
 		return PreferencesManager.getReadable() 
 				&& !isOriginalRequired()
