@@ -398,7 +398,7 @@ public class WebFragment extends SherlockFragment {
 	}
 	
 	@Subscribe
-	public void onSavedFeedItemSelected(SavedFeedItemSelectedEvent event) {
+	public void onFeedItemSelected(FeedItemSelectedEvent event) {
 		String url = event.feedObject.getUrl();
 		if(url != null) {	
 			DDGControlVar.currentFeedObject = event.feedObject;

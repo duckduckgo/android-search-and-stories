@@ -17,7 +17,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,12 +25,12 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
@@ -51,6 +50,7 @@ import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.CleanFeedDownloadsEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
 import com.duckduckgo.mobile.android.events.SearchOrGoToUrlEvent;
@@ -63,14 +63,15 @@ import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEve
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteUrlInHistoryEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.feedEvents.FeedUpdateRequestEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
-import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftHomeButtonClickEvent;
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftSavedButtonClickEvent;
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftSettingsButtonClickEvent;
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftStoriesButtonClickEvent;
+import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
+import com.duckduckgo.mobile.android.events.pasteEvents.SavedSearchPasteEvent;
+import com.duckduckgo.mobile.android.events.pasteEvents.SuggestionPasteEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveSearchEvent;
@@ -667,25 +668,42 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 		new SavedSearchMenuDialog(this, event.query).show();
 	}
 
-//	@Subscribe
-//	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
-//		switchDrawer();
-//	}
-//	
-//	@Subscribe
-//	public void onRecentSearchPaste(RecentSearchPasteEvent event) {
-//		switchDrawer();
-//	}
-//
-//    @Subscribe
-//	public void onSuggestionPaste(SuggestionPasteEvent event) {
-//    	switchDrawer();
-//	}
-//	
-//	@Subscribe
-//	public void onSavedSearchPaste(SavedSearchPasteEvent event) {
-//		switchDrawer();
-//	}
+	@Subscribe
+	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
+		String type = event.historyObject.getType();
+		if(type.equals("R")) {
+			setSearchBarText(event.historyObject.getData());
+		}
+		else {
+			setSearchBarText(event.historyObject.getUrl());
+		}
+	}
+	
+	@Subscribe
+	public void onFeedItemSelected(FeedItemSelectedEvent event) {
+		String url = event.feedObject.getUrl();
+		if(url != null) {
+			setSearchBarText(url);
+		}
+		else {
+			clearSearchBar();
+		}
+	}
+	
+	@Subscribe
+	public void onRecentSearchPaste(RecentSearchPasteEvent event) {
+		setSearchBarText(event.query);
+	}
+
+    @Subscribe
+	public void onSuggestionPaste(SuggestionPasteEvent event) {
+    	setSearchBarText(event.query);
+	}
+	
+	@Subscribe
+	public void onSavedSearchPaste(SavedSearchPasteEvent event) {
+		setSearchBarText(event.query);
+	}
 //	
 //	@Subscribe
 //	public void onRecentHeaderClick(RecentHeaderClickEvent event) {
