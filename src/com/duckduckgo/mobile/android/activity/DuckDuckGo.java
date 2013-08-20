@@ -325,6 +325,7 @@ public class DuckDuckGo extends SherlockFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        keyboardService = new KeyboardService(this);
         requestWindowFeature(Window.FEATURE_PROGRESS);
 
         getSupportActionBar().setDisplayShowCustomEnabled(true);

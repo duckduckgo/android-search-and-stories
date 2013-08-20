@@ -47,7 +47,9 @@ import com.duckduckgo.mobile.android.events.fontEvents.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOffEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOnEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.SaveEvent;
 import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
@@ -462,7 +464,10 @@ public class WebFragment extends SherlockFragment {
     	// Handle item selection
         switch (item.getItemId()) {
                 case R.id.menu_share:
-                    BusProvider.getInstance().post(CommonActions.getShareEvent(DDGControlVar.sessionType, DDGControlVar.currentFeedObject, webViewUrl));
+                	ShareEvent shareEvent = CommonActions.getShareEvent(DDGControlVar.sessionType, DDGControlVar.currentFeedObject, webViewUrl);
+                	if(shareEvent != null) {
+                		BusProvider.getInstance().post(shareEvent);
+                	}
                     return true;
                 case R.id.menu_external:
                     BusProvider.getInstance().post(CommonActions.getExternalEvent(DDGControlVar.sessionType, webViewUrl));
@@ -471,7 +476,10 @@ public class WebFragment extends SherlockFragment {
                 	BusProvider.getInstance().post(new ReloadEvent());
                     return true;
                 case R.id.menu_save:
-                    BusProvider.getInstance().post(CommonActions.getSaveEvent(DDGControlVar.sessionType, DDGControlVar.currentFeedObject, webViewUrl));
+                	SaveEvent saveEvent = CommonActions.getSaveEvent(DDGControlVar.sessionType, DDGControlVar.currentFeedObject, webViewUrl);
+                	if(saveEvent != null) {
+                		BusProvider.getInstance().post(saveEvent);
+                	}
                     return true;
         }
     	return false;
