@@ -73,6 +73,10 @@ public class DDGWebViewClient extends WebViewClient {
 	@SuppressLint("NewApi")
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
+        if(url.equals(DDGWebView.ABOUT_BLANK)){
+            activity.clearSearchBar();
+            return;
+        }
 		mLoaded = false;
         view.getSettings().setDomStorageEnabled(true);
         view.getSettings().setPluginState(PluginState.ON_DEMAND);
@@ -166,9 +170,8 @@ public class DDGWebViewClient extends WebViewClient {
     	        view.getSettings().setEnableSmoothTransition(true);
     	        view.getSettings().setDisplayZoomControls(false);
 	        }
-	        
-	        activity.setSearchBarText(url);
 		}
+        activity.setSearchBarText(url);
 	}
 	
 	public void onPageFinished (WebView view, String url) {
