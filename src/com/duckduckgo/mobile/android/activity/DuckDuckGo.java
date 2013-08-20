@@ -843,7 +843,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		keepFeedUpdated();
 	}
 	
-	private void clearSearchBar() {
+	public void clearSearchBar() {
 		getSearchField().setText("");
     	getSearchField().setCompoundDrawables(null, null, null, null);
 		getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
