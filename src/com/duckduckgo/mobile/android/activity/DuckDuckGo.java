@@ -33,6 +33,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.webkit.DownloadListener;
 import android.webkit.WebView.HitTestResult;
 import android.widget.AdapterView;
@@ -501,7 +502,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         getSearchField().setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-				if(textView == getSearchField()) {
+				if(textView == getSearchField() && actionId != EditorInfo.IME_NULL) {
                     keyboardService.hideKeyboard(getSearchField());
 					getSearchField().dismissDropDown();
 					searchOrGoToUrl(getSearchField().getTrimmedText());
