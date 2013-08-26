@@ -170,8 +170,8 @@ public class DDGWebViewClient extends WebViewClient {
     	        view.getSettings().setEnableSmoothTransition(true);
     	        view.getSettings().setDisplayZoomControls(false);
 	        }
+            activity.setSearchBarText(url);
 		}
-        activity.setSearchBarText(url);
 	}
 	
 	public void onPageFinished (WebView view, String url) {
