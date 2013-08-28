@@ -1,20 +1,20 @@
 # Contributing
+## Getting started with development
 
-Thanks for helping us make DuckDuckGo for Android! DuckDuckHack has been a
-great success and so we've taken the steps necessary to open sourcing our apps.
+1. Make sure you have a [GitHub account](https://github.com/signup/free).
+2. Create your own fork ( see Changes to see which branch you should fork off ).
+3. Use git to clone your fork : `git clone git@github.com:yourbranch/android.git`.
+4. In your git repository, enter `git submodule init` and `git submodule update`.
 
-* If **you are a developer**, you're in the right place!
-* If **you are not a developer**, there is still a lot you can do at our [ideas site](http://ideas.duckduckhack.com/) like suggest and comment on prospective features and ideas.
-* Both of these roles are very valuable and will help direct community efforts.
+### Using Eclipse
+1. Open up Eclipse.
+2. Make sure you have [the Android SDK](https://developer.android.com/sdk/installing/installing-adt.html "Installing Android Platforms and Packages") and [ADT](https://developer.android.com/tools/sdk/eclipse-adt.html "Android Developer Tools for Eclipse") [installed](https://developer.android.com/sdk/installing/installing-adt.html "Installing ADT for Eclipse").
+3. Import from existing android code the projects **DuckDuckGo** and **OnionKit**.
+4. If you're getting any errors by now, **Disable** Eclipse -> Project -> *Build  Automatically* and Eclipse -> Project -> *Clean...* select projects and  *start a build immediately*.
+5. Start the DuckDuckGo Application as an Android application.
 
-* All developers should make sure to have a [GitHub account](https://github.com/signup/free)
-* If there isn't already an open issue that describes your bug or feature, submit one.
-  * If you're submitting a bug, please describe a way we can reproduce the issue(s).
-  * Be sure to add the version you're experiencing the issue on.
-  * If you're submitting a feature (cool!), make sure you contact us before you do any work to ensure that you aren't duplicating efforts and that your changes are aligned with the goal of the app.
-
-* Some of the best features of DuckDuckGo came from the community; so stay in touch!
-
+### Using other IDEs
+Even though we provide the setup steps for Eclipse, you are free to use any IDE you like. 
 
 ## Changes
 * **Bugs** fork the repository on GitHub and create a topic branch from **master** with your GitHub username in the branch name like:
@@ -40,6 +40,15 @@ great success and so we've taken the steps necessary to open sourcing our apps.
     The body describes the behavior without the patch, why this is a problem,
     and how the patch fixes the problem when applied.
 ````
+
+
+## Things you can help with ( aka low hanging fruit )
+- Bug fixes
+- Layout fixes
+- Improving our test suite
+- Testing the application
+
+If you can't find any bugs, check out our issue tracker to find any open issues. 
 
 ## Caveat(s)
 The DuckDuckGo mobile apps represent a ton of hard work from people all around the world. We've spent a long time thinking about exactly what we think makes a great mobile experience. While we'd love to accept each an every pull request, that almost certainly wouldn't result in a coherent experience. It's really important to sync up with us on what you're trying to do. Every new feature, no matter how excellent, must jive and work with the overall vision.  The only way to do that is to stay in touch.
