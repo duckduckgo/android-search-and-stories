@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,54 +25,51 @@ public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 	public SourcesTask(SourcesListener listener) {
 		this.listener = listener;
 	}
+
+    private String fetchSourcesJson(){
+        String body = null;
+        try {
+            if (isCancelled()) {
+                return null;
+            }
+            // get source response (type_info=1)
+            body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
+            Log.v(TAG, body);
+        } catch (DDGHttpException conException) {
+            Log.e(TAG, "Unable to execute Query: " + conException.getMessage(), conException);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+        return body;
+    }
 	
 	@Override
 	protected List<SourcesObject> doInBackground(Void... arg0) {
-		JSONArray json = null;
-		List<SourcesObject> returnFeed = new ArrayList<SourcesObject>();
-		String body = null;
-		try {
-			if (isCancelled()) return null;
-			
-			// get source response (type_info=1)
-			body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.SOURCES_URL);
-			
-			Log.v(TAG, body);
-		} catch (DDGHttpException conException) {
-			Log.e(TAG, "Unable to execute Query: " + conException.getMessage(), conException);			
-		} catch (Exception e) {
-			Log.e(TAG, e.getMessage(), e);
-		}
-		
-		if(body != null) {	
-			try {
-				json = new JSONArray(body);
-			} catch (JSONException jex) {
-				Log.e(TAG, jex.getMessage(), jex);
-			}
-		}
-
-		if (json != null) {
-			if (isCancelled()) {
-				return returnFeed;
-			}
-			for (int i = 0; i < json.length(); i++) {
-				try {
-					JSONObject nextObj = json.getJSONObject(i);
-					if (nextObj != null) {
-						SourcesObject feed = new SourcesObject(nextObj);
-						if (feed != null) {
-							returnFeed.add(feed);
-						}
-					}
-				} catch (JSONException e) {
-					Log.e(TAG, "Failed to create object with info at index " + i);
-				}
-			}
-		}
-		
-		return returnFeed;
+        String sourcesJson = fetchSourcesJson();
+        if(!TextUtils.isEmpty(sourcesJson)) {
+            if (!isCancelled()) {
+                return createSourceObjects(sourcesJson);
+            }
+        }
+        return new ArrayList<SourcesObject>();
 	}
+
+    private ArrayList<SourcesObject> createSourceObjects(String sourcesJson){
+        ArrayList<SourcesObject> feedObjects = new ArrayList<SourcesObject>();
+        try {
+            JSONArray jsonArray = new JSONArray(sourcesJson);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if (jsonObject != null) {
+                    SourcesObject feed = new SourcesObject(jsonObject);
+                    feedObjects.add(feed);
+                }
+            }
+        } catch (JSONException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+        return feedObjects;
+    }
 	
 	@Override
 	protected void onPostExecute(List<SourcesObject> feed) {	
