@@ -1,38 +1,23 @@
-# DuckDuckGo for Android
+# DuckDuckGo Search & Stories
 
-DuckDuckGo Search & Stories offers you a better way to search and a new take on Stories.
+We are excited to engage the community in the development of our new [apps](https://duckduckgo.com/app)! If you are trying to contribute in other ways, that happens over at [DuckDuckHack](http://duckduckhack.com) or on [GitHub](http://github.com/duckduckgo).
 
-- Search anonymously.
-- Find instantly.
-- Stay informed.
+## Discuss
 
-Please read on to see how you can make DuckDuckGo for Android even better!
+Contact us at android@duckduckgo.com if you want to get more involed, have questions or want to chat.
 
-## Contributing
+## Getting started
 
-Thanks for helping us make DuckDuckGo for Android! DuckDuckHack has been a
-great success and so we've taken the steps necessary to open sourcing our apps.
+We're currently evaluating a variety of CI systems and suggested development environments. Android provides a rich set of environments, most of which are currently supported. You can familiarize yourself with the code by working on the following low-hanging fruit:
+- bug fixes
+- layout fixes
+- security fixes
+- improving the test suite
 
-* If **you are a developer**, you're in the right place! 
-* If **you are not a developer**, there is still a lot you can do at our [ideas site](http://ideas.duckduckhack.com/) like suggest and comment on prospective features and ideas.
+Please check out the [issue tracker](https://github.com/duckduckgo/android/issues) and [contributing](https://github.com/duckduckgo/android/blob/master/CONTRIBUTING.md) guidelines.
 
- Both of these roles are very valuable and will help direct community efforts.
+## License
+DuckDuckGo Search & Stories is distributed under the Apache 2.0 [license](https://github.com/duckduckgo/android/blob/master/LICENSE).
 
-To get started with development, check out the CONTRIBUTING guidelines.
-
-## Suggestions and bugs
-If there isn't already an open issue that describes your bug or feature, please submit one.
-
-  * If you're submitting a bug, please describe a way we can reproduce the issue(s).
-  * Be sure to add the version you're experiencing the issue on.
-  * If you're submitting a feature (cool!), make sure you contact us before you do any work to ensure that you aren't duplicating efforts and that your changes are aligned with the goal of the app.
-
-Some of the best features of DuckDuckGo came from the community; so stay in touch!
-
-
-
-## How to give feedback
-
-Contact us at android@duckduckgo.com if you have questions or want to chat.
-
-<Possibly more information on community platform, mailing lists, ...>
+## Notes
+DuckDuckGo Search & Stories represents a ton of hard work from people all around the world. We've spent a long time thinking about exactly what makes a great mobile experience. While we'd love to accept each an every pull request, that probably wouldn't lead to a coherent experience. If you would like to get more involved, mail us at android@duckduckgo.com.

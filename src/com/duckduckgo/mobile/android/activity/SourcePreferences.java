@@ -26,7 +26,8 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 
 public class SourcePreferences extends Activity implements SourcesListener {
 
-	SourcePreferencesContainer sourcePrefContainer;
+    public SourcesTask sourcesTask = null;
+    public SourcesAdapter sourcesAdapter = null;
 	
 	private ListView sourcesView = null;
 	private Button defaultButton = null;
@@ -38,18 +39,20 @@ public class SourcePreferences extends Activity implements SourcesListener {
 		
 		setContentView(R.layout.sources);
 		
-		sourcePrefContainer = (SourcePreferencesContainer) getLastNonConfigurationInstance();
+		SourcePreferencesContainer sourcePrefContainer = (SourcePreferencesContainer) getLastNonConfigurationInstance();
 		if(sourcePrefContainer == null){
-			sourcePrefContainer = new SourcePreferencesContainer();
-			sourcePrefContainer.sourcesAdapter = new SourcesAdapter(this);
+			sourcesAdapter = new SourcesAdapter(this);
 		}
+        else{
+            sourcesAdapter = sourcePrefContainer.sourcesAdapter;
+        }
 
 		sourcesView = (ListView) findViewById(R.id.sourceItems);
         sourcesView.addHeaderView(createHeaderView());
         sourcesView.addFooterView(createFooterView());
 		sourcesView.addFooterView(createSuggestSourceButton());
 
-		sourcesView.setAdapter(sourcePrefContainer.sourcesAdapter);
+		sourcesView.setAdapter(sourcesAdapter);
 
         defaultButton = (Button) findViewById(R.id.sourceDefaultButton);
 		defaultButton.setOnClickListener(new OnClickListener() {
@@ -65,7 +68,7 @@ public class SourcePreferences extends Activity implements SourcesListener {
 				DDGControlVar.userDisallowedSources.clear();
 				
 				// reset source set of underlying list adapter
-				sourcePrefContainer.sourcesAdapter.notifyDataSetChanged();
+				sourcesAdapter.notifyDataSetChanged();
 				sourcesView.invalidateViews();
 			}
 		});
@@ -107,28 +110,31 @@ public class SourcePreferences extends Activity implements SourcesListener {
 	protected void onResume() {
 		super.onResume();
 		
-		sourcePrefContainer.sourcesTask = new SourcesTask(this);
-		sourcePrefContainer.sourcesTask.execute();
+		sourcesTask = new SourcesTask(this);
+		sourcesTask.execute();
 	}
 
 	public void onSourcesRetrieved(List<SourcesObject> feed) {
-		sourcePrefContainer.sourcesAdapter.setList(feed);
-		sourcePrefContainer.sourcesAdapter.notifyDataSetChanged();
+		sourcesAdapter.setList(feed);
+		sourcesAdapter.notifyDataSetChanged();
 	}
 
 	public void onSourcesRetrievalFailed() {
 		//If the sourcesTask is null, we are currently paused
 		//Otherwise, we can try again
-		if (sourcePrefContainer.sourcesTask != null) {
-			sourcePrefContainer.sourcesTask = new SourcesTask(this);
-			sourcePrefContainer.sourcesTask.execute();
+		if (sourcesTask != null) {
+			sourcesTask = new SourcesTask(this);
+			sourcesTask.execute();
 		}
 	}
 	
 	@Override
     public Object onRetainNonConfigurationInstance() {
     	// return page container, holding all non-view data
-    	return sourcePrefContainer;
+        SourcePreferencesContainer sourcePreferencesContainer = new SourcePreferencesContainer();
+        sourcePreferencesContainer.sourcesAdapter = sourcesAdapter;
+        sourcePreferencesContainer.sourcesTask = sourcesTask;
+        return sourcePreferencesContainer;
     }
 	
 }
