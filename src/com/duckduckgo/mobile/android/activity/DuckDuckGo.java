@@ -24,6 +24,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
+import android.webkit.DownloadListener;
+import android.webkit.WebView.HitTestResult;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
@@ -214,9 +217,9 @@ public class DuckDuckGo extends SherlockFragmentActivity {
         		.getCustomView().findViewById(R.id.searchEditText);
         getSearchField().setAdapter(acAdapter);
         getSearchField().setOnEditorActionListener(new OnEditorActionListener() {
-    		@Override
-    		public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
-    			if(textView == getSearchField()) {
+			@Override
+			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
+				if(textView == getSearchField() && actionId != EditorInfo.IME_NULL) {
                     keyboardService.hideKeyboard(getSearchField());
     				getSearchField().dismissDropDown();
     				BusProvider.getInstance().post(new AfterSwitchPostEvent(SCREEN.SCR_WEBVIEW, 
