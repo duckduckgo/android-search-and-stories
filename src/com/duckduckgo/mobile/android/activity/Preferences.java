@@ -30,6 +30,7 @@ import android.preference.PreferenceActivity;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
@@ -46,11 +47,26 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
     public Preferences() {
         this.torIntegration = new TorIntegration(this);
     }
+
+    private boolean isDarkTheme(String themeName){
+        return themeName.equals("DDGDark");
+    }
+
+    private void setHoloTheme(String ddgThemeName){
+        if(isDarkTheme(ddgThemeName)){
+            setTheme(android.R.style.Theme_Holo);
+        }else{
+            setTheme(android.R.style.Theme_Holo_Light);
+        }
+    }
 	
   @SuppressWarnings("deprecation")
   @Override
   public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+      setHoloTheme(PreferencesManager.getThemeName());
+      super.onCreate(savedInstanceState);
+
+
 
       addPreferencesFromResource(R.xml.preferences);
       getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
@@ -121,6 +137,9 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
             @Override
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 result_switchTheme = true;
+                Intent intent = new Intent(getApplicationContext(), Preferences.class);
+                finish();
+                startActivity(intent);
                 return true;
             }
         });

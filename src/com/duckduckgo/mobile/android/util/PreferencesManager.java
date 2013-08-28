@@ -3,10 +3,12 @@ package com.duckduckgo.mobile.android.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import android.content.res.Resources;
 import com.duckduckgo.mobile.android.DDGApplication;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import com.duckduckgo.mobile.android.R;
 
 public class PreferencesManager {
 	

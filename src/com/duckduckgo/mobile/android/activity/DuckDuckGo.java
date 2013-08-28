@@ -142,12 +142,8 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 	}
 	
     // Assist action is better known as Google Now gesture
-	private void checkForAssistAction() {
-		if (getIntent() != null 
-				&& getIntent().getAction() != null 
-				&& getIntent().getAction().equals(Intent.ACTION_ASSIST)) {
-            keyboardService.toggleKeyboard(getSearchField());
-		}
+	private boolean isLaunchedWithAssistAction(){
+		return getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_ASSIST);
 	}
 	
 	private void clearSearchBar() {
@@ -452,6 +448,9 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 //		else if(isWebViewShowing()){
 //			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 //		}
+		else if(isLaunchedWithAssistAction()){
+			keyboardService.showKeyboard(getSearchField());
+		}
 	}
 
 	@Override
