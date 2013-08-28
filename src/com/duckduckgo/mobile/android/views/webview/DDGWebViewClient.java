@@ -174,10 +174,9 @@ public class DDGWebViewClient extends WebViewClient {
 	        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
     	        view.getSettings().setEnableSmoothTransition(true);
     	        view.getSettings().setDisplayZoomControls(false);
-	        }	        	        
-		}
-		
-		BusProvider.getInstance().post(new SearchBarSetTextEvent(url));
+	        }
+	        BusProvider.getInstance().post(new SearchBarSetTextEvent(url));
+		}			
 	}
 	
 	public void onPageFinished (WebView view, String url) {
