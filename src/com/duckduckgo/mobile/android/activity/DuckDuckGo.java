@@ -77,7 +77,9 @@ import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
 import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.searchbarEvents.SearchBarClearEvent;
 import com.duckduckgo.mobile.android.events.searchbarEvents.SearchBarClickEvent;
+import com.duckduckgo.mobile.android.events.searchbarEvents.SearchBarSetTextEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
@@ -146,7 +148,7 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 		return getIntent() != null && getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_ASSIST);
 	}
 	
-	private void clearSearchBar() {
+	public void clearSearchBar() {
 		getSearchField().setText("");
     	getSearchField().setCompoundDrawables(null, null, null, null);
 		getSearchField().setBackgroundDrawable(searchFieldDrawable);
@@ -839,4 +841,14 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 		BusProvider.getInstance().post(event.postEvent);
 	}
     
+	@Subscribe
+	public void onSearchBarSetText(SearchBarSetTextEvent event) {
+		setSearchBarText(event.text);
+	}
+	
+	@Subscribe
+	public void onSearchBarClear(SearchBarClearEvent event) {
+		clearSearchBar();
+	}
+	
 }

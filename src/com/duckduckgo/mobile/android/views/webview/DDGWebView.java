@@ -17,8 +17,9 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DDGWebView extends WebView {
-	
-	public boolean isReadable = false;
+
+    public static final String ABOUT_BLANK = "about:blank";
+    public boolean isReadable = false;
 	private boolean forceOriginalFormat = false;
 		
 	private HashSet<String> readableList = new HashSet<String>();
@@ -163,7 +164,7 @@ public class DDGWebView extends WebView {
      * See https://developer.android.com/reference/android/webkit/WebView.html#clearView%28%29
      */
     private void clearViewReliably() {
-        loadUrl("about:blank");
+        loadUrl(ABOUT_BLANK);
     }
 	
 	public void backPressAction() {		

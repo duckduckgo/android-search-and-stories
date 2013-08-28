@@ -37,3 +37,9 @@ We are excited that you want to help make DuckDuckGo Search & Stories better. So
 * [Chat](https://dukgo.com/blog/using-pidgin-with-xmpp-jabber)
 * [GitHub pull request documentation](http://help.github.com/send-pull-requests/)
 * [General GitHub documentation](http://help.github.com/)
+
+## Contributors
+
+* [Çağatay Çallı](https://github.com/faraday)
+* [Koen Metsu](https://github.com/koenmetsu)
+* [Kevin Pelgrims](https://github.com/kevinpelgrims)

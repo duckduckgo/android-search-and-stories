@@ -20,6 +20,7 @@ import android.webkit.WebViewClient;
 
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.SSLCertificateDialog;
+import com.duckduckgo.mobile.android.events.searchbarEvents.SearchBarClearEvent;
 import com.duckduckgo.mobile.android.events.searchbarEvents.SearchBarSearchDrawableEvent;
 import com.duckduckgo.mobile.android.events.searchbarEvents.SearchBarSetTextEvent;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
@@ -77,6 +78,10 @@ public class DDGWebViewClient extends WebViewClient {
 	@SuppressLint("NewApi")
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
+		if(url.equals(DDGWebView.ABOUT_BLANK)){
+			BusProvider.getInstance().post(new SearchBarClearEvent());
+			return;
+		}
 		mLoaded = false;
         view.getSettings().setDomStorageEnabled(true);
         view.getSettings().setPluginState(PluginState.ON_DEMAND);
@@ -169,10 +174,10 @@ public class DDGWebViewClient extends WebViewClient {
 	        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
     	        view.getSettings().setEnableSmoothTransition(true);
     	        view.getSettings().setDisplayZoomControls(false);
-	        }
-	        
-	        BusProvider.getInstance().post(new SearchBarSetTextEvent(url));
+	        }	        	        
 		}
+		
+		BusProvider.getInstance().post(new SearchBarSetTextEvent(url));
 	}
 	
 	public void onPageFinished (WebView view, String url) {
