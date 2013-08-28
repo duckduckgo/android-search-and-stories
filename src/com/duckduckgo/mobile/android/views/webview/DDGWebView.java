@@ -152,11 +152,19 @@ public class DDGWebView extends WebView {
 	public void clearBrowserState() {		
 		stopLoading();
 		clearHistory();
-		clearView();
-		shouldClearHistory = true;
+        clearViewReliably();
+        shouldClearHistory = true;
 		
 		clearReadabilityState();
 	}
+	
+    /**
+     * The clearView method was deprecated in API level 18. Use this instead
+     * See https://developer.android.com/reference/android/webkit/WebView.html#clearView%28%29
+     */
+    private void clearViewReliably() {
+        loadUrl("about:blank");
+    }
 	
 	public void backPressAction() {		
 		WebBackForwardList history = copyBackForwardList();
@@ -182,7 +190,7 @@ public class DDGWebView extends WebView {
 			BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.prevScreen));
 		}
 	}
-	
+
 	private boolean canDoReadability(String articleUrl) {
 		return PreferencesManager.getReadable() 
 				&& !isOriginalRequired()
