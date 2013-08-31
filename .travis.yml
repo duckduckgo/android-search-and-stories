@@ -1,11 +1,11 @@
 language: java
-
 before_install:
-  - wget http://dl.google.com/android/android-sdk_r21.1-linux.tgz
-  - tar -zxf android-sdk_r21.1-linux.tgz
-  - export ANDROID_HOME=~/build/abarisain/dmix/android-sdk-linux
+  # download the latest android sdk and unzip
+  - wget http://dl.google.com/android/android-sdk_r18-linux.tgz
+  - tar -zxf android-sdk_r18-linux.tgz
+  - export ANDROID_HOME=`pwd`/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-  - sudo apt-get update -qq
-  - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
-  - echo yes |android update sdk --filter platform-tools,build-tools-18.0.0,android-18,extra-android-support,sysimg-18 --no-ui --force > /dev/null
+  # only update the sdk for the tools and platform-tools (1,2) and whatever api level
+  # you are building for android (run "android list sdk" to get the full list. 9 = 2.3.3 or API level 10
+  - android update sdk --filter 1,2,9 --no-ui --force
   - echo "sdk.dir=/home/travis/build/abarisain/dmix/android-sdk-linux" > local.properties
