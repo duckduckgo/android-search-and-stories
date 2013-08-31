@@ -1,15 +1,11 @@
 language: java
-jdk: oraclejdk7
-before_script:
-    - sudo wget -q http://dl.google.com/android/android-sdk_r18-linux.tgz
-    - sudo tar xzvf android-sdk_r18-linux.tgz > /dev/null
-    - sudo android-sdk-linux/tools/android -s update sdk --filter android-7,platform-tool --no-ui
-    - sudo android-sdk-linux/tools/android -s update project --path ./android --target "android-7"
-    - sudo android-sdk-linux/tools/android -s update test-project --path ./android -m ../android
-    - export ANDROID_HOME=$PWD/android-sdk-linux
-    - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
 
-    # Install required Android components.
-    # Note that the command below only accepts the first license. This is actually convenient, since
-    # it prevents the installation of the ATOM and MIPS emulator images.
-    - echo yes | android update sdk --filter platform-tools,build-tools-18.0.0,android-17,android-16,extra-android-support --no-ui --force
+before_install:
+  - wget http://dl.google.com/android/android-sdk_r21.1-linux.tgz
+  - tar -zxf android-sdk_r21.1-linux.tgz
+  - export ANDROID_HOME=~/build/abarisain/dmix/android-sdk-linux
+  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+  - sudo apt-get update -qq
+  - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
+  - echo yes |android update sdk --filter platform-tools,build-tools-18.0.0,android-18,extra-android-support,sysimg-18 --no-ui --force > /dev/null
+  - echo "sdk.dir=/home/travis/build/abarisain/dmix/android-sdk-linux" > local.properties
