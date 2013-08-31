@@ -1,12 +1,11 @@
 language: java
 jdk: oraclejdk7
-
-before_install:
-    # Install base Android SDK
-    - sudo apt-get update -qq
-    - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq libc6:i386 libgcc1:i386 gcc-4.6-base:i386 libstdc++5:i386 libstdc++6:i386 lib32z1 libreadline6-dev:i386 libncurses5-dev:i386; fi
-    - wget -O android-sdk.tgz http://dl.google.com/android/android-sdk_r22.0.4-linux.tgz
-    - tar xzf android-sdk.tgz
+before_script:
+    - sudo wget -q http://dl.google.com/android/android-sdk_r18-linux.tgz
+    - sudo tar xzvf android-sdk_r18-linux.tgz > /dev/null
+    - sudo android-sdk-linux/tools/android -s update sdk --filter android-7,platform-tool --no-ui
+    - sudo android-sdk-linux/tools/android -s update project --path ./android --target "android-7"
+    - sudo android-sdk-linux/tools/android -s update test-project --path ./android -m ../android
     - export ANDROID_HOME=$PWD/android-sdk-linux
     - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
 
