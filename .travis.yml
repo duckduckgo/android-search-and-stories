@@ -1,11 +1,16 @@
 language: java
+jdk: oraclejdk7
+
 before_install:
-  # download the latest android sdk and unzip
-  - wget http://dl.google.com/android/android-sdk_r18-linux.tgz
-  - tar -zxf android-sdk_r18-linux.tgz
-  - export ANDROID_HOME=`pwd`/android-sdk-linux
-  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-  - android update project --path ANDROID_HOME
-  # only update the sdk for the tools and platform-tools (1,2) and whatever api level
-  # you are building for android (run "android list sdk" to get the full list.  9 = 2.3.3 or API level 10
-  - android update sdk --filter 1,2,9 --no-ui --force
+    # Install base Android SDK
+    - sudo apt-get update -qq
+    - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq libc6:i386 libgcc1:i386 gcc-4.6-base:i386 libstdc++5:i386 libstdc++6:i386 lib32z1 libreadline6-dev:i386 libncurses5-dev:i386; fi
+    - wget -O android-sdk.tgz http://dl.google.com/android/android-sdk_r22.0.4-linux.tgz
+    - tar xzf android-sdk.tgz
+    - export ANDROID_HOME=$PWD/android-sdk-linux
+    - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+
+    # Install required Android components.
+    # Note that the command below only accepts the first license. This is actually convenient, since
+    # it prevents the installation of the ATOM and MIPS emulator images.
+    - echo yes | android update sdk --filter platform-tools,build-tools-18.0.0,android-17,android-16,extra-android-support --no-ui --force
