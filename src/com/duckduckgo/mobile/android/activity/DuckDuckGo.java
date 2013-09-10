@@ -1380,6 +1380,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			mDuckDuckGoContainer.webviewShowing = true;
 		}
 	}
+
+    public SCREEN getDisplayedScreen(){
+        return SCREEN.getByCode(viewFlipper.getDisplayedChild());
+    }
 	
 	public void onClick(View view) {
 		if (view.equals(homeSettingsButton)) {
