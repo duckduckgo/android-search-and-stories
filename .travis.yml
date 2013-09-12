@@ -14,4 +14,5 @@ before_install:
 before_script:  
   - android update project -p src
   - android update test-project -m ../src -p tests
+  - cp onionKit-build.xml libs/OnionKit/libonionkit/build.xml
   - ant clean build 
