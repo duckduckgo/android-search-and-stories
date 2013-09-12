@@ -14,4 +14,4 @@ before_install:
 before_script:  
   - android update project -p src
   - android update test-project -m ../src -p tests
-  - ant clean debug
+  - ant clean build 
