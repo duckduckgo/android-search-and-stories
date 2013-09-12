@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.download;
 import java.lang.ref.SoftReference;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import android.graphics.Bitmap;
@@ -26,7 +27,7 @@ public class ImageCache {
 	@SuppressWarnings("serial")
 	private final HashMap<String, Bitmap> hardBitmapCache = new LinkedHashMap<String, Bitmap>(CACHE_CAPACITY / 2, 0.75f, true) {
 		@Override
-		protected boolean removeEldestEntry(LinkedHashMap.Entry<String, Bitmap> oldest) {
+		protected boolean removeEldestEntry(Map.Entry<String, Bitmap> oldest) {
 			//If we have too many objects, remove the oldest one and place it in soft reference
 			//The garbage collector will periodically remove soft references...
 			if (size() > CACHE_CAPACITY) {
