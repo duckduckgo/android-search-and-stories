@@ -1,85 +1,107 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="DuckDuckDroid" default="help">
-
-    <!-- The local.properties file is created and updated by the 'android' tool.
-         It contains the path to the SDK. It should *NOT* be checked into
-         Version Control Systems. -->
-    <property file="local.properties" />
-
-    <!-- The ant.properties file can be created by you. It is only edited by the
-         'android' tool to add properties to it.
-         This is the place to change some Ant specific build properties.
-         Here are some properties you may want to change/update:
-
-         source.dir
-             The name of the source directory. Default is 'src'.
-         out.dir
-             The name of the output directory. Default is 'bin'.
-
-         For other overridable properties, look at the beginning of the rules
-         files in the SDK, at tools/ant/build.xml
-
-         Properties related to the SDK location or the project target should
-         be updated using the 'android' tool with the 'update' action.
-
-         This file is an integral part of the build system for your
-         application and should be checked into Version Control Systems.
-
-         -->
-    <property file="ant.properties" />
-
-    <!-- The project.properties file is created and updated by the 'android'
-         tool, as well as ADT.
-
-         This contains project specific properties such as project target, and library
-         dependencies. Lower level build properties are stored in ant.properties
-         (or in .classpath for Eclipse projects).
-
-         This file is an integral part of the build system for your
-         application and should be checked into Version Control Systems. -->
-    <loadproperties srcFile="project.properties" />
-
-    <!-- quick check on sdk.dir -->
-    <fail
-            message="sdk.dir is missing. Make sure to generate local.properties using 'android update project' or to inject it through an env var"
-            unless="sdk.dir"
-    />
-
-
-<!-- extension targets. Uncomment the ones where you want to do custom work
-     in between standard targets -->
-<!--
-    <target name="-pre-build">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- WARNING: Eclipse auto-generated file.
+              Any modifications will be overwritten.
+              To include a user specific buildfile here, simply create one in the same
+              directory with the processing instruction <?eclipse.ant.import?>
+              as the first entry and export the buildfile again. --><project basedir="." default="build" name="DuckDuckGo">
+    <property environment="env"/>
+    <property name="tests.location" value="../../../Users/Koen/workspace/duckduckgo/tests"/>
+    <property name="ECLIPSE_HOME" value="../../../Program Files/eclipse"/>
+    <property name="OnionKit.location" value="libs/OnionKit/libonionkit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.6"/>
+    <property name="source" value="1.6"/>
+    <path id="Android 4.1.2.libraryclasspath">
+        <pathelement location="../../../android-sdk/sdk/platforms/android-16/android.jar"/>
+    </path>
+    <path id="Android Private Libraries.libraryclasspath">
+        <pathelement location="libs/picasso-1.1.1.jar"/>
+        <pathelement location="libs/httpclientandroidlib-1.1.2.jar"/>
+        <pathelement location="libs/acra-4.4.0.jar"/>
+        <pathelement location="../../../OnionKit/libs/sc-light-jdk15on-1.47.0.2.jar"/>
+        <pathelement location="libs/otto-1.3.4.jar"/>
+        <pathelement location="libs/android-support-v4.jar"/>
+    </path>
+    <path id="Android Dependencies.libraryclasspath">
+        <pathelement location="libs/OnionKit/libonionkit/bin/onionkit.jar"/>
+    </path>
+    <path id="Android 4.2.2.libraryclasspath">
+        <pathelement location="../../../android-sdk/sdk/platforms/android-17/android.jar"/>
+    </path>
+    <path id="OnionKit.classpath">
+        <path refid="Android 4.2.2.libraryclasspath"/>
+        <path refid="Android Private Libraries.libraryclasspath"/>
+        <path refid="Android Dependencies.libraryclasspath"/>
+        <pathelement location="${OnionKit.location}/libs/httpclientandroidlib-1.1.2.jar"/>
+        <pathelement location="${OnionKit.location}/libs/sc-light-jdk15on-1.47.0.2.jar"/>
+        <pathelement location="${OnionKit.location}/bin/classes"/>
+    </path>
+    <path id="DuckDuckGo.classpath">
+        <path refid="Android 4.1.2.libraryclasspath"/>
+        <path refid="Android Private Libraries.libraryclasspath"/>
+        <pathelement location="libs/acra-4.4.0.jar"/>
+        <pathelement location="libs/android-support-v4.jar"/>
+        <pathelement location="libs/picasso-1.1.1.jar"/>
+        <path refid="Android Dependencies.libraryclasspath"/>
+        <pathelement location="libs/httpclientandroidlib-1.1.2.jar"/>
+        <pathelement location="bin/classes"/>
+        <pathelement location="libs/otto-1.3.4.jar"/>
+        <path refid="OnionKit.classpath"/>
+    </path>
+    <target name="init">
+        <mkdir dir="bin/classes"/>
+        <copy includeemptydirs="false" todir="bin/classes">
+            <fileset dir="gen">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+        <copy includeemptydirs="false" todir="bin/classes">
+            <fileset dir="src">
+                <exclude name="**/*.java"/>
+            </fileset>
+        </copy>
     </target>
-    <target name="-pre-compile">
+    <target name="clean">
+        <delete dir="bin/classes"/>
     </target>
-
-    /* This is typically used for code obfuscation.
-       Compiled code location: ${out.classes.absolute.dir}
-       If this is not done in place, override ${out.dex.input.absolute.dir} */
-    <target name="-post-compile">
+    <target depends="clean" name="cleanall">
+        <ant antfile="build.xml" dir="${OnionKit.location}" inheritAll="false" target="clean"/>
     </target>
--->
-
-    <!-- Import the actual build file.
-
-         To customize existing targets, there are two options:
-         - Customize only one target:
-             - copy/paste the target into this file, *before* the
-               <import> task.
-             - customize it to your needs.
-         - Customize the whole content of build.xml
-             - copy/paste the content of the rules files (minus the top node)
-               into this file, replacing the <import> task.
-             - customize to your needs.
-
-         ***********************
-         ****** IMPORTANT ******
-         ***********************
-         In all cases you must update the value of version-tag below to read 'custom' instead of an integer,
-         in order to avoid having your file be overridden by tools such as "android update project"
-    -->
-    <!-- version-tag: 1 -->
-    <import file="${sdk.dir}/tools/ant/build.xml" />
-
+    <target depends="build-subprojects,build-project" name="build"/>
+    <target name="build-subprojects">
+        <ant antfile="build.xml" dir="${OnionKit.location}" inheritAll="false" target="build-project">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+    </target>
+    <target depends="init" name="build-project">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="bin/classes" includeantruntime="false" source="${source}" target="${target}">
+            <src path="gen"/>
+            <src path="src"/>
+            <classpath refid="DuckDuckGo.classpath"/>
+        </javac>
+    </target>
+    <target description="Build all projects which reference this project. Useful to propagate changes." name="build-refprojects">
+        <ant antfile="build.xml" dir="${tests.location}" inheritAll="false" target="clean"/>
+        <ant antfile="build.xml" dir="${tests.location}" inheritAll="false" target="build">
+            <propertyset>
+                <propertyref name="build.compiler"/>
+            </propertyset>
+        </ant>
+    </target>
+    <target description="copy Eclipse compiler jars to ant lib directory" name="init-eclipse-compiler">
+        <copy todir="${ant.library.dir}">
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </copy>
+        <unzip dest="${ant.library.dir}">
+            <patternset includes="jdtCompilerAdapter.jar"/>
+            <fileset dir="${ECLIPSE_HOME}/plugins" includes="org.eclipse.jdt.core_*.jar"/>
+        </unzip>
+    </target>
+    <target description="compile project with Eclipse compiler" name="build-eclipse-compiler">
+        <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
+        <antcall target="build"/>
+    </target>
 </project>
