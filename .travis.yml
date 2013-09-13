@@ -15,5 +15,5 @@ before_install:
   - echo "sdk.dir=`pwd`/android-sdk-linux" > local.properties
 before_script:  
   - android update project -p . --subprojects --target "android-16"
-  - android update project -p ./libs/OnionKit/libionkit/ --subprojects --target "android-16"
+  - android update project -p ./libs/OnionKit/libonionkit/ --subprojects --target "android-16"
   - ant clean debug
