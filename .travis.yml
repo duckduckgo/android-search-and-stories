@@ -13,6 +13,7 @@ before_install:
   - android update sdk --filter platform-tools,android-16,extra-android-support,android-17,sysimg-17 --no-ui --force
   - android list targets
   - echo "sdk.dir=`pwd`/android-sdk-linux" > local.properties
+  - echo "sdk.dir=`pwd`/android-sdk-linux" > ./libs/OnionKit/libonionkit/local.properties
 before_script:  
   - android update project -p . --subprojects --target "android-16"
   - android update project -p ./libs/OnionKit/libonionkit/ --subprojects --target "android-16"
