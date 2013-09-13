@@ -1,9 +1,8 @@
 language: java
 before_install:
   # download the latest android sdk and unzip
-  - wget http://dl.google.com/android/android-sdk_r16-linux.tgz
-  - tar -zxf android-sdk_r16-linux.tgz
-  - export ANDROID_HOME=`pwd`/android-sdk-linux
+  - wget http://dl.google.com/android/android-sdk_r21.0.1-linux.tgz
+  - export ANDROID_HOME=~/build/DuckDuckGo/Android/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
   - echo PATH
   - echo ANDROID_HOME
