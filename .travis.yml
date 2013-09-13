@@ -1,11 +1,10 @@
 language: java
 before_install:
   # download the latest android sdk and unzip
-  - wget http://dl.google.com/android/android-sdk_r18-linux.tgz
-  - tar -xzf android-sdk_r18-linux.tgz
+  - wget http://dl.google.com/android/android-sdk_r20-linux.tgz
+  - tar -xzf android-sdk_r20-linux.tgz
   - export ANDROID_HOME=~/build/duckduckgo/android/android-sdk-linux
   - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
-  - android update sdk --filter platform-tools,android-16,extra-android-support --no-ui --force
   - echo PATH
   - echo ANDROID_HOME
   # only update the sdk for the tools and platform-tools (1,2) and whatever api level
