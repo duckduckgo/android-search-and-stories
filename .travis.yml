@@ -9,8 +9,9 @@ before_install:
   - echo ANDROID_HOME
   # only update the sdk for the tools and platform-tools (1,2) and whatever api level
   # you are building for android (run "android list sdk" to get the full list. 9 = 2.3.3 or API level 10
-  - android update sdk --filter platform-tools,android-16,extra-android-support,android-17,sysimg-17 --no-ui --force
+  - android update sdk --filter platform-tools,extra-android-support,android-17,sysimg-17 --no-ui --force
   - android list targets
+  - locate aapt
   - echo "sdk.dir=`pwd`/android-sdk-linux" > local.properties
   - echo "sdk.dir=`pwd`/android-sdk-linux" > ./libs/OnionKit/libonionkit/local.properties
 before_script:  
