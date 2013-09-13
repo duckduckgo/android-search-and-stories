@@ -12,6 +12,6 @@ before_install:
   - android update sdk --filter 1,2,9 --no-ui --force
   - echo "sdk.dir=`pwd`/android-sdk-linux" > local.properties
 before_script:  
-  - android update project -p src --sub-projects
-  - android update project -p libs/OnionKit/libionkit/ --sub-projects
+  - android update project -p src --subprojects
+  - android update project -p libs/OnionKit/libionkit/ --subprojects
   - ant clean debug
