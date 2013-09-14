@@ -15,7 +15,7 @@ before_install:
   - android list sdk --extended
   # Do you accept the license 'android-sdk-license-bcbbd656' [y/n]:
   - echo -e "y\n" > accept.txt
-  - android update sdk --filter platform-tools,extra-android-support,$ANDROID_SDKS --no-ui --force < accept.txt
+  - android update sdk --filter platform-tools,android-16,extra-android-support,android-17,sysimg-17 --no-ui --force < accept.txt
   - android list targets
   - echo "sdk.dir=`pwd`/android-sdk-linux" > local.properties
   - echo "sdk.dir=`pwd`/android-sdk-linux" > ./libs/OnionKit/libonionkit/local.properties
