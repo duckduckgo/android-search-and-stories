@@ -13,7 +13,13 @@ before_install:
   - android list targets
   - echo "sdk.dir=`pwd`/android-sdk-linux" > local.properties
   - echo "sdk.dir=`pwd`/android-sdk-linux" > ./libs/OnionKit/libonionkit/local.properties
-  - find -name "aapt*"
+  - # PROVISIONAL: changed SDKr22 build-tools path. create symbolic link
+  - if [ ! -e ${ANDROID_HOME}/platform-tools/aapt ]; then ln -s ${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS_VERSION/aapt ${ANDROID_HOME}/platform-tools/aapt; fi
+  - if [ ! -e ${ANDROID_HOME}/platform-tools/aidl ]; then ln -s ${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS_VERSION/aidl ${ANDROID_HOME}/platform-tools/aidl; fi
+  - if [ ! -e ${ANDROID_HOME}/platform-tools/dx ]; then ln -s ${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS_VERSION/dx ${ANDROID_HOME}/platform-tools/dx; fi
+  - if [ ! -e ${ANDROID_HOME}/platform-tools/lib ]; then ln -sf ${ANDROID_HOME}/build-tools/$ANDROID_BUILD_TOOLS_VERSION/lib ${ANDROID_HOME}/platform-tools/lib; fi
+
+
 before_script:  
   - android update project -p . --subprojects --target "android-17"
   - android update project -p ./libs/OnionKit/libonionkit/ --subprojects --target "android-17"
