@@ -13,6 +13,7 @@ before_install:
   - android list targets
   - echo "sdk.dir=`pwd`/android-sdk-linux" > local.properties
   - echo "sdk.dir=`pwd`/android-sdk-linux" > ./libs/OnionKit/libonionkit/local.properties
+  - find -name "aapt*"
 before_script:  
   - android update project -p . --subprojects --target "android-17"
   - android update project -p ./libs/OnionKit/libonionkit/ --subprojects --target "android-17"
