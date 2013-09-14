@@ -1472,6 +1472,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
+                
+                if(PreferencesManager.isFontSliderVisible()) {
+    				fontSizeLayout.setVisibility(View.VISIBLE);
+    			}
 			}
 		}
 	}
