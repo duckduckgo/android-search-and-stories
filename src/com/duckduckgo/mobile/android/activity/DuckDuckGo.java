@@ -363,6 +363,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(themeId != 0) {
 			setTheme(themeId);
 		}
+		
+		PreferencesManager.setFontDefaultsFromTheme(this);
         		        
         setContentView(R.layout.pager);       
         
@@ -411,13 +413,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	leftStoriesTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
     	leftSavedTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
     	leftSettingsTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);    	
-    	
-    	
-    	TypedValue tmpTypedValue = new TypedValue(); 
-    	getTheme().resolveAttribute(R.attr.leftButtonTextSize, tmpTypedValue, true);
-    	// XXX getDimension returns in PIXELS !
-    	float defLeftTitleTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
-    	DDGControlVar.leftTitleTextSize = PreferencesManager.getLeftTitleTextSize(defLeftTitleTextSize);
+    	  	
+    	DDGControlVar.leftTitleTextSize = PreferencesManager.getLeftTitleTextSize();
     	
     	leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
     	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
@@ -613,8 +610,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         
         
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) contentView.findViewById(R.id.mainFeedItems);
-		DDGControlVar.ptrHeaderSize = PreferencesManager.getPtrHeaderTextSize(mPullRefreshFeedView.getHeaderTextSize());
-		DDGControlVar.ptrSubHeaderSize = PreferencesManager.getPtrHeaderSubTextSize(mPullRefreshFeedView.getHeaderSubTextSize());
+		PreferencesManager.setPtrHeaderFontDefaults(mPullRefreshFeedView.getHeaderTextSize(), mPullRefreshFeedView.getHeaderSubTextSize());
+		DDGControlVar.ptrHeaderSize = PreferencesManager.getPtrHeaderTextSize();
+		DDGControlVar.ptrSubHeaderSize = PreferencesManager.getPtrHeaderSubTextSize();
 		
 		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
 		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
@@ -652,17 +650,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         // get default User-Agent string for reuse later
         mWebViewDefaultUA = mainWebView.getSettings().getUserAgentString();
         
-        // read and configure web view font size
-        if(DDGControlVar.webViewTextSize == -1) {
-        	DDGControlVar.webViewTextSize = PreferencesManager.getWebviewFontSize();
-        }
-        
-        if(DDGControlVar.webViewTextSize != -1) {
-            mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
-        }
-        else {
-        	DDGControlVar.webViewTextSize = mainWebView.getSettings().getDefaultFontSize();
-        }
+        PreferencesManager.setWebViewFontDefault(mainWebView.getSettings().getDefaultFontSize());        
+        DDGControlVar.webViewTextSize = PreferencesManager.getWebviewFontSize();
         
         mainWebView.setWebViewClient(new DDGWebViewClient(DuckDuckGo.this));            
         mainWebView.setWebChromeClient(new DDGWebChromeClient(DuckDuckGo.this));
@@ -695,14 +684,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         fontSizeLayout = (LinearLayout) contentView.findViewById(R.id.fontSeekLayout);
         
         fontSizeSeekBar = (SeekBarHint) contentView.findViewById(R.id.fontSizeSeekBar);
-        
-    	getTheme().resolveAttribute(R.attr.mainTextSize, tmpTypedValue, true);
-    	float defMainTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
-    	DDGControlVar.mainTextSize = PreferencesManager.getMainFontSize(defMainTextSize);
-    	
-    	getTheme().resolveAttribute(R.attr.recentTextSize, tmpTypedValue, true);
-    	float defRecentTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
-    	DDGControlVar.recentTextSize = PreferencesManager.getRecentFontSize(defRecentTextSize);
+            	
+    	DDGControlVar.mainTextSize = PreferencesManager.getMainFontSize();
+    	    	
+    	DDGControlVar.recentTextSize = PreferencesManager.getRecentFontSize();
         
         fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
         fontSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
@@ -737,14 +722,14 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 					fontSizeSeekBar.setExtraText(String.valueOf((progress-DDGConstants.FONT_SEEKBAR_MID)));
 				}
 				DDGControlVar.fontProgress = progress;
-				DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize + diffPixel;
+				DDGControlVar.mainTextSize = PreferencesManager.getMainFontSize() + diffPixel;
 				mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 				
-				DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize + diffPixel;
+				DDGControlVar.recentTextSize = PreferencesManager.getRecentFontSize() + diffPixel;
 				mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
 				
-				DDGControlVar.ptrHeaderSize = DDGControlVar.prevPtrHeaderSize + diff;
-				DDGControlVar.ptrSubHeaderSize = DDGControlVar.prevPtrSubHeaderSize + diff;
+				DDGControlVar.ptrHeaderSize = PreferencesManager.getPtrHeaderTextSize() + diff;
+				DDGControlVar.ptrSubHeaderSize = PreferencesManager.getPtrHeaderSubTextSize() + diff;
 				
 				// adjust Pull-to-Refresh
 				mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
@@ -754,10 +739,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
 				mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
 				
-				DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize + diff;
+				DDGControlVar.webViewTextSize = PreferencesManager.getWebviewFontSize() + diff;
 				mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
 				
-				DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize + diffPixel;
+				DDGControlVar.leftTitleTextSize = PreferencesManager.getLeftTitleTextSize() + diffPixel;
 				
 				leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
 		    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
@@ -777,14 +762,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				
 				PreferencesManager.saveAdjustedTextSizes();
 				
-				DDGControlVar.prevMainTextSize = 0;
-				DDGControlVar.prevRecentTextSize = 0;
-				DDGControlVar.prevWebViewTextSize = -1;
-				DDGControlVar.prevPtrHeaderSize = 0;
-				DDGControlVar.prevPtrSubHeaderSize = 0;
-				DDGControlVar.prevLeftTitleTextSize = 0;
-				fontSizeLayout.setVisibility(View.GONE);
-				fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
+				closeFontSlider();
 			}
 		});
         
@@ -865,31 +843,30 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
 	
+	private void closeFontSlider() {
+		fontSizeLayout.setVisibility(View.GONE);
+		fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
+		PreferencesManager.setFontSliderVisibility(false);
+	}
+	
 	private void cancelFontScaling() {
 		fontSizeSeekBar.setExtraText(null);
-		DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
-		DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize;
-		DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
-		DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize;
+		DDGControlVar.mainTextSize = PreferencesManager.getMainFontSize();
+		DDGControlVar.recentTextSize = PreferencesManager.getRecentFontSize();
+		DDGControlVar.webViewTextSize = PreferencesManager.getWebviewFontSize();
+		DDGControlVar.leftTitleTextSize = PreferencesManager.getLeftTitleTextSize();
 		mDuckDuckGoContainer.feedAdapter.notifyDataSetInvalidated();
 		mDuckDuckGoContainer.historyAdapter.notifyDataSetInvalidated();
 		
-		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.prevPtrHeaderSize);
-		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
+		mPullRefreshFeedView.setHeaderTextSize(PreferencesManager.getPtrHeaderTextSize());
+		mPullRefreshFeedView.setHeaderSubTextSize(PreferencesManager.getPtrHeaderSubTextSize());
 		
 		// set Loading... font
-		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.prevPtrHeaderSize);
-		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
+		mPullRefreshFeedView.setLoadingTextSize(PreferencesManager.getPtrHeaderTextSize());
+		mPullRefreshFeedView.setLoadingSubTextSize(PreferencesManager.getPtrHeaderSubTextSize());
 		
 		mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
-		DDGControlVar.prevMainTextSize = 0;
-		DDGControlVar.prevRecentTextSize = 0;
-		DDGControlVar.prevWebViewTextSize = -1;
-		DDGControlVar.prevPtrHeaderSize = 0;
-		DDGControlVar.prevPtrSubHeaderSize = 0;
-		DDGControlVar.prevLeftTitleTextSize = 0;
-		fontSizeLayout.setVisibility(View.GONE);
-		fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
+		closeFontSlider();
 		
 		leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
     	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
@@ -911,7 +888,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
 	        // control which screen is shown & configure related views
 			
-			if(DDGControlVar.prevMainTextSize != 0) {
+			if(PreferencesManager.isFontSliderVisible()) {
 				fontSizeLayout.setVisibility(View.VISIBLE);
 			}
 			
@@ -1495,6 +1472,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
+                
+                if(PreferencesManager.isFontSliderVisible()) {
+    				fontSizeLayout.setVisibility(View.VISIBLE);
+    			}
 			}
 		}
 	}
