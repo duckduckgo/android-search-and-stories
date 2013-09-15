@@ -13,11 +13,14 @@ import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,8 +28,6 @@ import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
-import android.webkit.DownloadListener;
-import android.webkit.WebView.HitTestResult;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
@@ -35,9 +36,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
@@ -109,7 +107,7 @@ import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
 import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
 import com.squareup.otto.Subscribe;
 
-public class DuckDuckGo extends SherlockFragmentActivity {
+public class DuckDuckGo extends ActionBarActivity {
 	protected final String TAG = "DuckDuckGo";
 	
 	ActionBarDrawerToggle mDrawerToggle;
@@ -143,7 +141,7 @@ public class DuckDuckGo extends SherlockFragmentActivity {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 return findViewById(android.R.id.home);
         }
-        return findViewById(R.id.abs__home);
+        return findViewById(R.id.home);
 	}
 	
     // Assist action is better known as Google Now gesture
@@ -721,6 +719,11 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 //			switchDrawer();
 //	}
 	
+	public static int getContentViewCompat() {
+	    return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH ?
+	               android.R.id.content : R.id.action_bar_activity_content;
+	}
+	
 	private void addWelcomeScreen() {
 //    	viewPager.setDispatchTouch(false);
     	
@@ -730,7 +733,7 @@ public class DuckDuckGo extends SherlockFragmentActivity {
     	
     	// add welcome screen
         welcomeScreenLayout = new WelcomeScreenView(this);
-        FrameLayout rootLayout = (FrameLayout) findViewById(android.R.id.content);
+        FrameLayout rootLayout = (FrameLayout) findViewById(getContentViewCompat());
         rootLayout.addView(welcomeScreenLayout);
     	welcomeScreenLayout.setOnCloseListener(new OnClickListener() {
 			@Override
@@ -746,7 +749,7 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 //		viewPager.setDispatchTouch(true);		
 		PreferencesManager.setWelcomeShown();
     	// remove welcome screen
-		FrameLayout rootLayout = (FrameLayout) findViewById(android.R.id.content);
+		FrameLayout rootLayout = (FrameLayout) findViewById(getContentViewCompat());
 		rootLayout.removeView(welcomeScreenLayout);
 		welcomeScreenLayout = null;
 	}
@@ -764,14 +767,14 @@ public class DuckDuckGo extends SherlockFragmentActivity {
 	
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		if (mDrawerToggle.onOptionsItemSelected(DDGUtils.getMenuItem(item))) { 
+		if (mDrawerToggle.onOptionsItemSelected(item)) { 
 			return true; 
 		}
 		return false;
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getSupportMenuInflater().inflate(R.menu.actionbar, menu);
+		getMenuInflater().inflate(R.menu.actionbar, menu);
 		return true;
 	}
 	

@@ -7,7 +7,7 @@
         <item name="leftTitleTextSize">12sp</item>
         <item name="mainTextSize">14sp</item>
         <item name="recentTextSize">14sp</item>
-        <item name="actionBarStyle">@style/DDGActionBarStyle</item>
+        <item name="android:actionBarStyle">@style/DDGActionBarStyle</item>
     </style>
 
     <style name="DDGActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">

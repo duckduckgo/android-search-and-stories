@@ -9,16 +9,16 @@ import java.net.URLEncoder;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
 import android.webkit.WebView.HitTestResult;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.view.MenuItem;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.actions.CommonActions;
@@ -29,7 +29,6 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewQueryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
-import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
@@ -41,7 +40,6 @@ import com.duckduckgo.mobile.android.events.WebViewBackPressEvent;
 import com.duckduckgo.mobile.android.events.WebViewResetEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.fontEvents.FontSizeCancelEvent;
 import com.duckduckgo.mobile.android.events.fontEvents.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.ReadabilityFeedRetrieveSuccessEvent;
@@ -57,14 +55,13 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
-import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.squareup.otto.Subscribe;
 
-public class WebFragment extends SherlockFragment {
+public class WebFragment extends Fragment {
 	
 	protected final String TAG = "WebFragment";
 	
