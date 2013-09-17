@@ -119,9 +119,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
       mainFontSizePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
           public boolean onPreferenceClick(Preference preference) {
-              DDGControlVar.prevMainTextSize = DDGControlVar.mainTextSize;
-              DDGControlVar.prevWebViewTextSize = DDGControlVar.webViewTextSize;
-              DDGControlVar.prevLeftTitleTextSize = DDGControlVar.leftTitleTextSize;
+              PreferencesManager.setFontSliderVisibility(true);
               finish();
               return true;
           }
