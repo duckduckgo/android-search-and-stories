@@ -540,30 +540,29 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
         getSearchField().setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				if(PreferencesManager.getDirectQuery()){
-					//Hide the keyboard and perform a search
-					getSearchField().dismissDropDown();
-					
-					SuggestObject suggestObject = mDuckDuckGoContainer.acAdapter.getItem(position);
-					if (suggestObject != null) {
-                        SuggestType suggestType = suggestObject.getType();
-						if(suggestType == SuggestType.TEXT) {
-							String text = suggestObject.getPhrase().trim();
-							if(suggestObject.hasOnlyBangQuery()){
-								getSearchField().addTextWithTrailingSpace(suggestObject.getPhrase());
-							}else{
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getSearchField().dismissDropDown();
+
+                SuggestObject suggestObject = mDuckDuckGoContainer.acAdapter.getItem(position);
+                if (suggestObject != null) {
+                    SuggestType suggestType = suggestObject.getType();
+                    if(suggestType == SuggestType.TEXT) {
+                        if(PreferencesManager.getDirectQuery()){
+                            String text = suggestObject.getPhrase().trim();
+                            if(suggestObject.hasOnlyBangQuery()){
+                                getSearchField().addTextWithTrailingSpace(suggestObject.getPhrase());
+                            }else{
                                 keyboardService.hideKeyboard(getSearchField());
-								searchOrGoToUrl(text);
-							}
-						}
-						else if(suggestType == SuggestType.APP) {
-							DDGUtils.launchApp(DuckDuckGo.this, suggestObject.getSnippet());
-						}
-					}
-				}
-			}
-		});
+                                searchOrGoToUrl(text);
+                            }
+                        }
+                    }
+                    else if(suggestType == SuggestType.APP) {
+                        DDGUtils.launchApp(DuckDuckGo.this, suggestObject.getSnippet());
+                    }
+                }
+            }
+        });
 
         // This makes a little (X) to clear the search bar.
         mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
