@@ -546,15 +546,15 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 					getSearchField().dismissDropDown();
 					
 					SuggestObject suggestObject = mDuckDuckGoContainer.acAdapter.getItem(position);
-					SuggestType suggestType = suggestObject.getType();
 					if (suggestObject != null) {
+                        SuggestType suggestType = suggestObject.getType();
 						if(suggestType == SuggestType.TEXT) {
 							String text = suggestObject.getPhrase().trim();
 							if(suggestObject.hasOnlyBangQuery()){
 								getSearchField().addTextWithTrailingSpace(suggestObject.getPhrase());
 							}else{
                                 keyboardService.hideKeyboard(getSearchField());
-								searchOrGoToUrl(text);	
+								searchOrGoToUrl(text);
 							}
 						}
 						else if(suggestType == SuggestType.APP) {
