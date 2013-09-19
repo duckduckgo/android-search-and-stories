@@ -1299,6 +1299,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			leftHomeTextView.setSelected(true);
     	}
     	else {
+    		DDGControlVar.homeScreenShowing = false;
 			leftStoriesTextView.setSelected(true);
     	}
 	}
@@ -1320,6 +1321,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			leftHomeTextView.setSelected(true);
     	}
     	else {
+    		DDGControlVar.homeScreenShowing = false;
 			leftSavedTextView.setSelected(true);
     	}
 	}
@@ -1341,6 +1343,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     		DDGControlVar.homeScreenShowing = true;
     		homeSettingsButton.setImageResource(R.drawable.menu_button);
     		leftHomeTextView.setSelected(true);
+    	}
+    	else {
+    		DDGControlVar.homeScreenShowing = false;
     	}
 	}
 	
@@ -1475,6 +1480,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
                 if(PreferencesManager.isFontSliderVisible()) {
     				fontSizeLayout.setVisibility(View.VISIBLE);
     			}
+                
+                if(DDGControlVar.homeScreenShowing) {
+                	displayHomeScreen();
+                }
 			}
 		}
 	}
