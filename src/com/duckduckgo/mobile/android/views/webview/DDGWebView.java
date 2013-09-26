@@ -176,6 +176,13 @@ public class DDGWebView extends WebView {
 			
 			if(prevItem != null) {
 				String prevUrl = prevItem.getUrl();
+                if(ABOUT_BLANK.equals(prevUrl)){
+                    goBackOrForward(-2);
+                    if(lastIndex > 0){
+                        BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.prevScreen));
+                    }
+                    return;
+                }				
 				if(readableList.contains(prevUrl) && canDoReadability(prevUrl) && DDGControlVar.currentFeedObject != null) {
 					readableActionBack(DDGControlVar.currentFeedObject);
 				}

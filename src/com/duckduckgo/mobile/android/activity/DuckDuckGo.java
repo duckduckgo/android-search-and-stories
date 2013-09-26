@@ -479,6 +479,10 @@ public class DuckDuckGo extends ActionBarActivity {
 		DDGApplication.getImageCache().purge();
 		super.onDestroy();
 	}
+
+    public SCREEN getDisplayedScreen(){
+        return DDGControlVar.currentScreen;
+    }
 	
 	@Override
 	public void onBackPressed() {
