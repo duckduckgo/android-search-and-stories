@@ -267,25 +267,24 @@ public class DuckDuckGo extends ActionBarActivity {
         getSearchField().setOnItemClickListener(new OnItemClickListener() {
     		@Override
     		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-    			if(PreferencesManager.getDirectQuery()){
-    				//Hide the keyboard and perform a search
-    				getSearchField().dismissDropDown();
+    			getSearchField().dismissDropDown();
     				
-    				SuggestObject suggestObject = acAdapter.getItem(position);
+    			SuggestObject suggestObject = acAdapter.getItem(position);
+    			if (suggestObject != null) {
     				SuggestType suggestType = suggestObject.getType();
-    				if (suggestObject != null) {
-    					if(suggestType == SuggestType.TEXT) {
-    						String text = suggestObject.getPhrase().trim();
-    						if(suggestObject.hasOnlyBangQuery()){
-    							getSearchField().addTextWithTrailingSpace(suggestObject.getPhrase());
-    						}else{
-                                keyboardService.hideKeyboard(getSearchField());
-    							BusProvider.getInstance().post(new AfterSwitchPostEvent(SCREEN.SCR_WEBVIEW, new SearchOrGoToUrlEvent(text)));
-    						}
+    				if(suggestType == SuggestType.TEXT) {
+    					if(PreferencesManager.getDirectQuery()){
+	    					String text = suggestObject.getPhrase().trim();
+	    					if(suggestObject.hasOnlyBangQuery()){
+	    						getSearchField().addTextWithTrailingSpace(suggestObject.getPhrase());
+	    					}else{
+	                            keyboardService.hideKeyboard(getSearchField());
+	    						BusProvider.getInstance().post(new AfterSwitchPostEvent(SCREEN.SCR_WEBVIEW, new SearchOrGoToUrlEvent(text)));
+	    					}
     					}
-    					else if(suggestType == SuggestType.APP) {
-    						DDGUtils.launchApp(DuckDuckGo.this, suggestObject.getSnippet());
-    					}
+    				}
+    				else if(suggestType == SuggestType.APP) {
+    					DDGUtils.launchApp(DuckDuckGo.this, suggestObject.getSnippet());
     				}
     			}
     		}
