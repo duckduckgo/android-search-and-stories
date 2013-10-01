@@ -639,6 +639,10 @@ public class DuckDuckGo extends ActionBarActivity {
                 if(PreferencesManager.isFontSliderVisible()) {
     				fontSizeLayout.setVisibility(View.VISIBLE);
     			}
+                
+                if(DDGControlVar.homeScreenShowing) {
+                	switchFragments(DDGControlVar.START_SCREEN);
+                }
 			}
 		}
 	}
@@ -929,6 +933,14 @@ public class DuckDuckGo extends ActionBarActivity {
 			fragmentManager.executePendingTransactions();
 			DDGControlVar.prevScreen = DDGControlVar.currentScreen;
 			DDGControlVar.currentScreen = screen;
+			
+			if(DDGControlVar.START_SCREEN == screen) {
+				DDGControlVar.homeScreenShowing = true;
+			}
+			else {
+				DDGControlVar.homeScreenShowing = false;
+			}
+			BusProvider.getInstance().post(new UpdateVisibilityEvent(screen));
 		}
 		
 	}
