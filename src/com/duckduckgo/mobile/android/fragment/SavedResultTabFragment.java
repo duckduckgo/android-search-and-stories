@@ -13,8 +13,11 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.pasteEvents.SavedSearchPasteEvent;
 import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
+import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.squareup.otto.Subscribe;
 
@@ -59,7 +62,8 @@ public class SavedResultTabFragment extends ListFragment {
 			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
 			String query = c.getString(c.getColumnIndex("query"));
 			if(query != null){
-				BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));				
+				BusProvider.getInstance().post(new AfterSwitchPostEvent(SCREEN.SCR_WEBVIEW, 
+						new SavedSearchItemSelectedEvent(query)));
 			}
 		}
 	}

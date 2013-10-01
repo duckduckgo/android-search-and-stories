@@ -1,5 +1,12 @@
 package com.duckduckgo.mobile.android.actions;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
+
+import ch.boye.httpclientandroidlib.NameValuePair;
+import ch.boye.httpclientandroidlib.client.utils.URLEncodedUtils;
+
 import com.duckduckgo.mobile.android.events.externalEvents.ExternalEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
@@ -39,10 +46,29 @@ public class CommonActions {
         }
 	}
 	
+	static private String getQueryFromURL(String url) {
+		try {
+			URI searchUrl = new URI(url);
+			List<NameValuePair> params =URLEncodedUtils.parse(searchUrl, "UTF-8");
+	  		for(NameValuePair param : params) {
+	  			if(param.getName().equals("q"))
+	  				return param.getValue();
+	  		}
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
 	static public SaveEvent getSaveEvent(SESSIONTYPE sessionType, FeedObject feedObject, String webViewUrl) {
 		switch(sessionType) {
 	  	  case SESSION_SEARCH:
-	  		  return new SaveSearchEvent(webViewUrl);
+	  		  String query = getQueryFromURL(webViewUrl);
+	  		  if(query != null) {
+	  			  return new SaveSearchEvent(query);
+	  		  }
 	  	  case SESSION_FEED:
 	  		  return new SaveStoryEvent(feedObject);
 		  }
