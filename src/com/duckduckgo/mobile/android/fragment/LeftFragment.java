@@ -88,16 +88,12 @@ public class LeftFragment extends Fragment {
     	leftSettingsTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);    	
     	
     	
-    	TypedValue tmpTypedValue = new TypedValue(); 
-    	theme.resolveAttribute(R.attr.leftButtonTextSize, tmpTypedValue, true);
-    	// XXX getDimension returns in PIXELS !
-    	float defLeftTitleTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
-    	DDGControlVar.leftTitleTextSize = PreferencesManager.getLeftTitleTextSize(defLeftTitleTextSize);
+    	float leftTitleTextSize = PreferencesManager.getLeftTitleTextSize() + DDGControlVar.diffPixel;
     	
-    	leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize); 
+    	leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, leftTitleTextSize);
+    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, leftTitleTextSize);
+    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, leftTitleTextSize);
+    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, leftTitleTextSize); 
     	    	
     	leftHomeButtonLayout = (LinearLayout) contentView.findViewById(R.id.LeftHomeButtonLayout);
     	leftStoriesButtonLayout = (LinearLayout) contentView.findViewById(R.id.LeftStoriesButtonLayout);
@@ -231,25 +227,23 @@ public class LeftFragment extends Fragment {
 	@Subscribe
 	public void onFontSizeChange(FontSizeChangeEvent event) {
 		historyAdapter.notifyDataSetInvalidated();
-		DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize + event.diffPixel;
 		
-		leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+		float updatedSize = PreferencesManager.getLeftTitleTextSize() + event.diffPixel;
+		leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, updatedSize);
+    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, updatedSize);
+    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, updatedSize);
+    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, updatedSize);
     	contentView.invalidate();
 	}
 		
 	@Subscribe
 	public void onFontSizeCancel(FontSizeCancelEvent event) {
-		DDGControlVar.leftTitleTextSize = DDGControlVar.prevLeftTitleTextSize;
 		historyAdapter.notifyDataSetInvalidated();		
-		DDGControlVar.prevLeftTitleTextSize = 0;
 		
-		leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
-    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+		leftHomeTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getLeftTitleTextSize());
+    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getLeftTitleTextSize());
+    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getLeftTitleTextSize());
+    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getLeftTitleTextSize());
     	contentView.invalidate();
 	}
 	

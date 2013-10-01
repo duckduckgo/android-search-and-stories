@@ -30,6 +30,7 @@ import com.duckduckgo.mobile.android.download.Holder;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.squareup.picasso.Picasso;
 
 
@@ -122,7 +123,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	        });
 
 			//Set the Title
-			holder.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
+			holder.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getMainFontSize() + DDGControlVar.diffPixel);
 			holder.textViewTitle.setText(feed.getTitle());
 			
 			String feedId = feed.getId();

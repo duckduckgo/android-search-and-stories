@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.adapters;
 import java.util.List;
 
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 import android.content.Context;
 import android.util.TypedValue;
@@ -31,7 +32,7 @@ public class CustomArrayAdapter<T> extends ArrayAdapter<T> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		  View cv = super.getView(position, convertView, parent);
 		
-		((TextView) cv.findViewById(textViewResourceId)).setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
+		((TextView) cv.findViewById(textViewResourceId)).setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getRecentFontSize() + DDGControlVar.diffPixel);
 		
 		return cv;
 	}

@@ -30,8 +30,12 @@ import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 import android.widget.Toast;
@@ -66,6 +70,8 @@ import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowser
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.fontEvents.FontSizeCancelEvent;
+import com.duckduckgo.mobile.android.events.fontEvents.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftHomeButtonClickEvent;
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftSavedButtonClickEvent;
 import com.duckduckgo.mobile.android.events.leftMenuButtonEvents.LeftSettingsButtonClickEvent;
@@ -92,6 +98,7 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.tasks.ScanAppsTask;
 import com.duckduckgo.mobile.android.util.AppStateManager;
+import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DisplayStats;
@@ -101,6 +108,7 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
+import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
@@ -132,6 +140,12 @@ public class DuckDuckGo extends ActionBarActivity {
 	
 	private boolean shouldShowBangButtonExplanation;
 	private BangButtonExplanationPopup bangButtonExplanationPopup;
+	
+	// font scaling
+	private LinearLayout fontSizeLayout = null;
+	
+	// keep prev progress in font seek bar, to make incremental changes available
+	SeekBarHint fontSizeSeekBar;
 
 	public DDGAutoCompleteTextView getSearchField() {
 		return searchField;
@@ -345,6 +359,8 @@ public class DuckDuckGo extends ActionBarActivity {
 		if(themeId != 0) {
 			setTheme(themeId);
 		}
+		
+		PreferencesManager.setFontDefaultsFromTheme(this);
         		        
         setContentView(R.layout.activity_main);       
         
@@ -355,6 +371,10 @@ public class DuckDuckGo extends ActionBarActivity {
         DDGControlVar.hasUpdatedFeed = false;
             	
         leftView = findViewById(R.id.LeftRelativeLayout);
+        
+        fontSizeLayout = (LinearLayout) findViewById(R.id.fontSeekLayout);
+        fontSizeSeekBar = (SeekBarHint) findViewById(R.id.fontSizeSeekBar);
+        initFontSlider();
         
         switchFragments(DDGControlVar.START_SCREEN);
         
@@ -375,16 +395,101 @@ public class DuckDuckGo extends ActionBarActivity {
             }
         };
         
-        mDrawerLayout.setDrawerListener(mDrawerToggle);    	    	
-                
-        TypedValue tmpTypedValue = new TypedValue();
-    	getTheme().resolveAttribute(R.attr.mainTextSize, tmpTypedValue, true);
-    	float defMainTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
-    	DDGControlVar.mainTextSize = PreferencesManager.getMainFontSize(defMainTextSize);
-    	
-    	getTheme().resolveAttribute(R.attr.recentTextSize, tmpTypedValue, true);
-    	float defRecentTextSize = tmpTypedValue.getDimension(getResources().getDisplayMetrics());    	
-    	DDGControlVar.recentTextSize = PreferencesManager.getRecentFontSize(defRecentTextSize);                  
+        mDrawerLayout.setDrawerListener(mDrawerToggle);    	    	      
+    }
+    
+    private void closeFontSlider() {
+    	resetFontDiffs();
+    	fontSizeLayout.setVisibility(View.GONE);
+    	fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
+    	setFontSliderText(DDGControlVar.fontPrevProgress);
+    	PreferencesManager.setFontSliderVisibility(false);
+    }
+    
+    private void setFontSliderText(int progress) {
+    	int diff = progress - DDGControlVar.fontPrevProgress;
+		// set thumb text
+		if(diff == 0) {
+			fontSizeSeekBar.setExtraText(getResources().getString(R.string.NoChange));
+		}
+		else if(progress == DDGConstants.FONT_SEEKBAR_MID) {
+			fontSizeSeekBar.setExtraText(getResources().getString(R.string.Default));
+		}
+		else if(progress > DDGConstants.FONT_SEEKBAR_MID) {
+			fontSizeSeekBar.setExtraText("+" + (progress-DDGConstants.FONT_SEEKBAR_MID));
+		}
+		else {
+			fontSizeSeekBar.setExtraText(String.valueOf((progress-DDGConstants.FONT_SEEKBAR_MID)));
+		}
+    }
+    
+    private void initFontSlider() {
+    	fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
+        fontSizeSeekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {				
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {				
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {		
+				if(!fromUser) return;
+				
+				int diff = progress - DDGControlVar.fontPrevProgress;
+				float diffPixel = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 
+		                (float) diff, getResources().getDisplayMetrics());
+				setFontSliderText(progress);
+				DDGControlVar.fontProgress = progress;
+				
+				FontSizeChangeEvent fontSizeChangeEvent = new FontSizeChangeEvent(diff, diffPixel);
+				beforeFontSizeChange(fontSizeChangeEvent);			
+				BusProvider.getInstance().post(fontSizeChangeEvent);
+			}
+        });
+        
+        Button fontSizeApplyButton = (Button) findViewById(R.id.fontSizeApplyButton);
+        fontSizeApplyButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				DDGControlVar.fontPrevProgress = DDGControlVar.fontProgress;
+				fontSizeSeekBar.setExtraText(null);
+				
+				PreferencesManager.saveAdjustedTextSizes();
+				
+				closeFontSlider();
+			}
+		});
+        
+        Button fontSizeCancelButton = (Button) findViewById(R.id.fontSizeCancelButton);
+        fontSizeCancelButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				beforeFontSizeCancel();			
+				BusProvider.getInstance().post(new FontSizeCancelEvent());
+				closeFontSlider();
+			}
+		});
+    }
+    
+    private void resetFontDiffs() {
+    	DDGControlVar.diffPixel = 0;
+		DDGControlVar.diff = 0;
+    }
+    
+    private void beforeFontSizeChange(FontSizeChangeEvent event) {
+    	DDGControlVar.diffPixel = event.diffPixel;
+		DDGControlVar.diff = event.diff;
+    }
+    
+    private void beforeFontSizeCancel() {
+    	resetFontDiffs();
     }
 
     private void showNewSourcesDialog() {
@@ -490,13 +595,16 @@ public class DuckDuckGo extends ActionBarActivity {
 //		if(mDrawerLayout.isDrawerOpen(Gravity.LEFT)){
 //			mDrawerLayout.closeDrawer(leftView);
 //		}
-		if (DDGControlVar.currentScreen == SCREEN.SCR_WEBVIEW) {
+		if(PreferencesManager.isFontSliderVisible()) {
+			beforeFontSizeCancel();
+			BusProvider.getInstance().post(new FontSizeCancelEvent());
+			closeFontSlider();
+			return;
+		}
+		else if (DDGControlVar.currentScreen == SCREEN.SCR_WEBVIEW) {
 			BusProvider.getInstance().post(new WebViewBackPressEvent());
 			return;
 		}
-//		else if(mainFragment.inFontChangeMode()) {
-//			BusProvider.getInstance().post(new FontSizeCancelEvent());
-//		}
 		// main feed showing & source filter is active
 		if(DDGControlVar.targetSource != null){
 			BusProvider.getInstance().post(new SourceFilterCancelEvent());
@@ -528,6 +636,10 @@ public class DuckDuckGo extends ActionBarActivity {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
+                
+                if(PreferencesManager.isFontSliderVisible()) {
+    				fontSizeLayout.setVisibility(View.VISIBLE);
+    			}
 			}
 		}
 	}
@@ -792,6 +904,10 @@ public class DuckDuckGo extends ActionBarActivity {
 	public void switchFragments(SCREEN screen) {
 		FragmentManager fragmentManager = getSupportFragmentManager();		
 		Fragment mWorkFragment = null;
+		
+		if(PreferencesManager.isFontSliderVisible()) {
+			fontSizeLayout.setVisibility(View.VISIBLE);
+		}
 		
 		switch(screen) {
 			case SCR_STORIES:

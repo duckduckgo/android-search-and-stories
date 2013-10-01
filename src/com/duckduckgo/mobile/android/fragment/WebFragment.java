@@ -100,17 +100,7 @@ public class WebFragment extends Fragment {
         // get default User-Agent string for reuse later
         mWebViewDefaultUA = mainWebView.getSettings().getUserAgentString();
         
-        // read and configure web view font size
-        if(DDGControlVar.webViewTextSize == -1) {
-        	DDGControlVar.webViewTextSize = PreferencesManager.getWebviewFontSize();
-        }
-        
-        if(DDGControlVar.webViewTextSize != -1) {
-            mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
-        }
-        else {
-        	DDGControlVar.webViewTextSize = mainWebView.getSettings().getDefaultFontSize();
-        }
+        PreferencesManager.setWebViewFontDefault(mainWebView.getSettings().getDefaultFontSize());        
         
         mainWebView.setWebViewClient(new DDGWebViewClient(this));            
         mainWebView.setWebChromeClient(new DDGWebChromeClient(this));
@@ -352,14 +342,11 @@ public class WebFragment extends Fragment {
 	
 	@Subscribe
 	public void onFontSizeChange(FontSizeChangeEvent event) {
-		DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize + event.diff;
-		mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
+		mainWebView.getSettings().setDefaultFontSize(PreferencesManager.getWebviewFontSize() + event.diff);
 	}
 	
 	public void onFontSizeCancel(FontSizeCancelEvent event) {
-		DDGControlVar.webViewTextSize = DDGControlVar.prevWebViewTextSize;
-		mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
-		DDGControlVar.prevWebViewTextSize = -1;
+		mainWebView.getSettings().setDefaultFontSize(PreferencesManager.getWebviewFontSize());
 	}
 	
 	@Subscribe

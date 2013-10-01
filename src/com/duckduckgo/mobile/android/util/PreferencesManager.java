@@ -3,11 +3,14 @@ package com.duckduckgo.mobile.android.util;
 import java.util.HashSet;
 import java.util.Set;
 
-import android.content.res.Resources;
-import com.duckduckgo.mobile.android.DDGApplication;
-
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.res.Resources.Theme;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
+
+import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 
 public class PreferencesManager {
@@ -15,6 +18,15 @@ public class PreferencesManager {
 	private static int WELCOME_VERSION = 1;
 	private static boolean NEW_SOURCES = true;
 	private static boolean sourcesWereMigratedRightNow = false;
+	
+	private static float defMainFontSize;
+	private static float defRecentFontSize;
+	private static float defLeftTitleTextSize;
+	
+	private static int defWebViewFontSize;
+	private static int defPtrHeaderSize;
+	private static int defPtrSubHeaderSize;
+	
 	
 	/* Settings */
 	
@@ -68,34 +80,72 @@ public class PreferencesManager {
 		editor.commit();
 	}
 	
+	public static boolean isFontSliderVisible() {
+		return DDGApplication.getSharedPreferences().getBoolean("fontSliderVisible", false);
+	}
+	
+	public static void setFontSliderVisibility(boolean visible) {
+		Editor editor = DDGApplication.getSharedPreferences().edit();
+		editor.putBoolean("fontSliderVisible", visible);
+		editor.commit();
+	}
+	
 	public static int getFontPrevProgress(int defaultValue) {
 		return DDGApplication.getSharedPreferences().getInt("fontPrevProgress", defaultValue);
 	}
 	
 	/* Text sizes */
-	public static float getMainFontSize(float defaultValue) {
-		return DDGApplication.getSharedPreferences().getFloat("mainFontSize", defaultValue);
+	public static float getMainFontSize() {
+		return DDGApplication.getSharedPreferences().getFloat("mainFontSize", defMainFontSize);
 	}
 	
-	public static float getRecentFontSize(float defaultValue) {
-		return DDGApplication.getSharedPreferences().getFloat("recentFontSize", defaultValue);
+	public static float getRecentFontSize() {
+		return DDGApplication.getSharedPreferences().getFloat("recentFontSize", defRecentFontSize);
 	}
 	
 	public static int getWebviewFontSize() {
-		return DDGApplication.getSharedPreferences().getInt("webViewFontSize", -1);
+		return DDGApplication.getSharedPreferences().getInt("webViewFontSize", defWebViewFontSize);
 	}
 	
-	public static float getLeftTitleTextSize(float defaultValue) {
-		return DDGApplication.getSharedPreferences().getFloat("leftTitleTextSize", defaultValue);
+	public static float getLeftTitleTextSize() {
+		return DDGApplication.getSharedPreferences().getFloat("leftTitleTextSize", defLeftTitleTextSize);
 	}
 	
-	public static int getPtrHeaderTextSize(int defaultValue) {
-		return DDGApplication.getSharedPreferences().getInt("ptrHeaderTextSize", defaultValue);
+	public static int getPtrHeaderTextSize() {
+		return DDGApplication.getSharedPreferences().getInt("ptrHeaderTextSize", defPtrHeaderSize);
 	}
 	
-	public static int getPtrHeaderSubTextSize(int defaultValue) {
-		return DDGApplication.getSharedPreferences().getInt("ptrHeaderSubTextSize", defaultValue);
+	public static int getPtrHeaderSubTextSize() {
+		return DDGApplication.getSharedPreferences().getInt("ptrHeaderSubTextSize", defPtrSubHeaderSize);
 	}
+	
+	public static void setWebViewFontDefault(int fontSize) {
+		defWebViewFontSize = fontSize;
+	}
+	
+	public static void setPtrHeaderFontDefaults(int headerFontSize, int subHeaderFontSize) {
+		defPtrHeaderSize = headerFontSize;
+		defPtrSubHeaderSize = subHeaderFontSize;
+	}
+	
+    /*
+     * Sets default font sizes from current theme attributes
+     */
+    public static void setFontDefaultsFromTheme(Context context) {
+    	Theme theme = context.getTheme();
+    	DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+    	
+    	TypedValue tmpTypedValue = new TypedValue(); 
+    	theme.resolveAttribute(R.attr.leftButtonTextSize, tmpTypedValue, true);
+    	// XXX getDimension returns in PIXELS !
+    	defLeftTitleTextSize = tmpTypedValue.getDimension(displayMetrics);
+    	
+    	theme.resolveAttribute(R.attr.mainTextSize, tmpTypedValue, true);
+    	defMainFontSize = tmpTypedValue.getDimension(displayMetrics);
+    	
+    	theme.resolveAttribute(R.attr.recentTextSize, tmpTypedValue, true);
+    	defRecentFontSize = tmpTypedValue.getDimension(displayMetrics);
+    }
 	
 	public static int getAppVersionCode() {
 		return DDGApplication.getSharedPreferences().getInt("appVersionCode", 0);
@@ -118,12 +168,12 @@ public class PreferencesManager {
 	public static void saveAdjustedTextSizes() {
 		Editor editor = DDGApplication.getSharedPreferences().edit();
 		editor.putInt("fontPrevProgress", DDGControlVar.fontPrevProgress);
-		editor.putFloat("mainFontSize", DDGControlVar.mainTextSize);
-		editor.putFloat("recentFontSize", DDGControlVar.recentTextSize);
-		editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
-		editor.putInt("ptrHeaderTextSize", DDGControlVar.ptrHeaderSize);
-		editor.putInt("ptrHeaderSubTextSize", DDGControlVar.ptrSubHeaderSize);
-		editor.putFloat("leftTitleTextSize", DDGControlVar.leftTitleTextSize);
+		editor.putFloat("mainFontSize", getMainFontSize() + DDGControlVar.diffPixel);
+		editor.putFloat("recentFontSize", getRecentFontSize() + DDGControlVar.diffPixel);
+		editor.putInt("webViewFontSize", getWebviewFontSize() + DDGControlVar.diff);
+		editor.putInt("ptrHeaderTextSize", getPtrHeaderTextSize() + DDGControlVar.diff);
+		editor.putInt("ptrHeaderSubTextSize", getPtrHeaderSubTextSize() + DDGControlVar.diff);
+		editor.putFloat("leftTitleTextSize", getLeftTitleTextSize() + DDGControlVar.diffPixel);
 		editor.commit();
 	}
 	

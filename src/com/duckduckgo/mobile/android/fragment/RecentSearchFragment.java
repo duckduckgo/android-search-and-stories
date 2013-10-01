@@ -15,6 +15,7 @@ import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.fontEvents.FontSizeCancelEvent;
 import com.duckduckgo.mobile.android.events.fontEvents.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.squareup.otto.Subscribe;
 
@@ -60,14 +61,11 @@ public class RecentSearchFragment extends Fragment {
 	
 	@Subscribe
 	public void onFontSizeChange(FontSizeChangeEvent event) {
-		DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize + event.diffPixel;
 		recentSearchAdapter.notifyDataSetInvalidated();
 	}
 	
 	@Subscribe
 	public void onFontSizeCancel(FontSizeCancelEvent event) {
-		DDGControlVar.recentTextSize = DDGControlVar.prevRecentTextSize;
 		recentSearchAdapter.notifyDataSetInvalidated();				
-		DDGControlVar.prevRecentTextSize = 0;
 	}
 }

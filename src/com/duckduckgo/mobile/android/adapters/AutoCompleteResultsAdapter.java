@@ -36,6 +36,7 @@ import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.util.AppShortInfo;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.squareup.picasso.Picasso;
 
 public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> implements Filterable {
@@ -94,9 +95,10 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 			holder.autoCompleteResult.setText(suggestion.getPhrase());
 			final int pixelValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 
 	                (float) 2.0, getContext().getResources().getDisplayMetrics());
-			holder.autoCompleteResult.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize+pixelValue);
+			float autoCompleteFontSize = PreferencesManager.getMainFontSize() + pixelValue;
+			holder.autoCompleteResult.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoCompleteFontSize + pixelValue);
 			holder.autoCompleteDetail.setText(suggestion.getSnippet());
-			holder.autoCompleteDetail.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
+			holder.autoCompleteDetail.setTextSize(TypedValue.COMPLEX_UNIT_PX, autoCompleteFontSize);
 			holder.plusImage.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {

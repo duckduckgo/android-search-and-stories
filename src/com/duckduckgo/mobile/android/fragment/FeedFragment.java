@@ -71,15 +71,17 @@ public class FeedFragment extends Fragment {
 	private void initialise() {
 		
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) contentView.findViewById(R.id.mainFeedItems);
-		DDGControlVar.ptrHeaderSize = PreferencesManager.getPtrHeaderTextSize(mPullRefreshFeedView.getHeaderTextSize());
-		DDGControlVar.ptrSubHeaderSize = PreferencesManager.getPtrHeaderSubTextSize(mPullRefreshFeedView.getHeaderSubTextSize());
+		PreferencesManager.setPtrHeaderFontDefaults(mPullRefreshFeedView.getHeaderTextSize(), mPullRefreshFeedView.getHeaderSubTextSize());
 		
-		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
+		int ptrHeaderSize = PreferencesManager.getPtrHeaderTextSize() + DDGControlVar.diff;
+		int ptrSubHeaderSize = PreferencesManager.getPtrHeaderSubTextSize() + DDGControlVar.diff;
+		
+		mPullRefreshFeedView.setHeaderTextSize(ptrHeaderSize);
+		mPullRefreshFeedView.setHeaderSubTextSize(ptrSubHeaderSize);
 		
 		// set Loading... font
-		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
+		mPullRefreshFeedView.setLoadingTextSize(ptrHeaderSize);
+		mPullRefreshFeedView.setLoadingSubTextSize(ptrSubHeaderSize);
 
 		// Set a listener to be invoked when the list should be refreshed.
 		mPullRefreshFeedView.setOnRefreshListener(new OnRefreshListener<MainFeedListView>() {
@@ -240,37 +242,31 @@ public class FeedFragment extends Fragment {
 	@Subscribe
 	public void onFontSizeChange(FontSizeChangeEvent event) {
 		
-		DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize + event.diffPixel;
 		feedAdapter.notifyDataSetInvalidated();
 		
-		DDGControlVar.ptrHeaderSize = DDGControlVar.prevPtrHeaderSize + event.diff;
-		DDGControlVar.ptrSubHeaderSize = DDGControlVar.prevPtrSubHeaderSize + event.diff;
+		int updatedHeaderSize = PreferencesManager.getPtrHeaderTextSize() + event.diff;
+		int updatedSubHeaderSize = PreferencesManager.getPtrHeaderSubTextSize() + event.diff;
 		
 		// adjust Pull-to-Refresh
-		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
+		mPullRefreshFeedView.setHeaderTextSize(updatedHeaderSize);
+		mPullRefreshFeedView.setHeaderSubTextSize(updatedSubHeaderSize);
 		
 		// set Loading... font
-		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
+		mPullRefreshFeedView.setLoadingTextSize(updatedHeaderSize);
+		mPullRefreshFeedView.setLoadingSubTextSize(updatedSubHeaderSize);
 	}
     
 	@Subscribe
 	public void onFontSizeCancel(FontSizeCancelEvent event) {
-		DDGControlVar.mainTextSize = DDGControlVar.prevMainTextSize;
 		
 		feedAdapter.notifyDataSetInvalidated();
 		
-		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.prevPtrHeaderSize);
-		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
+		mPullRefreshFeedView.setHeaderTextSize(PreferencesManager.getPtrHeaderTextSize());
+		mPullRefreshFeedView.setHeaderSubTextSize(PreferencesManager.getPtrHeaderSubTextSize());
 		
 		// set Loading... font
-		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.prevPtrHeaderSize);
-		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.prevPtrSubHeaderSize);
-		
-		DDGControlVar.prevMainTextSize = 0;		
-		DDGControlVar.prevPtrHeaderSize = 0;
-		DDGControlVar.prevPtrSubHeaderSize = 0;
+		mPullRefreshFeedView.setLoadingTextSize(PreferencesManager.getPtrHeaderTextSize());
+		mPullRefreshFeedView.setLoadingSubTextSize(PreferencesManager.getPtrHeaderSubTextSize());
 	}
 	
 	@Subscribe
