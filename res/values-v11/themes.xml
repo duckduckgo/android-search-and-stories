@@ -13,7 +13,8 @@
     <style name="DDGActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
         <item name="displayOptions">showHome|homeAsUp</item>
         <item name="background">@drawable/topbar_background</item>        
-	    <item name="android:background">@drawable/topbar_background</item>	
+	    <item name="android:background">@drawable/topbar_background</item>
+	    <item name="android:icon">@drawable/btn_menu_states</item>	
     </style>
     
     <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">
