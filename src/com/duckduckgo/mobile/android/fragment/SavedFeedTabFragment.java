@@ -16,6 +16,8 @@ import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.fontEvents.FontSizeCancelEvent;
+import com.duckduckgo.mobile.android.events.fontEvents.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
@@ -74,5 +76,15 @@ public class SavedFeedTabFragment extends ListFragment {
 	public void onSyncAdapters(SyncAdaptersEvent event) {
 		savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
 		savedFeedAdapter.notifyDataSetChanged();
+	}
+	
+	@Subscribe
+	public void onFontSizeChange(FontSizeChangeEvent event) {
+		savedFeedAdapter.notifyDataSetInvalidated();
+	}
+	
+	@Subscribe
+	public void onFontSizeCancel(FontSizeCancelEvent event) {
+		savedFeedAdapter.notifyDataSetInvalidated();
 	}
 }

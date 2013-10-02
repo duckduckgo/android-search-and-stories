@@ -15,6 +15,8 @@ import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.fontEvents.FontSizeCancelEvent;
+import com.duckduckgo.mobile.android.events.fontEvents.FontSizeChangeEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.SavedSearchPasteEvent;
 import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.util.SCREEN;
@@ -72,5 +74,15 @@ public class SavedResultTabFragment extends ListFragment {
 	public void onSyncAdapters(SyncAdaptersEvent event) {
 		savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
 		savedSearchAdapter.notifyDataSetChanged();
+	}
+	
+	@Subscribe
+	public void onFontSizeChange(FontSizeChangeEvent event) {
+		savedSearchAdapter.notifyDataSetInvalidated();
+	}
+	
+	@Subscribe
+	public void onFontSizeCancel(FontSizeCancelEvent event) {
+		savedSearchAdapter.notifyDataSetInvalidated();
 	}
 }

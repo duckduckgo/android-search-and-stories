@@ -50,7 +50,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
     	
         TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
         textViewHistory.setText(data);
-        textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getRecentFontSize() + DDGControlVar.diff);
+        textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getRecentFontSize() + DDGControlVar.diffPixel);
         
         String strUrl = cursor.getString(cursor.getColumnIndex("url"));
         String extraType = cursor.getString(cursor.getColumnIndex("extraType"));
