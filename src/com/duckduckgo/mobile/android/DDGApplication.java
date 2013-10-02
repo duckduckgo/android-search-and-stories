@@ -30,7 +30,8 @@ formUri = "https://collect.duckduckgo.com/collect.js?type=crash",
 mode = ReportingInteractionMode.DIALOG,
 customReportContent = {
         ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.STACK_TRACE,
-        ReportField.AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, ReportField.LOGCAT
+        ReportField.AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, ReportField.LOGCAT,
+        ReportField.PRODUCT, ReportField.PHONE_MODEL
 },
 resToastText = R.string.crash_toast_text, // optional, displayed as soon as the crash occurs, before collecting data which can take a few seconds
 resNotifTickerText = R.string.crash_notif_ticker_text,
