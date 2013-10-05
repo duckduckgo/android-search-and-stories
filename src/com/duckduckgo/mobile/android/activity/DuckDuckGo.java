@@ -922,8 +922,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         
 		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_SEARCH
 				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED) {
-			// previous screen was a SERP
-            keyboardService.toggleKeyboard(getSearchField());
+            keyboardService.showKeyboard(getSearchField());
 		}
         mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
@@ -1814,7 +1813,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	@Subscribe
 	public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
-		searchWebTerm(event.query);	
+        keyboardService.hideKeyboard(mainWebView);
+        searchWebTerm(event.query);
 		itemSaveSearch(event.query);
 		syncAdapters();
 	}
