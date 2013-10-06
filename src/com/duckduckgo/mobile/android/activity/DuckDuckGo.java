@@ -25,14 +25,11 @@ import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.DownloadListener;
 import android.webkit.WebView.HitTestResult;
@@ -960,6 +957,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			DDGControlVar.hasAppsIndexed = true;
 		}
 		contentDownloader = new ContentDownloader(this);
+
 		// global search intent
         Intent intent = getIntent(); 
         
@@ -974,6 +972,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             keyboardService.showKeyboard(getSearchField());
 		}
 		else if(mDuckDuckGoContainer.webviewShowing){
+            keyboardService.hideKeyboard(mainWebView);
 			shareButton.setVisibility(View.VISIBLE);
 			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 		}
