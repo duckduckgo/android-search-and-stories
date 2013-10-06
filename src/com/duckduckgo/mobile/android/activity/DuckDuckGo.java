@@ -1063,7 +1063,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
-        keyboardService.hideKeyboard(mainWebView);
+        keyboardService.hideKeyboard(getSearchField());
 		savedState = false;
 		if(bangButtonExplanationPopup!=null){
 			bangButtonExplanationPopup.dismiss();
@@ -1798,6 +1798,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(viewPager.isLeftMenuOpen()){
             viewPager.hideMenu();
         }
+        keyboardService.hideKeyboard(getSearchField());
 		showHistoryObject(event.historyObject);
 	}
 	
@@ -1813,8 +1814,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
     @Subscribe
     public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
-        keyboardService.hideKeyboard(mainWebView);
-        searchWebTerm(event.query);
+        searchOrGoToUrl(event.query);
         syncAdapters();
     }
 
