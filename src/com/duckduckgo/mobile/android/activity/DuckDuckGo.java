@@ -972,7 +972,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             keyboardService.showKeyboard(getSearchField());
 		}
 		else if(mDuckDuckGoContainer.webviewShowing){
-            keyboardService.hideKeyboard(mainWebView);
+            keyboardService.hideKeyboard(getSearchField());
 			shareButton.setVisibility(View.VISIBLE);
 			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 		}
