@@ -1810,15 +1810,14 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             new HistorySearchMenuDialog(DuckDuckGo.this, event.historyObject).show();
         }
 	}
-	
-	@Subscribe
-	public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
+
+    @Subscribe
+    public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
         keyboardService.hideKeyboard(mainWebView);
         searchWebTerm(event.query);
-		itemSaveSearch(event.query);
-		syncAdapters();
-	}
-	
+        syncAdapters();
+    }
+
 	@Subscribe
 	public void onSavedSearchItemLongClick(SavedSearchItemLongClickEvent event) {
 		new SavedSearchMenuDialog(this, event.query).show();
