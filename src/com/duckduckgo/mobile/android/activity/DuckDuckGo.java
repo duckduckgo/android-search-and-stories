@@ -25,14 +25,11 @@ import android.text.TextWatcher;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.KeyEvent;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.DownloadListener;
 import android.webkit.WebView.HitTestResult;
@@ -922,8 +919,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         
 		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_SEARCH
 				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED) {
-			// previous screen was a SERP
-            keyboardService.toggleKeyboard(getSearchField());
+            keyboardService.showKeyboard(getSearchField());
 		}
         mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
@@ -961,6 +957,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			DDGControlVar.hasAppsIndexed = true;
 		}
 		contentDownloader = new ContentDownloader(this);
+
 		// global search intent
         Intent intent = getIntent(); 
         
@@ -975,6 +972,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             keyboardService.showKeyboard(getSearchField());
 		}
 		else if(mDuckDuckGoContainer.webviewShowing){
+            keyboardService.hideKeyboard(getSearchField());
 			shareButton.setVisibility(View.VISIBLE);
 			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 		}
@@ -1064,7 +1062,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
-        keyboardService.hideKeyboard(mainWebView);
+        keyboardService.hideKeyboard(getSearchField());
 		savedState = false;
 		if(bangButtonExplanationPopup!=null){
 			bangButtonExplanationPopup.dismiss();
@@ -1799,6 +1797,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if(viewPager.isLeftMenuOpen()){
             viewPager.hideMenu();
         }
+        keyboardService.hideKeyboard(getSearchField());
 		showHistoryObject(event.historyObject);
 	}
 	
@@ -1811,14 +1810,13 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             new HistorySearchMenuDialog(DuckDuckGo.this, event.historyObject).show();
         }
 	}
-	
-	@Subscribe
-	public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
-		searchWebTerm(event.query);	
-		itemSaveSearch(event.query);
-		syncAdapters();
-	}
-	
+
+    @Subscribe
+    public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
+        searchOrGoToUrl(event.query);
+        syncAdapters();
+    }
+
 	@Subscribe
 	public void onSavedSearchItemLongClick(SavedSearchItemLongClickEvent event) {
 		new SavedSearchMenuDialog(this, event.query).show();
