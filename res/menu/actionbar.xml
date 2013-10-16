@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+    android:id="@+id/menu_bang"
+    android:icon="@drawable/btn_bang_states"
+    app:showAsAction="always"
+    android:orderInCategory="1"
+    android:title="!Bang" />
+    
+    <item
+    android:id="@+id/root_menu"
+    android:icon="@drawable/ic_menu_moreoverflow_normal_holo_light"
+    app:showAsAction="always"
+    android:orderInCategory="2"
+    android:title="More">
+	    <menu>
+	        <item
+	            android:id="@+id/menu_share"
+	            android:icon="@android:drawable/ic_menu_share"
+	            app:showAsAction="never"
+	            android:title="@string/Share" />
+	        <item
+	            android:id="@+id/menu_external"
+	            android:icon="@android:drawable/ic_menu_rotate"
+	            app:showAsAction="never"
+	            android:title="@string/OpenInExternalBrowser"/>
+	        <item
+	            android:id="@+id/menu_reload"
+	            android:icon="@drawable/icon_reload"
+	            app:showAsAction="never"
+	            android:title="@string/Refresh"/>
+	        <item
+	            android:id="@+id/menu_save"
+	            android:icon="@android:drawable/ic_menu_save"
+	            app:showAsAction="never"
+	            android:title="@string/Save"/>	              	                	       
+	   </menu>
+   </item>
+</menu>

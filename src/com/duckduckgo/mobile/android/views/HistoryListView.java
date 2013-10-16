@@ -12,10 +12,12 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.duckduckgo.mobile.android.util.SCREEN;
 
 public class HistoryListView extends ListView implements android.widget.AdapterView.OnItemClickListener, android.widget.AdapterView.OnItemLongClickListener {
 
@@ -47,7 +49,8 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 		}
 		
 		if (obj != null) {
-			BusProvider.getInstance().post(new HistoryItemSelectedEvent(obj));
+			BusProvider.getInstance().post(new AfterSwitchPostEvent(SCREEN.SCR_WEBVIEW, 
+					new HistoryItemSelectedEvent(obj)));
 		}
 		
 	}

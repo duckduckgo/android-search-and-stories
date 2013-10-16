@@ -1,22 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.duckduckgo.mobile.android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.duckduckgo.mobile.android.DuckDuckGoActivity"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:baselineAligned="false"
     android:orientation="vertical"
     android:id="@+id/mainLayout" >
-
-    <!-- Main Search View -->
-
-	<include android:id="@+id/searchBar" layout="@layout/searchbar" />
     
-    <ProgressBar android:layout_width="fill_parent"
-    		 	 android:layout_height="5dp"
-    		 	 android:visibility="gone"
-    		 	 style="@android:style/Widget.ProgressBar.Horizontal"
-    		 	 android:id="@+id/pageLoadingProgress" />
-
     <!-- Main View Area -->
     <RelativeLayout android:layout_width="fill_parent"
         		    android:layout_height="0dip"
@@ -28,54 +19,39 @@
         android:layout_width="wrap_content"
         android:layout_height="fill_parent">
         
-        <com.duckduckgo.mobile.android.views.webview.DDGWebView android:layout_width="match_parent"
-            	 android:layout_height="match_parent"
-            	 android:id="@+id/mainWebView" />
+        <fragment
+        android:id="@+id/web_fragment"
+        android:name="com.duckduckgo.mobile.android.fragment.WebFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/web_fragment_view" />
         
-        <com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView
-            	  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:divider="@android:color/white"
-                  android:dividerHeight="1dp"
-                  
-                  app:ptrAnimationStyle="flip"
-                  app:ptrHeaderTextColor="?attr/leftItemTextColor"
-                  app:ptrHeaderSubTextColor="@color/left_secondary_text"
-                  app:ptrDrawableTop="?attr/ptrDrawable"
-                  app:ptrHeaderSize="10dp"
-                  
-                  android:fadingEdge="none"
-        		  android:fastScrollEnabled="false"
-        		  android:footerDividersEnabled="false"
-        		  android:headerDividersEnabled="false"
-        		  android:smoothScrollbar="true"
-        		  
-                  android:id="@+id/mainFeedItems" />
+        <fragment
+        android:id="@+id/feed_fragment"
+        android:name="com.duckduckgo.mobile.android.fragment.FeedFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/feed_fragment_view" />
         
-<!--         <com.duckduckgo.mobile.android.views.SavedSearchListView -->
-<!--             	  android:layout_width="match_parent" -->
-<!--                   android:layout_height="match_parent" -->
-<!--                   android:background="@android:color/transparent" -->
-<!--                   android:id="@+id/recentSearchItems" /> -->
+<!--         placeholder layout for DDGPreferenceFragment -->
+<!--         <FrameLayout android:id="@+id/placeholderFragment" android:layout_weight="1" -->
+<!--         			 android:layout_width="0px" -->
+<!--         			 android:layout_height="match_parent" /> -->
         
-        <include android:id="@+id/recentSearchLayout" layout="@layout/recentsearch" />
+        <fragment
+        android:id="@+id/saved_fragment"
+        android:name="com.duckduckgo.mobile.android.fragment.SavedMainFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/tab_saved_view" />
         
-        <LinearLayout 	  
-            android:layout_height="match_parent"
-			android:layout_width="match_parent"
-			android:baselineAligned="false"
-			android:background="@android:color/black"	
-			android:id="@+id/prefLayout">  
-			
-            <!-- placeholder layout for DDGPreferenceFragment -->
-            <FrameLayout android:id="@+id/prefFragment" android:layout_weight="1"
-        				 android:layout_width="0px"
-        				 android:layout_height="match_parent" />
-            
-            </LinearLayout>      
-            
-        <include android:id="@android:id/tabhost" layout="@layout/tab_saved_view" />
-        
+        <fragment
+        android:id="@+id/recentsearch_fragment"
+        android:name="com.duckduckgo.mobile.android.fragment.RecentSearchFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:layout="@layout/recentsearch" />
+                    
     </com.duckduckgo.mobile.android.widgets.SafeViewFlipper>
 
         

@@ -12,7 +12,6 @@ import com.squareup.picasso.Picasso;
 
 //TODO: Instead of using DownloadDrawable, we can just subclass ImageView with an AsyncImageView or some such...
 public class AsyncImageView extends ImageView {
-	private boolean hideOnDefault = false;
 	public String type = null;
 	
 	/**

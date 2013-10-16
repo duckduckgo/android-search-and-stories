@@ -10,8 +10,10 @@ import android.webkit.WebBackForwardList;
 import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DDGWebView extends WebView {
@@ -23,7 +25,6 @@ public class DDGWebView extends WebView {
 	private HashSet<String> readableList = new HashSet<String>();
 	
 	private DDGWebViewClient webViewClient = null;
-	private DuckDuckGo activity;
 	
 	public boolean readableBackState = false;
 	public boolean loadingReadableBack = false;
@@ -157,7 +158,7 @@ public class DDGWebView extends WebView {
 		
 		clearReadabilityState();
 	}
-
+	
     /**
      * The clearView method was deprecated in API level 18. Use this instead
      * See https://developer.android.com/reference/android/webkit/WebView.html#clearView%28%29
@@ -165,10 +166,6 @@ public class DDGWebView extends WebView {
     private void clearViewReliably() {
         loadUrl(ABOUT_BLANK);
     }
-
-    public void setParentActivity(DuckDuckGo activity) {
-		this.activity = activity;
-	}
 	
 	public void backPressAction() {		
 		WebBackForwardList history = copyBackForwardList();
@@ -182,13 +179,12 @@ public class DDGWebView extends WebView {
                 if(ABOUT_BLANK.equals(prevUrl)){
                     goBackOrForward(-2);
                     if(lastIndex > 0){
-                        activity.displayScreen(activity.mDuckDuckGoContainer.currentScreen, false);
+                        BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.prevScreen));
                     }
                     return;
-                }
-				if(readableList.contains(prevUrl) && canDoReadability(prevUrl) && activity.currentFeedObject != null) {
-//					readableAction(activity.currentFeedObject);
-					readableActionBack(activity.currentFeedObject);
+                }				
+				if(readableList.contains(prevUrl) && canDoReadability(prevUrl) && DDGControlVar.currentFeedObject != null) {
+					readableActionBack(DDGControlVar.currentFeedObject);
 				}
 				else {
 					goBack();
@@ -199,7 +195,7 @@ public class DDGWebView extends WebView {
 			}
 		}
 		else {
-			activity.displayScreen(activity.mDuckDuckGoContainer.currentScreen, true);
+			BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.prevScreen));
 		}
 	}
 

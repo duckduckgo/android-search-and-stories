@@ -168,12 +168,12 @@ public class PreferencesManager {
 	public static void saveAdjustedTextSizes() {
 		Editor editor = DDGApplication.getSharedPreferences().edit();
 		editor.putInt("fontPrevProgress", DDGControlVar.fontPrevProgress);
-		editor.putFloat("mainFontSize", DDGControlVar.mainTextSize);
-		editor.putFloat("recentFontSize", DDGControlVar.recentTextSize);
-		editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
-		editor.putInt("ptrHeaderTextSize", DDGControlVar.ptrHeaderSize);
-		editor.putInt("ptrHeaderSubTextSize", DDGControlVar.ptrSubHeaderSize);
-		editor.putFloat("leftTitleTextSize", DDGControlVar.leftTitleTextSize);
+		editor.putFloat("mainFontSize", getMainFontSize() + DDGControlVar.diffPixel);
+		editor.putFloat("recentFontSize", getRecentFontSize() + DDGControlVar.diffPixel);
+		editor.putInt("webViewFontSize", getWebviewFontSize() + DDGControlVar.diff);
+		editor.putInt("ptrHeaderTextSize", getPtrHeaderTextSize() + DDGControlVar.diff);
+		editor.putInt("ptrHeaderSubTextSize", getPtrHeaderSubTextSize() + DDGControlVar.diff);
+		editor.putFloat("leftTitleTextSize", getLeftTitleTextSize() + DDGControlVar.diffPixel);
 		editor.commit();
 	}
 	

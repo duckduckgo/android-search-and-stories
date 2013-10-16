@@ -11,8 +11,8 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveErrorEvent;
-import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
+import com.duckduckgo.mobile.android.events.readabilityEvents.ReadabilityFeedRetrieveErrorEvent;
+import com.duckduckgo.mobile.android.events.readabilityEvents.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 

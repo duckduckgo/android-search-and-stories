@@ -2,7 +2,9 @@
 <com.duckduckgo.mobile.android.tabhost.TabHostExt
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="?attr/leftLayoutRootBackground" 
+    android:id="@+id/saved_tab_host_ext">
 
     <LinearLayout
         android:orientation="vertical"
