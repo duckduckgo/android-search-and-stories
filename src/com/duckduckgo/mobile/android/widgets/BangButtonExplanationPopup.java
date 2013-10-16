@@ -7,10 +7,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
-import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
@@ -38,7 +36,7 @@ public class BangButtonExplanationPopup extends PopupWindow {
 		});
 	}
 	
-	public static BangButtonExplanationPopup showPopup(DuckDuckGo context, ImageButton bangButton){
+	public static BangButtonExplanationPopup showPopup(DuckDuckGo context, ImageView bangButton){
 		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		View layout = inflater.inflate(R.layout.bangbutton_explanation_popup,
                 (ViewGroup) context.findViewById(R.id.bangbuttonexplanation));

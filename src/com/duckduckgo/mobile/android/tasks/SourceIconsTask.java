@@ -6,7 +6,9 @@ import android.os.AsyncTask;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.ImageCache;
+import com.duckduckgo.mobile.android.events.SourceIconsTaskCompleteEvent;
 import com.duckduckgo.mobile.android.objects.SourceInfoPair;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
@@ -18,8 +20,7 @@ public class SourceIconsTask extends AsyncTask<Void, Void, Void> {
 	ImageCache cache;	
 	Set<SourceInfoPair> sourceInfoPairs;
 		
-	public SourceIconsTask(ListView mainFeedView, Set<SourceInfoPair> sourceInfoPairs) {
-		this.mainFeedView = mainFeedView;
+	public SourceIconsTask(Set<SourceInfoPair> sourceInfoPairs) {
 		this.cache = DDGApplication.getImageCache();
 		this.sourceInfoPairs = sourceInfoPairs;
 	}	
@@ -48,9 +49,7 @@ public class SourceIconsTask extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPostExecute(Void result) {
-		if(mainFeedView != null) {
-			mainFeedView.invalidateViews();
-		}
+		BusProvider.getInstance().post(new SourceIconsTaskCompleteEvent());
 		super.onPostExecute(result);
 	}
 	

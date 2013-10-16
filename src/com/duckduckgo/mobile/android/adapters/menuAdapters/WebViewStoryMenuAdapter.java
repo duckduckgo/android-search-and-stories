@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.adapters.menuAdapters;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import android.content.Context;
+
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.menuItems.ReloadMenuItem;
@@ -12,20 +13,20 @@ import com.duckduckgo.mobile.android.util.menuItems.TurnReadabilityOnMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.UnSaveStoryMenuItem;
 
 public class WebViewStoryMenuAdapter extends PageMenuContextAdapter {
-	private DuckDuckGo context;
+	private Context context;
 	private String url;
 	private Boolean isInReadabilityMode;
 	private Boolean isItemSaved;
 	private FeedObject feedObject;
 	private Boolean hasReadability;
 
-	public WebViewStoryMenuAdapter(DuckDuckGo context, int resource,
+	public WebViewStoryMenuAdapter(Context context, int resource,
 			int textViewResourceId) {
 		super(context, resource, textViewResourceId);
 		this.context = context;
 	}
 	
-	public WebViewStoryMenuAdapter(DuckDuckGo context, int resource, 
+	public WebViewStoryMenuAdapter(Context context, int resource, 
 			int textViewResourceId, FeedObject feedObject, Boolean isInReadabilityMode) {
 		this(context, resource, textViewResourceId);
 		this.feedObject = feedObject;

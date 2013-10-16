@@ -3,10 +3,20 @@ package com.duckduckgo.mobile.android.util;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.duckduckgo.mobile.android.objects.FeedObject;
+
 public class DDGControlVar {
 	
 	public static SCREEN START_SCREEN = SCREEN.SCR_STORIES;	// stories
 	
+	public static boolean mCleanSearchBar = false;
+	
+	public static String lastFeedUrl = "";	
+	public static SCREEN currentScreen = SCREEN.SCR_STORIES;
+	public static SCREEN prevScreen = SCREEN.SCR_STORIES;
+	public static FeedObject currentFeedObject = null;
+	public static SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;
+		
 	public static boolean hasUpdatedFeed = false;
 	public static String regionString = "wt-wt";	// world traveler (none) as default
 	
@@ -28,12 +38,9 @@ public class DDGControlVar {
 	
 	public static int fontProgress = DDGConstants.FONT_SEEKBAR_MID;	// over scale 0-10
 	public static int fontPrevProgress = DDGConstants.FONT_SEEKBAR_MID;	// over scale 0-10
-	public static float mainTextSize;
-	public static float recentTextSize; 
-	public static int webViewTextSize = -1;
-	public static int ptrHeaderSize;
-	public static int ptrSubHeaderSize;
-	public static float leftTitleTextSize;
+	
+	public static int diff = 0;
+	public static float diffPixel = 0.0f;
 		
 	public static boolean hasAppsIndexed = false;
 	

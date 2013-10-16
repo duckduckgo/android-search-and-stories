@@ -15,6 +15,7 @@ import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.pasteEvents.SavedSearchPasteEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class SavedResultCursorAdapter extends CursorAdapter {
 	
@@ -41,7 +42,7 @@ public class SavedResultCursorAdapter extends CursorAdapter {
     	
         TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
         textViewHistory.setText(data);
-        textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
+        textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getRecentFontSize() + DDGControlVar.diffPixel);
         
         AsyncImageView imageViewHistory = (AsyncImageView) view.findViewById(R.id.recentSearchImage);
         imageViewHistory.setImageResource(R.drawable.icon_history_search);

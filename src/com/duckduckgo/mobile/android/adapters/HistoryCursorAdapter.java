@@ -21,6 +21,7 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.squareup.picasso.Picasso;
 
 public class HistoryCursorAdapter extends CursorAdapter {
@@ -49,7 +50,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
     	
         TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
         textViewHistory.setText(data);
-        textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
+        textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getRecentFontSize() + DDGControlVar.diffPixel);
         
         String strUrl = cursor.getString(cursor.getColumnIndex("url"));
         String extraType = cursor.getString(cursor.getColumnIndex("extraType"));

@@ -21,6 +21,7 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.squareup.picasso.Picasso;
 
 public class SavedFeedCursorAdapter extends CursorAdapter {
@@ -95,7 +96,7 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
     	});
 
     	//Set the Title
-    	textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
+    	textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, PreferencesManager.getMainFontSize() + DDGControlVar.diffPixel);
     	textViewTitle.setText(title);
 
     	// FIXME : it'd be good to reset color to default color for textview in layout XML

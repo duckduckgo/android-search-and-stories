@@ -1,7 +1,8 @@
-package com.duckduckgo.mobile.android.events;
+package com.duckduckgo.mobile.android.events.readabilityEvents;
 
 import java.util.List;
 
+import com.duckduckgo.mobile.android.events.Event;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 
 public class ReadabilityFeedRetrieveSuccessEvent extends Event {

@@ -1,22 +1,23 @@
 package com.duckduckgo.mobile.android.adapters.menuAdapters;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import android.content.Context;
+
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.util.menuItems.ReloadMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SendToExternalBrowserMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.ShareWebPageMenuItem;
 
 public class WebViewWebPageMenuAdapter extends PageMenuContextAdapter {
-	private DuckDuckGo context;
+	private Context context;
 	private String pageUrl;
 
-	public WebViewWebPageMenuAdapter(DuckDuckGo context, int resource,
+	public WebViewWebPageMenuAdapter(Context context, int resource,
 			int textViewResourceId) {
 		super(context, resource, textViewResourceId);
 		this.context = context;
 	}
 	
-	public WebViewWebPageMenuAdapter(DuckDuckGo context, int resource, 
+	public WebViewWebPageMenuAdapter(Context context, int resource, 
 			int textViewResourceId, String pageUrl) {
 		this(context, resource, textViewResourceId);
 		this.pageUrl = pageUrl;
