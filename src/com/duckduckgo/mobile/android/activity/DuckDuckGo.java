@@ -18,15 +18,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
+import android.view.*;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
-import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -539,6 +534,7 @@ public class DuckDuckGo extends ActionBarActivity {
 		}
 		
 		
+
 		// global search intent
         Intent intent = getIntent(); 
         
@@ -553,6 +549,8 @@ public class DuckDuckGo extends ActionBarActivity {
             keyboardService.showKeyboard(getSearchField());
 		}
 //		else if(isWebViewShowing()){
+//			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
+//			shareButton.setVisibility(View.VISIBLE);
 //			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
 //		}
 		else if(isLaunchedWithAssistAction()){
@@ -613,6 +611,7 @@ public class DuckDuckGo extends ActionBarActivity {
 			super.onBackPressed();
 		}
 	}
+
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -772,7 +771,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	@Subscribe
 	public void onSavedFeedItemLongClick(SavedFeedItemLongClickEvent event) {
         new SavedStoryMenuDialog(DuckDuckGo.this, event.feedObject).show();
-    }	
+    }
 	
 	@Subscribe
 	public void onHistoryItemLongClick(HistoryItemLongClickEvent event) {
@@ -783,7 +782,7 @@ public class DuckDuckGo extends ActionBarActivity {
             new HistorySearchMenuDialog(DuckDuckGo.this, event.historyObject).show();
         }
 	}
-	
+
 	@Subscribe
 	public void onSavedSearchItemLongClick(SavedSearchItemLongClickEvent event) {
 		new SavedSearchMenuDialog(this, event.query).show();

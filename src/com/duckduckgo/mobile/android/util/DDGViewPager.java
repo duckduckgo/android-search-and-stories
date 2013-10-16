@@ -33,7 +33,7 @@ public class DDGViewPager extends ViewPager {
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 if(isLeftMenuOpen()){
-                    BusProvider.getInstance().post(new HideKeyboardEvent());
+                    BusProvider.getInstance().post(new HideKeyboardEvent(200));
                 }
             }
         });
