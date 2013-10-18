@@ -380,13 +380,12 @@ public class DuckDuckGo extends ActionBarActivity {
                 R.string.drawer_close) {
  
             public void onDrawerClosed(View view) {
-                // TODO Auto-generated method stub
                 super.onDrawerClosed(view);
             }
  
             public void onDrawerOpened(View drawerView) {
-                // TODO Auto-generated method stub
                 super.onDrawerOpened(drawerView);
+                BusProvider.getInstance().post(new HideKeyboardEvent(200));
             }
         };
         
