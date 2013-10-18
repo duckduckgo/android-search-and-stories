@@ -49,6 +49,7 @@ import com.duckduckgo.mobile.android.events.AddWelcomeScreenEvent;
 import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.CleanFeedDownloadsEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
+import com.duckduckgo.mobile.android.events.HideKeyboardEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
@@ -935,6 +936,11 @@ public class DuckDuckGo extends ActionBarActivity {
 			
 			if(DDGControlVar.START_SCREEN == screen) {
 				DDGControlVar.homeScreenShowing = true;
+				
+				if(DDGControlVar.sessionType == SESSIONTYPE.SESSION_SEARCH
+						|| screen == SCREEN.SCR_RECENT_SEARCH || screen == SCREEN.SCR_SAVED_FEED) {
+						keyboardService.showKeyboard(getSearchField());
+				}
 			}
 			else {
 				DDGControlVar.homeScreenShowing = false;
@@ -985,6 +991,16 @@ public class DuckDuckGo extends ActionBarActivity {
 	@Subscribe
 	public void onSearchBarClear(SearchBarClearEvent event) {
 		clearSearchBar();
+	}
+	
+	@Subscribe
+	public void onHideKeyboard(HideKeyboardEvent event) {
+		if(event.getDelay() == 0) {
+			keyboardService.hideKeyboard(getSearchField());
+		}
+		else {
+			keyboardService.hideKeyboardDelayed(getSearchField(), event.getDelay());
+		}
 	}
 	
 }
