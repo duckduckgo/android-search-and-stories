@@ -160,7 +160,7 @@ public class WebFragment extends Fragment {
 	}
 	
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
-        keyboardService.hideKeyboard(mainWebView);
+		BusProvider.getInstance().post(new HideKeyboardEvent());
 		savedState = false;
 		
 		DDGControlVar.sessionType = sessionType;
@@ -379,6 +379,7 @@ public class WebFragment extends Fragment {
 	
 	@Subscribe
 	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
+		BusProvider.getInstance().post(new HideKeyboardEvent());
 		showHistoryObject(event.historyObject);
 	}
 	
@@ -394,7 +395,7 @@ public class WebFragment extends Fragment {
 	@Subscribe
 	public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
 		BusProvider.getInstance().post(new HideKeyboardEvent());
-		searchWebTerm(event.query);	
+		searchOrGoToUrl(event.query);	
 		BusProvider.getInstance().post(new SyncAdaptersEvent());
 	}
 
