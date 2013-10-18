@@ -395,7 +395,6 @@ public class WebFragment extends Fragment {
 	public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
 		BusProvider.getInstance().post(new HideKeyboardEvent());
 		searchWebTerm(event.query);	
-		DDGUtils.itemSaveSearch(event.query);
 		BusProvider.getInstance().post(new SyncAdaptersEvent());
 	}
 
