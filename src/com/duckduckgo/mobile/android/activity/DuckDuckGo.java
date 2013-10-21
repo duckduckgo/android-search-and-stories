@@ -548,11 +548,6 @@ public class DuckDuckGo extends ActionBarActivity {
 			switchFragments(DDGControlVar.START_SCREEN);
             keyboardService.showKeyboard(getSearchField());
 		}
-//		else if(isWebViewShowing()){
-//			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
-//			shareButton.setVisibility(View.VISIBLE);
-//			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
-//		}
 		else if(isLaunchedWithAssistAction()){
 			keyboardService.showKeyboard(getSearchField());
 		}
