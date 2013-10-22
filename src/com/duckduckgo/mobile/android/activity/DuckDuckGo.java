@@ -49,6 +49,7 @@ import com.duckduckgo.mobile.android.events.AddWelcomeScreenEvent;
 import com.duckduckgo.mobile.android.events.AfterSwitchPostEvent;
 import com.duckduckgo.mobile.android.events.CleanFeedDownloadsEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
+import com.duckduckgo.mobile.android.events.HideKeyboardEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
@@ -379,13 +380,12 @@ public class DuckDuckGo extends ActionBarActivity {
                 R.string.drawer_close) {
  
             public void onDrawerClosed(View view) {
-                // TODO Auto-generated method stub
                 super.onDrawerClosed(view);
             }
  
             public void onDrawerOpened(View drawerView) {
-                // TODO Auto-generated method stub
                 super.onDrawerOpened(drawerView);
+                BusProvider.getInstance().post(new HideKeyboardEvent(200));
             }
         };
         
@@ -548,11 +548,6 @@ public class DuckDuckGo extends ActionBarActivity {
 			switchFragments(DDGControlVar.START_SCREEN);
             keyboardService.showKeyboard(getSearchField());
 		}
-//		else if(isWebViewShowing()){
-//			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
-//			shareButton.setVisibility(View.VISIBLE);
-//			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());
-//		}
 		else if(isLaunchedWithAssistAction()){
 			keyboardService.showKeyboard(getSearchField());
 		}
@@ -935,6 +930,11 @@ public class DuckDuckGo extends ActionBarActivity {
 			
 			if(DDGControlVar.START_SCREEN == screen) {
 				DDGControlVar.homeScreenShowing = true;
+				
+				if(DDGControlVar.sessionType == SESSIONTYPE.SESSION_SEARCH
+						|| screen == SCREEN.SCR_RECENT_SEARCH || screen == SCREEN.SCR_SAVED_FEED) {
+						keyboardService.showKeyboard(getSearchField());
+				}
 			}
 			else {
 				DDGControlVar.homeScreenShowing = false;
@@ -985,6 +985,16 @@ public class DuckDuckGo extends ActionBarActivity {
 	@Subscribe
 	public void onSearchBarClear(SearchBarClearEvent event) {
 		clearSearchBar();
+	}
+	
+	@Subscribe
+	public void onHideKeyboard(HideKeyboardEvent event) {
+		if(event.getDelay() == 0) {
+			keyboardService.hideKeyboard(getSearchField());
+		}
+		else {
+			keyboardService.hideKeyboardDelayed(getSearchField(), event.getDelay());
+		}
 	}
 	
 }

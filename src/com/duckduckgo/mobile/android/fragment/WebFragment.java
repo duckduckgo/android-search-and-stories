@@ -29,6 +29,7 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewQueryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
+import com.duckduckgo.mobile.android.events.HideKeyboardEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
 import com.duckduckgo.mobile.android.events.ResetScreenStateEvent;
@@ -159,7 +160,7 @@ public class WebFragment extends Fragment {
 	}
 	
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
-        keyboardService.hideKeyboard(mainWebView);
+		BusProvider.getInstance().post(new HideKeyboardEvent());
 		savedState = false;
 		
 		DDGControlVar.sessionType = sessionType;
@@ -378,6 +379,7 @@ public class WebFragment extends Fragment {
 	
 	@Subscribe
 	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
+		BusProvider.getInstance().post(new HideKeyboardEvent());
 		showHistoryObject(event.historyObject);
 	}
 	
@@ -392,8 +394,8 @@ public class WebFragment extends Fragment {
 	
 	@Subscribe
 	public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
-		searchWebTerm(event.query);	
-		DDGUtils.itemSaveSearch(event.query);
+		BusProvider.getInstance().post(new HideKeyboardEvent());
+		searchOrGoToUrl(event.query);	
 		BusProvider.getInstance().post(new SyncAdaptersEvent());
 	}
 

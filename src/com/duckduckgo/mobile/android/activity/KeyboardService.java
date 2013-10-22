@@ -13,13 +13,13 @@ public class KeyboardService {
         this.activity = activity;
     }
 
-    public void hideKeyboardDelayed(final View view){
+    public void hideKeyboardDelayed(final View view, int delay){
         view.postDelayed(new Runnable() {
             @Override
             public void run() {
                 hideKeyboard(view);
             }
-        }, 200);
+        }, delay);
     }
 
     public void hideKeyboard(final View view) {
