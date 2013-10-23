@@ -21,10 +21,10 @@
    	        android:layout_width="40dp"
    	        android:layout_height="@dimen/search_bar_control_height"
    	        android:layout_marginLeft="5dp"
-   	        android:background="@android:color/transparent"
+   	        android:background="@drawable/btn_bang"
    	        android:scaleType="fitCenter"
    	        android:visibility="gone"
-   	        android:src="@drawable/btn_bang_states" />
+   	        android:src="@drawable/ic_bang" />
  
    	    <FrameLayout
    	        android:layout_width="0dip"
