@@ -774,7 +774,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     }
 
 	private void setMainButtonHome() {
-		mainButton.setImageResource(R.drawable.home_button);
+		mainButton.setImageResource(R.drawable.ic_home);
 	}
 
 	private void setMainButtonMenu() {
