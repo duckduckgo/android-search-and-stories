@@ -5,6 +5,7 @@
 	<color name="holo_blue_dark">#ff0099cc</color>
 	<color name="topbar_top">#ffffff</color>
     <color name="topbar_bottom">#E6E6E6</color>
+    <color name="topbar_background">#f2f2f2</color>
     
     <color name="menuitem_onclick_light">#e1e2e6</color>
     <color name="left_bg_light">#edeef0</color>
