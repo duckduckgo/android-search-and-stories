@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <!--
-     <ScrollView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:fillViewport="true"
-        android:scrollbars="vertical" >
-    -->
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <LinearLayout
         android:id="@+id/welcomeLayout"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="#FFFFFFFF"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:weightSum="1">
 
         <ImageView
             android:layout_width="wrap_content"
-            android:layout_height="0px"
+            android:layout_height="0dp"
             android:layout_gravity="top|center_horizontal"
-            android:layout_weight="0.65"
+            android:layout_weight="0.70"
             android:adjustViewBounds="true"
             android:contentDescription="@string/WelcomeDescription"
             android:paddingLeft="55dp"
@@ -28,45 +22,29 @@
             android:scaleType="fitCenter"
             android:src="@drawable/welcome_logo" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0px"
-            android:layout_weight="0.30"
-            android:gravity="bottom"
-            android:orientation="vertical" >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_weight="0.15"
+            android:gravity="center_horizontal"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/WelcomeDescription"
+            android:textColor="#3a3e46"
+            android:textSize="18sp" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="0px"
-                android:layout_gravity="bottom|center_horizontal"
-                android:layout_weight="0.5"
-                android:gravity="center_horizontal"
-                android:lineSpacingExtra="2dp"
-                android:text="@string/WelcomeDescription"
-                android:textColor="#3a3e46"
-                android:textSize="18sp" />
+        <Button
+            android:id="@+id/getStartedBut"
+            android:layout_width="202dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/btn_welcome"
+            android:scaleType="centerInside"
+            android:text="@string/GetStarted"
+            android:textColor="#FFF"
+            android:textSize="21sp" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0px"
-                android:layout_weight="0.5"
-                android:gravity="top|center"
-                android:orientation="vertical" >
-
-                <Button
-                    android:id="@+id/getStartedBut"
-                    android:layout_width="202dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@drawable/btn_welcome"
-                    android:scaleType="centerInside"
-                    android:text="@string/GetStarted"
-                    android:textColor="#FFF"
-                    android:textSize="21sp" />
-
-            </LinearLayout>
-        </LinearLayout>
     </LinearLayout>
-    <!-- </ScrollView> -->
 
 </merge>
