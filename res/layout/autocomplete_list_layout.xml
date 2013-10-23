@@ -13,15 +13,19 @@
         android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"
-        android:layout_margin="2dp"
-        app:cornerRadius="3dp" />
+        android:layout_marginLeft="@dimen/default_margin"
+        app:cornerRadius="3dp"
+        android:background="@drawable/btn_auto_complete_image"
+        android:scaleType="center"
+        android:src="@drawable/ic_default_search_result" />
 
     <TextView
         android:id="@+id/autoCompleteResultText"
         style="@style/AutocompleteResultText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
+        android:layout_marginTop="@dimen/default_margin_tiny"
+        android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="40dp"
         android:layout_toRightOf="@id/autoCompleteImage"
         android:text="This is test Text which can get long" >
@@ -32,6 +36,7 @@
         style="@style/AutocompleteDetailText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="40dp"
         android:layout_below="@id/autoCompleteResultText"
         android:layout_toRightOf="@id/autoCompleteImage"
@@ -44,7 +49,7 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:padding="10dp"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="@dimen/default_margin"
         android:layout_centerInParent="true"
         android:layout_alignParentRight="true"
         android:src="@drawable/plus_button_ac" />
