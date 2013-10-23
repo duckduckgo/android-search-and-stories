@@ -5,6 +5,8 @@
     <color name="bang_button">#fafafa</color>
     <color name="bang_button_pressed">#d9d9d9</color>
     <color name="bang_button_border">#c7c7c7</color>
+    <color name="search_field">#ffffff</color>
+    <color name="search_field_border">#cfcfcf</color>
     
 	<color name="translucent_grey">#BB000000</color>
 	<color name="holo_blue_bright">#ff00ddff</color>

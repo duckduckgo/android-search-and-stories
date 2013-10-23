@@ -33,7 +33,7 @@
    	        android:layout_marginLeft="5dp"
    	        android:layout_marginRight="5dp"
    	        android:layout_weight="1"
-   	        android:background="@android:color/white" >
+   	        android:background="@drawable/bgd_search_field" >
    	        
   	    <EditText android:layout_width="0dp" android:layout_height="0dp"
   	        android:inputType="none"
