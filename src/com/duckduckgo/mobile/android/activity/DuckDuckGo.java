@@ -156,7 +156,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private HistoryListView recentSearchView = null;
 	
 	public DDGWebView mainWebView = null;
-	private ImageButton homeSettingsButton = null;
+	private ImageButton mainButton = null;
 	private ImageButton bangButton = null;
 	private ImageButton shareButton = null;
 	
@@ -325,7 +325,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     }
     
     private void showBangButton(boolean visible){
-    	homeSettingsButton.setVisibility(visible ? View.GONE: View.VISIBLE);
+    	mainButton.setVisibility(visible ? View.GONE: View.VISIBLE);
 		bangButton.setVisibility(visible ? View.VISIBLE: View.GONE);
 		if(shouldShowBangButtonExplanation && visible && welcomeScreenLayout == null){
 			bangButtonExplanationPopup = BangButtonExplanationPopup.showPopup(DuckDuckGo.this, bangButton);
@@ -469,8 +469,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			}
 		});
         
-        homeSettingsButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
-        homeSettingsButton.setOnClickListener(this);
+        mainButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
+        mainButton.setOnClickListener(this);
         bangButton = (ImageButton)contentView.findViewById(R.id.bangButton);
         bangButton.setOnClickListener(new OnClickListener() {
 			@Override
@@ -480,7 +480,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		});
         
         if(mDuckDuckGoContainer.webviewShowing) {
-        	homeSettingsButton.setImageResource(R.drawable.home_button);
+        	setMainButtonHome();
         }
         
         shareButton = (ImageButton) contentView.findViewById(R.id.shareButton);
@@ -772,6 +772,14 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		});
         displayHomeScreen();
     }
+
+	private void setMainButtonHome() {
+		mainButton.setImageResource(R.drawable.home_button);
+	}
+
+	private void setMainButtonMenu() {
+		mainButton.setImageResource(R.drawable.ic_menu);
+	}
 
     private void initializeContainer() {
         mDuckDuckGoContainer = new DuckDuckGoContainer();
@@ -1293,7 +1301,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){
     		DDGControlVar.homeScreenShowing = true;
-    		homeSettingsButton.setImageResource(R.drawable.ic_menu);
+    		setMainButtonMenu();
 			leftHomeTextView.setSelected(true);
     	}
     	else {
@@ -1315,7 +1323,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
     		DDGControlVar.homeScreenShowing = true;
-    		homeSettingsButton.setImageResource(R.drawable.ic_menu);
+    		setMainButtonMenu();
 			leftHomeTextView.setSelected(true);
     	}
     	else {
@@ -1339,7 +1347,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
     		DDGControlVar.homeScreenShowing = true;
-    		homeSettingsButton.setImageResource(R.drawable.ic_menu);
+    		setMainButtonMenu();
     		leftHomeTextView.setSelected(true);
     	}
     	else {
@@ -1350,7 +1358,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public void displayWebView() {		
 		// loading something in the browser - set home icon
 		DDGControlVar.homeScreenShowing = false;
-		homeSettingsButton.setImageResource(R.drawable.home_button);	
+		setMainButtonHome();	
 		
 		if (!mDuckDuckGoContainer.webviewShowing) {			
 			shareButton.setVisibility(View.VISIBLE);
@@ -1365,7 +1373,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     }
 	
 	public void onClick(View view) {
-		if (view.equals(homeSettingsButton)) {
+		if (view.equals(mainButton)) {
 			handleHomeSettingsButtonClick();
 		}
 		else if (view.equals(shareButton)) {			
@@ -1543,14 +1551,14 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			leftHomeTextView.setSelected(true);
 			
 			if(mDuckDuckGoContainer.webviewShowing){
-	    		homeSettingsButton.setImageResource(R.drawable.home_button);
+	    		setMainButtonHome();
 			}
 			else {
-	    		homeSettingsButton.setImageResource(R.drawable.ic_menu);
+	    		setMainButtonMenu();
 			}
 		}
 		else {
-    		homeSettingsButton.setImageResource(R.drawable.home_button);
+    		setMainButtonHome();
 			switch(current) {
 				case SCR_STORIES:
 					leftStoriesTextView.setSelected(true);
