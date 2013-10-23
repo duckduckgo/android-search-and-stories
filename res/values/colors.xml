@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+    <color name="main_button">#d65420</color>
+    <color name="main_button_pressed">#bf4000</color>
+    
 	<color name="translucent_grey">#BB000000</color>
 	<color name="holo_blue_bright">#ff00ddff</color>
 	<color name="holo_blue_dark">#ff0099cc</color>

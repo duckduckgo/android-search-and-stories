@@ -1293,7 +1293,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){
     		DDGControlVar.homeScreenShowing = true;
-    		homeSettingsButton.setImageResource(R.drawable.menu_button);
+    		homeSettingsButton.setImageResource(R.drawable.ic_menu);
 			leftHomeTextView.setSelected(true);
     	}
     	else {
@@ -1315,7 +1315,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
     		DDGControlVar.homeScreenShowing = true;
-    		homeSettingsButton.setImageResource(R.drawable.menu_button);
+    		homeSettingsButton.setImageResource(R.drawable.ic_menu);
 			leftHomeTextView.setSelected(true);
     	}
     	else {
@@ -1339,7 +1339,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
     		DDGControlVar.homeScreenShowing = true;
-    		homeSettingsButton.setImageResource(R.drawable.menu_button);
+    		homeSettingsButton.setImageResource(R.drawable.ic_menu);
     		leftHomeTextView.setSelected(true);
     	}
     	else {
@@ -1546,7 +1546,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	    		homeSettingsButton.setImageResource(R.drawable.home_button);
 			}
 			else {
-	    		homeSettingsButton.setImageResource(R.drawable.menu_button);
+	    		homeSettingsButton.setImageResource(R.drawable.ic_menu);
 			}
 		}
 		else {
