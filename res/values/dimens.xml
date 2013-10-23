@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="default_margin">8dp</dimen>
+    
     <dimen name="search_bar_control_height">40dp</dimen>
 	<dimen name="search_bar_control_stroke_width">0.5dp</dimen>
 	<dimen name="button_radius">2dp</dimen>
+	
+    <dimen name="search_bar_text_size">16sp</dimen>
     
     <dimen name="indicator_right_padding">10dp</dimen>
     <dimen name="indicator_corner_radius">12dp</dimen>
