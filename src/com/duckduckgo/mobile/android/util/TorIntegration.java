@@ -1,9 +1,7 @@
 package com.duckduckgo.mobile.android.util;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.Context;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import android.os.Build;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import info.guardianproject.onionkit.web.WebkitProxy;
@@ -25,11 +23,14 @@ public class TorIntegration {
         orbotHelper = new OrbotHelper(this.context);
     }
 
-    public void prepareTorSettings(){
-        prepareTorSettings(isTorSettingEnabled());
+    public boolean prepareTorSettings(){
+        return prepareTorSettings(isTorSettingEnabled());
     }
 
-    public void prepareTorSettings(boolean enableTor){
+    public boolean prepareTorSettings(boolean enableTor){
+        if(!isTorSupported()){
+            return false;
+        }
         DDGNetworkConstants.initializeMainClient(context.getApplication(), enableTor);
         if(enableTor){
             enableOrbotProxy();
@@ -38,6 +39,7 @@ public class TorIntegration {
         else{
             resetProxy();
         }
+        return true;
     }
 
     private void resetProxy() {
@@ -78,5 +80,9 @@ public class TorIntegration {
         return isTorSettingEnabled() &&
                 orbotHelper.isOrbotInstalled() &&
                 orbotHelper.isOrbotRunning();
+    }
+
+    public boolean isTorSupported() {
+        return Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2;
     }
 }
