@@ -102,7 +102,6 @@ public class DDGWebViewClient extends WebViewClient {
 	        view.getSettings().setLoadWithOverviewMode(false);
 	        
 	        view.getSettings().setPluginState(WebSettings.PluginState.ON);
-	        view.getSettings().setPluginsEnabled(true); 
 
 	        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
     	        view.getSettings().setEnableSmoothTransition(false);
@@ -164,7 +163,6 @@ public class DDGWebViewClient extends WebViewClient {
 	        view.getSettings().setUseWideViewPort(true);
 	        view.getSettings().setLoadWithOverviewMode(true);
 	        view.getSettings().setPluginState(WebSettings.PluginState.ON);
-	        view.getSettings().setPluginsEnabled(true);
 	        
 	        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
     	        view.getSettings().setEnableSmoothTransition(true);
