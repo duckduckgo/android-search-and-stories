@@ -15,6 +15,7 @@ import info.guardianproject.onionkit.web.WebkitProxy;
  */
 public class TorIntegration {
 
+    public static final int JELLY_BEAN_MR2 = 18;
     private final Activity context;
     private final OrbotHelper orbotHelper;
 
@@ -83,6 +84,6 @@ public class TorIntegration {
     }
 
     public boolean isTorSupported() {
-        return Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2;
+        return Build.VERSION.SDK_INT <= JELLY_BEAN_MR2;
     }
 }
