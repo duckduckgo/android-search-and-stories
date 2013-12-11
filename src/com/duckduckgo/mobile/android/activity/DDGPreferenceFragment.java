@@ -79,8 +79,7 @@ public class DDGPreferenceFragment extends PreferenceFragment implements OnShare
 		Preference enableTorPreference = findPreference("enableTor");
 		enableTorPreference.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
-                torIntegration.prepareTorSettings((Boolean) newValue);
-                return true;
+                return torIntegration.prepareTorSettings((Boolean) newValue);
             }
         });
 	}
