@@ -109,19 +109,20 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 			});
 			Drawable acDrawable = suggestion.getDrawable();
 			String imageUrl = suggestion.getImageUrl();
-			if(acDrawable == null && imageUrl != null && imageUrl.length() != 0) {
+			if(imageUrl != null && imageUrl.length() != 0) {
 				roundTransform.setRadius(holder.autoCompleteImage.getCornerRadius()); 
 				scaleTransform.setTarget(holder.autoCompleteImage); 
 				
 				Picasso.with(getContext())
 				.load(suggestion.getImageUrl())
-				.placeholder(android.R.color.transparent)
+				.placeholder(R.drawable.ic_default_search_result)
+				.error(R.drawable.ic_default_search_result)
 				.transform(scaleTransform)
 				.transform(roundTransform)
 				.into(holder.autoCompleteImage);
 			}
 			else {
-				holder.autoCompleteImage.setImageDrawable(acDrawable);
+				holder.autoCompleteImage.setImageResource(R.drawable.ic_default_search_result);
 			}
 		}
 		return view;

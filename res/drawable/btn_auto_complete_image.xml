@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@drawable/bgd_auto_complete_image_pressed"/>
+    <item android:drawable="@drawable/bgd_auto_complete_image"/>
+</selector>
