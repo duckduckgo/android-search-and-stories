@@ -15,14 +15,12 @@
    <item>@string/PrefWaterCoolerStories</item>
    <item>@string/PrefRecentSearch</item>
    <item>@string/PrefSavedItems</item>
-   <item>@string/PrefDuckMode</item>
 </string-array>
 
 <string-array name="startScreenValues">
    <item>0</item>
    <item>1</item>
    <item>2</item>
-   <item>3</item>
 </string-array>
 
 <string-array name="regionArray">
