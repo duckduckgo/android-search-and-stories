@@ -17,6 +17,7 @@
     <string name="PrefStories">Stories</string>
     <string name="PrefWaterCoolerStories">Stories</string>
     <string name="PrefSavedItems">Saved Items</string>
+    <string name="PrefDuckMode">Duck Mode</string>
     <string name="PrefRecentSearch">Recent Searches</string>
     <string name="PrefRecordHistory">Save Recent</string>
     <string name="PrefClearHistory">Clear Recent</string>
