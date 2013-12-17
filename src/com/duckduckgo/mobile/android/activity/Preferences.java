@@ -162,15 +162,23 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
     private void whenChangingTorChecksForOrbot() {
         Preference enableTorPreference = findPreference("enableTor");
-        enableTorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                torIntegration.prepareTorSettings((Boolean) newValue);
-                return true;
-            }
-        });
+        if(!torIntegration.isTorSupported()){
+            setTorNotSupportedInfo(enableTorPreference);
+        }else{
+            enableTorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    return torIntegration.prepareTorSettings((Boolean) newValue);
+                }
+            });
+        }
     }
 
-  @Override
+    private void setTorNotSupportedInfo(Preference enableTorPreference) {
+        enableTorPreference.setEnabled(false);
+        enableTorPreference.setSummary("Tor is currently not supported in Android 4.4 due to changes in the WebView implementation.");
+    }
+
+    @Override
   public Dialog onCreateDialog(int id) {
 	  Dialog d;
 	  switch(id) {

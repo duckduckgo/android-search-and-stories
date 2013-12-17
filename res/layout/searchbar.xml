@@ -2,7 +2,7 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/topbar_background"
+        android:background="@color/topbar_background"
         android:paddingBottom="5dp"
         android:paddingTop="5dp" >
     
@@ -10,30 +10,30 @@
    	    <ImageButton
    	        android:id="@+id/settingsButton"
    	        android:layout_width="40dp"
-   	        android:layout_height="40dp"
-   	        android:layout_marginLeft="5dp"
-   	        android:background="@android:color/transparent"
-   	        android:scaleType="fitCenter"
-   	        android:src="@drawable/btn_menu_states" />
+   	        android:layout_height="@dimen/search_bar_control_height"
+   	        android:layout_marginLeft="@dimen/default_margin"
+   	        android:background="@drawable/btn_main"
+   	        android:scaleType="center"
+   	        android:src="@drawable/ic_menu" />
    	    
    	    <ImageButton 
    	        android:id="@+id/bangButton"
    	        android:layout_width="40dp"
-   	        android:layout_height="40dp"
-   	        android:layout_marginLeft="5dp"
-   	        android:background="@android:color/transparent"
+   	        android:layout_height="@dimen/search_bar_control_height"
+   	        android:layout_marginLeft="@dimen/default_margin"
+   	        android:background="@drawable/btn_bang"
    	        android:scaleType="fitCenter"
    	        android:visibility="gone"
-   	        android:src="@drawable/btn_bang_states" />
+   	        android:src="@drawable/ic_bang" />
  
    	    <FrameLayout
    	        android:layout_width="0dip"
-   	        android:layout_height="34dp"
+   	        android:layout_height="@dimen/search_bar_control_height"
    	        android:layout_gravity="center_vertical"
-   	        android:layout_marginLeft="5dp"
-   	        android:layout_marginRight="5dp"
+   	        android:layout_marginLeft="@dimen/default_margin"
+   	        android:layout_marginRight="@dimen/default_margin"
    	        android:layout_weight="1"
-   	        android:background="@android:color/white" >
+   	        android:background="@drawable/bgd_search_field" >
    	        
   	    <EditText android:layout_width="0dp" android:layout_height="0dp"
   	        android:inputType="none"
@@ -45,9 +45,9 @@
    	        android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:background="@drawable/searchfield"
-			android:paddingLeft="5dp"
+			android:paddingLeft="@dimen/default_margin"
 			android:singleLine="true"
-			android:textSize="14sp"
+			android:textSize="@dimen/search_bar_text_size"
 			android:selectAllOnFocus="true"
 			android:dropDownWidth="match_parent"
 			android:dropDownAnchor="@+id/searchBar"
