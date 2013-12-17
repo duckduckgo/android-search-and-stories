@@ -8,7 +8,7 @@
     <ImageView 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ddg_red_logo"
-        android:alpha="0.5" />
+        android:src="@drawable/gitduck_white"
+        android:alpha="0.6" />
 
 </LinearLayout>
