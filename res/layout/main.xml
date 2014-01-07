@@ -60,19 +60,7 @@
         
         <include android:id="@+id/recentSearchLayout" layout="@layout/recentsearch" />
         
-        <LinearLayout 	  
-            android:layout_height="match_parent"
-			android:layout_width="match_parent"
-			android:baselineAligned="false"
-			android:background="@android:color/black"	
-			android:id="@+id/prefLayout">  
-			
-            <!-- placeholder layout for DDGPreferenceFragment -->
-            <FrameLayout android:id="@+id/prefFragment" android:layout_weight="1"
-        				 android:layout_width="0px"
-        				 android:layout_height="match_parent" />
-            
-            </LinearLayout>      
+        <include android:id="@+id/duckModeLayout" layout="@layout/duckmode" />      
             
         <include android:id="@android:id/tabhost" layout="@layout/tab_saved_view" />
         

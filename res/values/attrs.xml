@@ -73,4 +73,6 @@
         <attr name="emptyListIcon" format="reference" />
         <attr name="emptyListTitleColor" format="color" />
         <attr name="emptyListSubTitleColor" format="color" />
+        
+        <attr name="drawableDuckMode" format="reference" />
 </resources>

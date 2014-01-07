@@ -1,7 +1,7 @@
 package com.duckduckgo.mobile.android.util;
 
 public enum SCREEN {
-	SCR_STORIES(0), SCR_RECENT_SEARCH(1), SCR_SAVED_FEED(2), SCR_WEBVIEW(4);
+	SCR_STORIES(0), SCR_RECENT_SEARCH(1), SCR_SAVED_FEED(2), SCR_DUCKMODE(3), SCR_WEBVIEW(4);
 	
 	private int code;
 	
@@ -21,6 +21,8 @@ public enum SCREEN {
 				return SCR_RECENT_SEARCH;
 			case 2:
 				return SCR_SAVED_FEED;
+			case 3:
+				return SCR_DUCKMODE;
 			case 4:
 				return SCR_WEBVIEW;
 			default:
@@ -39,10 +41,12 @@ public enum SCREEN {
 				return 0;
 			case SCR_STORIES:
 				return 1;
-			case SCR_SAVED_FEED:
-				return 4;
 			case SCR_RECENT_SEARCH:
 				return 2;
+			case SCR_DUCKMODE:
+				return 3;
+			case SCR_SAVED_FEED:
+				return 4;
 			default:
 				return 1;
 		}

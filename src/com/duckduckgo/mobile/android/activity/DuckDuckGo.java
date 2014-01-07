@@ -903,6 +903,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				case SCR_RECENT_SEARCH:
 					displayRecentSearch();
 					break;
+				case SCR_DUCKMODE:
+					displayDuckMode();
+					break;
 				case SCR_SAVED_FEED:
 					displaySavedFeed();
 					break;
@@ -1337,6 +1340,29 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		clearLeftSelect();
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
+    		DDGControlVar.homeScreenShowing = true;
+    		setMainButtonMenu();
+    		leftHomeTextView.setSelected(true);
+    	}
+    	else {
+    		DDGControlVar.homeScreenShowing = false;
+    	}
+	}
+	
+	public void displayDuckMode(){  
+		resetScreenState(); 
+		
+		// left side menu visibility changes
+		changeLeftMenuVisibility();
+		
+    	// main view visibility changes
+		shareButton.setVisibility(View.GONE);
+		viewFlipper.setDisplayedChild(SCREEN.SCR_DUCKMODE.getFlipOrder());
+    	mDuckDuckGoContainer.webviewShowing = false;
+		
+		clearLeftSelect();
+    	    	
+    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_DUCKMODE){
     		DDGControlVar.homeScreenShowing = true;
     		setMainButtonMenu();
     		leftHomeTextView.setSelected(true);

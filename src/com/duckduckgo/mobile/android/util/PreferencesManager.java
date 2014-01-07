@@ -34,6 +34,21 @@ public class PreferencesManager {
 		return DDGApplication.getSharedPreferences().getString("themePref", "DDGDark");
 	}
 	
+	/**
+	 * Returns active SCREEN by considering the Duck Mode checkbox
+	 * @return active SCREEN
+	 */
+	public static SCREEN getActiveStartScreen() {
+		boolean isDuckMode = DDGApplication.getSharedPreferences().getBoolean("duckModePref", false);
+		if(isDuckMode) {
+			return SCREEN.SCR_DUCKMODE;
+		}
+		else {
+			String startScreenCode = DDGApplication.getSharedPreferences().getString("startScreenPref", "0");
+	        return SCREEN.getByCode(Integer.valueOf(startScreenCode));
+	    }
+	}
+	
 	public static String getStartScreen() {
 		return DDGApplication.getSharedPreferences().getString("startScreenPref", "0");
 	}
@@ -222,10 +237,10 @@ public class PreferencesManager {
 	
 	/* Events */
     public static void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if(key.equals("startScreenPref")){
-            DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(sharedPreferences.getString(key, "0")));
+    	if(key.equals("duckModePref") || key.equals("startScreenPref")){
+    		DDGControlVar.START_SCREEN = getActiveStartScreen();
         }
-        else if(key.equals("regionPref")){
+    	else if(key.equals("regionPref")){
             DDGControlVar.regionString = sharedPreferences.getString(key, "wt-wt");
         }
         else if(key.equals("appSearchPref")){

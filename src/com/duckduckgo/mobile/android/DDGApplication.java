@@ -98,7 +98,7 @@ public class DDGApplication extends Application {
 		DDGConstants.TTF_ROBOTO_BOLD = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Bold.ttf");		
 		DDGConstants.TTF_ROBOTO_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Medium.ttf");	
 		
-		DDGControlVar.START_SCREEN = SCREEN.getByCode(Integer.valueOf(PreferencesManager.getStartScreen()));
+		DDGControlVar.START_SCREEN = PreferencesManager.getActiveStartScreen();
 		DDGControlVar.regionString = PreferencesManager.getRegion();
 		DDGControlVar.alwaysUseExternalBrowser = PreferencesManager.getExternalBrowser();
 		DDGControlVar.fontPrevProgress = PreferencesManager.getFontPrevProgress(DDGConstants.FONT_SEEKBAR_MID);
