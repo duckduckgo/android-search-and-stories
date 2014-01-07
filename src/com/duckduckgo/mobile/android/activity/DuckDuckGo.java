@@ -906,9 +906,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				case SCR_SAVED_FEED:
 					displaySavedFeed();
 					break;
-				case SCR_SETTINGS:
-					displaySettings();
-					break;
 				default:
 					break;
 			}
@@ -1026,10 +1023,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 		else if (mDuckDuckGoContainer.webviewShowing) {
 			mainWebView.backPressAction();
-		}
-		else if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS){
-			// go back to where we left of
-			displayScreen(mDuckDuckGoContainer.prevScreen, false);
 		}
 		else if(fontSizeLayout.getVisibility() != View.GONE) {
 			cancelFontScaling();
@@ -1235,13 +1228,11 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	/**
 	 * main method that triggers display of Preferences screen or fragment
 	 */
-    private void displaySettings() {
-        if(!((mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS))){
-            feedView.cleanImageTasks();
-            Intent intent = new Intent(getBaseContext(), Preferences.class);
-            startActivityForResult(intent, PREFERENCES_RESULT);
-        }
-    }
+	private void displaySettings() {
+		feedView.cleanImageTasks();
+		Intent intent = new Intent(getBaseContext(), Preferences.class);
+		startActivityForResult(intent, PREFERENCES_RESULT);
+	}
 
 	/** 
 	 * change button visibility in left-side navigation menu
@@ -1537,13 +1528,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			return;
 		}
 		
-		// arbitrary choice to not display Settings on comeback
-    	if(mDuckDuckGoContainer.currentScreen == SCREEN.SCR_SETTINGS) {
-    		displayHomeScreen();
-    	}
-    	else {
-			displayScreen(mDuckDuckGoContainer.currentScreen, true);
-    	}
+		displayScreen(mDuckDuckGoContainer.currentScreen, true);
 	}
 	
 	private void markLeftSelect(SCREEN current){
@@ -1565,9 +1550,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 					break;
 				case SCR_SAVED_FEED:
 					leftSavedTextView.setSelected(true);
-					break;
-				case SCR_SETTINGS:
-					leftSettingsTextView.setSelected(true);
 					break;
 			}
 		}
