@@ -20,3 +20,5 @@ DuckDuckGo.eml
 DuckDuckGo.iml
 out/
 *.iml
+.gradle
+build/

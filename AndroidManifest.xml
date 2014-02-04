@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.duckduckgo.mobile.android"
-    android:versionCode="53"
-    android:versionName="2.1.2">
+    package="com.duckduckgo.mobile.android">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="17" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -30,11 +28,11 @@
                 <action android:name="android.intent.action.ASSIST" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-            
+
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        
+
         <receiver android:name="com.duckduckgo.mobile.android.DuckDuckGoWidgetProviderRed">
 		    <intent-filter>
 		        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -43,7 +41,7 @@
 		    <meta-data android:name="android.appwidget.provider"
 		        	   android:resource="@xml/widget_info_red" />
 		</receiver>
-		
+
         <receiver android:name="com.duckduckgo.mobile.android.DuckDuckGoWidgetProviderWhite">
 		    <intent-filter>
 		        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -52,37 +50,37 @@
 		    <meta-data android:name="android.appwidget.provider"
 		        	   android:resource="@xml/widget_info_white" />
 		</receiver>
-		
-        <activity 
-            android:name=".activity.Preferences" 
+
+        <activity
+            android:name=".activity.Preferences"
             android:label="@string/SettingsButtonContentDescription" />
-        
-        <activity 
-            android:name=".activity.SourcePreferences" 
+
+        <activity
+            android:name=".activity.SourcePreferences"
             android:label="@string/PrefSources" />
-        
+
         <activity android:name="org.acra.CrashReportDialog"
 	        android:theme="@android:style/Theme.Dialog"
 	        android:launchMode="singleInstance"
 	        android:excludeFromRecents="true"
 	        android:finishOnTaskLaunch="true" />
-        
+
 		<provider android:name=".providers.DuckDuckGoProvider"
 				android:authorities="com.duckduckgo.mobile.android.providers.DuckDuckGoProvider" />
-        
+
 		<receiver android:name=".broadcast.DownloadReceiver">
 		    <intent-filter>
 		        <action android:name="android.intent.action.DOWNLOAD_COMPLETE" />
 		    </intent-filter>
 		</receiver>
-		
+
 		<activity android:name="info.guardianproject.onionkit.ui.CertDisplayActivity"
             android:configChanges="locale|orientation"
             android:theme="@android:style/Theme.Dialog"
             android:taskAffinity="" />
-		
+
 		<service android:name="com.duckduckgo.mobile.android.subscribers.MainSubscriber" />
-		
+
     </application>
 
 </manifest>
