@@ -1,12 +1,12 @@
 apply plugin: 'android'
 
 android {
-    compileSdkVersion 16
+    compileSdkVersion 19
     buildToolsVersion '19.0.1'
 
     defaultConfig {
         minSdkVersion 8
-        targetSdkVersion 17
+        targetSdkVersion 19
 
         testPackageName "com.duckduckgo.mobile.android.tests"
         testInstrumentationRunner "android.test.InstrumentationTestRunner"
@@ -20,11 +20,17 @@ android {
     }
 }
 
+repositories {
+    flatDir {
+        dirs 'aars'
+    }
+}
+
 dependencies {
-    provided files('libs/libonionkit.aar')
     compile 'com.android.support:support-v4:+'
     compile files('libs/httpclientandroidlib-1.1.2.jar')
     compile files('libs/picasso-1.1.1.jar')
     compile files('libs/acra-4.4.0.jar')
     compile files('libs/otto-1.3.4.jar')
+    compile 'info.guardianproject.onionkit:libonionkit:1.0@aar'
 }
