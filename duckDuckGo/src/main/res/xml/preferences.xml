@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/PrefWaterCooler"
+                        android:layout="@layout/preference_category_summary">
+        <Preference
+                android:title="@string/PrefSources"
+                android:key="sourcesPref"
+                android:defaultValue="">
+        </Preference>
+        <CheckBoxPreference
+                android:title="@string/PrefReadable"
+                android:key="readablePref"
+                android:defaultValue="true" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/PrefGroupAppFlow">
+        <CheckBoxPreference
+                android:title="@string/PrefDuckMode"
+                android:key="duckModePref"
+                android:defaultValue="false" />
+        <ListPreference
+                android:title="@string/PrefStartScreen"
+                android:key="startScreenPref"
+                android:defaultValue="0"
+                android:entries="@array/startScreenArray"
+                android:entryValues="@array/startScreenValues">
+        </ListPreference>
+        <CheckBoxPreference
+                android:title="@string/PrefExternalBrowser"
+                android:key="externalBrowserPref"
+                android:defaultValue="false" />
+        <ListPreference
+                android:title="@string/PrefTheme"
+                android:key="themePref"
+                android:defaultValue="DDGDark"
+                android:entries="@array/themeArray"
+                android:entryValues="@array/themeValues">
+        </ListPreference>
+        <Preference
+                android:title="@string/PrefMainFontSize"
+                android:key="mainFontSizePref"
+                android:defaultValue="">
+        </Preference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/PrefSearchResults">
+        <ListPreference
+                android:title="@string/PrefRegion"
+                android:key="regionPref"
+                android:defaultValue="wt-wt"
+                android:entries="@array/regionArray"
+                android:entryValues="@array/regionValues">
+        </ListPreference>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/PrefAutocomplete">
+        <CheckBoxPreference
+                android:title="@string/PrefTurnOffAutocomplete"
+                android:key="turnOffAutocompletePref"
+                android:defaultValue="false"
+                android:disableDependentsState="true" />
+        <CheckBoxPreference
+                android:title="@string/PrefAppSearch"
+                android:key="appSearchPref"
+                android:defaultValue="false"
+                android:dependency="turnOffAutocompletePref" />
+        <CheckBoxPreference
+                android:title="@string/PrefDirectQuery"
+                android:key="directQueryPref"
+                android:defaultValue="true"
+                android:dependency="turnOffAutocompletePref" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/PrefGroupPrivacy">
+        <CheckBoxPreference
+                android:title="@string/PrefRecordHistory"
+                android:key="recordHistoryPref"
+                android:summary="@string/OnlyOnPhone"
+                android:defaultValue="true" />
+        <Preference
+                android:title="@string/PrefClearHistory"
+                android:key="clearHistoryPref"
+                android:defaultValue="" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/PrefGroupFeedback">
+        <Preference
+                android:title="@string/PrefSendFeedback"
+                android:key="sendFeedbackPref"
+                android:defaultValue="" />
+        <Preference
+                android:title="@string/PrefRate"
+                android:key="ratePref"
+                android:defaultValue="" />
+        <CheckBoxPreference android:key="acra.alwaysaccept"
+                            android:title="@string/PrefEnableAcra"
+                            android:summaryOn="@string/PrefAcraEnabled"
+                            android:summaryOff="@string/PrefAcraDisabled"
+                            android:defaultValue="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/PrefGroupTor">
+        <CheckBoxPreference
+                android:title="@string/PrefEnableTor"
+                android:key="enableTor"
+                android:defaultValue="false" />
+        <Preference
+                android:title="@string/PrefCheckOrbotStatus"
+                android:key="checkOrbotStatus"
+                android:dependency="enableTor" />
+    </PreferenceCategory>
+</PreferenceScreen>

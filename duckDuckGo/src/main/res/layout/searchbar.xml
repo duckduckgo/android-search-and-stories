@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>    
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/topbar_background"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+    
+    	<!-- Main Search Bar -->   	    
+   	    <ImageButton
+   	        android:id="@+id/settingsButton"
+   	        android:layout_width="40dp"
+   	        android:layout_height="@dimen/search_bar_control_height"
+   	        android:layout_marginLeft="@dimen/default_margin"
+   	        android:background="@drawable/btn_main"
+   	        android:scaleType="center"
+   	        android:src="@drawable/ic_menu" />
+   	    
+   	    <ImageButton 
+   	        android:id="@+id/bangButton"
+   	        android:layout_width="40dp"
+   	        android:layout_height="@dimen/search_bar_control_height"
+   	        android:layout_marginLeft="@dimen/default_margin"
+   	        android:background="@drawable/btn_bang"
+   	        android:scaleType="fitCenter"
+   	        android:visibility="gone"
+   	        android:src="@drawable/ic_bang" />
+ 
+   	    <FrameLayout
+   	        android:layout_width="0dip"
+   	        android:layout_height="@dimen/search_bar_control_height"
+   	        android:layout_gravity="center_vertical"
+   	        android:layout_marginLeft="@dimen/default_margin"
+   	        android:layout_marginRight="@dimen/default_margin"
+   	        android:layout_weight="1"
+   	        android:background="@drawable/bgd_search_field" >
+   	        
+  	    <EditText android:layout_width="0dp" android:layout_height="0dp"
+  	        android:inputType="none"
+  	        android:focusable="true"
+  	        android:imeOptions="actionSearch"
+  	        android:focusableInTouchMode="true" />
+   	    
+   	    <com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView 
+   	        android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:background="@drawable/searchfield"
+			android:paddingLeft="@dimen/default_margin"
+			android:singleLine="true"
+			android:textSize="@dimen/search_bar_text_size"
+			android:selectAllOnFocus="true"
+			android:dropDownWidth="match_parent"
+			android:dropDownAnchor="@+id/searchBar"
+			android:dropDownHorizontalOffset="0dp"
+			android:dropDownVerticalOffset="0dp"
+			android:completionThreshold="1"
+			android:inputType="textAutoComplete"
+			android:imeOptions="actionSearch"
+			android:hint="@string/SearchString"
+			android:id="@+id/searchEditText" />
+   	    
+   	    </FrameLayout>
+   	    
+   	    <ImageButton android:layout_width="30dp"
+   	        		 android:layout_height="40dp"
+   	        		 android:layout_marginLeft="-6dp"
+   	        		 android:scaleType="fitCenter"
+   	        		 android:id="@+id/shareButton"
+   	        		 android:background="@android:color/transparent"
+   	        		 android:visibility="gone"
+   	        		 android:src="@drawable/ic_menu_moreoverflow_holo_light" />
+   	    		  
+    </LinearLayout>

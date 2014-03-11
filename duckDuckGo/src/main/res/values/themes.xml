@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="DDGTheme" parent="android:Theme.NoTitleBar">
+        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
+        <item name="leftButtonTextSize">18sp</item>
+        <item name="leftTitleTextSize">12sp</item>
+        <item name="mainTextSize">14sp</item>
+        <item name="recentTextSize">14sp</item>
+    </style>
+
+    <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">
+        <item name="android:popupBackground">@drawable/new_spinner_dropdown_background</item>
+    </style>
+	
+	<style name="DDGTabText">
+	    <item name="android:textSize">?attr/leftButtonTextSize</item>
+	    <item name="android:textStyle">normal</item>
+	    <item name="android:textColor">?attr/tabTextSelector</item>
+	    <item name="android:layout_gravity">center</item>	 
+	    <item name="android:gravity">center</item>   
+	</style>  
+	
+	<style name="DDGTabWidget" parent="@android:style/Widget.TabWidget">
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAppearance">@style/DDGTabText</item>
+	</style>
+
+    
+    <style name="DDGLight" parent="@style/DDGTheme">
+        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
+        <item name="android:tabWidgetStyle">@style/DDGTabWidget</item> 
+        
+        <item name="leftLayoutRootBackground">@color/left_bg_light</item>
+        <item name="leftDivTopBackground">@drawable/div_top_light</item>
+        <item name="leftDivBottomBackground">@drawable/div_bottom_light</item>
+        
+        <item name="leftItemTextColor">@color/left_text_light</item>
+        <item name="leftItemTextBackground">@drawable/left_main_selector_light</item>
+        
+        <item name="leftRecentListViewBackground">@color/recent_empty_bg_light</item> 
+        <item name="leftRecentListSelector">@drawable/left_recent_selector_light</item>   
+        <item name="leftRecentListRootBackground">@color/left_bg_light</item>
+         <item name="leftRecentItemTextColor">@color/left_text_light</item>
+        
+        <item name="leftTitleTextColor">#9c9fa6</item>
+        <item name="leftTitleBackground">@color/recent_header_bg_light</item>
+        
+        <item name="leftDrawableHome">@drawable/icon_home_selector_light</item>
+        <item name="leftDrawableSaved">@drawable/icon_saved_selector_light</item>
+        <item name="leftDrawableSettings">@drawable/icon_settings_selector_light</item>
+        <item name="leftDrawableStories">@drawable/icon_stories_selector_light</item>
+        
+        <item name="leftDrawablePlusBackground">@drawable/plus_button_bg_light</item>
+        <item name="leftDrawablePlusIcon">@drawable/plus_button_icon_light</item>
+        
+        <item name="leftDropShadow">@drawable/dropshadow_light</item>
+        <item name="topDropShadow">@drawable/dropshadow_up_light</item>
+                
+        <item name="ptrDrawable">@drawable/refresh_arrow_light</item>
+        <item name="ptrDivider">@drawable/refresh_dotted_line_light</item>
+        
+        <item name="tabIndicator">@drawable/tab_indicator_light</item>
+        <item name="tabTextSelector">@color/tab_text_selector</item>
+        
+        <item name="emptyListIcon">@drawable/icon_light_no_saved_items</item>
+        <item name="emptyListTitleColor">#596067</item>
+        <item name="emptyListSubTitleColor">#92979c</item>
+        
+        <item name="drawableDuckMode">@drawable/gitduck_dark</item>
+    </style>
+    
+    <style name="DDGDark" parent="@style/DDGTheme">
+        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
+        <item name="android:tabWidgetStyle">@style/DDGTabWidget</item> 
+        
+        <item name="leftLayoutRootBackground">@drawable/left_bg_dark</item>
+        <item name="leftDivTopBackground">@drawable/div_top_dark</item>
+        <item name="leftDivBottomBackground">@drawable/div_bottom_dark</item>
+        
+        <item name="leftItemTextColor">@drawable/left_item_text_selector_dark</item>        
+        <item name="leftItemTextBackground">@drawable/left_main_selector_dark</item>
+        
+        <item name="leftRecentListViewBackground">@drawable/left_bg_dark</item>        
+        <item name="leftRecentListSelector">@drawable/left_recent_selector_dark</item>   
+        <item name="leftRecentListRootBackground">@drawable/left_bg_dark</item>
+        <item name="leftRecentItemTextColor">@color/left_text_dark</item>
+        
+        <item name="leftTitleTextColor">#9c9fa6</item>
+        <item name="leftTitleBackground">@drawable/left_bg_darker</item>
+        
+        <item name="leftDrawableHome">@drawable/icon_home_selector_dark</item>
+        <item name="leftDrawableSaved">@drawable/icon_saved_selector_dark</item>
+        <item name="leftDrawableSettings">@drawable/icon_settings_selector_dark</item>
+        <item name="leftDrawableStories">@drawable/icon_stories_selector_dark</item>
+        
+        <item name="leftDrawablePlusBackground">@drawable/plus_button_bg_dark</item>
+        <item name="leftDrawablePlusIcon">@drawable/plus_button_icon_dark</item>
+        
+        <item name="leftDropShadow">@drawable/dropshadow_dark</item>
+        <item name="topDropShadow">@drawable/dropshadow_up_dark</item>
+        
+        <item name="ptrDrawable">@drawable/refresh_arrow_dark</item>
+        <item name="ptrDivider">@drawable/refresh_dotted_line_dark</item>
+        
+        <item name="tabIndicator">@drawable/tab_indicator_dark</item>        
+        <item name="tabTextSelector">@android:color/tab_indicator_text</item>
+        
+        <item name="emptyListIcon">@drawable/icon_dark_no_saved_items</item>
+        <item name="emptyListTitleColor">#fff</item>
+        <item name="emptyListSubTitleColor">#b8bfcc</item>
+        
+        <item name="drawableDuckMode">@drawable/gitduck_white</item>
+    </style>
+    
+</resources>

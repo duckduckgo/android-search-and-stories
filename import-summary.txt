@@ -1,0 +1,88 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Manifest Merging:
+-----------------
+Your project uses libraries that provide manifests, and your Eclipse
+project did not explicitly turn on manifest merging. In Android Gradle
+projects, manifests are always merged (meaning that contents from your
+libraries' manifests will be merged into the app manifest. If you had
+manually copied contents from library manifests into your app manifest
+you may need to remove these for the app to build correctly.
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+From DuckDuckGo:
+* .gitignore
+* .gitmodules
+* CONTRIBUTING.md
+* LICENSE
+* README.md
+* TESTING.md
+* ant.properties
+* build.xml
+* proguard.cfg
+* tests/
+* tests/ant.properties
+* tests/build.xml
+* tests/proguard-project.txt
+* tests/project.properties
+From OnionKit:
+* COPYING
+* proguard-project.txt
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:+
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+In OnionKit:
+* AndroidManifest.xml => onionKit/src/main/AndroidManifest.xml
+* libs/httpclientandroidlib-1.1.2.jar => onionKit/libs/httpclientandroidlib-1.1.2.jar
+* libs/sc-light-jdk15on-1.47.0.2.jar => onionKit/libs/sc-light-jdk15on-1.47.0.2.jar
+* res/ => onionKit/src/main/res/
+* src/ => onionKit/src/main/java/
+* /home/koen/projects/duckduckgo/android/libs/OnionKit/netciphertest/res/ => onionKit/src/instrumentTest/res/
+* /home/koen/projects/duckduckgo/android/libs/OnionKit/netciphertest/src/ => onionKit/src/instrumentTest/java/
+In DuckDuckGo:
+* AndroidManifest.xml => duckDuckGo/src/main/AndroidManifest.xml
+* assets/ => duckDuckGo/src/main/assets/
+* libs/acra-4.4.0.jar => duckDuckGo/libs/acra-4.4.0.jar
+* libs/httpclientandroidlib-1.1.2.jar => duckDuckGo/libs/httpclientandroidlib-1.1.2.jar
+* libs/otto-1.3.4.jar => duckDuckGo/libs/otto-1.3.4.jar
+* libs/picasso-1.1.1.jar => duckDuckGo/libs/picasso-1.1.1.jar
+* lint.xml => duckDuckGo/lint.xml
+* res/ => duckDuckGo/src/main/res/
+* src/ => duckDuckGo/src/main/java/
+* tests/src/ => duckDuckGo/src/instrumentTest/java/
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

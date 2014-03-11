@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.duckduckgo.mobile.android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/background_light"
+    android:paddingBottom="2dp"
+    android:paddingTop="2dp" >
+
+    <com.duckduckgo.mobile.android.download.AsyncImageView
+        android:id="@+id/autoCompleteImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="@dimen/default_margin"
+        app:cornerRadius="3dp"
+        android:background="@drawable/btn_auto_complete_image"
+        android:scaleType="center"
+        android:src="@drawable/ic_default_search_result" />
+
+    <TextView
+        android:id="@+id/autoCompleteResultText"
+        style="@style/AutocompleteResultText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_tiny"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="40dp"
+        android:layout_toRightOf="@id/autoCompleteImage"
+        android:text="This is test Text which can get long" >
+    </TextView>
+
+    <TextView
+        android:id="@+id/autoCompleteDetailText"
+        style="@style/AutocompleteDetailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="40dp"
+        android:layout_below="@id/autoCompleteResultText"
+        android:layout_toRightOf="@id/autoCompleteImage"
+        android:text="This is test text, which can be long
+        and multiple lines long" >
+    </TextView>
+
+    <ImageView
+        android:id="@+id/autoCompletePlusButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="10dp"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_centerInParent="true"
+        android:layout_alignParentRight="true"
+        android:src="@drawable/plus_button_ac" />
+
+</RelativeLayout>

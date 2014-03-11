@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="AppName">DuckDuckGo</string>
+    <string name="SearchString">Search DuckDuckGo...</string>
+    <string name="SettingsButtonContentDescription">Settings</string>
+    <string name="HomeButtonContentDescription">Home</string>
+    
+    <string name="search_hint">Search...</string>
+    
+    <string name="PrefGroupAppFlow">Application</string>
+    <string name="PrefGroupPrivacy">Privacy</string>
+    <string name="PrefGroupFeedback">Feedback</string>
+    <string name="PrefTheme">Theme</string>
+    <string name="PrefThemeLight">Light</string>
+    <string name="PrefThemeDark">Dark</string>
+    <string name="PrefStartScreen">Home Screen</string>
+    <string name="PrefStories">Stories</string>
+    <string name="PrefWaterCoolerStories">Stories</string>
+    <string name="PrefSavedItems">Saved Items</string>
+    <string name="PrefDuckMode">Duck Mode</string>
+    <string name="PrefRecentSearch">Recent Searches</string>
+    <string name="PrefRecordHistory">Save Recent</string>
+    <string name="PrefClearHistory">Clear Recent</string>
+    <string name="PrefSources">Change Sources</string>
+    <string name="PrefResetSources">Reset Sources</string>
+    <string name="PrefRegion">Region Boost</string>
+    <string name="PrefDirectQuery">Search on Tap</string>
+    <string name="PrefExternalBrowser">Use External Browser</string>
+    <string name="PrefSendFeedback">Send Feedback</string>
+    <string name="PrefRate">Rate App</string>
+    <string name="PrefAppSearch">Include Apps</string>
+    <string name="PrefMainFontSize">Font Size</string>
+    <string name="PrefEnableAcra">Auto Report Crashes</string>
+    <string name="PrefAcraDisabled">Automatic Reporting Disabled</string>
+    <string name="PrefAcraEnabled">Automatic Reporting Enabled</string>
+    
+    <string name="PrefWaterCooler">Stories</string>
+    <string name="PrefAutocomplete">Autocomplete</string>
+    <string name="PrefSearchResults">Search Results</string>
+    <string name="PrefTurnOffAutocomplete">Disabled</string>
+    
+    <string name="PrefReadable">Readability</string>
+    <string name="PrefGroupTor">Tor</string>
+    <string name="PrefEnableTor">Enable Tor</string>
+    <string name="PrefCheckOrbotStatus">Check Orbot status</string>
+    <string name="OrbotStatusOkTitle">Orbot status</string>
+    <string name="OrbotStatusOkMessage">Orbot seems to be running fine!</string>
+    <string name="OrbotCheckSite">https://check.torproject.org</string>
+    
+    <string name="ShareStory">Share Story</string>
+    <string name="ShareSearch">Share Search</string>
+    <string name="SharePage">Share Page</string>
+    
+    <string name="ShareFormat">%1$s %2$s via DuckDuckGo for Android</string>
+    
+    <string name="Yes">Yes</string>
+    <string name="No">No</string>
+    
+    <string name="Save">Save</string>
+    <string name="Unsave">Unsave</string>
+    <string name="Share">Share</string>
+    <string name="Refresh">Refresh</string>
+    <string name="Delete">Delete</string>
+    
+    <string name="LeftStories">Stories</string>
+    <string name="LeftSaved">Saved</string>
+    <string name="LeftSettings">Settings</string>
+    <string name="LeftRecent">Recent</string>
+    <string name="LeftRecentQueries">Recent Queries</string>
+    
+    <string name="Confirm">Confirm</string>
+    <string name="ConfirmClearHistory">All search history will be deleted. Are you sure?</string>
+    
+    <string name="Default">Default</string>
+    <string name="Defaults">Defaults</string>
+    <string name="SuggestSource">Suggest a Source</string>
+    <string name="SuggestedSources">Please include these sources:</string>
+    
+    <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
+    <string name="FeedbackSubject">DuckDuckGo Android v2</string>
+    
+    <string name="SavedFeedEmptyTitle">You have no saved stories</string>
+    <string name="SavedFeedEmptySubTitle">You can save stories in the search bar\'s actions menu.</string>
+    <string name="SavedResultsEmptyTitle">You have no saved results</string>
+    <string name="SavedResultsEmptySubTitle">You can save your search results in the search bar\'s actions menu.</string>
+    
+    <string name="MoreMenuTitle">Page Options</string>
+    
+    <string name="OpenInExternalBrowser">Open in External Browser</string>
+    <string name="ConfirmExternalBrowser">Please Confirm</string>
+    
+    <string name="ChangingFontSize">Changing Font Size...</string>
+
+
+    <string name="crash_toast_text">Application crashed! Crash-related data will be collected and reported upon confirmation.</string>
+    <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
+    <string name="crash_notif_title">DuckDuckGo crash report</string>
+    <string name="crash_notif_text">Please click here to help fix the issue.</string>
+    <string name="crash_dialog_text">An unexpected error occurred.
+        Please help us fix the problem by clicking \'OK\' to send crash-related data. 
+        The only data we will receive is: APP_VERSION_CODE, APP_VERSION_NAME, ANDROID_VERSION, STACK_TRACE,
+        AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
+    <string name="crash_dialog_comment_prompt">Your comment: </string>
+    <string name="crash_dialog_ok_toast">Thank you for your help!</string>
+    
+    <string name="ErrorAppNotFound">App Not Found</string>
+    <string name="ErrorActivityNotFound">No related activity found!</string>
+    <string name="ErrorDownloadFailed">Download failed!</string>
+    <string name="ErrorDownloadOpenFail">Downloaded file could not be opened!</string>
+    
+    <string name="InfoReadStoriesFromCache">Connection failed! Stories retrieved from cache...</string>
+    <string name="DefaultsSetToast">Sources reset to default.</string>
+    <string name="SuggestSourceToast">To be implemented.</string>    
+    
+    <string name="SummaryWaterCooler">
+        These sources create a stream of interesting stories you won\'t find in regular news apps.
+        All of the sources are special feeds like \"most shared\" or \"most up-voted.\"
+        Check it out when you\'re waiting around for five minutes.
+        Note: you can remove Stories from your home screen using the \"Home Screen\" setting.
+    </string>
+
+    <string name="WaterCoolerSources">Stories</string>
+    
+    <string name="InformHistory"><i>Save recents</i> is disabled. You can enable it in <i>Settings.</i></string>
+    
+    <string name="Continue">Continue</string>
+    <string name="Retry">Retry</string>
+    <string name="ErrorFeedTitle">Error: Feed request</string>
+    <string name="ErrorFeedDetail">Feed request failed, possibly because of a connection problem.
+        You will still be able to browse cached items or you may choose to retry.</string>
+        
+    <string name="Apply">Apply</string>
+    <string name="Cancel">Cancel</string>
+    <string name="NoChange">No Change</string>
+    
+    <string name="OnlyOnPhone">Only on Phone</string>
+    <string name="SelectAppToSend">Select application to send</string>
+    
+    <string name="ReadabilityOn">Readability On</string>
+    <string name="ReadabilityOff">Readability Off</string>
+    
+    <string name="SavedSearches">Saved Searches</string>
+    <string name="SavedStories">Saved Stories</string>
+    <string name="StoryOptionsTitle">Story Options</string>
+    <string name="SearchOptionsTitle">Search Options</string>
+    <string name="PageOptionsTitle">Page Options</string>
+    
+    <string name="ToastUnSaveStory">The story has been removed from your saved stories.</string>
+    <string name="ToastUnSaveSearch">The search has been removed from your saved searches.</string>
+    <string name="ToastSaveStory">Your story was saved.</string>
+    <string name="ToastSaveSearch">Your search was saved.</string>
+    <string name="ToastDeleteStoryInHistory">The story has been removed from your history.</string>
+    <string name="ToastDeleteUrlInHistory">The url has been removed from your history.</string>
+    
+    <string name="WelcomeHeader">Introducing</string>
+    <string name="WelcomeTitle">DuckDuckGo Search &amp; Stories</string>
+    <string name="WelcomeDescription">
+        Search Anonymously.\nFind Instantly.\nStay Informed.</string>
+    <string name="GetStarted">Get Started</string>
+    
+    <string name="BangButtonExplanation">Searching on other sites is easy with !bang commands.</string>
+    
+    <string name="LeftRecentSearches">Recent Searches</string>
+    <string name="LeftRecentStories">Recent Stories</string>
+    <string name="NewSources">We\'ve added some cool new story sources!</string>
+    <string name="NewSourcesOk">Show me</string>
+    <string name="NewSourcesNoThx">Later</string>
+
+    
+    <!-- SSL Certificate dialogs -->
+    <!-- Title for an SSL Certificate dialog -->
+    <string name="ssl_certificate">Security certificate</string>
+    <!-- Message on an SSL Certificate dialog -->
+    <string name="ssl_certificate_is_valid">This certificate is valid.</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_to">Issued to:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="common_name">Common name:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="org_name">Organization:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="org_unit">Organizational unit:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_by">Issued by:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="validity_period">Validity:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_on">Issued on:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="expires_on">Expires on:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="serial_number">Serial number:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="fingerprints">Fingerprints:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="sha256_fingerprint">SHA-256 fingerprint:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="sha1_fingerprint">SHA-1 fingerprint:</string>
+    
+    <string name="WarnSSLTitle">Warning: SSL certificate</string>
+    <string name="WarnSSLDetail">SSL certificate of the server is not listed as trusted. 
+        You can still choose to continue or cancel the request.</string>
+    
+</resources>
