@@ -45,7 +45,7 @@ public class TorIntegration {
 
     private void resetProxy() {
         try {
-            WebkitProxy.resetProxy(context.getPackageName(), context);
+            WebkitProxy.resetProxy("com.duckduckgo.mobile.android.DDGApplication", context.getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class TorIntegration {
 
     private void enableOrbotProxy() {
         try {
-            WebkitProxy.setProxy(context.getPackageName(), context, DDGNetworkConstants.PROXY_HOST, DDGNetworkConstants.PROXY_HTTP_PORT);
+            WebkitProxy.setProxy("com.duckduckgo.mobile.android.DDGApplication", context.getApplicationContext(), DDGNetworkConstants.PROXY_HOST, DDGNetworkConstants.PROXY_HTTP_PORT);
         } catch (Exception e) {
             // what should we do here? Discuss!
             e.printStackTrace();
