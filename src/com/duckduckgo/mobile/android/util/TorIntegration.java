@@ -45,7 +45,7 @@ public class TorIntegration {
 
     private void resetProxy() {
         try {
-            WebkitProxy.resetProxy(context.getApplication());
+            WebkitProxy.resetProxy(context.getPackageName(), context);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class TorIntegration {
 
     private void enableOrbotProxy() {
         try {
-            WebkitProxy.setProxy(context.getApplication());
+            WebkitProxy.setProxy(context.getPackageName(), context, DDGNetworkConstants.PROXY_HOST, DDGNetworkConstants.PROXY_HTTP_PORT);
         } catch (Exception e) {
             // what should we do here? Discuss!
             e.printStackTrace();
@@ -84,6 +84,6 @@ public class TorIntegration {
     }
 
     public boolean isTorSupported() {
-        return Build.VERSION.SDK_INT <= JELLY_BEAN_MR2;
+        return true; //Build.VERSION.SDK_INT <= JELLY_BEAN_MR2;
     }
 }
