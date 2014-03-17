@@ -39,14 +39,8 @@ public class PreferencesManager {
 	 * @return active SCREEN
 	 */
 	public static SCREEN getActiveStartScreen() {
-		boolean isDuckMode = DDGApplication.getSharedPreferences().getBoolean("duckModePref", false);
-		if(isDuckMode) {
-			return SCREEN.SCR_DUCKMODE;
-		}
-		else {
-			String startScreenCode = DDGApplication.getSharedPreferences().getString("startScreenPref", "0");
-	        return SCREEN.getByCode(Integer.valueOf(startScreenCode));
-	    }
+        String startScreenCode = DDGApplication.getSharedPreferences().getString("startScreenPref", "0");
+        return SCREEN.getByCode(Integer.valueOf(startScreenCode));
 	}
 
     public static String getRegion() {
@@ -233,7 +227,7 @@ public class PreferencesManager {
 	
 	/* Events */
     public static void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-    	if(key.equals("duckModePref") || key.equals("startScreenPref")){
+    	if(key.equals("startScreenPref")){
     		DDGControlVar.START_SCREEN = getActiveStartScreen();
         }
     	else if(key.equals("regionPref")){
