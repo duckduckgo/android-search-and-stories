@@ -1385,11 +1385,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 	}
 
-    public SCREEN getDisplayedScreen(){
-        return SCREEN.getByCode(viewFlipper.getDisplayedChild());
-    }
-	
-	public void onClick(View view) {
+    public void onClick(View view) {
 		if (view.equals(mainButton)) {
 			handleHomeSettingsButtonClick();
 		}

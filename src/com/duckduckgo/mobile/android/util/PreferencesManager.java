@@ -48,12 +48,8 @@ public class PreferencesManager {
 	        return SCREEN.getByCode(Integer.valueOf(startScreenCode));
 	    }
 	}
-	
-	public static String getStartScreen() {
-		return DDGApplication.getSharedPreferences().getString("startScreenPref", "0");
-	}
-	
-	public static String getRegion() {
+
+    public static String getRegion() {
 		return DDGApplication.getSharedPreferences().getString("regionPref", "wt-wt");
 	}
 	
