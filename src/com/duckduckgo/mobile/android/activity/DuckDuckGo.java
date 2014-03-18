@@ -926,7 +926,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		displayScreen(DDGControlVar.START_SCREEN, true);
         
 		if(mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_SEARCH
-				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED) {
+				|| DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH
+                || DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED
+                || DDGControlVar.START_SCREEN == SCREEN.SCR_DUCKMODE) {
             keyboardService.showKeyboard(getSearchField());
 		}
         mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
