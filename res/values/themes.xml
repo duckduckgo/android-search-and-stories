@@ -67,8 +67,6 @@
         <item name="emptyListIcon">@drawable/icon_light_no_saved_items</item>
         <item name="emptyListTitleColor">#596067</item>
         <item name="emptyListSubTitleColor">#92979c</item>
-        
-        <item name="drawableDuckMode">@drawable/gitduck_dark</item>
     </style>
     
     <style name="DDGDark" parent="@style/DDGTheme">
@@ -110,8 +108,6 @@
         <item name="emptyListIcon">@drawable/icon_dark_no_saved_items</item>
         <item name="emptyListTitleColor">#fff</item>
         <item name="emptyListSubTitleColor">#b8bfcc</item>
-        
-        <item name="drawableDuckMode">@drawable/gitduck_white</item>
     </style>
     
 </resources>

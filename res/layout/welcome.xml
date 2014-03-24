@@ -20,7 +20,7 @@
             android:paddingLeft="55dp"
             android:paddingRight="55dp"
             android:scaleType="fitCenter"
-            android:src="@drawable/welcome_logo" />
+            android:src="@drawable/ddg_text_logo" />
 
         <TextView
             android:layout_width="wrap_content"
