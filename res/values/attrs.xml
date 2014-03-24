@@ -73,4 +73,5 @@
         <attr name="emptyListIcon" format="reference" />
         <attr name="emptyListTitleColor" format="color" />
         <attr name="emptyListSubTitleColor" format="color" />
+        <attr name="searchBarBackground" format="reference|color"/>
 </resources>
