@@ -76,7 +76,7 @@
         <item name="android:tabWidgetStyle">@style/DDGTabWidget</item> 
 
         <item name="searchBarBackground">@color/search_bar_background</item>
-        <item name="leftLayoutRootBackground">@drawable/left_bg_dark</item>
+        <item name="leftLayoutRootBackground">@color/search_bar_background</item>
         <item name="leftDivTopBackground">@drawable/div_top_dark</item>
         <item name="leftDivBottomBackground">@drawable/div_bottom_dark</item>
         

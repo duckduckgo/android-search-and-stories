@@ -29,6 +29,7 @@
     <color name="left_text_light">#4a5056</color>
     <color name="left_text_dark">#afb9cc</color>
     <color name="search_bar_background">#2A2D33</color>
+    <color name="search_bar_background_dark">#363940</color>
     <color name="left_secondary_text">#9c9fa6</color>
     
     <color name="left_bg_light2">#e2e1e6</color>
