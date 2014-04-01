@@ -17,7 +17,8 @@
         android:layout_weight="0.62"
         android:layout_gravity="center"
         android:adjustViewBounds="false"
-        android:scaleType="fitCenter"/>
+        android:scaleType="fitCenter"
+        android:layout_marginBottom="20dp"/>
     <View
         android:layout_width="0dp"
         android:layout_height="wrap_content"
