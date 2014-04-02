@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
@@ -197,8 +198,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	private TabHostExt savedTabHost = null;
     private TorIntegration torIntegration;
-	
-	class SourceClickListener implements OnClickListener {
+    private View searchBar;
+    private View dropShadowDivider;
+
+    class SourceClickListener implements OnClickListener {
 		public void onClick(View v) {
 			// source filtering
 
@@ -490,7 +493,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         if(mDuckDuckGoContainer.webviewShowing) {
         	shareButton.setVisibility(View.VISIBLE);
         }
-        
+        searchBar = contentView.findViewById(R.id.searchBar);
+        dropShadowDivider = contentView.findViewById(R.id.dropshadow_top);
         searchField = (DDGAutoCompleteTextView) contentView.findViewById(R.id.searchEditText);
         getSearchField().setAdapter(mDuckDuckGoContainer.acAdapter);
         getSearchField().setOnEditorActionListener(new OnEditorActionListener() {
@@ -845,9 +849,15 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		mainWebView.clearBrowserState();
 		currentFeedObject = null;
 		mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
+        resetSearchBar();
 	}
-	
-	private void closeFontSlider() {
+
+    private void resetSearchBar() {
+        searchBar.setBackgroundResource(R.color.topbar_background);
+        dropShadowDivider.setVisibility(View.VISIBLE);
+    }
+
+    private void closeFontSlider() {
 		fontSizeLayout.setVisibility(View.GONE);
 		fontSizeSeekBar.setProgress(DDGControlVar.fontPrevProgress);
 		PreferencesManager.setFontSliderVisibility(false);
@@ -1368,17 +1378,24 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     		DDGControlVar.homeScreenShowing = true;
     		setMainButtonMenu();
     		leftHomeTextView.setSelected(true);
+            hideSearchBarBackground();
     	}
     	else {
     		DDGControlVar.homeScreenShowing = false;
     	}
 	}
-	
-	public void displayWebView() {		
+
+    private void hideSearchBarBackground() {
+        TypedArray styledAttributes = getTheme().obtainStyledAttributes(R.style.DDGTheme, new int[]{R.attr.searchBarBackground});
+        searchBar.setBackgroundResource(styledAttributes.getResourceId(0,0));
+        dropShadowDivider.setVisibility(View.GONE);
+    }
+
+    public void displayWebView() {
 		// loading something in the browser - set home icon
 		DDGControlVar.homeScreenShowing = false;
-		setMainButtonHome();	
-		
+		setMainButtonHome();
+        resetSearchBar();
 		if (!mDuckDuckGoContainer.webviewShowing) {			
 			shareButton.setVisibility(View.VISIBLE);
 			viewFlipper.setDisplayedChild(SCREEN.SCR_WEBVIEW.getFlipOrder());

@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>    
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/searchBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/topbar_background"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp" >
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp" >
     
     	<!-- Main Search Bar -->   	    
    	    <ImageButton
    	        android:id="@+id/settingsButton"
    	        android:layout_width="40dp"
    	        android:layout_height="@dimen/search_bar_control_height"
-   	        android:layout_marginLeft="@dimen/default_margin"
+   	        android:layout_marginLeft="6dp"
    	        android:background="@drawable/btn_main"
    	        android:scaleType="center"
    	        android:src="@drawable/ic_menu" />
@@ -20,7 +21,7 @@
    	        android:id="@+id/bangButton"
    	        android:layout_width="40dp"
    	        android:layout_height="@dimen/search_bar_control_height"
-   	        android:layout_marginLeft="@dimen/default_margin"
+   	        android:layout_marginLeft="6dp"
    	        android:background="@drawable/btn_bang"
    	        android:scaleType="fitCenter"
    	        android:visibility="gone"
@@ -30,8 +31,8 @@
    	        android:layout_width="0dip"
    	        android:layout_height="@dimen/search_bar_control_height"
    	        android:layout_gravity="center_vertical"
-   	        android:layout_marginLeft="@dimen/default_margin"
-   	        android:layout_marginRight="@dimen/default_margin"
+   	        android:layout_marginLeft="6dp"
+   	        android:layout_marginRight="6dp"
    	        android:layout_weight="1"
    	        android:background="@drawable/bgd_search_field" >
    	        
@@ -45,7 +46,7 @@
    	        android:layout_width="match_parent"
 			android:layout_height="match_parent"
 			android:background="@drawable/searchfield"
-			android:paddingLeft="@dimen/default_margin"
+			android:paddingLeft="6dp"
 			android:singleLine="true"
 			android:textSize="@dimen/search_bar_text_size"
 			android:selectAllOnFocus="true"

@@ -30,8 +30,9 @@
     
     <style name="DDGLight" parent="@style/DDGTheme">
         <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
-        <item name="android:tabWidgetStyle">@style/DDGTabWidget</item> 
-        
+        <item name="android:tabWidgetStyle">@style/DDGTabWidget</item>
+
+        <item name="searchBarBackground">@color/left_bg_light</item>
         <item name="leftLayoutRootBackground">@color/left_bg_light</item>
         <item name="leftDivTopBackground">@drawable/div_top_light</item>
         <item name="leftDivBottomBackground">@drawable/div_bottom_light</item>
@@ -67,15 +68,15 @@
         <item name="emptyListIcon">@drawable/icon_light_no_saved_items</item>
         <item name="emptyListTitleColor">#596067</item>
         <item name="emptyListSubTitleColor">#92979c</item>
-        
-        <item name="drawableDuckMode">@drawable/gitduck_dark</item>
+        <item name="duckModeLogo">@drawable/ddg_text_logo_light</item>
     </style>
     
     <style name="DDGDark" parent="@style/DDGTheme">
         <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
         <item name="android:tabWidgetStyle">@style/DDGTabWidget</item> 
-        
-        <item name="leftLayoutRootBackground">@drawable/left_bg_dark</item>
+
+        <item name="searchBarBackground">@color/search_bar_background</item>
+        <item name="leftLayoutRootBackground">@color/search_bar_background</item>
         <item name="leftDivTopBackground">@drawable/div_top_dark</item>
         <item name="leftDivBottomBackground">@drawable/div_bottom_dark</item>
         
@@ -110,8 +111,7 @@
         <item name="emptyListIcon">@drawable/icon_dark_no_saved_items</item>
         <item name="emptyListTitleColor">#fff</item>
         <item name="emptyListSubTitleColor">#b8bfcc</item>
-        
-        <item name="drawableDuckMode">@drawable/gitduck_white</item>
+        <item name="duckModeLogo">@drawable/ddg_text_logo_dark</item>
     </style>
     
 </resources>
