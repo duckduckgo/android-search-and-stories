@@ -14,10 +14,6 @@
                 android:defaultValue="true" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/PrefGroupAppFlow">
-        <CheckBoxPreference
-                android:title="@string/PrefDuckMode"
-                android:key="duckModePref"
-                android:defaultValue="false" />
         <ListPreference
                 android:title="@string/PrefStartScreen"
                 android:key="startScreenPref"

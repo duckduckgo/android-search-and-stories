@@ -6,13 +6,6 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import info.guardianproject.onionkit.web.WebkitProxy;
 
-/**
- * Created with IntelliJ IDEA.
- * User: Koen
- * Date: 16/06/13
- * Time: 21:18
- * To change this template use File | Settings | File Templates.
- */
 public class TorIntegration {
 
     public static final int JELLY_BEAN_MR2 = 18;
