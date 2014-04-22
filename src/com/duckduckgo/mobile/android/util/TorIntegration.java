@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.util;
 
 import android.app.Activity;
 import android.os.Build;
+import android.webkit.WebView;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import info.guardianproject.onionkit.web.WebkitProxy;
@@ -38,7 +39,16 @@ public class TorIntegration {
 
     private void resetProxy() {
         try {
-            WebkitProxy.resetProxy("com.duckduckgo.mobile.android.DDGApplication", context.getApplicationContext());
+            WebkitProxy.resetProxy("com.duckduckgo.mobile.android.DDGApplication", DDGNetworkConstants.getWebView().getContext().getApplicationContext());
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void resetProxy(WebView webView) {
+        try {
+            WebkitProxy.resetProxy("com.duckduckgo.mobile.android.DDGApplication", webView.getContext().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,7 +56,16 @@ public class TorIntegration {
 
     private void enableOrbotProxy() {
         try {
-            WebkitProxy.setProxy("com.duckduckgo.mobile.android.DDGApplication", context.getApplicationContext(), DDGNetworkConstants.PROXY_HOST, DDGNetworkConstants.PROXY_HTTP_PORT);
+            WebkitProxy.setProxy("com.duckduckgo.mobile.android.DDGApplication", DDGNetworkConstants.getWebView().getContext().getApplicationContext(), DDGNetworkConstants.PROXY_HOST, DDGNetworkConstants.PROXY_HTTP_PORT);
+        } catch (Exception e) {
+            // what should we do here? Discuss!
+            e.printStackTrace();
+        }
+    }
+
+    public void enableOrbotProxy(WebView webView) {
+        try {
+            WebkitProxy.setProxy("com.duckduckgo.mobile.android.DDGApplication", webView.getContext().getApplicationContext(), DDGNetworkConstants.PROXY_HOST, DDGNetworkConstants.PROXY_HTTP_PORT);
         } catch (Exception e) {
             // what should we do here? Discuss!
             e.printStackTrace();

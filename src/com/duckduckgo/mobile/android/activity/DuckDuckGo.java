@@ -95,6 +95,7 @@ import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSel
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
+import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
@@ -646,6 +647,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         mainWebView = (DDGWebView) contentView.findViewById(R.id.mainWebView);
         mainWebView.setParentActivity(DuckDuckGo.this);
         mainWebView.getSettings().setJavaScriptEnabled(true);
+        DDGNetworkConstants.setWebView(mainWebView);
         
         // get default User-Agent string for reuse later
         mWebViewDefaultUA = mainWebView.getSettings().getUserAgentString();
