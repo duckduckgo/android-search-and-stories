@@ -16,5 +16,5 @@
     <dimen name="header_footer_left_right_padding">25dp</dimen>
     <dimen name="header_footer_top_bottom_padding">20dp</dimen>
     <dimen name="header_footer_internal_padding">10dp</dimen>
-    <dimen name="feed_item_height">155dp</dimen>
+    <dimen name="feed_item_height">190dp</dimen>
 </resources>
