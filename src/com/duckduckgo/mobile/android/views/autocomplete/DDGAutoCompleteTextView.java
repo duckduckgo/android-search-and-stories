@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.views.autocomplete;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 
 public class DDGAutoCompleteTextView extends AutoCompleteTextView {
@@ -37,6 +38,10 @@ public class DDGAutoCompleteTextView extends AutoCompleteTextView {
 			backButtonPressedEventListener.onBackButtonPressed();
 			return false;
 		}
+        if(keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP){
+            super.onEditorAction(EditorInfo.IME_ACTION_SEARCH);
+            return true;
+        }
 		return super.dispatchKeyEvent(event);
 	}
 
