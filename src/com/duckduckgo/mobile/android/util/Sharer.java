@@ -1,7 +1,15 @@
 package com.duckduckgo.mobile.android.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ResolveInfo;
+import android.os.Parcelable;
 
 import com.duckduckgo.mobile.android.R;
 
@@ -11,20 +19,75 @@ import com.duckduckgo.mobile.android.R;
 public class Sharer {
 
 	public static void shareWebPage(Context context, String title, String url) {
-		Intent shareIntent = createBasicShareIntent(url + " via DuckDuckGo for Android", title);
-		context.startActivity(Intent.createChooser(shareIntent, context.getResources().getText(R.string.SharePage)));
+		String actionName = (String) context.getResources().getText(R.string.SharePage);
+		Intent shareIntent = createTargetedShareIntent(context, url, title, actionName);
+		context.startActivity(Intent.createChooser(shareIntent, actionName));
 	}
 
 	public static void shareStory(Context context, String title, String url) {
-		Intent shareIntent = createBasicShareIntent(formatShareText(context, title, url), title);
-		context.startActivity(Intent.createChooser(shareIntent, context.getResources().getText(R.string.ShareStory)));
+		String actionName = (String) context.getResources().getText(R.string.ShareStory);
+		Intent shareIntent = createTargetedShareIntent(context, formatShareText(title, url), title, actionName);
+		context.startActivity(Intent.createChooser(shareIntent, actionName));
 	}
 
 	public static void shareSearch(Context context, String query) {
+		String actionName = (String) context.getResources().getText(R.string.ShareSearch);
 		String url = "https://duckduckgo.com/?q=" + query;
-		Intent shareIntent = createBasicShareIntent(String.format("%s %s via DuckDuckGo for Android", query, url),
-				String.format("DuckDuckGo Search for \"%s\"", query));
-		context.startActivity(Intent.createChooser(shareIntent, context.getResources().getText(R.string.ShareSearch)));
+		Intent shareIntent = createTargetedShareIntent(context, String.format("%s %s", query, url),
+				String.format("DuckDuckGo Search for \"%s\"", query), actionName);
+		context.startActivity(Intent.createChooser(shareIntent, actionName));
+	}
+	
+	private static Intent createTargetedShareIntent(Context context, String text, String subject, String actionName) {
+		List<Intent> targetedShareIntents = new ArrayList<Intent>();
+		Intent shareIntent = createBasicShareIntent(text, subject);
+		List<HashMap<String, String>> intentMetaInfo = new ArrayList<HashMap<String, String>>();
+        List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(shareIntent, 0);
+        
+        if (!resInfo.isEmpty()){
+            for (ResolveInfo resolveInfo : resInfo) {
+            	if (resolveInfo.activityInfo != null) {
+            		HashMap<String, String> info = new HashMap<String, String>();
+            		info.put("packageName", resolveInfo.activityInfo.packageName);
+            		info.put("className", resolveInfo.activityInfo.name);
+            		info.put("simpleName", String.valueOf(resolveInfo.activityInfo.loadLabel(context.getPackageManager())));
+            		intentMetaInfo.add(info);
+        		}
+            }
+        		 
+    		if (!intentMetaInfo.isEmpty()) {
+    			Collections.sort(intentMetaInfo, new Comparator<HashMap<String, String>>() {
+    				@Override
+    				public int compare(HashMap<String, String> map, HashMap<String, String> map2) {
+    					return map.get("simpleName").compareTo(map2.get("simpleName"));
+    				}
+				});
+    				 
+				for (HashMap<String, String> metaInfo : intentMetaInfo) {
+					String packageName = metaInfo.get("packageName");
+	                Intent targetedShareIntent = (Intent) shareIntent.clone();
+	                
+	                if (packageName.contains("twitter")) {
+	                    targetedShareIntent.putExtra(Intent.EXTRA_TEXT, 
+	                    		formatShareText(text, (String)context.getResources().getText(R.string.ShareTrailingTwitterString)));
+	                }
+	                else {
+	                	targetedShareIntent.putExtra(Intent.EXTRA_TEXT, 
+	                    		formatShareText(text, (String)context.getResources().getText(R.string.ShareTrailingString)));
+	                }
+
+    				targetedShareIntent.setPackage(packageName);
+    				targetedShareIntent.setClassName(metaInfo.get("packageName"), metaInfo.get("className"));
+    				targetedShareIntents.add(targetedShareIntent);
+				}
+            }
+    		
+            Intent chooserIntent = Intent.createChooser(targetedShareIntents.remove(targetedShareIntents.size()-1), actionName);
+            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, targetedShareIntents.toArray(new Parcelable[]{}));
+            return chooserIntent;
+        }
+        
+        return shareIntent;
 	}
 	
 	private static Intent createBasicShareIntent(String text, String subject) {
@@ -36,9 +99,8 @@ public class Sharer {
 		shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
 		return shareIntent;
 	}
-
-	private static String formatShareText(Context context, String title, String url) {
-		return String.format(context.getResources().getString(R.string.ShareFormat), title, url);
+	
+	private static String formatShareText(String text, String shareText) {
+		return text + " " + shareText;
 	}
-
 }
