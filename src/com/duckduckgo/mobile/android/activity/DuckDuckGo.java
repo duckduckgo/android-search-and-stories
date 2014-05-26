@@ -6,6 +6,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
+import org.apache.http.conn.util.InetAddressUtils;
+
 import android.annotation.SuppressLint;
 import android.app.SearchManager;
 import android.content.Intent;
@@ -241,7 +243,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				DDGApplication.getDB().insertFeedItem(feedObject);
 				syncAdapters();			
 			}
-			searchOrGoToUrl(url, SESSIONTYPE.SESSION_FEED);
+			searchOrGoToUrl(url, SESSIONTYPE.SESSION_FEED, false);
 		}
 		
 		if(ReadArticlesManager.addReadArticle(feedObject)){
@@ -503,7 +505,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				if(textView == getSearchField() && actionId != EditorInfo.IME_NULL) {
                     keyboardService.hideKeyboard(getSearchField());
 					getSearchField().dismissDropDown();
-					searchOrGoToUrl(getSearchField().getTrimmedText());
+					searchOrGoToUrl(getSearchField().getTrimmedText(), true);
 				}
 				return false;
 			}
@@ -551,7 +553,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
                                 getSearchField().addTextWithTrailingSpace(suggestObject.getPhrase());
                             }else{
                                 keyboardService.hideKeyboard(getSearchField());
-                                searchOrGoToUrl(text);
+                                searchOrGoToUrl(text, true);
                             }
                         }
                     }
@@ -1073,11 +1075,11 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	getSearchField().setBackgroundDrawable(mDuckDuckGoContainer.searchFieldDrawable);
 	}
 	
-	public void searchOrGoToUrl(String text) {
-		searchOrGoToUrl(text, SESSIONTYPE.SESSION_BROWSE);
+	public void searchOrGoToUrl(String text, boolean fromSearchBar) {
+		searchOrGoToUrl(text, SESSIONTYPE.SESSION_BROWSE, fromSearchBar);
 	}
 	
-	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
+	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType, boolean fromSearchBar) {
         keyboardService.hideKeyboard(getSearchField());
 		savedState = false;
 		if(bangButtonExplanationPopup!=null){
@@ -1098,24 +1100,33 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				searchAsUrl = new URL(text);
 				searchAsUrl.toURI();
 			} catch (MalformedURLException e) {
-				e.printStackTrace();
+				if (e!=null) {
+					e.printStackTrace();
+				}
 			} catch (URISyntaxException e) {
 				e.printStackTrace();
 				searchAsUrl = null;
 			}
 			
-			if (searchAsUrl == null) {
-				modifiedText = "http://" + text;
-				try {
-					searchAsUrl = new URL(modifiedText);
-					searchAsUrl.toURI();
-				} catch (MalformedURLException e) {
-					e.printStackTrace();
-				} catch (URISyntaxException e) {
-					e.printStackTrace();
-					searchAsUrl = null;
-				}
-			}			
+			if ((InetAddressUtils.isIPv4Address(text) || InetAddressUtils.isIPv6Address(text)) && fromSearchBar) {
+				// Do not add http:// to the search text
+			}
+			else {
+				if (searchAsUrl == null) {
+					modifiedText = "http://" + text;				
+					try {
+						searchAsUrl = new URL(modifiedText);
+						searchAsUrl.toURI();
+					} catch (MalformedURLException e) {
+						if (e!=null) {
+							e.printStackTrace();
+						}
+					} catch (URISyntaxException e) {
+						e.printStackTrace();
+						searchAsUrl = null;
+					}
+				}		
+			}
 			
 			//We use the . check to determine if this is a single word or not... 
 			//if it doesn't contain a . plus domain (2 more characters) it won't be a URL, even if it's valid, like http://test
@@ -1506,7 +1517,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				}
                 boolean startOrbotCheck = data.getBooleanExtra("startOrbotCheck",false);
                 if(startOrbotCheck){
-                    searchOrGoToUrl(getString(R.string.OrbotCheckSite));
+                    searchOrGoToUrl(getString(R.string.OrbotCheckSite), false);
                 }
                 boolean switchTheme = data.getBooleanExtra("switchTheme", false);
                 if(switchTheme){
@@ -1844,7 +1855,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
     @Subscribe
     public void onSavedSearchItemSelected(SavedSearchItemSelectedEvent event) {
-        searchOrGoToUrl(event.query);
+        searchOrGoToUrl(event.query, true);
         syncAdapters();
     }
 
