@@ -26,7 +26,7 @@ public class Sharer {
 
 	public static void shareStory(Context context, String title, String url) {
 		String actionName = (String) context.getResources().getText(R.string.ShareStory);
-		Intent shareIntent = createTargetedShareIntent(context, formatShareText(title, url), title, actionName);
+		Intent shareIntent = createTargetedShareIntent(context, String.format("%s %s", title, url), title, actionName);
 		context.startActivity(Intent.createChooser(shareIntent, actionName));
 	}
 
@@ -40,7 +40,7 @@ public class Sharer {
 	
 	private static Intent createTargetedShareIntent(Context context, String text, String subject, String actionName) {
 		List<Intent> targetedShareIntents = new ArrayList<Intent>();
-		Intent shareIntent = createBasicShareIntent(text, subject);
+		Intent shareIntent = createBasicShareIntent(context, text, subject);
 		List<HashMap<String, String>> intentMetaInfo = new ArrayList<HashMap<String, String>>();
         List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(shareIntent, 0);
         
@@ -69,13 +69,9 @@ public class Sharer {
 	                
 	                if (packageName.contains("twitter")) {
 	                    targetedShareIntent.putExtra(Intent.EXTRA_TEXT, 
-	                    		formatShareText(text, (String)context.getResources().getText(R.string.ShareTrailingTwitterString)));
+	                    		String.format(context.getResources().getString(R.string.TwitterShareFormat), text));
 	                }
-	                else {
-	                	targetedShareIntent.putExtra(Intent.EXTRA_TEXT, 
-	                    		formatShareText(text, (String)context.getResources().getText(R.string.ShareTrailingString)));
-	                }
-
+	                
     				targetedShareIntent.setPackage(packageName);
     				targetedShareIntent.setClassName(metaInfo.get("packageName"), metaInfo.get("className"));
     				targetedShareIntents.add(targetedShareIntent);
@@ -90,17 +86,13 @@ public class Sharer {
         return shareIntent;
 	}
 	
-	private static Intent createBasicShareIntent(String text, String subject) {
+	private static Intent createBasicShareIntent(Context context, String text, String subject) {
 		Intent shareIntent = new Intent();
 		shareIntent.setAction(Intent.ACTION_SEND);
 		shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		shareIntent.setType("text/plain");
-		shareIntent.putExtra(Intent.EXTRA_TEXT, text);
+		shareIntent.putExtra(Intent.EXTRA_TEXT, String.format(context.getResources().getString(R.string.RegularShareFormat), text));
 		shareIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
 		return shareIntent;
-	}
-	
-	private static String formatShareText(String text, String shareText) {
-		return text + " " + shareText;
 	}
 }

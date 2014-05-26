@@ -51,8 +51,8 @@
     <string name="ShareSearch">Suche teilen</string>
     <string name="SharePage">Seite teilen</string>
     
-    <string name="ShareTrailingString">via DuckDuckGo für Android</string>
-    <string name="ShareTrailingTwitterString">via @duckduckgo für Android</string>
+    <string name="RegularShareFormat">%1$s via DuckDuckGo für Android</string>
+    <string name="TwitterShareFormat">%1$s via @duckduckgo für Android</string>
     
     <string name="Yes">Ja</string>
     <string name="No">Nein</string>
