@@ -65,6 +65,7 @@
     <string name="LeftStories">Stories</string>
     <string name="LeftSaved">Saved</string>
     <string name="LeftSettings">Settings</string>
+    <string name="LeftGoodies">Goodies</string>
     <string name="LeftRecent">Recent</string>
     <string name="LeftRecentQueries">Recent Queries</string>
     
@@ -91,6 +92,7 @@
     
     <string name="ChangingFontSize">Changing Font Size...</string>
 
+    <string name="GoodiesSite">https://duckduckgo.com/goodies.html/</string>
 
     <string name="crash_toast_text">Application crashed! Crash-related data will be collected and reported upon confirmation.</string>
     <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>

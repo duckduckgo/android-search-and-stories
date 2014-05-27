@@ -165,6 +165,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private TextView leftStoriesTextView = null;
 	private TextView leftSavedTextView = null;
 	private TextView leftSettingsTextView = null;
+	private TextView leftGoodiesTextView = null;
 	
 	private LinearLayout leftHomeButtonLayout = null;
 	private LinearLayout leftStoriesButtonLayout = null;
@@ -408,11 +409,13 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	leftStoriesTextView = (TextView) leftMenuView.findViewById(R.id.LeftStoriesTextView);
     	leftSavedTextView = (TextView) leftMenuView.findViewById(R.id.LeftSavedTextView);
     	leftSettingsTextView = (TextView) leftMenuView.findViewById(R.id.LeftSettingsTextView);
+    	leftGoodiesTextView = (TextView) leftMenuView.findViewById(R.id.LeftGoodiesTextView);
     	
     	leftHomeTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
     	leftStoriesTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
     	leftSavedTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
-    	leftSettingsTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);    	
+    	leftSettingsTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
+    	leftGoodiesTextView.setTypeface(DDGConstants.TTF_ROBOTO_MEDIUM);
     	  	
     	DDGControlVar.leftTitleTextSize = PreferencesManager.getLeftTitleTextSize();
     	
@@ -420,6 +423,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
     	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
     	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize); 
+    	leftGoodiesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize); 
     	    	
     	leftHomeButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftHomeButtonLayout);
     	leftStoriesButtonLayout = (LinearLayout) leftMenuView.findViewById(R.id.LeftStoriesButtonLayout);
@@ -451,11 +455,17 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	xt = getResources().getDrawable(typedValue.resourceId);
         xt.setBounds(0, 0, pixelValue, pixelValue);
         leftSettingsTextView.setCompoundDrawables(xt, null, null, null);
+        
+        getTheme().resolveAttribute(R.attr.leftDrawableSettings, typedValue, true);
+    	xt = getResources().getDrawable(typedValue.resourceId);
+        xt.setBounds(0, 0, pixelValue, pixelValue);
+        leftGoodiesTextView.setCompoundDrawables(xt, null, null, null);
     	
     	leftHomeTextView.setOnClickListener(this);
     	leftStoriesTextView.setOnClickListener(this);
     	leftSavedTextView.setOnClickListener(this);
     	leftSettingsTextView.setOnClickListener(this);
+    	leftGoodiesTextView.setOnClickListener(this);
     	
     	leftRecentView = (HistoryListView) leftMenuView.findViewById(R.id.LeftRecentView);
 		
@@ -748,6 +758,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		    	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
 		    	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
 		    	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+		    	leftGoodiesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
 		    	leftMenuView.invalidate();
 			}
 		});
@@ -886,6 +897,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	leftStoriesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
     	leftSavedTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
     	leftSettingsTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
+    	leftGoodiesTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.leftTitleTextSize);
     	leftMenuView.invalidate();
 	}
 	
@@ -1237,6 +1249,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		leftHomeTextView.setSelected(false);
 		leftSavedTextView.setSelected(false);
 		leftSettingsTextView.setSelected(false);
+		leftGoodiesTextView.setSelected(false);
 		leftStoriesTextView.setSelected(false);
 	}
 	
@@ -1247,6 +1260,13 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		feedView.cleanImageTasks();
 		Intent intent = new Intent(getBaseContext(), Preferences.class);
 		startActivityForResult(intent, PREFERENCES_RESULT);
+	}
+	
+	private void displayGoodies() {
+		clearLeftSelect();
+		
+		searchOrGoToUrl(getString(R.string.GoodiesSite));
+		leftGoodiesTextView.setSelected(true);
 	}
 
 	/** 
@@ -1425,6 +1445,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		else if(view.equals(leftSettingsTextView)){
 			viewPager.switchPage();
             displaySettings();
+		}
+		else if(view.equals(leftGoodiesTextView)){
+			viewPager.switchPage();
+            displayGoodies();
 		}
 	}
 

@@ -78,6 +78,22 @@
          <ImageView style="@style/LeftDivBottom" />
      
      </LinearLayout>
+     
+    <LinearLayout
+    style="@style/LeftItemRoot"
+    android:id="@+id/LeftGoodiesButtonLayout">
+            
+         <ImageView style="@style/LeftDivTop" />
+    
+         <TextView 
+            style="@style/LeftItemText"
+            android:id="@+id/LeftGoodiesTextView" 
+            android:drawableLeft="?attr/leftDrawableSettings"
+            android:text="@string/LeftGoodies" />
+     
+         <ImageView style="@style/LeftDivBottom" />
+     
+     </LinearLayout>
     
     <com.duckduckgo.mobile.android.views.HistoryListView
         android:layout_width="fill_parent" 

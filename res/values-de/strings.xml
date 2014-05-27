@@ -65,6 +65,7 @@
     <string name="LeftStories">Geschichten</string>
     <string name="LeftSaved">Gespeichert</string>
     <string name="LeftSettings">Einstellungen</string>
+    <string name="LeftGoodies">Leckereien</string> <!-- Need confirmation here -->
     <string name="LeftRecent">Letzte</string>
     <string name="LeftRecentQueries">Letzte Suchen</string>
     
@@ -91,6 +92,7 @@
     
     <string name="ChangingFontSize">Schriftgröße wird geändert...</string>
 
+    <string name="GoodiesSite">https://duckduckgo.com/goodies.html/?lang=de</string>
 
     <string name="crash_toast_text">Anwendung abgestürzt! Absturzbezogene Daten werden gesammelt und nach Bestätigung gesendet.</string>
     <string name="crash_notif_ticker_text">Unerwarteter Fehler, bitte senden Sie einen Bericht...</string>
