@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.network;
 
 import android.app.Application;
+import android.webkit.WebView;
 import ch.boye.httpclientandroidlib.conn.ClientConnectionManager;
 import ch.boye.httpclientandroidlib.conn.params.ConnManagerParams;
 import ch.boye.httpclientandroidlib.conn.params.ConnPerRouteBean;
@@ -15,15 +16,25 @@ import com.duckduckgo.mobile.android.util.PreferencesManager;
 public class DDGNetworkConstants {
 	public static DDGHttpClient mainClient;
 	private static ClientConnectionManager mainConnManager;
-    private static HttpParams httpParams = new BasicHttpParams();    
-    private final static String PROXY_HOST = "127.0.0.1";
-    private final static int PROXY_HTTP_PORT = 8118; // default for Orbot/Tor
-    
+    private static HttpParams httpParams = new BasicHttpParams();
+    public final static String PROXY_HOST = "127.0.0.1";
+    public final static int PROXY_HTTP_PORT = 8118; // default for Orbot/Tor
+    private static WebView webView;
+
 //    public static Map<String, String> extraHeaders = new HashMap<String, String>();
-	
+
 	public static void initialize(DDGApplication application){
         initializeMainClient(application, PreferencesManager.getEnableTor());
 	}
+
+    public static void setWebView(WebView webView){
+        DDGNetworkConstants.webView = webView;
+    }
+
+    public static WebView getWebView(){
+        return webView;
+    }
+
 
     public static void initializeMainClient(Application application, boolean enableTor){
         // Create and initialize HTTP parameters
@@ -38,8 +49,8 @@ public class DDGNetworkConstants {
         mainConnManager = new ThreadSafeClientConnManager();
         mainClient = new DDGHttpClient(application.getApplicationContext(), mainConnManager, httpParams);
         if(enableTor){
-            mainClient.getStrongTrustManager().setNotifyVerificationFail(true);
-            mainClient.getStrongTrustManager().setNotifyVerificationSuccess(true);
+            //mainClient.getStrongTrustManager().setNotifyVerificationFail(true);
+            //mainClient.getStrongTrustManager().setNotifyVerificationSuccess(true);
             mainClient.useProxy(true, ConnRoutePNames.DEFAULT_PROXY, PROXY_HOST, PROXY_HTTP_PORT);
         }
     }
