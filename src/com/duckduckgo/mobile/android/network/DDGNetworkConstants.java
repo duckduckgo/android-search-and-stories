@@ -51,7 +51,7 @@ public class DDGNetworkConstants {
         if(enableTor){
             //mainClient.getStrongTrustManager().setNotifyVerificationFail(true);
             //mainClient.getStrongTrustManager().setNotifyVerificationSuccess(true);
-            mainClient.useProxy(true, ConnRoutePNames.DEFAULT_PROXY, PROXY_HOST, PROXY_HTTP_PORT);
+            mainClient.useProxy(true, "http", PROXY_HOST, PROXY_HTTP_PORT);
         }
     }
 }
