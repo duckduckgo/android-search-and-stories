@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">DuckDuckGo</string>
-    <string name="SearchString">Chercher sur DuckDuckGo&#8230;</string>
+    <string name="SearchString">Chercher sur DuckDuckGo...</string>
     <string name="SettingsButtonContentDescription">Paramètres</string>
     <string name="HomeButtonContentDescription">Accueil</string>
     
-    <string name="search_hint">Chercher&#8230;</string>
+    <string name="search_hint">Chercher...</string>
     
     <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Vie privée</string>
@@ -37,7 +37,7 @@
     <string name="PrefWaterCooler">Activités</string>
     <string name="PrefAutocomplete">Autocomplétion</string>
     <string name="PrefSearchResults">Résultats de la recherche</string>
-    <string name="PrefTurnOffAutocomplete">Désactivé</string>
+    <string name="PrefTurnOffAutocomplete">Désactivée</string>
     
     <string name="PrefReadable">Lisibilité</string>
     <string name="PrefGroupTor">Tor</string>
@@ -81,8 +81,8 @@
  &lt;help@duckduckgo.com&gt;</string>
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
     
-    <string name="SavedFeedEmptyTitle">Aucune actualité sauvegardée</string>
-    <string name="SavedFeedEmptySubTitle">Vous pouvez sauvegarder les actualités dans le menu d\'action de la barre de recherche</string>
+    <string name="SavedFeedEmptyTitle">Pas d\'actualité sauvegardée</string>
+    <string name="SavedFeedEmptySubTitle">Vous pouvez sauvegarder les actualités dans le menu d\'action de la barre de rechercheYoupstring>
     <string name="SavedResultsEmptyTitle">Pas de résultat sauvegardé</string>
     <string name="SavedResultsEmptySubTitle">Vous pouvez sauvegarder les résultats de vos recherches dans le menu d\'action de la barre de recherche.</string>
     
@@ -91,14 +91,14 @@
     <string name="OpenInExternalBrowser">Ouvrir dans un navigateur externe</string>
     <string name="ConfirmExternalBrowser">Veuillez confirmer</string>
     
-    <string name="ChangingFontSize">Changer la taille de la police&#8230;</string>
+    <string name="ChangingFontSize">Changer la taille de la police...</string>
 
 
     <string name="crash_toast_text">L\'application a planté ! Les données relatives à ce problème seront collectées et envoyées après confirmation.</string>
-    <string name="crash_notif_ticker_text">Erreur inattendue, vous pouvez envoyer un rapport pour que le problème soit résolu&#8230;</string>
+    <string name="crash_notif_ticker_text">Erreur inattendue, vous pouvez envoyer un rapport pour que le problème soit résolu...</string>
     <string name="crash_notif_title">Rapport de plantage DuckDuckGo</string>
     <string name="crash_notif_text">Cliquez ici pour aider à résoudre le problème.</string>
-    <string name="crash_dialog_text">Une erreur inattendue s\'est produite.
+    <string name="crash_dialog_text">Une erreur inattendue s'est produite.
      Aidez nous à résoudre le problème en cliquant sur \'OK\' pour envoyer des données relatives à l\'incident.
         Les seules données transmises seront : APP_VERSION_CODE, APP_VERSION_NAME, ANDROID_VERSION, STACK_TRACE,
         AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
@@ -110,32 +110,32 @@
     <string name="ErrorDownloadFailed">Échec du téléchargement !</string>
     <string name="ErrorDownloadOpenFail">Impossible d\'ouvrir le fichier téléchargé !</string>
     
-      <string name="InfoReadStoriesFromCache">Échec de la connexion ! Actualitées lues depuis le cache&#8230;</string>
+      <string name="InfoReadStoriesFromCache">Échec de la connexion ! Actualitées lues depuis le cache...</string>
     <string name="DefaultsSetToast">Remise à zéro des sources.</string>
     <string name="SuggestSourceToast">Bientôt disponible.</string>
     
     <string name="SummaryWaterCooler">
-        Ces sources ont des flux d\'informations intéressants que vous ne trouverez pas dans les applications d\'actualités classiques.
-        Ces sources sont des flux spéciaux comme \"plus partagé\" ou \"plus apprécié\".
-        Jetez y un oeuil quand vous avez 5 minutes.
+        Ces sources ont des flux d\'informations intéressants que vous ne trouverez pas dans les applications d'actualités classiques.
+        Ce sont des flux spéciaux comme \"plus partagé\" ou \"plus apprécié\".
+        Jetez y un œuil quand vous avez 5 minutes.
         Note : vous pouvez retirer les actualités de votre écran d\'accueil en utilisant le menu \"Écran d\'accueil\" dans les paramètres.
     </string>
 
     <string name="WaterCoolerSources">Actualités</string>
     
-    <string name="InformHistory"><i>La sauvegarde des récents</i> est désactivée. Vous pouvez l\'activer dans les <i>paramètres.</i></string>
+    <string name="InformHistory"><i>La sauvegarde des récents</i> est désactivée. Vous pouvez l'activer dans les <i>paramètres.</i></string>
     
     <string name="Continue">Continuer</string>
     <string name="Retry">Réessayer</string>
     <string name="ErrorFeedTitle">Erreur : requête sur le flux</string>
-    <string name="ErrorFeedDetail">Échec de la requête sur le flux, peu être à cause d\'un problème de connexion.
+    <string name="ErrorFeedDetail">Échec de la requête sur le flux, peut être à cause d\'un problème de connexion.
         Vous pouvez naviguer dans les éléments mis en cache ou vous pouvez réessayer.</string>
         
     <string name="Apply">Appliquer</string>
     <string name="Cancel">Annuler</string>
     <string name="NoChange">Ne pas changer</string>
     
-    <string name="OnlyOnPhone">Seulement sur téléphone</string>
+    <string name="OnlyOnPhone">Seulement sur l\'appareil</string>
     <string name="SelectAppToSend">Choisir l\'application pour envoyer</string>
     
     <string name="ReadabilityOn">Mode lisibilité actif</string>
@@ -145,7 +145,7 @@
     <string name="SavedStories">Actualités sauvegardées</string>
     <string name="StoryOptionsTitle">Options des actualités</string>
     <string name="SearchOptionsTitle">Options de recherche</string>
-    <string name="PageOptionsTitle">Options de  mise en page</string>
+    <string name="PageOptionsTitle">Options de la page</string>
     
     <string name="ToastUnSaveStory">L\'actualité a été retirée de vos actualités sauvegardées.</string>
     <string name="ToastUnSaveSearch">La recherche a été retirée de vos recherches sauvegardées.</string>
@@ -181,7 +181,7 @@
     <!-- Label for an information field on an SSL Certificate Dialog -->
     <string name="org_name">Organisation :</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
-    <string name="org_unit">Unité de l\'organisation :</string>
+    <string name="org_unit">Unité de l'organisation :</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
     <string name="issued_by">Émis par :</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
@@ -200,6 +200,7 @@
     <string name="sha1_fingerprint">Hash SHA-1 :</string>
     
     <string name="WarnSSLTitle">Attention : certificat SSL</string>
-    <string name="WarnSSLDetail">Le certificat SSL du serveur n\'est pas validé par une autorité de certification. Vous pouvez continuer ou annuler la requête.</string>
+    <string name="WarnSSLDetail">Le certificat SSL du serveur n\'est pas validé par une autorité de certification.
+        Vous pouvez continuer ou annuler la requête.</string>
     
 </resources>
