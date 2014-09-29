@@ -82,7 +82,7 @@
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
     
     <string name="SavedFeedEmptyTitle">Pas d\'actualité sauvegardée</string>
-    <string name="SavedFeedEmptySubTitle">Vous pouvez sauvegarder les actualités dans le menu d\'action de la barre de rechercheYoupstring>
+    <string name="SavedFeedEmptySubTitle">Vous pouvez sauvegarder les actualités dans le menu d\'action de la barre de recherche</string>
     <string name="SavedResultsEmptyTitle">Pas de résultat sauvegardé</string>
     <string name="SavedResultsEmptySubTitle">Vous pouvez sauvegarder les résultats de vos recherches dans le menu d\'action de la barre de recherche.</string>
     
@@ -98,7 +98,7 @@
     <string name="crash_notif_ticker_text">Erreur inattendue, vous pouvez envoyer un rapport pour que le problème soit résolu...</string>
     <string name="crash_notif_title">Rapport de plantage DuckDuckGo</string>
     <string name="crash_notif_text">Cliquez ici pour aider à résoudre le problème.</string>
-    <string name="crash_dialog_text">Une erreur inattendue s'est produite.
+    <string name="crash_dialog_text">Une erreur inattendue s\'est produite.
      Aidez nous à résoudre le problème en cliquant sur \'OK\' pour envoyer des données relatives à l\'incident.
         Les seules données transmises seront : APP_VERSION_CODE, APP_VERSION_NAME, ANDROID_VERSION, STACK_TRACE,
         AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
@@ -115,7 +115,7 @@
     <string name="SuggestSourceToast">Bientôt disponible.</string>
     
     <string name="SummaryWaterCooler">
-        Ces sources ont des flux d\'informations intéressants que vous ne trouverez pas dans les applications d'actualités classiques.
+        Ces sources ont des flux d\'informations intéressants que vous ne trouverez pas dans les applications d\'actualités classiques.
         Ce sont des flux spéciaux comme \"plus partagé\" ou \"plus apprécié\".
         Jetez y un œuil quand vous avez 5 minutes.
         Note : vous pouvez retirer les actualités de votre écran d\'accueil en utilisant le menu \"Écran d\'accueil\" dans les paramètres.
@@ -123,7 +123,7 @@
 
     <string name="WaterCoolerSources">Actualités</string>
     
-    <string name="InformHistory"><i>La sauvegarde des récents</i> est désactivée. Vous pouvez l'activer dans les <i>paramètres.</i></string>
+    <string name="InformHistory"><i>La sauvegarde des récents</i> est désactivée. Vous pouvez l\'activer dans les <i>paramètres.</i></string>
     
     <string name="Continue">Continuer</string>
     <string name="Retry">Réessayer</string>
@@ -181,7 +181,7 @@
     <!-- Label for an information field on an SSL Certificate Dialog -->
     <string name="org_name">Organisation :</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
-    <string name="org_unit">Unité de l'organisation :</string>
+    <string name="org_unit">Unité de l\'organisation :</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
     <string name="issued_by">Émis par :</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
