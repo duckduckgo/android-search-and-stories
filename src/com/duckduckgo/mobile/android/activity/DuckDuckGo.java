@@ -1613,18 +1613,25 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 				else {				
 					// cache
 					CacheFeedTask cacheTask = new CacheFeedTask(this);
-				
+
 					// for HTTP request
 					mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
 					
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-						mDuckDuckGoContainer.mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						if(DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
+								|| DDGControlVar.changedSources) {
+							mDuckDuckGoContainer.mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							DDGControlVar.changedSources = false;
+						}
 					}
 					else {
 						cacheTask.execute();
-						mDuckDuckGoContainer.mainFeedTask.execute();
-					}
+						if(DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
+								|| DDGControlVar.changedSources) {
+							mDuckDuckGoContainer.mainFeedTask.execute();
+							DDGControlVar.changedSources = false;
+						}
 				}
 			}
 		}

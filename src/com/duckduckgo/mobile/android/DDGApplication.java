@@ -106,7 +106,9 @@ public class DDGApplication extends Application {
 		
 		DDGControlVar.defaultSources = PreferencesManager.getDefaultSources();
 		DDGControlVar.userAllowedSources = PreferencesManager.getUserAllowedSources();
-		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();		
+		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();
+
+		DDGControlVar.automaticFeedUpdate = PreferencesManager.getAutomaticFeedUpdate();
 		
 		String strReadArticles = PreferencesManager.getReadArticles();
 		if(strReadArticles != null){

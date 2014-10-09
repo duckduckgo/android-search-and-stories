@@ -38,7 +38,8 @@
     <string name="PrefAutocomplete">Autocomplete</string>
     <string name="PrefSearchResults">Search Results</string>
     <string name="PrefTurnOffAutocomplete">Disabled</string>
-    
+
+    <string name="PrefAutoUpdate">Automatic Update</string>
     <string name="PrefReadable">Readability</string>
     <string name="PrefGroupTor">Tor</string>
     <string name="PrefEnableTor">Enable Tor</string>

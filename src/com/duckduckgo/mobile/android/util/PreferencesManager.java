@@ -242,6 +242,9 @@ public class PreferencesManager {
         else if(key.equals("turnOffAutocompletePref")){
             DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean(key, false);
         }
+        else if(key.equals("autoUpdatePref")){
+            DDGControlVar.automaticFeedUpdate = sharedPreferences.getBoolean(key, true);
+      }
     }
     
     /* Collections */
@@ -274,4 +277,14 @@ public class PreferencesManager {
     public static boolean saveUserDisallowedSources(Set<String> userSources) {
 		return DDGUtils.saveSet(DDGApplication.getSharedPreferences(), userSources, "disallowset");
 	}
+
+    public static boolean getAutomaticFeedUpdate() {
+      return DDGApplication.getSharedPreferences().getBoolean("autoUpdatePref", true);
+  }
+
+	  public static void setAutomaticFeedUpdate(boolean automaticFeedUpdate) {
+			Editor editor = DDGApplication.getSharedPreferences().edit();
+			editor.putBoolean("autoUpdatePref", automaticFeedUpdate);
+			editor.commit();
+  }
 }

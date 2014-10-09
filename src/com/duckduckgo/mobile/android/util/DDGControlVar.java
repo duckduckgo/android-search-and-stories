@@ -25,6 +25,8 @@ public class DDGControlVar {
 	public static boolean includeAppsInSearch = false;
 	public static boolean alwaysUseExternalBrowser = false;
 	public static boolean isAutocompleteActive = true;
+	public static boolean automaticFeedUpdate = true;
+	public static boolean changedSources = false;
 	
 	public static int fontProgress = DDGConstants.FONT_SEEKBAR_MID;	// over scale 0-10
 	public static int fontPrevProgress = DDGConstants.FONT_SEEKBAR_MID;	// over scale 0-10
