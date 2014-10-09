@@ -1603,42 +1603,40 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	 */
 	@SuppressLint("NewApi")
 	public void keepFeedUpdated(){
-		if(torIntegration.isOrbotRunningAccordingToSettings()){
+		if(torIntegration.isOrbotRunningAccordingToSettings()) {
 			if (!DDGControlVar.hasUpdatedFeed) {
-				if(DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
+				if (DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
 					// respect user choice of empty source list: show nothing
-					BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(new ArrayList<FeedObject>(), 
+					BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(new ArrayList<FeedObject>(),
 							REQUEST_TYPE.FROM_CACHE));
-				}
-				else {				
+				} else {
 					// cache
 					CacheFeedTask cacheTask = new CacheFeedTask(this);
 
 					// for HTTP request
 					mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
-					
+
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-						if(DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
+						if (DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
 								|| DDGControlVar.changedSources) {
 							mDuckDuckGoContainer.mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							DDGControlVar.changedSources = false;
 						}
-					}
-					else {
+					} else {
 						cacheTask.execute();
-						if(DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
+						if (DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
 								|| DDGControlVar.changedSources) {
 							mDuckDuckGoContainer.mainFeedTask.execute();
 							DDGControlVar.changedSources = false;
 						}
+					}
 				}
+			} else {
+				// complete the action anyway
+				mPullRefreshFeedView.onRefreshComplete();
 			}
 		}
-		else{
-            // complete the action anyway
-            mPullRefreshFeedView.onRefreshComplete();
-        }
 	}
     
 	@Override
