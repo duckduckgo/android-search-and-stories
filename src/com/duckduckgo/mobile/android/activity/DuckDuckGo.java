@@ -134,6 +134,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
 import com.squareup.otto.Subscribe;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	protected final String TAG = "DuckDuckGo";
     private KeyboardService keyboardService;
@@ -777,6 +780,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			}
 		});
         displayHomeScreen();
+
+        checkForUpdates();
     }
 
 	private void setMainButtonHome() {
@@ -1001,6 +1006,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         else if(isLaunchedWithAssistAction()){
             keyboardService.showKeyboard(getSearchField());
         }
+
+        checkForCrashes();
 	}
 
 	@Override
@@ -1670,6 +1677,18 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public DDGAutoCompleteTextView getSearchField() {
 		return searchField;
 	}
+
+    private void checkForCrashes() {
+        if(DDGApplication.isIsReleaseBuild())
+            return;
+        CrashManager.register(this, DDGConstants.HOCKEY_APP_ID);
+    }
+
+    private void checkForUpdates() {
+        if(DDGApplication.isIsReleaseBuild())
+            return;
+        UpdateManager.register(this, DDGConstants.HOCKEY_APP_ID);
+    }
 
     @Subscribe
 	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {

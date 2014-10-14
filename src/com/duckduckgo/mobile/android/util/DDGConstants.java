@@ -14,7 +14,9 @@ public class DDGConstants {
 	public static final String STORIES_JSON_PATH = "stories.json";
 	public static final String SOURCE_JSON_PATH = "source.json";
 	public static final String SOURCE_SIMPLE_PATH = "simple.kry";
-	
+
+    public static final String HOCKEY_APP_ID = "857ca81e2cd05ac6075c2d7c7fefe053";
+
 //	public static Typeface TTF_HELVETICA_NEUE_MEDIUM = null;
 	public static Typeface TTF_ROBOTO_BOLD = null;	
 	public static Typeface TTF_ROBOTO_MEDIUM = null;	
