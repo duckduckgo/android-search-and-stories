@@ -4,7 +4,7 @@ We are excited to engage the community in the development of our new [apps](http
 
 ## Discuss
 
-Contact us at android@duckduckgo.com if you want to get more involed, have questions or want to chat.
+Contact us at android@duckduckgo.com if you want to get more involved, have questions or want to chat.
 
 ## Getting started
 
