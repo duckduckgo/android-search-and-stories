@@ -21,6 +21,8 @@
     <string name="PrefRecentSearch">Recent Searches</string>
     <string name="PrefRecordHistory">Save Recent</string>
     <string name="PrefClearHistory">Clear Recent</string>
+    <string name="PrefRecordCookies">Save Cookies</string>
+    <string name="PrefClearCookies">Clear Cookies</string>
     <string name="PrefSources">Change Sources</string>
     <string name="PrefResetSources">Reset Sources</string>
     <string name="PrefRegion">Region Boost</string>
@@ -38,7 +40,8 @@
     <string name="PrefAutocomplete">Autocomplete</string>
     <string name="PrefSearchResults">Search Results</string>
     <string name="PrefTurnOffAutocomplete">Disabled</string>
-    
+
+    <string name="PrefAutoUpdate">Automatic Update</string>
     <string name="PrefReadable">Readability</string>
     <string name="PrefGroupTor">Tor</string>
     <string name="PrefEnableTor">Enable Tor</string>
@@ -71,6 +74,7 @@
     
     <string name="Confirm">Confirm</string>
     <string name="ConfirmClearHistory">All search history will be deleted. Are you sure?</string>
+    <string name="ConfirmClearCookies">All the cookies will be deleted. Are you sure?</string>
     
     <string name="Default">Default</string>
     <string name="Defaults">Defaults</string>

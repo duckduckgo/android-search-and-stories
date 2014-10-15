@@ -15,6 +15,10 @@
         android:theme="@style/DDGLight"
         android:label="@string/AppName"
         android:name="DDGApplication">
+
+        <!-- change value from "beta" to "release" for public app store builds -->
+        <meta-data android:name="DDGReleaseStatus" android:value="build" />
+
         <activity
             android:name=".activity.DuckDuckGo"
             android:label="@string/AppName"
@@ -81,6 +85,8 @@
             android:configChanges="locale|orientation"
             android:theme="@android:style/Theme.Dialog"
             android:taskAffinity="" />
+
+        <activity android:name="net.hockeyapp.android.UpdateActivity" />
 		
 		<service android:name="com.duckduckgo.mobile.android.subscribers.MainSubscriber" />
 		

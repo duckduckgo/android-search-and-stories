@@ -134,6 +134,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
 import com.squareup.otto.Subscribe;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	protected final String TAG = "DuckDuckGo";
     private KeyboardService keyboardService;
@@ -647,6 +650,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         mainWebView = (DDGWebView) contentView.findViewById(R.id.mainWebView);
         mainWebView.setParentActivity(DuckDuckGo.this);
         mainWebView.getSettings().setJavaScriptEnabled(true);
+        DDGWebView.recordCookies(PreferencesManager.getRecordCookies());
         DDGNetworkConstants.setWebView(mainWebView);
         
         // get default User-Agent string for reuse later
@@ -777,6 +781,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			}
 		});
         displayHomeScreen();
+
+        checkForUpdates();
     }
 
 	private void setMainButtonHome() {
@@ -1001,6 +1007,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         else if(isLaunchedWithAssistAction()){
             keyboardService.showKeyboard(getSearchField());
         }
+
+        checkForCrashes();
 	}
 
 	@Override
@@ -1603,35 +1611,40 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	 */
 	@SuppressLint("NewApi")
 	public void keepFeedUpdated(){
-		if(torIntegration.isOrbotRunningAccordingToSettings()){
+		if(torIntegration.isOrbotRunningAccordingToSettings()) {
 			if (!DDGControlVar.hasUpdatedFeed) {
-				if(DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
+				if (DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
 					// respect user choice of empty source list: show nothing
-					BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(new ArrayList<FeedObject>(), 
+					BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(new ArrayList<FeedObject>(),
 							REQUEST_TYPE.FROM_CACHE));
-				}
-				else {				
+				} else {
 					// cache
 					CacheFeedTask cacheTask = new CacheFeedTask(this);
-				
+
 					// for HTTP request
 					mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(this);
-					
+
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-						mDuckDuckGoContainer.mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-					}
-					else {
+						if (DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
+								|| DDGControlVar.changedSources) {
+							mDuckDuckGoContainer.mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							DDGControlVar.changedSources = false;
+						}
+					} else {
 						cacheTask.execute();
-						mDuckDuckGoContainer.mainFeedTask.execute();
+						if (DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
+								|| DDGControlVar.changedSources) {
+							mDuckDuckGoContainer.mainFeedTask.execute();
+							DDGControlVar.changedSources = false;
+						}
 					}
 				}
+			} else {
+				// complete the action anyway
+				mPullRefreshFeedView.onRefreshComplete();
 			}
 		}
-		else{
-            // complete the action anyway
-            mPullRefreshFeedView.onRefreshComplete();
-        }
 	}
     
 	@Override
@@ -1665,6 +1678,18 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	public DDGAutoCompleteTextView getSearchField() {
 		return searchField;
 	}
+
+    private void checkForCrashes() {
+        if(DDGApplication.isIsReleaseBuild())
+            return;
+        CrashManager.register(this, DDGConstants.HOCKEY_APP_ID);
+    }
+
+    private void checkForUpdates() {
+        if(DDGApplication.isIsReleaseBuild())
+            return;
+        UpdateManager.register(this, DDGConstants.HOCKEY_APP_ID);
+    }
 
     @Subscribe
 	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {

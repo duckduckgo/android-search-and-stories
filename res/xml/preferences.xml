@@ -12,6 +12,10 @@
                 android:title="@string/PrefReadable"
                 android:key="readablePref"
                 android:defaultValue="true" />
+        <CheckBoxPreference
+                android:title="@string/PrefAutoUpdate"
+                android:key="autoUpdatePref"
+                android:defaultValue="true" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/PrefGroupAppFlow">
         <ListPreference
@@ -73,6 +77,14 @@
         <Preference
                 android:title="@string/PrefClearHistory"
                 android:key="clearHistoryPref"
+                android:defaultValue="" />
+        <CheckBoxPreference
+                android:title="@string/PrefRecordCookies"
+                android:key="recordCookiesPref"
+                android:defaultValue="true" />
+        <Preference
+                android:title="@string/PrefClearCookies"
+                android:key="clearCookiesPref"
                 android:defaultValue="" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/PrefGroupFeedback">

@@ -12,6 +12,7 @@ import android.util.TypedValue;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
 public class PreferencesManager {
 	
@@ -66,6 +67,10 @@ public class PreferencesManager {
 	public static boolean getRecordHistory() {
 		return DDGApplication.getSharedPreferences().getBoolean("recordHistoryPref", true);
 	}
+
+    public static boolean getRecordCookies() {
+        return DDGApplication.getSharedPreferences().getBoolean("recordCookiesPref", true);
+    }
 	
 	public static boolean getDirectQuery() {
 		return DDGApplication.getSharedPreferences().getBoolean("directQueryPref", true);
@@ -242,6 +247,12 @@ public class PreferencesManager {
         else if(key.equals("turnOffAutocompletePref")){
             DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean(key, false);
         }
+        else if(key.equals("autoUpdatePref")){
+            DDGControlVar.automaticFeedUpdate = sharedPreferences.getBoolean(key, true);
+        }
+        else if(key.equals("recordCookiesPref")){
+            DDGWebView.recordCookies(sharedPreferences.getBoolean(key, true));
+      }
     }
     
     /* Collections */
@@ -274,4 +285,14 @@ public class PreferencesManager {
     public static boolean saveUserDisallowedSources(Set<String> userSources) {
 		return DDGUtils.saveSet(DDGApplication.getSharedPreferences(), userSources, "disallowset");
 	}
+
+    public static boolean getAutomaticFeedUpdate() {
+      return DDGApplication.getSharedPreferences().getBoolean("autoUpdatePref", true);
+  }
+
+	  public static void setAutomaticFeedUpdate(boolean automaticFeedUpdate) {
+			Editor editor = DDGApplication.getSharedPreferences().edit();
+			editor.putBoolean("autoUpdatePref", automaticFeedUpdate);
+			editor.commit();
+  }
 }

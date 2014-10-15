@@ -38,6 +38,8 @@ public class SourcePreferences extends Activity implements SourcesListener {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.sources);
+
+		DDGControlVar.changedSources = true;
 		
 		SourcePreferencesContainer sourcePrefContainer = (SourcePreferencesContainer) getLastNonConfigurationInstance();
 		if(sourcePrefContainer == null){

@@ -2,7 +2,9 @@ package com.duckduckgo.mobile.android;
 
 import android.app.Application;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
@@ -49,6 +51,8 @@ public class DDGApplication extends Application {
 	private static DdgDB db = null;
 	
 	private static String DB_FOLDER_NAME = "database";
+
+    private static boolean isReleaseBuild = false;
 	
 	/**
 	 * Changes after application upgrade
@@ -72,6 +76,18 @@ public class DDGApplication extends Application {
         db = new DdgDB(this);
 		fileCache = new FileCache(this.getApplicationContext());
 		imageCache.setFileCache(fileCache);
+
+        try {
+            ApplicationInfo aInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
+            if (aInfo.metaData != null) {
+                CharSequence val = aInfo.metaData.getString("DDGReleaseStatus");
+                if(val!=null) {
+                    isReleaseBuild = val.equals("release");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 		
 		try {
 			PackageInfo pInfo;
@@ -79,7 +95,7 @@ public class DDGApplication extends Application {
 			String appVersion = pInfo.versionName;
 			int appVersionCode = pInfo.versionCode;
 			int oldVersionCode = PreferencesManager.getAppVersionCode();
-			
+
 			Log.v("APP", "oldversion: " + oldVersionCode + " new: " + appVersionCode);
 			if(oldVersionCode == 0 || oldVersionCode != appVersionCode) {				
 				// upgrade
@@ -106,7 +122,9 @@ public class DDGApplication extends Application {
 		
 		DDGControlVar.defaultSources = PreferencesManager.getDefaultSources();
 		DDGControlVar.userAllowedSources = PreferencesManager.getUserAllowedSources();
-		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();		
+		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();
+
+		DDGControlVar.automaticFeedUpdate = PreferencesManager.getAutomaticFeedUpdate();
 		
 		String strReadArticles = PreferencesManager.getReadArticles();
 		if(strReadArticles != null){
@@ -135,6 +153,10 @@ public class DDGApplication extends Application {
 	public static DdgDB getDB() {
 		return db;
 	}
+
+    public static boolean isIsReleaseBuild() {
+        return isReleaseBuild;
+    }
 	
 	// method overridden to put DB in database folder cleanable upon uninstall
 	@Override
