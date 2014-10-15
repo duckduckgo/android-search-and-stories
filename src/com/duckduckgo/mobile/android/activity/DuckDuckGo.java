@@ -650,6 +650,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         mainWebView = (DDGWebView) contentView.findViewById(R.id.mainWebView);
         mainWebView.setParentActivity(DuckDuckGo.this);
         mainWebView.getSettings().setJavaScriptEnabled(true);
+        DDGWebView.recordCookies(PreferencesManager.getRecordCookies());
         DDGNetworkConstants.setWebView(mainWebView);
         
         // get default User-Agent string for reuse later

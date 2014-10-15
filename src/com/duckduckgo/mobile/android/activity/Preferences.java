@@ -32,10 +32,12 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.TorIntegration;
+import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
 	
 	public static final int CONFIRM_CLEAR_HISTORY = 100;
+    public static final int CONFIRM_CLEAR_COOKIES = 200;
     private final TorIntegration torIntegration;
     private boolean result_hasClearedHistory = false;
     private boolean result_startOrbotCheck = false;
@@ -72,6 +74,15 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
       clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
           public boolean onPreferenceClick(Preference preference) {
               showDialog(CONFIRM_CLEAR_HISTORY);
+              return true;
+          }
+      });
+
+      Preference clearCookiesPref = findPreference("clearCookiesPref");
+      clearCookiesPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+          @Override
+          public boolean onPreferenceClick(Preference preference) {
+              showDialog(CONFIRM_CLEAR_COOKIES);
               return true;
           }
       });
@@ -179,31 +190,54 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
   public Dialog onCreateDialog(int id) {
 	  Dialog d;
 	  switch(id) {
-		  case CONFIRM_CLEAR_HISTORY:
-			  d = new AlertDialog.Builder(this)
-			  .setTitle(getResources().getString(R.string.Confirm))
-			  .setMessage(getResources().getString(R.string.ConfirmClearHistory))
-			  .setIcon(android.R.drawable.ic_dialog_alert)
-			  .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-	
-				  public void onClick(DialogInterface dialog, int whichButton) {
-					  DDGApplication.getDB().deleteHistory();
+          case CONFIRM_CLEAR_HISTORY:
+              d = new AlertDialog.Builder(this)
+              .setTitle(getResources().getString(R.string.Confirm))
+              .setMessage(getResources().getString(R.string.ConfirmClearHistory))
+              .setIcon(android.R.drawable.ic_dialog_alert)
+              .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                  public void onClick(DialogInterface dialog, int whichButton) {
+                      DDGApplication.getDB().deleteHistory();
                       result_hasClearedHistory = true;
-				  }})
-				  .setNegativeButton(android.R.string.no, new OnClickListener() {
-					
-					@SuppressWarnings("deprecation")
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						removeDialog(Preferences.CONFIRM_CLEAR_HISTORY);
-						
-					}
-				}).create();
-	
-			  break;
-		  default:
-			  d = null;
-	  }
+                  }
+              })
+              .setNegativeButton(android.R.string.no, new OnClickListener() {
+
+                  @SuppressWarnings("deprecation")
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                      removeDialog(Preferences.CONFIRM_CLEAR_HISTORY);
+
+                  }
+              }).create();
+
+              break;
+          case CONFIRM_CLEAR_COOKIES:
+              d = new AlertDialog.Builder(this)
+              .setTitle(getResources().getString(R.string.Confirm))
+              .setMessage(getResources().getString(R.string.ConfirmClearCookies))
+              .setIcon(android.R.drawable.ic_dialog_alert)
+              .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                  public void onClick(DialogInterface dialog, int whichButton) {
+                      DDGWebView.clearCookies();
+                  }
+              })
+              .setNegativeButton(android.R.string.no, new OnClickListener() {
+
+                  @SuppressWarnings("deprecation")
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                      removeDialog(Preferences.CONFIRM_CLEAR_HISTORY);
+
+                  }
+              }).create();
+
+              break;
+          default:
+              d = null;
+      }
 	  return d;
   }
   

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.View;
+import android.webkit.CookieManager;
 import android.webkit.WebBackForwardList;
 import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
@@ -13,6 +14,8 @@ import android.webkit.WebView;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
+
+import org.apache.http.cookie.Cookie;
 
 public class DDGWebView extends WebView {
 
@@ -209,5 +212,21 @@ public class DDGWebView extends WebView {
 				&& articleUrl != null
 				&& articleUrl.length() != 0;
 	}
+
+    public static void clearCookies() {
+        CookieManager.getInstance().removeAllCookie();
+    }
+
+    public static void recordCookies(boolean newState) {
+        CookieManager.getInstance().setAcceptCookie(newState);
+    }
+
+    public static boolean hasCookies() {
+        return CookieManager.getInstance().hasCookies();
+    }
+
+    public static boolean isRecordingCookies() {
+        return CookieManager.getInstance().acceptCookie();
+    }
 	
 }
