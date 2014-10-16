@@ -116,7 +116,7 @@ public class DDGApplication extends Application {
 		
 		DDGControlVar.START_SCREEN = PreferencesManager.getActiveStartScreen();
 		DDGControlVar.regionString = PreferencesManager.getRegion();
-		DDGControlVar.alwaysUseExternalBrowser = PreferencesManager.getExternalBrowser();
+        DDGControlVar.useExternalBrowser = PreferencesManager.getUseExternalBrowser();
 		DDGControlVar.fontPrevProgress = PreferencesManager.getFontPrevProgress(DDGConstants.FONT_SEEKBAR_MID);
 		DDGControlVar.fontProgress = DDGControlVar.fontPrevProgress;
 		

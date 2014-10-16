@@ -55,10 +55,10 @@ public class PreferencesManager {
 	public static boolean getEnableTor(){
 		return DDGApplication.getSharedPreferences().getBoolean("enableTor", false);
 	}
-	
-	public static boolean getExternalBrowser() {
-		return DDGApplication.getSharedPreferences().getBoolean("externalBrowserPref", false);
-	}
+
+    public static int getUseExternalBrowser() {
+        return Integer.valueOf(DDGApplication.getSharedPreferences().getString("useExternalBrowserPref", "0"));
+    }
 	
 	public static boolean getTurnOffAutocomplete() {
 		return DDGApplication.getSharedPreferences().getBoolean("turnOffAutocompletePref", false);
@@ -241,8 +241,8 @@ public class PreferencesManager {
         else if(key.equals("appSearchPref")){
             DDGControlVar.includeAppsInSearch = sharedPreferences.getBoolean(key, false);
         }
-        else if(key.equals("externalBrowserPref")){
-            DDGControlVar.alwaysUseExternalBrowser = sharedPreferences.getBoolean(key, false);
+        else if(key.equals("useExternalBrowserPref")){
+            DDGControlVar.useExternalBrowser = Integer.valueOf(sharedPreferences.getString(key, "0"));
         }
         else if(key.equals("turnOffAutocompletePref")){
             DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean(key, false);
@@ -250,9 +250,9 @@ public class PreferencesManager {
         else if(key.equals("autoUpdatePref")){
             DDGControlVar.automaticFeedUpdate = sharedPreferences.getBoolean(key, true);
         }
-        else if(key.equals("recordCookiesPref")){
+        else if(key.equals("recordCookiesPref")) {
             DDGWebView.recordCookies(sharedPreferences.getBoolean(key, true));
-      }
+        }
     }
     
     /* Collections */

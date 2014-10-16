@@ -25,10 +25,14 @@
                 android:entries="@array/startScreenArray"
                 android:entryValues="@array/startScreenValues">
         </ListPreference>
-        <CheckBoxPreference
+        <ListPreference
                 android:title="@string/PrefExternalBrowser"
-                android:key="externalBrowserPref"
-                android:defaultValue="false" />
+                android:summary="%s"
+                android:key="useExternalBrowserPref"
+                android:defaultValue="0"
+                android:entries="@array/useExternalBrowserArray"
+                android:entryValues="@array/useExternalBrowserValues">
+        </ListPreference>
         <ListPreference
                 android:title="@string/PrefTheme"
                 android:key="themePref"

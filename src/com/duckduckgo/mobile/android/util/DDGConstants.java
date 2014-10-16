@@ -22,4 +22,8 @@ public class DDGConstants {
 	public static Typeface TTF_ROBOTO_MEDIUM = null;	
 	
 	public static final int FONT_SEEKBAR_MID = 5;
+
+    public static final int ALWAYS_INTERNAL = 0;
+    public static final int EXTERNAL_EXCEPT_SEARCHES = 1;
+    public static final int ALWAYS_EXTERNAL = 2;
 }

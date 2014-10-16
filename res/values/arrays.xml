@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+<string-array name="useExternalBrowserArray">
+    <item>@string/PrefExternalBrowserNever</item>
+    <item>@string/PrefExternalBrowserExceptSearches</item>
+    <item>@string/PrefExternalBrowserAlways</item>
+</string-array>
+<string-array name="useExternalBrowserValues">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+</string-array>
 <string-array name="themeArray">
    <item>@string/PrefThemeDark</item>
    <item>@string/PrefThemeLight</item>
