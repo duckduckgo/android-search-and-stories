@@ -28,6 +28,9 @@
     <string name="PrefRegion">Region Boost</string>
     <string name="PrefDirectQuery">Search on Tap</string>
     <string name="PrefExternalBrowser">Use External Browser</string>
+    <string name="PrefExternalBrowserNever">Never</string>
+    <string name="PrefExternalBrowserExceptSearches">For non-search results</string>
+    <string name="PrefExternalBrowserAlways">Always</string>
     <string name="PrefSendFeedback">Send Feedback</string>
     <string name="PrefRate">Rate App</string>
     <string name="PrefAppSearch">Include Apps</string>

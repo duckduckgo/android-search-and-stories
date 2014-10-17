@@ -23,7 +23,7 @@ public class DDGControlVar {
 	public static boolean homeScreenShowing = true;
 	
 	public static boolean includeAppsInSearch = false;
-	public static boolean alwaysUseExternalBrowser = false;
+    public static int useExternalBrowser = DDGConstants.ALWAYS_INTERNAL;
 	public static boolean isAutocompleteActive = true;
 	public static boolean automaticFeedUpdate = true;
 	public static boolean changedSources = false;

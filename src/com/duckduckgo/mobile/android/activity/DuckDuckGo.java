@@ -1168,8 +1168,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
 		DDGApplication.getDB().insertRecentSearch(term);
 		mDuckDuckGoContainer.historyAdapter.sync();
-		
-		if(DDGControlVar.alwaysUseExternalBrowser) {
+
+		if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
 			searchExternal(term);
         	return;
 		}
@@ -1210,7 +1210,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 	
 	public void showWebUrl(String url) {
-		if(DDGControlVar.alwaysUseExternalBrowser) {
+		if(DDGControlVar.useExternalBrowser == DDGConstants.EXTERNAL_EXCEPT_SEARCHES
+                || DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 			DDGUtils.execIntentIfSafe(this, browserIntent);
         	return;
@@ -1228,7 +1229,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	public void showFeed(FeedObject feedObject) {
 		if(!savedState) {
-			if(!DDGControlVar.alwaysUseExternalBrowser
+			if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_INTERNAL
 					&& PreferencesManager.getReadable()
 					&& !mainWebView.isOriginalRequired()
 					&& feedObject.getArticleUrl().length() != 0) {

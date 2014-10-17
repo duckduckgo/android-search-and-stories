@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
@@ -69,6 +70,11 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
 
       addPreferencesFromResource(R.xml.preferences);
       getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+
+      ListPreference useExternalBrowserPref = (ListPreference) findPreference("useExternalBrowserPref");
+      if(useExternalBrowserPref.getSummary().equals("%s")) {
+          useExternalBrowserPref.setSummary("");
+      }
 
       Preference clearHistoryPref = findPreference("clearHistoryPref");
       clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
