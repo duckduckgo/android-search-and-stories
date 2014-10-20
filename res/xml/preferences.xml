@@ -27,7 +27,6 @@
         </ListPreference>
         <ListPreference
                 android:title="@string/PrefExternalBrowser"
-                android:summary="%s"
                 android:key="useExternalBrowserPref"
                 android:defaultValue="0"
                 android:entries="@array/useExternalBrowserArray"
