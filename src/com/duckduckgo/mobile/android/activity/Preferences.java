@@ -35,7 +35,7 @@ import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.TorIntegration;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
-public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener {
+public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
 	
 	public static final int CONFIRM_CLEAR_HISTORY = 100;
     public static final int CONFIRM_CLEAR_COOKIES = 200;
@@ -71,10 +71,13 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
       addPreferencesFromResource(R.xml.preferences);
       getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
+      ListPreference startScreenPref = (ListPreference) findPreference("startScreenPref");
+      startScreenPref.setSummary(startScreenPref.getEntry());
+      startScreenPref.setOnPreferenceChangeListener(this);
+
       ListPreference useExternalBrowserPref = (ListPreference) findPreference("useExternalBrowserPref");
-      if(useExternalBrowserPref.getSummary().equals("%s")) {
-          useExternalBrowserPref.setSummary("");
-      }
+      useExternalBrowserPref.setSummary(useExternalBrowserPref.getEntry());
+      useExternalBrowserPref.setOnPreferenceChangeListener(this);
 
       Preference clearHistoryPref = findPreference("clearHistoryPref");
       clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
@@ -245,6 +248,16 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
               d = null;
       }
 	  return d;
+  }
+
+  @Override
+  public boolean onPreferenceChange(Preference preference, Object newValue) {
+      if(preference instanceof ListPreference && newValue instanceof String) {
+          ListPreference listPref = (ListPreference) preference;
+          int entryIndex = Integer.valueOf((String)newValue);
+          listPref.setSummary(listPref.getEntries()[entryIndex]);
+      }
+      return true;
   }
   
   @Override
