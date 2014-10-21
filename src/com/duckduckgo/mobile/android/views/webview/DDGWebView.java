@@ -5,7 +5,6 @@ import java.util.HashSet;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebBackForwardList;
@@ -15,8 +14,6 @@ import android.webkit.WebView;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
-
-import org.apache.http.cookie.Cookie;
 
 public class DDGWebView extends WebView {
 

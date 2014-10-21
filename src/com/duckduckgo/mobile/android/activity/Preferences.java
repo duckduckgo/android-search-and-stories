@@ -28,12 +28,8 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.util.Log;
-import android.webkit.WebSettings;
-
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.TorIntegration;
@@ -268,12 +264,11 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
           case CONFIRM_CLEAR_WEB_CACHE:
               d = new AlertDialog.Builder(this)
               .setTitle(getResources().getString(R.string.Confirm))
-              .setMessage("Browser cache will be deleted. Are you sure?")
+              .setMessage(getResources().getString(R.string.ConfirmClearCacheAndCookies))
               .setIcon(android.R.drawable.ic_dialog_alert)
               .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                   public void onClick(DialogInterface dialog, int whichButton) {
-                      Log.e("aaa", "should clear cache.");
                       result_mustClearWebCache = true;
                   }
               })

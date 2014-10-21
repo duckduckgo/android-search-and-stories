@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources.Theme;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -45,7 +44,6 @@ public class PreferencesManager {
         return SCREEN.getByCode(Integer.valueOf(startScreenCode));
 	}
 
-    //aaa
     public static CLEAR_INTERVAL_TYPE getClearCacheCookiesInterval() {
         String clearIntervalCode = DDGApplication.getSharedPreferences().getString("clearCacheCookiesIntervalPref", "3");
         return CLEAR_INTERVAL_TYPE.getCodeBy(Integer.valueOf(clearIntervalCode));
@@ -261,9 +259,7 @@ public class PreferencesManager {
             DDGWebView.recordCookies(sharedPreferences.getBoolean(key, true));
         }
         else if(key.equals("clearCacheCookiesIntervalPref")){
-            //DDGControlVar.clearCacheAndCookiesInterval = Integer.valueOf(sharedPreferences.getString(key, "3"));
             DDGControlVar.CLEAR_INTERVAL = getClearCacheCookiesInterval();
-            Log.e("aaa", "new clear interval = "+DDGControlVar.CLEAR_INTERVAL);
         }
     }
     

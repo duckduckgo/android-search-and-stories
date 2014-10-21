@@ -83,6 +83,7 @@
     <string name="Confirm">Confirm</string>
     <string name="ConfirmClearHistory">All search history will be deleted. Are you sure?</string>
     <string name="ConfirmClearCookies">All the cookies will be deleted. Are you sure?</string>
+    <string name="ConfirmClearCacheAndCookies">Browser cache will be deleted. Are you sure?</string>
     
     <string name="Default">Default</string>
     <string name="Defaults">Defaults</string>
