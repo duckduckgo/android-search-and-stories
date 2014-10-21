@@ -5,6 +5,7 @@ import java.util.HashSet;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebBackForwardList;
@@ -227,6 +228,10 @@ public class DDGWebView extends WebView {
 
     public static boolean isRecordingCookies() {
         return CookieManager.getInstance().acceptCookie();
+    }
+
+    public void clearCache() {
+        clearCache(true);
     }
 	
 }

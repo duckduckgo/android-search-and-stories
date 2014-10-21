@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+<string-array name="clearCacheAndCookiesArray">
+    <item>@string/PrefClearCacheCookiesEveryLaunch</item>
+    <item>@string/PrefClearCacheCookiesWeekly</item>
+    <item>@string/PrefClearCacheCookiesMonthly</item>
+    <item>@string/PrefNever</item>
+</string-array>
+<string-array name="clearCacheAndCookiesValues">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+</string-array>
 <string-array name="useExternalBrowserArray">
-    <item>@string/PrefExternalBrowserNever</item>
+    <item>@string/PrefNever</item>
     <item>@string/PrefExternalBrowserExceptSearches</item>
     <item>@string/PrefExternalBrowserAlways</item>
 </string-array>

@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources.Theme;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -43,6 +44,12 @@ public class PreferencesManager {
         String startScreenCode = DDGApplication.getSharedPreferences().getString("startScreenPref", "0");
         return SCREEN.getByCode(Integer.valueOf(startScreenCode));
 	}
+
+    //aaa
+    public static CLEAR_INTERVAL_TYPE getClearCacheCookiesInterval() {
+        String clearIntervalCode = DDGApplication.getSharedPreferences().getString("clearCacheCookiesIntervalPref", "3");
+        return CLEAR_INTERVAL_TYPE.getCodeBy(Integer.valueOf(clearIntervalCode));
+    }
 
     public static String getRegion() {
 		return DDGApplication.getSharedPreferences().getString("regionPref", "wt-wt");
@@ -253,6 +260,11 @@ public class PreferencesManager {
         else if(key.equals("recordCookiesPref")) {
             DDGWebView.recordCookies(sharedPreferences.getBoolean(key, true));
         }
+        else if(key.equals("clearCacheCookiesIntervalPref")){
+            //DDGControlVar.clearCacheAndCookiesInterval = Integer.valueOf(sharedPreferences.getString(key, "3"));
+            DDGControlVar.CLEAR_INTERVAL = getClearCacheCookiesInterval();
+            Log.e("aaa", "new clear interval = "+DDGControlVar.CLEAR_INTERVAL);
+        }
     }
     
     /* Collections */
@@ -290,9 +302,19 @@ public class PreferencesManager {
       return DDGApplication.getSharedPreferences().getBoolean("autoUpdatePref", true);
   }
 
-	  public static void setAutomaticFeedUpdate(boolean automaticFeedUpdate) {
+	public static void setAutomaticFeedUpdate(boolean automaticFeedUpdate) {
 			Editor editor = DDGApplication.getSharedPreferences().edit();
 			editor.putBoolean("autoUpdatePref", automaticFeedUpdate);
 			editor.commit();
   }
+
+    public static void setLastClearCacheAndCookies(long currentTime) {
+        Editor editor = DDGApplication.getSharedPreferences().edit();
+        editor.putLong("lastClearCacheAndCookies", currentTime);
+        editor.commit();
+    }
+
+    public static long getLastClearCacheAndCookies() {
+        return DDGApplication.getSharedPreferences().getLong("lastClearCacheAndCookies", 0l);
+    }
 }

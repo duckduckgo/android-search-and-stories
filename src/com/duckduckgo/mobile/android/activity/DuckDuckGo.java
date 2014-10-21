@@ -33,6 +33,7 @@ import android.view.View.OnLongClickListener;
 import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
 import android.webkit.DownloadListener;
+import android.webkit.WebSettings;
 import android.webkit.WebView.HitTestResult;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -1021,6 +1022,11 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			mDuckDuckGoContainer.mainFeedTask.cancel(false);
 			mDuckDuckGoContainer.mainFeedTask = null;
 		}
+
+        if(DDGControlVar.mustClearCacheAndCookies) {
+            DDGUtils.clearCacheAndCookies(mainWebView);
+            DDGControlVar.mustClearCacheAndCookies = false;
+        }
 		
 		PreferencesManager.saveReadArticles();
 		
@@ -1511,6 +1517,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
 		if (requestCode == PREFERENCES_RESULT){
 			if (resultCode == RESULT_OK) {
+                boolean clearWebCache = data.getBooleanExtra("mustClearWebCache", false);
+                if(clearWebCache){
+                    mainWebView.clearCache();
+                }
 				boolean clearedHistory = data.getBooleanExtra("hasClearedHistory",false);
 				if(clearedHistory){
 					clearRecentSearch();

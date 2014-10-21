@@ -28,21 +28,29 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+import android.util.Log;
+import android.webkit.WebSettings;
+
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.TorIntegration;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
+import java.util.List;
+
 public class Preferences extends PreferenceActivity implements OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
 	
 	public static final int CONFIRM_CLEAR_HISTORY = 100;
     public static final int CONFIRM_CLEAR_COOKIES = 200;
+    public static final int CONFIRM_CLEAR_WEB_CACHE = 300;
     private final TorIntegration torIntegration;
     private boolean result_hasClearedHistory = false;
     private boolean result_startOrbotCheck = false;
     private boolean result_switchTheme = false;
+    private boolean result_mustClearWebCache = false;
 
     public Preferences() {
         this.torIntegration = new TorIntegration(this);
@@ -79,6 +87,10 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
       useExternalBrowserPref.setSummary(useExternalBrowserPref.getEntry());
       useExternalBrowserPref.setOnPreferenceChangeListener(this);
 
+      ListPreference clearCookiesCachePref = (ListPreference) findPreference("clearCacheCookiesIntervalPref");
+      clearCookiesCachePref.setSummary(clearCookiesCachePref.getEntry());
+      clearCookiesCachePref.setOnPreferenceChangeListener(this);
+
       Preference clearHistoryPref = findPreference("clearHistoryPref");
       clearHistoryPref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
           public boolean onPreferenceClick(Preference preference) {
@@ -92,6 +104,15 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
           @Override
           public boolean onPreferenceClick(Preference preference) {
               showDialog(CONFIRM_CLEAR_COOKIES);
+              return true;
+          }
+      });
+
+      Preference clearWebCachePref = findPreference("clearWebCachePref");
+      clearWebCachePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+          @Override
+          public boolean onPreferenceClick(Preference preference) {
+              showDialog(CONFIRM_CLEAR_WEB_CACHE);
               return true;
           }
       });
@@ -244,6 +265,28 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
               }).create();
 
               break;
+          case CONFIRM_CLEAR_WEB_CACHE:
+              d = new AlertDialog.Builder(this)
+              .setTitle(getResources().getString(R.string.Confirm))
+              .setMessage("Browser cache will be deleted. Are you sure?")
+              .setIcon(android.R.drawable.ic_dialog_alert)
+              .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                  public void onClick(DialogInterface dialog, int whichButton) {
+                      Log.e("aaa", "should clear cache.");
+                      result_mustClearWebCache = true;
+                  }
+              })
+              .setNegativeButton(android.R.string.no, new OnClickListener() {
+
+                  @SuppressWarnings("deprecation")
+                  @Override
+                  public void onClick(DialogInterface dialog, int which) {
+                      removeDialog(Preferences.CONFIRM_CLEAR_HISTORY);
+
+                  }
+              }).create();
+              break;
           default:
               d = null;
       }
@@ -263,6 +306,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
   @Override
   public void finish() {
       Intent res = new Intent();
+      res.putExtra("mustClearWebCache", result_mustClearWebCache);
       res.putExtra("startOrbotCheck", result_startOrbotCheck);
       res.putExtra("hasClearedHistory", result_hasClearedHistory);
       res.putExtra("switchTheme", result_switchTheme);
