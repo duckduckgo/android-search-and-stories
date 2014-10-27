@@ -40,6 +40,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -174,6 +175,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private LinearLayout leftStoriesButtonLayout = null;
 	private LinearLayout leftSavedButtonLayout = null;
 	private LinearLayout leftSettingsButtonLayout = null;
+
+	private RelativeLayout mainContentView;
 	
 	// font scaling
 	private LinearLayout fontSizeLayout = null;
@@ -384,8 +387,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	if(mDuckDuckGoContainer == null){
             initializeContainer();
     	}
-    	
 
+		mainContentView = (RelativeLayout) findViewById(R.id.relativeLayoutPager);
     	
         viewPager = (DDGViewPager) findViewById(R.id.mainpager);
         viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
@@ -660,7 +663,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         DDGControlVar.webViewTextSize = PreferencesManager.getWebviewFontSize();
         
         mainWebView.setWebViewClient(new DDGWebViewClient(DuckDuckGo.this));            
-        mainWebView.setWebChromeClient(new DDGWebChromeClient(DuckDuckGo.this));
+        mainWebView.setWebChromeClient(new DDGWebChromeClient(DuckDuckGo.this, mainContentView));
         
         mainWebView.setOnLongClickListener(new OnLongClickListener() {
 
@@ -1050,6 +1053,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		// close left nav if it's open
 		if(viewPager.isLeftMenuOpen()){
 			viewPager.setCurrentItem(SCREEN.SCR_STORIES.getFlipOrder());
+		}
+		else if (mainWebView.isVideoPlayingFullscreen()) {
+			mainWebView.hideCustomView();
 		}
 		else if (mDuckDuckGoContainer.webviewShowing) {
 			mainWebView.backPressAction();
