@@ -17,6 +17,7 @@ import com.duckduckgo.mobile.android.download.ImageCache;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import org.acra.ACRA;
@@ -108,7 +109,7 @@ public class DDGApplication extends Application {
 			DDGConstants.USER_AGENT = DDGConstants.USER_AGENT.replace("%version", "2+");
 		}
 		DDGNetworkConstants.initialize(this);
-		
+
 		// set Helvetica Neue Medium
 //		DDGConstants.TTF_HELVETICA_NEUE_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeue_Medium.ttf");
 		DDGConstants.TTF_ROBOTO_BOLD = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Bold.ttf");		
@@ -125,7 +126,14 @@ public class DDGApplication extends Application {
 		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();
 
 		DDGControlVar.automaticFeedUpdate = PreferencesManager.getAutomaticFeedUpdate();
-		
+        DDGControlVar.CLEAR_INTERVAL = PreferencesManager.getClearCacheCookiesInterval();
+        DDGControlVar.lastClearCacheAndCookies = PreferencesManager.getLastClearCacheAndCookies();
+        if(DDGControlVar.lastClearCacheAndCookies == 0) {
+            PreferencesManager.setLastClearCacheAndCookies(System.currentTimeMillis());
+            DDGControlVar.lastClearCacheAndCookies = PreferencesManager.getLastClearCacheAndCookies();
+        }
+        DDGControlVar.mustClearCacheAndCookies = DDGUtils.mustClearCacheAnCookies();
+
 		String strReadArticles = PreferencesManager.getReadArticles();
 		if(strReadArticles != null){
 			for(String strId : strReadArticles.split("-")){

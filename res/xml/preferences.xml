@@ -89,6 +89,16 @@
                 android:title="@string/PrefClearCookies"
                 android:key="clearCookiesPref"
                 android:defaultValue="" />
+        <Preference
+                android:title="@string/PrefClearBrowserCache"
+                android:key="clearWebCachePref"
+                android:defaultValue="" />
+        <ListPreference
+                android:title="@string/PrefClearCacheAndCookies"
+                android:key="clearCacheCookiesIntervalPref"
+                android:defaultValue="3"
+                android:entries="@array/clearCacheAndCookiesArray"
+                android:entryValues="@array/clearCacheAndCookiesValues" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/PrefGroupFeedback">
         <Preference

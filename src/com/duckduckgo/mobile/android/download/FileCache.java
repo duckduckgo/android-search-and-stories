@@ -180,6 +180,25 @@ public class FileCache {
 		}
 		
 	}
+
+    public void clearCache() {
+        if(cacheDirectory!=null && cacheDirectory.isDirectory()) {
+            deleteDir(cacheDirectory);
+        }
+    }
+
+    private boolean deleteDir(File dir) {
+        if(dir!=null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for(String child : children) {
+                boolean success = deleteDir(new File(dir, child));
+                if(!success) {
+                    return false;
+                }
+            }
+        }
+        return dir.delete();
+    }
 	
 	/**
 	 * Remove files that have become unnecessary upon migration 

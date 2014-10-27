@@ -15,8 +15,6 @@ import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 
-import org.apache.http.cookie.Cookie;
-
 public class DDGWebView extends WebView {
 
     public static final String ABOUT_BLANK = "about:blank";
@@ -227,6 +225,10 @@ public class DDGWebView extends WebView {
 
     public static boolean isRecordingCookies() {
         return CookieManager.getInstance().acceptCookie();
+    }
+
+    public void clearCache() {
+        clearCache(true);
     }
 	
 }

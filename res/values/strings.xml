@@ -23,14 +23,19 @@
     <string name="PrefClearHistory">Clear Recent</string>
     <string name="PrefRecordCookies">Save Cookies</string>
     <string name="PrefClearCookies">Clear Cookies</string>
+    <string name="PrefClearBrowserCache">Clear Browser Cache</string>
+    <string name="PrefClearCacheAndCookies">Clear Cookies and Cache</string>
     <string name="PrefSources">Change Sources</string>
     <string name="PrefResetSources">Reset Sources</string>
     <string name="PrefRegion">Region Boost</string>
     <string name="PrefDirectQuery">Search on Tap</string>
     <string name="PrefExternalBrowser">Use External Browser</string>
-    <string name="PrefExternalBrowserNever">Never</string>
+    <string name="PrefNever">Never</string>
     <string name="PrefExternalBrowserExceptSearches">For non-search results</string>
     <string name="PrefExternalBrowserAlways">Always</string>
+    <string name="PrefClearCacheCookiesEveryLaunch">Every Launch</string>
+    <string name="PrefClearCacheCookiesWeekly">Weekly</string>
+    <string name="PrefClearCacheCookiesMonthly">Monthly</string>
     <string name="PrefSendFeedback">Send Feedback</string>
     <string name="PrefRate">Rate App</string>
     <string name="PrefAppSearch">Include Apps</string>
@@ -78,6 +83,7 @@
     <string name="Confirm">Confirm</string>
     <string name="ConfirmClearHistory">All search history will be deleted. Are you sure?</string>
     <string name="ConfirmClearCookies">All the cookies will be deleted. Are you sure?</string>
+    <string name="ConfirmClearCacheAndCookies">Browser cache will be deleted. Are you sure?</string>
     
     <string name="Default">Default</string>
     <string name="Defaults">Defaults</string>

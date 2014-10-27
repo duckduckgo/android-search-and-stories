@@ -42,6 +42,7 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
+import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
 public final class DDGUtils {
 	
@@ -371,5 +372,36 @@ public final class DDGUtils {
         	Toast.makeText(context, R.string.ErrorActivityNotFound, Toast.LENGTH_SHORT).show();
         }
 	}
+
+    public static boolean mustClearCacheAnCookies() {
+        int daysInterval = 0;
+        switch (DDGControlVar.CLEAR_INTERVAL) {
+            case EVERY_LAUNCH:
+                return true;
+            case WEEKLY:
+                daysInterval = 7;
+                break;
+            case MONTHLY:
+                daysInterval = 30;
+                break;
+            case NEVER:
+            default:
+                return false;
+        }
+		long currentTime = System.currentTimeMillis();
+        long clearInterval = daysInterval * 24l * 60l * 60l * 1000l;
+        long nextClear = DDGControlVar.lastClearCacheAndCookies + clearInterval;
+        if(currentTime >= nextClear) {
+            return true;
+        }
+        return false;
+    }
+
+    public static void clearCacheAndCookies(DDGWebView ddgWebView) {
+        DDGWebView.clearCookies();
+        ddgWebView.clearCache();
+        DDGControlVar.lastClearCacheAndCookies = System.currentTimeMillis();
+        PreferencesManager.setLastClearCacheAndCookies(DDGControlVar.lastClearCacheAndCookies);
+    }
 	
 }

@@ -27,6 +27,9 @@ public class DDGControlVar {
 	public static boolean isAutocompleteActive = true;
 	public static boolean automaticFeedUpdate = true;
 	public static boolean changedSources = false;
+    public static boolean mustClearCacheAndCookies = false;
+    public static long lastClearCacheAndCookies = 0l;
+    public static CLEAR_INTERVAL_TYPE CLEAR_INTERVAL = CLEAR_INTERVAL_TYPE.NEVER;
 	
 	public static int fontProgress = DDGConstants.FONT_SEEKBAR_MID;	// over scale 0-10
 	public static int fontPrevProgress = DDGConstants.FONT_SEEKBAR_MID;	// over scale 0-10
