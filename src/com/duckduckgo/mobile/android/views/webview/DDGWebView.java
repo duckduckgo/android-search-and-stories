@@ -24,6 +24,7 @@ public class DDGWebView extends WebView {
 	private HashSet<String> readableList = new HashSet<String>();
 	
 	private DDGWebViewClient webViewClient = null;
+	private DDGWebChromeClient webChromeClient = null;
 	private DuckDuckGo activity;
 	
 	public boolean readableBackState = false;
@@ -46,6 +47,15 @@ public class DDGWebView extends WebView {
 	
 	public DDGWebViewClient getWebViewClient() {
 		return webViewClient;
+	}
+
+	public void setWebChromeClient(DDGWebChromeClient client) {
+		webChromeClient = client;
+		super.setWebChromeClient(client);
+	}
+
+	public DDGWebChromeClient getWebChromeClient() {
+		return webChromeClient;
 	}
 	
 	public void setIsReadable(boolean isReadable) {
@@ -230,5 +240,13 @@ public class DDGWebView extends WebView {
     public void clearCache() {
         clearCache(true);
     }
+
+	public void hideCustomView() {
+		webChromeClient.onHideCustomView();
+	}
+
+	public boolean isVideoPlayingFullscreen() {
+		return webChromeClient.isVideoPlayingFullscreen;
+	}
 	
 }
