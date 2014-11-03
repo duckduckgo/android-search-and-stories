@@ -103,11 +103,11 @@
     <string name="OpenInExternalBrowser">Open in External Browser</string>
     <string name="ConfirmExternalBrowser">Please Confirm</string>
     
-    <string name="ChangingFontSize">Changing Font Size...</string>
+    <string name="ChangingFontSize">Changing Font Size&#8230;</string>
 
 
     <string name="crash_toast_text">Application crashed! Crash-related data will be collected and reported upon confirmation.</string>
-    <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
+    <string name="crash_notif_ticker_text">Unexpected error, please send a report&#8230;</string>
     <string name="crash_notif_title">DuckDuckGo crash report</string>
     <string name="crash_notif_text">Please click here to help fix the issue.</string>
     <string name="crash_dialog_text">An unexpected error occurred.
@@ -122,9 +122,10 @@
     <string name="ErrorDownloadFailed">Download failed!</string>
     <string name="ErrorDownloadOpenFail">Downloaded file could not be opened!</string>
     
-    <string name="InfoReadStoriesFromCache">Connection failed! Stories retrieved from cache...</string>
+    <string name="InfoReadStoriesFromCache">Connection failed! Stories retrieved from cache&#8230;</string>
     <string name="DefaultsSetToast">Sources reset to default.</string>
-    <string name="SuggestSourceToast">To be implemented.</string>    
+    <string name="SuggestSourceToast">To be implemented.</string>
+    <string name="Loading">Loading&#8230;</string>
     
     <string name="SummaryWaterCooler">
         These sources create a stream of interesting stories you won\'t find in regular news apps.

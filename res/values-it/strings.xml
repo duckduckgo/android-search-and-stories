@@ -124,7 +124,8 @@
     
     <string name="InfoReadStoriesFromCache">Connessione fallita! Storie recuperate dalla cache&#8230;</string>
     <string name="DefaultsSetToast">Fonti predefinite ripristinate.</string>
-    <string name="SuggestSourceToast">Da implementare.</string>    
+    <string name="SuggestSourceToast">Da implementare.</string>
+    <string name="Loading">Caricando&#8230;</string>
     
     <string name="SummaryWaterCooler">
         Queste fonti creano un flusso di storie interessanti che non trovi nelle normali app di notizie.

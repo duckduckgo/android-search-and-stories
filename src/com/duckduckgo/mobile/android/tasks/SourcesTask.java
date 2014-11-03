@@ -3,6 +3,8 @@ package com.duckduckgo.mobile.android.tasks;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,6 +13,7 @@ import org.json.JSONObject;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.SourcesObject;
@@ -21,8 +24,11 @@ public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 	private static String TAG = "SourcesTask";
 	
 	private SourcesListener listener = null;
+	private ProgressDialog progressDialog = null;
+	private Context context;
 				
-	public SourcesTask(SourcesListener listener) {
+	public SourcesTask(Context context, SourcesListener listener) {
+		this.context = context;
 		this.listener = listener;
 	}
 
@@ -42,6 +48,17 @@ public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
         }
         return body;
     }
+
+	@Override
+	protected void onPreExecute() {
+		super.onPreExecute();
+		progressDialog = new ProgressDialog(context);
+		progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+		progressDialog.setIndeterminate(true);
+		progressDialog.setCancelable(true);
+		progressDialog.setMessage(context.getResources().getString(R.string.Loading));
+		progressDialog.show();
+	}
 	
 	@Override
 	protected List<SourcesObject> doInBackground(Void... arg0) {
@@ -80,6 +97,14 @@ public class SourcesTask extends AsyncTask<Void, Void, List<SourcesObject>> {
 			} else {
 				this.listener.onSourcesRetrievalFailed();
 			}
+		}
+
+		try {
+			if (progressDialog!=null && progressDialog.isShowing()) {
+				progressDialog.dismiss();
+			}
+		} catch(IllegalArgumentException e) {
+			e.printStackTrace();
 		}
 	}
 	
