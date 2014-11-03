@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">DuckDuckGo</string>
-    <string name="SearchString">Chercher sur DuckDuckGo...</string>
+    <string name="SearchString">Chercher sur DuckDuckGo&#8230;</string>
     <string name="SettingsButtonContentDescription">Paramètres</string>
     <string name="HomeButtonContentDescription">Accueil</string>
     
-    <string name="search_hint">Chercher...</string>
+    <string name="search_hint">Chercher&#8230;</string>
     
     <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Vie privée</string>
@@ -91,11 +91,11 @@
     <string name="OpenInExternalBrowser">Ouvrir dans un navigateur externe</string>
     <string name="ConfirmExternalBrowser">Veuillez confirmer</string>
     
-    <string name="ChangingFontSize">Changer la taille de la police...</string>
+    <string name="ChangingFontSize">Changer la taille de la police&#8230;</string>
 
 
     <string name="crash_toast_text">L\'application a planté ! Les données relatives à ce problème seront collectées et envoyées après confirmation.</string>
-    <string name="crash_notif_ticker_text">Erreur inattendue, vous pouvez envoyer un rapport pour que le problème soit résolu...</string>
+    <string name="crash_notif_ticker_text">Erreur inattendue, vous pouvez envoyer un rapport pour que le problème soit résolu&#8230;</string>
     <string name="crash_notif_title">Rapport de plantage DuckDuckGo</string>
     <string name="crash_notif_text">Cliquez ici pour aider à résoudre le problème.</string>
     <string name="crash_dialog_text">Une erreur inattendue s\'est produite.
@@ -110,7 +110,7 @@
     <string name="ErrorDownloadFailed">Échec du téléchargement !</string>
     <string name="ErrorDownloadOpenFail">Impossible d\'ouvrir le fichier téléchargé !</string>
     
-      <string name="InfoReadStoriesFromCache">Échec de la connexion ! Actualitées lues depuis le cache...</string>
+      <string name="InfoReadStoriesFromCache">Échec de la connexion ! Actualitées lues depuis le cache&#8230;</string>
     <string name="DefaultsSetToast">Remise à zéro des sources.</string>
     <string name="SuggestSourceToast">Bientôt disponible.</string>
     

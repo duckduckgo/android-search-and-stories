@@ -21,11 +21,21 @@
     <string name="PrefRecentSearch">Ricerche Recenti</string>
     <string name="PrefRecordHistory">Salva Recenti</string>
     <string name="PrefClearHistory">Elimina Recenti</string>
+    <string name="PrefRecordCookies">Salva Cookie</string>
+    <string name="PrefClearCookies">Elimina Cookie</string>
+    <string name="PrefClearBrowserCache">Elimina Cache Browser</string>
+    <string name="PrefClearCacheAndCookies">Elimina Cache e Cookie</string>
     <string name="PrefSources">Modifica Fonti</string>
     <string name="PrefResetSources">Ripristina Fonti</string>
     <string name="PrefRegion">Ottimizza per Regione</string>
     <string name="PrefDirectQuery">Cerca al Tocco</string>
     <string name="PrefExternalBrowser">Usa Browser Esterno</string>
+    <string name="PrefNever">Mai</string>
+    <string name="PrefExternalBrowserExceptSearches">Escluse Ricerche</string><!--aaa-->
+    <string name="PrefExternalBrowserAlways">Sempre</string>
+    <string name="PrefClearCacheCookiesEveryLaunch">Ad Ogni Avvio</string>
+    <string name="PrefClearCacheCookiesWeekly">Settimanalmente</string>
+    <string name="PrefClearCacheCookiesMonthly">Mensilmente</string>
     <string name="PrefSendFeedback">Invia Feedback</string>
     <string name="PrefRate">Valuta l\'Applicazione</string>
     <string name="PrefAppSearch">Includi le Applicazioni</string>
@@ -38,7 +48,8 @@
     <string name="PrefAutocomplete">Autocompletamento</string>
     <string name="PrefSearchResults">Risultati di Ricerca</string>
     <string name="PrefTurnOffAutocomplete">Disabilitato</string>
-    
+
+    <string name="PrefAutoUpdate">Update Automatico</string>
     <string name="PrefReadable">Leggibilità</string>
     <string name="PrefGroupTor">Tor</string>
     <string name="PrefEnableTor">Abilita Tor</string>
@@ -50,8 +61,9 @@
     <string name="ShareStory">Condividi Storia</string>
     <string name="ShareSearch">Condividi Ricerca</string>
     <string name="SharePage">Condividi Pagina</string>
-    
-    <string name="ShareFormat">%1$s %2$s via DuckDuckGo per Android</string>
+
+    <string name="RegularShareFormat">%1$s via DuckDuckGo per Android</string>
+    <string name="TwitterShareFormat">%1$s via @duckduckgo per Android</string>
     
     <string name="Yes">Sì</string>
     <string name="No">No</string>
@@ -70,6 +82,8 @@
     
     <string name="Confirm">Conferma</string>
     <string name="ConfirmClearHistory">Tutta la cronologia di ricerca verrà eliminata. Sei sicuro?</string>
+    <string name="ConfirmClearCookies">Tutti i cookie verranno eliminati. Sei sicuro?</string>
+    <string name="ConfirmClearCacheAndCookies">La cache del browser verrà eliminata. Sei sicuro?</string>
     
     <string name="Default">Predefinito</string>
     <string name="Defaults">Predefiniti</string>
@@ -165,6 +179,12 @@
     <string name="NewSources">Abbiamo aggiunto alcune nuove fonti interessanti!</string>
     <string name="NewSourcesOk">Vediamo</string>
     <string name="NewSourcesNoThx">Più tardi</string>
+
+    <string name="WorldTraveler">Giramondo (nessuna)</string>
+
+    <string name="pull_to_refresh_pull_label">Trascina giù per aggiornare</string>
+    <string name="pull_to_refresh_release_label">Rilascia per aggiornare</string>
+    <string name="pull_to_refresh_refreshing_label">Caricamento&#8230;</string>
 
     
     <!-- SSL Certificate dialogs -->

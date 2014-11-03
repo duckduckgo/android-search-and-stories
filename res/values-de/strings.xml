@@ -5,7 +5,7 @@
     <string name="SettingsButtonContentDescription">Einstellungen</string>
     <string name="HomeButtonContentDescription">Hauptansicht</string>
     
-    <string name="search_hint">Suchen...</string>
+    <string name="search_hint">Suchen&#8230;</string>
     
     <string name="PrefGroupAppFlow">Anwendung</string>
     <string name="PrefGroupPrivacy">Privatsphäre</string>
@@ -90,11 +90,11 @@
     <string name="OpenInExternalBrowser">In externem Browser öffnen</string>
     <string name="ConfirmExternalBrowser">Bitte bestätigen</string>
     
-    <string name="ChangingFontSize">Schriftgröße wird geändert...</string>
+    <string name="ChangingFontSize">Schriftgröße wird geändert&#8230;</string>
 
 
     <string name="crash_toast_text">Anwendung abgestürzt! Absturzbezogene Daten werden gesammelt und nach Bestätigung gesendet.</string>
-    <string name="crash_notif_ticker_text">Unerwarteter Fehler, bitte senden Sie einen Bericht...</string>
+    <string name="crash_notif_ticker_text">Unerwarteter Fehler, bitte senden Sie einen Bericht&#8230;</string>
     <string name="crash_notif_title">DuckDuckGo-Absturzbericht</string>
     <string name="crash_notif_text">Bitte hier klicken, um bei der Fehlerbehebung zu helfen.</string>
     <string name="crash_dialog_text">Ein unerwarteter Fehler ist aufgetreten.
@@ -109,7 +109,7 @@
     <string name="ErrorDownloadFailed">Herunterladen fehlgeschlagen!</string>
     <string name="ErrorDownloadOpenFail">Heruntergeladene Datei konnte nicht geöffnet werden!</string>
     
-    <string name="InfoReadStoriesFromCache">Verbindung fehlgeschlagen! Geschichten aus dem Zwischenspeicher abgerufen...</string>
+    <string name="InfoReadStoriesFromCache">Verbindung fehlgeschlagen! Geschichten aus dem Zwischenspeicher abgerufen&#8230;</string>
     <string name="DefaultsSetToast">Quellen auf Vorgabe zurückgesetzt.</string>
     <string name="SuggestSourceToast">Zu implementieren.</string>    
     

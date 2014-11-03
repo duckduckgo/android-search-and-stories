@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">DuckDuckGo</string>
-    <string name="SearchString">Search DuckDuckGo...</string>
+    <string name="SearchString">Search DuckDuckGo&#8230;</string>
     <string name="SettingsButtonContentDescription">Settings</string>
     <string name="HomeButtonContentDescription">Home</string>
     
-    <string name="search_hint">Search...</string>
+    <string name="search_hint">Search&#8230;</string>
     
     <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Privacy</string>
@@ -179,6 +179,12 @@
     <string name="NewSources">We\'ve added some cool new story sources!</string>
     <string name="NewSourcesOk">Show me</string>
     <string name="NewSourcesNoThx">Later</string>
+
+    <string name="WorldTraveler">World Traveler (none)</string>
+
+    <string name="pull_to_refresh_pull_label">Pull down to refresh</string>
+    <string name="pull_to_refresh_release_label">Release to refresh</string>
+    <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
 
     
     <!-- SSL Certificate dialogs -->
