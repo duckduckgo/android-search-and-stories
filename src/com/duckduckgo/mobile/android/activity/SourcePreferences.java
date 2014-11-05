@@ -112,7 +112,7 @@ public class SourcePreferences extends Activity implements SourcesListener {
 	protected void onResume() {
 		super.onResume();
 		
-		sourcesTask = new SourcesTask(this);
+		sourcesTask = new SourcesTask(this, this);
 		sourcesTask.execute();
 	}
 
@@ -125,7 +125,7 @@ public class SourcePreferences extends Activity implements SourcesListener {
 		//If the sourcesTask is null, we are currently paused
 		//Otherwise, we can try again
 		if (sourcesTask != null) {
-			sourcesTask = new SourcesTask(this);
+			sourcesTask = new SourcesTask(this, this);
 			sourcesTask.execute();
 		}
 	}

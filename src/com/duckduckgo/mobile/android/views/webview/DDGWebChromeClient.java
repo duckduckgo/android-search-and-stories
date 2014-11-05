@@ -54,7 +54,6 @@ public class DDGWebChromeClient extends WebChromeClient {
 			callback.onCustomViewHidden();
 			return;
 		}
-		lockScreenOrientation();
 		contentView.setVisibility(View.GONE);
 		customViewContainer = new FrameLayout(activity);
 		customViewContainer.setLayoutParams(layoutParams);
@@ -73,7 +72,6 @@ public class DDGWebChromeClient extends WebChromeClient {
 		if (customViewContainer==null) {
 			return;
 		} else {
-			unlockScreenOrientaton();
 			if (customView!=null) {
 				customView.setVisibility(View.GONE);
 				customViewContainer.removeView(customView);
@@ -89,6 +87,7 @@ public class DDGWebChromeClient extends WebChromeClient {
 	public boolean isVideoPLayingFullscreen() {
 		return isVideoPlayingFullscreen;
 	}
+
 
 	private void lockScreenOrientation() {
 		activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">DuckDuckGo</string>
-    <string name="SearchString">Search DuckDuckGo...</string>
+    <string name="SearchString">Search DuckDuckGo&#8230;</string>
     <string name="SettingsButtonContentDescription">Settings</string>
     <string name="HomeButtonContentDescription">Home</string>
     
-    <string name="search_hint">Search...</string>
+    <string name="search_hint">Search&#8230;</string>
     
     <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Privacy</string>
@@ -103,11 +103,11 @@
     <string name="OpenInExternalBrowser">Open in External Browser</string>
     <string name="ConfirmExternalBrowser">Please Confirm</string>
     
-    <string name="ChangingFontSize">Changing Font Size...</string>
+    <string name="ChangingFontSize">Changing Font Size&#8230;</string>
 
 
     <string name="crash_toast_text">Application crashed! Crash-related data will be collected and reported upon confirmation.</string>
-    <string name="crash_notif_ticker_text">Unexpected error, please send a report...</string>
+    <string name="crash_notif_ticker_text">Unexpected error, please send a report&#8230;</string>
     <string name="crash_notif_title">DuckDuckGo crash report</string>
     <string name="crash_notif_text">Please click here to help fix the issue.</string>
     <string name="crash_dialog_text">An unexpected error occurred.
@@ -122,9 +122,10 @@
     <string name="ErrorDownloadFailed">Download failed!</string>
     <string name="ErrorDownloadOpenFail">Downloaded file could not be opened!</string>
     
-    <string name="InfoReadStoriesFromCache">Connection failed! Stories retrieved from cache...</string>
+    <string name="InfoReadStoriesFromCache">Connection failed! Stories retrieved from cache&#8230;</string>
     <string name="DefaultsSetToast">Sources reset to default.</string>
-    <string name="SuggestSourceToast">To be implemented.</string>    
+    <string name="SuggestSourceToast">To be implemented.</string>
+    <string name="Loading">Loading&#8230;</string>
     
     <string name="SummaryWaterCooler">
         These sources create a stream of interesting stories you won\'t find in regular news apps.
@@ -179,6 +180,12 @@
     <string name="NewSources">We\'ve added some cool new story sources!</string>
     <string name="NewSourcesOk">Show me</string>
     <string name="NewSourcesNoThx">Later</string>
+
+    <string name="WorldTraveler">World Traveler (none)</string>
+
+    <string name="pull_to_refresh_pull_label">Pull down to refresh</string>
+    <string name="pull_to_refresh_release_label">Release to refresh</string>
+    <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
 
     
     <!-- SSL Certificate dialogs -->

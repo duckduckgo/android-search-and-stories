@@ -83,6 +83,14 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
       useExternalBrowserPref.setSummary(useExternalBrowserPref.getEntry());
       useExternalBrowserPref.setOnPreferenceChangeListener(this);
 
+	  ListPreference themePref = (ListPreference) findPreference("themePref");
+	  themePref.setSummary(themePref.getEntry());
+	  themePref.setOnPreferenceChangeListener(this);
+
+	  ListPreference regionPref = (ListPreference) findPreference("regionPref");
+	  regionPref.setSummary(regionPref.getEntry());
+	  regionPref.setOnPreferenceChangeListener(this);
+
       ListPreference clearCookiesCachePref = (ListPreference) findPreference("clearCacheCookiesIntervalPref");
       clearCookiesCachePref.setSummary(clearCookiesCachePref.getEntry());
       clearCookiesCachePref.setOnPreferenceChangeListener(this);
