@@ -135,8 +135,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
 import com.squareup.otto.Subscribe;
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
+//import net.hockeyapp.android.CrashManager;
+//import net.hockeyapp.android.UpdateManager;
 
 public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	protected final String TAG = "DuckDuckGo";
@@ -1698,13 +1698,13 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     private void checkForCrashes() {
         if(DDGApplication.isIsReleaseBuild())
             return;
-        CrashManager.register(this, DDGConstants.HOCKEY_APP_ID);
+        //CrashManager.register(this, DDGConstants.HOCKEY_APP_ID);
     }
 
     private void checkForUpdates() {
         if(DDGApplication.isIsReleaseBuild())
             return;
-        UpdateManager.register(this, DDGConstants.HOCKEY_APP_ID);
+        //UpdateManager.register(this, DDGConstants.HOCKEY_APP_ID);
     }
 
     @Subscribe
