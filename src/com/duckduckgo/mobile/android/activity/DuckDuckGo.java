@@ -21,7 +21,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.widget.DrawerLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateUtils;
@@ -41,7 +40,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -51,7 +49,6 @@ import android.widget.Toast;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
-import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
@@ -110,7 +107,6 @@ import com.duckduckgo.mobile.android.util.AppStateManager;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.DDGViewPager;
 import com.duckduckgo.mobile.android.util.DisplayStats;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
@@ -120,6 +116,7 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegration;
+import com.duckduckgo.mobile.android.views.DDGDrawerLayout;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
@@ -153,9 +150,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private HistoryListView leftRecentView = null;
 	
 	public PullToRefreshMainFeedListView mPullRefreshFeedView = null;
-	
-	//private DDGViewPager viewPager;
-	private DrawerLayout drawer;
+
+	private DDGDrawerLayout drawer;
 	private View contentView = null;
 	private View leftMenuView = null;
 	
@@ -178,7 +174,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private LinearLayout leftSavedButtonLayout = null;
 	private LinearLayout leftSettingsButtonLayout = null;
 
-	private RelativeLayout mainContentView;
+	private View mainContentView;
 	
 	// font scaling
 	private LinearLayout fontSizeLayout = null;
@@ -303,7 +299,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
      * Also disables dispatching of touch events from viewPager to children views
      */
     private void addWelcomeScreen() {
-		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+		drawer.lockDrawer();
     	
     	if(!getResources().getBoolean(R.bool.welcomeScreen_allowLandscape)){
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -329,7 +325,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     private void removeWelcomeScreen() {
     	welcomeScreenLayout.setVisibility(View.GONE);
 
-		drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+		drawer.unlockDrawer();
 		PreferencesManager.setWelcomeShown();
     	// remove welcome screen
 		FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
@@ -391,25 +387,18 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             initializeContainer();
     	}
 
-		mainContentView = (RelativeLayout) findViewById(R.id.activityContainer);
+		mainContentView = (View) findViewById(R.id.activityContainer);
 
-		drawer = (DrawerLayout) findViewById(R.id.mainDrawer);
+		drawer = (DDGDrawerLayout) findViewById(R.id.mainDrawer);
 
+		leftMenuView = (View) findViewById(R.id.left_drawer);
+		contentView = (View) findViewById(R.id.mainView);
+		drawer.setViews(contentView, leftMenuView);
 
         if(!PreferencesManager.isWelcomeShown()) {
             addWelcomeScreen();
             shouldShowBangButtonExplanation = true;
     	}
-
-		leftMenuView = (View) findViewById(R.id.left_drawer);
-		contentView = (View) findViewById(R.id.mainView);
-
-		int width = getResources().getDisplayMetrics().widthPixels;
-		DrawerLayout.LayoutParams params = (DrawerLayout.LayoutParams) leftMenuView.getLayoutParams();
-		float newWidth = width * 0.806f;
-		params.width = (int) newWidth;
-		leftMenuView.setLayoutParams(params);
-
 
 		// XXX Step 2: Setup TabHost
 		initialiseTabHost();
@@ -812,8 +801,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
     private void initializeContainer() {
         mDuckDuckGoContainer = new DuckDuckGoContainer();
-
-        mDuckDuckGoContainer.pageAdapter = new DDGPagerAdapter(this);
 
         mDuckDuckGoContainer.webviewShowing = false;
 

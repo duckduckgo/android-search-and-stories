@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-<android.support.v4.widget.DrawerLayout
+<com.duckduckgo.mobile.android.views.DDGDrawerLayout
     android:id="@+id/mainDrawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -14,5 +14,5 @@
 
     <include android:id="@+id/left_drawer" layout="@layout/left_layout" />
 
-</android.support.v4.widget.DrawerLayout>
+</com.duckduckgo.mobile.android.views.DDGDrawerLayout>
 </RelativeLayout>
