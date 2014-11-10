@@ -56,7 +56,9 @@ public class DDGViewPager extends ViewPager {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent event) {
         if (this.enabled) {
-            return super.onInterceptTouchEvent(event);
+			if((getCurrentItem()==1 && event.getX()<=100) || getCurrentItem()==0) {
+				return super.onInterceptTouchEvent(event);
+			}
         }
  
         return false;
