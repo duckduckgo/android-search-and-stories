@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
+    android:layout_width="240dp"
     android:layout_height="fill_parent"
+    android:layout_gravity="start"
     android:id="@+id/LeftRelativeLayout">
 
 <LinearLayout

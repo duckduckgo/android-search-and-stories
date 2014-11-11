@@ -40,7 +40,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
@@ -50,7 +49,6 @@ import android.widget.Toast;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
-import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
@@ -109,7 +107,6 @@ import com.duckduckgo.mobile.android.util.AppStateManager;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.DDGViewPager;
 import com.duckduckgo.mobile.android.util.DisplayStats;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
@@ -119,6 +116,7 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegration;
+import com.duckduckgo.mobile.android.views.DDGDrawerLayout;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
@@ -135,8 +133,8 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
 import com.squareup.otto.Subscribe;
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
+//import net.hockeyapp.android.CrashManager;
+//import net.hockeyapp.android.UpdateManager;
 
 public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	protected final String TAG = "DuckDuckGo";
@@ -152,8 +150,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private HistoryListView leftRecentView = null;
 	
 	public PullToRefreshMainFeedListView mPullRefreshFeedView = null;
-	
-	private DDGViewPager viewPager;
+
+	private DDGDrawerLayout drawer;
 	private View contentView = null;
 	private View leftMenuView = null;
 	
@@ -176,7 +174,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private LinearLayout leftSavedButtonLayout = null;
 	private LinearLayout leftSettingsButtonLayout = null;
 
-	private RelativeLayout mainContentView;
+	private View mainContentView;
 	
 	// font scaling
 	private LinearLayout fontSizeLayout = null;
@@ -301,7 +299,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
      * Also disables dispatching of touch events from viewPager to children views
      */
     private void addWelcomeScreen() {
-    	viewPager.setDispatchTouch(false);
+		drawer.lockDrawer();
     	
     	if(!getResources().getBoolean(R.bool.welcomeScreen_allowLandscape)){
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -313,7 +311,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         rootLayout.addView(welcomeScreenLayout);
     	welcomeScreenLayout.setOnCloseListener(new OnClickListener() {
 			@Override
-			public void onClick(View v) {		
+			public void onClick(View v) {
 				removeWelcomeScreen();
 				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 			}
@@ -325,8 +323,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
      * Also enables dispatching of touch events from viewPager
      */
     private void removeWelcomeScreen() {
-    	welcomeScreenLayout.setVisibility(View.GONE);	
-		viewPager.setDispatchTouch(true);					
+    	welcomeScreenLayout.setVisibility(View.GONE);
+
+		drawer.unlockDrawer();
 		PreferencesManager.setWelcomeShown();
     	// remove welcome screen
 		FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
@@ -373,7 +372,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
 		PreferencesManager.setFontDefaultsFromTheme(this);
         		        
-        setContentView(R.layout.pager);       
+        setContentView(R.layout.drawer);
         
         DDGUtils.displayStats = new DisplayStats(this);        
         
@@ -388,21 +387,19 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             initializeContainer();
     	}
 
-		mainContentView = (RelativeLayout) findViewById(R.id.relativeLayoutPager);
-    	
-        viewPager = (DDGViewPager) findViewById(R.id.mainpager);
-        viewPager.setAdapter(mDuckDuckGoContainer.pageAdapter);
-        viewPager.hideMenu();
+		mainContentView = (View) findViewById(R.id.activityContainer);
 
+		drawer = (DDGDrawerLayout) findViewById(R.id.mainDrawer);
+
+		leftMenuView = (View) findViewById(R.id.left_drawer);
+		contentView = (View) findViewById(R.id.mainView);
+		drawer.setViews(contentView, leftMenuView);
 
         if(!PreferencesManager.isWelcomeShown()) {
             addWelcomeScreen();
             shouldShowBangButtonExplanation = true;
     	}
-        
-        leftMenuView = mDuckDuckGoContainer.pageAdapter.getPageView(0);
-        contentView = mDuckDuckGoContainer.pageAdapter.getPageView(1);    
-        
+
 		// XXX Step 2: Setup TabHost
 		initialiseTabHost();
 		if (savedInstanceState != null) {
@@ -474,7 +471,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			
 			@Override
 			public void onClick(View v) {
-				viewPager.switchPage();		
+				//viewPager.switchPage();
+				if(drawer.isDrawerOpen(leftMenuView)) {
+					drawer.closeDrawer(leftMenuView);
+				}
 				displaySettings();
 			}
 		});
@@ -520,9 +520,12 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			@Override
 			public void onClick(View v) {
 				// close left n	av if it's open
-				if(viewPager.isLeftMenuOpen()){
+				/*if(viewPager.isLeftMenuOpen()){
                     viewPager.hideMenu();
-                }
+                }*/ //aaa
+				if(drawer.isDrawerOpen(leftMenuView)) {
+					drawer.closeDrawer(leftMenuView);
+				}
 				showBangButton(true);
 			}
 		});
@@ -799,8 +802,6 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     private void initializeContainer() {
         mDuckDuckGoContainer = new DuckDuckGoContainer();
 
-        mDuckDuckGoContainer.pageAdapter = new DDGPagerAdapter(this);
-
         mDuckDuckGoContainer.webviewShowing = false;
 
         mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
@@ -1051,8 +1052,8 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Override
 	public void onBackPressed() {
 		// close left nav if it's open
-		if(viewPager.isLeftMenuOpen()){
-			viewPager.setCurrentItem(SCREEN.SCR_STORIES.getFlipOrder());
+		if(drawer.isDrawerOpen(leftMenuView)) {
+			drawer.closeDrawer(leftMenuView);
 		}
 		else if (mainWebView.isVideoPlayingFullscreen()) {
 			mainWebView.hideCustomView();
@@ -1437,21 +1438,21 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			handleLeftHomeTextViewClick();
 		}
 		else if(view.equals(leftStoriesTextView)){
-			viewPager.switchPage();		
+			drawer.closeDrawer(leftMenuView);
 			displayScreen(SCREEN.SCR_STORIES, false);
 		}
 		else if(view.equals(leftSavedTextView)){
-			viewPager.switchPage();		
+			drawer.closeDrawer(leftMenuView);
 			displayScreen(SCREEN.SCR_SAVED_FEED, false);
 		}
 		else if(view.equals(leftSettingsTextView)){
-			viewPager.switchPage();
+			drawer.closeDrawer(leftMenuView);
             displaySettings();
 		}
 	}
 
 	private void handleLeftHomeTextViewClick() {
-		viewPager.switchPage();
+		drawer.closeDrawer(leftMenuView);
 					
 		if (mDuckDuckGoContainer.webviewShowing) {
 
@@ -1469,7 +1470,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
         keyboardService.hideKeyboard(getSearchField());
 		
 		if(DDGControlVar.homeScreenShowing){
-			viewPager.switchPage();
+			drawer.openDrawer(leftMenuView);
 		}
 		else {
 			// going home
@@ -1676,7 +1677,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if ( keyCode == KeyEvent.KEYCODE_MENU ) {
-	    	viewPager.switchPage();
+			drawer.closeDrawer(leftMenuView);
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
@@ -1698,13 +1699,13 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     private void checkForCrashes() {
         if(DDGApplication.isIsReleaseBuild())
             return;
-        CrashManager.register(this, DDGConstants.HOCKEY_APP_ID);
+        //CrashManager.register(this, DDGConstants.HOCKEY_APP_ID);
     }
 
     private void checkForUpdates() {
         if(DDGApplication.isIsReleaseBuild())
             return;
-        UpdateManager.register(this, DDGConstants.HOCKEY_APP_ID);
+        //UpdateManager.register(this, DDGConstants.HOCKEY_APP_ID);
     }
 
     @Subscribe
@@ -1850,9 +1851,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	@Subscribe
 	public void onFeedItemSelected(FeedItemSelectedEvent event) {
 		// close left nav if it's open
-		if(viewPager.isLeftMenuOpen()){
-            viewPager.hideMenu();
-        }
+		if(drawer.isDrawerOpen(leftMenuView)) {
+			drawer.closeDrawer(leftMenuView);
+		}
 		feedItemSelected(event.feedObject);
 	}
 	
@@ -1868,9 +1869,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	
 	@Subscribe
 	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
-		if(viewPager.isLeftMenuOpen()){
-            viewPager.hideMenu();
-        }
+		if(drawer.isDrawerOpen(leftMenuView)) {
+			drawer.closeDrawer(leftMenuView);
+		}
         keyboardService.hideKeyboard(getSearchField());
 		showHistoryObject(event.historyObject);
 	}
@@ -1898,20 +1899,20 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
 	@Subscribe
 	public void onRecentSearchPaste(RecentSearchPasteEvent event) {
-        viewPager.hideMenu();
+		drawer.closeDrawer(leftMenuView);
         getSearchField().pasteQuery(event.query);
         keyboardService.showKeyboard(getSearchField());
 	}
 
     @Subscribe
 	public void onSuggestionPaste(SuggestionPasteEvent event) {
-        viewPager.hideMenu();
+		drawer.closeDrawer(leftMenuView);
         getSearchField().pasteQuery(event.query);
 	}
 	
 	@Subscribe
 	public void onSavedSearchPaste(SavedSearchPasteEvent event) {
-        viewPager.hideMenu();
+		drawer.closeDrawer(leftMenuView);
         getSearchField().pasteQuery(event.query);
         keyboardService.showKeyboard(getSearchField());
 	}

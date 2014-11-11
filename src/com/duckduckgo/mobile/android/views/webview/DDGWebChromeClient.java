@@ -16,14 +16,14 @@ public class DDGWebChromeClient extends WebChromeClient {
 	FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
 			FrameLayout.LayoutParams.MATCH_PARENT,
 			FrameLayout.LayoutParams.MATCH_PARENT);
-	RelativeLayout contentView;
+	View contentView;
 	View customView = null;
 	FrameLayout customViewContainer;
 	CustomViewCallback customViewCallback;
 
 	public boolean isVideoPlayingFullscreen = false;
 
-	public DDGWebChromeClient(DuckDuckGo activity, RelativeLayout contentView) {
+	public DDGWebChromeClient(DuckDuckGo activity, View contentView) {
 		this.activity = activity;
 		this.contentView = contentView;
 	}
