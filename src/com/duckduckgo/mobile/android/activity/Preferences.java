@@ -28,6 +28,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
+
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -300,8 +301,11 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
   public boolean onPreferenceChange(Preference preference, Object newValue) {
       if(preference instanceof ListPreference && newValue instanceof String) {
           ListPreference listPref = (ListPreference) preference;
-          int entryIndex = Integer.valueOf((String)newValue);
-          listPref.setSummary(listPref.getEntries()[entryIndex]);
+          for(int i=0; i<listPref.getEntries().length; i++) {
+              if(newValue.equals(listPref.getEntryValues()[i])) {
+                  listPref.setSummary(listPref.getEntries()[i]);
+              }
+          }
       }
       return true;
   }
