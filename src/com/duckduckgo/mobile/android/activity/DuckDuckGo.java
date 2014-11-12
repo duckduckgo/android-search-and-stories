@@ -1000,6 +1000,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			searchWebTerm(query);
 		}
 		else if(intent.getBooleanExtra("widget", false)) {
+            if(!getSearchField().getText().toString().equals("")) {
+                clearSearchBar();
+            }
 			viewFlipper.setDisplayedChild(DDGControlVar.START_SCREEN.getFlipOrder());
             keyboardService.showKeyboard(getSearchField());
 		}

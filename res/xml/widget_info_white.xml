@@ -3,6 +3,8 @@
     android:minWidth="250dp"
     android:minHeight="40dp"
     android:initialLayout="@layout/widget_white"
+    android:initialKeyguardLayout="@layout/widget_white"
     android:previewImage="@drawable/widget_white"
+    android:widgetCategory="keyguard|home_screen"
     android:resizeMode="none"
 />

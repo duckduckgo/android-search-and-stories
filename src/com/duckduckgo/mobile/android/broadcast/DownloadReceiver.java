@@ -106,7 +106,7 @@ public class DownloadReceiver extends BroadcastReceiver {
 		}
 
 		// if download failed somehow, skip content viewing intent
-		if(uri == null)
+		if(uri == null || mimeType == null)
 			return;
 
 		String downPath = null;
