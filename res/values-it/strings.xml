@@ -121,6 +121,8 @@
     <string name="ErrorActivityNotFound">Nessuna attività correlata trovata!</string>
     <string name="ErrorDownloadFailed">Scaricamento fallito!</string>
     <string name="ErrorDownloadOpenFail">Impossibile aprire il file scaricato!</string>
+
+    <string name="ToastSchemeNotSupported">Impossibile scaricare il file</string>
     
     <string name="InfoReadStoriesFromCache">Connessione fallita! Storie recuperate dalla cache&#8230;</string>
     <string name="DefaultsSetToast">Fonti predefinite ripristinate.</string>
