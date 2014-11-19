@@ -33,6 +33,14 @@ public class ContentDownloader {
 		String extension = decideExtension(mimeType);
 		String fileName = "down." + extension;
 
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            if(url.startsWith("https")) {
+                //download scheme not supported yet
+                Toast.makeText(duckDuckGoActivity, R.string.ToastSchemeNotSupported, Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 			Uri uri = Uri.parse(url);
 			DownloadManager.Request request = new DownloadManager.Request(uri);

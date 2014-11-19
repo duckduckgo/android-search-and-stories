@@ -58,13 +58,14 @@ public class DDGWebViewClient extends WebViewClient {
 				return false;
 			}
 			else if(!(url.startsWith("http:") || url.startsWith("https:"))) {
-				// custom handling, there can be a related app
+                // custom handling, there can be a related app
 				Intent customIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 				DDGUtils.execIntentIfSafe(activity, customIntent);
 				return true;
 			}
 			else {
 				clickedAnchorAction((DDGWebView) view);
+                ((DDGWebView)view).setUserAgentString(url);
 			}
 		}
 		return false;
@@ -93,8 +94,7 @@ public class DDGWebViewClient extends WebViewClient {
 
 		// Omnibar like behavior.
 		if (url.contains("duckduckgo.com")) {
-			view.getSettings().setUserAgentString(DDGConstants.USER_AGENT);
-			
+
 	        view.getSettings().setSupportZoom(true);
 	        view.getSettings().setDefaultZoom(WebSettings.ZoomDensity.MEDIUM);
 	        view.getSettings().setBuiltInZoomControls(false);
@@ -150,10 +150,10 @@ public class DDGWebViewClient extends WebViewClient {
 			}
 		} else {
 			//This isn't duckduck go...
-			view.getSettings().setUserAgentString(activity.mWebViewDefaultUA);
+			//view.getSettings().setUserAgentString(activity.mWebViewDefaultUA);//not needed anymore
 			// This is a bit strange, but necessary to load Twitter in the app
 			//TODO: Figure out a better way, it has something to do with JS with errors
-			if (url.contains("twitter.com")) {
+			if (url.contains("twitter.com") && Build.VERSION.SDK_INT <= Build.VERSION_CODES.KITKAT) {
 				view.getSettings().setUserAgentString(DDGConstants.USER_AGENT);
 			}
 			
