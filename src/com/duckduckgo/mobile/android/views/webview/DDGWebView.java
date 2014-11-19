@@ -13,6 +13,7 @@ import android.webkit.WebView;
 
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DDGWebView extends WebView {
@@ -101,6 +102,20 @@ public class DDGWebView extends WebView {
 	    catch (Exception e) {}
 	    this.resumeTimers();
 	}
+
+    public void setUserAgentString(String url) {
+        if(url.contains("duckduckgo.com")) {
+            getSettings().setUserAgentString(DDGConstants.USER_AGENT);
+        } else {
+            getSettings().setUserAgentString(activity.mWebViewDefaultUA);
+        }
+    }
+
+    @Override
+    public void loadUrl(String url) {
+        setUserAgentString(url);
+        super.loadUrl(url);
+    }
 	
 	@Override
 	public WebBackForwardList saveState(Bundle outState) {
@@ -184,8 +199,8 @@ public class DDGWebView extends WebView {
 	public void backPressAction() {		
 		WebBackForwardList history = copyBackForwardList();
 		int lastIndex = history.getCurrentIndex();
-		
-		if(lastIndex > 0) {
+
+        if(lastIndex > 0) {
 			WebHistoryItem prevItem = history.getItemAtIndex(lastIndex-1);
 			
 			if(prevItem != null) {
