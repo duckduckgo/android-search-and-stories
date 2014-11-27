@@ -19,6 +19,8 @@ import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.squareup.otto.Subscribe;
 
 public class SavedResultTabFragment extends ListFragment {
+
+	public static final String TAG = "saved_result_tab_fragment";
 	SavedSearchListView savedSearchView;
 	SavedResultCursorAdapter savedSearchAdapter;
 	

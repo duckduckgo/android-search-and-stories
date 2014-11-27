@@ -5,12 +5,14 @@ import java.net.URL;
 import java.net.URLDecoder;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.MailTo;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
@@ -19,29 +21,37 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.SSLCertificateDialog;
+import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarAddClearTextDrawable;
+import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarClearEvent;
+import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetTextEvent;
 import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 
 public class DDGWebViewClient extends WebViewClient {
 	private boolean mLoaded = false;
 	
-	DuckDuckGo activity;
+	Activity activity;
+	boolean log = false;
 	
-	public DDGWebViewClient(DuckDuckGo activity) {
+	public DDGWebViewClient(Activity activity, boolean log) {
 		this.activity = activity;
-
+		this.log = log;
 	}
 	 	
 	private void clickedAnchorAction(DDGWebView view) {
-		activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
+		DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
 	        	        	        	
 	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
 		// Log.i(TAG, "shouldOverrideUrl  " + url);
+		if(log)
+		Log.e("aaa", "should override url: "+url);
 		
-		if(!activity.savedState && mLoaded) {			
+		if(!((DuckDuckGo)activity).savedState && mLoaded) {
 			// handle mailto: and tel: links with native apps
 			if(url.startsWith("mailto:")){
                 MailTo mt = MailTo.parse(url);
@@ -74,8 +84,11 @@ public class DDGWebViewClient extends WebViewClient {
 	@SuppressLint("NewApi")
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
+		if(log)
+		Log.e("aaa", "on page started: "+url);
         if(url.equals(DDGWebView.ABOUT_BLANK)){
-            activity.clearSearchBar();
+            //activity.clearSearchBar();//to delete
+			BusProvider.getInstance().post(new SearchBarClearEvent());
             return;
         }
 		mLoaded = false;
@@ -88,8 +101,8 @@ public class DDGWebViewClient extends WebViewClient {
 			return;
 		}
 				        		
-		if(url.equals(activity.mDuckDuckGoContainer.lastFeedUrl)) {
-			activity.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
+		if(url.equals(DDGControlVar.mDuckDuckGoContainer.lastFeedUrl)) {
+			DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
 		}
 
 		// Omnibar like behavior.
@@ -131,22 +144,22 @@ public class DDGWebViewClient extends WebViewClient {
     						text = text.substring(0, text.indexOf("&"));
     					}
     					String realText = URLDecoder.decode(text);
-    					activity.setSearchBarText(realText);
+    					setSearchBarText(realText);
 					}
 					else if(path != null && !path.equals("/")){
     					String text = path.substring(path.lastIndexOf("/") + 1).replace("_", " ");
-    					activity.setSearchBarText(text);
+    					setSearchBarText(text);
     				}
 					else {
-						activity.setSearchBarText(url);
+						setSearchBarText(url);
 					}
 				}
 				else {
-					activity.setSearchBarText(url);
+					setSearchBarText(url);
 				}
 			} else {
 				//Just in case...
-				activity.setSearchBarText(url);
+				setSearchBarText(url);
 			}
 		} else {
 			//This isn't duckduck go...
@@ -168,22 +181,26 @@ public class DDGWebViewClient extends WebViewClient {
     	        view.getSettings().setEnableSmoothTransition(true);
     	        view.getSettings().setDisplayZoomControls(false);
 	        }
-            activity.setSearchBarText(url);
+            setSearchBarText(url);
 		}
 	}
 	
 	public void onPageFinished (WebView view, String url) {
 		super.onPageFinished(view, url);
+		if(log)
+		Log.e("aaa", "on page finished: "+url);
 		
 		mLoaded = true;
 		
-		activity.mCleanSearchBar = false;
+		//((DuckDuckGo)activity).mCleanSearchBar = false;//aaa to cahnge
+		DDGControlVar.mCleanSearchBar = false;
 		
 		if(view.getVisibility() != View.VISIBLE) {
 			return;
 		}
 		
-		activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.searchFieldDrawable);
+		//((DuckDuckGo)activity).getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable);//aaa
+		BusProvider.getInstance().post(new SearchBarAddClearTextDrawable());
 		
 //		// This makes a little (X) to clear the search bar.
 //		mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
@@ -199,12 +216,12 @@ public class DDGWebViewClient extends WebViewClient {
 			}
 			else {
 				wv.shouldClearHistory = true;
-				wv.readableAction(activity.currentFeedObject);
+				wv.readableAction(DDGControlVar.currentFeedObject);
 			}
 		}
 		else if(wv.loadingReadableBack) {
 			wv.loadingReadableBack = false;
-			wv.readableAction(activity.currentFeedObject);
+			wv.readableAction(DDGControlVar.currentFeedObject);
 		}				
 		
 		if(wv.shouldClearHistory) {
@@ -231,6 +248,10 @@ public class DDGWebViewClient extends WebViewClient {
 			return;
 		}
 		super.onReceivedSslError(view, handler, error);
+	}
+
+	private void setSearchBarText(String text) {
+		BusProvider.getInstance().post(new SearchBarSetTextEvent(text));
 	}
 
 }

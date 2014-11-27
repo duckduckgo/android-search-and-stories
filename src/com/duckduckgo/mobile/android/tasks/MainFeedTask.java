@@ -27,6 +27,7 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
+import com.duckduckgo.mobile.android.views.MainFeedListView;
 
 public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 
@@ -36,11 +37,12 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	private FileCache fileCache = null;
 	
 	DuckDuckGo activity;
+	private MainFeedListView feedListView;
 	
 	private boolean requestFailed = false;
 	
-	public MainFeedTask(DuckDuckGo activity) {
-		this.activity = activity;
+	public MainFeedTask(MainFeedListView feedListView) {
+		this.feedListView = feedListView;
 		this.cache = DDGApplication.getImageCache();
 		this.fileCache = DDGApplication.getFileCache();
 	}
@@ -139,7 +141,8 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		
 		if(!DDGControlVar.isDefaultsChecked) {
 			Set<SourceInfoPair> sourceInfoPairs = initializeSources();
-			new SourceIconsTask(activity.mPullRefreshFeedView.getRefreshableView(), sourceInfoPairs).execute();
+			//new SourceIconsTask(activity.mPullRefreshFeedView.getRefreshableView(), sourceInfoPairs).execute();//aaa
+			new SourceIconsTask(feedListView, sourceInfoPairs).execute();
 			DDGControlVar.isDefaultsChecked = true;
 		}
 		

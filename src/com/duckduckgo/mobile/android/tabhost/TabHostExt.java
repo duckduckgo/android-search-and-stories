@@ -28,13 +28,13 @@ public class TabHostExt extends FragmentTabHost {
     }
     
     public void addDefaultTabs(){
-		addDefaultTab(getResources().getString(R.string.SavedSearches), SavedResultTabFragment.class);
-		addDefaultTab(getResources().getString(R.string.SavedStories), SavedFeedTabFragment.class);
+		addDefaultTab(SavedResultTabFragment.TAG, getResources().getString(R.string.SavedSearches), SavedResultTabFragment.class);
+		addDefaultTab(SavedFeedTabFragment.TAG, getResources().getString(R.string.SavedStories), SavedFeedTabFragment.class);
     }
     
-	private void addDefaultTab(String label, Class<?> intentClass) {
+	private void addDefaultTab(String tag, String label, Class<?> intentClass) {
 		Intent intent = new Intent(getContext(), intentClass);
-		TabHostExt.TabSpec spec = (TabHostExt.TabSpec) newTabSpec(label);
+		TabHostExt.TabSpec spec = (TabHostExt.TabSpec) newTabSpec(tag);
 
 		View tabIndicator = LayoutInflater.from(getContext()).inflate(R.layout.tab_indicator, getTabWidget(), false);
 		TextView title = (TextView) tabIndicator.findViewById(R.id.title);

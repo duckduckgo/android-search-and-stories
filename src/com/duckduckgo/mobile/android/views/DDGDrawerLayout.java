@@ -12,9 +12,6 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.activity.KeyboardService;
 
-/**
- * Created by fgei on 11/10/14.
- */
 public class DDGDrawerLayout extends DrawerLayout implements DrawerLayout.DrawerListener{
 
 	private final DuckDuckGo context;

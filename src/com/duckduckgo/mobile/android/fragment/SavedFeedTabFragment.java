@@ -21,6 +21,7 @@ import com.squareup.otto.Subscribe;
 
 
 public class SavedFeedTabFragment extends ListFragment {
+	public static final String TAG = "saved_feed_tab_fragment";
 	MainFeedListView savedFeedView;
 	SavedFeedCursorAdapter savedFeedAdapter;	
 	

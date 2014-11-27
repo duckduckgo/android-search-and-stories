@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.net.Uri;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.RequestKeepFeedUpdatedEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 
@@ -25,7 +27,8 @@ public final class FeedRequestFailureDialogBuilder extends AlertDialog.Builder{
         setNegativeButton(R.string.Retry, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 DDGControlVar.hasUpdatedFeed = false;
-                context.keepFeedUpdated();
+                //context.keepFeedUpdated();//aaa event
+				BusProvider.getInstance().post(new RequestKeepFeedUpdatedEvent());
             }
         });
 	}

@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.views.webview;
 
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 import android.content.pm.ActivityInfo;
 import android.view.View;
@@ -37,12 +38,12 @@ public class DDGWebChromeClient extends WebChromeClient {
 		}
 		
 		if(newProgress == 100){
-			activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.searchFieldDrawable);        			
+			activity.getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable);
 		}
 		else {
-			if(!activity.mCleanSearchBar) {
-				activity.mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
-				activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.progressDrawable);
+			if(!DDGControlVar.mCleanSearchBar) {
+				DDGControlVar.mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
+				activity.getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.progressDrawable);
 			}
 		}
 

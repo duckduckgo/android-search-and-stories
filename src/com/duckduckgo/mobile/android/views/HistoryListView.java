@@ -69,7 +69,7 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 			BusProvider.getInstance().post(new HistoryItemLongClickEvent(obj));
 		}
 		
-		return false;
+		return true;
 	}
 	
 	/**
