@@ -10,7 +10,7 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
 public class AppStateManager {
 	public static  void saveAppState(SharedPreferences prefs, DuckDuckGoContainer duckDuckGoContainer,
-			DDGWebView webView, FeedObject currentFeedObject) {
+			FeedObject currentFeedObject) {
 		Editor editor = prefs.edit();
 		editor.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
 		editor.putBoolean("webviewShowing", duckDuckGoContainer.webviewShowing);
@@ -24,7 +24,7 @@ public class AppStateManager {
 	}
 	
 	public static void saveAppState(Bundle bundle, DuckDuckGoContainer duckDuckGoContainer,
-			DDGWebView webView, FeedObject currentFeedObject) {
+			FeedObject currentFeedObject) {
 		bundle.putBoolean("homeScreenShowing", DDGControlVar.homeScreenShowing);
 		bundle.putBoolean("webviewShowing", duckDuckGoContainer.webviewShowing);
 		bundle.putInt("currentScreen", duckDuckGoContainer.currentScreen.ordinal());
@@ -36,7 +36,7 @@ public class AppStateManager {
 	}
 	
 	public static void recoverAppState(Object state, DuckDuckGoContainer duckDuckGoContainer,
-			DDGWebView webView, FeedObject currentFeedObject) {
+			FeedObject currentFeedObject) {
 		Bundle bundle = null; 
 		SharedPreferences prefs = null; 
 		

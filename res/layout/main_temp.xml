@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <com.duckduckgo.mobile.android.views.DDGDrawerLayout
+        android:id="@+id/mainDrawer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/mainView"
+            android:background="?attr/leftLayoutRootBackground"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <include android:id="@+id/searchBar" layout="@layout/searchbar" />
+
+            <FrameLayout
+                android:id="@+id/fragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/searchBar"/>
+
+            <View
+                android:id="@+id/dropshadow_top"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/searchBar"
+                android:background="?attr/topDropShadow"/>
+
+        </RelativeLayout>
+
+        <fragment
+            android:id="@+id/drawerFragment"
+            android:name="com.duckduckgo.mobile.android.fragment.DrawerFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start" />
+
+    </com.duckduckgo.mobile.android.views.DDGDrawerLayout>
+
+    <include android:id="@+id/fontSeekLayout" layout="@layout/font_seekbar" />
+
+</RelativeLayout>

@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.fragment;
 import android.database.sqlite.SQLiteCursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ public class SavedFeedTabFragment extends ListFragment {
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedfeed, container, false);
-		setRetainInstance(true);
+		//setRetainInstance(true);
 		BusProvider.getInstance().register(this);
 		return fragmentLayout;
 	}

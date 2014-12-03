@@ -24,8 +24,8 @@ public class DuckDuckGoContainer {
 	
 	public MultiHistoryAdapter historyAdapter = null;
 	
-	public MainFeedAdapter feedAdapter = null;
-	public MainFeedTask mainFeedTask = null;
+	//public MainFeedAdapter feedAdapter = null;
+	//public MainFeedTask mainFeedTask = null;
 	
 	public AutoCompleteResultsAdapter acAdapter = null;
 }

@@ -26,6 +26,7 @@ import com.duckduckgo.mobile.android.dialogs.SSLCertificateDialog;
 import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarAddClearTextDrawable;
 import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarClearEvent;
 import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetTextEvent;
+import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -34,12 +35,10 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 public class DDGWebViewClient extends WebViewClient {
 	private boolean mLoaded = false;
 	
-	Activity activity;
-	boolean log = false;
+	WebFragment fragment;
 	
-	public DDGWebViewClient(Activity activity, boolean log) {
-		this.activity = activity;
-		this.log = log;
+	public DDGWebViewClient(WebFragment fragment) {
+		this.fragment = fragment;
 	}
 	 	
 	private void clickedAnchorAction(DDGWebView view) {
@@ -48,20 +47,18 @@ public class DDGWebViewClient extends WebViewClient {
 	        	        	        	
 	public boolean shouldOverrideUrlLoading(WebView view, String url) { 
 		// Log.i(TAG, "shouldOverrideUrl  " + url);
-		if(log)
-		Log.e("aaa", "should override url: "+url);
 		
-		if(!((DuckDuckGo)activity).savedState && mLoaded) {
+		if(!fragment.getSavedState() && mLoaded) {
 			// handle mailto: and tel: links with native apps
 			if(url.startsWith("mailto:")){
                 MailTo mt = MailTo.parse(url);
                 Intent i = DDGUtils.newEmailIntent(mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
-                activity.startActivity(i);
+                fragment.startActivity(i);
                 return true;
             }
 			else if(url.startsWith("tel:")){
                 Intent i = DDGUtils.newTelIntent(url);
-                activity.startActivity(i);
+                fragment.startActivity(i);
                 return true;
 			}
 			else if(url.startsWith("file:///android_asset/webkit/")){
@@ -70,7 +67,7 @@ public class DDGWebViewClient extends WebViewClient {
 			else if(!(url.startsWith("http:") || url.startsWith("https:"))) {
                 // custom handling, there can be a related app
 				Intent customIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-				DDGUtils.execIntentIfSafe(activity, customIntent);
+				DDGUtils.execIntentIfSafe(fragment.getActivity(), customIntent);
 				return true;
 			}
 			else {
@@ -84,8 +81,6 @@ public class DDGWebViewClient extends WebViewClient {
 	@SuppressLint("NewApi")
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
-		if(log)
-		Log.e("aaa", "on page started: "+url);
         if(url.equals(DDGWebView.ABOUT_BLANK)){
             //activity.clearSearchBar();//to delete
 			BusProvider.getInstance().post(new SearchBarClearEvent());
@@ -187,8 +182,6 @@ public class DDGWebViewClient extends WebViewClient {
 	
 	public void onPageFinished (WebView view, String url) {
 		super.onPageFinished(view, url);
-		if(log)
-		Log.e("aaa", "on page finished: "+url);
 		
 		mLoaded = true;
 		

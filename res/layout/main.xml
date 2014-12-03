@@ -20,7 +20,7 @@
     <!-- Main View Area -->
     <RelativeLayout android:layout_width="fill_parent"
         		    android:layout_height="0dip"
-        		    android:layout_weight="0"
+        		    android:layout_weight="1"
         		    android:background="?attr/leftLayoutRootBackground"	 
         		    android:id="@+id/mainViewArea">
         		    
@@ -61,9 +61,9 @@
         <include android:id="@+id/recentSearchLayout" layout="@layout/recentsearch" />
         
         <include android:id="@+id/duckModeLayout" layout="@layout/duckmode" />      
-            
+
         <include android:id="@android:id/tabhost" layout="@layout/tab_saved_view" />
-        
+
     </com.duckduckgo.mobile.android.widgets.SafeViewFlipper>
 
         
@@ -77,12 +77,5 @@
         android:background="?attr/topDropShadow"/>
         
     </RelativeLayout>
-    
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="?attr/leftLayoutRootBackground"/>
         		  
 </LinearLayout>

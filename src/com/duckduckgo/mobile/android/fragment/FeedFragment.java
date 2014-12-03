@@ -15,16 +15,21 @@ import android.view.ViewGroup;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.RequestKeepFeedUpdatedEvent;
 import com.duckduckgo.mobile.android.events.RequestOpenWebPageEvent;
+import com.duckduckgo.mobile.android.events.RequestSyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedCleanImageTaskEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveErrorEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
+import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeCancelScalingEvent;
+import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeOnProgressChangedEvent;
+import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuCloseEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
@@ -34,6 +39,7 @@ import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
 import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
@@ -47,6 +53,10 @@ public class FeedFragment extends Fragment {
 
 	private MainFeedListView feedView = null;
 	private PullToRefreshMainFeedListView mPullRefreshFeedView = null;
+	private View fragmentView;
+
+	private MainFeedAdapter feedAdapter = null;
+	private MainFeedTask mainFeedTask = null;
 
 	// for keeping filter source at same position
 	public String m_objectId = null;
@@ -67,23 +77,38 @@ public class FeedFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_feed, container, false);
+		fragmentView =  inflater.inflate(R.layout.fragment_feed, container, false);
+		return fragmentView;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		setRetainInstance(true);
 		init();
 	}
 
 	@Override
 	public void onResume() {
 		super.onResume();
+		// lock button etc. can cause MainFeedTask results to be useless for the Activity
+		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
+		// ensure we refresh in such cases
+
 		keepFeedUpdated();
 	}
 
+	@Override
+	public void onPause() {
+		super.onPause();
+		if (mainFeedTask != null) {
+			mainFeedTask.cancel(false);
+			mainFeedTask = null;
+		}
+	}
+
 	public void init() {
-		mPullRefreshFeedView = (PullToRefreshMainFeedListView) getView().findViewById(R.id.mainFeedItems);//feed fragment
+		mPullRefreshFeedView = (PullToRefreshMainFeedListView) fragmentView.findViewById(R.id.mainFeedItems);
 		PreferencesManager.setPtrHeaderFontDefaults(mPullRefreshFeedView.getHeaderTextSize(), mPullRefreshFeedView.getHeaderSubTextSize());
 		DDGControlVar.ptrHeaderSize = PreferencesManager.getPtrHeaderTextSize();
 		DDGControlVar.ptrSubHeaderSize = PreferencesManager.getPtrHeaderSubTextSize();
@@ -110,12 +135,12 @@ public class FeedFragment extends Fragment {
 		});
 
 		SourceClickListener sourceClickListener = new SourceClickListener();
-		DDGControlVar.mDuckDuckGoContainer.feedAdapter = new MainFeedAdapter(getActivity(), sourceClickListener);
+		feedAdapter = new MainFeedAdapter(getActivity(), sourceClickListener);
 
-		DDGControlVar.mDuckDuckGoContainer.mainFeedTask = null;
+		mainFeedTask = null;
 
 		feedView = mPullRefreshFeedView.getRefreshableView();
-		feedView.setAdapter(DDGControlVar.mDuckDuckGoContainer.feedAdapter);
+		feedView.setAdapter(feedAdapter);
 
 	}
 
@@ -157,14 +182,14 @@ public class FeedFragment extends Fragment {
 		if (url != null) {
 			if(!DDGApplication.getDB().existsVisibleFeedById(feedObject.getId())) {
 				DDGApplication.getDB().insertFeedItem(feedObject);
-				((DuckDuckGo)getActivity()).syncAdapters();//aaa todo change to event
+				BusProvider.getInstance().post(new RequestSyncAdaptersEvent());
+
 			}
-			//((DuckDuckGo)getActivity()).searchOrGoToUrl(url, SESSIONTYPE.SESSION_FEED);//aaa todo change to event
 			BusProvider.getInstance().post(new RequestOpenWebPageEvent(url, SESSIONTYPE.SESSION_FEED));
 		}
 
 		if(ReadArticlesManager.addReadArticle(feedObject)){
-			DDGControlVar.mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
+			feedAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -174,32 +199,12 @@ public class FeedFragment extends Fragment {
 	}
 
 	/**
-	 * save feed by object or by the feed id
-	 *
-	 * @param feedObject
-	 * @param pageFeedId
-	 */
-	public void itemSaveFeed(FeedObject feedObject, String pageFeedId) {//feed fragment
-		if(feedObject != null) {
-			if(DDGApplication.getDB().existsAllFeedById(feedObject.getId())) {
-				DDGApplication.getDB().makeItemVisible(feedObject.getId());
-			}
-			else {
-				DDGApplication.getDB().insertVisible(feedObject);
-			}
-		}
-		else if(pageFeedId != null && pageFeedId.length() != 0){
-			DDGApplication.getDB().makeItemVisible(pageFeedId);
-		}
-	}
-
-	/**
 	 * Cancels source filter applied with source icon click from feed item
 	 */
-	public void cancelSourceFilter() {//feed fragment
+	public void cancelSourceFilter() {
 		DDGControlVar.targetSource = null;
-		DDGControlVar.mDuckDuckGoContainer.feedAdapter.unmark();
 		DDGControlVar.hasUpdatedFeed = false;
+		feedAdapter.unmark();
 		keepFeedUpdated();
 	}
 
@@ -207,8 +212,8 @@ public class FeedFragment extends Fragment {
 	 * Refresh feed if it's not marked as updated
 	 */
 	@SuppressLint("NewApi")
-	public void keepFeedUpdated(){//feed fragment
-		//if(torIntegration.isOrbotRunningAccordingToSettings()) { //todo
+	public void keepFeedUpdated(){
+		if(TorIntegrationProvider.getInstance(getActivity()).isOrbotRunningAccordingToSettings()) {
 			if (!DDGControlVar.hasUpdatedFeed) {
 				if (DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
 					// respect user choice of empty source list: show nothing
@@ -216,23 +221,23 @@ public class FeedFragment extends Fragment {
 							REQUEST_TYPE.FROM_CACHE));
 				} else {
 					// cache
-					CacheFeedTask cacheTask = new CacheFeedTask((DuckDuckGo)getActivity());//todo change the context
+					CacheFeedTask cacheTask = new CacheFeedTask(getActivity());
 
 					// for HTTP request
-					DDGControlVar.mDuckDuckGoContainer.mainFeedTask = new MainFeedTask(feedView);
+					mainFeedTask = new MainFeedTask(feedView);
 
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						if (DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
 								|| DDGControlVar.changedSources) {
-							DDGControlVar.mDuckDuckGoContainer.mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+							mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							DDGControlVar.changedSources = false;
 						}
 					} else {
 						cacheTask.execute();
 						if (DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
 								|| DDGControlVar.changedSources) {
-							DDGControlVar.mDuckDuckGoContainer.mainFeedTask.execute();
+							mainFeedTask.execute();
 							DDGControlVar.changedSources = false;
 						}
 					}
@@ -241,20 +246,19 @@ public class FeedFragment extends Fragment {
 				// complete the action anyway
 				mPullRefreshFeedView.onRefreshComplete();
 			}
-		//}
+		}
 	}
 
 	@Subscribe
-	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {//feed fragment
-		Log.e("aaa", "fragment on feed retrieve success event");
+	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {
 		if(event.requestType == REQUEST_TYPE.FROM_NETWORK) {
-			synchronized(DDGControlVar.mDuckDuckGoContainer.feedAdapter) {
-				DDGControlVar.mDuckDuckGoContainer.feedAdapter.clear();
+			synchronized(feedAdapter) {
+				feedAdapter.clear();
 			}
 		}
 
-		DDGControlVar.mDuckDuckGoContainer.feedAdapter.addData(event.feed);
-		DDGControlVar.mDuckDuckGoContainer.feedAdapter.notifyDataSetChanged();
+		feedAdapter.addData(event.feed);
+		feedAdapter.notifyDataSetChanged();
 
 		// update pull-to-refresh header to reflect task completion
 		mPullRefreshFeedView.onRefreshComplete();
@@ -266,28 +270,37 @@ public class FeedFragment extends Fragment {
 			int nPos = feedView.getSelectionPosById(m_objectId);
 			feedView.setSelectionFromTop(nPos,m_yOffset);
 			// mark for blink animation (as a visual cue after list update)
-			DDGControlVar.mDuckDuckGoContainer.feedAdapter.mark(m_objectId);
+			feedAdapter.mark(m_objectId);
 		}
 
 	}
 
 	@Subscribe
-	public void onFeedRetrieveErrorEvent(FeedRetrieveErrorEvent event) {//feed fragment
-		Log.e("aaa", "fragment on feed retrieve error event");
-		if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && DDGControlVar.mDuckDuckGoContainer.mainFeedTask != null) {
-			new FeedRequestFailureDialogBuilder((DuckDuckGo)getActivity()).show();//todo change context
+	public void onFeedRetrieveErrorEvent(FeedRetrieveErrorEvent event) {
+		if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mainFeedTask != null) {
+			new FeedRequestFailureDialogBuilder(getActivity()).show();
 		}
 
 	}
 
+	/**
+	 * Handling both MainFeedItemSelectedEvent and SavedFeedItemSelectedEvent.
+	 * (modify to handle independently when necessary)
+	 * @param event
+	 */
 	@Subscribe
-	public void onReadabilityFeedRetrieveSuccessEvent(ReadabilityFeedRetrieveSuccessEvent event) {//feed fragment
-		Log.e("aaa", "fragment on readability feed retrieve success event");
-		if(event.feed.size() != 0) {
-			DDGControlVar.currentFeedObject = event.feed.get(0);
-			DDGControlVar.mDuckDuckGoContainer.lastFeedUrl = DDGControlVar.currentFeedObject.getUrl();
-			//mainWebView.readableAction(DDGControlVar.currentFeedObject);//todo event
+	public void onFeedItemSelected(FeedItemSelectedEvent event) {
+		BusProvider.getInstance().post(new LeftMenuCloseEvent());
+		if(event.feedObject==null) {
+			feedItemSelected(event.feedId);
+		} else {
+			feedItemSelected(event.feedObject);
 		}
+	}
+
+	@Subscribe
+	public void onFeedCancelSourceFilterEvent(FeedCancelSourceFilterEvent event) {
+		cancelSourceFilter();
 	}
 
 	@Subscribe
@@ -295,5 +308,32 @@ public class FeedFragment extends Fragment {
 		keepFeedUpdated();
 	}
 
+	@Subscribe
+	public void onFeedCleanImageTaskEvent(FeedCleanImageTaskEvent event) {
+		feedView.cleanImageTasks();
+	}
+
+	@Subscribe
+	public void onFontSizeOnProgressChangedEvent(FontSizeOnProgressChangedEvent event) {
+		feedAdapter.notifyDataSetInvalidated();
+		// adjust Pull-to-Refresh
+		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
+		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
+		// set Loading... font
+		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
+		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
+	}
+
+	@Subscribe
+	public void onFontSizeCancelScalingEvent(FontSizeCancelScalingEvent event) {
+		feedAdapter.notifyDataSetInvalidated();
+
+		mPullRefreshFeedView.setHeaderTextSize(PreferencesManager.getPtrHeaderTextSize());
+		mPullRefreshFeedView.setHeaderSubTextSize(PreferencesManager.getPtrHeaderSubTextSize());
+
+		// set Loading... font
+		mPullRefreshFeedView.setLoadingTextSize(PreferencesManager.getPtrHeaderTextSize());
+		mPullRefreshFeedView.setLoadingSubTextSize(PreferencesManager.getPtrHeaderSubTextSize());
+	}
 
 }

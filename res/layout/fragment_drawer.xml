@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/LeftRelativeLayout">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/LeftMainLayout"
+        style="@style/LeftLayoutRoot">
+
+
+        <LinearLayout
+            style="@style/LeftItemRoot"
+            android:id="@+id/LeftHomeButtonLayout">
+
+            <ImageView style="@style/LeftDivTop" />
+
+            <TextView
+                style="@style/LeftItemText"
+                android:id="@+id/LeftHomeTextView"
+                android:drawableLeft="?attr/leftDrawableHome"
+                android:text="@string/HomeButtonContentDescription" />
+
+            <ImageView style="@style/LeftDivBottom" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            style="@style/LeftItemRoot"
+            android:visibility="gone"
+            android:id="@+id/LeftStoriesButtonLayout">
+
+            <ImageView style="@style/LeftDivTop" />
+
+            <TextView
+                style="@style/LeftItemText"
+                android:id="@+id/LeftStoriesTextView"
+                android:drawableLeft="@android:drawable/ic_menu_rotate"
+                android:text="@string/LeftStories" />
+
+            <ImageView style="@style/LeftDivBottom" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LeftItemRoot"
+            android:id="@+id/LeftSavedButtonLayout">
+
+            <ImageView style="@style/LeftDivTop" />
+
+            <TextView
+                style="@style/LeftItemText"
+                android:id="@+id/LeftSavedTextView"
+                android:drawableLeft="?attr/leftDrawableSaved"
+                android:text="@string/LeftSaved" />
+
+            <ImageView style="@style/LeftDivBottom" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/LeftItemRoot"
+            android:id="@+id/LeftSettingsButtonLayout">
+
+            <ImageView style="@style/LeftDivTop" />
+
+            <TextView
+                style="@style/LeftItemText"
+                android:id="@+id/LeftSettingsTextView"
+                android:drawableLeft="?attr/leftDrawableSettings"
+                android:text="@string/LeftSettings" />
+
+            <ImageView style="@style/LeftDivBottom" />
+
+        </LinearLayout>
+
+        <com.duckduckgo.mobile.android.views.HistoryListView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:cacheColorHint="@android:color/transparent"
+            style="@style/LeftRecentListView"
+            android:id="@+id/LeftRecentView" />
+
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/dropshadow"
+        android:layout_width="15dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:background="?attr/leftDropShadow"/>
+
+
+</RelativeLayout>

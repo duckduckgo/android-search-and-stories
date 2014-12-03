@@ -16,7 +16,8 @@ public class RecentSearchFragment extends Fragment {
 	public static final String TAG = "recent_search_fragment";
 
 	private HistoryListView recentSearchView = null;
-/*
+	private View fragmentView;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -28,10 +29,11 @@ public class RecentSearchFragment extends Fragment {
 		super.onDestroy();
 		BusProvider.getInstance().unregister(this);
 	}
-*/
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_recent_search, container, false);
+		fragmentView = inflater.inflate(R.layout.fragment_recent_search, container, false);
+		return fragmentView;
 	}
 
 	@Override
@@ -41,8 +43,9 @@ public class RecentSearchFragment extends Fragment {
 	}
 
 	public void init() {
-		recentSearchView = (HistoryListView) getView().findViewById(R.id.recentSearchItems);
+		recentSearchView = (HistoryListView) fragmentView.findViewById(R.id.recentSearchItems);
 		recentSearchView.setDivider(null);
 		recentSearchView.setAdapter(DDGControlVar.mDuckDuckGoContainer.historyAdapter.getRecentSearchAdapter());
 	}
+
 }

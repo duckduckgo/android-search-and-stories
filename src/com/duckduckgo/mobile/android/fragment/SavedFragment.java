@@ -2,6 +2,8 @@ package com.duckduckgo.mobile.android.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,25 +18,45 @@ public class SavedFragment extends Fragment {
 
 	private TabHostExt savedTabHost = null;
 
+	private View fragmentView;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		BusProvider.getInstance().register(this);
 	}
 
 	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		BusProvider.getInstance().unregister(this);
+	}
+
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.fragment_saved, container, false);
+		setRetainInstance(true);
+		fragmentView = inflater.inflate(R.layout.fragment_saved, container, false);
+		init();
+		return fragmentView;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		init();
+		if(savedInstanceState!=null) {
+			savedTabHost.setCurrentTabByTag(savedInstanceState.getString("tag"));
+		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("tag", savedTabHost.getCurrentTabTag());
 	}
 
 	public void init() {
-		savedTabHost = (TabHostExt) getView().findViewById(android.R.id.tabhost);
+		savedTabHost= (TabHostExt) fragmentView.findViewById(R.id.savedTabHost);
 		savedTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
 		savedTabHost.addDefaultTabs();
 	}

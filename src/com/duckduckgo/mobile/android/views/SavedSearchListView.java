@@ -34,7 +34,7 @@ public class SavedSearchListView extends ListView implements android.widget.Adap
 			BusProvider.getInstance().post(new SavedSearchItemLongClickEvent(query));
 		}
 		
-		return false;
+		return true;
 	}
 
 }
