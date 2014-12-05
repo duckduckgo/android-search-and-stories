@@ -746,7 +746,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			BusProvider.getInstance().post(new WebViewClearCacheAndCookiesEvent());
             DDGControlVar.mustClearCacheAndCookies = false;
         }
-		
+
 		PreferencesManager.saveReadArticles();
 		
 		// XXX keep these for low memory conditions
@@ -857,6 +857,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		displayFeedCore();
 		clearLeftSelect();
 
+		if(feedFragment==null) {
+			feedFragment = new FeedFragment();
+		}
 		if(!feedFragment.isVisible()) {
 			changeFragment(feedFragment, FeedFragment.TAG);
 		}
@@ -883,8 +886,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
 		clearLeftSelect();
 
+		savedFragment = new SavedFragment();
+
 		if(!savedFragment.isVisible()) {
-			savedFragment = new SavedFragment();
 			changeFragment(savedFragment, SavedFragment.TAG);
 		}
     	    	
@@ -911,6 +915,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		
 		clearLeftSelect();
 
+		if(recentSearchFragment==null) {
+			recentSearchFragment = new RecentSearchFragment();
+		}
+
 		if(!recentSearchFragment.isVisible()) {
 			changeFragment(recentSearchFragment, RecentSearchFragment.TAG);
 		}
@@ -936,6 +944,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     	DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
 		
 		clearLeftSelect();
+
+		if(duckModeFragment==null) {
+			duckModeFragment = new DuckModeFragment();
+		}
 
 		if(!duckModeFragment.isVisible()) {
 			changeFragment(duckModeFragment, DuckModeFragment.TAG);
@@ -966,8 +978,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		if (!DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
 			shareButton.setVisibility(View.VISIBLE);
 
+			webFragment = new WebFragment();
+
 			if(!webFragment.isVisible()) {
-				webFragment = new WebFragment();
 				changeFragment(webFragment, WebFragment.TAG);
 
 				DDGControlVar.mDuckDuckGoContainer.prevScreen = DDGControlVar.mDuckDuckGoContainer.currentScreen;
@@ -988,11 +1001,14 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			transaction.hide(currentFragment);
 			transaction.add(fragmentContainer.getId(), newFragment, newTag);
 		} else if(newFragment==feedFragment) {
-			if(newFragment.isAdded()) {
+			if(feedFragment.isAdded() ||
+					(fragmentManager.findFragmentByTag(FeedFragment.TAG)!=null
+							&& fragmentManager.findFragmentByTag(FeedFragment.TAG).isAdded())) {//reference is when actvity get destroyed and recrated
 				transaction.remove(currentFragment);
 				transaction.show(newFragment);
 			} else {
-				transaction.replace(fragmentContainer.getId(), newFragment, newTag);
+				transaction.remove(currentFragment);
+				transaction.add(fragmentContainer.getId(), newFragment, newTag);
 			}
 		} else {
 			transaction.remove(currentFragment);
