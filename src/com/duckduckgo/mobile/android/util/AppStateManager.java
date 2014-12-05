@@ -17,6 +17,7 @@ public class AppStateManager {
 		editor.putInt("currentScreen", duckDuckGoContainer.currentScreen.ordinal());
 		editor.putInt("prevScreen", duckDuckGoContainer.prevScreen.ordinal());
 		editor.putInt("sessionType", duckDuckGoContainer.sessionType.ordinal());
+		editor.putString("currentFragmentTag", duckDuckGoContainer.currentFragmentTag);
 		if(currentFeedObject != null) {
 			editor.putString("currentFeedObjectId", currentFeedObject.getId());
 		}
@@ -30,6 +31,7 @@ public class AppStateManager {
 		bundle.putInt("currentScreen", duckDuckGoContainer.currentScreen.ordinal());
 		bundle.putInt("prevScreen", duckDuckGoContainer.prevScreen.ordinal());
 		bundle.putInt("sessionType", duckDuckGoContainer.sessionType.ordinal());
+		bundle.putString("currentFragmentTag", duckDuckGoContainer.currentFragmentTag);
 		if(currentFeedObject != null) {
 			bundle.putString("currentFeedObjectId", currentFeedObject.getId());
 		}
@@ -49,6 +51,7 @@ public class AppStateManager {
 			duckDuckGoContainer.currentScreen = SCREEN.getByCode(bundle.getInt("currentScreen"));
 			duckDuckGoContainer.prevScreen = SCREEN.getByCode(bundle.getInt("prevScreen"));
 			duckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(bundle.getInt("sessionType"));
+			duckDuckGoContainer.currentFragmentTag = bundle.getString("currentFragmentTag");
 		}
 		// do we ever get here?
 		else if(state instanceof SharedPreferences) {
@@ -59,6 +62,7 @@ public class AppStateManager {
 			duckDuckGoContainer.currentScreen = SCREEN.getByCode(prefs.getInt("currentScreen", SCREEN.SCR_STORIES.getCode()));
 			duckDuckGoContainer.prevScreen = SCREEN.getByCode(prefs.getInt("prevScreen", SCREEN.SCR_STORIES.getCode()));
 			duckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(prefs.getInt("sessionType", SESSIONTYPE.SESSION_BROWSE.getCode()));
+			duckDuckGoContainer.currentFragmentTag = prefs.getString("currentFragmentTag", "");
 		}
 	}
 	

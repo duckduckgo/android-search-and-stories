@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -857,7 +858,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		clearLeftSelect();
 
 		if(!feedFragment.isVisible()) {
-			fragmentManager.beginTransaction().replace(fragmentContainer.getId(), feedFragment, FeedFragment.TAG).commit();
+			changeFragment(feedFragment, FeedFragment.TAG);
 		}
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){
@@ -884,8 +885,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
 		if(!savedFragment.isVisible()) {
 			savedFragment = new SavedFragment();
-			fragmentManager.beginTransaction().replace(fragmentContainer.getId(), savedFragment).commit();
-			//fragmentManager.executePendingTransactions();
+			changeFragment(savedFragment, SavedFragment.TAG);
 		}
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_SAVED_FEED){
@@ -912,7 +912,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		clearLeftSelect();
 
 		if(!recentSearchFragment.isVisible()) {
-			fragmentManager.beginTransaction().replace(fragmentContainer.getId(), recentSearchFragment, RecentSearchFragment.TAG).commit();
+			changeFragment(recentSearchFragment, RecentSearchFragment.TAG);
 		}
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH){
@@ -938,7 +938,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		clearLeftSelect();
 
 		if(!duckModeFragment.isVisible()) {
-			fragmentManager.beginTransaction().replace(fragmentContainer.getId(), duckModeFragment, DuckModeFragment.TAG).commit();
+			changeFragment(duckModeFragment, DuckModeFragment.TAG);
 		}
     	    	
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_DUCKMODE){
@@ -968,8 +968,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
 			if(!webFragment.isVisible()) {
 				webFragment = new WebFragment();
-				fragmentManager.beginTransaction().replace(fragmentContainer.getId(), webFragment, WebFragment.TAG).commit();
-				fragmentManager.executePendingTransactions();
+				changeFragment(webFragment, WebFragment.TAG);
 
 				DDGControlVar.mDuckDuckGoContainer.prevScreen = DDGControlVar.mDuckDuckGoContainer.currentScreen;
 				DDGControlVar.mDuckDuckGoContainer.currentScreen = SCREEN.SCR_WEBVIEW;
@@ -977,6 +976,33 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
 			DDGControlVar.mDuckDuckGoContainer.webviewShowing = true;
 		}
+	}
+
+	private void changeFragment(Fragment newFragment, String newTag) {
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		Fragment currentFragment = fragmentManager.findFragmentByTag(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+
+		if(currentFragment==null) {
+			transaction.replace(fragmentContainer.getId(), newFragment, newTag);
+		} else if(currentFragment==feedFragment) {
+			transaction.hide(currentFragment);
+			transaction.add(fragmentContainer.getId(), newFragment, newTag);
+		} else if(newFragment==feedFragment) {
+			if(newFragment.isAdded()) {
+				transaction.remove(currentFragment);
+				transaction.show(newFragment);
+			} else {
+				transaction.replace(fragmentContainer.getId(), newFragment, newTag);
+			}
+		} else {
+			transaction.remove(currentFragment);
+			transaction.add(fragmentContainer.getId(), newFragment, newTag);
+		}
+
+		transaction.commit();
+		fragmentManager.executePendingTransactions();
+		DDGControlVar.mDuckDuckGoContainer.currentFragmentTag = newTag;
+
 	}
 
     public void onClick(View view) {

@@ -15,6 +15,7 @@ public class DuckDuckGoContainer {
 	
 	public SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;
 	public String lastFeedUrl = "";
+	public String currentFragmentTag = "";
 	
 	public SCREEN currentScreen = SCREEN.SCR_STORIES;
 	public SCREEN prevScreen = SCREEN.SCR_STORIES;
