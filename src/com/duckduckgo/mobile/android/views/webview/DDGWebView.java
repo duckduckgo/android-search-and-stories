@@ -134,7 +134,7 @@ public class DDGWebView extends WebView {
 	
 	@Override
 	public WebBackForwardList restoreState(Bundle inState) {
-		isReadable = inState.getBoolean("isReadable");//aaa temp
+		isReadable = inState.getBoolean("isReadable");
 		return super.restoreState(inState);
 	}
 	

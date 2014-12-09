@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activityContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
@@ -15,20 +16,29 @@
             android:background="?attr/leftLayoutRootBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+<!--
             <include android:id="@+id/searchBar" layout="@layout/searchbar" />
+-->
+            <android.support.v7.widget.Toolbar
+                android:layout_alignParentTop="true"
+                android:id="@+id/toolbar"
+                android:minHeight="50dp"
+                android:background="@color/topbar_background"
+                app:contentInsetStart="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="50dp" />
 
             <FrameLayout
                 android:id="@+id/fragmentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/searchBar"/>
+                android:layout_below="@id/toolbar"/>
 
             <View
                 android:id="@+id/dropshadow_top"
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
-                android:layout_below="@id/searchBar"
+                android:layout_below="@id/toolbar"
                 android:background="?attr/topDropShadow"/>
 
         </RelativeLayout>

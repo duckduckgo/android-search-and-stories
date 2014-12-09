@@ -184,8 +184,7 @@ public class DDGWebViewClient extends WebViewClient {
 		super.onPageFinished(view, url);
 		
 		mLoaded = true;
-		
-		//((DuckDuckGo)activity).mCleanSearchBar = false;//aaa to cahnge
+
 		DDGControlVar.mCleanSearchBar = false;
 		
 		if(view.getVisibility() != View.VISIBLE) {

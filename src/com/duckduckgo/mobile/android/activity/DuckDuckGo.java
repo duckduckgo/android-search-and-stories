@@ -12,6 +12,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -134,7 +137,7 @@ import com.squareup.otto.Subscribe;
 //import net.hockeyapp.android.CrashManager;
 //import net.hockeyapp.android.UpdateManager;
 
-public class DuckDuckGo extends FragmentActivity implements OnClickListener {
+public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	protected final String TAG = "DuckDuckGo";
     private KeyboardService keyboardService;
 
@@ -148,7 +151,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 
 	private ImageButton mainButton = null;
 	private ImageButton bangButton = null;
-	private ImageButton shareButton = null;
+	//private ImageButton shareButton = null;
 
 	private View mainContentView;
 	private FrameLayout fragmentContainer;
@@ -159,6 +162,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	private RecentSearchFragment recentSearchFragment;
 	private SavedFragment savedFragment;
 	private FeedFragment feedFragment;
+
+	public Toolbar toolbar;
+	private ActionBar actionBar;
 	
 	// font scaling
 	private LinearLayout fontSizeLayout = null;
@@ -275,7 +281,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         keyboardService = new KeyboardService(this);
-        requestWindowFeature(Window.FEATURE_PROGRESS);
+        supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
         showNewSourcesDialog();
 
@@ -310,9 +316,9 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		drawer = (DDGDrawerLayout) findViewById(R.id.mainDrawer);
 
 		fragmentContainer = (FrameLayout) findViewById(R.id.fragmentContainer);
-		initFragments();
 
 		fragmentManager = getSupportFragmentManager();
+        initFragments();
 
 		drawer.setLeftMenuView(fragmentManager.findFragmentById(R.id.drawerFragment));
 		contentView = (View) findViewById(R.id.mainView);
@@ -322,28 +328,32 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
             shouldShowBangButtonExplanation = true;
     	}
 
-        mainButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
+		initSearchBar();
+
+        //mainButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
+		mainButton = (ImageButton) actionBar.getCustomView().findViewById(R.id.settingsButton);
         mainButton.setOnClickListener(this);
-        bangButton = (ImageButton)contentView.findViewById(R.id.bangButton);
+        //bangButton = (ImageButton)contentView.findViewById(R.id.bangButton);
+		bangButton = (ImageButton) actionBar.getCustomView().findViewById(R.id.bangButton);
         bangButton.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				getSearchField().addBang();				
 			}
 		});
-        
+
         if(DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
         	setMainButtonHome();
         }
-        
+        /*
         shareButton = (ImageButton) contentView.findViewById(R.id.shareButton);
         shareButton.setOnClickListener(this);
         
         // adjust visibility of share button after screen rotation
         if(DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
         	shareButton.setVisibility(View.VISIBLE);
-        }
-        initSearchBar();
+        }*/
+        //initSearchBar();
 
 		initFontSizeLayout();
 
@@ -363,9 +373,20 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	}
 
 	private void initSearchBar() {
-		searchBar = contentView.findViewById(R.id.searchBar);
-		dropShadowDivider = contentView.findViewById(R.id.dropshadow_top);
-		searchField = (DDGAutoCompleteTextView) contentView.findViewById(R.id.searchEditText);
+
+		toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowCustomEnabled(true);
+		View actionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar, null);
+		ActionBar.LayoutParams params = new ActionBar.LayoutParams(
+				ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+		actionBar.setCustomView(actionBarView, params);
+
+		searchBar = actionBar.getCustomView(). findViewById(R.id.searchBar);
+		dropShadowDivider = findViewById(R.id.dropshadow_top);
+		searchField = (DDGAutoCompleteTextView) actionBar.getCustomView().findViewById(R.id.searchEditText);
 		getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.acAdapter);
 		getSearchField().setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
@@ -726,7 +747,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		}
 		else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
             keyboardService.hideKeyboard(getSearchField());
-			shareButton.setVisibility(View.VISIBLE);
+			//shareButton.setVisibility(View.VISIBLE);
 			displayScreen(SCREEN.SCR_WEBVIEW, false);
 		}
         else if(isLaunchedWithAssistAction()){
@@ -788,7 +809,13 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 			super.onBackPressed();
 		}
 	}
-	
+/*
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.webfragment, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+*/
 	public void reloadAction() {
 		DDGControlVar.mCleanSearchBar = false;
         DDGControlVar.mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int) Math.floor(DDGControlVar.mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth() / 1.5), (int) Math.floor(DDGControlVar.mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight() / 1.5));
@@ -837,7 +864,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 	 */
 	private void displayFeedCore() {		
     	// main view visibility changes and keep feed updated
-		shareButton.setVisibility(View.GONE);
+		//shareButton.setVisibility(View.GONE);
     	DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
 	}
 	
@@ -882,11 +909,11 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		// left side menu visibility changes
 		BusProvider.getInstance().post(new LeftMenuChangeVisibilityEvent());
     	
-		shareButton.setVisibility(View.GONE);
+		//shareButton.setVisibility(View.GONE);
     	DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
 		clearLeftSelect();
 
-		savedFragment = new SavedFragment();
+		//savedFragment = new SavedFragment();
 
 		if(!savedFragment.isVisible()) {
 			changeFragment(savedFragment, SavedFragment.TAG);
@@ -910,7 +937,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		BusProvider.getInstance().post(new LeftMenuChangeVisibilityEvent());
 		
     	// main view visibility changes
-		shareButton.setVisibility(View.GONE);
+		//shareButton.setVisibility(View.GONE);
     	DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
 		
 		clearLeftSelect();
@@ -940,7 +967,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		BusProvider.getInstance().post(new LeftMenuChangeVisibilityEvent());
 		
     	// main view visibility changes
-		shareButton.setVisibility(View.GONE);
+		//shareButton.setVisibility(View.GONE);
     	DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
 		
 		clearLeftSelect();
@@ -976,7 +1003,7 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		setMainButtonHome();
         resetSearchBar();
 		if (!DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
-			shareButton.setVisibility(View.VISIBLE);
+			//shareButton.setVisibility(View.VISIBLE);
 
 			webFragment = new WebFragment();
 
@@ -1024,10 +1051,10 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
     public void onClick(View view) {
 		if (view.equals(mainButton)) {
 			handleHomeSettingsButtonClick();
-		}
+		}/*
 		else if (view.equals(shareButton)) {
 			BusProvider.getInstance().post(new HandleShareButtonClickEvent());
-		}
+		}*/
 	}
 
 	private void handleLeftHomeTextViewClick() {
@@ -1155,7 +1182,13 @@ public class DuckDuckGo extends FragmentActivity implements OnClickListener {
 		webFragment = new WebFragment();
 		recentSearchFragment = new RecentSearchFragment();
 		savedFragment = new SavedFragment();
-		feedFragment = new FeedFragment();
+        Fragment fragment = null;
+        fragment = fragmentManager.findFragmentByTag(FeedFragment.TAG);
+        if(fragment==null) {
+            feedFragment = new FeedFragment();
+        } else {
+            feedFragment = (FeedFragment) fragment;
+        }
 
 	}
 

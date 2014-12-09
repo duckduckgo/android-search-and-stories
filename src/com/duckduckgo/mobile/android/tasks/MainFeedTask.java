@@ -141,7 +141,6 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		
 		if(!DDGControlVar.isDefaultsChecked) {
 			Set<SourceInfoPair> sourceInfoPairs = initializeSources();
-			//new SourceIconsTask(activity.mPullRefreshFeedView.getRefreshableView(), sourceInfoPairs).execute();//aaa
 			new SourceIconsTask(feedListView, sourceInfoPairs).execute();
 			DDGControlVar.isDefaultsChecked = true;
 		}

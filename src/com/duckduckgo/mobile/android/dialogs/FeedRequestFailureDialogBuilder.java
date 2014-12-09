@@ -25,7 +25,6 @@ public final class FeedRequestFailureDialogBuilder extends AlertDialog.Builder{
         setNegativeButton(R.string.Retry, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 DDGControlVar.hasUpdatedFeed = false;
-                //context.keepFeedUpdated();//aaa event
 				BusProvider.getInstance().post(new RequestKeepFeedUpdatedEvent());
             }
         });

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<!--
+        <item android:id="@+id/submenu_test"
+              android:title="prova"
+              android:icon="@drawable/ic_menu_moreoverflow_normal_holo_light"
+              android:orderInCategory="1"
+              app:showAsAction="always" >
+
+            <menu>
+                <item android:id="@+id/action_share2"
+                      android:title="@string/Share"
+                      android:icon="@android:drawable/ic_menu_share"
+                      android:orderInCategory="10"
+                      app:showAsAction="never" />
+
+                <item android:id="@+id/action_external_browser2"
+                      android:title="@string/OpenInExternalBrowser"
+                      android:icon="@android:drawable/ic_menu_rotate"
+                      android:orderInCategory="20"
+                      app:showAsAction="never" />
+
+                <item android:id="@+id/action_refresh2"
+                      android:title="@string/Refresh"
+                      android:icon="@drawable/icon_reload"
+                      android:orderInCategory="30"
+                      app:showAsAction="never" />
+
+                <item android:id="@+id/action_save2"
+                      android:title="@string/Save"
+                      android:icon="@android:drawable/ic_menu_save"
+                      android:orderInCategory="40"
+                      app:showAsAction="never" />
+
+                <item android:id="@+id/action_delete2"
+                      android:title="@string/Delete"
+                      android:icon="@android:drawable/ic_menu_close_clear_cancel"
+                      android:orderInCategory="45"
+                      app:showAsAction="never" />
+
+                <item android:id="@+id/action_readability_on2"
+                      android:title="@string/ReadabilityOn"
+                      android:icon="@drawable/icon_readability_on"
+                      android:orderInCategory="50"
+                      app:showAsAction="never" />
+
+                <item android:id="@+id/action_readability_off2"
+                      android:title="@string/ReadabilityOff"
+                      android:icon="@drawable/icon_readability_off"
+                      android:orderInCategory="55"
+                      app:showAsAction="never" />
+
+            </menu>
+
+        </item>
+-->
+    <item android:id="@+id/action_share"
+          android:title="@string/Share"
+          android:icon="@android:drawable/ic_menu_share"
+          android:orderInCategory="10"
+          app:showAsAction="never" />
+
+    <item android:id="@+id/action_external_browser"
+          android:title="@string/OpenInExternalBrowser"
+          android:icon="@android:drawable/ic_menu_rotate"
+          android:orderInCategory="20"
+          app:showAsAction="never" />
+
+    <item android:id="@+id/action_refresh"
+          android:title="@string/Refresh"
+          android:icon="@drawable/icon_reload"
+          android:orderInCategory="30"
+          app:showAsAction="never" />
+
+    <item android:id="@+id/action_save"
+          android:title="@string/Save"
+          android:icon="@android:drawable/ic_menu_save"
+          android:orderInCategory="40"
+          app:showAsAction="never" />
+
+    <item android:id="@+id/action_delete"
+          android:title="@string/Delete"
+          android:icon="@android:drawable/ic_menu_close_clear_cancel"
+          android:orderInCategory="45"
+          app:showAsAction="never" />
+
+    <item android:id="@+id/action_readability_on"
+          android:title="@string/ReadabilityOn"
+          android:icon="@drawable/icon_readability_on"
+          android:orderInCategory="50"
+          app:showAsAction="never" />
+
+    <item android:id="@+id/action_readability_off"
+          android:title="@string/ReadabilityOff"
+          android:icon="@drawable/icon_readability_off"
+          android:orderInCategory="55"
+          app:showAsAction="never" />
+
+</menu>

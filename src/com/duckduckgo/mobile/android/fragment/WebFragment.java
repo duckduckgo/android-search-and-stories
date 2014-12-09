@@ -4,8 +4,13 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
@@ -13,6 +18,7 @@ import android.webkit.WebView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.activity.KeyboardService;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
@@ -38,6 +44,13 @@ import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeOnProgressCha
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuHomeClickEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOffEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOnEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.SaveSearchEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.UnSaveSearchEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
@@ -47,11 +60,13 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.util.URLTYPE;
 import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.squareup.otto.Subscribe;
 
+import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -69,6 +84,7 @@ public class WebFragment extends Fragment {
 	private View fragmentView;
 
 	private boolean savedState = false;
+	private URLTYPE urlType = URLTYPE.WEBPAGE;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,11 +112,13 @@ public class WebFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 
 		setRetainInstance(true);
+		setHasOptionsMenu(true);
 		init();
 
 		// Restore the state of the WebView
 		if(savedInstanceState!=null) {
 			mainWebView.restoreState(savedInstanceState);
+			urlType = URLTYPE.getByCode(savedInstanceState.getInt("url_type"));
 		}
 
 	}
@@ -108,9 +126,122 @@ public class WebFragment extends Fragment {
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
+		outState.putInt("url_type", urlType.getCode());
 		// Save the state of the WebView
 		mainWebView.saveState(outState);
 	}
+
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.webfragment, menu);
+		super.onCreateOptionsMenu(menu, inflater);
+	}
+
+	@Override
+	public void onPrepareOptionsMenu(Menu menu) {
+		super.onPrepareOptionsMenu(menu);
+		MenuItem saveItem = menu.findItem(R.id.action_save);
+		MenuItem deleteItem = menu.findItem(R.id.action_delete);
+		MenuItem readabilityOnItem = menu.findItem(R.id.action_readability_on);
+		MenuItem readabilityOffItem = menu.findItem(R.id.action_readability_off);
+		switch(urlType) {
+			case FEED:
+				if(DDGControlVar.currentFeedObject!=null) {
+					if(DDGControlVar.currentFeedObject.isSaved()) {
+						saveItem.setVisible(false);
+						deleteItem.setVisible(true);
+					} else {
+						saveItem.setVisible(true);
+						deleteItem.setVisible(false);
+					}
+					if(DDGControlVar.currentFeedObject.hasPossibleReadability()) {
+						if(mainWebView.isReadable) {
+							readabilityOffItem.setVisible(true);
+							readabilityOnItem.setVisible(false);
+						} else {
+							readabilityOffItem.setVisible(false);
+							readabilityOnItem.setVisible(true);
+						}
+					} else {
+						readabilityOffItem.setVisible(false);
+						readabilityOnItem.setVisible(false);
+					}
+				}
+				break;
+			case SERP:
+				String webViewUrl = mainWebView.getUrl();
+				if(webViewUrl==null) {
+					webViewUrl = "";
+				}
+				if(DDGApplication.getDB().isSavedSearch(webViewUrl)) {
+					saveItem.setVisible(false);
+					deleteItem.setVisible(true);
+				} else {
+					saveItem.setVisible(true);
+					deleteItem.setVisible(false);
+				}
+				readabilityOffItem.setVisible(false);
+				readabilityOnItem.setVisible(false);
+				break;
+			case WEBPAGE:
+				saveItem.setVisible(false);
+				deleteItem.setVisible(false);
+				readabilityOffItem.setVisible(false);
+				readabilityOnItem.setVisible(false);
+				break;
+			default:
+				saveItem.setVisible(false);
+				deleteItem.setVisible(false);
+				readabilityOffItem.setVisible(false);
+				readabilityOnItem.setVisible(false);
+				break;
+		}
+		onMenuOpened(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+			case R.id.action_share:
+				actionShare();
+				return true;
+			case R.id.action_external_browser:
+				actionExternalBrowser();
+				return true;
+			case R.id.action_refresh:
+				actionReload();
+				return true;
+			case R.id.action_save:
+				actionSave();
+				return true;
+			case R.id.action_delete:
+				actionDelete();
+				return true;
+			case R.id.action_readability_off:
+				actionTurnReadabilityOff();
+				return true;
+			case R.id.action_readability_on:
+				actionTurnReadabilityOn();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	public void onMenuOpened(Menu menu) {
+		if(menu.getClass().getSimpleName().equals("MenuBuilder")) {
+			try {
+				Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+				m.setAccessible(true);
+				m.invoke(menu, true);
+			} catch(NoSuchMethodException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
 
 	public void init() {
 		keyboardService = new KeyboardService(getActivity());
@@ -252,6 +383,8 @@ public class WebFragment extends Fragment {
 			return;
 		}
 
+		urlType = URLTYPE.SERP;
+
 		if(!savedState){
 			if(DDGControlVar.regionString.equals("wt-wt")){	// default
 				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
@@ -290,6 +423,17 @@ public class WebFragment extends Fragment {
 			return;
 		}
 
+		if(isStorySessionOrStoryUrl()) {
+			DDGControlVar.mDuckDuckGoContainer.lastFeedUrl = url;
+			if(DDGControlVar.currentFeedObject != null) {
+				urlType = URLTYPE.FEED;
+			}
+		} else if(DDGUtils.isSerpUrl(url)) {
+			urlType = URLTYPE.SERP;
+		} else {
+			urlType = URLTYPE.WEBPAGE;
+		}
+
 		if(!savedState) {
 			mainWebView.setIsReadable(false);
 			mainWebView.loadUrl(url);
@@ -302,6 +446,7 @@ public class WebFragment extends Fragment {
 					&& PreferencesManager.getReadable()
 					&& !mainWebView.isOriginalRequired()
 					&& feedObject.getArticleUrl().length() != 0) {
+				urlType = URLTYPE.FEED;
 				new ReadableFeedTask(feedObject).execute();
 			}
 			else {
@@ -345,6 +490,69 @@ public class WebFragment extends Fragment {
 		}
 	}
 
+	private void actionShare() {
+		String webViewUrl = mainWebView.getUrl();
+		if(webViewUrl==null) {
+			webViewUrl = "";
+		}
+		switch(urlType) {
+			case FEED:
+				BusProvider.getInstance().post(new ShareFeedEvent(DDGControlVar.currentFeedObject.getTitle(), DDGControlVar.currentFeedObject.getUrl()));
+				break;
+			case SERP:
+				BusProvider.getInstance().post(new ShareSearchEvent(webViewUrl));
+				break;
+			case WEBPAGE:
+				BusProvider.getInstance().post(new ShareWebPageEvent(webViewUrl, webViewUrl));
+				break;
+			default:
+				break;
+		}
+	}
+
+	private void actionExternalBrowser() {
+		String webViewUrl = mainWebView.getUrl();
+		if(webViewUrl==null) {
+			webViewUrl = "";
+		}
+		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(webViewUrl));
+		DDGUtils.execIntentIfSafe(getActivity(), browserIntent);
+	}
+
+	private void actionReload() {
+		if(!mainWebView.isReadable)
+			mainWebView.reload();
+		else {
+			new ReadableFeedTask(DDGControlVar.currentFeedObject).execute();
+		}
+	}
+
+	private void actionSave() {
+		if(urlType==URLTYPE.FEED) {
+			BusProvider.getInstance().post(new SaveStoryEvent(DDGControlVar.currentFeedObject));
+		} else if(urlType==URLTYPE.SERP) {
+			BusProvider.getInstance().post(new SaveSearchEvent(mainWebView.getUrl()));
+		}
+	}
+
+	private void actionDelete() {
+		if(urlType==URLTYPE.FEED) {
+			BusProvider.getInstance().post(new UnSaveStoryEvent(DDGControlVar.currentFeedObject.getId()));
+		} else if(urlType==URLTYPE.SERP) {
+			BusProvider.getInstance().post(new UnSaveSearchEvent(mainWebView.getUrl()));
+		}
+	}
+
+	private void actionTurnReadabilityOff() {
+		String webViewUrl = mainWebView.getUrl();
+		mainWebView.forceOriginal();
+		showWebUrl(webViewUrl);
+	}
+
+	private void actionTurnReadabilityOn() {
+		new ReadableFeedTask(DDGControlVar.currentFeedObject);
+	}
+
 	@Subscribe
 	public void onWebViewClearBrowserStateEvent(WebViewClearBrowserStateEvent event) {
 		//if(mainWebView!=null) {
@@ -364,11 +572,7 @@ public class WebFragment extends Fragment {
 
 	@Subscribe
 	public void onWebViewReloadActionEvent(WebViewReloadActionEvent event) {
-		if(!mainWebView.isReadable)
-			mainWebView.reload();
-		else {
-			new ReadableFeedTask(DDGControlVar.currentFeedObject).execute();
-		}
+		actionReload();
 	}
 
 	@Subscribe
