@@ -11,8 +11,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -68,10 +71,14 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	@Override
 	public View getView(int position, View cv, ViewGroup parent) {
 		if (cv == null) {
-			cv = inflater.inflate(R.layout.main_feed_layout, null);
-			cv.setTag(new Holder((TextView)cv.findViewById(R.id.feedTitleTextView),
-					             (AsyncImageView)cv.findViewById(R.id.feedItemBackground),
-					             (AsyncImageView)cv.findViewById(R.id.feedItemSourceIcon)));
+			cv = inflater.inflate(R.layout.temp_main_feed_layout, null);
+			Holder holder = new Holder((Toolbar) cv.findViewById(R.id.feedWrapper),
+					(TextView)cv.findViewById(R.id.feedTitleTextView),
+					(TextView)cv.findViewById(R.id.feedCategotyTextView),
+					(AsyncImageView)cv.findViewById(R.id.feedItemBackground),
+					(AsyncImageView)cv.findViewById(R.id.feedItemSourceIcon));
+			holder.toolbar.inflateMenu(R.menu.feed);
+			cv.setTag(holder);
 		}
 		
 		FeedObject feed = getItem(position);
@@ -91,7 +98,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		    	.placeholder(android.R.color.transparent)
 		    	.into(holder.imageViewBackground);
 			}
-			
+
 			String feedType = feed.getType();
 			
 			holder.imageViewFeedIcon.setType(feedType);	// stored source id in imageview
@@ -131,6 +138,33 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			if(DDGControlVar.readArticles.contains(feedId)){
 				holder.textViewTitle.setTextColor(Color.GRAY);
 			}
+
+			//set the category
+			//todo insert size
+			holder.textViewCategory.setText(feed.getCategory().toUpperCase());
+
+			//set the toolbar Menu
+			holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(MenuItem menuItem) {
+					switch(menuItem.getItemId()) {
+						case R.id.action_add_favourites:
+							Log.e("aaa", "action add favourites");
+							//add to favourites
+							return true;
+						case R.id.action_share:
+							Log.e("aaa", "action share");
+							//action share
+							return true;
+						case R.id.action_external:
+							Log.e("aaa", "action external view in chrome");
+							//view in chrome
+							return true;
+						default:
+							return false;
+					}
+				}
+			});
 			
 			if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
 				try {
