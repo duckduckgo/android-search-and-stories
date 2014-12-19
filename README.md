@@ -1,5 +1,7 @@
 # DuckDuckGo Search & Stories
 
+[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/duckduckgo/android?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 We are excited to engage the community in the development of our new [apps](https://duckduckgo.com/app)! If you are trying to contribute in other ways, that happens over at [DuckDuckHack](http://duckduckhack.com) or on [GitHub](http://github.com/duckduckgo).
 
 ## Discuss
