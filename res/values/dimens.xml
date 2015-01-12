@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="actionbar_margin">7dp</dimen>
+    <dimen name="actionbar_overflow_margin">44dp</dimen><!--48-->
+    <dimen name="menu_padding">6dip</dimen>
+    <dimen name="menu_letterspace">10dip</dimen>
+    <dimen name="menu_outer_margin">4dp</dimen>
+    
     <dimen name="default_margin">8dp</dimen>
     <dimen name="default_margin_tiny">2dp</dimen>
     
@@ -16,5 +22,5 @@
     <dimen name="header_footer_left_right_padding">25dp</dimen>
     <dimen name="header_footer_top_bottom_padding">20dp</dimen>
     <dimen name="header_footer_internal_padding">10dp</dimen>
-    <dimen name="feed_item_height">190dp</dimen>
+    <dimen name="feed_item_height">160dp</dimen><!--190-->
 </resources>

@@ -183,7 +183,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
 		}
 
 		// saved button
-		if(DDGControlVar.START_SCREEN != SCREEN.SCR_SAVED_FEED) {
+		//if(DDGControlVar.START_SCREEN != SCREEN.SCR_SAVED_FEED) {//aaa
+        if(DDGControlVar.START_SCREEN != SCREEN.SCR_SAVED) {
 			leftSavedButtonLayout.setVisibility(View.VISIBLE);
 		}
 		else {
@@ -191,7 +192,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
 		}
 
 		// recent search button
-    	if(DDGControlVar.START_SCREEN != SCREEN.SCR_RECENT_SEARCH) {
+    	//if(DDGControlVar.START_SCREEN != SCREEN.SCR_RECENT_SEARCH) {//aaa
+        if(DDGControlVar.START_SCREEN != SCREEN.SCR_RECENTS) {
         	leftRecentView.setVisibility(View.VISIBLE);
     	}
     	else {
@@ -216,7 +218,8 @@ public class DrawerFragment extends Fragment implements View.OnClickListener {
 				case SCR_STORIES:
 					leftStoriesTextView.setSelected(true);
 					break;
-				case SCR_SAVED_FEED:
+				//case SCR_SAVED_FEED://aaa
+                case SCR_SAVED:
 					leftSavedTextView.setSelected(true);
 					break;
 			}

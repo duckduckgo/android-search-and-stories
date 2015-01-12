@@ -51,7 +51,7 @@ public class DDGWebChromeClient extends WebChromeClient {
 		else {
 			if(!DDGControlVar.mCleanSearchBar) {
 				//DDGControlVar.mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
-				BusProvider.getInstance().post(new SearchBarSetProgressEvent(newProgress*100));
+				//BusProvider.getInstance().post(new SearchBarSetProgressEvent(newProgress*100));//aaa - blue bar loading page
 				//activity.getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.progressDrawable);
 			}
 		}

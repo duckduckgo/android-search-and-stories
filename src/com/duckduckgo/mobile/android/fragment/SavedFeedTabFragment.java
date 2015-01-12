@@ -63,7 +63,7 @@ public class SavedFeedTabFragment extends ListFragment {
 		else if(item instanceof SQLiteCursor) {
 			obj = new FeedObject(((SQLiteCursor) item));
 		}
-		
+		Log.e("aaa", "obj: "+obj.toString());
 		if (obj != null) {
 			BusProvider.getInstance().post(new SavedFeedItemSelectedEvent(obj));
 		}

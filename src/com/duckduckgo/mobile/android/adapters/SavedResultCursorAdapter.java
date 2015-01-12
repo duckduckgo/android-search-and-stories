@@ -27,7 +27,9 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         // when the view will be created for first time,
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
+        //View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
+        //View retView = inflater.inflate(R.layout.temp_search_layout, parent, false);
+        View retView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
         return retView;
     }
@@ -38,7 +40,7 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         // that means, take the data from the cursor and put it in views
 
     	final String data = cursor.getString(cursor.getColumnIndex("query"));
-    	
+    	/*
         TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
         textViewHistory.setText(data);
         textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
@@ -46,7 +48,7 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         AsyncImageView imageViewHistory = (AsyncImageView) view.findViewById(R.id.recentSearchImage);
         imageViewHistory.setImageResource(R.drawable.icon_history_search);
 
-        
+
         // query use button
         ImageView buttonHistory = (ImageView) view.findViewById(R.id.recentSearchPaste);
         buttonHistory.setOnClickListener(new OnClickListener() {
@@ -55,7 +57,10 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         	public void onClick(View v) {
         		BusProvider.getInstance().post(new SavedSearchPasteEvent(data));
         	}
-        });
-        
+        });*/
+        //TextView textViewSearch = (TextView) view.findViewById(R.id.item_text);
+        TextView textViewTitle = (TextView) view.findViewById(android.R.id.text1);
+        textViewTitle.setText(data);
+
     }
 }

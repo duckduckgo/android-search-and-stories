@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="General">
+
+        <ListPreference
+            android:title="Home page"
+            android:summary="%s"
+            android:key="startScreenPref"
+            android:defaultValue="0"
+            android:entries="@array/startScreenArray"
+            android:entryValues="@array/startScreenValues"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Stories">
+
+        <Preference
+            android:title="Change Sources"
+            android:key="sourcesPref"
+            android:defaultValue="" />
+
+        <SwitchPreference
+            android:title="Readability"
+            android:summary="On, when available"
+            android:key="readablePref"
+            android:defaultValue="true" />
+
+        <SwitchPreference
+            android:title="Automatic Update"
+            android:key="autoUpdatePref"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Search">
+
+        <SwitchPreference
+            android:title="Autosuggestion"
+            android:key="turnOffAutocompletePref"
+            android:defaultValue="false"
+            android:disableDependentsState="true" />
+
+        <ListPreference
+            android:title="Region"
+            android:key="regionPref"
+            android:summary="%s"
+            android:defaultValue="wt-wt"
+            android:entries="@array/regionArray"
+            android:entryValues="@array/regionValues" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Privacy">
+
+        <SwitchPreference
+            android:title="Save Recents"
+            android:key="recordHistoryPref"
+            android:defaultValue="true" />
+
+        <Preference
+            android:title="Clear Recents"
+            android:key="clearHistoryPref"
+            android:defaultValue="" />
+
+        <SwitchPreference
+            android:title="Save Cookies"
+            android:key="recordCookiesPref"
+            android:defaultValue="true" />
+
+        <Preference
+            android:title="Clear Cookies"
+            android:key="clearCookiesPref"
+            android:defaultValue="" />
+
+        <Preference
+            android:title="Clear Browser Caches"
+            android:key="clearWebCachePref"
+            android:defaultValue="" />
+
+        <SwitchPreference
+            android:title="Automatic Crash Report"
+            android:summaryOn="@string/PrefAcraEnabled"
+            android:summaryOff="@string/PrefAcraDisabled"
+            android:defaultValue="false"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Other">
+
+        <Preference
+            android:title="About" />
+
+        <Preference
+            android:title="Leave Feedback"
+            android:key="sendFeedbackPref"
+            android:defaultValue="" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

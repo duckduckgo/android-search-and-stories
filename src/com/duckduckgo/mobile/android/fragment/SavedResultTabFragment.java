@@ -46,7 +46,8 @@ public class SavedResultTabFragment extends ListFragment {
 		super.onActivityCreated(savedInstanceState);
 		
 		savedSearchView = (SavedSearchListView) getListView();
-		savedSearchView.setDivider(null);
+		//savedSearchView.setDivider(null);
+        //savedSearchView.setDivider();
 		savedSearchAdapter = new SavedResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
 		savedSearchView.setAdapter(savedSearchAdapter);
 	}
@@ -62,7 +63,8 @@ public class SavedResultTabFragment extends ListFragment {
 			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
 			String query = c.getString(c.getColumnIndex("query"));
 			if(query != null){
-				BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));				
+                Log.e("aaa", "---------------------------------------query: "+query);
+				//BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));
 			}
 		}
 	}

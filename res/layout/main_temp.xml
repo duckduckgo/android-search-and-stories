@@ -22,17 +22,46 @@
             <android.support.v7.widget.Toolbar
                 android:layout_alignParentTop="true"
                 android:id="@+id/toolbar"
-                android:minHeight="50dp"
-                android:background="@color/topbar_background"
+                android:minHeight="56dp"
+                android:background="@color/colorPrimary"
                 app:contentInsetStart="0dp"
+                app:contentInsetEnd="48dp"
                 android:layout_width="match_parent"
-                android:layout_height="50dp" />
+                android:layout_height="56dp"
+                app:theme="@style/DDGWhiteOverflow"/><!--
+                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                />-->
+            <!--
+                app:theme="@style/DDGToolbar"/>
+            -->
+            <android.support.v7.widget.Toolbar
+                android:visibility="gone"
+                android:layout_below="@id/toolbar"
+                android:id="@+id/toolbar2"
+                android:minHeight="?attr/actionBarSize"
+                android:background="#ff5722"
+                app:contentInsetStart="0dp"
+                app:contentInsetEnd="48dp"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize" >
 
+                <include android:id="@+id/toolbar2_id" layout="@layout/actionbar_temp_2" />
+
+                </android.support.v7.widget.Toolbar>
+<!--   50dp
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar2"
+                android:minHeight="?attr/actionBarSize"
+                android:layout_below="@id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+-->
             <FrameLayout
                 android:id="@+id/fragmentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/toolbar"/>
+                android:layout_below="@id/toolbar2"/>
 
             <View
                 android:id="@+id/dropshadow_top"

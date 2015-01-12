@@ -35,6 +35,7 @@ public class DDGWebView extends WebView {
 	private Activity activity;
 	
 	public boolean readableBackState = false;
+    public boolean readableForwardState = false;
 	public boolean loadingReadableBack = false;
 	
 	public boolean shouldClearHistory = false;
@@ -162,6 +163,11 @@ public class DDGWebView extends WebView {
 		readableBackState = true;
 		goBack();
 	}
+
+    public void readableActonForward(FeedObject feedObject) {
+        readableForwardState = true;
+        goForward();
+    }
 	
 	/**
 	 * Whether original format of the web page is required (no readability)
@@ -176,6 +182,7 @@ public class DDGWebView extends WebView {
 		forceOriginalFormat = false;
 		
 		readableBackState = false;
+        readableForwardState = false;
 		loadingReadableBack = false;
 	}
 	
@@ -205,7 +212,7 @@ public class DDGWebView extends WebView {
 		this.activity = activity;
 	}
 	
-	public void backPressAction() {
+	public void backPressAction(boolean toHomeScreen) {
 		WebBackForwardList history = copyBackForwardList();
 		int lastIndex = history.getCurrentIndex();
 
@@ -219,6 +226,7 @@ public class DDGWebView extends WebView {
                 if(ABOUT_BLANK.equals(prevUrl)){
                     goBackOrForward(-2);
                     if(lastIndex > 0){
+                        if(toHomeScreen)
 						BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.mDuckDuckGoContainer.prevScreen, false));
                     }
                     return;
@@ -235,11 +243,29 @@ public class DDGWebView extends WebView {
 				goBack();
 			}
 		}
-		else {
+		else if(toHomeScreen) {
 			BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.mDuckDuckGoContainer.prevScreen, true));
 			BusProvider.getInstance().post(new StopActionEvent());
 		}
 	}
+
+    public void forwardPressAction() {
+        WebBackForwardList history = copyBackForwardList();
+        int lastIndex = history.getCurrentIndex();
+
+        if(lastIndex < history.getSize()) {
+            WebHistoryItem nextItem = history.getItemAtIndex(lastIndex+1);
+
+            if(nextItem!=null) {
+                String nextUrl = nextItem.getUrl();
+                if(ABOUT_BLANK.equals(nextUrl)){
+                    goBackOrForward(2);
+                } else {
+                    goForward();
+                }
+            }
+        }
+    }
 
 	private boolean canDoReadability(String articleUrl) {
 		return PreferencesManager.getReadable() 

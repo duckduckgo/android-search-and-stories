@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -31,6 +32,7 @@ import android.preference.PreferenceActivity;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.fragment.PreferencesFragment;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.TorIntegration;
@@ -64,7 +66,18 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
             setTheme(android.R.style.Theme_Holo_Light);
         }
     }
-	
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(false && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            getFragmentManager().beginTransaction().add(android.R.id.content, new PreferencesFragment(), "pref").commit();
+        } else {
+            addPreferencesFromResource(R.xml.preferences);
+        }
+    }
+/*
   @SuppressWarnings("deprecation")
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -296,7 +309,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
       }
 	  return d;
   }
-
+*/
   @Override
   public boolean onPreferenceChange(Preference preference, Object newValue) {
       if(preference instanceof ListPreference && newValue instanceof String) {

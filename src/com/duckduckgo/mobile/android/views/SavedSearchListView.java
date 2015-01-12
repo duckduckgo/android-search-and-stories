@@ -32,9 +32,10 @@ public class SavedSearchListView extends ListView implements android.widget.Adap
 		
 		if (query != null) {
 			BusProvider.getInstance().post(new SavedSearchItemLongClickEvent(query));
+            return true;
 		}
 		
-		return true;
+		return false;
 	}
 
 }

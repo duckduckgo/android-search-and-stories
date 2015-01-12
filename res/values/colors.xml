@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+
+    <color name="colorPrimary">#de5833</color>
+    <color name="colorPrimaryDark">#bf360c</color>
+    <color name="colorAccent">#ff5722</color>
+
     <color name="welcome_button">#d24e25</color>
     <color name="welcome_button_pressed">#b33331</color>
     <color name="main_button">#d65420</color>

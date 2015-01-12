@@ -1,12 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="DDGTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="DDGTheme" parent="DDGTheme.Base">
+
+    </style>
+
+    <style name="DDGTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
         <item name="leftButtonTextSize">18sp</item>
         <item name="leftTitleTextSize">12sp</item>
         <item name="mainTextSize">14sp</item>
         <item name="recentTextSize">14sp</item>
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+
+        <!--
+        <item name="android:textColorSecondary">#ffffff</item>
+        -->
+        <!--
+        <item name="android:textColorPrimary">#ffffff</item>-->
+    </style>
+
+    <style name="DDGWhiteOverflow" parent="DDGTheme.Base">
+        <item name="android:tint">#ffffff</item>
+    </style>
+
+    <style name="DGBlackOverflow" parent="DDGTheme.Base">
+        <item name="android:tint">#000000</item>
+    </style>
+
+    <style name="DDGToolbar" parent="DDGTheme.Base">
+        <item name="actionOverflowButtonStyle">@style/Overflow</item>
+    </style>
+    
+    <style name="Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:src">@drawable/home</item>
     </style>
 
     <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">
@@ -112,6 +143,11 @@
         <item name="emptyListTitleColor">#fff</item>
         <item name="emptyListSubTitleColor">#b8bfcc</item>
         <item name="duckModeLogo">@drawable/ddg_text_logo_dark</item>
+    </style>
+
+    <style name="ToolbarStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
     </style>
     
 </resources>

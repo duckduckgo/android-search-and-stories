@@ -10,6 +10,9 @@ import android.support.v4.app.Fragment;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -30,6 +33,7 @@ import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeCancelScalingEvent;
 import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeOnProgressChangedEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuCloseEvent;
+import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarChangeEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
@@ -77,6 +81,7 @@ public class FeedFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
 		fragmentView =  inflater.inflate(R.layout.fragment_feed, container, false);
 		return fragmentView;
 	}
@@ -91,6 +96,7 @@ public class FeedFragment extends Fragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
@@ -107,6 +113,28 @@ public class FeedFragment extends Fragment {
 		}
 	}
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.feeds, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+/*
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.action_favourites:
+                return true;
+            case R.id.action_history:
+                return true;
+            case R.id.action_settings:
+                return true;
+            case R.id.action_help_feedback:
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+*/
 	public void init() {
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) fragmentView.findViewById(R.id.mainFeedItems);
 		PreferencesManager.setPtrHeaderFontDefaults(mPullRefreshFeedView.getHeaderTextSize(), mPullRefreshFeedView.getHeaderSubTextSize());
@@ -277,7 +305,9 @@ public class FeedFragment extends Fragment {
 
 	@Subscribe
 	public void onFeedRetrieveErrorEvent(FeedRetrieveErrorEvent event) {
-		if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mainFeedTask != null) {
+        //aaa
+		//if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mainFeedTask != null) {
+        if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED && mainFeedTask != null) {
 			new FeedRequestFailureDialogBuilder(getActivity()).show();
 		}
 

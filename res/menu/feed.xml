@@ -7,14 +7,19 @@
           android:orderInCategory="10"
           app:showAsAction="never" />
 
-    <item android:id="@+id/action_share"
-          android:title="@string/share"
+    <item android:id="@+id/action_remove_favourites"
+          android:title="@string/remove_favourites"
           android:orderInCategory="20"
           app:showAsAction="never" />
 
-    <item android:id="@+id/action_external"
-          android:title="@string/view_in_chrome"
+    <item android:id="@+id/action_share"
+          android:title="@string/share"
           android:orderInCategory="30"
+          app:showAsAction="never" />
+
+    <item android:id="@+id/action_external"
+          android:title="@string/view_external"
+          android:orderInCategory="40"
           app:showAsAction="never" />
 
 </menu>

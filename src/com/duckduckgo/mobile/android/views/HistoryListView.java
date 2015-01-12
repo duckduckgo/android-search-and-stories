@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.views;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Adapter;
@@ -35,7 +36,9 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 		leftRecentHeaderView.setOnClickListener(listener);
 	}
 
+    @Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.e("aaa", "history listview onitemclick");
 		Object adapter = getAdapter();
 		Cursor c = null;
 		HistoryObject obj = null;
@@ -47,13 +50,15 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 		}
 		
 		if (obj != null) {
-			BusProvider.getInstance().post(new HistoryItemSelectedEvent(obj));
+            Log.e("aaa", "object: "+obj.toString());
+            BusProvider.getInstance().post(new HistoryItemSelectedEvent(obj));
 		}
 		
 	}
 	
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.e("aaa", "history listview onitemlongclick");
 		
 		Object adapter = getAdapter();		
 		Cursor c = null;

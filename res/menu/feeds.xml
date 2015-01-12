@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
+<!--
+    <item android:id="@+id/action_menu_feeds"
+          android:title="action_menu_feeds"
+          android:orderInCategory="1"
+          android:icon="@drawable/ic_bang"
+          app:showAsAction="always">
 
+        <menu>
+-->
     <item android:id="@+id/action_favourites"
           android:title="@string/favourites"
           android:orderInCategory="10"
@@ -19,6 +27,9 @@
 
     <item android:id="@+id/action_help_feedback"
           android:title="@string/help_feedback"
-          android:orderInCategory="40" />"
-
+          android:orderInCategory="40" />
+<!--
+            </menu>
+    </item>
+-->
 </menu>

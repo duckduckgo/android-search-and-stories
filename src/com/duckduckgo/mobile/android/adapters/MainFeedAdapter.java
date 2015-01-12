@@ -28,8 +28,13 @@ import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
+import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -81,7 +86,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			cv.setTag(holder);
 		}
 		
-		FeedObject feed = getItem(position);
+		final FeedObject feed = getItem(position);
 		
 		final Holder holder = (Holder) cv.getTag();
 		URL feedUrl = null;
@@ -133,8 +138,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			holder.textViewTitle.setText(feed.getTitle());
 			
 			String feedId = feed.getId();
-			// FIXME : it'd be good to reset color to default color for textview in layout XML
-			holder.textViewTitle.setTextColor(Color.WHITE);
+
 			if(DDGControlVar.readArticles.contains(feedId)){
 				holder.textViewTitle.setTextColor(Color.GRAY);
 			}
@@ -144,20 +148,37 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			holder.textViewCategory.setText(feed.getCategory().toUpperCase());
 
 			//set the toolbar Menu
+            if(DDGApplication.getDB().isSaved(feedId)) {
+                holder.toolbar.getMenu().findItem(R.id.action_add_favourites).setVisible(false);
+                holder.toolbar.getMenu().findItem(R.id.action_remove_favourites).setVisible(true);
+            } else {
+                holder.toolbar.getMenu().findItem(R.id.action_add_favourites).setVisible(true);
+                holder.toolbar.getMenu().findItem(R.id.action_remove_favourites).setVisible(false);
+            }
 			holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
 				@Override
 				public boolean onMenuItemClick(MenuItem menuItem) {
 					switch(menuItem.getItemId()) {
 						case R.id.action_add_favourites:
 							Log.e("aaa", "action add favourites");
+                            BusProvider.getInstance().post(new SaveStoryEvent(feed));
+                            holder.toolbar.getMenu().findItem(R.id.action_add_favourites).setVisible(false);
+                            holder.toolbar.getMenu().findItem(R.id.action_remove_favourites).setVisible(true);
 							//add to favourites
 							return true;
+                        case R.id.action_remove_favourites:
+                            BusProvider.getInstance().post(new UnSaveStoryEvent(feed.getId()));
+                            holder.toolbar.getMenu().findItem(R.id.action_add_favourites).setVisible(true);
+                            holder.toolbar.getMenu().findItem(R.id.action_remove_favourites).setVisible(false);
+                            return true;
 						case R.id.action_share:
 							Log.e("aaa", "action share");
+                            BusProvider.getInstance().post(new ShareFeedEvent(feed.getTitle(), feed.getUrl()));
 							//action share
 							return true;
 						case R.id.action_external:
 							Log.e("aaa", "action external view in chrome");
+                            BusProvider.getInstance().post(new SendToExternalBrowserEvent(getContext(), feed.getUrl()));
 							//view in chrome
 							return true;
 						default:

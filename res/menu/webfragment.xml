@@ -3,6 +3,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 <!--
+    <item android:id="@+id/action_web_menu"
+          android:title="action_web_menu"
+          android:orderInCategory="10"
+          android:icon="@drawable/ic_bang"
+          app:showAsAction="always" />-->
+<!--
         <item android:id="@+id/submenu_test"
               android:title="prova"
               android:icon="@drawable/ic_menu_moreoverflow_normal_holo_light"
@@ -56,6 +62,7 @@
 
         </item>
 -->
+
     <item android:id="@+id/action_share"
           android:title="@string/Share"
           android:icon="@android:drawable/ic_menu_share"
@@ -97,5 +104,7 @@
           android:icon="@drawable/icon_readability_off"
           android:orderInCategory="55"
           app:showAsAction="never" />
+
+
 
 </menu>

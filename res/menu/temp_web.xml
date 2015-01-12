@@ -13,7 +13,7 @@
           app:showAsAction="never" />
 
     <item android:id="@+id/action_external"
-          android:title="@string/view_in_chrome"
+          android:title="@string/view_external"
           android:orderInCategory="30"
           app:showAsAction="never" />
 

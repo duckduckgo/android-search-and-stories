@@ -195,9 +195,26 @@
     <string name="settings">Settings</string>
     <string name="help_feedback">Help &amp; Feedback</string>
     <string name="add_favourites">Add to Favourites</string>
+    <string name="remove_favourites">Remove from Favourites</string>
     <string name="share">Share this</string>
-    <string name="view_in_chrome">View in Chrome</string>
+    <string name="view_external">View in Browser</string>
     <string name="reload">Reload</string>
+
+    <!--about fragment-->
+    <string name="about">About</string>
+    <string name="about_text">The search engine that doesn\'t track you.</string>
+    <string name="version">Version</string>
+    <string name="select_application">Select application</string>
+
+    <!--help feedback fragment-->
+    <string name="help">Help</string>
+    <string name="android_help_center">Android Help Center</string>
+    <string name="feedack">Feedback</string>
+    <string name="leave_feedback">Leave Feedback</string>
+    <string name="rate">Rate the App</string>
+
+
+
 
     
     <!-- SSL Certificate dialogs -->

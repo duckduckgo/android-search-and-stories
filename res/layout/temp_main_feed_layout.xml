@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res/com.duckduckgo.mobile.android"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/feed_item_height"
+                android:layout_height="wrap_content"
                 android:descendantFocusability="blocksDescendants">
+    <!--android:layout_height="@dimen/feed_item_height"-->
 
     <com.duckduckgo.mobile.android.download.AsyncImageView android:layout_width="match_parent"
                                                            android:layout_height="@dimen/feed_item_height"
@@ -27,7 +28,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/feedItemBackground"
         android:id="@+id/feedWrapper"
-        android:background="@color/translucent_grey">
+        android:background="#ffffff"><!--
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -48,6 +51,7 @@
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical"
                       android:layout_weight="1"
+                      android:textColor="@android:color/black"
                       android:paddingLeft="5dp"
                       android:paddingTop="5dp"
                       android:paddingBottom="5dp"
