@@ -1,13 +1,10 @@
 package com.duckduckgo.mobile.android.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.internal.view.menu.MenuBuilder;
-import android.support.v7.widget.ListPopupWindow;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -15,14 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.webkit.DownloadListener;
 import android.webkit.WebView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.PopupWindow;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
@@ -72,19 +63,15 @@ import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.URLTYPE;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
-import com.duckduckgo.mobile.android.views.DDGOverflowMenu2;
 import com.duckduckgo.mobile.android.views.webview.DDGWebChromeClient;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.squareup.otto.Subscribe;
 
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 public class WebFragment extends Fragment {
 
@@ -100,16 +87,14 @@ public class WebFragment extends Fragment {
 	private boolean savedState = false;
 	private URLTYPE urlType = URLTYPE.WEBPAGE;
 
-    private DDGOverflowMenu overflowMenu = null;
     private Menu webMenu = null;
     private Menu headerMenu = null;
-    private DDGOverflowMenu2 overflowMenu2 = null;
+    private DDGOverflowMenu overflowMenu2 = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		BusProvider.getInstance().register(this);
-        Log.e("aaa", "-------------------- on create fragment");
 	}
 
 	@Override
@@ -146,19 +131,6 @@ public class WebFragment extends Fragment {
 
 	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        //BusProvider.getInstance().post(new SearchBarChangeEvent(SCREEN.SCR_WEBVIEW));
-/*
-        ListPopupWindow popup = new ListPopupWindow(getActivity());
-        String[] list = new String[] {"ciao", "culo", "suca"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, list);
-        popup.setAdapter(adapter);
-        popup.show();
-        */
-    }
-
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -169,37 +141,15 @@ public class WebFragment extends Fragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        Log.e("aaa", "------------------------- on create options menu");
         headerMenu = new MenuBuilder(getActivity());
-        //headerMenu = menu;
         inflater.inflate(R.menu.web_header, headerMenu);
 		inflater.inflate(R.menu.feed, menu);
-        //overflowMenu.setMenu(menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}
-/*
-    @Override
-    public void onPrepareOptionsMenu(Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        Log.e("aaa", "on prepare options menu");
-        MenuItem emptyItem = menu.findItem(R.id.action_empty);
-        if(firstOpen) {
-            firstOpen = false;
-        } else {
-            emptyItem.setVisible(false);
-            Log.e("aaa", "open new menu!");
-
-        }
-        //emptyItem.setVisible(true);
-
-        //emptyItem.setVisible(false);
-    }
-*/
 
 	@Override
 	public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        Log.e("aaa", "on prepare options menu WEB FRAGMENT");
         if(headerMenu!=null) {
             MenuItem backItem = headerMenu.findItem(R.id.action_back);
             MenuItem forwardItem = headerMenu.findItem(R.id.action_forward);
@@ -231,7 +181,8 @@ public class WebFragment extends Fragment {
                 if(webViewUrl==null) {
                     webViewUrl = "";
                 }
-                if(DDGApplication.getDB().isSaved(webViewUrl)) {
+                String query = DDGUtils.getQueryIfSerp(webViewUrl);
+                if(DDGApplication.getDB().isSavedSearch(query)) {
                     saveItem.setVisible(false);
                     deleteItem.setVisible(true);
                 } else {
@@ -245,147 +196,12 @@ public class WebFragment extends Fragment {
                 deleteItem.setVisible(false);
                 break;
         }
-
-
-        /*
-        MenuItem saveItem = menu.findItem(R.id.action_save);
-        MenuItem deleteItem = menu.findItem(R.id.action_delete);
-        MenuItem readabilityOnItem = menu.findItem(R.id.action_readability_on);
-        MenuItem readabilityOffItem = menu.findItem(R.id.action_readability_off);
-        switch(urlType) {
-            case FEED:
-                if(DDGControlVar.currentFeedObject!=null) {
-                    if(DDGControlVar.currentFeedObject.isSaved()) {
-                        saveItem.setVisible(false);
-                        deleteItem.setVisible(true);
-                    } else {
-                        saveItem.setVisible(true);
-                        deleteItem.setVisible(false);
-                    }
-                    if(DDGControlVar.currentFeedObject.hasPossibleReadability()) {
-                        if(mainWebView.isReadable) {
-                            readabilityOffItem.setVisible(true);
-                            readabilityOnItem.setVisible(false);
-                        } else {
-                            readabilityOffItem.setVisible(false);
-                            readabilityOnItem.setVisible(true);
-                        }
-                    } else {
-                        readabilityOffItem.setVisible(false);
-                        readabilityOnItem.setVisible(false);
-                    }
-                }
-                break;
-            case SERP:
-                String webViewUrl = mainWebView.getUrl();
-                if(webViewUrl==null) {
-                    webViewUrl = "";
-                }
-                if(DDGApplication.getDB().isSavedSearch(webViewUrl)) {
-                    saveItem.setVisible(false);
-                    deleteItem.setVisible(true);
-                } else {
-                    saveItem.setVisible(true);
-                    deleteItem.setVisible(false);
-                }
-                readabilityOffItem.setVisible(false);
-                readabilityOnItem.setVisible(false);
-                break;
-            case WEBPAGE:
-                saveItem.setVisible(false);
-                deleteItem.setVisible(false);
-                readabilityOffItem.setVisible(false);
-                readabilityOnItem.setVisible(false);
-                break;
-            default:
-                saveItem.setVisible(false);
-                deleteItem.setVisible(false);
-                readabilityOffItem.setVisible(false);
-                readabilityOnItem.setVisible(false);
-                break;
-        }
-*/
         webMenu = menu;
-
-		//onMenuOpened(menu);
 	}
-
-    public Menu prepareMenu(Menu menu) {
-        MenuItem saveItem = menu.findItem(R.id.action_save);
-        MenuItem deleteItem = menu.findItem(R.id.action_delete);
-        MenuItem readabilityOnItem = menu.findItem(R.id.action_readability_on);
-        MenuItem readabilityOffItem = menu.findItem(R.id.action_readability_off);
-        switch(urlType) {
-            case FEED:
-                if(DDGControlVar.currentFeedObject!=null) {
-                    if(DDGControlVar.currentFeedObject.isSaved()) {
-                        saveItem.setVisible(false);
-                        deleteItem.setVisible(true);
-                    } else {
-                        saveItem.setVisible(true);
-                        deleteItem.setVisible(false);
-                    }
-                    if(DDGControlVar.currentFeedObject.hasPossibleReadability()) {
-                        if(mainWebView.isReadable) {
-                            readabilityOffItem.setVisible(true);
-                            readabilityOnItem.setVisible(false);
-                        } else {
-                            readabilityOffItem.setVisible(false);
-                            readabilityOnItem.setVisible(true);
-                        }
-                    } else {
-                        readabilityOffItem.setVisible(false);
-                        readabilityOnItem.setVisible(false);
-                    }
-                }
-                break;
-            case SERP:
-                String webViewUrl = mainWebView.getUrl();
-                if(webViewUrl==null) {
-                    webViewUrl = "";
-                }
-                if(DDGApplication.getDB().isSavedSearch(webViewUrl)) {
-                    saveItem.setVisible(false);
-                    deleteItem.setVisible(true);
-                } else {
-                    saveItem.setVisible(true);
-                    deleteItem.setVisible(false);
-                }
-                readabilityOffItem.setVisible(false);
-                readabilityOnItem.setVisible(false);
-                break;
-            case WEBPAGE:
-                saveItem.setVisible(false);
-                deleteItem.setVisible(false);
-                readabilityOffItem.setVisible(false);
-                readabilityOnItem.setVisible(false);
-                break;
-            default:
-                saveItem.setVisible(false);
-                deleteItem.setVisible(false);
-                readabilityOffItem.setVisible(false);
-                readabilityOnItem.setVisible(false);
-                break;
-        }
-        return menu;
-    }
-
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-        Log.e("aaa", "on options item selected: "+item.getTitle());
 		switch(item.getItemId()) {
-            case R.id.action_empty:
-                Log.e("aaa", "FRAGMETN action empty");
-                String[] list = new String[] {"Ciao", "culo", "suca"};
-                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, list);
-
-                ListPopupWindow menu = new ListPopupWindow(getActivity());
-                menu.setAdapter(adapter);
-                menu.setAnchorView(mainWebView);
-                menu.show();
-
-                return true;
             case R.id.action_add_favourites:
                 actionSave();
                 return true;
@@ -398,32 +214,6 @@ public class WebFragment extends Fragment {
             case R.id.action_external:
                 actionExternalBrowser();
                 return true;
-            /* to delete
-			case R.id.action_external_browser:
-				actionExternalBrowser();
-				return true;
-			case R.id.action_refresh:
-				actionReload();
-				return true;
-			case R.id.action_save:
-				actionSave();
-				return true;
-			case R.id.action_delete:
-				actionDelete();
-				return true;
-			case R.id.action_readability_off:
-				actionTurnReadabilityOff();
-				return true;
-			case R.id.action_readability_on:
-				actionTurnReadabilityOn();
-				return true;
-
-				*/
-            /*new menu*/
-            /*
-            case R.id.action_reload:
-                actionReload();
-                return true;*/
             case R.id.action_back:
                 mainWebView.backPressAction(false);
                 if(!mainWebView.canGoBack()) {
@@ -431,34 +221,17 @@ public class WebFragment extends Fragment {
                 }
                 return true;
             case R.id.action_forward:
-                Log.e("aaa", "action forward");
                 mainWebView.forwardPressAction();
                 if(!mainWebView.canGoForward()) {
                     BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(R.id.action_forward, R.id.action_back));
                 }
                 return true;
             case R.id.action_close:
-                Log.e("aaa", "action close");
                 overflowMenu2.dismiss();
 			default:
 				return super.onOptionsItemSelected(item);
 		}
 	}
-
-	public void onMenuOpened(Menu menu) {
-		if(menu.getClass().getSimpleName().equals("MenuBuilder")) {
-			try {
-				Method m = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
-				m.setAccessible(true);
-				m.invoke(menu, true);
-			} catch(NoSuchMethodException e) {
-				e.printStackTrace();
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		}
-	}
-
 
 	public void init() {
 		keyboardService = new KeyboardService(getActivity());
@@ -737,7 +510,6 @@ public class WebFragment extends Fragment {
 	}
 
 	private void actionReload() {
-        Log.e("aaa", "inside action reload");
 		if(!mainWebView.isReadable)
 			mainWebView.reload();
 		else {
@@ -757,7 +529,7 @@ public class WebFragment extends Fragment {
 		if(urlType==URLTYPE.FEED) {
 			BusProvider.getInstance().post(new UnSaveStoryEvent(DDGControlVar.currentFeedObject.getId()));
 		} else if(urlType==URLTYPE.SERP) {
-			BusProvider.getInstance().post(new UnSaveSearchEvent(mainWebView.getUrl()));
+			BusProvider.getInstance().post(new UnSaveSearchEvent(DDGUtils.getQueryIfSerp(mainWebView.getUrl())));
 		}
 	}
 
@@ -867,130 +639,15 @@ public class WebFragment extends Fragment {
 
     @Subscribe
     public void onWebViewOpenMenuEvent(WebViewOpenMenuEvent event) {
-        Log.e("aaa", "opening menu now from fragment");
-        if(webMenu==null) {
-            Log.e("aaa", "fragment menu == null");
-        } else {
-            Log.e("aaa", "fragment menu != null, OK, size: "+webMenu.size());
+        if(webMenu!=null) {
 
             onPrepareOptionsMenu(webMenu);
-//            String[] items = new String[webMenu.size()];
-            List<String> itemsList = new ArrayList<String>();
-            //webMenu = prepareMenu(webMenu);
-            for(int i=0; i<webMenu.size(); i++) {
-                Log.e("aaa", "item name: "+webMenu.getItem(i).getTitle() + "visibility: "+webMenu.getItem(i).isVisible());
-                if(webMenu.getItem(i).isVisible()) {
-                    itemsList.add(""+webMenu.getItem(i).getTitle());
-                    //items[i] = webMenu.getItem(i).getTitle().toString();
-                }
-            }
 
-
-  //          Log.e("aaa", "new menu size: "+items.length);
-
-
-            overflowMenu = new DDGOverflowMenu(getActivity());
-            overflowMenu.setMenu(webMenu);
-            overflowMenu.setHeaderView(headerMenu);
-            overflowMenu.setAnchorView(event.anchorView);
-            //overflowMenu.show();
-
-            overflowMenu2 = new DDGOverflowMenu2(getActivity());
+            overflowMenu2 = new DDGOverflowMenu(getActivity());
             overflowMenu2.setHeaderMenu(headerMenu);
             overflowMenu2.setMenu(webMenu);
-            //overflowMenu2.showAsDropDown(event.anchorView);
-            //overflowMenu2.show(event.anchorView);
-
             overflowMenu2.show(event.anchorView);
 
-            //overflowMenu2.show(event.anchorView);
-
-            //overflowMenu2.showAtLocation(mainWebView, Gravity.NO_GRAVITY, 0, 0);
-
-
-            LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View container = inflater.inflate(R.layout.temp_popupwindows, null, false);
-            PopupWindow popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
-            ListView listView = (ListView) container.findViewById(R.id.listview);
-            View headerContainer = container.findViewById(R.id.header_container);
-            headerContainer.setVisibility(View.GONE);
-            //listView.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, new String[] {"ciao", "culo", "suca"}));
-
-            //popupWindow.showAsDropDown(event.anchorView);
-
-            //showPopUp(event.anchorView);
-
-            Test test = new Test(getActivity(), 0);
-            //test.show(event.anchorView);
-            //test.showAsDropDown(event.anchorView);
-
-        }
-    }
-
-    private void showPopUp(View anchor) {
-        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View layout = inflater.inflate(R.layout.temp_popupwindows, null, false);
-        final PopupWindow popupWindow = new PopupWindow(
-                layout,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                true);
-
-        ListView listview = (ListView) layout.findViewById(R.id.listview);
-
-        String[] items = {"Reload", "Add to Favourite", "View in Browser"};
-        //listview.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, items));
-
-        //popupWindow.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.));
-        //popupWindow.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.dialog_holo_light_frame));
-//        popupWindow.setBackgroundDrawable(getResources().getDrawable(android.R.drawable.spinner_dropdown_background));
-        //popupWindow.showAsDropDown(toolbar, Gravity.CENTER, 0, 0);
-        popupWindow.showAsDropDown(anchor);
-
-    }
-
-    public class Test extends PopupWindow {
-
-        private View mContentView;
-
-        public Test(Context context, int resourceId) {
-            super(context);
-            //mContentView = LayoutInflater.from(context).inflate(resourceId, null);
-            mContentView = LayoutInflater.from(context).inflate(R.layout.temp_menuitem, null);
-            ((TextView)mContentView.findViewById(R.id.text1)).setText("ciao");
-            setContentView(mContentView);
-            setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-            setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-
-            // Handle touchevents
-            setOutsideTouchable(true);
-            setFocusable(true);
-            ListPopupWindow popup = new ListPopupWindow(getActivity());
-            //setBackgroundDrawable(popup.getBackground());
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
-                setElevation(50);
-            }
-            //android.widget.ListPopupWindow popup = new android.widget.ListPopupWindow(context);
-            //setBackgroundDrawable(context.getResources().getDrawable(android.R.drawable.spinner_background));
-            //setBackgroundDrawable(popup.getBackground());
-        }
-
-        /**
-         * Attach the OverflowMenu View to the ActionBar's Right corner
-         * @param actionBarView
-         */
-        public void show(View actionBarView) {
-            int x = actionBarView.getMeasuredWidth() - mContentView.getMeasuredWidth();
-            showAsDropDown(actionBarView, x, 0);
-        }
-
-        /**
-         * Return mContentView,
-         *  used for mContentView.findViewById();
-         * @return
-         */
-        public View getView(){
-            return mContentView;
         }
     }
 }
