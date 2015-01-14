@@ -213,6 +213,10 @@
     <string name="leave_feedback">Leave Feedback</string>
     <string name="rate">Rate the App</string>
 
+    <string name="action_back">Back</string>
+    <string name="action_forward">Forward</string>
+    <string name="action_close">Close</string>
+
 
 
 

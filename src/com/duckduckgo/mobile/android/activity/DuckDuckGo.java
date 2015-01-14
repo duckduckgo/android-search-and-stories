@@ -1173,10 +1173,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
             case R.id.action_help_feedback:
                 actionHelpFeedback();
                 return true;
-            //temp
-            case R.id.action_reload:
-                Log.e("aaa", "activity action reload item selected");
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

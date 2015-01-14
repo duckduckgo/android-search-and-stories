@@ -120,9 +120,6 @@ public class WebFragment extends Fragment {
 		setHasOptionsMenu(true);
 		init();
 
-        //overflowMenu = new DDGOverflowMenu(getActivity());
-        //overflowMenu.setMenu(R.menu.feeds);
-        //Log.e("aaa", "overflow menu check: "+overflowMenu.checkMenu());
 		// Restore the state of the WebView
 		if(savedInstanceState!=null) {
 			mainWebView.restoreState(savedInstanceState);
@@ -142,7 +139,7 @@ public class WebFragment extends Fragment {
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         headerMenu = new MenuBuilder(getActivity());
-        inflater.inflate(R.menu.web_header, headerMenu);
+        inflater.inflate(R.menu.web_navigation, headerMenu);
 		inflater.inflate(R.menu.feed, menu);
 		super.onCreateOptionsMenu(menu, inflater);
 	}

@@ -3,19 +3,19 @@
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item android:id="@+id/action_back"
-          android:title="back"
+          android:title="@string/action_back"
           android:icon="@drawable/temp_back"
           android:orderInCategory="10"
           app:showAsAction="never" /><!--temp_back_button_selector-->
 
     <item android:id="@+id/action_forward"
-          android:title="forward"
+          android:title="@string/action_forward"
           android:icon="@drawable/temp_forward"
           android:orderInCategory="20"
           app:showAsAction="never" /><!--temp_forward_button_selector-->
 
     <item android:id="@+id/action_close"
-          android:title="close"
+          android:title="@string/action_close"
           android:icon="@drawable/temp_overflow"
           android:orderInCategory="30"
           app:showAsAction="never" />
