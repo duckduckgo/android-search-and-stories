@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.fragment;
 
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,20 +20,24 @@ import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSel
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.squareup.otto.Subscribe;
 
-public class SavedResultTabFragment extends ListFragment {
+public class SavedResultTabFragment extends Fragment {
 
 	public static final String TAG = "saved_result_tab_fragment";
-	SavedSearchListView savedSearchView;
-	SavedResultCursorAdapter savedSearchAdapter;
+	private SavedSearchListView savedSearchView;
+	private SavedResultCursorAdapter savedSearchAdapter;
+
+    private View fragmentView = null;
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
+		//LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
 		//setRetainInstance(true);
 		BusProvider.getInstance().register(this);
-		return fragmentLayout;
+		//return fragmentLayout;
+        return fragmentView;
 	}
 	
 	@Override
@@ -45,13 +50,14 @@ public class SavedResultTabFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		savedSearchView = (SavedSearchListView) getListView();
+		//savedSearchView = (SavedSearchListView) getListView();
+        savedSearchView = (SavedSearchListView) fragmentView.findViewById(R.id.listview);
 		//savedSearchView.setDivider(null);
         //savedSearchView.setDivider();
 		savedSearchAdapter = new SavedResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
 		savedSearchView.setAdapter(savedSearchAdapter);
 	}
-
+/*
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		super.onListItemClick(l, v, position, id);
@@ -68,7 +74,7 @@ public class SavedResultTabFragment extends ListFragment {
 			}
 		}
 	}
-	
+*/
 	@Subscribe
 	public void onSyncAdapters(SyncAdaptersEvent event) {
 		savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());

@@ -20,13 +20,13 @@
             android:key="sourcesPref"
             android:defaultValue="" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:title="Readability"
             android:summary="On, when available"
             android:key="readablePref"
             android:defaultValue="true" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:title="Automatic Update"
             android:key="autoUpdatePref"
             android:defaultValue="true" />
@@ -35,7 +35,7 @@
 
     <PreferenceCategory android:title="Search">
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:title="Autosuggestion"
             android:key="turnOffAutocompletePref"
             android:defaultValue="false"
@@ -53,7 +53,7 @@
 
     <PreferenceCategory android:title="Privacy">
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:title="Save Recents"
             android:key="recordHistoryPref"
             android:defaultValue="true" />
@@ -63,7 +63,7 @@
             android:key="clearHistoryPref"
             android:defaultValue="" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:title="Save Cookies"
             android:key="recordCookiesPref"
             android:defaultValue="true" />
@@ -78,7 +78,7 @@
             android:key="clearWebCachePref"
             android:defaultValue="" />
 
-        <CheckBoxPreference
+        <SwitchPreference
             android:title="Automatic Crash Report"
             android:summaryOn="@string/PrefAcraEnabled"
             android:summaryOff="@string/PrefAcraDisabled"
