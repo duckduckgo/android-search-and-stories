@@ -565,7 +565,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 			public void onFocusChange(View v, boolean hasFocus) {
 //				showBangButton(hasFocus);
                 if(hasFocus) {
-                    displayScreen(SCREEN.SCR_SEARCH, true);
+                    displayScreen(SCREEN.SCR_SEARCH, false);
                 }
 			}
 		});
@@ -766,7 +766,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	}
 	
 	public void setSearchBarText(String text) {
-        Log.e("aaa", "set search bar text: "+text);
         if(text.startsWith("https://")) {
             text = text.replace("https://", "");
         } else if(text.startsWith("http://")) {
@@ -818,7 +817,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	 * @param clean Whether screen state (searchbar, browser etc.) states will get cleaned
 	 */
 	public void displayScreen(SCREEN screenToDisplay, boolean clean) {
-        //Log.e("aaa", "inside s")
         if(clean) {
 			resetScreenState();
 		}
@@ -835,10 +833,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 				break;
 			case SCR_RECENTS:
 				displayRecents();
-				break;/*aaa
-			case SCR_DUCKMODE:
-				displayDuckMode();
-				break;*/
+				break;
             case SCR_WEBVIEW:
                 displayWebView();
                 break;
@@ -1001,6 +996,9 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		else if(DDGControlVar.targetSource != null){
 			BusProvider.getInstance().post(new FeedCancelSourceFilterEvent());
 		}
+        else if(DDGControlVar.mDuckDuckGoContainer.currentScreen!=DDGControlVar.START_SCREEN) {
+            displayHomeScreen();
+        }
 		else {
 			DDGControlVar.hasUpdatedFeed = false;
 			super.onBackPressed();
@@ -1018,34 +1016,11 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
-        Log.e("aaa", "on menu opened");
 
-        android.support.v7.widget.ListPopupWindow popup = new android.support.v7.widget.ListPopupWindow(this);
-        if(openingMenu!=null) {
-
-            //popup.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, android.R.id.text1, new String[] {"ciao", "culo", "suca"}));
-            //popup.setAnchorView(toolbar);
-
-            //Log.e("aaa", "overflow menu check: "+overflowMenu.checkMenu());
-        }
         if(DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
             if(openingMenu!=null) {
-                //onPrepareOptionsMenu(openingMenu);
-
-                //overflowMenu.setMenu(openingMenu);
-                //overflowMenu.setAnchorView(toolbar);
-
-                    openingMenu.close();
+                openingMenu.close();
                 BusProvider.getInstance().post(new WebViewOpenMenuEvent(toolbar));
-                //BusProvider.getInstance().post(new WebViewOpenMenuEvent(findViewById(android.R.id.content)));
-                //popup.show();
-                //overflowMenu.show();
-                //Log.e("aaa", "safe to close");
-            } else {
-                //Log.e("aaa", "error, not safe to close");
-            }
-            if(menu!=null) {
-                //menu.close();
             }
             return false;
         }
@@ -1056,7 +1031,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        Log.e("aaa", "on prepare options menu ACTIVITY");
         this.openingMenu = menu;
         return super.onPrepareOptionsMenu(menu);
     }
@@ -1071,7 +1045,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 actionFavourites();
                 return true;
             case R.id.action_history:
-                actionHistory();
+                //actionHistory();
                 //Toast.makeText(this, "TO LNK", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_settings:
@@ -1122,7 +1096,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
             @Override
             public void onClick(View v) {
                 //todo
-                Toast.makeText(DuckDuckGo.this, "TO DO", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(DuckDuckGo.this, "TO DO", Toast.LENGTH_SHORT).show();
+                getSearchField().addBang();
             }
         });
         setActionBarMarginStart(false);
@@ -1368,7 +1343,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	}
 
     public void displaySearch() {
-        resetScreenState();
+        //resetScreenState();
         //DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
 
         //changeFragment(searchFragment, SearchFragment.TAG);
@@ -1514,7 +1489,12 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	}
 
     public void addFragment(Fragment fragmentToAdd, String tag) {
-        fragmentManager.beginTransaction().add(fragmentContainer.getId(), fragmentToAdd, tag).commit();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        //fragmentManager.beginTransaction().add(fragmentContainer.getId(), fragmentToAdd, tag).commit();
+        transaction.hide(fragmentManager.findFragmentByTag(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag));
+        transaction.add(fragmentContainer.getId(), fragmentToAdd, tag);
+        transaction.commit();
+
         updateActionBar(tag);
     }
 
@@ -1526,6 +1506,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         if(fragmentToRemove!=null) {
             transaction.remove(fragmentToRemove);
         }
+        transaction.show(fragmentManager.findFragmentByTag(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag));
         transaction.commit();
         getSearchField().clearFocus();
         updateActionBar(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
