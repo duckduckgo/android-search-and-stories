@@ -98,7 +98,7 @@
     <string name="crash_notif_title">DuckDuckGo-Absturzbericht</string>
     <string name="crash_notif_text">Bitte hier klicken, um bei der Fehlerbehebung zu helfen.</string>
     <string name="crash_dialog_text">Ein unerwarteter Fehler ist aufgetreten.
-        Bitte helfen Sie uns, das Problem zu beheben, indem sie mit \'OK\' das Senden von absturzbezogenen Daten bestätigen. 
+        Bitte helfen Sie uns, das Problem zu beheben, indem Sie mit \'OK\' das Senden von absturzbezogenen Daten bestätigen. 
         Die einzigen Daten, die wir erhalten sind: APP_VERSION_CODE, APP_VERSION_NAME, ANDROID_VERSION, STACK_TRACE,
         AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
     <string name="crash_dialog_comment_prompt">Ihr Kommentar: </string>
@@ -146,8 +146,8 @@
     <string name="SearchOptionsTitle">Sucheinstellungen</string>
     <string name="PageOptionsTitle">Seiteneinstellungen</string>
     
-    <string name="ToastUnSaveStory">Die Geschichte wurde aus ihren gespeicherten Geschichten entfernt.</string>
-    <string name="ToastUnSaveSearch">Die Suche wurde aus ihren gespeicherten Suchen entfernt.</string>
+    <string name="ToastUnSaveStory">Die Geschichte wurde aus Ihren gespeicherten Geschichten entfernt.</string>
+    <string name="ToastUnSaveSearch">Die Suche wurde aus Ihren gespeicherten Suchen entfernt.</string>
     <string name="ToastSaveStory">Ihre Geschichte wurde gespeichert.</string>
     <string name="ToastSaveSearch">Ihre Suche wurde gespeichert.</string>
     <string name="ToastDeleteStoryInHistory">Die Geschichte wurde aus Ihrem Verlauf entfernt.</string>
