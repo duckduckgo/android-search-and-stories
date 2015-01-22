@@ -53,21 +53,7 @@ public class SavedFeedTabFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-        Log.e("aaa", "saved feed tab son click");
-		
-		Object item = getListView().getAdapter().getItem(position);
-		FeedObject obj = null;
-		if(item instanceof FeedObject) {
-			obj = (FeedObject) item;
-		}
-		else if(item instanceof SQLiteCursor) {
-			obj = new FeedObject(((SQLiteCursor) item));
-		}
-		//Log.e("aaa", "obj: "+obj.toString());
-		if (obj != null) {
-			BusProvider.getInstance().post(new SavedFeedItemSelectedEvent(obj));
-		}
+        savedFeedView.onItemClick(l, v, position, id);
 	}
 	
 	@Subscribe

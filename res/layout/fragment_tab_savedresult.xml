@@ -11,8 +11,7 @@
             	  android:layout_width="match_parent"
                   android:layout_height="match_parent"                  
                   style="@style/SavedResultListView"
-                  android:id="@+id/listview"/><!--
-                  android:id="@android:id/list"/>-->
+                  android:id="@android:id/list"/>
 	
 	<LinearLayout android:id="@android:id/empty"
    	    		  android:layout_width="match_parent"
@@ -23,19 +22,22 @@
    	    		  android:paddingBottom="50dp">
    	    <ImageView android:layout_width="wrap_content"
    	        	   android:layout_height="wrap_content"
-   	        	   android:src="?attr/emptyListIcon" />
+                   android:src="@drawable/favorite_large"/> <!--
+   	        	   android:src="?attr/emptyListIcon" />-->
    	    <TextView android:layout_width="wrap_content"
    	        	  android:layout_height="wrap_content"
    	        	  android:layout_marginBottom="20dp"
    	        	  android:textSize="8.94pt"
    	        	  android:textColor="?attr/emptyListTitleColor"
-   	        	  android:text="@string/SavedResultsEmptyTitle" />
+                  android:text="No Favourites" /><!--
+   	        	  android:text="@string/SavedResultsEmptyTitle" />-->
    	    <TextView android:layout_width="wrap_content"
    	        	  android:layout_height="wrap_content"
    	        	  android:gravity="center_horizontal"
    	        	  android:textSize="6.59pt"
    	        	  android:textColor="?attr/emptyListSubTitleColor"
-   	        	  android:text="@string/SavedResultsEmptySubTitle" />
+                  android:text="Add searches and stories\nto your favourites, and they\nwill be shown here." /><!--
+   	        	  android:text="@string/SavedResultsEmptySubTitle" />-->
    	</LinearLayout> 
     
 </LinearLayout>

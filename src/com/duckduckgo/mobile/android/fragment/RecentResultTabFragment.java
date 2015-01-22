@@ -21,7 +21,7 @@ import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.squareup.otto.Subscribe;
 
-public class RecentResultTabFragment extends Fragment {
+public class RecentResultTabFragment extends ListFragment {
 
     public static final String TAG = "recent_result_tab_fragment";
 
@@ -54,15 +54,17 @@ public class RecentResultTabFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         //historyListView = (HistoryListView) getListView();
-        //recentSearchListView = (RecentSearchListView) getListView();
-        recentSearchListView = (RecentSearchListView) fragmentView.findViewById(R.id.listview);
+        recentSearchListView = (RecentSearchListView) getListView();
+        //recentSearchListView = (RecentSearchListView) fragmentView.findViewById(R.id.listview);
         recentResultAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory());
         //historyListView.setAdapter(recentResultAdapter);
         recentSearchListView.setAdapter(recentResultAdapter);
     }
-/*
+
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
+        recentSearchListView.onItemClick(l, v, position, id);
+        /*
         Log.e("aaa", "recent result tab fragment onitem click");
         super.onListItemClick(l, v, position, id);
 
@@ -77,9 +79,9 @@ public class RecentResultTabFragment extends Fragment {
                 //BusProvider.getInstance().post(new HistoryItemSelectedEvent());
                 //aaa todo
             }
-        }
+        }*/
     }
-*/
+
     @Subscribe
     public void onSyncAdaptersEvent(SyncAdaptersEvent event) {
         recentResultAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());

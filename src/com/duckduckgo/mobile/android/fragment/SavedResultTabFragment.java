@@ -20,7 +20,7 @@ import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSel
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.squareup.otto.Subscribe;
 
-public class SavedResultTabFragment extends Fragment {
+public class SavedResultTabFragment extends ListFragment {
 
 	public static final String TAG = "saved_result_tab_fragment";
 	private SavedSearchListView savedSearchView;
@@ -32,11 +32,9 @@ public class SavedResultTabFragment extends Fragment {
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		//LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
         fragmentView = inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
 		//setRetainInstance(true);
 		BusProvider.getInstance().register(this);
-		//return fragmentLayout;
         return fragmentView;
 	}
 	
@@ -50,31 +48,16 @@ public class SavedResultTabFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		//savedSearchView = (SavedSearchListView) getListView();
-        savedSearchView = (SavedSearchListView) fragmentView.findViewById(R.id.listview);
-		//savedSearchView.setDivider(null);
-        //savedSearchView.setDivider();
+		savedSearchView = (SavedSearchListView) getListView();
 		savedSearchAdapter = new SavedResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
 		savedSearchView.setAdapter(savedSearchAdapter);
 	}
-/*
+
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		
-		Object adapter = getListView().getAdapter();
-		Cursor c = null;
-		
-		if(adapter instanceof SavedResultCursorAdapter) {
-			c = (Cursor) ((SavedResultCursorAdapter) adapter).getItem(position);
-			String query = c.getString(c.getColumnIndex("query"));
-			if(query != null){
-                Log.e("aaa", "---------------------------------------query: "+query);
-				//BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));
-			}
-		}
+        savedSearchView.onItemClick(l, v, position, id);
 	}
-*/
+
 	@Subscribe
 	public void onSyncAdapters(SyncAdaptersEvent event) {
 		savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
