@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.adapters;
 import android.content.Context;
 import android.database.Cursor;
+import android.text.InputType;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +29,8 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         //View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
-        //View retView = inflater.inflate(R.layout.temp_search_layout, parent, false);
-        View retView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+        View retView = inflater.inflate(R.layout.temp_search_layout, parent, false);
+        //View retView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
         return retView;
     }
@@ -58,9 +59,25 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         		BusProvider.getInstance().post(new SavedSearchPasteEvent(data));
         	}
         });*/
-        //TextView textViewSearch = (TextView) view.findViewById(R.id.item_text);
-        TextView textViewTitle = (TextView) view.findViewById(android.R.id.text1);
-        textViewTitle.setText(data);
+        TextView title = (TextView) view.findViewById(R.id.item_text);
+        //TextView textViewTitle = (TextView) view.findViewById(android.R.id.text1);
+        title.setText(capitalizeWords(data));
+        //title.setText(data.substring(0,1).toUpperCase()+data.substring(1));
 
+        ImageView icon = (ImageView) view.findViewById(R.id.item_icon);
+        icon.setImageDrawable(context.getResources().getDrawable(R.drawable.favorite));
+
+    }
+
+    public String capitalizeWords(String input) {
+        StringBuilder out = new StringBuilder();
+        for(int i=0; i<input.length(); i++) {
+            if(i==0 || (i>0 && input.charAt(i-1)==' ')) {
+                out.append(input.substring(i, i+1).toUpperCase());
+            } else {
+                out.append(input.substring(i, i+1));
+            }
+        }
+        return out.toString();
     }
 }

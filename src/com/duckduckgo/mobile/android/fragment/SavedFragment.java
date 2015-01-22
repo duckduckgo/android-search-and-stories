@@ -46,7 +46,7 @@ public class SavedFragment extends Fragment {
 		setRetainInstance(true);
 		//fragmentView = inflater.inflate(R.layout.fragment_saved, container, false);
         fragmentView = inflater.inflate(R.layout.fragment_saved_recents, container, false);
-		init();
+		//init();
 		return fragmentView;
 	}
 
@@ -78,7 +78,7 @@ public class SavedFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		//outState.putString("tag", savedTabHost.getCurrentTabTag());
 	}
-
+/*
 	public void init() {
 		//savedTabHost= (TabHostExt) fragmentView.findViewById(R.id.savedTabHost);
 		//savedTabHost.setup(getActivity(), getChildFragmentManager(), R.id.realtabcontent);
@@ -168,5 +168,5 @@ public class SavedFragment extends Fragment {
             text.setText("FRAGMENT numero 2222");
             return root;
         }
-    }
+    }*/
 }

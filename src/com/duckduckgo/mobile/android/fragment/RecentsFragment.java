@@ -30,7 +30,7 @@ public class RecentsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(), new String[] {"Recent searches", "Recents"}, new Fragment[] {new RecentResultTabFragment(), new RecentSearchFragment()});
+        pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(), new String[] {"Recents", "Recent searches"}, new Fragment[] {new RecentFeedTabFragment(), new RecentResultTabFragment()});
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
         slidingTabLayout = (SlidingTabLayout) fragmentView.findViewById(R.id.sliding_tabs);

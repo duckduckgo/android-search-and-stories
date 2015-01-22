@@ -43,6 +43,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     public DDGOverflowMenu(Context context) {
         super(context, null, android.R.attr.listPopupWindowStyle);
+        //super(context);
         this.context = context;
         init();
     }

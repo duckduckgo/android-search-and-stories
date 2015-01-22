@@ -45,9 +45,9 @@
                 app:contentInsetEnd="48dp"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize" >
-
+<!--
                 <include android:id="@+id/toolbar2_id" layout="@layout/actionbar_temp_2" />
-
+-->
                 </android.support.v7.widget.Toolbar>
 <!--   50dp
             <android.support.v7.widget.Toolbar

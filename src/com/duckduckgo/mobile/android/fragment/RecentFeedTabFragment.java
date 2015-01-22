@@ -11,7 +11,9 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.RecentFeedCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
+import com.squareup.otto.Subscribe;
 
 public class RecentFeedTabFragment extends ListFragment {
 
@@ -47,5 +49,11 @@ public class RecentFeedTabFragment extends ListFragment {
         adapter = new RecentFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorStoryHistory());
         mainFeedListView.setAdapter(adapter);
 
+    }
+
+    @Subscribe
+    public void onSyncAdaptersEvent(SyncAdaptersEvent event) {
+        adapter.changeCursor(DDGApplication.getDB().getCursorStoryHistory());
+        adapter.notifyDataSetChanged();
     }
 }

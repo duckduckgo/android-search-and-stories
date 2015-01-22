@@ -134,14 +134,21 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	        });
 
 			//Set the Title
-			holder.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
+			//holder.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
 			holder.textViewTitle.setText(feed.getTitle());
-			
+			/*
 			String feedId = feed.getId();
 
 			if(DDGControlVar.readArticles.contains(feedId)){
 				holder.textViewTitle.setTextColor(Color.GRAY);
-			}
+			}*/
+
+            String feedId = feed.getId();
+            // FIXME : it'd be good to reset color to default color for textview in layout XML
+            holder.textViewTitle.setTextColor(Color.parseColor("#404040"));
+            if(DDGControlVar.readArticles.contains(feedId)){
+                holder.textViewTitle.setTextColor(Color.GRAY);
+            }
 
 			//set the category
 			//todo insert size

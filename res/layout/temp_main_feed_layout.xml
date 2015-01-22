@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res/com.duckduckgo.mobile.android"
+                xmlns:toolbar="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:descendantFocusability="blocksDescendants">
@@ -13,22 +14,29 @@
 
     <TextView
         android:id="@+id/feedCategotyTextView"
-        android:text="Ciao"
-        android:padding="5dp"
-        android:layout_margin="5dp"
+        android:textColor="#ffffff"
+        android:textSize="11sp"
+        android:textStyle="bold"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:layout_margin="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:background="@color/translucent_grey"
+        android:background="@drawable/temp_feed_category_background"
         style="@style/MainFeedText" />
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="64.3dp"
+        android:minHeight="64.3dp"
+        android:background="#ffffff"
         android:layout_below="@id/feedItemBackground"
         android:id="@+id/feedWrapper"
-        android:background="#ffffff"><!--
+        toolbar:contentInsetStart="0dp"><!--
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">-->
 
@@ -39,28 +47,35 @@
 
             <com.duckduckgo.mobile.android.download.AsyncImageView
                 style="@style/MainFeedText"
-                android:layout_width="25dp"
-                android:layout_height="30dp"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
                 android:layout_gravity="center_vertical"
-                android:layout_margin="5dp"
+                android:layout_marginLeft="16dp"
                 android:scaleType="fitCenter"
                 app:usePicasso="false"
                 android:id="@+id/feedItemSourceIcon" />
 
-            <TextView android:layout_width="0dip"
+            <TextView android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical"
-                      android:layout_weight="1"
-                      android:textColor="@android:color/black"
-                      android:paddingLeft="5dp"
-                      android:paddingTop="5dp"
-                      android:paddingBottom="5dp"
+                      android:layout_marginLeft="24dp"
                       style="@style/MainFeedText"
                       android:text="This is a Test String!"
+                      android:textSize="16sp"
                       android:maxLines="2"
                       android:ellipsize="end"
                       android:id="@+id/feedTitleTextView" />
 
         </LinearLayout>
+        <!--
+                      android:paddingLeft="5dp"
+                      android:paddingTop="5dp"
+                      android:paddingBottom="5dp"-->
     </android.support.v7.widget.Toolbar>
+    <View
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="8dp"
+        android:layout_below="@id/feedWrapper"
+        android:background="#33000000"/>
 </RelativeLayout>

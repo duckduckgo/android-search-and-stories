@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
@@ -27,13 +26,10 @@ import android.view.View.OnTouchListener;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListPopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -45,6 +41,8 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
+import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.TempAutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
@@ -55,7 +53,6 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
 import com.duckduckgo.mobile.android.events.DismissBangPopupEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
-import com.duckduckgo.mobile.android.events.HandleShareButtonClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
@@ -66,7 +63,6 @@ import com.duckduckgo.mobile.android.events.SetMainButtonMenuEvent;
 import com.duckduckgo.mobile.android.events.StopActionEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewBackPressActionEvent;
-import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearBrowserStateEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearCacheAndCookiesEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearCacheEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewOpenMenuEvent;
@@ -86,15 +82,11 @@ import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeOnProgressCha
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuChangeVisibilityEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuClearSelectEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuCloseEvent;
-import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuHistoryDisabledEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuHomeClickEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuMarkSelectedEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuSavedClickEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuSetAdapterEvent;
-import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuSetHomeSelectedEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuSetRecentVisibleEvent;
-import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuSetSavedSelectedEvent;
-import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuSetStoriesSelectedEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuSettingsClickEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuStoriesClickEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
@@ -118,13 +110,10 @@ import com.duckduckgo.mobile.android.fragment.AboutFragment;
 import com.duckduckgo.mobile.android.fragment.DuckModeFragment;
 import com.duckduckgo.mobile.android.fragment.FeedFragment;
 import com.duckduckgo.mobile.android.fragment.HelpFeedbackFragment;
-import com.duckduckgo.mobile.android.fragment.PreferencesFragment;
 import com.duckduckgo.mobile.android.fragment.RecentSearchFragment;
 import com.duckduckgo.mobile.android.fragment.RecentsFragment;
 import com.duckduckgo.mobile.android.fragment.SavedFragment;
 import com.duckduckgo.mobile.android.fragment.SearchFragment;
-import com.duckduckgo.mobile.android.fragment.StoredItemsFragment;
-import com.duckduckgo.mobile.android.fragment.TempFragment;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.SuggestObject;
@@ -149,8 +138,6 @@ import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
 import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
 import com.squareup.otto.Subscribe;
 
-import java.util.List;
-
 //import net.hockeyapp.android.CrashManager;
 //import net.hockeyapp.android.UpdateManager;
 
@@ -159,7 +146,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     private KeyboardService keyboardService;
 
 	private DDGAutoCompleteTextView searchField = null;
-    private FrameLayout searchFieldContainer = null;
+    //private FrameLayout searchFieldContainer = null;
+    private RelativeLayout searchFieldContainer = null;
     private TextView actionBarTtitle;
 	//private HistoryListView leftRecentView = null;//drawer fragment
 
@@ -412,6 +400,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
         switch(screen) {
             case SCR_STORIES:
+                clearSearchBar();
                 showActionBarSearchField();
                 setActionBarShadow(true);
                 hasOverflowButtonVisible(true);
@@ -528,7 +517,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		actionBar.setDisplayShowCustomEnabled(true);
         //actionBar.setDisplayShowCustomEnabled(false);
 
-		View actionBarView = LayoutInflater.from(this).inflate(R.layout.actionbar_temp, null);
+		View actionBarView = LayoutInflater.from(this).inflate(R.layout.temp_actionbar, null);
 		ActionBar.LayoutParams params = new ActionBar.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
         //params.setMarginEnd(100);
@@ -536,10 +525,12 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
 		searchBar = actionBar.getCustomView().findViewById(R.id.searchBar);
 		dropShadowDivider = findViewById(R.id.dropshadow_top);
-        searchFieldContainer = (FrameLayout) actionBar.getCustomView().findViewById(R.id.search_container);
+        //searchFieldContainer = (FrameLayout) actionBar.getCustomView().findViewById(R.id.search_container);
+        searchFieldContainer = (RelativeLayout) actionBar.getCustomView().findViewById(R.id.search_container);
         actionBarTtitle = (TextView) actionBar.getCustomView().findViewById(R.id.actionbar_title);
 		searchField = (DDGAutoCompleteTextView) actionBar.getCustomView().findViewById(R.id.searchEditText);
-		getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.acAdapter);
+		//getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.acAdapter);
+        getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.tempAdapter);//aaa adapter
 		getSearchField().setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
@@ -585,7 +576,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				getSearchField().dismissDropDown();
 
-				SuggestObject suggestObject = DDGControlVar.mDuckDuckGoContainer.acAdapter.getItem(position);
+				//SuggestObject suggestObject = DDGControlVar.mDuckDuckGoContainer.acAdapter.getItem(position);
+                SuggestObject suggestObject = DDGControlVar.mDuckDuckGoContainer.tempAdapter.getItem(position);
 				if (suggestObject != null) {
 					SuggestType suggestType = suggestObject.getType();
 					if(suggestType == SuggestType.TEXT) {
@@ -607,7 +599,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		});
 
 		// This makes a little (X) to clear the search bar.
-		DDGControlVar.mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(DDGControlVar.mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(DDGControlVar.mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
+		//DDGControlVar.mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(DDGControlVar.mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(DDGControlVar.mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()/1.5));
+        DDGControlVar.mDuckDuckGoContainer.stopDrawable.setBounds(0, 0, (int)Math.floor(DDGControlVar.mDuckDuckGoContainer.stopDrawable.getIntrinsicWidth()), (int)Math.floor(DDGControlVar.mDuckDuckGoContainer.stopDrawable.getIntrinsicHeight()));
 		getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : DDGControlVar.mDuckDuckGoContainer.stopDrawable, null);
 
 		getSearchField().setOnTouchListener(new OnTouchListener() {
@@ -639,6 +632,12 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		getSearchField().addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : DDGControlVar.mDuckDuckGoContainer.stopDrawable, null);
+                Log.e("aaa", "new text is: " + s);
+                if(false && !s.toString().equals("")) {
+                    //DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory(s.toString()));
+                    DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getFilter().filter(s);
+                    //DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
+                }
 			}
 
 			public void afterTextChanged(Editable arg0) {
@@ -735,7 +734,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
         DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
 
-        DDGControlVar.mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
+        //DDGControlVar.mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.stop);
+        DDGControlVar.mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.cross);
 //    		DDGControlVar.mDuckDuckGoContainer.reloadDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.reload);
         DDGControlVar.mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
         DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
@@ -745,6 +745,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		BusProvider.getInstance().post(new LeftMenuSetAdapterEvent());
 
         DDGControlVar.mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
+        DDGControlVar.mDuckDuckGoContainer.tempAdapter = new TempAutoCompleteResultsAdapter(this);
+        DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter = new RecentResultCursorAdapter(this, DDGApplication.getDB().getCursorSearchHistory());
     }
 
     // Assist action is better known as Google Now gesture
@@ -909,7 +911,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 			getSearchField().setAdapter(null);
 		}
 		else {
-	        getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.acAdapter);
+	        //getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.acAdapter);
+            getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.tempAdapter);//aaa adapter
 		}
 		
 		if(DDGControlVar.includeAppsInSearch && !DDGControlVar.hasAppsIndexed) {
@@ -1045,7 +1048,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 actionFavourites();
                 return true;
             case R.id.action_history:
-                //actionHistory();
+                actionHistory();
                 //Toast.makeText(this, "TO LNK", Toast.LENGTH_SHORT).show();
                 return true;
             case R.id.action_settings:

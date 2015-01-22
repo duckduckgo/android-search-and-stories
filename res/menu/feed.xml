@@ -8,9 +8,9 @@
           app:showAsAction="never" />
 
     <item android:id="@+id/action_remove_favourites"
-          android:title="@string/remove_favourites"
+          android:title="Unfavourite"
           android:orderInCategory="20"
-          app:showAsAction="never" />
+          app:showAsAction="never" /><!--@string/remove_favourites-->
 
     <item android:id="@+id/action_share"
           android:title="@string/share"
