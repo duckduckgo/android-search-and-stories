@@ -23,7 +23,6 @@
         android:layout_height="48dp"
         android:layout_alignParentLeft="true"
         android:layout_gravity="center_vertical"
-        android:layout_marginLeft="@dimen/default_margin"
         app:cornerRadius="3dp"
         android:scaleType="center"
         android:src="@drawable/time" />

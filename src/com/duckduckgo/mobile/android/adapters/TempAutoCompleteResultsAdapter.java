@@ -99,6 +99,7 @@ public class TempAutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> 
 
         if (suggestion != null) {
 
+
             StringBuilder stringInput, stringSuggestion;
             stringInput = new StringBuilder();
             stringSuggestion = new StringBuilder();

@@ -6,29 +6,43 @@
               android:layout_height="match_parent"
               android:background="#ffffff">
 
-    <com.duckduckgo.mobile.android.views.RecentSearchListView
-        android:id="@+id/recentList"
+    <ListView
+        android:id="@+id/search_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"/><!--
-        android:layout_height="0dp"
-        android:layout_weight="1"/>-->
+        android:visibility="gone"/>
 
-    <View
+    <LinearLayout
+        android:id="@+id/recent_saved_container"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#55a4a4a4"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <com.duckduckgo.mobile.android.views.SavedSearchListView
-        android:visibility="gone"
-        android:id="@+id/savedList"
-        android:layout_marginTop="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.5"/><!--
-        android:layout_height="0dp"
-        android:layout_weight="1"/>-->
+        <com.duckduckgo.mobile.android.views.RecentSearchListView
+            android:id="@+id/recent_list"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/><!--
+            android:layout_weight="0.5"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>-->
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#55a4a4a4"/>
+
+        <com.duckduckgo.mobile.android.views.SavedSearchListView
+            android:id="@+id/saved_list"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/><!--
+            android:layout_weight="0.5"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>-->
+
+    </LinearLayout>
 
 </LinearLayout>

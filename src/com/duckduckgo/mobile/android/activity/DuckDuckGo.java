@@ -62,6 +62,7 @@ import com.duckduckgo.mobile.android.events.SetMainButtonHomeEvent;
 import com.duckduckgo.mobile.android.events.SetMainButtonMenuEvent;
 import com.duckduckgo.mobile.android.events.StopActionEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.TestEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewBackPressActionEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearCacheAndCookiesEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearCacheEvent;
@@ -530,7 +531,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         actionBarTtitle = (TextView) actionBar.getCustomView().findViewById(R.id.actionbar_title);
 		searchField = (DDGAutoCompleteTextView) actionBar.getCustomView().findViewById(R.id.searchEditText);
 		//getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.acAdapter);
-        getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.tempAdapter);//aaa adapter
+        //getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.tempAdapter);//aaa adapter
 		getSearchField().setOnEditorActionListener(new OnEditorActionListener() {
 			@Override
 			public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
@@ -633,17 +634,22 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : DDGControlVar.mDuckDuckGoContainer.stopDrawable, null);
                 Log.e("aaa", "new text is: " + s);
-                if(false && !s.toString().equals("")) {
-                    //DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory(s.toString()));
-                    DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getFilter().filter(s);
-                    //DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
+                if(!s.toString().equals("")) {
+                    BusProvider.getInstance().post(new TestEvent(true));
+                    if(DDGControlVar.isAutocompleteActive) {
+                        DDGControlVar.mDuckDuckGoContainer.tempAdapter.getFilter().filter(s);
+                    } else {
+                        DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getFilter().filter(s);
+                    }
                 }
 			}
 
 			public void afterTextChanged(Editable arg0) {
+                Log.e("aaa", "after text changed: "+arg0.toString());
 			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.e("aaa", "before text changed: "+s);
 			}
 		});
 	}
@@ -908,11 +914,11 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		
 		// check autocomplete 
 		if(!DDGControlVar.isAutocompleteActive) {
-			getSearchField().setAdapter(null);
+			//getSearchField().setAdapter(null);
 		}
 		else {
 	        //getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.acAdapter);
-            getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.tempAdapter);//aaa adapter
+            //getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.tempAdapter);//aaa adapter
 		}
 		
 		if(DDGControlVar.includeAppsInSearch && !DDGControlVar.hasAppsIndexed) {

@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Build;
@@ -11,23 +12,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.TestEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.squareup.otto.Subscribe;
 
-public class SearchFragment extends Fragment implements ViewTreeObserver.OnGlobalLayoutListener {
+public class SearchFragment extends Fragment implements ViewTreeObserver.OnGlobalLayoutListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     public static final String TAG = "search_fragment";
+
+    private ListView autoCompleteResultListView;
 
     private RecentSearchListView recentSearchListView;
     //private RecentResultCursorAdapter recentSearchAdapter;
@@ -67,7 +74,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
         search_container = (LinearLayout) fragmentView.findViewById(R.id.search_container);
 
-        recentSearchListView = (RecentSearchListView) fragmentView.findViewById(R.id.recentList);
+        recentSearchListView = (RecentSearchListView) fragmentView.findViewById(R.id.recent_list);
         recentSearchListView.setDivider(null);
         //recentSearchAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory());
         //recentSearchListView.setAdapter(recentSearchAdapter);
@@ -75,16 +82,31 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
         //setMaxItemVisible(recentSearchListView);
 
-        savedSearchListView = (SavedSearchListView) fragmentView.findViewById(R.id.savedList);
+        savedSearchListView = (SavedSearchListView) fragmentView.findViewById(R.id.saved_list);
         savedSearchListView.setDivider(null);
         savedSearchAdapter = new SavedResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
         savedSearchListView.setAdapter(savedSearchAdapter);
+
+        autoCompleteResultListView = (ListView) fragmentView.findViewById(R.id.search_list);
+        autoCompleteResultListView.setDivider(null);
+        if(DDGControlVar.isAutocompleteActive) {
+            autoCompleteResultListView.setAdapter(DDGControlVar.mDuckDuckGoContainer.tempAdapter);
+        } else {
+            autoCompleteResultListView.setAdapter(DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter);
+        }
+        autoCompleteResultListView.setOnItemClickListener(this);
+        autoCompleteResultListView.setOnItemLongClickListener(this);
+        autoCompleteResultListView.setVisibility(View.GONE);
+        fragmentView.findViewById(R.id.recent_saved_container).setVisibility(View.VISIBLE);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         Log.e("aaa", "on resume");
+        syncAdapters();
+        showRecentAndSaved();
+
         if(recentSearchListView.getCount()!=0) {
             setMaxItemVisible(recentSearchListView);
         }
@@ -94,9 +116,27 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     public void onPause() {
         super.onPause();
         if(viewTreeObserver!=null) {
-            //if(Build.VERSION.SDK_INT>=)
-            //viewTreeObserver.removeOnGlobalLayoutListener(this);
+            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN) {
+                viewTreeObserver.removeOnGlobalLayoutListener(this);
+            } else {
+                viewTreeObserver.removeGlobalOnLayoutListener(this);
+            }
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if(DDGControlVar.isAutocompleteActive) {
+            //aaa make an event to the activity;
+        } else {
+            //
+        }
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+        return false;
     }
 
     @Override
@@ -106,80 +146,87 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     }
 
     @Subscribe
+    public void onTestEvent(TestEvent event) {//aaa make an event
+        showSearch();
+    }
+
+    @Subscribe
     public void onSyncAdaptersEvent(SyncAdaptersEvent event) {
+        Log.e("aaa", "on sync adapters");
+        syncAdapters();
         //recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
         //recentSearchAdapter.notifyDataSetChanged();
-        DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
-        DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
-        savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
-        savedSearchAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onGlobalLayout() {
-        int totalHeight = search_container.getRootView().getHeight();// - (int) getActivity().getResources().getDimension(R.dimen.actionbar_height);
+        int totalHeight = search_container.getRootView().getHeight();
         int visibleHeight = search_container.getHeight();
 
         int statusBar = getStatusBarHeight();
         int navigationBar = getNavigationBarHeight();
         Log.e("aaa", "status bar: "+statusBar);
         Log.e("aaa", "navigation bar: "+navigationBar);
-        //int padding = recentSearchListView.getPaddingTop() * 3;
         totalHeight = totalHeight - statusBar - navigationBar - actionBarHeight;
 
-        //if(2*visibleHeight<totalHeight) {
-        if (visibleHeight < totalHeight) {
+
+        int itemHeight = (int) getActivity().getResources().getDimension(R.dimen.temp_item_height);
+
+        LinearLayout.LayoutParams recentParams = (LinearLayout.LayoutParams) recentSearchListView.getLayoutParams();
+        LinearLayout.LayoutParams savedParams = (LinearLayout.LayoutParams) savedSearchListView.getLayoutParams();
+        int newRecentHeight = 0;
+        int newSavedHeight = 0;
+
+        visibleHeight = visibleHeight - recentParams.topMargin - recentParams.bottomMargin - savedParams.topMargin;
+
+        int maxItems = visibleHeight / itemHeight;
+
+        //if((totalHeight-visibleHeight) > (totalHeight/3)) {
+        if((totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
             Log.e("aaa", "open");
             Log.e("aaa", "total height: " + totalHeight);
             Log.e("aaa", "visible height: " + visibleHeight);
-            Log.e("aaa", "difference: " + (totalHeight - visibleHeight));
-            int itemHeight = (int) getActivity().getResources().getDimension(R.dimen.temp_item_height);
-            Log.e("aaa", "item height: " + itemHeight);
-            Log.e("aaa", "padding: "+recentSearchListView.getPaddingTop());
-            //visibleHeight = visibleHeight - recentSearchListView.getPaddingBottom() - recentSearchListView.getPaddingTop() - savedSearchListView.getPaddingTop();
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recentSearchListView.getLayoutParams();
-            visibleHeight = visibleHeight - params.topMargin - params.bottomMargin - params.topMargin;
-            Log.e("aaa", "new visible height: "+visibleHeight);
-            int maxItems = visibleHeight / itemHeight;
-            //ViewGroup.LayoutParams params = recentSearchListView.getLayoutParams();
-            //LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recentSearchListView.getLayoutParams();
-            float newWeight = (float) (maxItems - 1) / maxItems;
-            Log.e("aaa", "new weight: "+newWeight);
-            params.weight = newWeight;
-            recentSearchListView.setLayoutParams(params);
-            //recentSearchListView.requestLayout();
 
+            int recentItems = (maxItems - 1) <= recentSearchListView.getCount() ? (maxItems - 1) : recentSearchListView.getCount();
+            int savedItems = maxItems - recentItems;
 
-            //int maxItems = (int) (visibleHeight / (itemHeight) + (recentSearchListView.getPaddingBottom() * 3));
-            //maxItems = maxItems - 1;
+            Log.e("aaa", "MAX items: "+maxItems);
+            Log.e("aaa", "recent items: "+recentItems);
+            Log.e("aaa", "saved items: "+savedItems);
 
-            //ViewGroup.LayoutParams params = recentSearchListView.getLayoutParams();
-            //int oldHeight = params.height;
-            //int newHeight = (itemHeight * maxItems);
-            //params.height = (itemHeight * maxItems);
-            //listView.setLayoutParams(params);
-            //listView.requestLayout();
-            Log.e("aaa", "open, max items: "+maxItems);
+            Log.e("aaa", "visible height: "+visibleHeight);
+            Log.e("aaa", "recent height: "+recentItems*itemHeight);
+            Log.e("aaa", "saved height: "+savedItems*itemHeight);
+
+            newRecentHeight = recentItems * itemHeight;
+            newSavedHeight = LinearLayout.LayoutParams.MATCH_PARENT;
 
         } else {
-            //ViewGroup.LayoutParams params = recentSearchListView.getLayoutParams();
-            //params.height = -2;
-            //listView.setLayoutParams(params);
-            //listView.requestLayout();
             Log.e("aaa", "close");
             Log.e("aaa", "total height: " + totalHeight);
             Log.e("aaa", "visible height: " + visibleHeight);
-            Log.e("aaa", "difference: " + (totalHeight - visibleHeight));
-            int itemHeight = (int) getActivity().getResources().getDimension(R.dimen.temp_item_height);
-            Log.e("aaa", "item height: "+itemHeight);
-            int maxItems = visibleHeight / itemHeight;
-            Log.e("aaa", "max items: "+maxItems);
-            //Log.e("aaa", "item height: "+item.getMeasuredHeight());
-            //Log.e("aaa", "max items: "+(visibleHeight / item.getMeasuredHeight()));
-            LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) recentSearchListView.getLayoutParams();
-            params.weight = 0.5f;
-            recentSearchListView.setLayoutParams(params);
-            //recentSearchListView.requestLayout();
+            int halfItems = maxItems / 2;
+            int recentItems = halfItems <= recentSearchListView.getCount() ? halfItems : recentSearchListView.getCount();
+            int savedItems = maxItems - recentItems;
+            Log.e("aaa", "MAX items: "+maxItems);
+            Log.e("aaa", "half items: "+halfItems);
+            Log.e("aaa", "recent items: "+recentItems);
+            Log.e("aaa", "saved items: "+savedItems);
+
+            newRecentHeight = recentItems * itemHeight;
+            newSavedHeight = LinearLayout.LayoutParams.MATCH_PARENT;
+
+            Log.e("aaa", "visible height: "+visibleHeight);
+            Log.e("aaa", "recent height: "+newRecentHeight);
+            Log.e("aaa", "saved height: "+newSavedHeight);
+        }
+        if(recentParams.height!=newRecentHeight) {
+            recentParams.height = newRecentHeight;
+            recentSearchListView.setLayoutParams(recentParams);
+        }
+        if(savedParams.height!=newSavedHeight) {
+            savedParams.height = newSavedHeight;
+            savedSearchListView.setLayoutParams(savedParams);
         }
 
     }
@@ -202,51 +249,37 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     }
 
     public void setMaxItemVisible(final ListView listView) {
-        Log.e("aaa", "--------------------inside calculate visible item");
+
         final View container = search_container;
-        //Log.e("aaa", "search container measured height: "+search_container.getMeasuredHeight());
         viewTreeObserver = container.getViewTreeObserver();
-        //viewTreeObserver.addOnGlobalLayoutListener(this);
-        /*
-        viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
 
-                int totalHeight = container.getRootView().getHeight();// - (int) getActivity().getResources().getDimension(R.dimen.actionbar_height);
-                int visibleHeight = container.getHeight();
-                //if(2*visibleHeight<totalHeight) {
-                if ((totalHeight - visibleHeight) > 300) {
-                    Log.e("aaa", "open");
-                    Log.e("aaa", "total height: " + totalHeight);
-                    Log.e("aaa", "visible height: " + visibleHeight);
-                    View item = listView.getAdapter().getView(0, null, listView);
-                    item.measure(0, 0);
-                    int itemHeight = (item.getMeasuredHeight() + listView.getDividerHeight());
-                    Log.e("aaa", "item height: " + itemHeight);
-                    int maxItems = (int) (visibleHeight / (itemHeight) + (listView.getPaddingBottom() * 3));
-                    maxItems = maxItems - 1;
+        viewTreeObserver.addOnGlobalLayoutListener(this);
 
-                    ViewGroup.LayoutParams params = listView.getLayoutParams();
-                    int oldHeight = params.height;
-                    int newHeight = (itemHeight * maxItems);
-                    params.height = (itemHeight * maxItems);
-                    //listView.setLayoutParams(params);
-                    //listView.requestLayout();
-                    //Log.e("aaa", "open, max items: "+maxItems);
+    }
 
-                } else {
-                    ViewGroup.LayoutParams params = listView.getLayoutParams();
-                    params.height = -2;
-                    //listView.setLayoutParams(params);
-                    //listView.requestLayout();
-                    Log.e("aaa", "close");
-                    Log.e("aaa", "total height: " + totalHeight);
-                    Log.e("aaa", "visible height: " + visibleHeight);
-                }
+    private void syncAdapters() {
+        DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
+        DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
+        savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
+        savedSearchAdapter.notifyDataSetChanged();
+    }
 
-            }
-        });*/
+    private void showSearch() {
+        toggleSearchView(true);
+    }
 
+    private void showRecentAndSaved() {
+        toggleSearchView(false);
+    }
+
+    private void toggleSearchView(boolean openSearch) {
+        if(openSearch) {
+            fragmentView.findViewById(R.id.recent_saved_container).setVisibility(View.GONE);
+            autoCompleteResultListView.setVisibility(View.VISIBLE);
+        } else {
+            fragmentView.findViewById(R.id.recent_saved_container).setVisibility(View.VISIBLE);
+            autoCompleteResultListView.setVisibility(View.GONE);
+        }
     }
 
 
