@@ -33,6 +33,7 @@
     <style name="OverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:minWidth">@dimen/actionbar_overflow_width</item>
         <item name="android:layout_width">@dimen/actionbar_overflow_width</item>
+        <item name="android:padding">0dp</item>
     </style>
 
     <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">
