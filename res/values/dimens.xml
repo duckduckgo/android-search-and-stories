@@ -1,13 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- new dimen -->
+
     <dimen name="temp_item_height">48dp</dimen>
 
     <dimen name="actionbar_height">56dp</dimen>
-    <dimen name="actionbar_margin">7dp</dimen>
-    <dimen name="actionbar_overflow_margin">44dp</dimen><!--48-->
+    <dimen name="actionbar_height_low">48dp</dimen>
+    <dimen name="actionbar_tab_height">51.3dp</dimen>
+    <dimen name="actionbar_margin">8dp</dimen>
+    <dimen name="actionbar_padding">8dp</dimen> <!-- aaa try to change margin with padding -->
+    <dimen name="actionbar_title_left_margin">24dp</dimen>
+    <dimen name="actionbar_overflow_width">48dp</dimen><!--48 poi 44-->
+
+    <dimen name="toolbar_height">64.3dp</dimen>
+    <dimen name="toolbar_icon_margin">16dp</dimen>
+    <dimen name="toolbar_icon_size">32dp</dimen>
+    <dimen name="toolbar_title_left_margin">24dp</dimen>
+    <dimen name="toolbar_category_margin">8dp</dimen>
+    <dimen name="toolbar_category_height">22dp</dimen>
+    <dimen name="toolbar_divider_height">8dp</dimen>
+
+
     <dimen name="menu_padding">6dip</dimen>
     <dimen name="menu_letterspace">10dip</dimen>
     <dimen name="menu_outer_margin">4dp</dimen>
+
+    <!-- old dimen -->
     
     <dimen name="default_margin">8dp</dimen>
     <dimen name="default_margin_tiny">2dp</dimen>

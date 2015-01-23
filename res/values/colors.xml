@@ -1,9 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
 
+    <!-- temp -->
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
     <color name="colorPrimary">#de5833</color>
     <color name="colorPrimaryDark">#bf360c</color>
     <color name="colorAccent">#ff5722</color>
+
+    <!-- new colors -->
+
+    <color name="colorPrimaryRed">#de5833</color>
+    <color name="colorPrimaryDarkRed">#bd4b2b</color>
+    <color name="colorPrimaryLightRed">#e37151</color>
+
+    <color name="accentGold">#f1a031</color>
+
+    <color name="colorPrimaryBlue">#4495d4</color>
+    <color name="colorPrimaryDarkBlue">#3a7fb4</color>
+    <color name="colorPrimaryLightBlue">#60a5da</color>
+
+    <color name="accentGreen">#5b9e4d</color>
+    <color name="accentPurple">#5454db</color>
+
+    <color name="feed_title">#404040</color>
+
+    <color name="actionbar_tab_selected">@color/white</color>
+    <color name="actionbar_tab_unselected">#88ffffff</color>
+
+    <color name="search_dark">#212121</color>
+    <color name="search_light">#a4a4a4</color>
+
+    <color name="text_light">#757575</color>
+
+    <!-- old colors -->
 
     <color name="welcome_button">#d24e25</color>
     <color name="welcome_button_pressed">#b33331</color>

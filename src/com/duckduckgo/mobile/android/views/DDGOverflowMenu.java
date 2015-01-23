@@ -42,7 +42,8 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     private HashMap<Integer, MenuItem> headerItems;
 
     public DDGOverflowMenu(Context context) {
-        super(context, null, android.R.attr.listPopupWindowStyle);
+        //super(context, null, android.R.attr.listPopupWindowStyle);
+        super(context, null, android.R.attr.popupMenuStyle);
         //super(context);
         this.context = context;
         init();

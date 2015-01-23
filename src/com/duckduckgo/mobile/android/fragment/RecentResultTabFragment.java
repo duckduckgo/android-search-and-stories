@@ -17,6 +17,7 @@ import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.squareup.otto.Subscribe;
@@ -28,6 +29,8 @@ public class RecentResultTabFragment extends ListFragment {
     //private HistoryListView historyListView;
     private RecentSearchListView recentSearchListView;
     private RecentResultCursorAdapter recentResultAdapter;
+
+    private boolean recordHistory = true;
 
     private View fragmentView = null;
 
@@ -45,6 +48,8 @@ public class RecentResultTabFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        recordHistory = PreferencesManager.getRecordHistory();
+        Log.e("aaa", "record history: "+recordHistory);
         fragmentView = inflater.inflate(R.layout.fragment_tab_recentresult, container, false);
         return fragmentView;
     }
@@ -53,12 +58,18 @@ public class RecentResultTabFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //historyListView = (HistoryListView) getListView();
-        recentSearchListView = (RecentSearchListView) getListView();
-        //recentSearchListView = (RecentSearchListView) fragmentView.findViewById(R.id.listview);
-        recentResultAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory());
-        //historyListView.setAdapter(recentResultAdapter);
-        recentSearchListView.setAdapter(recentResultAdapter);
+        if(recordHistory) {
+            //historyListView = (HistoryListView) getListView();
+            recentSearchListView = (RecentSearchListView) getListView();
+            //recentSearchListView = (RecentSearchListView) fragmentView.findViewById(R.id.listview);
+            recentResultAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory());
+            //historyListView.setAdapter(recentResultAdapter);
+            recentSearchListView.setAdapter(recentResultAdapter);
+        } else {
+            getListView().setVisibility(View.GONE);
+            //fragmentView.findViewById(R.id.contenitore).setVisibility(View.GONE);
+            //fragmentView.findViewById(R.id.text).setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

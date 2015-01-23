@@ -32,6 +32,8 @@ import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
+import com.duckduckgo.mobile.android.R;
+
 import org.w3c.dom.Text;
 
 /**
@@ -72,7 +74,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
     private static final int TITLE_OFFSET_DIPS = 24;
     private static final int TAB_VIEW_PADDING_DIPS = 16;
-    private static final int TAB_VIEW_TEXT_SIZE_SP = 12;
+    private static final int TAB_VIEW_TEXT_SIZE_SP = 14;
 
     private int mTitleOffset;
 
@@ -178,9 +180,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
     protected TextView createDefaultTabView(Context context) {
         TextView textView = new TextView(context);
         textView.setGravity(Gravity.CENTER);
-        textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, TAB_VIEW_TEXT_SIZE_SP);
-        textView.setTypeface(Typeface.DEFAULT_BOLD);
-        textView.setTextColor(0x88ffffff);
+        textView.setTextAppearance(context, R.style.TabTitle);
+        textView.setHeight((int)getResources().getDimension(R.dimen.actionbar_tab_height));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // If we're running on Honeycomb or newer, then we can use the Theme's
@@ -274,9 +275,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
             if(positionOffset==0 && selectedChild!=oldSelection) {
                 selectedChild.setSelected(true);
                 removeOldSelection();
-                ((TextView)selectedChild).setTextColor(0xffffffff);
+                ((TextView)selectedChild).setTextColor(getResources().getColor(R.color.actionbar_tab_selected));
                 if(oldSelection!=null) {
-                    ((TextView)oldSelection).setTextColor(0x88ffffff);
+                    ((TextView)oldSelection).setTextColor(getResources().getColor(R.color.actionbar_tab_unselected));
                 }
                 oldSelection = selectedChild;
             }

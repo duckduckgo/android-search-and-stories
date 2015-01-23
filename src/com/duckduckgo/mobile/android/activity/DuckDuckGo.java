@@ -60,6 +60,7 @@ import com.duckduckgo.mobile.android.events.RequestOpenWebPageEvent;
 import com.duckduckgo.mobile.android.events.RequestSyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.SetMainButtonHomeEvent;
 import com.duckduckgo.mobile.android.events.SetMainButtonMenuEvent;
+import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.events.StopActionEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.TestEvent;
@@ -405,49 +406,75 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 showActionBarSearchField();
                 setActionBarShadow(true);
                 hasOverflowButtonVisible(true);
+
+                setActionBarMarginBottom(true);
+
                 setHomeButton(DDGControlVar.START_SCREEN!=screen);
+                setHomeButtonMarginTop(false);
+                setActionBarHeight(true);
                 break;
             case SCR_RECENTS:
                 showActionBarSearchField();
                 setActionBarShadow(false);
+                setActionBarMarginBottom(false);
                 hasOverflowButtonVisible(false);
                 setHomeButton(DDGControlVar.START_SCREEN!=screen);
+                setHomeButtonMarginTop(true);
+                setActionBarHeight(false);
                 break;
             case SCR_SAVED:
                 showActionBarSearchField();
                 setActionBarShadow(false);
+                setActionBarMarginBottom(false);
                 hasOverflowButtonVisible(false);
                 setHomeButton(DDGControlVar.START_SCREEN!=screen);
+                setHomeButtonMarginTop(true);
+                setActionBarHeight(false);
                 break;
             case SCR_WEBVIEW:
                 showActionBarSearchField();
                 setActionBarShadow(true);
                 hasOverflowButtonVisible(true);
+
+                setActionBarMarginBottom(true);
+
                 setHomeButton(true);
+                setHomeButtonMarginTop(false);
+                setActionBarHeight(true);
                 break;
             case SCR_SEARCH:
                 showActionBarSearchField();
                 setActionBarShadow(true);
                 hasOverflowButtonVisible(false);
+
+                setActionBarMarginBottom(true);
+
                 setBangButton();
+                setActionBarHeight(true);
                 break;
             case SCR_ABOUT:
                 showActionBarTitle(getResources().getString(R.string.about));
                 setActionBarShadow(true);
                 hasOverflowButtonVisible(false);
                 setHomeButton(true);
+                setHomeButtonMarginTop(false);
+                setActionBarHeight(true);
                 break;
             case SCR_HELP:
                 showActionBarTitle(getResources().getString(R.string.help_feedback));
                 setActionBarShadow(true);
                 hasOverflowButtonVisible(false);
                 setHomeButton(true);
+                setHomeButtonMarginTop(false);
+                setActionBarHeight(true);
                 break;
             case SCR_SETTINGS:
                 showActionBarTitle(getResources().getString(R.string.settings));
                 setActionBarShadow(true);
                 hasOverflowButtonVisible(false);
                 setHomeButton(true);
+                setHomeButtonMarginTop(false);
+                setActionBarHeight(true);
                 break;
             default:
                 break;
@@ -635,7 +662,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 				getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : DDGControlVar.mDuckDuckGoContainer.stopDrawable, null);
                 Log.e("aaa", "new text is: " + s);
                 if(!s.toString().equals("")) {
-                    BusProvider.getInstance().post(new TestEvent(true));
+                    BusProvider.getInstance().post(new ShowAutoCompleteResultsEvent());
                     if(DDGControlVar.isAutocompleteActive) {
                         DDGControlVar.mDuckDuckGoContainer.tempAdapter.getFilter().filter(s);
                     } else {
@@ -1095,6 +1122,15 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         setActionBarMarginStart(!visible);
     }
 
+    private void setHomeButtonMarginTop(boolean visible) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) actionBar.getCustomView().findViewById(R.id.home).getLayoutParams();
+        int padding = 0;
+        if(visible) {
+            padding = (int) getResources().getDimension(R.dimen.actionbar_margin);
+        }
+        params.topMargin = padding;
+    }
+
     private void setBangButton() {
         actionBar.getCustomView().findViewById(R.id.home).setVisibility(View.GONE);
         actionBar.getCustomView().findViewById(R.id.overflow).setVisibility(View.GONE);
@@ -1128,10 +1164,19 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     private void hasOverflowButtonVisible(boolean visible) {
         int endMargin = 0;
         if(visible) {
-            endMargin = (int)getResources().getDimension(R.dimen.actionbar_overflow_margin);
+            endMargin = (int)getResources().getDimension(R.dimen.actionbar_overflow_width);
         }
         toolbar.setContentInsetsRelative(0, endMargin);
         setActionBarMarginEnd(!visible);
+    }
+
+    private void setActionBarMarginBottom(boolean visible) {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) searchFieldContainer.getLayoutParams();
+        int margin = 0;
+        if(visible) {
+            margin = (int) getResources().getDimension(R.dimen.actionbar_margin);
+        }
+        params.bottomMargin = margin;
     }
 
     private void setActionBarMarginStart(boolean visible) {
@@ -1158,6 +1203,17 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         } else {
             dropShadowDivider.setVisibility(View.GONE);
         }
+    }
+
+    private void setActionBarHeight(boolean normal) {
+        int height = 0;
+        if(normal) {
+            height = (int) getResources().getDimension(R.dimen.actionbar_height);
+        } else {
+            height = (int) getResources().getDimension(R.dimen.actionbar_height_low);
+        }
+        toolbar.setMinimumHeight(height);
+        toolbar.getLayoutParams().height = height;
     }
 
     private void actionFavourites() {
@@ -1929,5 +1985,28 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     @Subscribe
     public void onSearchBarChangeEvent(SearchBarChangeEvent event) {
         //changeSearchBar(event.screen);
+    }
+
+    @Subscribe
+    public void onTestEvent(TestEvent event) {
+        SuggestObject suggestObject = DDGControlVar.mDuckDuckGoContainer.tempAdapter.getItem(event.position );
+        if (suggestObject != null) {
+            SuggestType suggestType = suggestObject.getType();
+            if(suggestType == SuggestType.TEXT) {
+                if(PreferencesManager.getDirectQuery()){
+                    String text = suggestObject.getPhrase().trim();
+                    if(suggestObject.hasOnlyBangQuery()){
+                        getSearchField().addTextWithTrailingSpace(suggestObject.getPhrase());
+                    }else{
+                        keyboardService.hideKeyboard(getSearchField());
+                        searchOrGoToUrl(text);
+                    }
+                }
+            }
+            else if(suggestType == SuggestType.APP) {
+                DDGUtils.launchApp(DuckDuckGo.this, suggestObject.getSnippet());
+            }
+        }
+
     }
 }

@@ -12,9 +12,11 @@
         <item name="mainTextSize">14sp</item>
         <item name="recentTextSize">14sp</item>
 
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/colorPrimaryRed</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkRed</item>
+        <item name="colorAccent">@color/colorPrimaryRed</item>
+
+        <item name="actionOverflowButtonStyle">@style/OverflowButton</item>
 
 
         <!--
@@ -28,16 +30,9 @@
         <item name="android:tint">#ffffff</item>
     </style>
 
-    <style name="DDGBlackOverflow" parent="DDGTheme.Base">
-        <item name="android:tint">#AFAFAF</item>
-    </style>
-
-    <style name="DDGToolbar" parent="DDGTheme.Base">
-        <item name="actionOverflowButtonStyle">@style/Overflow</item>
-    </style>
-    
-    <style name="Overflow" parent="Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">@drawable/home</item>
+    <style name="OverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:minWidth">@dimen/actionbar_overflow_width</item>
+        <item name="android:layout_width">@dimen/actionbar_overflow_width</item>
     </style>
 
     <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">

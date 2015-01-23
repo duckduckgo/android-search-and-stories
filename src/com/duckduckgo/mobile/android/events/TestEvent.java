@@ -2,9 +2,9 @@ package com.duckduckgo.mobile.android.events;
 
 public class TestEvent extends Event {
 
-    public boolean isAutoCompleteActive = true;
+    public int position;
 
-    public TestEvent(boolean isAutoCompleteActive) {
-        this.isAutoCompleteActive = isAutoCompleteActive;
+    public TestEvent(int position) {
+        this.position = position;
     }
 }

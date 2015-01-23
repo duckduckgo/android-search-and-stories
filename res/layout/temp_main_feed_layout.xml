@@ -14,29 +14,24 @@
 
     <TextView
         android:id="@+id/feedCategotyTextView"
-        android:textColor="#ffffff"
-        android:textSize="11sp"
-        android:textStyle="bold"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="4dp"
-        android:paddingBottom="4dp"
         android:layout_margin="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:background="@drawable/temp_feed_category_background"
-        style="@style/MainFeedText" />
+        style="@style/FeedCategory"/>
 
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
-        android:layout_height="64.3dp"
-        android:minHeight="64.3dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:minHeight="@dimen/toolbar_height"
         android:background="#ffffff"
         android:layout_below="@id/feedItemBackground"
         android:id="@+id/feedWrapper"
-        toolbar:contentInsetStart="0dp"><!--
+        toolbar:contentInsetStart="0dp"
+        toolbar:theme="@style/FeedToolbar"
+        toolbar:popupTheme="@style/ThemeOverlay.AppCompat.Light"><!--
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">-->
 
@@ -47,10 +42,10 @@
 
             <com.duckduckgo.mobile.android.download.AsyncImageView
                 style="@style/MainFeedText"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/toolbar_icon_size"
+                android:layout_height="@dimen/toolbar_icon_size"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="@dimen/toolbar_icon_margin"
                 android:scaleType="fitCenter"
                 app:usePicasso="false"
                 android:id="@+id/feedItemSourceIcon" />
@@ -58,13 +53,10 @@
             <TextView android:layout_width="match_parent"
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical"
-                      android:layout_marginLeft="24dp"
-                      style="@style/MainFeedText"
+                      android:layout_marginLeft="@dimen/toolbar_title_left_margin"
                       android:text="This is a Test String!"
-                      android:textSize="16sp"
-                      android:maxLines="2"
-                      android:ellipsize="end"
-                      android:id="@+id/feedTitleTextView" />
+                      android:id="@+id/feedTitleTextView"
+                      style="@style/FeedTitle" />
 
         </LinearLayout>
         <!--
@@ -75,7 +67,7 @@
     <View
         android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="8dp"
+        android:layout_height="@dimen/toolbar_divider_height"
         android:layout_below="@id/feedWrapper"
-        android:background="#33000000"/>
+        android:background="@color/search_light"/>
 </RelativeLayout>

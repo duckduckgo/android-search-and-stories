@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -30,10 +31,19 @@ public class RecentsFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+
         pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(), new String[] {"Recents", "Recent searches"}, new Fragment[] {new RecentFeedTabFragment(), new RecentResultTabFragment()});
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
+
         slidingTabLayout = (SlidingTabLayout) fragmentView.findViewById(R.id.sliding_tabs);
+        slidingTabLayout.setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
+        slidingTabLayout.setViewPager(viewPager);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
         slidingTabLayout.setViewPager(viewPager);
     }
 }

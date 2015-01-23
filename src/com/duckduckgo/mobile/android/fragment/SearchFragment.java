@@ -23,6 +23,7 @@ import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.TestEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -43,7 +44,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     private SavedResultCursorAdapter savedSearchAdapter;
 
     private LinearLayout search_container;
-    private ViewTreeObserver viewTreeObserver = null;
+    //private ViewTreeObserver viewTreeObserver = null;
     private int actionBarHeight = 0;
     private View fragmentView = null;
 
@@ -103,24 +104,19 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("aaa", "on resume");
         syncAdapters();
         showRecentAndSaved();
 
-        if(recentSearchListView.getCount()!=0) {
-            setMaxItemVisible(recentSearchListView);
-        }
+        search_container.getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if(viewTreeObserver!=null) {
-            if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN) {
-                viewTreeObserver.removeOnGlobalLayoutListener(this);
-            } else {
-                viewTreeObserver.removeGlobalOnLayoutListener(this);
-            }
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN) {
+            search_container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+        } else {
+            search_container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
         }
     }
 
@@ -128,6 +124,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(DDGControlVar.isAutocompleteActive) {
             //aaa make an event to the activity;
+            BusProvider.getInstance().post(new TestEvent(position));
         } else {
             //
         }
@@ -139,23 +136,14 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         return false;
     }
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.e("aaa", "Search fragment hidden: " + hidden);
-    }
-
     @Subscribe
-    public void onTestEvent(TestEvent event) {//aaa make an event
+    public void onShowAutoCompleteResultsEvent(ShowAutoCompleteResultsEvent event) {
         showSearch();
     }
 
     @Subscribe
     public void onSyncAdaptersEvent(SyncAdaptersEvent event) {
-        Log.e("aaa", "on sync adapters");
         syncAdapters();
-        //recentSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
-        //recentSearchAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -250,10 +238,10 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
     public void setMaxItemVisible(final ListView listView) {
 
-        final View container = search_container;
-        viewTreeObserver = container.getViewTreeObserver();
+        //final View container = search_container;
+        //viewTreeObserver = container.getViewTreeObserver();
 
-        viewTreeObserver.addOnGlobalLayoutListener(this);
+        //viewTreeObserver.addOnGlobalLayoutListener(this);
 
     }
 
