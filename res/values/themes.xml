@@ -29,11 +29,11 @@
         <!--
         <item name="android:textColorPrimary">#ffffff</item>-->
     </style>
-
+<!--
     <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
         <item name="android:popupBackground">@drawable/temp_popup</item>
         <item name="android:tint">#ffffff</item>
-    </style>
+    </style>-->
 
     <style name="DDGWhiteOverflow" parent="DDGTheme.Base">
         <item name="android:tint">#ffffff</item>
