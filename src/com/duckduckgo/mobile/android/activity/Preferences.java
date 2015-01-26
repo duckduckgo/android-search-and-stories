@@ -72,7 +72,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         super.onCreate(savedInstanceState);
 
         if(false && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-            getFragmentManager().beginTransaction().add(android.R.id.content, new PreferencesFragment(), "pref").commit();
+            //getFragmentManager().beginTransaction().add(android.R.id.content, new PreferencesFragment(), "pref").commit();
         } else {
             addPreferencesFromResource(R.xml.temp_preferences);
         }
