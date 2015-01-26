@@ -7,7 +7,7 @@ import android.support.v7.app.ActionBar;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 
-public class PreferencesFragment extends PreferenceFragment {
+public class PreferencesFragment extends android.support.v4.preference.PreferenceFragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
