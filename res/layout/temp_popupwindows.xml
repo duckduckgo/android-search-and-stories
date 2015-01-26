@@ -16,6 +16,11 @@
         android:id="@+id/menu_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@null"/>
+        android:divider="@null"
+        android:fadingEdgeLength="0dp"
+        android:fadingEdge="none"
+        android:requiresFadingEdge="none"
+        android:overScrollMode="never"
+        android:listSelector="?attr/selectableItemBackground"/>
 
 </LinearLayout>

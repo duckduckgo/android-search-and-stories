@@ -29,6 +29,7 @@
         android:id="@+id/item_text"
         android:textColor="#212121"
         android:textSize="16sp"
+        android:maxLines="2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

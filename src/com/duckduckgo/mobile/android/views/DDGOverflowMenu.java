@@ -2,11 +2,15 @@ package com.duckduckgo.mobile.android.views;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.v7.widget.ListPopupWindow;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Adapter;
@@ -19,6 +23,7 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewUpdateMenuNavigationEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
@@ -42,9 +47,12 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     private HashMap<Integer, MenuItem> headerItems;
 
     public DDGOverflowMenu(Context context) {
-        //super(context, null, android.R.attr.listPopupWindowStyle);
-        super(context, null, android.R.attr.popupMenuStyle);
+        super(context, null, android.R.attr.listPopupWindowStyle);
+
+        //super(context, null, android.R.attr.popupMenuStyle);
+        //super(context, null, android.R.attr.actionOverflowMenuStyle);
         //super(context);
+        //super(context, null, android.R.attr.spinnerStyle);
         this.context = context;
         init();
     }
@@ -65,8 +73,13 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
 
+        ListPopupWindow temp = new ListPopupWindow(context);
+        //setBackgroundDrawable(temp.getBackground());
+
         menuListView = (ListView) container.findViewById(R.id.menu_listview);
         header = (LinearLayout) container.findViewById(R.id.header_container);
+
+        //menuListView.setOnTouchListener(this);
     }
 
     public void setMenu(Menu menu) {
@@ -103,7 +116,16 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     }
 
     public void show(View anchor) {
+        TypedValue value = new TypedValue();
+        context.getTheme().resolveAttribute(android.R.attr.listPreferredItemHeight, value, true);
+        String s = TypedValue.coerceToString(value.type, value.data);
+        DisplayMetrics display = new DisplayMetrics();
+        ((DuckDuckGo)context).getWindowManager().getDefaultDisplay().getMetrics(display);
+        float item = value.getDimension(display);
+        Log.e("aaa", "single item is: "+item);
+
         setWidth(getMaxWidth(context, adapter));
+        //setWidth(54*3*3);
 
         int xOffset = anchor.getMeasuredWidth() - getWidth();
         int yOffset = anchor.getMeasuredHeight() - getHeight();
@@ -144,13 +166,17 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     }
 
     public static int getMaxWidth(Context context, Adapter adapter) {
+        Log.e("aaa", "-------------get max width");
         int maxLength = 0;
         for(int i=0; i<adapter.getCount(); i++) {
             int newLength = ((MenuItem)adapter.getItem(i)).getTitle().length();
+            Log.e("aaa", "new length: "+newLength);
             maxLength = newLength>maxLength ? newLength : maxLength;
+            Log.e("aaa", "max length: "+maxLength);
         }
-        int width = (int) context.getResources().getDimension(R.dimen.menu_letterspace) * maxLength;
+        int width = (int) context.getResources().getDimension(R.dimen.menu_letterspace) * (maxLength+2);
         int menuPadding = (int) context.getResources().getDimension(R.dimen.menu_padding) * 2;
+        Log.e("aaa", "size: "+width+menuPadding);
         return width + menuPadding;
 
     }

@@ -23,7 +23,7 @@
 
 
     <dimen name="menu_padding">6dip</dimen>
-    <dimen name="menu_letterspace">10dip</dimen>
+    <dimen name="menu_letterspace">10sp</dimen><!-- 10dp -->
     <dimen name="menu_outer_margin">4dp</dimen>
 
     <!-- old dimen -->

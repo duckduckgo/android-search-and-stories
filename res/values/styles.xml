@@ -165,4 +165,10 @@
         <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="OverflowMenuStyle" parent="Widget.AppCompat.ListPopupWindow"><!--
+        <item name="android:dropDownVerticalOffset">-10dip</item>
+        <item name="android:dropDownHorizontalOffset">0dip</item>
+        <item name="android:dropDownWidth">wrap_content</item>-->
+    </style>
 </resources>

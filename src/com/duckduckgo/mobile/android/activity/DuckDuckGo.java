@@ -411,7 +411,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
                 setHomeButton(DDGControlVar.START_SCREEN!=screen);
                 setHomeButtonMarginTop(false);
-                setActionBarHeight(true);
+                setStandardActionBarHeight(true);
                 break;
             case SCR_RECENTS:
                 showActionBarSearchField();
@@ -420,7 +420,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 hasOverflowButtonVisible(false);
                 setHomeButton(DDGControlVar.START_SCREEN!=screen);
                 setHomeButtonMarginTop(true);
-                setActionBarHeight(false);
+                setStandardActionBarHeight(false);
                 break;
             case SCR_SAVED:
                 showActionBarSearchField();
@@ -429,7 +429,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 hasOverflowButtonVisible(false);
                 setHomeButton(DDGControlVar.START_SCREEN!=screen);
                 setHomeButtonMarginTop(true);
-                setActionBarHeight(false);
+                setStandardActionBarHeight(false);
                 break;
             case SCR_WEBVIEW:
                 showActionBarSearchField();
@@ -440,7 +440,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
                 setHomeButton(true);
                 setHomeButtonMarginTop(false);
-                setActionBarHeight(true);
+                setStandardActionBarHeight(true);
                 break;
             case SCR_SEARCH:
                 showActionBarSearchField();
@@ -448,9 +448,10 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 hasOverflowButtonVisible(false);
 
                 setActionBarMarginBottom(true);
+                setHomeButtonMarginTop(false);
 
                 setBangButton();
-                setActionBarHeight(true);
+                setStandardActionBarHeight(true);
                 break;
             case SCR_ABOUT:
                 showActionBarTitle(getResources().getString(R.string.about));
@@ -458,7 +459,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 hasOverflowButtonVisible(false);
                 setHomeButton(true);
                 setHomeButtonMarginTop(false);
-                setActionBarHeight(true);
+                setStandardActionBarHeight(true);
                 break;
             case SCR_HELP:
                 showActionBarTitle(getResources().getString(R.string.help_feedback));
@@ -466,7 +467,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 hasOverflowButtonVisible(false);
                 setHomeButton(true);
                 setHomeButtonMarginTop(false);
-                setActionBarHeight(true);
+                setStandardActionBarHeight(true);
                 break;
             case SCR_SETTINGS:
                 showActionBarTitle(getResources().getString(R.string.settings));
@@ -474,7 +475,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 hasOverflowButtonVisible(false);
                 setHomeButton(true);
                 setHomeButtonMarginTop(false);
-                setActionBarHeight(true);
+                setStandardActionBarHeight(true);
                 break;
             default:
                 break;
@@ -1205,14 +1206,14 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         }
     }
 
-    private void setActionBarHeight(boolean normal) {
+    private void setStandardActionBarHeight(boolean normal) {
         int height = 0;
         if(normal) {
             height = (int) getResources().getDimension(R.dimen.actionbar_height);
         } else {
             height = (int) getResources().getDimension(R.dimen.actionbar_height_low);
         }
-        toolbar.setMinimumHeight(height);
+        //toolbar.setMinimumHeight(height);
         toolbar.getLayoutParams().height = height;
     }
 
