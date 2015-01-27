@@ -7,27 +7,31 @@
     
     <string name="search_hint">Search&#8230;</string>
     
+    <string name="PrefGroupGeneral">General</string>
+    <string name="PrefGroupStories">Stories</string>
+    <string name="PrefGroupSearch">Search</string>
+    <string name="PrefGroupOther">Other</string>
     <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Privacy</string>
     <string name="PrefGroupFeedback">Feedback</string>
     <string name="PrefTheme">Theme</string>
     <string name="PrefThemeLight">Light</string>
     <string name="PrefThemeDark">Dark</string>
-    <string name="PrefStartScreen">Home Screen</string>
+    <string name="PrefStartScreen">Homepage</string>
     <string name="PrefStories">Stories</string>
     <string name="PrefWaterCoolerStories">Stories</string>
     <string name="PrefSavedItems">Saved Items</string>
     <string name="PrefDuckMode">Search</string>
     <string name="PrefRecentSearch">Recent Searches</string>
-    <string name="PrefRecordHistory">Save Recent</string>
-    <string name="PrefClearHistory">Clear Recent</string>
+    <string name="PrefRecordHistory">Save Recents</string>
+    <string name="PrefClearHistory">Clear Recents</string>
     <string name="PrefRecordCookies">Save Cookies</string>
     <string name="PrefClearCookies">Clear Cookies</string>
     <string name="PrefClearBrowserCache">Clear Browser Cache</string>
     <string name="PrefClearCacheAndCookies">Clear Cookies and Cache</string>
     <string name="PrefSources">Change Sources</string>
     <string name="PrefResetSources">Reset Sources</string>
-    <string name="PrefRegion">Region Boost</string>
+    <string name="PrefRegion">Region</string>
     <string name="PrefDirectQuery">Search on Tap</string>
     <string name="PrefExternalBrowser">Use External Browser</string>
     <string name="PrefNever">Never</string>
@@ -36,11 +40,12 @@
     <string name="PrefClearCacheCookiesEveryLaunch">Every Launch</string>
     <string name="PrefClearCacheCookiesWeekly">Weekly</string>
     <string name="PrefClearCacheCookiesMonthly">Monthly</string>
-    <string name="PrefSendFeedback">Send Feedback</string>
+    <string name="PrefSendFeedback">Feedback</string>
+    <string name="PrefAbout">About</string>
     <string name="PrefRate">Rate App</string>
     <string name="PrefAppSearch">Include Apps</string>
     <string name="PrefMainFontSize">Font Size</string>
-    <string name="PrefEnableAcra">Auto Report Crashes</string>
+    <string name="PrefEnableAcra">Automatic Crash Report</string>
     <string name="PrefAcraDisabled">Automatic Reporting Disabled</string>
     <string name="PrefAcraEnabled">Automatic Reporting Enabled</string>
     
@@ -51,6 +56,7 @@
 
     <string name="PrefAutoUpdate">Automatic Update</string>
     <string name="PrefReadable">Readability</string>
+    <string name="PrefReadableSummary">On, when available</string>
     <string name="PrefGroupTor">Tor</string>
     <string name="PrefEnableTor">Enable Tor</string>
     <string name="PrefCheckOrbotStatus">Check Orbot status</string>
@@ -202,7 +208,7 @@
 
     <!--about fragment-->
     <string name="about">About</string>
-    <string name="about_text">The search engine that doesn\'t track you.</string>
+    <string name="about_text">The search engine that doesn\'t\ntrack you.</string>
     <string name="version">Version</string>
     <string name="select_application">Select application</string>
 

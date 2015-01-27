@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import android.widget.Toast;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
+import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.TempAutoCompleteResultsAdapter;
@@ -51,6 +53,7 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistoryStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.MainFeedMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
+import com.duckduckgo.mobile.android.events.ConfirmDialogOkEvent;
 import com.duckduckgo.mobile.android.events.DismissBangPopupEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
@@ -112,6 +115,7 @@ import com.duckduckgo.mobile.android.fragment.AboutFragment;
 import com.duckduckgo.mobile.android.fragment.DuckModeFragment;
 import com.duckduckgo.mobile.android.fragment.FeedFragment;
 import com.duckduckgo.mobile.android.fragment.HelpFeedbackFragment;
+import com.duckduckgo.mobile.android.fragment.PrefFragment;
 import com.duckduckgo.mobile.android.fragment.RecentSearchFragment;
 import com.duckduckgo.mobile.android.fragment.RecentsFragment;
 import com.duckduckgo.mobile.android.fragment.SavedFragment;
@@ -137,6 +141,7 @@ import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
+import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
 import com.squareup.otto.Subscribe;
 
@@ -320,7 +325,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         if(savedInstanceState != null)
         	savedState = true;
         
-        DDGControlVar.isAutocompleteActive = !PreferencesManager.getTurnOffAutocomplete();
+        DDGControlVar.isAutocompleteActive = PreferencesManager.getAutocomplete();
         // always refresh on start
         DDGControlVar.hasUpdatedFeed = false;
         DDGControlVar.mDuckDuckGoContainer = (DuckDuckGoContainer) getLastCustomNonConfigurationInstance();
@@ -495,8 +500,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
             return SCREEN.SCR_ABOUT;
         } else if(tag.equals(HelpFeedbackFragment.TAG)) {
             return SCREEN.SCR_HELP;
-        } else if(tag.equals("preferencetag")) {
-            // scr settings
+        } else if(tag.equals(PrefFragment.TAG)) {
+            return SCREEN.SCR_SETTINGS;
         }
         return SCREEN.SCR_STORIES;
     }
@@ -514,9 +519,14 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
             searchFieldContainer.setVisibility(View.GONE);
             actionBarTtitle.setVisibility(View.VISIBLE);
             actionBarTtitle.setText(newTitle);
+            //actionBar.setDisplayShowCustomEnabled(false);
+            //actionBar.setDisplayShowTitleEnabled(true);
+            //actionBar.setTitle(newTitle);
         } else {
             searchFieldContainer.setVisibility(View.VISIBLE);
             actionBarTtitle.setVisibility(View.GONE);
+            //actionBar.setDisplayShowCustomEnabled(true);
+            //actionBar.setDisplayShowTitleEnabled(false);
         }
     }
 
@@ -557,6 +567,9 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         //searchFieldContainer = (FrameLayout) actionBar.getCustomView().findViewById(R.id.search_container);
         searchFieldContainer = (RelativeLayout) actionBar.getCustomView().findViewById(R.id.search_container);
         actionBarTtitle = (TextView) actionBar.getCustomView().findViewById(R.id.actionbar_title);
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Medium.ttf");
+        actionBarTtitle.setTypeface(typeface);
+
 		searchField = (DDGAutoCompleteTextView) actionBar.getCustomView().findViewById(R.id.searchEditText);
 		//getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.acAdapter);
         //getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.tempAdapter);//aaa adapter
@@ -661,23 +674,24 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		getSearchField().addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : DDGControlVar.mDuckDuckGoContainer.stopDrawable, null);
-                Log.e("aaa", "new text is: " + s);
+                //Log.e("aaa", "new text is: " + s);
                 if(!s.toString().equals("")) {
+                    Log.e("aaa", "is auto complete active: "+DDGControlVar.isAutocompleteActive);
                     BusProvider.getInstance().post(new ShowAutoCompleteResultsEvent());
                     if(DDGControlVar.isAutocompleteActive) {
+                        Log.e("aaa", "autocomplete == active");
                         DDGControlVar.mDuckDuckGoContainer.tempAdapter.getFilter().filter(s);
                     } else {
+                        Log.e("aaa", "autocomplete != active");
                         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getFilter().filter(s);
                     }
                 }
 			}
 
 			public void afterTextChanged(Editable arg0) {
-                Log.e("aaa", "after text changed: "+arg0.toString());
 			}
 
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.e("aaa", "before text changed: "+s);
 			}
 		});
 	}
@@ -853,6 +867,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	 * @param clean Whether screen state (searchbar, browser etc.) states will get cleaned
 	 */
 	public void displayScreen(SCREEN screenToDisplay, boolean clean) {
+        Log.e("aaa", "dispplay screen: "+screenToDisplay);
         if(clean) {
 			resetScreenState();
 		}
@@ -886,6 +901,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 displayHelp();
                 break;
             case SCR_SETTINGS:
+                Log.e("aaa", "case settings");
                 displaySettings();
                 break;
             default:
@@ -1029,6 +1045,9 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 				|| webFragment.isVisible()) {
 			BusProvider.getInstance().post(new WebViewBackPressActionEvent());
 		}
+        else if(DDGControlVar.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_ABOUT) {
+            displayScreen(SCREEN.SCR_SETTINGS, false);
+        }
 		// main feed showing & source filter is active
 		else if(DDGControlVar.targetSource != null){
 			BusProvider.getInstance().post(new FeedCancelSourceFilterEvent());
@@ -1234,8 +1253,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     }
 
     private void actionSettings() {
-        displayScreen(SCREEN.SCR_SETTINGS, false);
         Log.e("aaa", "action settings");
+        displayScreen(SCREEN.SCR_SETTINGS, false);
     }
 
 	public void reloadAction() {
@@ -1278,7 +1297,9 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	 */
 	private void displaySettings() {
         Log.e("aaa", "display settings");
-		BusProvider.getInstance().post(new FeedCleanImageTaskEvent());
+        DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
+		//BusProvider.getInstance().post(new FeedCleanImageTaskEvent());//aaa
+        /*
         if(true || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
             Log.e("aaa", "true");
             Intent intent = new Intent(getBaseContext(), Preferences.class);
@@ -1289,8 +1310,9 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 //getSupportFragmentManager().beginTransaction().remove(fragment);
             //}
             //getFragmentManager().beginTransaction().replace(fragmentContainer.getId(), new PreferencesFragment(), "preferences").commit();
-        }
-        //fragmentManager.beginTransaction().replace(fragmentContainer.getId(), new HelpFeedbackFragment(), "about").commit();
+        }*/
+        //fragmentManager.beginTransaction().replace(fragmentContainer.getId(), new PrefFragment(), PrefFragment.TAG).commit();
+        changeFragment(new PrefFragment(), PrefFragment.TAG);
 	}
 
 	/**
@@ -1421,12 +1443,12 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     public void displayAbout() {
         resetScreenState();//aaa to check
         DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
-
+/*
         actionBar.setDisplayShowCustomEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
         //actionBar.setHomeAsUpIndicator(R.drawable.ic_home);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(R.string.about);
+        actionBar.setTitle(R.string.about);*/
 
         changeFragment(new AboutFragment(), AboutFragment.TAG);
     }
@@ -1522,7 +1544,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	}
 
 	private void changeFragment(Fragment newFragment, String newTag) {
-        //Log.e("aaa", "change fragment");
+        Log.e("aaa", "change fragment: "+newTag);
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		Fragment currentFragment = fragmentManager.findFragmentByTag(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
 
@@ -1982,6 +2004,24 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	public void onRequestSyncAdaptersEvent(RequestSyncAdaptersEvent event) {
 		syncAdapters();
 	}
+
+    @Subscribe
+    public void onConfirmDialogOkEvent(ConfirmDialogOkEvent event) {
+        switch(event.action) {
+            case DDGConstants.CONFIRM_CLEAR_HISTORY:
+                DDGApplication.getDB().deleteHistory();
+                clearRecentSearch();
+                break;
+            case DDGConstants.CONFIRM_CLEAR_COOKIES:
+                DDGWebView.clearCookies();
+                break;
+            case DDGConstants.CONFIRM_CLEAR_WEB_CACHE:
+                BusProvider.getInstance().post(new WebViewClearCacheEvent());
+                break;
+            default:
+                break;
+        }
+    }
 
     @Subscribe
     public void onSearchBarChangeEvent(SearchBarChangeEvent event) {

@@ -47,11 +47,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/bang"
-        android:textColor="#ffffff"
-        android:textSize="19sp"
+        android:layout_marginLeft="24dp"
         android:gravity="center_vertical"
         android:id="@+id/actionbar_title"
-        android:layout_marginLeft="10dp"/>
+        android:textColor="@color/actionbar_title"
+        android:textSize="18sp"/>
 
     <RelativeLayout
         android:id="@+id/search_container"

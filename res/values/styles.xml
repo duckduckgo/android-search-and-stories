@@ -166,6 +166,16 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ActionBarTitle" parent="@android:style/TextAppearance.Large">
+        <item name="android:textColor">@color/actionbar_title</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="PreferenceCategory" parent="">
+        <item name="layout">@layout/temp_switchpreference</item>
+
+    </style>
+
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.ListPopupWindow"><!--
         <item name="android:dropDownVerticalOffset">-10dip</item>
         <item name="android:dropDownHorizontalOffset">0dip</item>

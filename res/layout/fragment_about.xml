@@ -3,18 +3,27 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:gravity="center_horizontal">
+              android:paddingTop="48dp"
+              android:paddingBottom="48dp">
 
     <ImageView
         android:id="@+id/imageview"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/logo_red"/>
 
     <TextView
         android:id="@+id/textview_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/imageview"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16.6dp"
+        android:layout_marginBottom="17.3dp"
+        android:textSize="21sp"
+        android:textColor="@color/search_dark"
         android:text="@string/AppName"/>
 
     <TextView
@@ -23,13 +32,17 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/textview_title"
         android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:textSize="16sp"
+        android:textColor="@color/text_light"
         android:text="@string/about_text"/>
 
     <TextView
         android:id="@+id/textview_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/textview_text"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:text="@string/version"/>
 
 </RelativeLayout>

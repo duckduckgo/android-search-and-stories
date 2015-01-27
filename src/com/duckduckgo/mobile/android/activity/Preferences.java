@@ -32,7 +32,6 @@ import android.preference.PreferenceActivity;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.fragment.PreferencesFragment;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.TorIntegration;
@@ -66,7 +65,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
             setTheme(android.R.style.Theme_Holo_Light);
         }
     }
-
+/*
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,8 +75,8 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
         } else {
             addPreferencesFromResource(R.xml.temp_preferences);
         }
-    }
-/*
+    }*/
+
   @SuppressWarnings("deprecation")
   @Override
   public void onCreate(Bundle savedInstanceState) {
@@ -309,7 +308,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
       }
 	  return d;
   }
-*/
+
   @Override
   public boolean onPreferenceChange(Preference preference, Object newValue) {
       if(preference instanceof ListPreference && newValue instanceof String) {

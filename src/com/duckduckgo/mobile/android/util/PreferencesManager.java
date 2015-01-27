@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources.Theme;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -65,8 +66,8 @@ public class PreferencesManager {
         return Integer.valueOf(DDGApplication.getSharedPreferences().getString("useExternalBrowserPref", "0"));
     }
 	
-	public static boolean getTurnOffAutocomplete() {
-		return DDGApplication.getSharedPreferences().getBoolean("turnOffAutocompletePref", false);
+	public static boolean getAutocomplete() {
+		return DDGApplication.getSharedPreferences().getBoolean("autocompletePref", false);
 	}
 	
 	public static boolean getRecordHistory() {
@@ -237,11 +238,14 @@ public class PreferencesManager {
 	
 	/* Events */
     public static void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.e("aaa", "Preference manager on shared preference changed");
     	if(key.equals("startScreenPref")){
     		DDGControlVar.START_SCREEN = getActiveStartScreen();
         }
     	else if(key.equals("regionPref")){
+            Log.e("aaa", "preferences manager, region pref");
             DDGControlVar.regionString = sharedPreferences.getString(key, "wt-wt");
+            Log.e("aaa", "control var is: "+DDGControlVar.regionString);
         }
         else if(key.equals("appSearchPref")){
             DDGControlVar.includeAppsInSearch = sharedPreferences.getBoolean(key, false);
@@ -249,8 +253,10 @@ public class PreferencesManager {
         else if(key.equals("useExternalBrowserPref")){
             DDGControlVar.useExternalBrowser = Integer.valueOf(sharedPreferences.getString(key, "0"));
         }
-        else if(key.equals("turnOffAutocompletePref")){
-            DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean(key, false);
+        else if(key.equals("autocompletePref")){
+            Log.e("aaa", "turn off autocomplete");
+            DDGControlVar.isAutocompleteActive = sharedPreferences.getBoolean(key, false);
+            Log.e("aaa", "is autocomplete active: "+DDGControlVar.isAutocompleteActive);
         }
         else if(key.equals("autoUpdatePref")){
             DDGControlVar.automaticFeedUpdate = sharedPreferences.getBoolean(key, true);

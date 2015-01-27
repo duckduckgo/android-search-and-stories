@@ -153,8 +153,8 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
         int statusBar = getStatusBarHeight();
         int navigationBar = getNavigationBarHeight();
-        Log.e("aaa", "status bar: "+statusBar);
-        Log.e("aaa", "navigation bar: "+navigationBar);
+        //Log.e("aaa", "status bar: "+statusBar);
+        //Log.e("aaa", "navigation bar: "+navigationBar);
         totalHeight = totalHeight - statusBar - navigationBar - actionBarHeight;
 
 
@@ -171,42 +171,42 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
         //if((totalHeight-visibleHeight) > (totalHeight/3)) {
         if((totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
-            Log.e("aaa", "open");
-            Log.e("aaa", "total height: " + totalHeight);
-            Log.e("aaa", "visible height: " + visibleHeight);
+            //Log.e("aaa", "open");
+            //Log.e("aaa", "total height: " + totalHeight);
+            //Log.e("aaa", "visible height: " + visibleHeight);
 
             int recentItems = (maxItems - 1) <= recentSearchListView.getCount() ? (maxItems - 1) : recentSearchListView.getCount();
             int savedItems = maxItems - recentItems;
 
-            Log.e("aaa", "MAX items: "+maxItems);
-            Log.e("aaa", "recent items: "+recentItems);
-            Log.e("aaa", "saved items: "+savedItems);
+            //Log.e("aaa", "MAX items: "+maxItems);
+            //Log.e("aaa", "recent items: "+recentItems);
+            //Log.e("aaa", "saved items: "+savedItems);
 
-            Log.e("aaa", "visible height: "+visibleHeight);
-            Log.e("aaa", "recent height: "+recentItems*itemHeight);
-            Log.e("aaa", "saved height: "+savedItems*itemHeight);
+            //Log.e("aaa", "visible height: "+visibleHeight);
+            //Log.e("aaa", "recent height: "+recentItems*itemHeight);
+            //Log.e("aaa", "saved height: "+savedItems*itemHeight);
 
             newRecentHeight = recentItems * itemHeight;
             newSavedHeight = LinearLayout.LayoutParams.MATCH_PARENT;
 
         } else {
-            Log.e("aaa", "close");
-            Log.e("aaa", "total height: " + totalHeight);
-            Log.e("aaa", "visible height: " + visibleHeight);
+            //Log.e("aaa", "close");
+            //Log.e("aaa", "total height: " + totalHeight);
+            //Log.e("aaa", "visible height: " + visibleHeight);
             int halfItems = maxItems / 2;
             int recentItems = halfItems <= recentSearchListView.getCount() ? halfItems : recentSearchListView.getCount();
             int savedItems = maxItems - recentItems;
-            Log.e("aaa", "MAX items: "+maxItems);
-            Log.e("aaa", "half items: "+halfItems);
-            Log.e("aaa", "recent items: "+recentItems);
-            Log.e("aaa", "saved items: "+savedItems);
+            //Log.e("aaa", "MAX items: "+maxItems);
+            //Log.e("aaa", "half items: "+halfItems);
+            //Log.e("aaa", "recent items: "+recentItems);
+            //Log.e("aaa", "saved items: "+savedItems);
 
             newRecentHeight = recentItems * itemHeight;
             newSavedHeight = LinearLayout.LayoutParams.MATCH_PARENT;
 
-            Log.e("aaa", "visible height: "+visibleHeight);
-            Log.e("aaa", "recent height: "+newRecentHeight);
-            Log.e("aaa", "saved height: "+newSavedHeight);
+            //Log.e("aaa", "visible height: "+visibleHeight);
+            //Log.e("aaa", "recent height: "+newRecentHeight);
+            //Log.e("aaa", "saved height: "+newSavedHeight);
         }
         if(recentParams.height!=newRecentHeight) {
             recentParams.height = newRecentHeight;

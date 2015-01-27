@@ -26,6 +26,8 @@
 
     <color name="feed_title">#404040</color>
 
+    <color name="actionbar_title">@color/white</color>
+
     <color name="actionbar_tab_selected">@color/white</color>
     <color name="actionbar_tab_unselected">#88ffffff</color>
 
