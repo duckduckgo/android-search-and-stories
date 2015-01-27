@@ -4,7 +4,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:gravity="center_vertical"
-                android:background="@android:color/background_light"
+                android:background="@android:color/transparent"
                 android:descendantFocusability="blocksDescendants">
 <!--
     <com.duckduckgo.mobile.android.download.AsyncImageView
