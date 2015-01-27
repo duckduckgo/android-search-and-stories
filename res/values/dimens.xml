@@ -12,6 +12,8 @@
     <dimen name="actionbar_padding">8dp</dimen> <!-- aaa try to change margin with padding -->
     <dimen name="actionbar_title_left_margin">24dp</dimen>
     <dimen name="actionbar_overflow_width">48dp</dimen><!--48 poi 44-->
+    <dimen name="actionbar_button_height">56dp</dimen>
+    <dimen name="actionbar_button_width">48dp</dimen>
 
     <dimen name="toolbar_height">64.3dp</dimen>
     <dimen name="toolbar_icon_margin">16dp</dimen>
@@ -20,6 +22,11 @@
     <dimen name="toolbar_category_margin">8dp</dimen>
     <dimen name="toolbar_category_height">22dp</dimen>
     <dimen name="toolbar_divider_height">8dp</dimen>
+
+    <dimen name="listview_item_height">48dp</dimen>
+    <dimen name="listview_item_icon_dimen">@dimen/listview_item_height</dimen>
+    <dimen name="listview_item_text_margin">24dp</dimen>
+    <dimen name="listview_item_plus_margin">26dp</dimen>
 
 
     <dimen name="menu_padding">6dip</dimen>

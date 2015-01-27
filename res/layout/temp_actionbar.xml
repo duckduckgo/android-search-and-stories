@@ -10,27 +10,23 @@
     <ImageButton
         android:visibility="gone"
         android:id="@+id/home"
-        android:layout_width="48dp"
-        android:layout_height="56dp"
+        android:layout_width="@dimen/actionbar_button_width"
+        android:layout_height="@dimen/actionbar_button_height"
         android:src="@drawable/home"
         android:layout_alignParentLeft="true"
         android:scaleType="center"
-        android:background="?attr/actionBarItemBackground"/><!--
-        android:layout_marginRight="14dp"
-        android:layout_marginLeft="14dp"-->
+        android:background="?attr/actionBarItemBackground"/>
 
     <ImageButton
         android:visibility="gone"
         android:id="@+id/bang"
-        android:layout_width="48dp"
-        android:layout_height="56dp"
+        android:layout_width="@dimen/actionbar_button_width"
+        android:layout_height="@dimen/actionbar_button_height"
         android:src="@drawable/bang"
         android:layout_toRightOf="@id/home"
         android:scaleType="center"
-        android:background="?attr/actionBarItemBackground"/><!--
-        android:layout_marginRight="14dp"
-        android:layout_marginLeft="14dp"-->
-
+        android:background="?attr/actionBarItemBackground"/>
+<!--
     <ImageButton
         android:visibility="gone"
         android:id="@+id/overflow"
@@ -41,13 +37,13 @@
         android:src="@drawable/home"
         android:layout_alignParentRight="true"
         android:scaleType="center"
-        android:background="?attr/actionBarItemBackground"/>
+        android:background="?attr/actionBarItemBackground"/>-->
     <TextView
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_toRightOf="@id/bang"
-        android:layout_marginLeft="24dp"
+        android:layout_marginLeft="@dimen/actionbar_title_left_margin"
         android:gravity="center_vertical"
         android:id="@+id/actionbar_title"
         android:textColor="@color/actionbar_title"
@@ -91,7 +87,7 @@
             android:paddingRight="18.6dp"
             android:singleLine="true"
             android:textSize="@dimen/search_bar_text_size"
-            android:textColor="#000000"
+            android:textColor="@color/search_dark"
             android:selectAllOnFocus="true"
             android:dropDownWidth="match_parent"
             android:dropDownAnchor="@+id/searchBar"

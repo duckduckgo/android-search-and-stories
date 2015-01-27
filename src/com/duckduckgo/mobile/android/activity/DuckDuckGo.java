@@ -1127,7 +1127,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     private void setHomeButton(boolean visible) {
         ImageButton homeButton = (ImageButton) actionBar.getCustomView().findViewById(R.id.home);
         actionBar.getCustomView().findViewById(R.id.bang).setVisibility(View.GONE);
-        actionBar.getCustomView().findViewById(R.id.overflow).setVisibility(View.GONE);
         if(visible) {
             homeButton.setVisibility(View.VISIBLE);
             homeButton.setOnClickListener(new OnClickListener() {
@@ -1153,7 +1152,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
     private void setBangButton() {
         actionBar.getCustomView().findViewById(R.id.home).setVisibility(View.GONE);
-        actionBar.getCustomView().findViewById(R.id.overflow).setVisibility(View.GONE);
 
         ImageButton bang = (ImageButton) findViewById(R.id.bang);
         bang.setVisibility(View.VISIBLE);
@@ -1166,19 +1164,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
             }
         });
         setActionBarMarginStart(false);
-    }
-
-    private void setOverflowButton() {/*
-        ImageView overflow = (ImageView) actionBar.getCustomView().findViewById(R.id.overflow);
-        overflow.setVisibility(View.VISIBLE);
-        overflow.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //todo
-                Toast.makeText(DuckDuckGo.this, "Open menu diocan", Toast.LENGTH_SHORT).show();
-            }
-        });
-        setActionBarMarginEnd(false);*/
     }
 
     private void hasOverflowButtonVisible(boolean visible) {
