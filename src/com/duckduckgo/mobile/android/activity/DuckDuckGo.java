@@ -155,7 +155,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	private DDGAutoCompleteTextView searchField = null;
     //private FrameLayout searchFieldContainer = null;
     private RelativeLayout searchFieldContainer = null;
-    private TextView actionBarTtitle;
+    private TextView actionBarTitle;
 	//private HistoryListView leftRecentView = null;//drawer fragment
 
 	private DDGDrawerLayout drawer;
@@ -517,14 +517,14 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     private void toggleActionBarView(boolean showTitle, String newTitle) {
         if(showTitle) {
             searchFieldContainer.setVisibility(View.GONE);
-            actionBarTtitle.setVisibility(View.VISIBLE);
-            actionBarTtitle.setText(newTitle);
+            actionBarTitle.setVisibility(View.VISIBLE);
+            actionBarTitle.setText(newTitle);
             //actionBar.setDisplayShowCustomEnabled(false);
             //actionBar.setDisplayShowTitleEnabled(true);
             //actionBar.setTitle(newTitle);
         } else {
             searchFieldContainer.setVisibility(View.VISIBLE);
-            actionBarTtitle.setVisibility(View.GONE);
+            actionBarTitle.setVisibility(View.GONE);
             //actionBar.setDisplayShowCustomEnabled(true);
             //actionBar.setDisplayShowTitleEnabled(false);
         }
@@ -566,9 +566,9 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		dropShadowDivider = findViewById(R.id.dropshadow_top);
         //searchFieldContainer = (FrameLayout) actionBar.getCustomView().findViewById(R.id.search_container);
         searchFieldContainer = (RelativeLayout) actionBar.getCustomView().findViewById(R.id.search_container);
-        actionBarTtitle = (TextView) actionBar.getCustomView().findViewById(R.id.actionbar_title);
+        actionBarTitle = (TextView) actionBar.getCustomView().findViewById(R.id.actionbar_title);
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Medium.ttf");
-        actionBarTtitle.setTypeface(typeface);
+        actionBarTitle.setTypeface(typeface);
 
 		searchField = (DDGAutoCompleteTextView) actionBar.getCustomView().findViewById(R.id.searchEditText);
 		//getSearchField().setAdapter(DDGControlVar.mDuckDuckGoContainer.acAdapter);

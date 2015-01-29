@@ -9,8 +9,8 @@
     <com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@android:color/white"
-        android:dividerHeight="1dp"
+        android:divider="@null"
+        android:dividerHeight="0dp"
 
         app:ptrAnimationStyle="flip"
         app:ptrHeaderTextColor="?attr/leftItemTextColor"

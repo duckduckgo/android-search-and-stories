@@ -64,6 +64,7 @@
                 android:layout_below="@id/toolbar2"/>
 
             <View
+                android:visibility="gone"
                 android:id="@+id/dropshadow_top"
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"

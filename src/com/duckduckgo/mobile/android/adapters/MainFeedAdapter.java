@@ -79,7 +79,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			cv = inflater.inflate(R.layout.temp_main_feed_layout, null);
 			Holder holder = new Holder((Toolbar) cv.findViewById(R.id.feedWrapper),
 					(TextView)cv.findViewById(R.id.feedTitleTextView),
-					(TextView)cv.findViewById(R.id.feedCategotyTextView),
+					(TextView)cv.findViewById(R.id.feedCategoryTextView),
 					(AsyncImageView)cv.findViewById(R.id.feedItemBackground),
 					(AsyncImageView)cv.findViewById(R.id.feedItemSourceIcon));
 			holder.toolbar.inflateMenu(R.menu.feed);
@@ -145,9 +145,9 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 
             String feedId = feed.getId();
             // FIXME : it'd be good to reset color to default color for textview in layout XML
-            holder.textViewTitle.setTextColor(Color.parseColor("#404040"));
+            holder.textViewTitle.setTextColor(context.getResources().getColor(R.color.feed_title));
             if(DDGControlVar.readArticles.contains(feedId)){
-                holder.textViewTitle.setTextColor(Color.GRAY);
+                holder.textViewTitle.setTextColor(context.getResources().getColor(R.color.feed_title_viewed));
             }
 
 			//set the category

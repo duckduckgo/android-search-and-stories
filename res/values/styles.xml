@@ -178,6 +178,5 @@
     </style>
 
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
-        <item name="android:popupBackground">@drawable/temp_green</item>
     </style>
 </resources>

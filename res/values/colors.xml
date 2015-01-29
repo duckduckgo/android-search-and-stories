@@ -25,11 +25,17 @@
     <color name="accentPurple">#5454db</color>
 
     <color name="feed_title">#404040</color>
+    <color name="feed_title_viewed">#888888</color>
+    <color name="feed_category_background">#7f111111</color>
+    <color name="feed_toolbar_background">@color/white</color>
+    <color name="feed_divider">#eeeeee</color>
+    <color name="feed_divider_shadow">#26000000</color>
 
     <color name="actionbar_title">@color/white</color>
+    <color name="actionbar_title_hint">#999999</color>
 
     <color name="actionbar_tab_selected">@color/white</color>
-    <color name="actionbar_tab_unselected">#88ffffff</color>
+    <color name="actionbar_tab_unselected">#7fffffff</color>
 
     <color name="search_dark">#212121</color>
     <color name="search_light">#a4a4a4</color>

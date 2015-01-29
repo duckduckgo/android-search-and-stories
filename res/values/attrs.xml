@@ -6,6 +6,7 @@
     <declare-styleable name="AsyncImageView">
         <attr name="cornerRadius" format="dimension" />
         <attr name="usePicasso" format="boolean" />
+        <attr name="heightRatio" format="float" />
     </declare-styleable>
     
     

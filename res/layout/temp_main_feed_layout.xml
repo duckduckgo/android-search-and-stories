@@ -13,7 +13,7 @@
                                                            android:id="@+id/feedItemBackground" />
 
     <TextView
-        android:id="@+id/feedCategotyTextView"
+        android:id="@+id/feedCategoryTextView"
         android:layout_margin="@dimen/toolbar_category_margin"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/toolbar_category_height"
@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
         android:minHeight="@dimen/toolbar_height"
-        android:background="#ffffff"
+        android:background="@color/feed_toolbar_background"
         android:layout_below="@id/feedItemBackground"
         android:id="@+id/feedWrapper"
         toolbar:contentInsetStart="0dp"
@@ -65,9 +65,41 @@
                       android:paddingBottom="5dp"-->
     </android.support.v7.widget.Toolbar>
     <View
+        android:id="@+id/divider_1"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/feedWrapper"
+        android:background="@color/feed_divider_shadow"/>
+    <View
+        android:id="@+id/divider_2"
         android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_divider_height"
+        android:layout_below="@id/divider_1"
+        android:background="@color/feed_divider"/>
+    <View
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/divider_2"
+        android:background="@color/feed_divider_shadow"/>
+
+    <RelativeLayout
         android:layout_below="@id/feedWrapper"
-        android:background="@color/search_light"/>
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_divider_height"
+        android:background="@color/feed_divider">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/feed_divider_shadow"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/feed_divider_shadow"/>
+        </RelativeLayout>
 </RelativeLayout>

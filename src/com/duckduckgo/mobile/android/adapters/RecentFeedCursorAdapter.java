@@ -44,7 +44,7 @@ public class RecentFeedCursorAdapter extends CursorAdapter {
         final String feedId = cursor.getString(cursor.getColumnIndex("feedId"));
 
         final TextView textViewTitle = (TextView) view.findViewById(R.id.feedTitleTextView);
-        final TextView textViewCategory = (TextView) view.findViewById(R.id.feedCategotyTextView);
+        final TextView textViewCategory = (TextView) view.findViewById(R.id.feedCategoryTextView);
         final AsyncImageView imageViewBackground = (AsyncImageView) view.findViewById(R.id.feedItemBackground);
         final AsyncImageView imageViewFeedIcon = (AsyncImageView) view.findViewById(R.id.feedItemSourceIcon);
         final Toolbar toolbar = (Toolbar) view.findViewById(R.id.feedWrapper);

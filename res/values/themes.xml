@@ -12,10 +12,14 @@
         <item name="mainTextSize">14sp</item>
         <item name="recentTextSize">14sp</item>
 
+        <item name="colorPrimary">@color/colorPrimaryRed</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkRed</item>
+        <item name="colorAccent">@color/colorPrimaryRed</item>
+
         <item name="actionOverflowButtonStyle">@style/OverflowButton</item>
-
+<!--
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
-
+-->
 
         <!--
 
@@ -33,10 +37,10 @@
 
     </style>
 
-    <style name="DDGThemeRed" parent="DDGLight">
+    <style name="DDGThemeRed" parent="DDGLight"><!--
         <item name="colorPrimary">@color/colorPrimaryRed</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkRed</item>
-        <item name="colorAccent">@color/colorPrimaryRed</item>
+        <item name="colorAccent">@color/colorPrimaryRed</item>-->
 
     </style>
 
@@ -51,7 +55,6 @@
     </style>
 
     <style name="OverflowMenu2" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
-        <item name="android:background">@drawable/temp_overflow2</item>
     </style>
 <!--
     <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
