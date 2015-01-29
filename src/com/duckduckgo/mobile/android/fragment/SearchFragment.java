@@ -45,7 +45,6 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
     private LinearLayout search_container;
     //private ViewTreeObserver viewTreeObserver = null;
-    private int actionBarHeight = 0;
     private View fragmentView = null;
 
     @Override
@@ -70,8 +69,6 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.e("aaa", "on activity created");
-
-        actionBarHeight = (int) getActivity().getResources().getDimension(R.dimen.actionbar_height);
 
         search_container = (LinearLayout) fragmentView.findViewById(R.id.search_container);
 
@@ -153,6 +150,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
         int statusBar = getStatusBarHeight();
         int navigationBar = getNavigationBarHeight();
+        int actionBarHeight = (int) getActivity().getResources().getDimension(R.dimen.actionbar_height);
         //Log.e("aaa", "status bar: "+statusBar);
         //Log.e("aaa", "navigation bar: "+navigationBar);
         totalHeight = totalHeight - statusBar - navigationBar - actionBarHeight;
@@ -250,6 +248,9 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
         savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
         savedSearchAdapter.notifyDataSetChanged();
+        toggleDivider(savedSearchAdapter.getCount()!=0 && (
+                recentSearchListView.getVisibility()==View.VISIBLE && DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount()!=0
+                ));
     }
 
     private void showSearch() {
@@ -267,6 +268,22 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         } else {
             fragmentView.findViewById(R.id.recent_saved_container).setVisibility(View.VISIBLE);
             autoCompleteResultListView.setVisibility(View.GONE);
+        }
+    }
+
+    private void showDivider() {
+        toggleDivider(true);
+    }
+
+    private void hideDivider() {
+        toggleDivider(false);
+    }
+
+    private void toggleDivider(boolean visible) {
+        if(visible) {
+            fragmentView.findViewById(R.id.search_divider).setVisibility(View.VISIBLE);
+        } else {
+            fragmentView.findViewById(R.id.search_divider).setVisibility(View.GONE);
         }
     }
 

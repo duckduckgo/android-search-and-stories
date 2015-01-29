@@ -1421,6 +1421,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
         //changeFragment(searchFragment, SearchFragment.TAG);
         if(!searchFragment.isVisible()) {
+            searchFragment = new SearchFragment();
             addFragment(searchFragment, SearchFragment.TAG);
         }
     }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="DDGThemeRed" parent="DDGLight">
+        <item name="android:colorPrimary">@color/colorPrimaryBlue</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDarkBlue</item>
+        <item name="android:colorAccent">@color/colorPrimaryBlue</item>
+    </style>
+</resources>

@@ -23,7 +23,7 @@
                 android:layout_alignParentTop="true"
                 android:id="@+id/toolbar"
                 android:minHeight="56dp"
-                android:background="@color/colorPrimary"
+                android:background="@color/colorPrimaryRed"
                 app:contentInsetStart="0dp"
                 app:contentInsetEnd="48dp"
                 android:layout_width="match_parent"
