@@ -23,28 +23,7 @@
             android:headerDividersEnabled="false"
             android:smoothScrollbar="true"/>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-    <com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-
-        app:ptrAnimationStyle="flip"
-        app:ptrHeaderTextColor="?attr/leftItemTextColor"
-        app:ptrHeaderSubTextColor="@color/left_secondary_text"
-        app:ptrDrawableTop="?attr/ptrDrawable"
-        app:ptrHeaderSize="10dp"
-
-        android:fadingEdge="none"
-        android:fastScrollEnabled="false"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
-        android:smoothScrollbar="true"
-
-        android:id="@+id/mainFeedItems" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 </LinearLayout>

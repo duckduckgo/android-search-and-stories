@@ -8,12 +8,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -38,15 +35,12 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
 import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -57,7 +51,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 	private MainFeedListView feedView = null;
     private SwipeRefreshLayout swipeRefreshLayout = null;
-	//private PullToRefreshMainFeedListView mPullRefreshFeedView = null;
 	private View fragmentView;
 
 	private MainFeedAdapter feedAdapter = null;
@@ -120,23 +113,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         menu.findItem(R.id.action_stories).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
-/*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch(item.getItemId()) {
-            case R.id.action_favourites:
-                return true;
-            case R.id.action_history:
-                return true;
-            case R.id.action_settings:
-                return true;
-            case R.id.action_help_feedback:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-*/
+
     @Override
     public void onRefresh() {
         // refresh the list
@@ -144,42 +121,16 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         keepFeedUpdated();
     }
 
-	public void init() {/*
-		mPullRefreshFeedView = (PullToRefreshMainFeedListView) fragmentView.findViewById(R.id.mainFeedItems);
-		PreferencesManager.setPtrHeaderFontDefaults(mPullRefreshFeedView.getHeaderTextSize(), mPullRefreshFeedView.getHeaderSubTextSize());
-		DDGControlVar.ptrHeaderSize = PreferencesManager.getPtrHeaderTextSize();
-		DDGControlVar.ptrSubHeaderSize = PreferencesManager.getPtrHeaderSubTextSize();
-
-		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
-
-		// set Loading... font
-		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
-
-		// Set a listener to be invoked when the list should be refreshed.
-		mPullRefreshFeedView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<MainFeedListView>() {
-			@Override
-			public void onRefresh(PullToRefreshBase<MainFeedListView> refreshView) {
-				mPullRefreshFeedView.setLastUpdatedLabel(DateUtils.formatDateTime(getActivity().getApplicationContext(),
-						System.currentTimeMillis(), DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE
-								| DateUtils.FORMAT_ABBREV_ALL));
-
-				// refresh the list
-				DDGControlVar.hasUpdatedFeed = false;
-				keepFeedUpdated();
-			}
-		});*/
+	public void init() {
 
 		SourceClickListener sourceClickListener = new SourceClickListener();
 		feedAdapter = new MainFeedAdapter(getActivity(), sourceClickListener);
 
 		mainFeedTask = null;
 
-		//feedView = mPullRefreshFeedView.getRefreshableView();
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
-            swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryRed);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryRed);
         feedView = (MainFeedListView) fragmentView.findViewById(R.id.feed_list_view);
 		feedView.setAdapter(feedAdapter);
 
@@ -269,14 +220,14 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-						if (DDGControlVar.automaticFeedUpdate || swipeRefreshLayout.isRefreshing()//mPullRefreshFeedView.isRefreshing()
+						if (DDGControlVar.automaticFeedUpdate || swipeRefreshLayout.isRefreshing()
 								|| DDGControlVar.changedSources) {
 							mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							DDGControlVar.changedSources = false;
 						}
 					} else {
 						cacheTask.execute();
-						if (DDGControlVar.automaticFeedUpdate || swipeRefreshLayout.isRefreshing()//mPullRefreshFeedView.isRefreshing()
+						if (DDGControlVar.automaticFeedUpdate || swipeRefreshLayout.isRefreshing()
 								|| DDGControlVar.changedSources) {
 							mainFeedTask.execute();
 							DDGControlVar.changedSources = false;
@@ -285,7 +236,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 				}
 			} else {
 				// complete the action anyway
-				//mPullRefreshFeedView.onRefreshComplete();
                 swipeRefreshLayout.setRefreshing(false);
 			}
 		}
@@ -293,7 +243,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 	@Subscribe
 	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {
-        Log.e("aaa", "feed retrieve success event");
 		if(event.requestType == REQUEST_TYPE.FROM_NETWORK) {
 			synchronized(feedAdapter) {
 				feedAdapter.clear();
@@ -304,7 +253,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		feedAdapter.notifyDataSetChanged();
 
 		// update pull-to-refresh header to reflect task completion
-		//mPullRefreshFeedView.onRefreshComplete();
         swipeRefreshLayout.setRefreshing(false);
 
 		DDGControlVar.hasUpdatedFeed = true;
@@ -321,7 +269,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 	@Subscribe
 	public void onFeedRetrieveErrorEvent(FeedRetrieveErrorEvent event) {
-        Log.e("aaa", "feed retrieve error event");
         //aaa
 		//if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mainFeedTask != null) {
         if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED && mainFeedTask != null) {
