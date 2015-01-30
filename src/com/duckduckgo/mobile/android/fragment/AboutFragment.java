@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -38,6 +39,22 @@ public class AboutFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        init();
+    }
+
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.e("aaa", "new config");
+        ViewGroup container = (ViewGroup) getView();
+        container.removeAllViewsInLayout();
+        fragmentView = onCreateView(getActivity().getLayoutInflater(), container, null);
+        container.addView(fragmentView);
+        init();
+    }
+
+    private void init() {
         versionTextView = (TextView) fragmentView.findViewById(R.id.textview_version);
         versionTextView.setText(versionTextView.getText() + getVersion());
     }

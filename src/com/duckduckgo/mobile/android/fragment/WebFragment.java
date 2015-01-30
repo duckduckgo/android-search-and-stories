@@ -156,8 +156,8 @@ public class WebFragment extends Fragment {
         if(menu==null) {
             return;
         }
-        MenuItem saveItem = menu.findItem(R.id.action_add_favourites);
-        MenuItem deleteItem = menu.findItem(R.id.action_remove_favourites);
+        MenuItem saveItem = menu.findItem(R.id.action_add_favorite);
+        MenuItem deleteItem = menu.findItem(R.id.action_remove_favorite);
         switch(urlType) {
             case FEED:
                 if(DDGControlVar.currentFeedObject!=null) {
@@ -199,10 +199,10 @@ public class WebFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
-            case R.id.action_add_favourites:
+            case R.id.action_add_favorite:
                 actionSave();
                 return true;
-            case R.id.action_remove_favourites:
+            case R.id.action_remove_favorite:
                 actionDelete();
                 return true;
             case R.id.action_share:

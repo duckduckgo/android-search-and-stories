@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
+import android.content.res.Configuration;
 import android.database.sqlite.SQLiteCursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -50,6 +51,13 @@ public class SavedFeedTabFragment extends ListFragment {
 		savedFeedAdapter = new SavedFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorStoryFeed());
 		savedFeedView.setAdapter(savedFeedAdapter);
 	}
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.e("aaa", "new config");
+
+    }
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {

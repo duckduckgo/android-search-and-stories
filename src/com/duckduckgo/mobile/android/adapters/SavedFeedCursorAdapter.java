@@ -150,7 +150,7 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
             url = feedUrl.toString();
         }
 
-        toolbar.getMenu().findItem(R.id.action_add_favourites).setVisible(false);
+        toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
         //aaa todo check why removing a feed inflate more items in other menus
         //aaaa solved!
 
@@ -158,7 +158,7 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch(item.getItemId()) {
-                    case R.id.action_remove_favourites:
+                    case R.id.action_remove_favorite:
                         BusProvider.getInstance().post(new UnSaveStoryEvent(feedId));
                         //toolbar.
                         return true;

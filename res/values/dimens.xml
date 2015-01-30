@@ -28,6 +28,10 @@
     <dimen name="listview_item_text_margin">24dp</dimen>
     <dimen name="listview_item_plus_margin">26dp</dimen>
 
+    <dimen name="about_container_padding">48dp</dimen>
+    <dimen name="about_title_top_margin">16.6dp</dimen>
+    <dimen name="about_title_bottom_margin">17.3dp</dimen>
+
 
     <dimen name="menu_padding">6dip</dimen>
     <dimen name="menu_letterspace">10sp</dimen><!-- 10dp -->

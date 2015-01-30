@@ -6,7 +6,7 @@
             android:title="@string/android_help_center"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/feedack">
+    <PreferenceCategory android:title="@string/feedback">
         <Preference
             android:key="leave_feedback"
             android:title="@string/leave_feedback"/>

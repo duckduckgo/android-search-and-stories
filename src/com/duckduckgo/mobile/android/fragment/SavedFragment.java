@@ -57,7 +57,9 @@ public class SavedFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-        pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(), new String[] {"Favourites", "Favourited searches"}, new Fragment[] {new SavedFeedTabFragment(), new SavedResultTabFragment()});
+        pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(),
+                new String[] {getResources().getString(R.string.favorites), getResources().getString(R.string.favorited_search)},
+                new Fragment[] {new SavedFeedTabFragment(), new SavedResultTabFragment()});
 
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
@@ -88,7 +90,7 @@ public class SavedFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        menu.findItem(R.id.action_favourites).setVisible(false);
+        menu.findItem(R.id.action_favorites).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

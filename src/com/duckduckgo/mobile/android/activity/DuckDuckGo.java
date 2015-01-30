@@ -566,7 +566,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		actionBar.setCustomView(actionBarView, params);
 
 		searchBar = actionBar.getCustomView().findViewById(R.id.searchBar);
-		dropShadowDivider = findViewById(R.id.dropshadow_top);
+		dropShadowDivider = findViewById(R.id.dropshadow_top);//todo remove
         //searchFieldContainer = (FrameLayout) actionBar.getCustomView().findViewById(R.id.search_container);
         searchFieldContainer = (RelativeLayout) actionBar.getCustomView().findViewById(R.id.search_container);
         actionBarTitle = (TextView) actionBar.getCustomView().findViewById(R.id.actionbar_title);
@@ -1103,15 +1103,13 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
             case R.id.action_stories:
                 actionStories();
                 return true;
-            case R.id.action_favourites:
-                actionFavourites();
+            case R.id.action_favorites:
+                actionFavorites();
                 return true;
-            case R.id.action_history:
-                actionHistory();
-                //Toast.makeText(this, "TO LNK", Toast.LENGTH_SHORT).show();
+            case R.id.action_recents:
+                actionRecents();
                 return true;
             case R.id.action_settings:
-                //Toast.makeText(this, "TO ")
                 actionSettings();
                 return true;
             case R.id.action_help_feedback:
@@ -1231,24 +1229,19 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         displayScreen(SCREEN.SCR_STORIES, true);
     }
 
-    private void actionFavourites() {
-        //displaySaved();
+    private void actionFavorites() {
         displayScreen(SCREEN.SCR_SAVED, true);
-        Log.e("aaa", "action favourites");
     }
 
-    private void actionHistory() {
+    private void actionRecents() {
         displayScreen(SCREEN.SCR_RECENTS, true);
-        Log.e("aaa", "action history");
     }
 
     private void actionHelpFeedback(){
         displayScreen(SCREEN.SCR_HELP, false);
-        Log.e("aaa", "action help");
     }
 
     private void actionSettings() {
-        Log.e("aaa", "action settings");
         displayScreen(SCREEN.SCR_SETTINGS, false);
     }
 
@@ -1261,6 +1254,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	}
 
 	private void stopAction() {
+        Log.e("aaa", "stop action");
 		DDGControlVar.mCleanSearchBar = true;
     	getSearchField().setText("");
 

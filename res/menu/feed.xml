@@ -2,23 +2,23 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/action_add_favourites"
-          android:title="@string/add_favourites"
+    <item android:id="@+id/action_add_favorite"
+          android:title="@string/action_add_favorite"
           android:orderInCategory="10"
           app:showAsAction="never" />
 
-    <item android:id="@+id/action_remove_favourites"
-          android:title="Unfavourite"
+    <item android:id="@+id/action_remove_favorite"
+          android:title="@string/action_remove_favorite"
           android:orderInCategory="20"
-          app:showAsAction="never" /><!--@string/remove_favourites-->
+          app:showAsAction="never" />
 
     <item android:id="@+id/action_share"
-          android:title="@string/share"
+          android:title="@string/action_share"
           android:orderInCategory="30"
           app:showAsAction="never" />
 
     <item android:id="@+id/action_external"
-          android:title="@string/view_external"
+          android:title="@string/action_view_external"
           android:orderInCategory="40"
           app:showAsAction="never" />
 

@@ -3,8 +3,8 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:paddingTop="48dp"
-              android:paddingBottom="48dp">
+              android:paddingTop="@dimen/about_container_padding"
+              android:paddingBottom="@dimen/about_container_padding">
 
     <ImageView
         android:id="@+id/imageview"
@@ -20,8 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/imageview"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16.6dp"
-        android:layout_marginBottom="17.3dp"
+        android:layout_marginTop="@dimen/about_title_top_margin"
+        android:layout_marginBottom="@dimen/about_title_bottom_margin"
         android:textSize="21sp"
         android:textColor="@color/search_dark"
         android:text="@string/AppName"/>

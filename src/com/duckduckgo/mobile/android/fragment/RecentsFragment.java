@@ -36,7 +36,9 @@ public class RecentsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(), new String[] {"Recents", "Recent searches"}, new Fragment[] {new RecentFeedTabFragment(), new RecentResultTabFragment()});
+        pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(),
+                new String[] {getResources().getString(R.string.recents), getResources().getString(R.string.recent_searches)},
+                new Fragment[] {new RecentFeedTabFragment(), new RecentResultTabFragment()});
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
 
@@ -60,7 +62,7 @@ public class RecentsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        menu.findItem(R.id.action_history).setVisible(false);
+        menu.findItem(R.id.action_recents).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 }

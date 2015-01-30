@@ -156,27 +156,27 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 
 			//set the toolbar Menu
             if(DDGApplication.getDB().isSaved(feedId)) {
-                holder.toolbar.getMenu().findItem(R.id.action_add_favourites).setVisible(false);
-                holder.toolbar.getMenu().findItem(R.id.action_remove_favourites).setVisible(true);
+                holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
+                holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(true);
             } else {
-                holder.toolbar.getMenu().findItem(R.id.action_add_favourites).setVisible(true);
-                holder.toolbar.getMenu().findItem(R.id.action_remove_favourites).setVisible(false);
+                holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(true);
+                holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(false);
             }
 			holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
 				@Override
 				public boolean onMenuItemClick(MenuItem menuItem) {
 					switch(menuItem.getItemId()) {
-						case R.id.action_add_favourites:
+						case R.id.action_add_favorite:
 							Log.e("aaa", "action add favourites");
                             BusProvider.getInstance().post(new SaveStoryEvent(feed));
-                            holder.toolbar.getMenu().findItem(R.id.action_add_favourites).setVisible(false);
-                            holder.toolbar.getMenu().findItem(R.id.action_remove_favourites).setVisible(true);
+                            holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
+                            holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(true);
 							//add to favourites
 							return true;
-                        case R.id.action_remove_favourites:
+                        case R.id.action_remove_favorite:
                             BusProvider.getInstance().post(new UnSaveStoryEvent(feed.getId()));
-                            holder.toolbar.getMenu().findItem(R.id.action_add_favourites).setVisible(true);
-                            holder.toolbar.getMenu().findItem(R.id.action_remove_favourites).setVisible(false);
+                            holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(true);
+                            holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(false);
                             return true;
 						case R.id.action_share:
 							Log.e("aaa", "action share");

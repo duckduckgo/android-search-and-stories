@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:background="@android:color/transparent"
+  android:background="#ffffff"
   android:orientation="vertical">
     
     <com.duckduckgo.mobile.android.views.MainFeedListView
@@ -32,15 +32,15 @@
    	    <TextView android:layout_width="wrap_content"
    	        	  android:layout_height="wrap_content"
    	        	  android:layout_marginBottom="20dp"
-   	        	  android:textSize="8.94pt"
-   	        	  android:textColor="?attr/emptyListTitleColor"
-   	        	  android:text="No Favourites" />
+   	        	  android:textSize="21sp"
+   	        	  android:textColor="@color/search_dark"
+   	        	  android:text="@string/no_favorites_title" />
    	    <TextView android:layout_width="wrap_content"
    	        	  android:layout_height="wrap_content"
    	        	  android:gravity="center_horizontal"
-   	        	  android:textSize="6.59pt"
-   	        	  android:textColor="?attr/emptyListSubTitleColor"
-   	        	  android:text="Add searches and stories\nto your favourites, and they\nwill be shown here." />
+   	        	  android:textSize="14sp"
+   	        	  android:textColor="@color/search_light"
+   	        	  android:text="@string/no_favorites_text" />
    	</LinearLayout>
 
 </LinearLayout>
