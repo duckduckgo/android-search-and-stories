@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +34,6 @@ import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeCancelScalingEvent;
 import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeOnProgressChangedEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuCloseEvent;
-import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarChangeEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
@@ -51,12 +51,13 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class FeedFragment extends Fragment {
+public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
 	public static final String TAG = "feed_fragment";
 
 	private MainFeedListView feedView = null;
-	private PullToRefreshMainFeedListView mPullRefreshFeedView = null;
+    private SwipeRefreshLayout swipeRefreshLayout = null;
+	//private PullToRefreshMainFeedListView mPullRefreshFeedView = null;
 	private View fragmentView;
 
 	private MainFeedAdapter feedAdapter = null;
@@ -81,7 +82,6 @@ public class FeedFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        setHasOptionsMenu(true);
 		fragmentView =  inflater.inflate(R.layout.fragment_feed, container, false);
 		return fragmentView;
 	}
@@ -97,6 +97,7 @@ public class FeedFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 
+        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES);
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
@@ -115,7 +116,8 @@ public class FeedFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.feeds, menu);
+        inflater.inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_stories).setVisible(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 /*
@@ -135,7 +137,14 @@ public class FeedFragment extends Fragment {
         }
     }
 */
-	public void init() {
+    @Override
+    public void onRefresh() {
+        // refresh the list
+        DDGControlVar.hasUpdatedFeed = false;
+        keepFeedUpdated();
+    }
+
+	public void init() {/*
 		mPullRefreshFeedView = (PullToRefreshMainFeedListView) fragmentView.findViewById(R.id.mainFeedItems);
 		PreferencesManager.setPtrHeaderFontDefaults(mPullRefreshFeedView.getHeaderTextSize(), mPullRefreshFeedView.getHeaderSubTextSize());
 		DDGControlVar.ptrHeaderSize = PreferencesManager.getPtrHeaderTextSize();
@@ -160,14 +169,18 @@ public class FeedFragment extends Fragment {
 				DDGControlVar.hasUpdatedFeed = false;
 				keepFeedUpdated();
 			}
-		});
+		});*/
 
 		SourceClickListener sourceClickListener = new SourceClickListener();
 		feedAdapter = new MainFeedAdapter(getActivity(), sourceClickListener);
 
 		mainFeedTask = null;
 
-		feedView = mPullRefreshFeedView.getRefreshableView();
+		//feedView = mPullRefreshFeedView.getRefreshableView();
+        swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+            swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryRed);
+        feedView = (MainFeedListView) fragmentView.findViewById(R.id.feed_list_view);
 		feedView.setAdapter(feedAdapter);
 
 	}
@@ -256,14 +269,14 @@ public class FeedFragment extends Fragment {
 
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-						if (DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
+						if (DDGControlVar.automaticFeedUpdate || swipeRefreshLayout.isRefreshing()//mPullRefreshFeedView.isRefreshing()
 								|| DDGControlVar.changedSources) {
 							mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							DDGControlVar.changedSources = false;
 						}
 					} else {
 						cacheTask.execute();
-						if (DDGControlVar.automaticFeedUpdate || mPullRefreshFeedView.isRefreshing()
+						if (DDGControlVar.automaticFeedUpdate || swipeRefreshLayout.isRefreshing()//mPullRefreshFeedView.isRefreshing()
 								|| DDGControlVar.changedSources) {
 							mainFeedTask.execute();
 							DDGControlVar.changedSources = false;
@@ -272,13 +285,15 @@ public class FeedFragment extends Fragment {
 				}
 			} else {
 				// complete the action anyway
-				mPullRefreshFeedView.onRefreshComplete();
+				//mPullRefreshFeedView.onRefreshComplete();
+                swipeRefreshLayout.setRefreshing(false);
 			}
 		}
 	}
 
 	@Subscribe
 	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {
+        Log.e("aaa", "feed retrieve success event");
 		if(event.requestType == REQUEST_TYPE.FROM_NETWORK) {
 			synchronized(feedAdapter) {
 				feedAdapter.clear();
@@ -289,7 +304,8 @@ public class FeedFragment extends Fragment {
 		feedAdapter.notifyDataSetChanged();
 
 		// update pull-to-refresh header to reflect task completion
-		mPullRefreshFeedView.onRefreshComplete();
+		//mPullRefreshFeedView.onRefreshComplete();
+        swipeRefreshLayout.setRefreshing(false);
 
 		DDGControlVar.hasUpdatedFeed = true;
 
@@ -305,11 +321,13 @@ public class FeedFragment extends Fragment {
 
 	@Subscribe
 	public void onFeedRetrieveErrorEvent(FeedRetrieveErrorEvent event) {
+        Log.e("aaa", "feed retrieve error event");
         //aaa
 		//if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mainFeedTask != null) {
         if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED && mainFeedTask != null) {
 			new FeedRequestFailureDialogBuilder(getActivity()).show();
 		}
+        swipeRefreshLayout.setRefreshing(false);
 
 	}
 
@@ -344,18 +362,18 @@ public class FeedFragment extends Fragment {
 	}
 
 	@Subscribe
-	public void onFontSizeOnProgressChangedEvent(FontSizeOnProgressChangedEvent event) {
+	public void onFontSizeOnProgressChangedEvent(FontSizeOnProgressChangedEvent event) {/*
 		feedAdapter.notifyDataSetInvalidated();
 		// adjust Pull-to-Refresh
 		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
 		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
 		// set Loading... font
 		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);
+		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);*/
 	}
 
 	@Subscribe
-	public void onFontSizeCancelScalingEvent(FontSizeCancelScalingEvent event) {
+	public void onFontSizeCancelScalingEvent(FontSizeCancelScalingEvent event) {/*
 		feedAdapter.notifyDataSetInvalidated();
 
 		mPullRefreshFeedView.setHeaderTextSize(PreferencesManager.getPtrHeaderTextSize());
@@ -363,7 +381,7 @@ public class FeedFragment extends Fragment {
 
 		// set Loading... font
 		mPullRefreshFeedView.setLoadingTextSize(PreferencesManager.getPtrHeaderTextSize());
-		mPullRefreshFeedView.setLoadingSubTextSize(PreferencesManager.getPtrHeaderSubTextSize());
+		mPullRefreshFeedView.setLoadingSubTextSize(PreferencesManager.getPtrHeaderSubTextSize());*/
 	}
 
 }

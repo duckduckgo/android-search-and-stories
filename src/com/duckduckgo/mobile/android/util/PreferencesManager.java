@@ -241,6 +241,7 @@ public class PreferencesManager {
         Log.e("aaa", "Preference manager on shared preference changed");
     	if(key.equals("startScreenPref")){
     		DDGControlVar.START_SCREEN = getActiveStartScreen();
+            Log.e("aaa", "start screen: "+DDGControlVar.START_SCREEN);
         }
     	else if(key.equals("regionPref")){
             Log.e("aaa", "preferences manager, region pref");

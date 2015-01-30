@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -27,6 +29,7 @@ import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.TestEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.squareup.otto.Subscribe;
@@ -101,6 +104,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     @Override
     public void onResume() {
         super.onResume();
+        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_SEARCH);
         syncAdapters();
         showRecentAndSaved();
 
@@ -118,10 +122,16 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(DDGControlVar.isAutocompleteActive) {
             //aaa make an event to the activity;
-            BusProvider.getInstance().post(new TestEvent(position));
+            BusProvider.getInstance().post(new TestEvent(position));//aaa todo change event!
         } else {
             //
         }

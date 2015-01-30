@@ -9,6 +9,8 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,6 +19,8 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.tabhost.TabHostExt;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
+import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.SlidingTabLayout;
 
 public class SavedFragment extends Fragment {
@@ -69,10 +73,23 @@ public class SavedFragment extends Fragment {
 	}
 
     @Override
+    public void onResume() {
+        super.onResume();
+        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_SAVED);
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.e("aaa", "configuration changed");
         slidingTabLayout.setViewPager(viewPager);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_favourites).setVisible(false);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
 	@Override
