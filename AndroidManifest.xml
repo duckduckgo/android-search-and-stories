@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.duckduckgo.mobile.android"
-    android:versionCode="60"
-    android:versionName="2.1.9">
+    android:versionCode="61"
+    android:versionName="2.1.10">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.INTERNET"/>
