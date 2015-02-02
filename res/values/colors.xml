@@ -42,6 +42,8 @@
 
     <color name="text_light">#757575</color>
 
+    <color name="background">#eeeeee</color>
+
     <!-- old colors -->
 
     <color name="welcome_button">#d24e25</color>

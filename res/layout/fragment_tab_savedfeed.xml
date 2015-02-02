@@ -1,24 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
-  android:background="#ffffff"
+  android:background="@color/background"
   android:orientation="vertical">
+
     
     <com.duckduckgo.mobile.android.views.MainFeedListView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            	  android:layout_width="fill_parent"
-                  android:layout_height="fill_parent"
-                  android:divider="@null"
-                  android:dividerHeight="0dp"
-                  android:fadingEdge="none"
-        		  android:fastScrollEnabled="false"
-        		  android:footerDividersEnabled="false"
-        		  android:headerDividersEnabled="false"
-        		  android:smoothScrollbar="true"
-                  android:id="@android:id/list"/>
-	
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:fadingEdge="none"
+        	android:fastScrollEnabled="false"
+        	android:footerDividersEnabled="false"
+        	android:headerDividersEnabled="false"
+        	android:smoothScrollbar="true"
+            android:id="@android:id/list"/>
+	<!--
 	<LinearLayout android:id="@android:id/empty"
    	    		  android:layout_width="match_parent"
    	    		  android:layout_height="match_parent"
@@ -41,6 +40,49 @@
    	        	  android:textSize="14sp"
    	        	  android:textColor="@color/search_light"
    	        	  android:text="@string/no_favorites_text" />
-   	</LinearLayout>
+   	</LinearLayout>-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="93.3dp"
+            android:paddingBottom="93.3dp">
+
+            <ImageView
+                android:id="@+id/empty_logo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/favorite_large"/>
+
+            <TextView
+                android:id="@+id/empty_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/empty_logo"
+                android:layout_marginTop="18.3dp"
+                android:layout_marginBottom="25dp"
+                android:text="@string/no_favorites_title"
+                android:textColor="@color/search_dark"
+                android:textSize="21sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/empty_title"
+                android:gravity="center"
+                android:text="@string/no_favorites_text"
+                android:textColor="@color/search_light"
+                android:textSize="14sp"/>
+
+        </RelativeLayout>
+    </ScrollView>
 
 </LinearLayout>

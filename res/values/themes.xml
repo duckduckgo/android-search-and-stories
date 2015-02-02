@@ -92,10 +92,10 @@
 
     
     <style name="DDGLight" parent="@style/DDGTheme"><!--
-        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>-->
-        <item name="android:tabWidgetStyle">@style/DDGTabWidget</item>
+        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>--><!--
+        <item name="android:tabWidgetStyle">@style/DDGTabWidget</item>--><!--
 
-        <item name="searchBarBackground">@color/left_bg_light</item>
+        <item name="searchBarBackground">@color/left_bg_light</item>-->
         <item name="leftLayoutRootBackground">@color/left_bg_light</item>
         <item name="leftDivTopBackground">@drawable/div_top_light</item>
         <item name="leftDivBottomBackground">@drawable/div_bottom_light</item>

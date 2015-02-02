@@ -13,10 +13,10 @@
 
         <RelativeLayout
             android:id="@+id/mainView"
-            android:background="?attr/leftLayoutRootBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 <!--
+            android:background="?attr/leftLayoutRootBackground"
             <include android:id="@+id/searchBar" layout="@layout/searchbar" />
 -->
             <android.support.v7.widget.Toolbar
@@ -61,7 +61,8 @@
                 android:id="@+id/fragmentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/toolbar2"/>
+                android:layout_below="@id/toolbar2"
+                android:background="@color/background"/>
 
             <View
                 android:visibility="gone"

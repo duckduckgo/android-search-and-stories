@@ -24,12 +24,14 @@
             android:title="@string/PrefReadable"
             android:summary="@string/PrefReadableSummary"
             android:key="readablePref"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            android:widgetLayout="@layout/temp_switchpreference" />
 
         <CheckBoxPreference
             android:title="@string/PrefAutoUpdate"
             android:key="autoUpdatePref"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            android:widgetLayout="@layout/temp_switchpreference" />
 
     </PreferenceCategory>
 
@@ -39,7 +41,8 @@
             android:title="@string/PrefAutocomplete"
             android:key="autocompletePref"
             android:defaultValue="false"
-            android:disableDependentsState="true" />
+            android:disableDependentsState="true"
+            android:widgetLayout="@layout/temp_switchpreference" />
 
         <ListPreference
             android:title="@string/PrefRegion"
@@ -56,7 +59,8 @@
         <CheckBoxPreference
             android:title="@string/PrefRecordHistory"
             android:key="recordHistoryPref"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            android:widgetLayout="@layout/temp_switchpreference" />
 
         <Preference
             android:title="@string/PrefClearHistory"
@@ -66,7 +70,8 @@
         <CheckBoxPreference
             android:title="@string/PrefRecordCookies"
             android:key="recordCookiesPref"
-            android:defaultValue="true" />
+            android:defaultValue="true"
+            android:widgetLayout="@layout/temp_switchpreference" />
 
         <Preference
             android:title="@string/PrefClearCookies"
@@ -80,7 +85,8 @@
 
         <CheckBoxPreference
             android:title="@string/PrefEnableAcra"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            android:widgetLayout="@layout/temp_switchpreference"/>
 
     </PreferenceCategory>
 
