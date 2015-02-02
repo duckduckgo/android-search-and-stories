@@ -16,6 +16,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.activity.SourcePreferences;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.ConfirmDialogOkEvent;
@@ -24,10 +25,14 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
+import com.duckduckgo.mobile.android.util.TorIntegration;
+import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
 
 public class PrefFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
     public static final String TAG = "preferences_fragment";
+
+    //private final TorIntegration torIntegration;
 
     //private Preference
     private ListPreference startScreenPref;
@@ -47,9 +52,11 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         startScreenPref = (ListPreference) findPreference("startScreenPref");
+        startScreenPref.setSummary(startScreenPref.getEntry());
         startScreenPref.setOnPreferenceChangeListener(this);
 
         regionPref = (ListPreference) findPreference("regionPref");
+        regionPref.setSummary(regionPref.getEntry());
         regionPref.setOnPreferenceChangeListener(this);
 
         sourcesPref = findPreference("sourcesPref");
@@ -76,9 +83,15 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        //torIntegration = new TorIntegration(getActivity());
+
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
             getListView().setPadding(0, 0, 0, getListView().getPaddingBottom());
         }
+
+
+        whenChangingTorChecksForOrbot();
+        whenCheckingOrbotStatusStartsOrbotAndSetsProxy();
 
     }
 
@@ -126,6 +139,42 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         PreferencesManager.onSharedPreferenceChanged(sharedPreferences, key);
+    }
+
+    private void whenCheckingOrbotStatusStartsOrbotAndSetsProxy() {
+        Preference checkOrbotPreference = findPreference("checkOrbotStatus");
+        checkOrbotPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                if(!TorIntegrationProvider.getInstance(getActivity()).isOrbotRunningAccordingToSettings()){
+                    TorIntegrationProvider.getInstance(getActivity()).prepareTorSettings();
+                }
+                else{
+                    //result_startOrbotCheck = true;
+                    //finish();
+                    ((DuckDuckGo)getActivity()).searchOrGoToUrl(getString(R.string.OrbotCheckSite));
+                }
+                return true;
+            }
+        });
+    }
+
+    private void whenChangingTorChecksForOrbot() {
+        Preference enableTorPreference = findPreference("enableTor");
+        if(!TorIntegrationProvider.getInstance(getActivity()).isTorSupported()){
+            setTorNotSupportedInfo(enableTorPreference);
+        }else{
+            enableTorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                public boolean onPreferenceChange(Preference preference, Object newValue) {
+                    return TorIntegrationProvider.getInstance(getActivity()).prepareTorSettings((Boolean) newValue);
+                }
+            });
+        }
+    }
+
+    private void setTorNotSupportedInfo(Preference enableTorPreference) {
+        enableTorPreference.setEnabled(false);
+        enableTorPreference.setSummary("Tor is currently not supported in Android 4.4 due to changes in the WebView implementation.");
     }
 
     public static class ConfirmDialog extends DialogFragment {

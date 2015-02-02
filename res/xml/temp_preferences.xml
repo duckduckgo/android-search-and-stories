@@ -80,7 +80,22 @@
 
         <CheckBoxPreference
             android:title="@string/PrefEnableAcra"
+            android:key="acra.alwaysaccept"
             android:defaultValue="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/PrefGroupTor">
+
+        <CheckBoxPreference
+            android:title="@string/PrefEnableTor"
+            android:key="enableTor"
+            android:defaultValue="false" />
+
+        <Preference
+            android:title="@string/PrefCheckOrbotStatus"
+            android:key="checkOrbotStatus"
+            android:dependency="enableTor" />
 
     </PreferenceCategory>
 

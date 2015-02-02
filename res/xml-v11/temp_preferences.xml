@@ -85,8 +85,24 @@
 
         <CheckBoxPreference
             android:title="@string/PrefEnableAcra"
+            android:key="acra.alwaysaccept"
             android:defaultValue="false"
-            android:widgetLayout="@layout/temp_switchpreference"/>
+            android:widgetLayout="@layout/temp_switchpreference" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/PrefGroupTor">
+
+        <CheckBoxPreference
+            android:title="@string/PrefEnableTor"
+            android:key="enableTor"
+            android:defaultValue="false"
+            android:widgetLayout="@layout/temp_switchpreference" />
+
+        <Preference
+            android:title="@string/PrefCheckOrbotStatus"
+            android:key="checkOrbotStatus"
+            android:dependency="enableTor" />
 
     </PreferenceCategory>
 
