@@ -8,7 +8,6 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,7 +40,6 @@ import android.widget.Toast;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
-import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.TempAutoCompleteResultsAdapter;
@@ -53,6 +51,7 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistoryStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.MainFeedMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
+import com.duckduckgo.mobile.android.events.AutoCompleteResultClickEvent;
 import com.duckduckgo.mobile.android.events.ConfirmDialogOkEvent;
 import com.duckduckgo.mobile.android.events.DismissBangPopupEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
@@ -66,7 +65,6 @@ import com.duckduckgo.mobile.android.events.SetMainButtonMenuEvent;
 import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.events.StopActionEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
-import com.duckduckgo.mobile.android.events.TestEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewBackPressActionEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearCacheAndCookiesEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearCacheEvent;
@@ -79,7 +77,6 @@ import com.duckduckgo.mobile.android.events.deleteEvents.DeleteStoryInHistoryEve
 import com.duckduckgo.mobile.android.events.deleteEvents.DeleteUrlInHistoryEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
-import com.duckduckgo.mobile.android.events.feedEvents.FeedCleanImageTaskEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeCancelScalingEvent;
@@ -112,12 +109,11 @@ import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
 import com.duckduckgo.mobile.android.fragment.AboutFragment;
+import com.duckduckgo.mobile.android.fragment.FavoriteFragment;
 import com.duckduckgo.mobile.android.fragment.FeedFragment;
 import com.duckduckgo.mobile.android.fragment.HelpFeedbackFragment;
 import com.duckduckgo.mobile.android.fragment.PrefFragment;
-import com.duckduckgo.mobile.android.fragment.RecentSearchFragment;
 import com.duckduckgo.mobile.android.fragment.RecentsFragment;
-import com.duckduckgo.mobile.android.fragment.SavedFragment;
 import com.duckduckgo.mobile.android.fragment.SearchFragment;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.objects.FeedObject;
@@ -167,8 +163,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
 	private FragmentManager fragmentManager;
 	private WebFragment webFragment;
-	private RecentSearchFragment recentSearchFragment;
-	private SavedFragment savedFragment;
+	private FavoriteFragment favoriteFragment;
     private RecentsFragment recentsFragment;
 	private FeedFragment feedFragment;
     private SearchFragment searchFragment;
@@ -448,7 +443,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     private SCREEN getScreenByTag(String tag) {
         if(tag.equals(RecentsFragment.TAG)) {
             return SCREEN.SCR_RECENTS;
-        } else if(tag.equals(SavedFragment.TAG)) {
+        } else if(tag.equals(FavoriteFragment.TAG)) {
             return SCREEN.SCR_SAVED;
         } else if(tag.equals(WebFragment.TAG)) {
             return SCREEN.SCR_WEBVIEW;
@@ -1237,8 +1232,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
 		//savedFragment = new SavedFragment();
 
-		if(!savedFragment.isVisible()) {
-			changeFragment(savedFragment, SavedFragment.TAG);
+		if(!favoriteFragment.isVisible()) {
+			changeFragment(favoriteFragment, FavoriteFragment.TAG);
             //changeFragment(savedFragment, StoredItemsFragment.SAVED_TAG);
 		}
     	//aaa
@@ -1267,17 +1262,9 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		
 		clearLeftSelect();
 
-		if(recentSearchFragment==null) {
-			recentSearchFragment = new RecentSearchFragment();
-		}
-
         if(recentsFragment==null) {
             recentsFragment = new RecentsFragment();
         }
-
-		if(!recentSearchFragment.isVisible()) {
-			//changeFragment(recentSearchFragment, RecentSearchFragment.TAG);
-		}
 
         if(!recentsFragment.isVisible()) {
             changeFragment(recentsFragment, RecentsFragment.TAG);
@@ -1546,8 +1533,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
 	private void initFragments() {
 		webFragment = new WebFragment();
-		recentSearchFragment = new RecentSearchFragment();
-		savedFragment = new SavedFragment();
+		favoriteFragment = new FavoriteFragment();
         recentsFragment = new RecentsFragment();
         searchFragment = new SearchFragment();
         Fragment fragment = null;
@@ -1831,7 +1817,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     }
 
     @Subscribe
-    public void onTestEvent(TestEvent event) {
+    public void onTestEvent(AutoCompleteResultClickEvent event) {
         SuggestObject suggestObject = DDGControlVar.mDuckDuckGoContainer.tempAdapter.getItem(event.position );
         if (suggestObject != null) {
             SuggestType suggestType = suggestObject.getType();

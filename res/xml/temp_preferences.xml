@@ -22,7 +22,8 @@
 
         <CheckBoxPreference
             android:title="@string/PrefReadable"
-            android:summary="@string/PrefReadableSummary"
+            android:summaryOn="@string/PrefReadableSummary"
+            android:summaryOff=""
             android:key="readablePref"
             android:defaultValue="true" />
 

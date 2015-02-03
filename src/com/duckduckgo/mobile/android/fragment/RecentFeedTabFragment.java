@@ -42,7 +42,7 @@ public class RecentFeedTabFragment extends ListFragment implements AdapterView.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentView = inflater.inflate(R.layout.fragment_tab_recentfeed, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_tab_recentsfeed, container, false);
         return fragmentView;
     }
 

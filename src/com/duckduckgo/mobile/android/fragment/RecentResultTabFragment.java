@@ -1,8 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,13 +11,10 @@ import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.RecentFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
-import com.duckduckgo.mobile.android.views.HistoryListView;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.squareup.otto.Subscribe;
 
@@ -51,7 +46,7 @@ public class RecentResultTabFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         recordHistory = PreferencesManager.getRecordHistory();
         Log.e("aaa", "record history: "+recordHistory);
-        fragmentView = inflater.inflate(R.layout.fragment_tab_recentresult, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_tab_recentsresult, container, false);
         return fragmentView;
     }
 

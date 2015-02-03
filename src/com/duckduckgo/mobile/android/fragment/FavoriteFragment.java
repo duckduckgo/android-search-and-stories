@@ -1,11 +1,8 @@
 package com.duckduckgo.mobile.android.fragment;
 
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,17 +10,14 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
-import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.tabhost.TabHostExt;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.SlidingTabLayout;
 
-public class SavedFragment extends Fragment {
+public class FavoriteFragment extends Fragment {
 
 	public static final String TAG = "saved_fragment";
 
@@ -49,7 +43,7 @@ public class SavedFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		//setRetainInstance(true);
-        fragmentView = inflater.inflate(R.layout.fragment_saved_recents, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_favorite_recents, container, false);
 		return fragmentView;
 	}
 

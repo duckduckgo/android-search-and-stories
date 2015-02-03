@@ -1,10 +1,10 @@
 package com.duckduckgo.mobile.android.events;
 
-public class TestEvent extends Event {
+public class AutoCompleteResultClickEvent extends Event {
 
     public int position;
 
-    public TestEvent(int position) {
+    public AutoCompleteResultClickEvent(int position) {
         this.position = position;
     }
 }

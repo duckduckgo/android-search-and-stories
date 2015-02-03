@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.fragment;
 
-import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.os.Build;
@@ -14,20 +13,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.Window;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.AutoCompleteResultClickEvent;
 import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
-import com.duckduckgo.mobile.android.events.TestEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
@@ -131,7 +127,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if(DDGControlVar.isAutocompleteActive) {
             //aaa make an event to the activity;
-            BusProvider.getInstance().post(new TestEvent(position));//aaa todo change event!
+            BusProvider.getInstance().post(new AutoCompleteResultClickEvent(position));//aaa todo change event!
         } else {
             //
         }

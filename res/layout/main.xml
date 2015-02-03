@@ -59,9 +59,9 @@
 <!--                   android:id="@+id/recentSearchItems" /> -->
         
         <include android:id="@+id/recentSearchLayout" layout="@layout/recentsearch" />
-        
+<!--
         <include android:id="@+id/duckModeLayout" layout="@layout/duckmode" />      
-
+-->
         <include android:id="@android:id/tabhost" layout="@layout/tab_saved_view" />
 
     </com.duckduckgo.mobile.android.widgets.SafeViewFlipper>

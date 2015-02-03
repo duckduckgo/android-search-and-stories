@@ -1,7 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
 import android.content.res.Configuration;
-import android.database.sqlite.SQLiteCursor;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.util.Log;
@@ -16,8 +15,6 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
-import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemSelectedEvent;
-import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.squareup.otto.Subscribe;
 
@@ -31,7 +28,7 @@ public class SavedFeedTabFragment extends ListFragment {
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedfeed, container, false);
+		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_favoritefeed, container, false);
 		//setRetainInstance(true);
 		BusProvider.getInstance().register(this);
 		return fragmentLayout;

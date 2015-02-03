@@ -28,7 +28,7 @@ public class RecentsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentView = inflater.inflate(R.layout.fragment_saved_recents, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_favorite_recents, container, false);
         return fragmentView;
     }
 

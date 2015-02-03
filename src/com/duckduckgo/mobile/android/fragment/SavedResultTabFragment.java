@@ -1,14 +1,10 @@
 package com.duckduckgo.mobile.android.fragment;
 
-import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -16,7 +12,6 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
-import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.views.SavedSearchListView;
 import com.squareup.otto.Subscribe;
 
@@ -32,7 +27,7 @@ public class SavedResultTabFragment extends ListFragment {
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentView = inflater.inflate(R.layout.fragment_tab_savedresult, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_tab_favoriteresult, container, false);
 		//setRetainInstance(true);
 		BusProvider.getInstance().register(this);
         return fragmentView;
