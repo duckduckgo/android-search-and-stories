@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
@@ -58,7 +59,7 @@ public class RecentResultTabFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        if(recordHistory) {
+        if(PreferencesManager.getRecordHistory()) {
             //historyListView = (HistoryListView) getListView();
             recentSearchListView = (RecentSearchListView) getListView();
             //recentSearchListView = (RecentSearchListView) fragmentView.findViewById(R.id.listview);
@@ -67,6 +68,12 @@ public class RecentResultTabFragment extends ListFragment {
             recentSearchListView.setAdapter(recentResultAdapter);
         } else {
             getListView().setVisibility(View.GONE);
+
+            TextView title = (TextView) fragmentView.findViewById(R.id.empty_title);
+            title.setText(getResources().getString(R.string.disabled_recents_title));
+
+            TextView text = (TextView) fragmentView.findViewById(R.id.empty_text);
+            text.setText(getResources().getString(R.string.disabled_recents_text));
             //fragmentView.findViewById(R.id.contenitore).setVisibility(View.GONE);
             //fragmentView.findViewById(R.id.text).setVisibility(View.VISIBLE);
         }

@@ -206,14 +206,16 @@
     <!--favorites fragment -->
     <string name="favorites">Favorites</string>
     <string name="favorited_search">Favorited Searches</string>
-    <string name="no_favorites_title">No Favorites</string>
-    <string name="no_favorites_text">Add searches and stories\nto your favourites, and they\nwill be shown here.</string>
+    <string name="empty_favorites_title">No Favorites</string>
+    <string name="empty_favorites_text">Add searches and stories\nto your favourites, and they\nwill be shown here.</string>
 
     <!--recents fragment-->
     <string name="recents">Recents</string>
     <string name="recent_searches">Recent Searches</string>
-    <string name="no_recents_title">No Recents</string>
-    <string name="no_recents_text">to add</string>
+    <string name="empty_recents_title">No Recents</string>
+    <string name="empty_recents_text">Once you start searching\nor browsing stories, your activity\nwill be shown here.</string>
+    <string name="disabled_recents_title">Recents Disabled</string>
+    <string name="disabled_recents_text">You can enable recents in Settings.</string>
 
     <!--about fragment-->
     <string name="about">About</string>

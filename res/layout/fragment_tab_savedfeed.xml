@@ -68,7 +68,7 @@
                 android:layout_below="@id/empty_logo"
                 android:layout_marginTop="18.3dp"
                 android:layout_marginBottom="25dp"
-                android:text="@string/no_favorites_title"
+                android:text="@string/empty_favorites_title"
                 android:textColor="@color/search_dark"
                 android:textSize="21sp"/>
 
@@ -78,7 +78,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/empty_title"
                 android:gravity="center"
-                android:text="@string/no_favorites_text"
+                android:text="@string/empty_favorites_text"
                 android:textColor="@color/search_light"
                 android:textSize="14sp"/>
 

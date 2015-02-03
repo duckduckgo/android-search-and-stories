@@ -8,12 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.RecentFeedCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.squareup.otto.Subscribe;
 
@@ -47,10 +49,20 @@ public class RecentFeedTabFragment extends ListFragment implements AdapterView.O
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        recentFeedListView = (MainFeedListView) getListView();
-        recentFeedListView.setOnItemLongClickListener(this);
-        recentFeedAdapter = new RecentFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorStoryHistory());
-        recentFeedListView.setAdapter(recentFeedAdapter);
+        if(PreferencesManager.getRecordHistory()) {
+            recentFeedListView = (MainFeedListView) getListView();
+            recentFeedListView.setOnItemLongClickListener(this);
+            recentFeedAdapter = new RecentFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorStoryHistory());
+            recentFeedListView.setAdapter(recentFeedAdapter);
+        } else {
+            getListView().setVisibility(View.GONE);
+
+            TextView title = (TextView) fragmentView.findViewById(R.id.empty_title);
+            title.setText(getResources().getString(R.string.disabled_recents_title));
+
+            TextView text = (TextView) fragmentView.findViewById(R.id.empty_text);
+            text.setText(getResources().getString(R.string.disabled_recents_text));
+        }
 
     }
 
