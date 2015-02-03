@@ -990,6 +990,9 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 			displayScreen(DDGControlVar.START_SCREEN, true);
             keyboardService.showKeyboard(getSearchField());
 		}
+        else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
+            searchOrGoToUrl(intent.getDataString());
+        }
 		else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
             keyboardService.hideKeyboard(getSearchField());
 			//shareButton.setVisibility(View.VISIBLE);
