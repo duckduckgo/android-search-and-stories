@@ -170,6 +170,8 @@ public class SlidingTabLayout extends HorizontalScrollView {
         if (viewPager != null) {
             viewPager.setOnPageChangeListener(new InternalViewPagerListener());
             populateTabStrip();
+
+            scrollToTab(mViewPager.getCurrentItem(), 0);
         }
     }
 
