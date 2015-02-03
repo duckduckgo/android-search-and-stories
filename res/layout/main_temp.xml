@@ -6,19 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <com.duckduckgo.mobile.android.views.DDGDrawerLayout
-        android:id="@+id/mainDrawer"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <RelativeLayout
-            android:id="@+id/mainView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-<!--
-            android:background="?attr/leftLayoutRootBackground"
-            <include android:id="@+id/searchBar" layout="@layout/searchbar" />
--->
             <android.support.v7.widget.Toolbar
                 android:layout_alignParentTop="true"
                 android:id="@+id/toolbar"
@@ -28,40 +15,13 @@
                 app:contentInsetEnd="48dp"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                app:theme="@style/DDGWhiteOverflow"/><!--
-                app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                />-->
-            <!--
-                app:theme="@style/DDGToolbar"/>
-            -->
-            <android.support.v7.widget.Toolbar
-                android:visibility="gone"
-                android:layout_below="@id/toolbar"
-                android:id="@+id/toolbar2"
-                android:minHeight="?attr/actionBarSize"
-                android:background="#ff5722"
-                app:contentInsetStart="0dp"
-                app:contentInsetEnd="48dp"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize" >
-<!--
-                <include android:id="@+id/toolbar2_id" layout="@layout/actionbar_temp_2" />
--->
-                </android.support.v7.widget.Toolbar>
-<!--   50dp
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar2"
-                android:minHeight="?attr/actionBarSize"
-                android:layout_below="@id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
--->
+                app:theme="@style/DDGWhiteOverflow"/>
+
             <FrameLayout
                 android:id="@+id/fragmentContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@id/toolbar2"
+                android:layout_below="@id/toolbar"
                 android:background="@color/background"/>
 
             <View
@@ -71,17 +31,6 @@
                 android:layout_height="2dp"
                 android:layout_below="@id/toolbar"
                 android:background="?attr/topDropShadow"/>
-
-        </RelativeLayout>
-
-        <fragment
-            android:id="@+id/drawerFragment"
-            android:name="com.duckduckgo.mobile.android.fragment.DrawerFragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="start" />
-
-    </com.duckduckgo.mobile.android.views.DDGDrawerLayout>
 
     <include android:id="@+id/fontSeekLayout" layout="@layout/font_seekbar" />
 

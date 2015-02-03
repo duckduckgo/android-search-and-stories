@@ -112,7 +112,6 @@ import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
 import com.duckduckgo.mobile.android.fragment.AboutFragment;
-import com.duckduckgo.mobile.android.fragment.DuckModeFragment;
 import com.duckduckgo.mobile.android.fragment.FeedFragment;
 import com.duckduckgo.mobile.android.fragment.HelpFeedbackFragment;
 import com.duckduckgo.mobile.android.fragment.PrefFragment;
@@ -135,8 +134,6 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
-import com.duckduckgo.mobile.android.views.DDGDrawerLayout;
-import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.SeekBarHint;
 import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
@@ -158,9 +155,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     private TextView actionBarTitle;
 	//private HistoryListView leftRecentView = null;//drawer fragment
 
-	private DDGDrawerLayout drawer;
-	private View contentView = null;
-	
 	//private HistoryListView recentSearchView = null;//recent search fragment
 
 	private ImageButton mainButton = null;
@@ -169,15 +163,12 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     private ImageButton homebutton = null;
     private ImageButton bangButton = null;
 
-	private View mainContentView;
 	private FrameLayout fragmentContainer;
 
 	private FragmentManager fragmentManager;
 	private WebFragment webFragment;
-	private DuckModeFragment duckModeFragment;
 	private RecentSearchFragment recentSearchFragment;
 	private SavedFragment savedFragment;
-    //private StoredItemsFragment savedFragment;
     private RecentsFragment recentsFragment;
 	private FeedFragment feedFragment;
     private SearchFragment searchFragment;
@@ -207,8 +198,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	private boolean shouldShowBangButtonExplanation;
 
 	private BangButtonExplanationPopup bangButtonExplanationPopup;
-
-    private DDGOverflowMenu overflowMenu = null;
     
     /**
      * save feed by object or by the feed id
@@ -231,7 +220,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     }
     
     public void itemSaveSearch(String query) {
-        //Log.e("aaa", "saving query: "+query);
     	DDGApplication.getDB().insertSavedSearch(query);
     }
     
@@ -245,7 +233,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
      * Also disables dispatching of touch events from viewPager to children views
      */
     private void addWelcomeScreen() {
-		drawer.lockDrawer();
 
     	if(!getResources().getBoolean(R.bool.welcomeScreen_allowLandscape)){
 			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -271,7 +258,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     private void removeWelcomeScreen() {
     	welcomeScreenLayout.setVisibility(View.GONE);
 
-		drawer.unlockDrawer();
 		PreferencesManager.setWelcomeShown();
     	// remove welcome screen
 		FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
@@ -333,52 +319,21 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
             initializeContainer();
     	}
 
-		mainContentView = (View) findViewById(R.id.activityContainer);
-
-		drawer = (DDGDrawerLayout) findViewById(R.id.mainDrawer);
-
 		fragmentContainer = (FrameLayout) findViewById(R.id.fragmentContainer);
 
 		fragmentManager = getSupportFragmentManager();
         initFragments();
-
-		drawer.setLeftMenuView(fragmentManager.findFragmentById(R.id.drawerFragment));
-		contentView = (View) findViewById(R.id.mainView);
 
         if(!PreferencesManager.isWelcomeShown()) {
             addWelcomeScreen();
             shouldShowBangButtonExplanation = true;
     	}
 
-		//initSearchBar();
         initActionBar();
 
-        overflowMenu = new DDGOverflowMenu(this);
-/*aaa
-        //mainButton = (ImageButton) contentView.findViewById(R.id.settingsButton);
-		mainButton = (ImageButton) actionBar.getCustomView().findViewById(R.id.settingsButton);
-        mainButton.setOnClickListener(this);
-        //bangButton = (ImageButton)contentView.findViewById(R.id.bangButton);
-		bangButton = (ImageButton) actionBar.getCustomView().findViewById(R.id.bangButton);
-        bangButton.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getSearchField().addBang();				
-			}
-		});
-*/
         if(DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
         	setMainButtonHome();
         }
-        /*
-        shareButton = (ImageButton) contentView.findViewById(R.id.shareButton);
-        shareButton.setOnClickListener(this);
-        
-        // adjust visibility of share button after screen rotation
-        if(DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
-        	shareButton.setVisibility(View.VISIBLE);
-        }*/
-        //initSearchBar();
 
 		initFontSizeLayout();
 
@@ -522,47 +477,23 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
             searchFieldContainer.setVisibility(View.GONE);
             actionBarTitle.setVisibility(View.VISIBLE);
             actionBarTitle.setText(newTitle);
-            //actionBar.setDisplayShowCustomEnabled(false);
-            //actionBar.setDisplayShowTitleEnabled(true);
-            //actionBar.setTitle(newTitle);
         } else {
             searchFieldContainer.setVisibility(View.VISIBLE);
             actionBarTitle.setVisibility(View.GONE);
-            //actionBar.setDisplayShowCustomEnabled(true);
-            //actionBar.setDisplayShowTitleEnabled(false);
         }
     }
 
-    private void showSearchField() {
-        actionBar.getCustomView().findViewById(R.id.search_container).setVisibility(View.VISIBLE);
-        actionBar.getCustomView().findViewById(R.id.actionbar_title).setVisibility(View.GONE);
-    }
-
 	private void initActionBar() {
-
-        //Toolbar toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
-
-        //Toolbar toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
-        //toolbar2.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            //@Override
-            //public boolean onMenuItemClick(MenuItem item) {
-                //return false;
-            //}
-        //});
-        //toolbar2.inflateMenu(R.menu.feeds);
-
-
 		toolbar = (Toolbar) findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		actionBar = getSupportActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowCustomEnabled(true);
-        //actionBar.setDisplayShowCustomEnabled(false);
 
 		View actionBarView = LayoutInflater.from(this).inflate(R.layout.temp_actionbar, null);
 		ActionBar.LayoutParams params = new ActionBar.LayoutParams(
 				ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-        //params.setMarginEnd(100);
+
 		actionBar.setCustomView(actionBarView, params);
 
 		searchBar = actionBar.getCustomView().findViewById(R.id.searchBar);
@@ -591,7 +522,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		getSearchField().setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				drawer.close();
+				//drawer.close();
                 //displayScreen(SCREEN.SCR_SEARCH, true);
 //				showBangButton(true);
 			}
@@ -677,15 +608,11 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		getSearchField().addTextChangedListener(new TextWatcher() {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				getSearchField().setCompoundDrawables(null, null, getSearchField().getText().toString().equals("") ? null : DDGControlVar.mDuckDuckGoContainer.stopDrawable, null);
-                //Log.e("aaa", "new text is: " + s);
                 if(!s.toString().equals("")) {
-                    Log.e("aaa", "is auto complete active: "+DDGControlVar.isAutocompleteActive);
                     BusProvider.getInstance().post(new ShowAutoCompleteResultsEvent());
                     if(DDGControlVar.isAutocompleteActive) {
-                        Log.e("aaa", "autocomplete == active");
                         DDGControlVar.mDuckDuckGoContainer.tempAdapter.getFilter().filter(s);
                     } else {
-                        Log.e("aaa", "autocomplete != active");
                         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getFilter().filter(s);
                     }
                 }
@@ -904,28 +831,19 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 displayHelp();
                 break;
             case SCR_SETTINGS:
-                Log.e("aaa", "case settings");
                 displaySettings();
                 break;
             default:
 				break;
 		}
-		/*
-		if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENT_SEARCH &&
-				!screenToDisplay.equals(SCREEN.SCR_RECENT_SEARCH)){
-			BusProvider.getInstance().post(new LeftMenuSetRecentVisibleEvent());
-		}*/
         if(DDGControlVar.START_SCREEN == SCREEN.SCR_RECENTS &&
                 !screenToDisplay.equals(SCREEN.SCR_RECENTS)){
             BusProvider.getInstance().post(new LeftMenuSetRecentVisibleEvent());
         }
-        //Log.e("aaa", "inside display screen, webview is showing: "+DDGControlVar.mDuckDuckGoContainer.webviewShowing);
 	    if(!DDGControlVar.mDuckDuckGoContainer.webviewShowing && screenToDisplay!=SCREEN.SCR_SEARCH) {
 			DDGControlVar.mDuckDuckGoContainer.prevScreen = DDGControlVar.mDuckDuckGoContainer.currentScreen;
 			DDGControlVar.mDuckDuckGoContainer.currentScreen = screenToDisplay;
-            //Log.e("aaa", "in - current screen: "+DDGControlVar.mDuckDuckGoContainer.currentScreen+" - prev screen: "+DDGControlVar.mDuckDuckGoContainer.prevScreen);
 		}
-        //Log.e("aaa", "out - current screen: "+DDGControlVar.mDuckDuckGoContainer.currentScreen+" - prev screen: "+DDGControlVar.mDuckDuckGoContainer.prevScreen);
 	}
 	
 	private void displayHomeScreen() {
@@ -943,9 +861,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
             keyboardService.showKeyboard(getSearchField());
         }
         DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
-        //displayAbout();
-        //displayHelp();
-        //fragmentManager.beginTransaction().replace(fragmentContainer.getId(), new TempFragment(), "ciao").commit();
 	}
 
 	@Override
@@ -995,7 +910,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         }
 		else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
             keyboardService.hideKeyboard(getSearchField());
-			//shareButton.setVisibility(View.VISIBLE);
 			displayScreen(SCREEN.SCR_WEBVIEW, false);
 		}
         else if(isLaunchedWithAssistAction()){
@@ -1036,10 +950,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	
 	@Override
 	public void onBackPressed() {
-		if(drawer.isOpen()) {
-			drawer.close();
-		}
-		else if(fontSizeLayout.getVisibility() != View.GONE) {
+        if(fontSizeLayout.getVisibility() != View.GONE) {
 			cancelFontScaling();
 		}
 		//else if (DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
@@ -1066,15 +977,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 			super.onBackPressed();
 		}
 	}
-/*
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.webfragment, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-*/
-
-
 
     @Override
     public boolean onMenuOpened(int featureId, Menu menu) {
@@ -1100,9 +1002,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()) {
-            case android.R.id.home:
-                actionHome();
-                return true;
             case R.id.action_stories:
                 actionStories();
                 return true;
@@ -1120,14 +1019,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void actionHome() {
-        if(DDGControlVar.mDuckDuckGoContainer.currentScreen==SCREEN.SCR_SEARCH) {
-            //aaa todo add bang
-        } else {
-            displayHomeScreen();
         }
     }
 
@@ -1267,7 +1158,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	}
 
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
-		//displayWebView();//aaa
         displayScreen(SCREEN.SCR_WEBVIEW, false);
 		BusProvider.getInstance().post(new WebViewSearchOrGoToUrlEvent(text, sessionType));
 	}
@@ -1290,20 +1180,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	private void displaySettings() {
         Log.e("aaa", "display settings");
         DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
-		//BusProvider.getInstance().post(new FeedCleanImageTaskEvent());//aaa
-        /*
-        if(true || Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
-            Log.e("aaa", "true");
-            Intent intent = new Intent(getBaseContext(), Preferences.class);
-            startActivityForResult(intent, PREFERENCES_RESULT);
-        } else {
-            //List<Fragment> fragments = getSupportFragmentManager().getFragments();
-            //for(Fragment fragment : fragments) {
-                //getSupportFragmentManager().beginTransaction().remove(fragment);
-            //}
-            //getFragmentManager().beginTransaction().replace(fragmentContainer.getId(), new PreferencesFragment(), "preferences").commit();
-        }*/
-        //fragmentManager.beginTransaction().replace(fragmentContainer.getId(), new PrefFragment(), PrefFragment.TAG).commit();
+
         changeFragment(new PrefFragment(), PrefFragment.TAG);
 	}
 
@@ -1341,14 +1218,10 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
     	if(DDGControlVar.START_SCREEN == SCREEN.SCR_STORIES){
     		DDGControlVar.homeScreenShowing = true;
-    		//setMainButtonMenu();//aaaa
-			//BusProvider.getInstance().post(new LeftMenuSetHomeSelectedEvent(true));//aaa
 
     	}
     	else {
     		DDGControlVar.homeScreenShowing = false;
-			//BusProvider.getInstance().post(new LeftMenuSetStoriesSelectedEvent(true));//aaa
-            //setHomeButton();//aaa
         }
 	}
 	
@@ -1440,12 +1313,6 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
     public void displayAbout() {
         resetScreenState();//aaa to check
         DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
-/*
-        actionBar.setDisplayShowCustomEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        //actionBar.setHomeAsUpIndicator(R.drawable.ic_home);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(R.string.about);*/
 
         changeFragment(new AboutFragment(), AboutFragment.TAG);
     }
@@ -1454,61 +1321,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         resetScreenState();//aaa to check
         DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
 
-        //actionBar.setDisplayShowCustomEnabled(false);
-        //actionBar.setDisplayHomeAsUpEnabled(true);
-        //actionBar.setHomeAsUpIndicator(R.drawable.ic_home);
-        //actionBar.setDisplayShowTitleEnabled(true);
-        //actionBar.setTitle(R.string.help_feedback);
-
         changeFragment(new HelpFeedbackFragment(), HelpFeedbackFragment.TAG);
     }
-/*
-    public void displaySettings() {
-        resetScreenState();
-        DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
-
-        actionBar.setDisplayShowCustomEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setHomeAsUpIndicator(R.drawable.ic_home);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(R.string.settings);
-
-        //changeFragment(new PreferencesFragment(), "preferences");
-
-    }
-*/
-
-	/*
-	public void displayDuckMode(){  
-		resetScreenState(); 
-		
-		// left side menu visibility changes
-		BusProvider.getInstance().post(new LeftMenuChangeVisibilityEvent());
-		
-    	// main view visibility changes
-		//shareButton.setVisibility(View.GONE);
-    	DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
-		
-		clearLeftSelect();
-
-		if(duckModeFragment==null) {
-			duckModeFragment = new DuckModeFragment();
-		}
-
-		if(!duckModeFragment.isVisible()) {
-			changeFragment(duckModeFragment, DuckModeFragment.TAG);
-		}
-    	    	/*
-    	if(DDGControlVar.START_SCREEN == SCREEN.SCR_DUCKMODE){
-    		DDGControlVar.homeScreenShowing = true;
-    		setMainButtonMenu();
-			BusProvider.getInstance().post(new LeftMenuSetHomeSelectedEvent(true));
-            hideSearchBarBackground();
-    	}
-    	else {
-    		DDGControlVar.homeScreenShowing = false;
-    	}*//*
-	}*/
 
     private void hideSearchBarBackground() {
         TypedArray styledAttributes = getTheme().obtainStyledAttributes(R.style.DDGTheme, new int[]{R.attr.searchBarBackground});
@@ -1540,7 +1354,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		}
 	}
 
-	private void changeFragment(Fragment newFragment, String newTag) {
+	private void changeFragment(Fragment newFragment, String newTag) {// todo add search fragment add/remove
         Log.e("aaa", "change fragment: "+newTag);
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		Fragment currentFragment = fragmentManager.findFragmentByTag(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
@@ -1602,7 +1416,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
         updateActionBar(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
     }
 
-    public void onClick(View view) {
+    public void onClick(View view) {//aaa toremove
 		if (view.equals(mainButton)) {
 			handleHomeSettingsButtonClick();
 		}/*
@@ -1611,8 +1425,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		}*/
 	}
 
-	private void handleLeftHomeTextViewClick() {
-		drawer.close();
+	private void handleLeftHomeTextViewClick() {//aaa to remove
 					
 		if (DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
 
@@ -1626,11 +1439,11 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 		displayHomeScreen();
 	}
 
-	private void handleHomeSettingsButtonClick() {
+	private void handleHomeSettingsButtonClick() {//aaa to remove
         keyboardService.hideKeyboard(getSearchField());
 		
 		if(DDGControlVar.homeScreenShowing){
-			drawer.open();
+			//drawer.open();
 		}
 		else {
 			// going home
@@ -1639,7 +1452,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {//aaa to remove
 		super.onActivityResult(requestCode, resultCode, data);
 
 		if (requestCode == PREFERENCES_RESULT){
@@ -1725,18 +1538,16 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 	    if ( keyCode == KeyEvent.KEYCODE_MENU ) {
-			drawer.close();
+			//drawer.close();
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
 	}
 
 	private void initFragments() {
-		duckModeFragment = new DuckModeFragment();
 		webFragment = new WebFragment();
 		recentSearchFragment = new RecentSearchFragment();
 		savedFragment = new SavedFragment();
-        //savedFragment = StoredItemsFragment.newSavedInstance();
         recentsFragment = new RecentsFragment();
         searchFragment = new SearchFragment();
         Fragment fragment = null;
@@ -1869,12 +1680,9 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	
 	@Subscribe
 	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
-		drawer.close();
         keyboardService.hideKeyboard(getSearchField());
 		if(!webFragment.isVisible()) {
-			//displayWebView();//aaa
             displayScreen(SCREEN.SCR_WEBVIEW, false);
-			//displayScreen(SCREEN.SCR_WEBVIEW, false);
 		}
 		BusProvider.getInstance().post(new WebViewShowHistoryObjectEvent(event.historyObject));
 	}
@@ -1902,20 +1710,17 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
 	@Subscribe
 	public void onRecentSearchPaste(RecentSearchPasteEvent event) {
-		drawer.close();
         getSearchField().pasteQuery(event.query);
         keyboardService.showKeyboard(getSearchField());
 	}
 
     @Subscribe
 	public void onSuggestionPaste(SuggestionPasteEvent event) {
-		drawer.close();
         getSearchField().pasteQuery(event.query);
 	}
 	
 	@Subscribe
 	public void onSavedSearchPaste(SavedSearchPasteEvent event) {
-		drawer.close();
         getSearchField().pasteQuery(event.query);
         keyboardService.showKeyboard(getSearchField());
 	}
@@ -1958,26 +1763,21 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 
 	@Subscribe
 	public void onLeftMenuStoriesClickEvent(LeftMenuStoriesClickEvent event) {
-		drawer.close();
 		displayScreen(SCREEN.SCR_STORIES, false);
 	}
 
 	@Subscribe
 	public void onLeftMenuSavedClickEvent(LeftMenuSavedClickEvent event) {
-		drawer.close();
-		//displayScreen(SCREEN.SCR_SAVED_FEED, false);//aaaa
         displayScreen(SCREEN.SCR_SAVED, false);
 	}
 
 	@Subscribe
 	public void onLeftMenuSettingsClickEvent(LeftMenuSettingsClickEvent event) {
-		drawer.close();
 		displaySettings();
 	}
 
 	@Subscribe
 	public void onLeftMenuCloseEvent(LeftMenuCloseEvent event) {
-		drawer.close();
 	}
 
 	@Subscribe
