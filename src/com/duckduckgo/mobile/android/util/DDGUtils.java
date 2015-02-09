@@ -403,5 +403,27 @@ public final class DDGUtils {
         DDGControlVar.lastClearCacheAndCookies = System.currentTimeMillis();
         PreferencesManager.setLastClearCacheAndCookies(DDGControlVar.lastClearCacheAndCookies);
     }
+
+	public static String getVersionName(Context context) {
+		String versionName = "";
+		try {
+			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			versionName = packageInfo.versionName;
+		} catch(NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return versionName;
+	}
+
+	public static int getVersionCode(Context context) {
+		int versionCode = 0;
+		try {
+			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			versionCode = packageInfo.versionCode;
+		} catch(NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return versionCode;
+	}
 	
 }

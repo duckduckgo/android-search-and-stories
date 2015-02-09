@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">DuckDuckGo</string>
-    <string name="SearchString">Ricerca DuckDuckGo&#8230;</string>
+    <string name="SearchString">Ricerca DuckDuckGo</string>
     <string name="SettingsButtonContentDescription">Impostazioni</string>
     <string name="HomeButtonContentDescription">Home</string>
     
@@ -184,11 +184,6 @@
     <string name="NewSourcesNoThx">Più tardi</string>
 
     <string name="WorldTraveler">Giramondo (nessuna)</string>
-
-    <string name="pull_to_refresh_pull_label">Trascina giù per aggiornare</string>
-    <string name="pull_to_refresh_release_label">Rilascia per aggiornare</string>
-    <string name="pull_to_refresh_refreshing_label">Caricamento&#8230;</string>
-
     
     <!-- SSL Certificate dialogs -->
     <!-- Title for an SSL Certificate dialog -->

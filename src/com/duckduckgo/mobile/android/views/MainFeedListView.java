@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.views;
 import android.content.Context;
 import android.database.sqlite.SQLiteCursor;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -27,7 +28,8 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Object item = getAdapter().getItem(position);
+        Log.e("aaa", "main feed list view on click");
+        Object item = getAdapter().getItem(position);
 		FeedObject obj = null;
 		if(item instanceof FeedObject) {
 			obj = (FeedObject) item;

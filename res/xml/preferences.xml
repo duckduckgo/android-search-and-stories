@@ -76,7 +76,7 @@
                 android:title="@string/PrefRecordHistory"
                 android:key="recordHistoryPref"
                 android:summary="@string/OnlyOnPhone"
-                android:defaultValue="true" />
+                android:defaultValue="false" />
         <Preference
                 android:title="@string/PrefClearHistory"
                 android:key="clearHistoryPref"

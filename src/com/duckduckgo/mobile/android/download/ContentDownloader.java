@@ -4,6 +4,7 @@ import java.io.File;
 
 import android.annotation.SuppressLint;
 import android.app.DownloadManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -18,12 +19,12 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 public class ContentDownloader {
 
 	private DownloadManager downloadManager;
-	private DuckDuckGo duckDuckGoActivity;
+	private Context context;
 
-	public ContentDownloader(DuckDuckGo duckDuckGoActivity) {
-		this.duckDuckGoActivity = duckDuckGoActivity;
+	public ContentDownloader(Context context) {
+		this.context = context;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-			this.downloadManager = (DownloadManager) duckDuckGoActivity.getSystemService(DuckDuckGo.DOWNLOAD_SERVICE);
+			this.downloadManager = (DownloadManager) context.getSystemService(DuckDuckGo.DOWNLOAD_SERVICE);
 		}
 	}
 
@@ -36,7 +37,7 @@ public class ContentDownloader {
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             if(url.startsWith("https")) {
                 //download scheme not supported yet
-                Toast.makeText(duckDuckGoActivity, R.string.ToastSchemeNotSupported, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.ToastSchemeNotSupported, Toast.LENGTH_SHORT).show();
                 return;
             }
         }
@@ -64,7 +65,7 @@ public class ContentDownloader {
 				public void onDownloadFailed() {
 					// TODO Fail gracefully here... inform the user about failed
 					// download!
-					Toast.makeText(duckDuckGoActivity, R.string.ErrorDownloadFailed, Toast.LENGTH_LONG).show();
+					Toast.makeText(context, R.string.ErrorDownloadFailed, Toast.LENGTH_LONG).show();
 				}
 
 				@Override
@@ -74,7 +75,7 @@ public class ContentDownloader {
 					File file = new File(filePath);
 					viewIntent.setDataAndType(Uri.fromFile(file), mimeType);
 					viewIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-					DDGUtils.execIntentIfSafe(duckDuckGoActivity, viewIntent);
+					DDGUtils.execIntentIfSafe(context, viewIntent);
 				}
 			};
 

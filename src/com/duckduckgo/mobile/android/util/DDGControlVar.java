@@ -1,5 +1,8 @@
 package com.duckduckgo.mobile.android.util;
 
+import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
+import com.duckduckgo.mobile.android.objects.FeedObject;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,7 +27,7 @@ public class DDGControlVar {
 	
 	public static boolean includeAppsInSearch = false;
     public static int useExternalBrowser = DDGConstants.ALWAYS_INTERNAL;
-	public static boolean isAutocompleteActive = true;
+	public static boolean isAutocompleteActive = false;
 	public static boolean automaticFeedUpdate = true;
 	public static boolean changedSources = false;
     public static boolean mustClearCacheAndCookies = false;
@@ -39,6 +42,11 @@ public class DDGControlVar {
 	public static int ptrHeaderSize;
 	public static int ptrSubHeaderSize;
 	public static float leftTitleTextSize;
+
+	public static DuckDuckGoContainer mDuckDuckGoContainer;
+
+	public static FeedObject currentFeedObject = null;
+	public static boolean mCleanSearchBar = false;
 		
 	public static boolean hasAppsIndexed = false;
 	

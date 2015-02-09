@@ -35,6 +35,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
+        //View retView = inflater.inflate(R.layout.temp_search_layout, parent, false);
 
         return retView;
     }
@@ -88,7 +89,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
         else {
         	imageViewHistory.setImageResource(R.drawable.icon_history_search);
         }
-        
+
         // query use button
         ImageView buttonHistory = (ImageView) view.findViewById(R.id.recentSearchPaste);
         

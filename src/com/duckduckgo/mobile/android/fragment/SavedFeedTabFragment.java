@@ -1,8 +1,9 @@
 package com.duckduckgo.mobile.android.fragment;
 
-import android.database.sqlite.SQLiteCursor;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +15,12 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
-import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemSelectedEvent;
-import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.squareup.otto.Subscribe;
 
 
 public class SavedFeedTabFragment extends ListFragment {
+	public static final String TAG = "saved_feed_tab_fragment";
 	MainFeedListView savedFeedView;
 	SavedFeedCursorAdapter savedFeedAdapter;	
 	
@@ -28,8 +28,8 @@ public class SavedFeedTabFragment extends ListFragment {
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
 	 */
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_savedfeed, container, false);
-		setRetainInstance(true);
+		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_favoritefeed, container, false);
+		//setRetainInstance(true);
 		BusProvider.getInstance().register(this);
 		return fragmentLayout;
 	}
@@ -49,22 +49,16 @@ public class SavedFeedTabFragment extends ListFragment {
 		savedFeedView.setAdapter(savedFeedAdapter);
 	}
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        Log.e("aaa", "new config");
+
+    }
+
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		super.onListItemClick(l, v, position, id);
-		
-		Object item = getListView().getAdapter().getItem(position);
-		FeedObject obj = null;
-		if(item instanceof FeedObject) {
-			obj = (FeedObject) item;
-		}
-		else if(item instanceof SQLiteCursor) {
-			obj = new FeedObject(((SQLiteCursor) item));
-		}
-		
-		if (obj != null) {
-			BusProvider.getInstance().post(new SavedFeedItemSelectedEvent(obj));
-		}
+        savedFeedView.onItemClick(l, v, position, id);
 	}
 	
 	@Subscribe

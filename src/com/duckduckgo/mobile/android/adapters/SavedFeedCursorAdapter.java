@@ -7,8 +7,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +19,12 @@ import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -34,7 +41,7 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
         // when the view will be created for first time,
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View retView = inflater.inflate(R.layout.main_feed_layout, parent, false);
+        View retView = inflater.inflate(R.layout.temp_main_feed_layout, parent, false);
 
         return retView;
     }
@@ -49,10 +56,15 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
     	final String feedType = cursor.getString(cursor.getColumnIndex("type"));
     	final String imageUrl = cursor.getString(cursor.getColumnIndex("imageurl"));
     	final String feedContent = cursor.getString(cursor.getColumnIndex("feed"));
+        final String category = cursor.getString(cursor.getColumnIndex("category"));
     	
     	final TextView textViewTitle = (TextView) view.findViewById(R.id.feedTitleTextView);
+        final TextView textViewCategory = (TextView) view.findViewById(R.id.feedCategoryTextView);
     	final AsyncImageView imageViewBackground = (AsyncImageView) view.findViewById(R.id.feedItemBackground);
     	final AsyncImageView imageViewFeedIcon = (AsyncImageView) view.findViewById(R.id.feedItemSourceIcon);
+        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.feedWrapper);
+        toolbar.getMenu().clear();
+        toolbar.inflateMenu(R.menu.feed);
     			
 
     	URL feedUrl = null;
@@ -98,8 +110,9 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
     	textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
     	textViewTitle.setText(title);
 
-    	// FIXME : it'd be good to reset color to default color for textview in layout XML
-    	textViewTitle.setTextColor(Color.WHITE);
+        //Set the Category
+        textViewCategory.setText(category.toUpperCase());
+
     	if(DDGControlVar.readArticles.contains(feedId)){
     		textViewTitle.setTextColor(Color.GRAY);
     	}
@@ -107,7 +120,7 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
     	if (feedContent != null && !feedContent.equals("null")) {
     		try {
     			feedUrl = new URL(feedContent);
-    		} catch (MalformedURLException e) {
+            } catch (MalformedURLException e) {
     			e.printStackTrace();
     		}
 
@@ -130,6 +143,40 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
     			}
     		}
     	}
+        final String url;
+        if(feedUrl==null) {
+            url = null;
+        } else {
+            url = feedUrl.toString();
+        }
+
+        toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
+        //aaa todo check why removing a feed inflate more items in other menus
+        //aaaa solved!
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch(item.getItemId()) {
+                    case R.id.action_remove_favorite:
+                        BusProvider.getInstance().post(new UnSaveStoryEvent(feedId));
+                        //toolbar.
+                        return true;
+                    case R.id.action_share:
+                        if(url!=null) {
+                            BusProvider.getInstance().post(new ShareFeedEvent(title, url));
+                        }
+                        return true;
+                    case R.id.action_external:
+                        if(url!=null) {
+                            BusProvider.getInstance().post(new SendToExternalBrowserEvent(null, url));
+                        }
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+        });
 
 
     }

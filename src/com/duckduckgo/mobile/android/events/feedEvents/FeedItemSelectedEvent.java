@@ -5,7 +5,13 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 
 public class FeedItemSelectedEvent extends Event {
 	
-	public FeedObject feedObject;
+	public FeedObject feedObject = null;
+
+	public String feedId = null;
+
+	public FeedItemSelectedEvent(String feedId) {
+		this.feedId = feedId;
+	}
 
 	public FeedItemSelectedEvent(FeedObject feedObject){
 		this.feedObject = feedObject;
