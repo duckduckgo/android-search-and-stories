@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -29,10 +30,10 @@ public class CacheFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 			
 	private boolean requestFailed = false;
 	
-	DuckDuckGo activity;
+	private Context context;
 			
-	public CacheFeedTask(DuckDuckGo activity) {
-		this.activity = activity;
+	public CacheFeedTask(Context context) {
+		this.context = context;
 		this.fileCache = DDGApplication.getFileCache();	
 	}
 	

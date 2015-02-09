@@ -1,5 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
+
+    <!-- temp -->
+
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="colorPrimary">#de5833</color>
+    <color name="colorPrimaryDark">#bf360c</color>
+    <color name="colorAccent">#ff5722</color>
+
+    <!-- new colors -->
+
+    <color name="colorPrimaryRed">#de5833</color>
+    <color name="colorPrimaryDarkRed">#bd4b2b</color>
+    <color name="colorPrimaryLightRed">#e37151</color>
+
+    <color name="accentGold">#f1a031</color>
+
+    <color name="colorPrimaryBlue">#4495d4</color>
+    <color name="colorPrimaryDarkBlue">#3a7fb4</color>
+    <color name="colorPrimaryLightBlue">#60a5da</color>
+
+    <color name="accentGreen">#5b9e4d</color>
+    <color name="accentPurple">#5454db</color>
+
+    <color name="feed_title">#404040</color>
+    <color name="feed_title_viewed">#888888</color>
+    <color name="feed_category_background">#7f111111</color>
+    <color name="feed_toolbar_background">@color/white</color>
+    <color name="feed_divider">#eeeeee</color>
+    <color name="feed_divider_shadow">#26000000</color>
+
+    <color name="actionbar_title">@color/white</color>
+    <color name="actionbar_title_hint">#999999</color>
+
+    <color name="actionbar_tab_selected">@color/white</color>
+    <color name="actionbar_tab_unselected">#7fffffff</color>
+
+    <color name="search_dark">#212121</color>
+    <color name="search_light">#a4a4a4</color>
+
+    <color name="text_light">#757575</color>
+
+    <color name="background">#eeeeee</color>
+
+    <!-- old colors -->
+
     <color name="welcome_button">#d24e25</color>
     <color name="welcome_button_pressed">#b33331</color>
     <color name="main_button">#d65420</color>

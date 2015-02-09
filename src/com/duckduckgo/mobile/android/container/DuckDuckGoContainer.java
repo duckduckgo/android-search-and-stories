@@ -5,6 +5,8 @@ import android.graphics.drawable.Drawable;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
+import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.TempAutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
@@ -15,6 +17,7 @@ public class DuckDuckGoContainer {
 	
 	public SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;
 	public String lastFeedUrl = "";
+	public String currentFragmentTag = "";
 	
 	public SCREEN currentScreen = SCREEN.SCR_STORIES;
 	public SCREEN prevScreen = SCREEN.SCR_STORIES;
@@ -24,8 +27,10 @@ public class DuckDuckGoContainer {
 	
 	public MultiHistoryAdapter historyAdapter = null;
 	
-	public MainFeedAdapter feedAdapter = null;
-	public MainFeedTask mainFeedTask = null;
+	//public MainFeedAdapter feedAdapter = null;
+	//public MainFeedTask mainFeedTask = null;
 	
 	public AutoCompleteResultsAdapter acAdapter = null;
+    public TempAutoCompleteResultsAdapter tempAdapter = null;
+    public RecentResultCursorAdapter recentResultCursorAdapter = null;
 }

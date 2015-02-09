@@ -1,33 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">DuckDuckGo</string>
-    <string name="SearchString">Search DuckDuckGo&#8230;</string>
+    <string name="SearchString">Search DuckDuckGo</string>
     <string name="SettingsButtonContentDescription">Settings</string>
     <string name="HomeButtonContentDescription">Home</string>
     
     <string name="search_hint">Search&#8230;</string>
     
+    <string name="PrefGroupGeneral">General</string>
+    <string name="PrefGroupStories">Stories</string>
+    <string name="PrefGroupSearch">Search</string>
+    <string name="PrefGroupOther">Other</string>
     <string name="PrefGroupAppFlow">Application</string>
     <string name="PrefGroupPrivacy">Privacy</string>
     <string name="PrefGroupFeedback">Feedback</string>
     <string name="PrefTheme">Theme</string>
     <string name="PrefThemeLight">Light</string>
     <string name="PrefThemeDark">Dark</string>
-    <string name="PrefStartScreen">Home Screen</string>
+    <string name="PrefStartScreen">Homepage</string>
     <string name="PrefStories">Stories</string>
     <string name="PrefWaterCoolerStories">Stories</string>
     <string name="PrefSavedItems">Saved Items</string>
     <string name="PrefDuckMode">Search</string>
     <string name="PrefRecentSearch">Recent Searches</string>
-    <string name="PrefRecordHistory">Save Recent</string>
-    <string name="PrefClearHistory">Clear Recent</string>
+    <string name="PrefRecordHistory">Save Recents</string>
+    <string name="PrefClearHistory">Clear Recents</string>
     <string name="PrefRecordCookies">Save Cookies</string>
     <string name="PrefClearCookies">Clear Cookies</string>
     <string name="PrefClearBrowserCache">Clear Browser Cache</string>
     <string name="PrefClearCacheAndCookies">Clear Cookies and Cache</string>
     <string name="PrefSources">Change Sources</string>
     <string name="PrefResetSources">Reset Sources</string>
-    <string name="PrefRegion">Region Boost</string>
+    <string name="PrefRegion">Region</string>
     <string name="PrefDirectQuery">Search on Tap</string>
     <string name="PrefExternalBrowser">Use External Browser</string>
     <string name="PrefNever">Never</string>
@@ -36,11 +40,12 @@
     <string name="PrefClearCacheCookiesEveryLaunch">Every Launch</string>
     <string name="PrefClearCacheCookiesWeekly">Weekly</string>
     <string name="PrefClearCacheCookiesMonthly">Monthly</string>
-    <string name="PrefSendFeedback">Send Feedback</string>
+    <string name="PrefSendFeedback">Feedback</string>
+    <string name="PrefAbout">About</string>
     <string name="PrefRate">Rate App</string>
     <string name="PrefAppSearch">Include Apps</string>
     <string name="PrefMainFontSize">Font Size</string>
-    <string name="PrefEnableAcra">Auto Report Crashes</string>
+    <string name="PrefEnableAcra">Automatic Crash Report</string>
     <string name="PrefAcraDisabled">Automatic Reporting Disabled</string>
     <string name="PrefAcraEnabled">Automatic Reporting Enabled</string>
     
@@ -51,6 +56,7 @@
 
     <string name="PrefAutoUpdate">Automatic Update</string>
     <string name="PrefReadable">Readability</string>
+    <string name="PrefReadableSummary">On, when available</string>
     <string name="PrefGroupTor">Tor</string>
     <string name="PrefEnableTor">Enable Tor</string>
     <string name="PrefCheckOrbotStatus">Check Orbot status</string>
@@ -185,9 +191,61 @@
 
     <string name="WorldTraveler">World Traveler (none)</string>
 
-    <string name="pull_to_refresh_pull_label">Pull down to refresh</string>
-    <string name="pull_to_refresh_release_label">Release to refresh</string>
-    <string name="pull_to_refresh_refreshing_label">Loading&#8230;</string>
+
+    <!--new strings-->
+    <string name="favourites">Favourites</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
+    <string name="help_feedback">Help &amp; Feedback</string>
+    <string name="add_favourites">Add to Favourites</string>
+    <string name="remove_favourites">Remove from Favourites</string>
+    <string name="share">Share this</string>
+    <string name="view_external">View in Browser</string>
+    <string name="reload">Reload</string>
+
+    <!--favorites fragment -->
+    <string name="favorites">Favorites</string>
+    <string name="favorited_search">Favorited Searches</string>
+    <string name="empty_favorites_title">No Favorites</string>
+    <string name="empty_favorites_text">Add searches and stories\nto your favourites, and they\nwill be shown here.</string>
+
+    <!--recents fragment-->
+    <string name="recents">Recents</string>
+    <string name="recent_searches">Recent Searches</string>
+    <string name="empty_recents_title">No Recents</string>
+    <string name="empty_recents_text">Once you start searching\nor browsing stories, your activity\nwill be shown here.</string>
+    <string name="disabled_recents_title">Recents Disabled</string>
+    <string name="disabled_recents_text">You can enable recents in Settings.</string>
+
+    <!--about fragment-->
+    <string name="about">About</string>
+    <string name="about_text">The search engine that doesn\'t\ntrack you.</string>
+    <string name="version">Version</string>
+    <string name="select_application">Select application</string>
+
+    <!--help feedback fragment-->
+    <string name="help">Help</string>
+    <string name="android_help_center">Android Help Center</string>
+    <string name="feedback">Feedback</string>
+    <string name="leave_feedback">Leave Feedback</string>
+    <string name="rate">Rate the App</string>
+
+    <!-- menus -->
+    <string name="action_stories">Stories</string>
+    <string name="action_recents">Recents</string>
+    <string name="action_favorites">Favorites</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_help_feedback">Help &amp; Feedback</string>
+    <string name="action_add_favorite">Add Favorite</string>
+    <string name="action_remove_favorite">Unfavorite</string>
+    <string name="action_share">Share</string>
+    <string name="action_view_external">View in Browser</string>
+    <string name="action_back">Back</string>
+    <string name="action_forward">Forward</string>
+    <string name="action_close">Close</string>
+
+
+
 
     
     <!-- SSL Certificate dialogs -->

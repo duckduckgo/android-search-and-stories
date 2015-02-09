@@ -1,7 +1,12 @@
 package com.duckduckgo.mobile.android.util;
 
+import com.duckduckgo.mobile.android.fragment.FeedFragment;
+import com.duckduckgo.mobile.android.fragment.WebFragment;
+
+import org.apache.http.entity.FileEntity;
+
 public enum SCREEN {
-	SCR_STORIES(0), SCR_RECENT_SEARCH(1), SCR_SAVED_FEED(2), SCR_DUCKMODE(3), SCR_WEBVIEW(4);
+	SCR_STORIES(0), SCR_RECENTS(1), SCR_SAVED(2), SCR_SEARCH(3), SCR_WEBVIEW(4), SCR_ABOUT(5), SCR_HELP(6), SCR_SETTINGS(7);
 	
 	private int code;
 	
@@ -18,23 +23,39 @@ public enum SCREEN {
 			case 0:
 				return SCR_STORIES;
 			case 1:
-				return SCR_RECENT_SEARCH;
+				return SCR_RECENTS;
 			case 2:
-				return SCR_SAVED_FEED;
+				return SCR_SAVED;
 			case 3:
-				return SCR_DUCKMODE;
+                return SCR_SEARCH;
 			case 4:
-				return SCR_WEBVIEW;
+                return SCR_WEBVIEW;
+            case 5:
+				return SCR_ABOUT;
+            case 6:
+                return SCR_HELP;
+            case 7:
+                return SCR_SETTINGS;
 			default:
 				return SCR_STORIES;
 		}	
 			
 	}
-	
+/*
+    public SCREEN getByTag(String tag) {
+        if(tag.equals(FeedFragment.TAG)) {
+            return SCR_STORIES;
+        } else if(false) {
+            return SCR_RECENTS;
+        } else if(tag.equals(WebFragment.TAG)) {
+            return SCR_WEBVIEW;
+        }
+    }
+*/
 	/**
 	 * method to get associated ViewFlipper order in main.xml
 	 * @return
-	 */
+	 *//*aaa
 	public int getFlipOrder() {
 		switch(this) {
 			case SCR_WEBVIEW:
@@ -50,5 +71,5 @@ public enum SCREEN {
 			default:
 				return 1;
 		}
-	}
+	}*/
 }

@@ -4,8 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 
 /*

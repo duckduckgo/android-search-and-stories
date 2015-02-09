@@ -2,9 +2,11 @@ package com.duckduckgo.mobile.android.views.webview;
 
 import java.util.HashSet;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebBackForwardList;
@@ -12,8 +14,12 @@ import android.webkit.WebHistoryItem;
 import android.webkit.WebView;
 
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
+import com.duckduckgo.mobile.android.events.StopActionEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DDGWebView extends WebView {
@@ -26,16 +32,20 @@ public class DDGWebView extends WebView {
 	
 	private DDGWebViewClient webViewClient = null;
 	private DDGWebChromeClient webChromeClient = null;
-	private DuckDuckGo activity;
+	private Activity activity;
 	
 	public boolean readableBackState = false;
+    public boolean readableForwardState = false;
 	public boolean loadingReadableBack = false;
 	
 	public boolean shouldClearHistory = false;
+
+	public String mWebViewDefaultUA = null;
 	
 	public DDGWebView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		attrSet = attrs;
+		mWebViewDefaultUA = getSettings().getUserAgentString();
 	}
 
 	public boolean is_gone=true;
@@ -107,7 +117,7 @@ public class DDGWebView extends WebView {
         if(url.contains("duckduckgo.com")) {
             getSettings().setUserAgentString(DDGConstants.USER_AGENT);
         } else {
-            getSettings().setUserAgentString(activity.mWebViewDefaultUA);
+            getSettings().setUserAgentString(mWebViewDefaultUA);
         }
     }
 
@@ -153,6 +163,11 @@ public class DDGWebView extends WebView {
 		readableBackState = true;
 		goBack();
 	}
+
+    public void readableActonForward(FeedObject feedObject) {
+        readableForwardState = true;
+        goForward();
+    }
 	
 	/**
 	 * Whether original format of the web page is required (no readability)
@@ -167,6 +182,7 @@ public class DDGWebView extends WebView {
 		forceOriginalFormat = false;
 		
 		readableBackState = false;
+        readableForwardState = false;
 		loadingReadableBack = false;
 	}
 	
@@ -192,29 +208,32 @@ public class DDGWebView extends WebView {
         loadUrl(ABOUT_BLANK);
     }
 
-    public void setParentActivity(DuckDuckGo activity) {
+    public void setParentActivity(Activity activity) {
 		this.activity = activity;
 	}
 	
-	public void backPressAction() {		
+	public void backPressAction(boolean toHomeScreen) {
 		WebBackForwardList history = copyBackForwardList();
 		int lastIndex = history.getCurrentIndex();
 
         if(lastIndex > 0) {
 			WebHistoryItem prevItem = history.getItemAtIndex(lastIndex-1);
-			
-			if(prevItem != null) {
+
+			if(webChromeClient.isVideoPlayingFullscreen) {
+				hideCustomView();
+			} else if(prevItem != null) {
 				String prevUrl = prevItem.getUrl();
                 if(ABOUT_BLANK.equals(prevUrl)){
                     goBackOrForward(-2);
                     if(lastIndex > 0){
-                        activity.displayScreen(activity.mDuckDuckGoContainer.currentScreen, false);
+                        if(toHomeScreen)
+						BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.mDuckDuckGoContainer.prevScreen, false));
                     }
                     return;
                 }
-				if(readableList.contains(prevUrl) && canDoReadability(prevUrl) && activity.currentFeedObject != null) {
+				if(readableList.contains(prevUrl) && canDoReadability(prevUrl) && DDGControlVar.currentFeedObject != null) {
 //					readableAction(activity.currentFeedObject);
-					readableActionBack(activity.currentFeedObject);
+					readableActionBack(DDGControlVar.currentFeedObject);
 				}
 				else {
 					goBack();
@@ -224,10 +243,29 @@ public class DDGWebView extends WebView {
 				goBack();
 			}
 		}
-		else {
-			activity.displayScreen(activity.mDuckDuckGoContainer.currentScreen, true);
+		else if(toHomeScreen) {
+			BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.mDuckDuckGoContainer.prevScreen, true));
+			BusProvider.getInstance().post(new StopActionEvent());
 		}
 	}
+
+    public void forwardPressAction() {
+        WebBackForwardList history = copyBackForwardList();
+        int lastIndex = history.getCurrentIndex();
+
+        if(lastIndex < history.getSize()) {
+            WebHistoryItem nextItem = history.getItemAtIndex(lastIndex+1);
+
+            if(nextItem!=null) {
+                String nextUrl = nextItem.getUrl();
+                if(ABOUT_BLANK.equals(nextUrl)){
+                    goBackOrForward(2);
+                } else {
+                    goForward();
+                }
+            }
+        }
+    }
 
 	private boolean canDoReadability(String articleUrl) {
 		return PreferencesManager.getReadable() 
@@ -263,5 +301,5 @@ public class DDGWebView extends WebView {
 	public boolean isVideoPlayingFullscreen() {
 		return webChromeClient.isVideoPlayingFullscreen;
 	}
-	
+
 }

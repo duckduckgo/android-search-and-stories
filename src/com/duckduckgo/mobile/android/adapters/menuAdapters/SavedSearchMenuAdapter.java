@@ -1,22 +1,23 @@
 package com.duckduckgo.mobile.android.adapters.menuAdapters;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import android.content.Context;
+
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.util.menuItems.SearchExternalMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.ShareSearchMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.UnSaveSearchMenuItem;
 
 public class SavedSearchMenuAdapter extends PageMenuContextAdapter {
-	private DuckDuckGo context;
+	private Context context;
 	private String query;
 
-	public SavedSearchMenuAdapter(DuckDuckGo context, int resource,
+	public SavedSearchMenuAdapter(Context context, int resource,
 			int textViewResourceId) {
 		super(context, resource, textViewResourceId);
 		this.context = context;
 	}
 	
-	public SavedSearchMenuAdapter(DuckDuckGo context, int resource,
+	public SavedSearchMenuAdapter(Context context, int resource,
                                   int textViewResourceId, String query) {
 		this(context, resource, textViewResourceId);
 		this.query = query;

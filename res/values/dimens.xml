@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- new dimen -->
+
+    <dimen name="temp_item_height">48dp</dimen>
+
+    <dimen name="actionbar_height">56dp</dimen>
+    <dimen name="actionbar_height_low">48dp</dimen>
+    <dimen name="actionbar_tab_height">51.3dp</dimen>
+    <dimen name="actionbar_margin">8dp</dimen>
+    <dimen name="actionbar_padding">8dp</dimen> <!-- aaa try to change margin with padding -->
+    <dimen name="actionbar_title_left_margin">24dp</dimen>
+    <dimen name="actionbar_overflow_width">48dp</dimen><!--48 poi 44-->
+    <dimen name="actionbar_button_height">56dp</dimen>
+    <dimen name="actionbar_button_width">48dp</dimen>
+
+    <dimen name="toolbar_height">64.3dp</dimen>
+    <dimen name="toolbar_icon_margin">16dp</dimen>
+    <dimen name="toolbar_icon_size">32dp</dimen>
+    <dimen name="toolbar_title_left_margin">24dp</dimen>
+    <dimen name="toolbar_category_margin">8dp</dimen>
+    <dimen name="toolbar_category_height">22dp</dimen>
+    <dimen name="toolbar_divider_height">8dp</dimen>
+
+    <dimen name="listview_item_height">48dp</dimen>
+    <dimen name="listview_item_icon_dimen">@dimen/listview_item_height</dimen>
+    <dimen name="listview_item_text_margin">24dp</dimen>
+    <dimen name="listview_item_plus_margin">26dp</dimen>
+
+    <dimen name="about_container_padding">48dp</dimen>
+    <dimen name="about_title_top_margin">16.6dp</dimen>
+    <dimen name="about_title_bottom_margin">17.3dp</dimen>
+
+
+    <dimen name="menu_padding">6dip</dimen>
+    <dimen name="menu_letterspace">10sp</dimen><!-- 10dp -->
+    <dimen name="menu_outer_margin">4dp</dimen>
+
+    <!-- old dimen -->
+    
     <dimen name="default_margin">8dp</dimen>
     <dimen name="default_margin_tiny">2dp</dimen>
     
@@ -16,5 +55,5 @@
     <dimen name="header_footer_left_right_padding">25dp</dimen>
     <dimen name="header_footer_top_bottom_padding">20dp</dimen>
     <dimen name="header_footer_internal_padding">10dp</dimen>
-    <dimen name="feed_item_height">190dp</dimen>
+    <dimen name="feed_item_height">160dp</dimen><!--190-->
 </resources>

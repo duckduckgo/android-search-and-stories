@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.adapters.menuAdapters;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import android.content.Context;
+
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.menuItems.SaveStoryMenuItem;
@@ -8,17 +9,19 @@ import com.duckduckgo.mobile.android.util.menuItems.SendToExternalBrowserMenuIte
 import com.duckduckgo.mobile.android.util.menuItems.ShareFeedMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.UnSaveStoryMenuItem;
 
+import org.apache.http.conn.ConnectTimeoutException;
+
 public class MainFeedMenuAdapter extends PageMenuContextAdapter {
-	private DuckDuckGo context;
+	private Context context;
 	private FeedObject feedObject;
 
-	public MainFeedMenuAdapter(DuckDuckGo context, int resource,
+	public MainFeedMenuAdapter(Context context, int resource,
 			int textViewResourceId) {
 		super(context, resource, textViewResourceId);
 		this.context = context;
 	}
 	
-	public MainFeedMenuAdapter(DuckDuckGo context, int resource,
+	public MainFeedMenuAdapter(Context context, int resource,
                                int textViewResourceId, FeedObject feedObject) {
 		this(context, resource, textViewResourceId);
 		this.feedObject = feedObject;

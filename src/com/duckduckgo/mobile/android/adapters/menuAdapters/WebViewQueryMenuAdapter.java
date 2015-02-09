@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.adapters.menuAdapters;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import android.content.Context;
+
 import com.duckduckgo.mobile.android.adapters.PageMenuContextAdapter;
 import com.duckduckgo.mobile.android.util.menuItems.ReloadMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.SaveSearchMenuItem;
@@ -9,17 +10,17 @@ import com.duckduckgo.mobile.android.util.menuItems.ShareSearchMenuItem;
 import com.duckduckgo.mobile.android.util.menuItems.UnSaveSearchMenuItem;
 
 public class WebViewQueryMenuAdapter extends PageMenuContextAdapter {
-	private DuckDuckGo context;
+	private Context context;
 	private String query;
 	private Boolean isQuerySaved;
 
-	public WebViewQueryMenuAdapter(DuckDuckGo context, int resource,
+	public WebViewQueryMenuAdapter(Context context, int resource,
 			int textViewResourceId) {
 		super(context, resource, textViewResourceId);
 		this.context = context;
 	}
 	
-	public WebViewQueryMenuAdapter(DuckDuckGo context, int resource, 
+	public WebViewQueryMenuAdapter(Context context, int resource,
 			int textViewResourceId, String query, Boolean isQuerySaved) {
 		this(context, resource, textViewResourceId);
 		this.query = query;

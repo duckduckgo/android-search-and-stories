@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -64,7 +65,18 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
             setTheme(android.R.style.Theme_Holo_Light);
         }
     }
-	
+/*
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(false && Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            //getFragmentManager().beginTransaction().add(android.R.id.content, new PreferencesFragment(), "pref").commit();
+        } else {
+            addPreferencesFromResource(R.xml.temp_preferences);
+        }
+    }*/
+
   @SuppressWarnings("deprecation")
   @Override
   public void onCreate(Bundle savedInstanceState) {

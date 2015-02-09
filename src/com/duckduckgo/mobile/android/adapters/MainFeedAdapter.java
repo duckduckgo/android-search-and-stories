@@ -11,8 +11,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,8 +28,13 @@ import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
+import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -68,13 +76,17 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	@Override
 	public View getView(int position, View cv, ViewGroup parent) {
 		if (cv == null) {
-			cv = inflater.inflate(R.layout.main_feed_layout, null);
-			cv.setTag(new Holder((TextView)cv.findViewById(R.id.feedTitleTextView),
-					             (AsyncImageView)cv.findViewById(R.id.feedItemBackground),
-					             (AsyncImageView)cv.findViewById(R.id.feedItemSourceIcon)));
+			cv = inflater.inflate(R.layout.temp_main_feed_layout, null);
+			Holder holder = new Holder((Toolbar) cv.findViewById(R.id.feedWrapper),
+					(TextView)cv.findViewById(R.id.feedTitleTextView),
+					(TextView)cv.findViewById(R.id.feedCategoryTextView),
+					(AsyncImageView)cv.findViewById(R.id.feedItemBackground),
+					(AsyncImageView)cv.findViewById(R.id.feedItemSourceIcon));
+			holder.toolbar.inflateMenu(R.menu.feed);
+			cv.setTag(holder);
 		}
 		
-		FeedObject feed = getItem(position);
+		final FeedObject feed = getItem(position);
 		
 		final Holder holder = (Holder) cv.getTag();
 		URL feedUrl = null;
@@ -91,7 +103,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		    	.placeholder(android.R.color.transparent)
 		    	.into(holder.imageViewBackground);
 			}
-			
+
 			String feedType = feed.getType();
 			
 			holder.imageViewFeedIcon.setType(feedType);	// stored source id in imageview
@@ -122,15 +134,65 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	        });
 
 			//Set the Title
-			holder.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
+			//holder.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
 			holder.textViewTitle.setText(feed.getTitle());
-			
+			/*
 			String feedId = feed.getId();
-			// FIXME : it'd be good to reset color to default color for textview in layout XML
-			holder.textViewTitle.setTextColor(Color.WHITE);
+
 			if(DDGControlVar.readArticles.contains(feedId)){
 				holder.textViewTitle.setTextColor(Color.GRAY);
-			}
+			}*/
+
+            String feedId = feed.getId();
+            // FIXME : it'd be good to reset color to default color for textview in layout XML
+            holder.textViewTitle.setTextColor(context.getResources().getColor(R.color.feed_title));
+            if(DDGControlVar.readArticles.contains(feedId)){
+                holder.textViewTitle.setTextColor(context.getResources().getColor(R.color.feed_title_viewed));
+            }
+
+			//set the category
+			//todo insert size
+			holder.textViewCategory.setText(feed.getCategory().toUpperCase());
+
+			//set the toolbar Menu
+            if(DDGApplication.getDB().isSaved(feedId)) {
+                holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
+                holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(true);
+            } else {
+                holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(true);
+                holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(false);
+            }
+			holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(MenuItem menuItem) {
+					switch(menuItem.getItemId()) {
+						case R.id.action_add_favorite:
+							Log.e("aaa", "action add favourites");
+                            BusProvider.getInstance().post(new SaveStoryEvent(feed));
+                            holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
+                            holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(true);
+							//add to favourites
+							return true;
+                        case R.id.action_remove_favorite:
+                            BusProvider.getInstance().post(new UnSaveStoryEvent(feed.getId()));
+                            holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(true);
+                            holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(false);
+                            return true;
+						case R.id.action_share:
+							Log.e("aaa", "action share");
+                            BusProvider.getInstance().post(new ShareFeedEvent(feed.getTitle(), feed.getUrl()));
+							//action share
+							return true;
+						case R.id.action_external:
+							Log.e("aaa", "action external view in chrome");
+                            BusProvider.getInstance().post(new SendToExternalBrowserEvent(getContext(), feed.getUrl()));
+							//view in chrome
+							return true;
+						default:
+							return false;
+					}
+				}
+			});
 			
 			if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
 				try {

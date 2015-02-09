@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/activityContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+            <android.support.v7.widget.Toolbar
+                android:layout_alignParentTop="true"
+                android:id="@+id/toolbar"
+                android:minHeight="56dp"
+                android:background="@color/colorPrimaryRed"
+                app:contentInsetStart="0dp"
+                app:contentInsetEnd="48dp"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                app:theme="@style/DDGWhiteOverflow"/>
+
+            <FrameLayout
+                android:id="@+id/fragmentContainer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/toolbar"
+                android:background="@color/background"/>
+
+            <View
+                android:visibility="gone"
+                android:id="@+id/dropshadow_top"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:layout_below="@id/toolbar"
+                android:background="?attr/topDropShadow"/>
+
+    <include android:id="@+id/fontSeekLayout" layout="@layout/font_seekbar" />
+
+</RelativeLayout>
