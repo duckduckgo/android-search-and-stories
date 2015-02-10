@@ -67,7 +67,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/empty_logo"
                 android:layout_marginTop="18.3dp"
-                android:layout_marginBottom="25dp"
+                android:layout_marginBottom="24dp"
                 android:text="@string/empty_recents_title"
                 android:textColor="@color/search_dark"
                 android:textSize="21sp"/>

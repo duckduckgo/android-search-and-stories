@@ -91,7 +91,7 @@ public class WebFragment extends Fragment {
 
     private Menu webMenu = null;
     private Menu headerMenu = null;
-    private DDGOverflowMenu overflowMenu2 = null;
+    private DDGOverflowMenu overflowMenu = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -226,7 +226,7 @@ public class WebFragment extends Fragment {
                 }
                 return true;
             case R.id.action_close:
-                overflowMenu2.dismiss();
+                overflowMenu.dismiss();
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -642,10 +642,14 @@ public class WebFragment extends Fragment {
 
             onPrepareOptionsMenu(webMenu);
 
-            overflowMenu2 = new DDGOverflowMenu(getActivity());
-            overflowMenu2.setHeaderMenu(headerMenu);
-            overflowMenu2.setMenu(webMenu);
-            overflowMenu2.show(event.anchorView);
+            if(overflowMenu!=null && overflowMenu.isShowing()) {
+                return;
+            }
+
+            overflowMenu = new DDGOverflowMenu(getActivity());
+            overflowMenu.setHeaderMenu(headerMenu);
+            overflowMenu.setMenu(webMenu);
+            overflowMenu.show(event.anchorView);
 
         }
     }

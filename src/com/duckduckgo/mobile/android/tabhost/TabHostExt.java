@@ -1,8 +1,8 @@
 package com.duckduckgo.mobile.android.tabhost;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.fragment.SavedFeedTabFragment;
-import com.duckduckgo.mobile.android.fragment.SavedResultTabFragment;
+import com.duckduckgo.mobile.android.fragment.FavoriteFeedTabFragment;
+import com.duckduckgo.mobile.android.fragment.FavoriteResultTabFragment;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,8 +23,8 @@ public class TabHostExt extends FragmentTabHost {
     }
     
     public void addDefaultTabs(){
-		addDefaultTab(SavedResultTabFragment.TAG, getResources().getString(R.string.SavedSearches), SavedResultTabFragment.class);
-		addDefaultTab(SavedFeedTabFragment.TAG, getResources().getString(R.string.SavedStories), SavedFeedTabFragment.class);
+		addDefaultTab(FavoriteResultTabFragment.TAG, getResources().getString(R.string.SavedSearches), FavoriteResultTabFragment.class);
+		addDefaultTab(FavoriteFeedTabFragment.TAG, getResources().getString(R.string.SavedStories), FavoriteFeedTabFragment.class);
     }
     
 	private void addDefaultTab(String tag, String label, Class<?> intentClass) {

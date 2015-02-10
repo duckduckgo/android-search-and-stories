@@ -1,19 +1,8 @@
 package com.duckduckgo.mobile.android.adapters;
 
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
-
-import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.fragment.AboutFragment;
-import com.duckduckgo.mobile.android.fragment.SavedFeedTabFragment;
-import com.duckduckgo.mobile.android.fragment.SavedResultTabFragment;
 
 public class DDGPagerAdapter extends FragmentPagerAdapter{
 

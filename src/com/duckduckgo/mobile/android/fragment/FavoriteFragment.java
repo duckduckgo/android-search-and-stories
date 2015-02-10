@@ -52,8 +52,8 @@ public class FavoriteFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 
         pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(),
-                new String[] {getResources().getString(R.string.favorites), getResources().getString(R.string.favorited_search)},
-                new Fragment[] {new SavedFeedTabFragment(), new SavedResultTabFragment()});
+                new String[] {getResources().getString(R.string.favorite_stories), getResources().getString(R.string.favorited_search)},
+                new Fragment[] {new FavoriteFeedTabFragment(), new FavoriteResultTabFragment()});
 
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);

@@ -37,7 +37,7 @@ public class RecentsFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
 
         pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(),
-                new String[] {getResources().getString(R.string.recents), getResources().getString(R.string.recent_searches)},
+                new String[] {getResources().getString(R.string.recent_stories), getResources().getString(R.string.recent_searches)},
                 new Fragment[] {new RecentFeedTabFragment(), new RecentResultTabFragment()});
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
