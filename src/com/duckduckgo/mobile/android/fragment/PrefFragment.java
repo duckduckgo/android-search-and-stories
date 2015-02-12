@@ -13,6 +13,9 @@ import android.preference.Preference;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.preference.PreferenceFragment;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
@@ -77,6 +80,13 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
         sendFeedbackPref = findPreference("sendFeedbackPref");
         sendFeedbackPref.setOnPreferenceClickListener(this);
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        rootView.setBackgroundColor(getResources().getColor(R.color.background));
+        return rootView;
     }
 
     @Override

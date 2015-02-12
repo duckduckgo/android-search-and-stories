@@ -108,7 +108,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			
 			holder.imageViewFeedIcon.setType(feedType);	// stored source id in imageview
 			holder.imageViewFeedIcon.setOnClickListener(sourceClickListener);
-			
+
 			final View iconParent = (View) cv.findViewById(R.id.feedWrapper);
 			iconParent.post(new Runnable() {
 	            public void run() {

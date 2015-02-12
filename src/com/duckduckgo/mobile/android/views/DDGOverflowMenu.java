@@ -122,7 +122,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         DisplayMetrics display = new DisplayMetrics();
         ((DuckDuckGo)context).getWindowManager().getDefaultDisplay().getMetrics(display);
         float item = value.getDimension(display);
-        Log.e("aaa", "single item is: "+item);
+        //Log.e("aaa", "single item is: "+item);
 
         setWidth(getMaxWidth(context, adapter));
         //setWidth(54*3*3);
@@ -170,17 +170,17 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     }
 
     public static int getMaxWidth(Context context, Adapter adapter) {
-        Log.e("aaa", "-------------get max width");
+        //Log.e("aaa", "-------------get max width");
         int maxLength = 0;
         for(int i=0; i<adapter.getCount(); i++) {
             int newLength = ((MenuItem)adapter.getItem(i)).getTitle().length();
-            Log.e("aaa", "new length: "+newLength);
+            //Log.e("aaa", "new length: "+newLength);
             maxLength = newLength>maxLength ? newLength : maxLength;
-            Log.e("aaa", "max length: "+maxLength);
+            //Log.e("aaa", "max length: "+maxLength);
         }
         int width = (int) context.getResources().getDimension(R.dimen.menu_letterspace) * (maxLength+2);
         int menuPadding = (int) context.getResources().getDimension(R.dimen.menu_padding) * 2;
-        Log.e("aaa", "size: "+width+menuPadding);
+        //Log.e("aaa", "size: "+width+menuPadding);
         return width + menuPadding;
 
     }

@@ -8,11 +8,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
@@ -57,9 +59,14 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	private MainFeedTask mainFeedTask = null;
 
 	// for keeping filter source at same position
-	public String m_objectId = null;
-	public int m_itemHeight;
-	public int m_yOffset;
+	public String source_m_objectId = null;
+	public int source_m_itemHeight;
+	public int source_m_yOffset;
+
+    // for keeping filter category at same position
+    public String category_m_objectId = null;
+    public int category_m_itemHeight;
+    public int category_m_yOffset;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -147,13 +154,14 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 				View itemParent = (View) v.getParent().getParent();
 				int pos = feedView.getPositionForView(itemParent);
-				m_objectId = ((FeedObject) feedView.getItemAtPosition(pos)).getId();
-				m_itemHeight = itemParent.getHeight();
+				source_m_objectId = ((FeedObject) feedView.getItemAtPosition(pos)).getId();
+                FeedObject feedObject = (FeedObject) feedView.getItemAtPosition(pos);
+				source_m_itemHeight = itemParent.getHeight();
 
 				Rect r = new Rect();
 				Point offset = new Point();
 				feedView.getChildVisibleRect(itemParent, r, offset);
-				m_yOffset = offset.y;
+				source_m_yOffset = offset.y;
 
 				String sourceType = ((AsyncImageView) v).getType();
 				DDGControlVar.targetSource = sourceType;
@@ -199,6 +207,16 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		feedAdapter.unmark();
 		keepFeedUpdated();
 	}
+
+    /**
+     * Cancels target filter applied with source icon click from feed item
+     */
+    public void cancelCategoryFilter() {
+        DDGControlVar.targetCategory= null;
+        DDGControlVar.hasUpdatedFeed = false;
+        feedAdapter.unmark();
+        keepFeedUpdated();
+    }
 
 	/**
 	 * Refresh feed if it's not marked as updated
@@ -258,11 +276,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		DDGControlVar.hasUpdatedFeed = true;
 
 		// do this upon filter completion
-		if(DDGControlVar.targetSource != null && m_objectId != null) {
-			int nPos = feedView.getSelectionPosById(m_objectId);
-			feedView.setSelectionFromTop(nPos,m_yOffset);
+		if(DDGControlVar.targetSource != null && source_m_objectId != null) {
+			int nPos = feedView.getSelectionPosById(source_m_objectId);
+			feedView.setSelectionFromTop(nPos,source_m_yOffset);
 			// mark for blink animation (as a visual cue after list update)
-			feedAdapter.mark(m_objectId);
+			feedAdapter.mark(source_m_objectId);
 		}
 
 	}

@@ -119,16 +119,26 @@ public class WebFragment extends Fragment {
 		super.onActivityCreated(savedInstanceState);
 
 		setRetainInstance(true);
-		setHasOptionsMenu(true);
-		init();
+        init();
 
 		// Restore the state of the WebView
 		if(savedInstanceState!=null) {
 			mainWebView.restoreState(savedInstanceState);
 			urlType = URLTYPE.getByCode(savedInstanceState.getInt("url_type"));
 		}
-
 	}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        setHasOptionsMenu(!hidden);
+    }
 
 	@Override
 	public void onSaveInstanceState(Bundle outState) {

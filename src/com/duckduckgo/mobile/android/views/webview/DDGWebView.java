@@ -16,6 +16,7 @@ import android.webkit.WebView;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
+import com.duckduckgo.mobile.android.events.RemoveWebFragmentEvent;
 import com.duckduckgo.mobile.android.events.StopActionEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
@@ -227,7 +228,7 @@ public class DDGWebView extends WebView {
                     goBackOrForward(-2);
                     if(lastIndex > 0){
                         if(toHomeScreen)
-						BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.mDuckDuckGoContainer.prevScreen, false));
+						BusProvider.getInstance().post(new RemoveWebFragmentEvent());//DisplayScreenEvent(DDGControlVar.mDuckDuckGoContainer.prevScreen, false));
                     }
                     return;
                 }
@@ -244,7 +245,7 @@ public class DDGWebView extends WebView {
 			}
 		}
 		else if(toHomeScreen) {
-			BusProvider.getInstance().post(new DisplayScreenEvent(DDGControlVar.mDuckDuckGoContainer.prevScreen, true));
+			BusProvider.getInstance().post(new RemoveWebFragmentEvent());//DisplayScreenEvent(DDGControlVar.mDuckDuckGoContainer.prevScreen, true));
 			BusProvider.getInstance().post(new StopActionEvent());
 		}
 	}

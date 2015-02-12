@@ -16,6 +16,7 @@ package com.duckduckgo.mobile.android.views;
  */
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.Typeface;
@@ -23,6 +24,7 @@ import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
@@ -205,15 +207,18 @@ public class SlidingTabLayout extends HorizontalScrollView {
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
 
-        int x = 0;
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            Point size = new Point();
-            display.getSize(size);
-            x = size.x;
-        } else {
-            x = display.getWidth();
+        if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)!=Configuration.SCREENLAYOUT_SIZE_SMALL
+                || getResources().getConfiguration().orientation==Configuration.ORIENTATION_LANDSCAPE) {
+            int x = 0;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+                Point size = new Point();
+                display.getSize(size);
+                x = size.x;
+            } else {
+                x = display.getWidth();
+            }
+            textView.setWidth(x / mViewPager.getAdapter().getCount());
         }
-        textView.setWidth(x / mViewPager.getAdapter().getCount());
 
         return textView;
     }

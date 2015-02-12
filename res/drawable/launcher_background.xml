@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list  xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><!--
+    <item>
+        <solid android:color="@color/colorPrimaryRed"/>
+    </item>-->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorPrimaryRed"/>
+        </shape>
+    </item>
+    <item>
+        <bitmap android:src="@drawable/logo" android:gravity="center"/>
+    </item>
+</layer-list>

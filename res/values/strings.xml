@@ -20,9 +20,9 @@
     <string name="PrefStartScreen">Homepage</string>
     <string name="PrefStories">Stories</string>
     <string name="PrefWaterCoolerStories">Stories</string>
-    <string name="PrefSavedItems">Saved Items</string>
+    <string name="PrefSavedItems">@string/favorites</string>
     <string name="PrefDuckMode">Search</string>
-    <string name="PrefRecentSearch">Recent Searches</string>
+    <string name="PrefRecentSearch">@string/recents</string>
     <string name="PrefRecordHistory">Save Recents</string>
     <string name="PrefClearHistory">Clear Recents</string>
     <string name="PrefRecordCookies">Save Cookies</string>
@@ -192,16 +192,15 @@
     <string name="WorldTraveler">World Traveler (none)</string>
 
 
-    <!--new strings-->
-    <string name="favourites">Favourites</string>
-    <string name="history">History</string>
-    <string name="settings">Settings</string>
-    <string name="help_feedback">Help &amp; Feedback</string>
+    <!--new strings--><!--
     <string name="add_favourites">Add to Favourites</string>
     <string name="remove_favourites">Remove from Favourites</string>
     <string name="share">Share this</string>
     <string name="view_external">View in Browser</string>
-    <string name="reload">Reload</string>
+    <string name="reload">Reload</string>-->
+    <string name="stories">Stories</string>
+    <string name="help_feedback">Help &amp; Feedback</string>
+    <string name="settings">Settings</string>
 
     <!--favorites fragment -->
     <string name="favorites">Favorites</string>
@@ -233,10 +232,10 @@
     <string name="rate">Rate the App</string>
 
     <!-- menus -->
-    <string name="action_stories">Stories</string>
-    <string name="action_recents">Recents</string>
-    <string name="action_favorites">Favorites</string>
-    <string name="action_settings">Settings</string>
+    <string name="action_stories">@string/stories</string>
+    <string name="action_recents">@string/recents</string>
+    <string name="action_favorites">@string/favorites</string>
+    <string name="action_settings">@string/settings</string>
     <string name="action_help_feedback">Help &amp; Feedback</string>
     <string name="action_add_favorite">Add Favorite</string>
     <string name="action_remove_favorite">Unfavorite</string>

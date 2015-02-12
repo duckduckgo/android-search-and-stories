@@ -19,7 +19,8 @@ public class DDGControlVar {
 	public static Set<String> userAllowedSources = null;
 	public static Set<String> userDisallowedSources = null;
 	
-	public static String targetSource = null; 
+	public static String targetSource = null;
+    public static String targetCategory = null;
 		
 	public static Set<String> readArticles = new HashSet<String>(); 
 	
