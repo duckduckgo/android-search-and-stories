@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.AsyncTask;
@@ -25,6 +26,7 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.RequestKeepFeedUpdatedEvent;
 import com.duckduckgo.mobile.android.events.RequestOpenWebPageEvent;
 import com.duckduckgo.mobile.android.events.RequestSyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCleanImageTaskEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
@@ -50,6 +52,8 @@ import java.util.ArrayList;
 public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
 	public static final String TAG = "feed_fragment";
+
+    private Activity activity = null;
 
 	private MainFeedListView feedView = null;
     private SwipeRefreshLayout swipeRefreshLayout = null;
@@ -90,6 +94,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setRetainInstance(true);
+        activity = getActivity();
 		init();
 	}
 
@@ -131,7 +136,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	public void init() {
 
 		SourceClickListener sourceClickListener = new SourceClickListener();
-		feedAdapter = new MainFeedAdapter(getActivity(), sourceClickListener);
+        CategoryClickListener categoryClickListener = new CategoryClickListener();
+		feedAdapter = new MainFeedAdapter(getActivity(), sourceClickListener, categoryClickListener);
 
 		mainFeedTask = null;
 
@@ -173,6 +179,38 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		}
 	}
 
+    class CategoryClickListener implements View.OnClickListener {
+        public void onClick(View v) {
+            // source filtering
+
+            if(DDGControlVar.targetCategory != null){
+                cancelCategoryFilter();
+            }
+            else {
+
+                View itemParent = (View) v.getParent();
+                int pos = feedView.getPositionForView(itemParent);
+                category_m_objectId = ((FeedObject) feedView.getItemAtPosition(pos)).getId();
+                FeedObject feedObject = (FeedObject) feedView.getItemAtPosition(pos);
+                category_m_itemHeight = itemParent.getHeight();
+
+                Rect r = new Rect();
+                Point offset = new Point();
+                feedView.getChildVisibleRect(itemParent, r, offset);
+                category_m_yOffset = offset.y;
+
+                //String sourceType = ((AsyncImageView) v).getType();
+                //String categoryType = feedObject.getCategory();
+                DDGControlVar.targetCategory = feedObject.getCategory();
+                Log.e("aaa", "category clicked: "+DDGControlVar.targetCategory);
+
+                DDGControlVar.hasUpdatedFeed = false;
+                keepFeedUpdated();
+            }
+
+        }
+    }
+
 	public void feedItemSelected(FeedObject feedObject) {
 		// keep a reference, so that we can reuse details while saving
 		DDGControlVar.currentFeedObject = feedObject;
@@ -202,6 +240,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	 * Cancels source filter applied with source icon click from feed item
 	 */
 	public void cancelSourceFilter() {
+        Log.e("aaa", "inside cancel source filter");
 		DDGControlVar.targetSource = null;
 		DDGControlVar.hasUpdatedFeed = false;
 		feedAdapter.unmark();
@@ -212,10 +251,13 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
      * Cancels target filter applied with source icon click from feed item
      */
     public void cancelCategoryFilter() {
-        DDGControlVar.targetCategory= null;
+        Log.e("aaa", "inside cancel category filter");
+        DDGControlVar.targetCategory = null;
         DDGControlVar.hasUpdatedFeed = false;
-        feedAdapter.unmark();
-        keepFeedUpdated();
+        feedAdapter.unmarkCategory();
+        feedAdapter.getFilter().filter("");
+        //feedAdapter.unmark();
+        //keepFeedUpdated();
     }
 
 	/**
@@ -268,6 +310,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		}
 
 		feedAdapter.addData(event.feed);
+        //feedAdapter.getFilter().filter("");
 		feedAdapter.notifyDataSetChanged();
 
 		// update pull-to-refresh header to reflect task completion
@@ -289,8 +332,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	public void onFeedRetrieveErrorEvent(FeedRetrieveErrorEvent event) {
         //aaa
 		//if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mainFeedTask != null) {
-        if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED && mainFeedTask != null) {
-			new FeedRequestFailureDialogBuilder(getActivity()).show();
+        if (activity!=null && DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED && mainFeedTask != null) {
+			new FeedRequestFailureDialogBuilder(activity).show();
 		}
         swipeRefreshLayout.setRefreshing(false);
 
@@ -313,8 +356,15 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 	@Subscribe
 	public void onFeedCancelSourceFilterEvent(FeedCancelSourceFilterEvent event) {
+        Log.e("aaa", "on feed cancel source filter event");
 		cancelSourceFilter();
 	}
+
+    @Subscribe
+    public void onFeedCancelCategoryFilterEvent(FeedCancelCategoryFilterEvent event) {
+        Log.e("aaa", "on feed cancel category filter even");
+        cancelCategoryFilter();
+    }
 
 	@Subscribe
 	public void onRequestKeepFeedUpdatedEvent(RequestKeepFeedUpdatedEvent event) {

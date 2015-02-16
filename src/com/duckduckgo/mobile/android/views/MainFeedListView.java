@@ -38,7 +38,7 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 			obj = new FeedObject(((SQLiteCursor) item));
 		}
 		
-		if (obj != null) {			
+		if (obj != null) {
 			BusProvider.getInstance().post(new MainFeedItemSelectedEvent(obj));
 		}
 	}

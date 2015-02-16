@@ -512,6 +512,10 @@ public class DdgDB {
 	public Cursor getCursorSearchHistory() {
 		return this.db.query(HISTORY_TABLE, null, "type='R'", null , null, null, "_id DESC");
 	}
+
+    public Cursor getCursorSearchHistory(int limit) {
+        return this.db.query(HISTORY_TABLE, null, "type='R'", null , null, null, "_id DESC", ""+(limit>=0?limit:1));
+    }
 	
 	public Cursor getCursorStoryHistory() {
 		return this.db.query(HISTORY_TABLE, null, "type='F'", null , null, null, "_id DESC");

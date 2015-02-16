@@ -12,7 +12,7 @@
         <item name="mainTextSize">14sp</item>
         <item name="recentTextSize">14sp</item>
 
-        <item name="android:windowBackground">@drawable/launcher_background</item>
+        <item name="android:windowBackground">@drawable/launcher_window_background</item>
 
         <item name="colorPrimary">@color/colorPrimaryRed</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDarkRed</item>

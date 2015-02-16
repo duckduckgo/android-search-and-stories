@@ -73,7 +73,9 @@ public class CacheFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 					if (nextObj != null) {
 						FeedObject feed = new FeedObject(nextObj);
 						if (feed != null) {
-							returnFeed.add(feed);
+                            if(DDGControlVar.targetSource==null || DDGControlVar.targetSource.equals(feed.getType())) {
+                                returnFeed.add(feed);
+                            }
 						}
 					}
 				} catch (JSONException e) {

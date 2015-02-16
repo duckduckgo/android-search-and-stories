@@ -5,8 +5,9 @@ import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 
-public class DDGAutoCompleteTextView extends AutoCompleteTextView {
+public class DDGAutoCompleteTextView extends EditText {
 
 	public DDGAutoCompleteTextView(Context context) {
 		super(context);

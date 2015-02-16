@@ -164,7 +164,6 @@
     <style name="TabTitle" parent="TextAppearance.AppCompat.Medium">
         <item name="android:textColor">@color/actionbar_tab_unselected</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ActionBarTitle" parent="@android:style/TextAppearance.Large">

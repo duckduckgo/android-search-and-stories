@@ -4,13 +4,22 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/background">
+              android:descendantFocusability="blocksDescendants"
+              android:paddingTop="8dp"
+              android:paddingBottom="8dp">
 
-    <ListView
+    <com.duckduckgo.mobile.android.views.SearchListView
         android:id="@+id/search_list"
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null"/>
+
+
+    <ListView
+        android:id="@+id/autocomplete_list"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:divider="@null"
         android:visibility="gone"/>
 
     <LinearLayout

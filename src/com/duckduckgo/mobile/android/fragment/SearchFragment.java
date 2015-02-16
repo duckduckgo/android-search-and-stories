@@ -19,43 +19,56 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.SearchAdapter;
+import com.duckduckgo.mobile.android.adapters.SeparatedListAdapter;
+import com.duckduckgo.mobile.android.adapters._SearchAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.AutoCompleteResultClickEvent;
 import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.SCREEN;
-import com.duckduckgo.mobile.android.views.RecentSearchListView;
-import com.duckduckgo.mobile.android.views.SavedSearchListView;
+import com.duckduckgo.mobile.android.views.SearchListView;
 import com.squareup.otto.Subscribe;
 
 public class SearchFragment extends Fragment implements ViewTreeObserver.OnGlobalLayoutListener, AdapterView.OnItemClickListener, AdapterView.OnItemLongClickListener {
 
     public static final String TAG = "search_fragment";
+    public static final String TAG_HOME_PAGE = "search_fragment_home_page";
 
     private ListView autoCompleteResultListView;
 
-    private RecentSearchListView recentSearchListView;
+    private SearchListView searchListView;
+    private _SearchAdapter searchAdapter;
+    private SearchAdapter adapter;
+
+//    private RecentSearchListView recentSearchListView;
     //private RecentResultCursorAdapter recentSearchAdapter;
 
-    private SavedSearchListView savedSearchListView;
+//    private SavedSearchListView savedSearchListView;
     private SavedResultCursorAdapter savedSearchAdapter;
+    private RecentResultCursorAdapter recentAdapter;
 
     private LinearLayout search_container;
     //private ViewTreeObserver viewTreeObserver = null;
     private View fragmentView = null;
 
+    //private ListView listView;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         BusProvider.getInstance().register(this);
+        Log.e("aaa", "Search on create: "+getId());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         BusProvider.getInstance().unregister(this);
+        Log.e("aaa", "Search on destroy: "+getId());
     }
 
     @Override
@@ -67,24 +80,36 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Log.e("aaa", "on activity created");
+        Log.e("aaa", "Search on activity created: "+getId());
 
         search_container = (LinearLayout) fragmentView.findViewById(R.id.search_container);
 
-        recentSearchListView = (RecentSearchListView) fragmentView.findViewById(R.id.recent_list);
-        recentSearchListView.setDivider(null);
-        //recentSearchAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory());
-        //recentSearchListView.setAdapter(recentSearchAdapter);
-        recentSearchListView.setAdapter(DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter);
-
-        //setMaxItemVisible(recentSearchListView);
-
-        savedSearchListView = (SavedSearchListView) fragmentView.findViewById(R.id.saved_list);
-        savedSearchListView.setDivider(null);
+        searchListView = (SearchListView) fragmentView.findViewById(R.id.search_list);
         savedSearchAdapter = new SavedResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
-        savedSearchListView.setAdapter(savedSearchAdapter);
+        searchAdapter = new _SearchAdapter(getActivity());
+        searchAdapter.addSection("recents", DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter);
+        searchAdapter.addSection("favorites", savedSearchAdapter);
+        //searchListView.setAdapter(searchAdapter);
+        recentAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory());
 
-        autoCompleteResultListView = (ListView) fragmentView.findViewById(R.id.search_list);
+        adapter = new SearchAdapter(getActivity());
+        adapter.addSection("recents", DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter);
+        //adapter.addSection("recents", recentAdapter);
+        adapter.addSection("favorites", savedSearchAdapter);
+
+
+        SeparatedListAdapter adapter2 = new SeparatedListAdapter(getActivity());
+        adapter2.addSection("recents", DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter);
+        //adapter2.addSection("recents", recentAdapter);
+        adapter2.addSection("favorites", savedSearchAdapter);
+
+        //searchListView.setAdapter(adapter);
+        searchListView.setAdapter(DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter);
+        searchListView.setLimit(DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount());
+        //searchListView.setLimit(recentAdapter.getCount());
+
+
+        autoCompleteResultListView = (ListView) fragmentView.findViewById(R.id.autocomplete_list);
         autoCompleteResultListView.setDivider(null);
         if(DDGControlVar.isAutocompleteActive) {
             autoCompleteResultListView.setAdapter(DDGControlVar.mDuckDuckGoContainer.tempAdapter);
@@ -94,26 +119,46 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         autoCompleteResultListView.setOnItemClickListener(this);
         autoCompleteResultListView.setOnItemLongClickListener(this);
         autoCompleteResultListView.setVisibility(View.GONE);
-        fragmentView.findViewById(R.id.recent_saved_container).setVisibility(View.VISIBLE);
+        //fragmentView.findViewById(R.id.recent_saved_container).setVisibility(View.VISIBLE);
+
+        fragmentView.findViewById(R.id.recent_saved_container).setVisibility(View.GONE);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_SEARCH);
+        Log.e("aaa", "Search on resume: "+getId());
+        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_SEARCH_HOME_PAGE);
         syncAdapters();
-        showRecentAndSaved();
+        //showRecentAndSaved();
 
-        search_container.getViewTreeObserver().addOnGlobalLayoutListener(this);
+        //search_container.getViewTreeObserver().addOnGlobalLayoutListener(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.e("aaa", "Search on pause: "+getId());
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN) {
-            search_container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            //search_container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
         } else {
-            search_container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+            //search_container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e("aaa", "Search on stop: "+getId());
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.e("aaa", "search fragment on hidden changed, hidden: " + hidden);
+        if(!hidden) {
+            //showRecentAndSaved();
         }
     }
 
@@ -141,7 +186,9 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
     @Subscribe
     public void onShowAutoCompleteResultsEvent(ShowAutoCompleteResultsEvent event) {
-        showSearch();
+        //showSearch();
+        Log.e("aaa,", "+++SEARCH FRAGMENT, show autocomplete: "+event.isVisible);
+        showAutoCompleteResults(event.isVisible);
     }
 
     @Subscribe
@@ -154,6 +201,8 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         int totalHeight = search_container.getRootView().getHeight();
         int visibleHeight = search_container.getHeight();
 
+        boolean portrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
         int statusBar = getStatusBarHeight();
         int navigationBar = getNavigationBarHeight();
         int actionBarHeight = (int) getActivity().getResources().getDimension(R.dimen.actionbar_height);
@@ -164,61 +213,78 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
         int itemHeight = (int) getActivity().getResources().getDimension(R.dimen.temp_item_height);
 
-        LinearLayout.LayoutParams recentParams = (LinearLayout.LayoutParams) recentSearchListView.getLayoutParams();
-        LinearLayout.LayoutParams savedParams = (LinearLayout.LayoutParams) savedSearchListView.getLayoutParams();
-        int newRecentHeight = 0;
-        int newSavedHeight = 0;
+//        LinearLayout.LayoutParams recentParams = (LinearLayout.LayoutParams) recentSearchListView.getLayoutParams();
+//        LinearLayout.LayoutParams savedParams = (LinearLayout.LayoutParams) savedSearchListView.getLayoutParams();
+        LinearLayout.LayoutParams searchParams = (LinearLayout.LayoutParams) searchListView.getLayoutParams();
+//        int newRecentHeight = 0;
+//        int newSavedHeight = 0;
 
-        visibleHeight = visibleHeight - recentParams.topMargin - recentParams.bottomMargin - savedParams.topMargin;
+//        visibleHeight = visibleHeight - recentParams.topMargin - recentParams.bottomMargin - savedParams.topMargin;
+
+        //visibleHeight = visibleHeight - recentParams.topMargin - recentParams.bottomMargin - savedParams.topMargin;
 
         int maxItems = visibleHeight / itemHeight;
+        int recentItems = 0;
 
         //if((totalHeight-visibleHeight) > (totalHeight/3)) {
-        if((totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
+        if(!portrait) {
+            Log.e("aaa", "is portrait: "+portrait);
+
+            Log.e("aaa", "max items: "+maxItems);
+            return;
+
+            //int halfItems = maxItems / 2;
+            //recentItems = halfItems <= recentAdapter.getCount() ? halfItems : recentAdapter.getCount();
+            //int savedItems = maxItems - recentItems;
+
+        } else if((totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
+            Log.e("aaa", "open keyboard");
+            Log.e("aaa", "max items: "+maxItems);
             //Log.e("aaa", "open");
             //Log.e("aaa", "total height: " + totalHeight);
             //Log.e("aaa", "visible height: " + visibleHeight);
 
-            int recentItems = (maxItems - 1) <= recentSearchListView.getCount() ? (maxItems - 1) : recentSearchListView.getCount();
+            //recentItems = (maxItems - 1) <= DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount() ? (maxItems - 1) : DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount();
+            //recentItems = (maxItems - 1) <= recentAdapter.getCount() ? (maxItems - 1) : recentAdapter.getCount();
+            recentItems = 1;
             int savedItems = maxItems - recentItems;
 
-            //Log.e("aaa", "MAX items: "+maxItems);
-            //Log.e("aaa", "recent items: "+recentItems);
-            //Log.e("aaa", "saved items: "+savedItems);
-
-            //Log.e("aaa", "visible height: "+visibleHeight);
-            //Log.e("aaa", "recent height: "+recentItems*itemHeight);
-            //Log.e("aaa", "saved height: "+savedItems*itemHeight);
-
-            newRecentHeight = recentItems * itemHeight;
-            newSavedHeight = LinearLayout.LayoutParams.MATCH_PARENT;
+//            newRecentHeight = recentItems * itemHeight;
+//            newSavedHeight = LinearLayout.LayoutParams.MATCH_PARENT;
 
         } else {
+            Log.e("aaa", "close keyboard");
+            Log.e("aaa", "max items: "+maxItems);
             //Log.e("aaa", "close");
             //Log.e("aaa", "total height: " + totalHeight);
             //Log.e("aaa", "visible height: " + visibleHeight);
             int halfItems = maxItems / 2;
-            int recentItems = halfItems <= recentSearchListView.getCount() ? halfItems : recentSearchListView.getCount();
+            //recentItems = halfItems <= recentAdapter.getCount() ? halfItems : recentAdapter.getCount();
+            recentItems = maxItems;
             int savedItems = maxItems - recentItems;
-            //Log.e("aaa", "MAX items: "+maxItems);
-            //Log.e("aaa", "half items: "+halfItems);
-            //Log.e("aaa", "recent items: "+recentItems);
-            //Log.e("aaa", "saved items: "+savedItems);
 
-            newRecentHeight = recentItems * itemHeight;
-            newSavedHeight = LinearLayout.LayoutParams.MATCH_PARENT;
+//            newRecentHeight = recentItems * itemHeight;
+//            newSavedHeight = LinearLayout.LayoutParams.MATCH_PARENT;
 
             //Log.e("aaa", "visible height: "+visibleHeight);
             //Log.e("aaa", "recent height: "+newRecentHeight);
             //Log.e("aaa", "saved height: "+newSavedHeight);
         }
-        if(recentParams.height!=newRecentHeight) {
-            recentParams.height = newRecentHeight;
-            recentSearchListView.setLayoutParams(recentParams);
-        }
-        if(savedParams.height!=newSavedHeight) {
-            savedParams.height = newSavedHeight;
-            savedSearchListView.setLayoutParams(savedParams);
+//        if(recentParams.height!=newRecentHeight) {
+//            recentParams.height = newRecentHeight;//
+//            recentSearchListView.setLayoutParams(recentParams);
+//        }
+//        if(savedParams.height!=newSavedHeight) {
+//            savedParams.height = newSavedHeight;
+//            savedSearchListView.setLayoutParams(savedParams);
+//        }
+
+        Log.e("aaa", "recent items: "+recentItems);
+        //boolean shouldUpdateAdapters = recentItems!=recentAdapter.getCount();
+        boolean shouldUpdateAdapters = recentItems!=DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount();
+        Log.e("aaa", "should update adapters: "+shouldUpdateAdapters);
+        if(shouldUpdateAdapters) {
+            syncRecents(recentItems);
         }
 
     }
@@ -240,12 +306,18 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         return 0;
     }
 
-    public void setMaxItemVisible(final ListView listView) {
+    private void syncRecents(int limit) {
+        searchListView.setLimit(limit);
+        DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory(limit));
+        DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
+        recentAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory(limit));
+        recentAdapter.notifyDataSetChanged();
+        savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
+        savedSearchAdapter.notifyDataSetChanged();
+        //searchAdapter.
+        searchAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
 
-        //final View container = search_container;
-        //viewTreeObserver = container.getViewTreeObserver();
-
-        //viewTreeObserver.addOnGlobalLayoutListener(this);
 
     }
 
@@ -253,10 +325,17 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
         savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
-        savedSearchAdapter.notifyDataSetChanged();
+        savedSearchAdapter.notifyDataSetChanged();/*
         toggleDivider(savedSearchAdapter.getCount()!=0 && (
                 recentSearchListView.getVisibility()==View.VISIBLE && DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount()!=0
-                ));
+                ));*/
+        searchAdapter.notifyDataSetChanged();
+        adapter.notifyDataSetChanged();
+    }
+
+    public void showAutoCompleteResults(boolean visible) {
+        autoCompleteResultListView.setVisibility(visible ? View.VISIBLE : View.GONE);
+        searchListView.setVisibility(visible ? View.GONE : View.VISIBLE);
     }
 
     private void showSearch() {

@@ -94,11 +94,12 @@
             android:dropDownHorizontalOffset="0dp"
             android:dropDownVerticalOffset="0dp"
             android:completionThreshold="1"
-            android:inputType="textAutoComplete"
+            android:inputType="textNoSuggestions"
             android:imeOptions="actionSearch"
             android:textColorHint="@color/actionbar_title_hint"
+            android:textColorHighlight="@color/accentGold"
             android:hint="@string/SearchString"
-            android:id="@+id/searchEditText" />
+            android:id="@+id/searchEditText"/>
 
     </RelativeLayout>
 </RelativeLayout>
