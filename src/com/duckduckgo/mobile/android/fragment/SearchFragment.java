@@ -128,8 +128,8 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("aaa", "Search on resume: "+getId());
-        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_SEARCH_HOME_PAGE);
+        Log.e("aaa", "Search on resume: "+getId()+getTag());
+        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_SEARCH_HOME_PAGE && getTag().equals(TAG_HOME_PAGE));
         syncAdapters();
         //showRecentAndSaved();
 

@@ -31,7 +31,7 @@ public class CustomArrayAdapter<T> extends ArrayAdapter<T> {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		  View cv = super.getView(position, convertView, parent);
 		
-		((TextView) cv.findViewById(textViewResourceId)).setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
+		//((TextView) cv.findViewById(textViewResourceId)).setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
 		
 		return cv;
 	}

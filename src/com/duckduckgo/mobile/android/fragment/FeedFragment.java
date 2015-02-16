@@ -32,8 +32,6 @@ import com.duckduckgo.mobile.android.events.feedEvents.FeedCleanImageTaskEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveErrorEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
-import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeCancelScalingEvent;
-import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeOnProgressChangedEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuCloseEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
@@ -356,13 +354,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 	@Subscribe
 	public void onFeedCancelSourceFilterEvent(FeedCancelSourceFilterEvent event) {
-        Log.e("aaa", "on feed cancel source filter event");
 		cancelSourceFilter();
 	}
 
     @Subscribe
     public void onFeedCancelCategoryFilterEvent(FeedCancelCategoryFilterEvent event) {
-        Log.e("aaa", "on feed cancel category filter even");
         cancelCategoryFilter();
     }
 
@@ -374,29 +370,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	@Subscribe
 	public void onFeedCleanImageTaskEvent(FeedCleanImageTaskEvent event) {
 		feedView.cleanImageTasks();
-	}
-
-	@Subscribe
-	public void onFontSizeOnProgressChangedEvent(FontSizeOnProgressChangedEvent event) {/*
-		feedAdapter.notifyDataSetInvalidated();
-		// adjust Pull-to-Refresh
-		mPullRefreshFeedView.setHeaderTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setHeaderSubTextSize(DDGControlVar.ptrSubHeaderSize);
-		// set Loading... font
-		mPullRefreshFeedView.setLoadingTextSize(DDGControlVar.ptrHeaderSize);
-		mPullRefreshFeedView.setLoadingSubTextSize(DDGControlVar.ptrSubHeaderSize);*/
-	}
-
-	@Subscribe
-	public void onFontSizeCancelScalingEvent(FontSizeCancelScalingEvent event) {/*
-		feedAdapter.notifyDataSetInvalidated();
-
-		mPullRefreshFeedView.setHeaderTextSize(PreferencesManager.getPtrHeaderTextSize());
-		mPullRefreshFeedView.setHeaderSubTextSize(PreferencesManager.getPtrHeaderSubTextSize());
-
-		// set Loading... font
-		mPullRefreshFeedView.setLoadingTextSize(PreferencesManager.getPtrHeaderTextSize());
-		mPullRefreshFeedView.setLoadingSubTextSize(PreferencesManager.getPtrHeaderSubTextSize());*/
 	}
 
 }

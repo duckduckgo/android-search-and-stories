@@ -40,8 +40,6 @@ import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewSearchWebTermEv
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewShowHistoryObjectEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeCancelScalingEvent;
-import com.duckduckgo.mobile.android.events.fontSizeEvents.FontSizeOnProgressChangedEvent;
 import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuHomeClickEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOffEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOnEvent;
@@ -252,9 +250,6 @@ public class WebFragment extends Fragment {
 
 		// get default User-Agent string for reuse later
 		mWebViewDefaultUA = mainWebView.getSettings().getUserAgentString();
-
-		PreferencesManager.setWebViewFontDefault(mainWebView.getSettings().getDefaultFontSize());
-		DDGControlVar.webViewTextSize = PreferencesManager.getWebviewFontSize();
 
 		mainWebView.setWebViewClient(new DDGWebViewClient(this));
 		View container = getActivity().findViewById(R.id.activityContainer);
@@ -629,16 +624,6 @@ public class WebFragment extends Fragment {
 	@Subscribe
 	public void onHandleShareButtonClickEvent(HandleShareButtonClickEvent event) {
 		handleShareButtonClick();
-	}
-
-	@Subscribe
-	public void onFontSizeOnProgressChangedEvent(FontSizeOnProgressChangedEvent event) {
-		mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
-	}
-
-	@Subscribe
-	public void onFontSizeCancelScalingEvent(FontSizeCancelScalingEvent event) {
-		mainWebView.getSettings().setDefaultFontSize(DDGControlVar.webViewTextSize);
 	}
 
     @Subscribe

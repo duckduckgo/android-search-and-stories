@@ -107,7 +107,6 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
     	});
 
     	//Set the Title
-    	textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
     	textViewTitle.setText(title);
 
         //Set the Category
