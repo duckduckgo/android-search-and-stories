@@ -474,7 +474,9 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 break;
         }
 
-        if(!tag.equals(SearchFragment.TAG) && !tag.equals(SearchFragment.TAG_HOME_PAGE)) {
+        if(tag.equals(SearchFragment.TAG) || tag.equals(SearchFragment.TAG_HOME_PAGE)) {
+            //keyboardService.showKeyboard(getSearchField());
+        } else {
             keyboardService.hideKeyboard(getSearchField());
         }
     }
@@ -596,8 +598,8 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 //				showBangButton(hasFocus);
                 Log.e("aaa", "get search field, focus: "+hasFocus);
                 if(hasFocus) {
-                    //displayScreen(SCREEN.SCR_SEARCH, false);
-                    addSearchFragment();
+                    displayScreen(SCREEN.SCR_SEARCH, false);
+                    //addSearchFragment();
                 }
 			}
 		});
@@ -828,6 +830,13 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
                 tag = WebFragment.TAG;
                 //displayWebView();
                 break;
+            case SCR_SEARCH:
+                resetScreenState();
+                fragment = new SearchFragment();
+                tag = SearchFragment.TAG;
+                //displaySearch();
+
+                break;
             case SCR_SEARCH_HOME_PAGE:
                 resetScreenState();
                 fragment = new SearchFragment();
@@ -994,7 +1003,7 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	@Override
 	public void onBackPressed() {
         Log.e("aaa", "on back pressed");
-        if(DDGControlVar.START_SCREEN!=SCREEN.SCR_SEARCH && isFragmentVisible(SearchFragment.TAG)) {
+        if(false && DDGControlVar.START_SCREEN!=SCREEN.SCR_SEARCH && isFragmentVisible(SearchFragment.TAG)) {
             removeSearchFragment();
         }
 		else if((DDGControlVar.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_WEBVIEW
@@ -1398,27 +1407,31 @@ public class DuckDuckGo extends ActionBarActivity implements OnClickListener {
 	private void changeFragment(Fragment newFragment, String newTag, boolean displayHomeScreen) {
         Fragment searchFragment = fragmentManager.findFragmentByTag(SearchFragment.TAG);
         if(searchFragment!=null && DDGControlVar.START_SCREEN!=SCREEN.SCR_SEARCH) {
-            removeSearchFragment();
+            //removeSearchFragment();
         }
 
-        boolean backState = fragmentManager.popBackStackImmediate(newTag, 0);
+        boolean backState = true;
 
-        if(displayHomeScreen && fragmentManager.getBackStackEntryCount()>1) {
-            List<Fragment> fragments = fragmentManager.getFragments();
-            FragmentTransaction removeTransaction = fragmentManager.beginTransaction();
-            for(Fragment f : fragments) {
-                if(f!=null) {
-                    removeTransaction.remove(f);
-                    fragmentManager.popBackStack();
+        if(!newTag.equals(SearchFragment.TAG)) {
+            backState = fragmentManager.popBackStackImmediate(newTag, 0);
+
+            if (displayHomeScreen && fragmentManager.getBackStackEntryCount() > 1) {
+                List<Fragment> fragments = fragmentManager.getFragments();
+                FragmentTransaction removeTransaction = fragmentManager.beginTransaction();
+                for (Fragment f : fragments) {
+                    if (f != null) {
+                        removeTransaction.remove(f);
+                        fragmentManager.popBackStack();
+                    }
                 }
+                removeTransaction.commit();
+                fragmentManager.executePendingTransactions();
             }
-            removeTransaction.commit();
-            fragmentManager.executePendingTransactions();
         }
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-        if(!backState && fragmentManager.findFragmentByTag(newTag)==null) {
+        if(newTag.equals(SearchFragment.TAG) || (!backState && fragmentManager.findFragmentByTag(newTag)==null)) {
             Fragment currentFragment = fragmentManager.findFragmentByTag(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
             if(currentFragment!=null && currentFragment.isAdded() && currentFragment.isVisible()) {
                 transaction.hide(currentFragment);

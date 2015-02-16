@@ -47,6 +47,7 @@ import com.duckduckgo.mobile.android.events.saveEvents.SaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
+import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetTextEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
@@ -136,6 +137,10 @@ public class WebFragment extends Fragment {
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         setHasOptionsMenu(!hidden);
+        Log.e("aaa", "WEB fragment on hidden changed, HIDDEN: "+hidden+" - url: "+mainWebView.getUrl());
+        if(!hidden) {
+            BusProvider.getInstance().post(new SearchBarSetTextEvent(mainWebView.getUrl()));
+        }
     }
 
 	@Override
