@@ -40,43 +40,47 @@ public class SearchListView extends ListView implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(position<recentLimit) {
-            Log.e("aaa", "RECENT click, position: "+position+" - limit: "+recentLimit);
-            Log.e("aaa", "recent search list view - on item click");
-            Object adapter = getAdapter();
-            Cursor c = null;
-            HistoryObject obj = null;
+        String s = position < recentLimit ? "Recents" : "Favorites";
+        Log.e("aaa", "search view on item click position: "+position+" - limit: "+recentLimit+" - type: "+s);
+        if(recentLimit>0) {
+            if (position < recentLimit) {
+                Log.e("aaa", "RECENT click, position: " + position + " - limit: " + recentLimit);
+                Log.e("aaa", "recent search list view - on item click");
+                Object adapter = getAdapter();
+                Cursor c = null;
+                HistoryObject obj = null;
 
-            Object itemClicked = ((Adapter) adapter).getItem(position);
-            if(itemClicked instanceof Cursor) {
-                c = (Cursor) itemClicked;
-                obj = new HistoryObject(c);
-            }
+                Object itemClicked = ((Adapter) adapter).getItem(position);
+                if (itemClicked instanceof Cursor) {
+                    c = (Cursor) itemClicked;
+                    obj = new HistoryObject(c);
+                }
 
-            if (obj != null) {
-                Log.e("aaa", "object: "+obj.toString());
-                BusProvider.getInstance().post(new HistoryItemSelectedEvent(obj));
-            }
-        } else {
-            //position = position - recentLimit - 1;
-            Log.e("aaa", "FAVORITE click, position: "+position+" - limit: "+recentLimit);
-            Object adapter = getAdapter();
-            Cursor c = null;
-            String query = null;
-
-            if(adapter instanceof SearchAdapter) {
-                Log.e("aaa", "adapter instanceof SavedResultCursorAdapter");
-                c = (Cursor) ((SearchAdapter) adapter).getItem(position);
-                query = c.getString(c.getColumnIndex("query"));
+                if (obj != null) {
+                    Log.e("aaa", "object: " + obj.toString());
+                    BusProvider.getInstance().post(new HistoryItemSelectedEvent(obj));
+                }
             } else {
-                Log.e("aaa", "adapter NOT instanceof SavedResultCursorAdapter");
-            }
+                //position = position - recentLimit - 1;
+                Log.e("aaa", "FAVORITE click, position: " + position + " - limit: " + recentLimit);
+                Object adapter = getAdapter();
+                Cursor c = null;
+                String query = null;
 
-            if(query!=null) {
-                Log.e("aaa", "query != null");
-                BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));
-            } else {
-                Log.e("aaa", "query == null");
+                if (adapter instanceof SearchAdapter) {
+                    Log.e("aaa", "adapter instanceof SavedResultCursorAdapter");
+                    c = (Cursor) ((SearchAdapter) adapter).getItem(position);
+                    query = c.getString(c.getColumnIndex("query"));
+                } else {
+                    Log.e("aaa", "adapter NOT instanceof SavedResultCursorAdapter");
+                }
+
+                if (query != null) {
+                    Log.e("aaa", "query != null");
+                    BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));
+                } else {
+                    Log.e("aaa", "query == null");
+                }
             }
         }
     }

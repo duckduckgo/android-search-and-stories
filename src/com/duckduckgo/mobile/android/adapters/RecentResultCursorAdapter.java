@@ -26,9 +26,16 @@ public class RecentResultCursorAdapter extends CursorAdapter {
 
     private CharSequence userInput = "";
 
+    private boolean hidePasteButton = false;
+
     public RecentResultCursorAdapter(Context context, Cursor c) {
         super(context, c);
         //super context, c, flags api 11
+    }
+
+    public RecentResultCursorAdapter(Context context, Cursor c, boolean hidePasteButton) {
+        super(context, c);
+        this.hidePasteButton = hidePasteButton;
     }
 
     @Override
@@ -55,31 +62,41 @@ public class RecentResultCursorAdapter extends CursorAdapter {
 
         //TextView textViewTitle = (TextView) view.findViewById(android.R.id.text1);
         TextView title = (TextView) view.findViewById(R.id.item_text);
+        if(title!=null) {
 
-        if(userInput.length()!=0 && data.startsWith(userInput.toString())) {
-            word = new SpannableString(userInput);
-            word.setSpan(new ForegroundColorSpan(Color.parseColor("#212121")), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            title.setText(word);
+            if (userInput.length() != 0 && data.startsWith(userInput.toString())) {
+                word = new SpannableString(userInput);
+                word.setSpan(new ForegroundColorSpan(Color.parseColor("#212121")), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                title.setText(word);
 
-            word = new SpannableString(data.replace(userInput.toString(), ""));
-            word.setSpan(new ForegroundColorSpan(Color.parseColor("#A4A4A4")), 0, word.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            title.append(word);
-        } else {
-            title.setTextColor(Color.parseColor("#212121"));
-            title.setText(data);
+                word = new SpannableString(data.replace(userInput.toString(), ""));
+                word.setSpan(new ForegroundColorSpan(Color.parseColor("#A4A4A4")), 0, word.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                title.append(word);
+            } else {
+                title.setTextColor(Color.parseColor("#212121"));
+                title.setText(data);
+            }
         }
 
         ImageView icon = (ImageView) view.findViewById(R.id.item_icon);
-        icon.setImageDrawable(context.getResources().getDrawable(R.drawable.time));
+        if(icon!=null) {
+            icon.setImageDrawable(context.getResources().getDrawable(R.drawable.time));
+        }
 
         ImageButton pasteButton = (ImageButton) view.findViewById(R.id.item_paste);
-        pasteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BusProvider.getInstance().post(new RecentSearchPasteEvent(data));
+        if(pasteButton!=null) {
+            if(hidePasteButton) {
+                pasteButton.setVisibility(View.GONE);
+            } else {
+                pasteButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        BusProvider.getInstance().post(new RecentSearchPasteEvent(data));
+                    }
+                });
+                pasteButton.setVisibility(View.VISIBLE);
             }
-        });
-        pasteButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

@@ -29,7 +29,6 @@ import com.duckduckgo.mobile.android.events.HandleShareButtonClickEvent;
 import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewBackPressActionEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearBrowserStateEvent;
-import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearCacheAndCookiesEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearCacheEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewUpdateMenuNavigationEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
@@ -562,11 +561,6 @@ public class WebFragment extends Fragment {
 	@Subscribe
 	public void onWebViewClearCacheEvent(WebViewClearCacheEvent event) {
 		mainWebView.clearCache();
-	}
-
-	@Subscribe
-	public void onWebViewClearCacheAndCookiesEvent(WebViewClearCacheAndCookiesEvent event) {
-		DDGUtils.clearCacheAndCookies(mainWebView);
 	}
 
 	@Subscribe

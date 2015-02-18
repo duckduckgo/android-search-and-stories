@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.util;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.objects.FeedObject;
@@ -18,6 +19,7 @@ public class AppStateManager {
 		editor.putInt("prevScreen", duckDuckGoContainer.prevScreen.ordinal());
 		editor.putInt("sessionType", duckDuckGoContainer.sessionType.ordinal());
 		editor.putString("currentFragmentTag", duckDuckGoContainer.currentFragmentTag);
+        editor.putString("currentUrl", duckDuckGoContainer.currentUrl);
 		if(currentFeedObject != null) {
 			editor.putString("currentFeedObjectId", currentFeedObject.getId());
 		}
@@ -32,6 +34,7 @@ public class AppStateManager {
 		bundle.putInt("prevScreen", duckDuckGoContainer.prevScreen.ordinal());
 		bundle.putInt("sessionType", duckDuckGoContainer.sessionType.ordinal());
 		bundle.putString("currentFragmentTag", duckDuckGoContainer.currentFragmentTag);
+        bundle.putString("currentUrl", duckDuckGoContainer.currentUrl);
 		if(currentFeedObject != null) {
 			bundle.putString("currentFeedObjectId", currentFeedObject.getId());
 		}
@@ -52,6 +55,7 @@ public class AppStateManager {
 			duckDuckGoContainer.prevScreen = SCREEN.getByCode(bundle.getInt("prevScreen"));
 			duckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(bundle.getInt("sessionType"));
 			duckDuckGoContainer.currentFragmentTag = bundle.getString("currentFragmentTag");
+            duckDuckGoContainer.currentUrl = bundle.getString("currentUrl");
 		}
 		// do we ever get here?
 		else if(state instanceof SharedPreferences) {
@@ -63,6 +67,7 @@ public class AppStateManager {
 			duckDuckGoContainer.prevScreen = SCREEN.getByCode(prefs.getInt("prevScreen", SCREEN.SCR_STORIES.getCode()));
 			duckDuckGoContainer.sessionType = SESSIONTYPE.getByCode(prefs.getInt("sessionType", SESSIONTYPE.SESSION_BROWSE.getCode()));
 			duckDuckGoContainer.currentFragmentTag = prefs.getString("currentFragmentTag", "");
+            duckDuckGoContainer.currentUrl = prefs.getString("currentUrl", "");
 		}
 	}
 	

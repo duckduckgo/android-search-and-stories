@@ -32,10 +32,12 @@
     <dimen name="about_title_top_margin">16.6dp</dimen>
     <dimen name="about_title_bottom_margin">17.3dp</dimen>
 
-
     <dimen name="menu_padding">6dip</dimen>
     <dimen name="menu_letterspace">10sp</dimen><!-- 10dp -->
     <dimen name="menu_outer_margin">4dp</dimen>
+
+    <dimen name="tab_big">360dp</dimen>
+    <dimen name="tab_small">230dp</dimen>
 
     <!-- old dimen -->
     

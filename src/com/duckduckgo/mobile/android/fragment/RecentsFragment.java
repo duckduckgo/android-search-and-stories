@@ -1,9 +1,12 @@
 package com.duckduckgo.mobile.android.fragment;
 
 import android.content.res.Configuration;
+import android.graphics.Point;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,8 +39,22 @@ public class RecentsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        int width;
+
+        Display display = getActivity().getWindowManager().getDefaultDisplay();
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB_MR2) {
+            Point size = new Point();
+            display.getSize(size);
+            width = size.x;
+        } else {
+            width = display.getWidth();
+        }
+
+        int storiesResId = (width >= getResources().getDimension(R.dimen.tab_small) ? R.string.recent_stories : R.string.recent_stories_narrow);
+        int searchesResId = (width >= getResources().getDimension(R.dimen.tab_big) ? R.string.recent_searches : R.string.recent_searches_narrow);
+
         pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(),
-                new String[] {getResources().getString(R.string.recent_stories), getResources().getString(R.string.recent_searches)},
+                new String[] {getResources().getString(storiesResId), getResources().getString(searchesResId)},
                 new Fragment[] {new RecentFeedTabFragment(), new RecentResultTabFragment()});
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
@@ -50,7 +67,7 @@ public class RecentsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_RECENTS);
+        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_RECENTS && DDGControlVar.homeScreenShowing);
     }
 
     @Override

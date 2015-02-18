@@ -61,11 +61,15 @@ public class SavedResultCursorAdapter extends CursorAdapter {
         });*/
         TextView title = (TextView) view.findViewById(R.id.item_text);
         //TextView textViewTitle = (TextView) view.findViewById(android.R.id.text1);
-        title.setText(capitalizeWords(data));
+        if(title!=null ) {
+            title.setText(capitalizeWords(data));
+        }
         //title.setText(data.substring(0,1).toUpperCase()+data.substring(1));
 
         ImageView icon = (ImageView) view.findViewById(R.id.item_icon);
-        icon.setImageDrawable(context.getResources().getDrawable(R.drawable.favorite));
+        if(icon!=null) {
+            icon.setImageDrawable(context.getResources().getDrawable(R.drawable.favorite));
+        }
 
     }
 

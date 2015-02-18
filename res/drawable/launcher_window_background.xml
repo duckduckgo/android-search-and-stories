@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list  xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle"><!--
-    <item>
-        <solid android:color="@color/colorPrimaryRed"/>
-    </item>-->
+<layer-list  xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/colorPrimaryRed"/>
+            <solid android:color="@color/colorPrimaryLightRed"/>
         </shape>
     </item>
     <item>

@@ -12,6 +12,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.TypedValue;
@@ -289,7 +290,6 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
                 ArrayList<FeedObject> newResults = new ArrayList<FeedObject>();
-                Log.e("aaa", "performing filter, feedobject size: "+feedObjects.size());
                 if(DDGControlVar.targetCategory==null) {
                     newResults = feedObjects;
                 } else {
@@ -311,8 +311,15 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 clear();
-                if(results!=null && results.count>0) {
-                    addAll((ArrayList<FeedObject>)results.values);
+                if(results!=null    && results.count>0) {
+                    if(Build.VERSION.SDK_INT>+Build.VERSION_CODES.HONEYCOMB) {
+                        addAll((ArrayList<FeedObject>)results.values);
+                    } else {
+                        ArrayList<FeedObject> list = (ArrayList<FeedObject>) results.values;
+                        for (int i = 0; i < list.size(); i++) {
+                            add(list.get(i));
+                        }
+                    }
                     notifyDataSetChanged();
                 } else {
                     clear();

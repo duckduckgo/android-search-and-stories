@@ -206,18 +206,18 @@ public class SlidingTabLayout extends HorizontalScrollView {
 
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();
+        int width;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            Point size = new Point();
+            display.getSize(size);
+            width = size.x;
+        } else {
+            width = display.getWidth();
+        }
 
-        if((getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK)!=Configuration.SCREENLAYOUT_SIZE_SMALL
+        if(width > getResources().getDimension(R.dimen.tab_small)
                 || getResources().getConfiguration().orientation==Configuration.ORIENTATION_LANDSCAPE) {
-            int x = 0;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-                Point size = new Point();
-                display.getSize(size);
-                x = size.x;
-            } else {
-                x = display.getWidth();
-            }
-            textView.setWidth(x / mViewPager.getAdapter().getCount());
+            textView.setWidth(width / mViewPager.getAdapter().getCount());
         }
 
         return textView;
@@ -248,7 +248,7 @@ public class SlidingTabLayout extends HorizontalScrollView {
                 tabTitleView = (TextView) tabView;
             }
 
-            tabTitleView.setText(adapter.getPageTitle(i));
+            tabTitleView.setText(adapter.getPageTitle(i).toString().toUpperCase());
             tabView.setOnClickListener(tabClickListener);
 
             mTabStrip.addView(tabView);

@@ -124,13 +124,6 @@ public class DDGApplication extends Application {
 		DDGControlVar.userDisallowedSources = PreferencesManager.getUserDisallowedSources();
 
 		DDGControlVar.automaticFeedUpdate = PreferencesManager.getAutomaticFeedUpdate();
-        DDGControlVar.CLEAR_INTERVAL = PreferencesManager.getClearCacheCookiesInterval();
-        DDGControlVar.lastClearCacheAndCookies = PreferencesManager.getLastClearCacheAndCookies();
-        if(DDGControlVar.lastClearCacheAndCookies == 0) {
-            PreferencesManager.setLastClearCacheAndCookies(System.currentTimeMillis());
-            DDGControlVar.lastClearCacheAndCookies = PreferencesManager.getLastClearCacheAndCookies();
-        }
-        DDGControlVar.mustClearCacheAndCookies = DDGUtils.mustClearCacheAnCookies();
 
 		String strReadArticles = PreferencesManager.getReadArticles();
 		if(strReadArticles != null){

@@ -373,37 +373,6 @@ public final class DDGUtils {
         }
 	}
 
-    public static boolean mustClearCacheAnCookies() {
-        int daysInterval = 0;
-        switch (DDGControlVar.CLEAR_INTERVAL) {
-            case EVERY_LAUNCH:
-                return true;
-            case WEEKLY:
-                daysInterval = 7;
-                break;
-            case MONTHLY:
-                daysInterval = 30;
-                break;
-            case NEVER:
-            default:
-                return false;
-        }
-		long currentTime = System.currentTimeMillis();
-        long clearInterval = daysInterval * 24l * 60l * 60l * 1000l;
-        long nextClear = DDGControlVar.lastClearCacheAndCookies + clearInterval;
-        if(currentTime >= nextClear) {
-            return true;
-        }
-        return false;
-    }
-
-    public static void clearCacheAndCookies(DDGWebView ddgWebView) {
-        DDGWebView.clearCookies();
-        ddgWebView.clearCache();
-        DDGControlVar.lastClearCacheAndCookies = System.currentTimeMillis();
-        PreferencesManager.setLastClearCacheAndCookies(DDGControlVar.lastClearCacheAndCookies);
-    }
-
 	public static String getVersionName(Context context) {
 		String versionName = "";
 		try {

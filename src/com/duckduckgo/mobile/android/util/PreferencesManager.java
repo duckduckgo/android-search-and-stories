@@ -35,12 +35,6 @@ public class PreferencesManager {
         String startScreenCode = DDGApplication.getSharedPreferences().getString("startScreenPref", "0");
         return SCREEN.getByCode(Integer.valueOf(startScreenCode));
 	}
-
-    public static CLEAR_INTERVAL_TYPE getClearCacheCookiesInterval() {
-        String clearIntervalCode = DDGApplication.getSharedPreferences().getString("clearCacheCookiesIntervalPref", "3");
-        return CLEAR_INTERVAL_TYPE.getCodeBy(Integer.valueOf(clearIntervalCode));
-    }
-
     public static String getRegion() {
 		return DDGApplication.getSharedPreferences().getString("regionPref", "wt-wt");
 	}
@@ -192,9 +186,6 @@ public class PreferencesManager {
         else if(key.equals("recordCookiesPref")) {
             DDGWebView.recordCookies(sharedPreferences.getBoolean(key, true));
         }
-        else if(key.equals("clearCacheCookiesIntervalPref")){
-            DDGControlVar.CLEAR_INTERVAL = getClearCacheCookiesInterval();
-        }
     }
     
     /* Collections */
@@ -237,7 +228,7 @@ public class PreferencesManager {
 			editor.putBoolean("autoUpdatePref", automaticFeedUpdate);
 			editor.commit();
   }
-
+/*
     public static void setLastClearCacheAndCookies(long currentTime) {
         Editor editor = DDGApplication.getSharedPreferences().edit();
         editor.putLong("lastClearCacheAndCookies", currentTime);
@@ -246,5 +237,5 @@ public class PreferencesManager {
 
     public static long getLastClearCacheAndCookies() {
         return DDGApplication.getSharedPreferences().getLong("lastClearCacheAndCookies", 0l);
-    }
+    }*/
 }

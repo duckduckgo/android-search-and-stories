@@ -58,7 +58,7 @@ public class RecentResultTabFragment extends ListFragment {
             //historyListView = (HistoryListView) getListView();
             recentSearchListView = (RecentSearchListView) getListView();
             //recentSearchListView = (RecentSearchListView) fragmentView.findViewById(R.id.listview);
-            recentResultAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory());
+            recentResultAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory(), true);
             //historyListView.setAdapter(recentResultAdapter);
             recentSearchListView.setAdapter(recentResultAdapter);
         } else {

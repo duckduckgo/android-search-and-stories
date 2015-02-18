@@ -32,7 +32,6 @@ import com.duckduckgo.mobile.android.events.feedEvents.FeedCleanImageTaskEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveErrorEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedRetrieveSuccessEvent;
-import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuCloseEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.tasks.CacheFeedTask;
 import com.duckduckgo.mobile.android.tasks.MainFeedTask;
@@ -73,12 +72,14 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Log.e("aaa", "on create: "+getTag());
 		BusProvider.getInstance().register(this);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+        Log.e("aaa", "on destroy: "+getTag());
 		BusProvider.getInstance().register(this);
 	}
 
@@ -91,16 +92,43 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+        Log.e("aaa", "on activity created: "+getTag());
 		setRetainInstance(true);
         activity = getActivity();
 		init();
+        if(savedInstanceState!=null) {
+            Log.e("aaa", "on activity created savedinstantestate!=null: "+getTag());
+        } else {
+            Log.e("aaa", "on activity created savedinstancestate==null: "+getTag());
+        }
 	}
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.e("aaa", "on hidden changed, hidden "+hidden+" - "+getTag());/*
+        boolean value = DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES;
+        Log.e("aaa", "DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES: "+value);
+        value = !hidden;
+        Log.e("aaa", "visible: "+value);
+        value = DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && !hidden;
+        Log.e("aaa", "should ")*/
+        //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && !hidden);
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.e("aaa", "set user visible hint: "+isVisibleToUser+" - tag: "+getTag());
+    }
 
 	@Override
 	public void onResume() {
 		super.onResume();
 
-        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES);
+        Log.e("aaa", "on resume: "+getTag());
+
+        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && DDGControlVar.homeScreenShowing);
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
@@ -111,11 +139,18 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	@Override
 	public void onPause() {
 		super.onPause();
+        Log.e("aaa", "on pause: "+getTag());
 		if (mainFeedTask != null) {
 			mainFeedTask.cancel(false);
 			mainFeedTask = null;
 		}
 	}
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.e("aaa", "on stop: "+getTag());
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -330,7 +365,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	public void onFeedRetrieveErrorEvent(FeedRetrieveErrorEvent event) {
         //aaa
 		//if (DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED_FEED && mainFeedTask != null) {
-        if (activity!=null && DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_SAVED && mainFeedTask != null) {
+        if (activity!=null && DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_FAVORITE && mainFeedTask != null) {
 			new FeedRequestFailureDialogBuilder(activity).show();
 		}
         swipeRefreshLayout.setRefreshing(false);
@@ -344,7 +379,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	 */
 	@Subscribe
 	public void onFeedItemSelected(FeedItemSelectedEvent event) {
-		BusProvider.getInstance().post(new LeftMenuCloseEvent());
 		if(event.feedObject==null) {
 			feedItemSelected(event.feedId);
 		} else {
