@@ -243,8 +243,9 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         //Log.e("aaa", "top margin: "+searchParams.topMargin);
         //  Log.e("aaa", "header height: "+headerParams.height);
 
-        visibleHeight = visibleHeight - (searchParams.topMargin * 3);
+        //visibleHeight = visibleHeight - (searchParams.topMargin * 3);
         //visibleHeight = visibleHeight - (headerParams.height * 3);
+        visibleHeight = visibleHeight - (searchListView.getPaddingTop() * 3);
 
         int maxItems = visibleHeight / itemHeight;
         int recentItems = 0;

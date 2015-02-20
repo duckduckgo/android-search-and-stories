@@ -111,7 +111,6 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
-import com.duckduckgo.mobile.android.views.WelcomeScreenView;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
@@ -135,27 +134,12 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
 	//private HistoryListView recentSearchView = null;//recent search fragment
 
-	//private ImageButton mainButton = null;
-	//private ImageButton bangButton = null;
-	//private ImageButton shareButton = null;
-    //private ImageButton homebutton = null;
-    //private ImageButton bangButton = null;
-
 	private FrameLayout fragmentContainer;
 
 	private FragmentManager fragmentManager;
-	private WebFragment webFragment;
-	private FavoriteFragment favoriteFragment;
-    private RecentsFragment recentsFragment;
-	private FeedFragment feedFragment;
-    private SearchFragment searchFragment;
 
 	public Toolbar toolbar;
 	private ActionBar actionBar;
-
-	// welcome screen
-	private WelcomeScreenView welcomeScreenLayout = null;
-	OnClickListener welcomeCloseListener = null;
 		
 	private SharedPreferences sharedPreferences;
 		
@@ -198,43 +182,6 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
     	DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
     	BusProvider.getInstance().post(new SyncAdaptersEvent());
     }
-    
-    /**
-     * Adds welcome screen on top of content view
-     * Also disables dispatching of touch events from viewPager to children views
-     *//*
-    private void addWelcomeScreen() {
-
-    	if(!getResources().getBoolean(R.bool.welcomeScreen_allowLandscape)){
-			setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		}
-    	
-    	// add welcome screen
-        welcomeScreenLayout = new WelcomeScreenView(this);
-        FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
-        rootLayout.addView(welcomeScreenLayout);
-    	welcomeScreenLayout.setOnCloseListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				removeWelcomeScreen();
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-			}
-		});
-    }*/
-    
-    /**
-     * Removes welcome screen from content view
-     * Also enables dispatching of touch events from viewPager
-     *//*
-    private void removeWelcomeScreen() {
-    	welcomeScreenLayout.setVisibility(View.GONE);
-
-		PreferencesManager.setWelcomeShown();
-    	// remove welcome screen
-		FrameLayout rootLayout = (FrameLayout)findViewById(android.R.id.content);
-		rootLayout.removeView(welcomeScreenLayout);
-		welcomeScreenLayout = null;
-    }*/
 /*
     private void showBangButton(boolean visible){
     	mainButton.setVisibility(visible ? View.GONE: View.VISIBLE);
@@ -1212,16 +1159,6 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	public void clearRecentSearch() {
 		DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
 	}
-	
-	/**
-	 * main method that triggers display of Preferences screen or fragment
-	 */
-	private void displaySettings() {
-        //Log.e("aaa", "display settings");
-        DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
-
-        changeFragment(new PrefFragment(), PrefFragment.TAG);
-	}
 
 	/**
 	 * Method that switches visibility of views for Home or Saved feed
@@ -1342,42 +1279,6 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
     public boolean isFragmentVisible(String tag) {
         return fragmentManager.findFragmentByTag(tag)!=null && fragmentManager.findFragmentByTag(tag).isVisible();
     }
-
-//    public void onClick(View view) {//aaa toremove
-//		if (view.equals(mainButton)) {
-			//handleHomeSettingsButtonClick();
-//		}/*
-//		else if (view.equals(shareButton)) {
-//			BusProvider.getInstance().post(new HandleShareButtonClickEvent());
-//		}*/
-//	}
-/*
-	private void handleLeftHomeTextViewClick() {//aaa to remove
-					
-		if (DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
-
-			//We are going home!
-			//mainWebView.clearHistory();
-			//mainWebView.clearView();
-			clearSearchBar();
-			DDGControlVar.mDuckDuckGoContainer.webviewShowing = false;
-		}
-		
-		displayHomeScreen();
-	}
-*//*
-	private void handleHomeSettingsButtonClick() {//aaa to remove
-        keyboardService.hideKeyboard(getSearchField());
-		
-		if(DDGControlVar.homeScreenShowing){
-			//drawer.open();
-		}
-		else {
-			// going home
-			displayHomeScreen();
-		}
-	}
-*/
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {//aaa to remove
 		super.onActivityResult(requestCode, resultCode, data);
@@ -1450,11 +1351,6 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
 		DDGUtils.displayStats.refreshStats(this);
-/*
-		if(welcomeScreenLayout != null) {
-			removeWelcomeScreen();
-			addWelcomeScreen();
-		}*/
 		super.onConfigurationChanged(newConfig);
 	}
 	
@@ -1586,7 +1482,6 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	
 	@Subscribe
 	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
-        Log.e("aaa", "====== ERROR 7 - on history item selected");
         keyboardService.hideKeyboard(getSearchField());
 		//if(!webFragment.isVisible()) {
             displayScreen(SCREEN.SCR_WEBVIEW, false);

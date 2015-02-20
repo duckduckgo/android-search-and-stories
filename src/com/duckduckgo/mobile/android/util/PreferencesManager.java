@@ -16,8 +16,7 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
 public class PreferencesManager {
-	
-	private static int WELCOME_VERSION = 1;
+
 	private static boolean NEW_SOURCES = true;
 	private static boolean sourcesWereMigratedRightNow = false;
 	
@@ -70,31 +69,6 @@ public class PreferencesManager {
 	public static boolean containsSourceSetSize() {
 		return DDGApplication.getSharedPreferences().contains("sourceset_size");
 	}
-	/*
-	public static boolean isWelcomeShown() {
-		return DDGApplication.getSharedPreferences().getInt("welcomeShown", 0) == WELCOME_VERSION;
-	}
-	
-	public static void setWelcomeShown() {
-		Editor editor = DDGApplication.getSharedPreferences().edit();
-		editor.putInt("welcomeShown", WELCOME_VERSION);
-		editor.commit();
-	}*/
-	/*
-	public static boolean isFontSliderVisible() {
-		return DDGApplication.getSharedPreferences().getBoolean("fontSliderVisible", false);
-	}
-	
-	public static void setFontSliderVisibility(boolean visible) {
-		Editor editor = DDGApplication.getSharedPreferences().edit();
-		editor.putBoolean("fontSliderVisible", visible);
-		editor.commit();
-	}
-
-	public static int getFontPrevProgress(int defaultValue) {
-		return DDGApplication.getSharedPreferences().getInt("fontPrevProgress", defaultValue);
-	}
-*/
 
 	public static int getAppVersionCode() {
 		return DDGApplication.getSharedPreferences().getInt("appVersionCode", 0);
@@ -228,14 +202,4 @@ public class PreferencesManager {
 			editor.putBoolean("autoUpdatePref", automaticFeedUpdate);
 			editor.commit();
   }
-/*
-    public static void setLastClearCacheAndCookies(long currentTime) {
-        Editor editor = DDGApplication.getSharedPreferences().edit();
-        editor.putLong("lastClearCacheAndCookies", currentTime);
-        editor.commit();
-    }
-
-    public static long getLastClearCacheAndCookies() {
-        return DDGApplication.getSharedPreferences().getLong("lastClearCacheAndCookies", 0l);
-    }*/
 }
