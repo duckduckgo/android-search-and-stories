@@ -20,7 +20,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:layout_marginBottom="16dip"
-          android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+          android:textAppearance="?android:attr/textAppearanceMedium"
           android:textColor="@color/colorPrimary"
           android:paddingLeft="?attr/listPreferredItemPaddingLeft"
           android:paddingRight="?attr/listPreferredItemPaddingRight"

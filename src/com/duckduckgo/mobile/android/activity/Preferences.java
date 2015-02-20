@@ -174,7 +174,7 @@ public class Preferences extends PreferenceActivity implements OnSharedPreferenc
       mainFontSizePref.setOnPreferenceClickListener(new OnPreferenceClickListener() {
 
           public boolean onPreferenceClick(Preference preference) {
-              PreferencesManager.setFontSliderVisibility(true);
+              //PreferencesManager.setFontSliderVisibility(true);
               finish();
               return true;
           }

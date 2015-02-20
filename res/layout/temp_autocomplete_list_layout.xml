@@ -16,7 +16,9 @@
         app:cornerRadius="3dp"
         android:background="@drawable/btn_auto_complete_image"
         android:scaleType="center"
-        android:src="@drawable/ic_default_search_result" />-->
+        android:src="@drawable/ic_default_search_result" />--><!--
+        android:layout_width="@dimen/listview_item_icon_dimen"
+        android:layout_height="@dimen/listview_item_icon_dimen"-->
     <com.duckduckgo.mobile.android.download.AsyncImageView
         android:id="@+id/item_icon"
         android:layout_width="@dimen/listview_item_icon_dimen"
@@ -39,15 +41,30 @@
         android:background="?attr/selectableItemBackground"
         android:visibility="gone"/>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/listview_item_text_margin"
+        android:layout_toRightOf="@id/item_icon"
+        android:layout_toLeftOf="@id/item_paste">
+
     <TextView
         android:id="@+id/item_text"
         android:textColor="@color/search_dark"
         android:textSize="16sp"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/item_text_detail"
+        android:textColor="@color/search_light"
+        android:textSize="12sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/listview_item_text_margin"
-        android:layout_toRightOf="@id/item_icon"
-        android:layout_toLeftOf="@id/item_paste"/>
+        android:visibility="gone"/>
+
+    </LinearLayout>
 
 </RelativeLayout>

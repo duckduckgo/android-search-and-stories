@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Rect;
@@ -48,12 +49,14 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
     private SearchListView searchListView;
     private SearchAdapter adapter;
+    //private SeparatedListAdapter adapter;
 
     private SavedResultCursorAdapter savedSearchAdapter;
     private RecentResultCursorAdapter recentAdapter;
 
     private int maxRecents = 1;
 
+    View headerPadding;
     private LinearLayout search_container;
     private View fragmentView = null;
 
@@ -90,14 +93,21 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         recentAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory());
 
         adapter = new SearchAdapter(getActivity());
+        //adapter = new SeparatedListAdapter(getActivity());
         //adapter.addSection("recents", DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter);
         adapter.addSection("recents", recentAdapter);
         adapter.addSection("favorites", savedSearchAdapter);
+
+        headerPadding = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_fake_header, searchListView, false);
+        //searchListView.addHeaderView(headerPadding);
 
         searchListView.setAdapter(adapter);
 
         autoCompleteResultListView = (ListView) fragmentView.findViewById(R.id.autocomplete_list);
         autoCompleteResultListView.setDivider(null);
+
+        headerPadding = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_fake_header, autoCompleteResultListView, false);
+        //autoCompleteResultListView.addHeaderView(headerPadding);
 
         autoCompleteResultListView.setOnItemClickListener(this);
         autoCompleteResultListView.setOnItemLongClickListener(this);
@@ -228,7 +238,13 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
         LinearLayout.LayoutParams searchParams = (LinearLayout.LayoutParams) searchListView.getLayoutParams();
 
+        ListView.LayoutParams headerParams = (ListView.LayoutParams) headerPadding.getLayoutParams();
+
+        //Log.e("aaa", "top margin: "+searchParams.topMargin);
+        //  Log.e("aaa", "header height: "+headerParams.height);
+
         visibleHeight = visibleHeight - (searchParams.topMargin * 3);
+        //visibleHeight = visibleHeight - (headerParams.height * 3);
 
         int maxItems = visibleHeight / itemHeight;
         int recentItems = 0;
@@ -289,7 +305,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     }
 
     private void syncAdapters() {
-        Log.e("aaa", "syncadapters");
+        //Log.e("aaa", "syncadapters");
         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
         savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
@@ -301,7 +317,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     }
 
     private void syncAdapters(int limit) {
-        Log.e("aaa", "syncadapters with limit: "+limit);
+        //Log.e("aaa", "syncadapters with limit: "+limit);
         //DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory(limit));
         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();

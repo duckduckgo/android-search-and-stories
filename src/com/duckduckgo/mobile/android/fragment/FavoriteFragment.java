@@ -66,7 +66,7 @@ public class FavoriteFragment extends Fragment {
         }
 
         int storiesResId = (width >= getResources().getDimension(R.dimen.tab_small) ? R.string.favorite_stories : R.string.favorite_stories_narrow);
-        int searchesResId = (width >= getResources().getDimension(R.dimen.tab_big) ? R.string.favorited_search : R.string.favorited_search_narrow);
+        int searchesResId = (width >= getResources().getDimension(R.dimen.tab_big) ? R.string.favorite_search : R.string.favorite_search_narrow);
 
         pagerAdapter = new DDGPagerAdapter(getChildFragmentManager(),
                 new String[] {getResources().getString(storiesResId), getResources().getString(searchesResId)},

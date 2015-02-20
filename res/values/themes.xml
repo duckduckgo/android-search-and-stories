@@ -3,6 +3,8 @@
 
     <style name="DDGTheme" parent="DDGTheme.Base">
 
+
+
     </style>
 
     <style name="DDGTheme.Base" parent="Theme.AppCompat.Light.NoActionBar"><!--
@@ -14,11 +16,17 @@
 
         <item name="android:windowBackground">@drawable/launcher_window_background</item>
 
-        <item name="colorPrimary">@color/colorPrimaryRed</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkRed</item>
-        <item name="colorAccent">@color/colorPrimaryRed</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
 
         <item name="actionOverflowButtonStyle">@style/OverflowButton</item>
+
+
+
+<!--
+        <item name="android:preferenceCategoryStyle">@style/DDGPreferenceCategory</item>
+-->
 <!--
         <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
 -->
@@ -44,12 +52,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDarkRed</item>
         <item name="colorAccent">@color/colorPrimaryRed</item>-->
 
-    </style>
-
-    <style name="DDGThemeBlue" parent="DDGLight">
-        <item name="colorPrimary">@color/colorPrimaryBlue</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDarkBlue</item>
-        <item name="colorAccent">@color/colorPrimaryBlue</item>
+        <item name="android:preferenceCategoryStyle">@style/DDGPreferenceCategory</item>
     </style>
 
     <style name="OverflowMenu" parent="Widget.AppCompat.Spinner.DropDown">
@@ -183,5 +186,6 @@
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
-    
+
+
 </resources>

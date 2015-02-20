@@ -108,19 +108,20 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
     @Override
     public boolean onPreferenceClick(Preference preference) {
         if(preference==sourcesPref) {
-            Intent intent = new Intent(getActivity(), SourcePreferences.class);
-            startActivity(intent);
+            //Intent intent = new Intent(getActivity(), SourcePreferences.class);
+            //startActivity(intent);
+            BusProvider.getInstance().post(new DisplayScreenEvent(SCREEN.SCR_SOURCES, false));
             return true;
         } else if(preference==clearHistoryPref) {
-            ConfirmDialog dialog = new ConfirmDialog().newInstance(getResources().getString(R.string.Confirm), getResources().getString(R.string.ConfirmClearHistory), DDGConstants.CONFIRM_CLEAR_HISTORY);
+            ConfirmDialog dialog = ConfirmDialog.newInstance(getResources().getString(R.string.Confirm), getResources().getString(R.string.ConfirmClearHistory), DDGConstants.CONFIRM_CLEAR_HISTORY);
             dialog.show(getFragmentManager(), ConfirmDialog.TAG);
             return true;
         } else if(preference==clearCookiesPref) {
-            ConfirmDialog dialog = new ConfirmDialog().newInstance(getResources().getString(R.string.Confirm), getResources().getString(R.string.ConfirmClearCookies), DDGConstants.CONFIRM_CLEAR_COOKIES);
+            ConfirmDialog dialog = ConfirmDialog.newInstance(getResources().getString(R.string.Confirm), getResources().getString(R.string.ConfirmClearCookies), DDGConstants.CONFIRM_CLEAR_COOKIES);
             dialog.show(getFragmentManager(), ConfirmDialog.TAG);
             return true;
         } else if(preference==clearWebCachePref) {
-            ConfirmDialog dialog = new ConfirmDialog().newInstance(getResources().getString(R.string.Confirm), getResources().getString(R.string.ConfirmClearCacheAndCookies), DDGConstants.CONFIRM_CLEAR_WEB_CACHE);
+            ConfirmDialog dialog = ConfirmDialog.newInstance(getResources().getString(R.string.Confirm), getResources().getString(R.string.ConfirmClearCacheAndCookies), DDGConstants.CONFIRM_CLEAR_WEB_CACHE);
             dialog.show(getFragmentManager(), ConfirmDialog.TAG);
         } else if(preference==aboutPref) {
             BusProvider.getInstance().post(new DisplayScreenEvent(SCREEN.SCR_ABOUT, false));

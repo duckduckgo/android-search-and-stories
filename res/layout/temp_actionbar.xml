@@ -56,7 +56,6 @@
         android:layout_marginBottom="@dimen/actionbar_margin"
         android:layout_gravity="center_vertical"
         android:layout_toRightOf="@id/bang"
-        android:layout_toLeftOf="@id/overflow"
         android:background="@drawable/temp_background" >
 
         <EditText android:layout_width="0dp" android:layout_height="0dp"

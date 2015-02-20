@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.views.autocomplete;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
@@ -48,10 +49,13 @@ public class DDGAutoCompleteTextView extends EditText {
 
 	public void addBang() {
 		if(isCursorAtEnd() && !lastCharIsSpaceOrNull()){
-			getText().insert(getSelectionStart(), " !");	
+            Log.e("aaa", "add bang 1");
+            getText().insert(getSelectionStart(), " !");
 		}else{
+            Log.e("aaa", "add bang 2");
 			getText().replace(getSelectionStart(), getSelectionEnd(), "!");
-			setSelection(getSelectionStart());
+			//setSelection(getSelectionStart());//fix 1
+            setSelection(getSelectionEnd());
 		}
 	}
 	

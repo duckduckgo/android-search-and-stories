@@ -176,6 +176,12 @@
 
     </style>
 
+    <style name="DDGPreferenceCategory" parent="">
+        <item name="layout">@layout/temp_pref_categry</item>
+        <item name="android:shouldDisableView">false</item>
+        <item name="android:selectable">false</item>
+    </style>
+
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
     </style>
 </resources>

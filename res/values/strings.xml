@@ -206,8 +206,8 @@
     <string name="favorites">Favorites</string>
     <string name="favorite_stories">Favorite Stories</string>
     <string name="favorite_stories_narrow">@string/stories</string>
-    <string name="favorited_search">Favorited Searches</string>
-    <string name="favorited_search_narrow">Searches</string>
+    <string name="favorite_search">Favorite Searches</string>
+    <string name="favorite_search_narrow">Searches</string>
     <string name="empty_favorites_title">No Favorites</string>
     <string name="empty_favorites_text">Add searches and stories\nto your favourites, and they\nwill be shown here.</string>
 
@@ -234,6 +234,9 @@
     <string name="feedback">Feedback</string>
     <string name="leave_feedback">Leave Feedback</string>
     <string name="rate">Rate the App</string>
+
+    <!-- change sources fragment-->
+    <string name="change_sources">Change Sources</string>
 
     <!-- menus -->
     <string name="action_stories">@string/stories</string>

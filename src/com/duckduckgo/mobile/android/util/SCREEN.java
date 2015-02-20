@@ -6,7 +6,7 @@ import com.duckduckgo.mobile.android.fragment.WebFragment;
 import org.apache.http.entity.FileEntity;
 
 public enum SCREEN {
-	SCR_STORIES(0), SCR_RECENTS(1), SCR_FAVORITE(2), SCR_SEARCH_HOME_PAGE(3), SCR_WEBVIEW(4), SCR_ABOUT(5), SCR_HELP(6), SCR_SETTINGS(7), SCR_SEARCH(8);
+	SCR_STORIES(0), SCR_RECENTS(1), SCR_FAVORITE(2), SCR_SEARCH_HOME_PAGE(3), SCR_WEBVIEW(4), SCR_ABOUT(5), SCR_HELP(6), SCR_SETTINGS(7), SCR_SEARCH(8), SCR_SOURCES(9);
 	
 	private int code;
 	
@@ -38,6 +38,8 @@ public enum SCREEN {
                 return SCR_SETTINGS;
             case 8:
                 return SCR_SEARCH;
+            case 9:
+                return SCR_SOURCES;
 			default:
 				return SCR_STORIES;
 		}	

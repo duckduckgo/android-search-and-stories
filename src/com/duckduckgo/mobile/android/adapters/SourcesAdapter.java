@@ -18,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -77,7 +78,8 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 		if(!item.isSection()) {
 			
 			if (cv == null || cv.getTag() == null) {
-				cv = inflater.inflate(R.layout.sourcepref_layout, null);
+				//cv = inflater.inflate(R.layout.sourcepref_layout, null);
+                cv = inflater.inflate(R.layout.temp_sourcepref_layout, null);
 				cv.setTag(new SourceHolder((TextView)cv.findViewById(R.id.sourceTitleTextView),
 									 (TextView)cv.findViewById(R.id.sourceTitleSubTextView),
 						             (AsyncImageView)cv.findViewById(R.id.sourceItemBackground),
@@ -165,6 +167,9 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 			final TextView sectionView = (TextView) cv.findViewById(R.id.list_item_section_text);
 			sectionView.setText(si.getTitle());
 		}
+
+//        ListView.LayoutParams params = (ListView.LayoutParams) cv.getLayoutParams();
+//        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
 		return cv;
 	}

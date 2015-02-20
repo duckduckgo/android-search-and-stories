@@ -394,5 +394,17 @@ public final class DDGUtils {
 		}
 		return versionCode;
 	}
+
+    public static String getUrlToDisplay(String url) {
+        if(url.startsWith("https://")) {
+            url = url.replace("https://", "");
+        } else if(url.startsWith("http://")) {
+            url = url.replace("http://", "");
+        }
+        if(url.startsWith("www.")) {
+            url = url.replace("www.", "");
+        }
+        return url;
+    }
 	
 }

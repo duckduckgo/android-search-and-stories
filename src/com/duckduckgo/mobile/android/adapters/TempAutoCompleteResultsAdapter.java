@@ -89,6 +89,7 @@ public class TempAutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> 
             //view = inflater.inflate(R.layout.temp_search_layout, null);
             view.setTag(new Holder(
                     (TextView)view.findViewById(R.id.item_text),
+                    (TextView)view.findViewById(R.id.item_text_detail),
                     (AsyncImageView)view.findViewById(R.id.item_icon),
                     (ImageButton)view.findViewById(R.id.item_paste)));
         }
@@ -122,6 +123,14 @@ public class TempAutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> 
             word.setSpan(new ForegroundColorSpan(Color.parseColor("#A4A4A4")), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.result.append(word);
 
+            String snippet = suggestion.getSnippet();
+            if(snippet!=null && snippet.length()>0) {
+                holder.detail.setText(suggestion.getSnippet());
+                holder.detail.setVisibility(View.VISIBLE);
+            } else {
+                holder.detail.setVisibility(View.GONE);
+            }
+
             //holder.icon.setImageDrawable(getContext().getResources().getDrawable(R.drawable.time));
             holder.plus.setVisibility(View.VISIBLE);
             holder.plus.setOnClickListener(new View.OnClickListener() {
@@ -136,13 +145,15 @@ public class TempAutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> 
 
             //Drawable acDrawable = suggestion.getDrawable();
             String imageUrl = suggestion.getImageUrl();
-            if(imageUrl != null && imageUrl.length() != 0) {
+            if(imageUrl != null && imageUrl.length() != 0 && !imageUrl.contains("search-suggestions_default.png")) {
+                Log.e("aaa", "image url: "+imageUrl);
                 roundTransform.setRadius(holder.icon.getCornerRadius());
-                scaleTransform.setTarget(holder.icon);
+                //scaleTransform.setTarget(holder.icon, 0.6);
+                scaleTransform.setTarget((int)getContext().getResources().getDimension(R.dimen.source_icon_dimen));
 
                 Picasso.with(getContext())
                         .load(suggestion.getImageUrl())
-                        .placeholder(R.drawable.time)
+                        .placeholder(null)
                         .error(R.drawable.time)
                         .transform(scaleTransform)
                         .transform(roundTransform)
@@ -191,10 +202,12 @@ public class TempAutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> 
 
     class Holder {
         final TextView result;
+        final TextView detail;
         final AsyncImageView icon;
         final ImageButton plus;
-        public Holder(final TextView result, final AsyncImageView icon, final ImageButton plus) {
+        public Holder(final TextView result, final TextView detail, final AsyncImageView icon, final ImageButton plus) {
             this.result = result;
+            this.detail = detail;
             this.icon = icon;
             this.plus = plus;
         }

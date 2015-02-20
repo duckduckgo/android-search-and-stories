@@ -56,6 +56,14 @@ public class RecentResultCursorAdapter extends CursorAdapter {
         // that means, take the data from the cursor and put it in views
 
         final String data = cursor.getString(cursor.getColumnIndex("data"));
+        TextView sub = (TextView) view.findViewById(R.id.item_text2);
+        if(sub!=null) {
+            //sub.setText(userInput);
+        }
+        TextView sub2 = (TextView) view.findViewById(R.id.item_text3);
+        if(sub2!=null && userInput.length()>0) {
+            //sub2.setText(data.substring(userInput.length()));
+        }
         Spannable word;
 
         //final String type = cursor.getString(cursor.getColumnIndex("type"));
@@ -66,14 +74,14 @@ public class RecentResultCursorAdapter extends CursorAdapter {
 
             if (userInput.length() != 0 && data.startsWith(userInput.toString())) {
                 word = new SpannableString(userInput);
-                word.setSpan(new ForegroundColorSpan(Color.parseColor("#212121")), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                word.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.search_dark)), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 title.setText(word);
 
-                word = new SpannableString(data.replace(userInput.toString(), ""));
-                word.setSpan(new ForegroundColorSpan(Color.parseColor("#A4A4A4")), 0, word.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                word = new SpannableString(data.substring(userInput.length()));//data.replace(userInput.toString(), ""));
+                word.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.search_light)), 0, word.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 title.append(word);
             } else {
-                title.setTextColor(Color.parseColor("#212121"));
+                title.setTextColor(context.getResources().getColor(R.color.search_dark));
                 title.setText(data);
             }
         }

@@ -70,7 +70,7 @@ public class PreferencesManager {
 	public static boolean containsSourceSetSize() {
 		return DDGApplication.getSharedPreferences().contains("sourceset_size");
 	}
-	
+	/*
 	public static boolean isWelcomeShown() {
 		return DDGApplication.getSharedPreferences().getInt("welcomeShown", 0) == WELCOME_VERSION;
 	}
@@ -79,8 +79,8 @@ public class PreferencesManager {
 		Editor editor = DDGApplication.getSharedPreferences().edit();
 		editor.putInt("welcomeShown", WELCOME_VERSION);
 		editor.commit();
-	}
-	
+	}*/
+	/*
 	public static boolean isFontSliderVisible() {
 		return DDGApplication.getSharedPreferences().getBoolean("fontSliderVisible", false);
 	}
@@ -90,11 +90,11 @@ public class PreferencesManager {
 		editor.putBoolean("fontSliderVisible", visible);
 		editor.commit();
 	}
-	
+
 	public static int getFontPrevProgress(int defaultValue) {
 		return DDGApplication.getSharedPreferences().getInt("fontPrevProgress", defaultValue);
 	}
-	
+*/
 
 	public static int getAppVersionCode() {
 		return DDGApplication.getSharedPreferences().getInt("appVersionCode", 0);

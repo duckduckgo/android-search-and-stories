@@ -5,11 +5,12 @@
 
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
-    <color name="colorPrimary">#de5833</color>
-    <color name="colorPrimaryDark">#bf360c</color>
-    <color name="colorAccent">#ff5722</color>
 
     <!-- new colors -->
+
+    <color name="colorPrimary">@color/colorPrimaryRed</color>
+    <color name="colorPrimaryDark">@color/colorPrimaryDarkRed</color>
+    <color name="colorPrimaryLight">@color/colorPrimaryLightRed</color>
 
     <color name="colorPrimaryRed">#de5833</color>
     <color name="colorPrimaryDarkRed">#bd4b2b</color>

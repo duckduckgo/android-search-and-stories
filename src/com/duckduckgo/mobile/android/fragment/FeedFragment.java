@@ -114,6 +114,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         value = DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && !hidden;
         Log.e("aaa", "should ")*/
         //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && !hidden);
+
+        keepFeedUpdated();
     }
 
     @Override
@@ -176,7 +178,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryRed);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         feedView = (MainFeedListView) fragmentView.findViewById(R.id.feed_list_view);
 		feedView.setAdapter(feedAdapter);
 
