@@ -106,22 +106,10 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        Log.e("aaa", "on hidden changed, hidden "+hidden+" - "+getTag());/*
-        boolean value = DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES;
-        Log.e("aaa", "DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES: "+value);
-        value = !hidden;
-        Log.e("aaa", "visible: "+value);
-        value = DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && !hidden;
-        Log.e("aaa", "should ")*/
-        //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && !hidden);
-
-        keepFeedUpdated();
-    }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        Log.e("aaa", "set user visible hint: "+isVisibleToUser+" - tag: "+getTag());
+        Log.e("aaa", "on hidden changed, hidden "+hidden+" - "+getTag());
+        if(!hidden) {
+            keepFeedUpdated();
+        }
     }
 
 	@Override
@@ -300,6 +288,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	 */
 	@SuppressLint("NewApi")
 	public void keepFeedUpdated(){
+        Log.e("aaa", "keep feed updated");
 		if(TorIntegrationProvider.getInstance(getActivity()).isOrbotRunningAccordingToSettings()) {
 			if (!DDGControlVar.hasUpdatedFeed) {
 				if (DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
@@ -345,7 +334,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		}
 
 		feedAdapter.addData(event.feed);
-        //feedAdapter.getFilter().filter("");
+        feedAdapter.getFilter().filter("");
 		feedAdapter.notifyDataSetChanged();
 
 		// update pull-to-refresh header to reflect task completion
@@ -371,7 +360,6 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 			new FeedRequestFailureDialogBuilder(activity).show();
 		}
         swipeRefreshLayout.setRefreshing(false);
-
 	}
 
 	/**

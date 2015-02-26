@@ -13,7 +13,9 @@
 <!--
         <item name="android:actionModeStyle">@style/DDGActionMode</item>
         -->
+        <!--
         <item name="android:actionModeCopyDrawable">@drawable/home</item>
+        -->
 <!--
         <item name="android:actionModeBackground">@color/action_mode_background</item>
         --><!--

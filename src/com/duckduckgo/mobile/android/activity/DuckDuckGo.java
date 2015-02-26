@@ -700,7 +700,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 		}
         else if(isLaunchedWithAssistAction()){
             Log.e("aaa", "++++++++++++++should display seach");
-            keyboardService.showKeyboard(getSearchField());
+            //keyboardService.showKeyboard(getSearchField());
+            displayScreen(SCREEN.SCR_SEARCH, true);
             //displayScreen(SCREEN.SCR_SEARCH, true);
         }
 
@@ -742,15 +743,16 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 			BusProvider.getInstance().post(new WebViewBackPressActionEvent());
 		}
 		// main feed showing & source filter is active
-		else if(DDGControlVar.targetSource != null){
+		else if(DDGControlVar.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_STORIES && DDGControlVar.targetSource != null){
 			BusProvider.getInstance().post(new FeedCancelSourceFilterEvent());
 		}
         // main feed showing & category filter is active
-        else if(DDGControlVar.targetCategory != null) {
+        else if(DDGControlVar.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_STORIES && DDGControlVar.targetCategory != null) {
             BusProvider.getInstance().post(new FeedCancelCategoryFilterEvent());
         }
         else if(fragmentManager.getBackStackEntryCount()==1) {
-            finish();
+            fragmentManager.popBackStackImmediate();
+            super.onBackPressed();
         }
 		else {
 			DDGControlVar.hasUpdatedFeed = false;
@@ -914,8 +916,10 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 //currentFragment.onHiddenChanged(true);
             }
             //transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
-            transaction.add(fragmentContainer.getId(), newFragment, newTag);
-            if(!newFragment.isVisible()) {
+            Fragment f = fragmentManager.findFragmentByTag(newTag);
+            if(f==null) {
+                transaction.add(fragmentContainer.getId(), newFragment, newTag);
+            } else {
                 transaction.show(newFragment);
             }
             transaction.addToBackStack(newTag);
