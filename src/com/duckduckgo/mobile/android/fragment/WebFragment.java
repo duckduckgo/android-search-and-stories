@@ -258,7 +258,7 @@ public class WebFragment extends Fragment {
 		mainWebView.setWebViewClient(new DDGWebViewClient(this));
 		View container = getActivity().findViewById(R.id.activityContainer);
 		mainWebView.setWebChromeClient(new DDGWebChromeClient(this, container));
-
+/*
 		mainWebView.setOnLongClickListener(new View.OnLongClickListener() {
 
 			@Override
@@ -275,7 +275,7 @@ public class WebFragment extends Fragment {
 				return false;
 			}
 		});
-
+*/
 		contentDownloader = new ContentDownloader(getActivity());
 
 		mainWebView.setDownloadListener(new DownloadListener() {

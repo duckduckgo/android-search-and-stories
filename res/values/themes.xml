@@ -28,6 +28,8 @@
 
         <item name="actionOverflowButtonStyle">@style/OverflowButton</item>
 
+        <item name="popUp">@style/DDGPopup</item>
+
 
 
 <!--
@@ -50,6 +52,10 @@
         -->
         <!--
         <item name="android:textColorPrimary">#ffffff</item>-->
+
+    </style>
+
+    <style name="DDGPopup" parent="Widget.AppCompat.PopupMenu">
 
     </style>
 
