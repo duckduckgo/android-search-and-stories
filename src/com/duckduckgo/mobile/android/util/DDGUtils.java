@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -40,6 +41,15 @@ import ch.boye.httpclientandroidlib.HttpEntity;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.FileCache;
+import com.duckduckgo.mobile.android.fragment.AboutFragment;
+import com.duckduckgo.mobile.android.fragment.FavoriteFragment;
+import com.duckduckgo.mobile.android.fragment.FeedFragment;
+import com.duckduckgo.mobile.android.fragment.HelpFeedbackFragment;
+import com.duckduckgo.mobile.android.fragment.PrefFragment;
+import com.duckduckgo.mobile.android.fragment.RecentsFragment;
+import com.duckduckgo.mobile.android.fragment.SearchFragment;
+import com.duckduckgo.mobile.android.fragment.SourcesFragment;
+import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
@@ -395,6 +405,18 @@ public final class DDGUtils {
 		return versionCode;
 	}
 
+    public static void searchExternal(Context context, String term) {
+        String url;
+        if(DDGControlVar.regionString == "wt-wt"){	// default
+            url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term);
+        }
+        else {
+            url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
+        }
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(browserIntent);
+    }
+
     public static String getUrlToDisplay(String url) {
         if(url.startsWith("https://")) {
             url = url.replace("https://", "");
@@ -405,6 +427,56 @@ public final class DDGUtils {
             url = url.replace("www.", "");
         }
         return url;
+    }
+
+    public static SCREEN getScreenByTag(String tag) {
+        if(tag.equals(RecentsFragment.TAG)) {
+            return SCREEN.SCR_RECENTS;
+        } else if(tag.equals(FavoriteFragment.TAG)) {
+            return SCREEN.SCR_FAVORITE;
+        } else if(tag.equals(WebFragment.TAG)) {
+            return SCREEN.SCR_WEBVIEW;
+        } else if(tag.equals(SearchFragment.TAG)) {
+            return SCREEN.SCR_SEARCH;
+        } else if(tag.equals(AboutFragment.TAG)) {
+            return SCREEN.SCR_ABOUT;
+        } else if(tag.equals(HelpFeedbackFragment.TAG)) {
+            return SCREEN.SCR_HELP;
+        } else if(tag.equals(PrefFragment.TAG)) {
+            return SCREEN.SCR_SETTINGS;
+        } else  if(tag.equals(SearchFragment.TAG_HOME_PAGE)) {
+            return SCREEN.SCR_SEARCH_HOME_PAGE;
+        } else if(tag.equals(SourcesFragment.TAG)) {
+            return SCREEN.SCR_SOURCES;
+        }
+        return SCREEN.SCR_STORIES;
+    }
+
+    public static String getTagByScreen(SCREEN screen) {
+        switch(screen) {
+            case SCR_STORIES:
+                return FeedFragment.TAG;
+            case SCR_RECENTS:
+                return RecentsFragment.TAG;
+            case SCR_FAVORITE:
+                return FavoriteFragment.TAG;
+            case SCR_WEBVIEW:
+                return WebFragment.TAG;
+            case SCR_SEARCH:
+                return SearchFragment.TAG;
+            case SCR_ABOUT:
+                return AboutFragment.TAG;
+            case SCR_HELP:
+                return HelpFeedbackFragment.TAG;
+            case SCR_SETTINGS:
+                return PrefFragment.TAG;
+            case SCR_SEARCH_HOME_PAGE:
+                return SearchFragment.TAG_HOME_PAGE;
+            case SCR_SOURCES:
+                return SourcesFragment.TAG;
+            default:
+                return FeedFragment.TAG;
+        }
     }
 	
 }

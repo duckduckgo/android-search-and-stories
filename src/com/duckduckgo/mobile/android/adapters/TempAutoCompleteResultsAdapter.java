@@ -145,19 +145,22 @@ public class TempAutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> 
 
             //Drawable acDrawable = suggestion.getDrawable();
             String imageUrl = suggestion.getImageUrl();
-            if(imageUrl != null && imageUrl.length() != 0 && !imageUrl.contains("search-suggestions_default.png")) {
-                Log.e("aaa", "image url: "+imageUrl);
-                roundTransform.setRadius(holder.icon.getCornerRadius());
-                //scaleTransform.setTarget(holder.icon, 0.6);
-                scaleTransform.setTarget((int)getContext().getResources().getDimension(R.dimen.source_icon_dimen));
+            if(imageUrl != null && imageUrl.length() != 0) {
+                if(!imageUrl.contains("search-suggestions_default.png")) {
+                    Log.e("aaa", "image url: " + imageUrl);
+                    roundTransform.setRadius(holder.icon.getCornerRadius());
+                    //scaleTransform.setTarget(holder.icon, 0.6);
+                    scaleTransform.setTarget((int) getContext().getResources().getDimension(R.dimen.source_icon_dimen));
 
-                Picasso.with(getContext())
-                        .load(suggestion.getImageUrl())
-                        .placeholder(null)
-                        .error(R.drawable.time)
-                        .transform(scaleTransform)
-                        .transform(roundTransform)
-                        .into(holder.icon);
+                    Picasso.with(getContext())
+                            .load(suggestion.getImageUrl())
+                            .placeholder(null)
+                            .transform(scaleTransform)
+                            .transform(roundTransform)
+                            .into(holder.icon);
+                } else {
+                    holder.icon.setImageDrawable(null);
+                }
             }
             else {
                 holder.icon.setImageResource(R.drawable.time);

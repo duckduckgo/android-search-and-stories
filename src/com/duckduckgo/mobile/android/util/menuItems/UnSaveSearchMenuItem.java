@@ -9,7 +9,7 @@ import com.duckduckgo.mobile.android.util.Item;
 public class UnSaveSearchMenuItem extends Item {
 
 	public UnSaveSearchMenuItem(Context context, String query){
-		super(context.getResources().getString(R.string.Unsave), android.R.drawable.ic_menu_delete, ItemType.UNSAVE);
+		super(context.getResources().getString(R.string.action_remove_favorite), android.R.drawable.ic_menu_delete, ItemType.UNSAVE);
 		this.EventToFire = new UnSaveSearchEvent(query);
 	}
 	

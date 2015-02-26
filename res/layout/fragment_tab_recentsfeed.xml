@@ -6,7 +6,7 @@
     android:background="@android:color/transparent"
     android:orientation="vertical">
 
-    <com.duckduckgo.mobile.android.views.MainFeedListView
+    <com.duckduckgo.mobile.android.views.RecentFeedListView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -68,8 +68,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/empty_logo"
-                android:layout_marginTop="18.3dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"
                 android:text="@string/empty_recents_title"
                 android:textColor="@color/search_dark"
                 android:textSize="21sp"/>
@@ -83,7 +83,7 @@
                 android:gravity="center"
                 android:text="@string/empty_recents_text"
                 android:textColor="@color/search_light"
-                android:textSize="14sp"/>
+                android:textSize="16sp"/>
 
         </RelativeLayout>
     </ScrollView>

@@ -17,13 +17,14 @@ import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
+import com.duckduckgo.mobile.android.views.RecentFeedListView;
 import com.squareup.otto.Subscribe;
 
 public class RecentFeedTabFragment extends ListFragment implements AdapterView.OnItemLongClickListener{
 
     public static final String TAG = "recent_feed_tab_fragment";
 
-    MainFeedListView recentFeedListView;
+    RecentFeedListView recentFeedListView;
     RecentFeedCursorAdapter recentFeedAdapter;
 
     private View fragmentView = null;
@@ -50,9 +51,9 @@ public class RecentFeedTabFragment extends ListFragment implements AdapterView.O
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(PreferencesManager.getRecordHistory()) {
-            recentFeedListView = (MainFeedListView) getListView();
+            recentFeedListView = (RecentFeedListView) getListView();
             recentFeedListView.setOnItemLongClickListener(this);
-            recentFeedAdapter = new RecentFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorStoryHistory());
+            recentFeedAdapter = new RecentFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorRecentFeed());
             recentFeedListView.setAdapter(recentFeedAdapter);
         } else {
             getListView().setVisibility(View.GONE);
@@ -69,18 +70,19 @@ public class RecentFeedTabFragment extends ListFragment implements AdapterView.O
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.e("aaa", "on click");
-        //recentFeedListView.onItemClick(l, v, position, id);
+        recentFeedListView.onItemClick(l, v, position, id);
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
         Log.e("aaa", "on long click");
+        recentFeedListView.onItemLongClick(parent, v, position, id);
         return true;
     }
 
     @Subscribe
     public void onSyncAdaptersEvent(SyncAdaptersEvent event) {
-        recentFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryHistory());
+        recentFeedAdapter.changeCursor(DDGApplication.getDB().getCursorRecentFeed());
         recentFeedAdapter.notifyDataSetChanged();
     }
 }

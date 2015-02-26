@@ -9,7 +9,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.FavoriteFeedCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
@@ -44,6 +44,7 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 	}
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.e("aaa", "main feed long click");
 		Object item = getAdapter().getItem(position);
 		FeedObject obj = null;
 		if(item instanceof FeedObject) {
@@ -54,10 +55,12 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		}
 
 		if (obj != null) {
-			if(getAdapter().getClass() == SavedFeedCursorAdapter.class) {
+			if(getAdapter().getClass() == FavoriteFeedCursorAdapter.class) {
+                Log.e("aaa", "saved feed item long click event");
 				BusProvider.getInstance().post(new SavedFeedItemLongClickEvent(obj));
 			}
 			else {
+                Log.e("aaa", "main feed item long click event");
 				BusProvider.getInstance().post(new MainFeedItemLongClickEvent(obj));
 			}
 		}

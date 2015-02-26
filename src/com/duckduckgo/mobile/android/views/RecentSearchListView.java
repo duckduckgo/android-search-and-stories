@@ -57,6 +57,7 @@ public class RecentSearchListView extends ListView implements AdapterView.OnItem
         }
 
         if (obj != null) {
+            Log.e("aaa", "history object: "+obj.toString());
             BusProvider.getInstance().post(new HistoryItemLongClickEvent(obj));
         }
 

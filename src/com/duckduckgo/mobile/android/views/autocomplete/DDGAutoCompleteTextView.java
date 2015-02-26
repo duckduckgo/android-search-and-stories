@@ -1,25 +1,36 @@
 package com.duckduckgo.mobile.android.views.autocomplete;
 
 import android.content.Context;
+import android.support.v7.view.ActionMode;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewParent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
-public class DDGAutoCompleteTextView extends EditText {
+public class DDGAutoCompleteTextView extends EditText implements View.OnLongClickListener {
+
+    private android.view.ActionMode actionMode;
+    private android.view.ActionMode.Callback actionModeCallback;
 
 	public DDGAutoCompleteTextView(Context context) {
 		super(context);
+        //this.setOnLongClickListener(this);
 	}
 
 	public DDGAutoCompleteTextView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+        //this.setOnLongClickListener(this);
 	}
 
 	public DDGAutoCompleteTextView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
+        //this.setOnLongClickListener(this);
 	}
 
 	private BackButtonPressedEventListener backButtonPressedEventListener;
@@ -27,8 +38,6 @@ public class DDGAutoCompleteTextView extends EditText {
 	public void setOnBackButtonPressedEventListener(BackButtonPressedEventListener eventListener) {
 		backButtonPressedEventListener = eventListener;
 	}
-
-
 	
 	public String getTrimmedText(){
 		return getText().toString().trim();
@@ -58,7 +67,12 @@ public class DDGAutoCompleteTextView extends EditText {
             setSelection(getSelectionEnd());
 		}
 	}
-	
+
+    @Override
+    public boolean onLongClick(View v) {
+        return false;
+    }
+
 	private boolean lastCharIsSpaceOrNull(){
 		return !hasText() || getText().charAt(getText().length() - 1) == ' ';
 	}

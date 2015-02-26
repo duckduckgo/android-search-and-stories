@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
@@ -537,6 +538,13 @@ public class DdgDB {
 		return this.db.query(FEED_TABLE, null, "NOT feed='' AND hidden='F'", null , null, null, null);
 	}
 
+    public Cursor getCursorRecentFeed() {
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(HISTORY_TABLE + " inner join " + FEED_TABLE + " ON " + HISTORY_TABLE + ".feedId = " + FEED_TABLE + "._id");
+        return builder.query(this.db, null, null, null, null, null, HISTORY_TABLE+"._id DESC");
+
+        //return this.db.rawQuery("select * from "+FEED_TABLE+", "+HISTORY_TABLE+" where "+HISTORY_TABLE+".feedId = "+FEED_TABLE+"._id order by "+HISTORY_TABLE+"._id DESC", null);
+    }
 	
 	
 	private static class OpenHelper extends SQLiteOpenHelper {

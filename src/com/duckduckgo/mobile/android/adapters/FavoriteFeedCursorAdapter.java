@@ -30,9 +30,9 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.squareup.picasso.Picasso;
 
-public class SavedFeedCursorAdapter extends CursorAdapter {
+public class FavoriteFeedCursorAdapter extends CursorAdapter {
 		
-    public SavedFeedCursorAdapter(Context context, Cursor c) {
+    public FavoriteFeedCursorAdapter(Context context, Cursor c) {
         super(context, c);
     }
 
@@ -62,9 +62,9 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
         final TextView textViewCategory = (TextView) view.findViewById(R.id.feedCategoryTextView);
     	final AsyncImageView imageViewBackground = (AsyncImageView) view.findViewById(R.id.feedItemBackground);
     	final AsyncImageView imageViewFeedIcon = (AsyncImageView) view.findViewById(R.id.feedItemSourceIcon);
-        final Toolbar toolbar = (Toolbar) view.findViewById(R.id.feedWrapper);
-        toolbar.getMenu().clear();
-        toolbar.inflateMenu(R.menu.feed);
+        //final Toolbar toolbar = (Toolbar) view.findViewById(R.id.feedWrapper);
+        //toolbar.getMenu().clear();
+        //toolbar.inflateMenu(R.menu.feed);
     			
 
     	URL feedUrl = null;
@@ -82,7 +82,7 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
     	imageViewFeedIcon.setType(feedType);	// stored source id in imageview
 //    	imageViewFeedIcon.setOnClickListener(sourceClickListener);
 
-    	final View iconParent = (View) view.findViewById(R.id.feedWrapper);
+    	final View iconParent = (View) imageViewBackground.getParent();//view.findViewById(R.id.feedWrapper);
     	iconParent.post(new Runnable() {
     		public void run() {
     			// Post in the parent's message queue to make sure the parent
@@ -148,7 +148,7 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
         } else {
             url = feedUrl.toString();
         }
-
+/*
         toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
         //aaa todo check why removing a feed inflate more items in other menus
         //aaaa solved!
@@ -176,7 +176,7 @@ public class SavedFeedCursorAdapter extends CursorAdapter {
                 }
             }
         });
-
+*/
 
     }
 }

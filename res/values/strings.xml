@@ -40,7 +40,7 @@
     <string name="PrefClearCacheCookiesEveryLaunch">Every Launch</string>
     <string name="PrefClearCacheCookiesWeekly">Weekly</string>
     <string name="PrefClearCacheCookiesMonthly">Monthly</string>
-    <string name="PrefSendFeedback">Feedback</string>
+    <string name="PrefSendFeedback">Leave Feedback</string>
     <string name="PrefAbout">About</string>
     <string name="PrefRate">Rate App</string>
     <string name="PrefAppSearch">Include Apps</string>
@@ -92,7 +92,7 @@
     <string name="ConfirmClearCacheAndCookies">Browser cache will be deleted. Are you sure?</string>
     
     <string name="Default">Default</string>
-    <string name="Defaults">Defaults</string>
+    <string name="Defaults">Reset to Default</string><!-- new -->
     <string name="SuggestSource">Suggest a Source</string>
     <string name="SuggestedSources">Please include these sources:</string>
     
@@ -244,7 +244,7 @@
     <string name="action_favorites">@string/favorites</string>
     <string name="action_settings">@string/settings</string>
     <string name="action_help_feedback">Help &amp; Feedback</string>
-    <string name="action_add_favorite">Add Favorite</string>
+    <string name="action_add_favorite">Add to Favorites</string>
     <string name="action_remove_favorite">Unfavorite</string>
     <string name="action_share">Share</string>
     <string name="action_view_external">View in Browser</string>

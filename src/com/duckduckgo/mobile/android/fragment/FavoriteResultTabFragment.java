@@ -9,17 +9,17 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.FavoriteResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
-import com.duckduckgo.mobile.android.views.SavedSearchListView;
+import com.duckduckgo.mobile.android.views.FavoriteSearchListView;
 import com.squareup.otto.Subscribe;
 
 public class FavoriteResultTabFragment extends ListFragment {
 
 	public static final String TAG = "saved_result_tab_fragment";
-	private SavedSearchListView savedSearchView;
-	private SavedResultCursorAdapter savedSearchAdapter;
+	private FavoriteSearchListView savedSearchView;
+	private FavoriteResultCursorAdapter savedSearchAdapter;
 
     private View fragmentView = null;
 	
@@ -43,8 +43,8 @@ public class FavoriteResultTabFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		savedSearchView = (SavedSearchListView) getListView();
-		savedSearchAdapter = new SavedResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
+		savedSearchView = (FavoriteSearchListView) getListView();
+		savedSearchAdapter = new FavoriteResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
 		savedSearchView.setAdapter(savedSearchAdapter);
 	}
 

@@ -157,7 +157,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        menu.findItem(R.id.action_stories).setVisible(false);
+        menu.findItem(R.id.action_stories).setEnabled(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

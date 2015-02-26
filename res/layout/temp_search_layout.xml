@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/item_icon"
-        android:layout_width="@dimen/listview_item_icon_dimen"
-        android:layout_height="@dimen/listview_item_icon_dimen"
+        android:layout_width="@dimen/searchlistview_item_icon_dimen"
+        android:layout_height="@dimen/searchlistview_item_icon_dimen"
         android:layout_alignParentLeft="true"
         android:scaleType="center"/>
 
@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="@dimen/listview_item_plus_margin"
+        android:layout_marginRight="@dimen/searchlistview_item_plus_margin"
         android:scaleType="center"
         android:src="@drawable/plus"
         android:background="?attr/selectableItemBackground"
@@ -33,7 +33,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/listview_item_text_margin"
+        android:layout_marginLeft="@dimen/searchlistview_item_text_margin"
         android:layout_toRightOf="@id/item_icon"/><!--
         android:layout_toLeftOf="@id/item_paste"/>-->
 

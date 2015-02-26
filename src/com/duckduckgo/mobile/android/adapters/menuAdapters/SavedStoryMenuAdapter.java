@@ -27,8 +27,8 @@ public class SavedStoryMenuAdapter extends PageMenuContextAdapter {
 	}
 	
 	public void addItems() {
+        add(new UnSaveStoryMenuItem(context, feedObject.getId()));
 		add(new ShareFeedMenuItem(context, feedObject.getTitle(), feedObject.getUrl()));
-		add(new SendToExternalBrowserMenuItem(context, feedObject.getUrl()));		
-		add(new UnSaveStoryMenuItem(context, feedObject.getId()));
+		add(new SendToExternalBrowserMenuItem(context, feedObject.getUrl()));
 	}
 }

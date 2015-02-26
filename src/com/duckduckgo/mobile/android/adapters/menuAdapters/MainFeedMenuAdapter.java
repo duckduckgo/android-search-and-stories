@@ -27,7 +27,7 @@ public class MainFeedMenuAdapter extends PageMenuContextAdapter {
 		this.feedObject = feedObject;
 		addItems();
 	}
-	
+	/*
 	public void addItems() {
 		add(new ShareFeedMenuItem(context, feedObject.getTitle(), feedObject.getUrl()));
 		add(new SendToExternalBrowserMenuItem(context, feedObject.getUrl()));		
@@ -36,5 +36,14 @@ public class MainFeedMenuAdapter extends PageMenuContextAdapter {
 		}else{
 			add(new SaveStoryMenuItem(context, feedObject));
 		}
-	}
+	}*/
+    public void addItems() {
+        if(feedObject.isSaved()){
+            add(new UnSaveStoryMenuItem(context, feedObject.getId()));
+        }else{
+            add(new SaveStoryMenuItem(context, feedObject));
+        }
+        add(new ShareFeedMenuItem(context, feedObject.getTitle(), feedObject.getUrl()));
+        add(new SendToExternalBrowserMenuItem(context, feedObject.getUrl()));
+    }
 }

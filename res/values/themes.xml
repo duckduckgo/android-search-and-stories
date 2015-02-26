@@ -16,6 +16,12 @@
 
         <item name="android:windowBackground">@drawable/launcher_window_background</item>
 
+        <item name="actionModeBackground">@color/action_mode_background</item><!--
+        <item name="android:textColorSecondary">@color/white</item>-->
+<!--
+        <item name="actionModeStyle">@style/DDGActionMode</item>
+-->
+
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
@@ -45,6 +51,11 @@
         <!--
         <item name="android:textColorPrimary">#ffffff</item>-->
 
+    </style>
+
+    <style name="DDGActionMode" parent="Theme.AppCompat">
+        <item name="actionModeBackground">@color/action_mode_background</item>
+        <item name="android:textColorSecondary">@color/white</item>
     </style>
 
     <style name="DDGThemeRed" parent="DDGLight"><!--

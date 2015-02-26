@@ -25,8 +25,8 @@ public class SavedSearchMenuAdapter extends PageMenuContextAdapter {
 	}
 	
 	public void addItems() {
+        add(new UnSaveSearchMenuItem(context, query));
 		add(new ShareSearchMenuItem(context, query));
-		add(new UnSaveSearchMenuItem(context, query));		
 		add(new SearchExternalMenuItem(context, query));
 	}
 }

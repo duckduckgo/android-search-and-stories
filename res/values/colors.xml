@@ -44,6 +44,7 @@
     <color name="text_light">#757575</color>
 
     <color name="background">#eeeeee</color>
+    <color name="action_mode_background">#9b3d24</color>
 
     <!-- old colors -->
 

@@ -9,7 +9,7 @@ import com.duckduckgo.mobile.android.util.Item;
 public class SendToExternalBrowserMenuItem extends Item {
 
 	public SendToExternalBrowserMenuItem(Context context, String url){
-		super(context.getResources().getString(R.string.OpenInExternalBrowser), android.R.drawable.ic_menu_rotate, ItemType.EXTERNAL);
+		super(context.getResources().getString(R.string.action_view_external), android.R.drawable.ic_menu_rotate, ItemType.EXTERNAL);
 		this.EventToFire = new SendToExternalBrowserEvent(context, url);
 	}
 	

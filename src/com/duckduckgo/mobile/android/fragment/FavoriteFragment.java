@@ -101,7 +101,7 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        menu.findItem(R.id.action_favorites).setVisible(false);
+        menu.findItem(R.id.action_favorites).setEnabled(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 

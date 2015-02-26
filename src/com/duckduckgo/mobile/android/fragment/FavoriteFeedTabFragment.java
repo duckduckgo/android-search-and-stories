@@ -12,17 +12,17 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.FavoriteFeedCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
-import com.duckduckgo.mobile.android.views.MainFeedListView;
+import com.duckduckgo.mobile.android.views.FavoriteFeedListView;
 import com.squareup.otto.Subscribe;
 
 
 public class FavoriteFeedTabFragment extends ListFragment {
 	public static final String TAG = "saved_feed_tab_fragment";
-	MainFeedListView savedFeedView;
-	SavedFeedCursorAdapter savedFeedAdapter;	
+	FavoriteFeedListView favoriteFeedListView;
+	FavoriteFeedCursorAdapter favoriteFeedAdapter;
 	
 	/** (non-Javadoc)
 	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
@@ -44,9 +44,9 @@ public class FavoriteFeedTabFragment extends ListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		
-		savedFeedView = (MainFeedListView) getListView();
-		savedFeedAdapter = new SavedFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorStoryFeed());
-		savedFeedView.setAdapter(savedFeedAdapter);
+		favoriteFeedListView = (FavoriteFeedListView) getListView();
+		favoriteFeedAdapter = new FavoriteFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorStoryFeed());
+		favoriteFeedListView.setAdapter(favoriteFeedAdapter);
 	}
 
     @Override
@@ -58,12 +58,12 @@ public class FavoriteFeedTabFragment extends ListFragment {
 
 	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
-        savedFeedView.onItemClick(l, v, position, id);
+        favoriteFeedListView.onItemClick(l, v, position, id);
 	}
 	
 	@Subscribe
 	public void onSyncAdapters(SyncAdaptersEvent event) {
-		savedFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-		savedFeedAdapter.notifyDataSetChanged();
+		favoriteFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
+		favoriteFeedAdapter.notifyDataSetChanged();
 	}
 }

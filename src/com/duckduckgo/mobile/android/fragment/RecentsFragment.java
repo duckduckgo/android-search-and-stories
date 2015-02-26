@@ -79,7 +79,7 @@ public class RecentsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
-        menu.findItem(R.id.action_recents).setVisible(false);
+        menu.findItem(R.id.action_recents).setEnabled(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
 }

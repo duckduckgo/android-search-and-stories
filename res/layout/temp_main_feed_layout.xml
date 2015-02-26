@@ -21,7 +21,7 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/temp_feed_category_background"
         style="@style/FeedCategory"/>
-
+<!--
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
@@ -31,14 +31,21 @@
         android:id="@+id/feedWrapper"
         toolbar:contentInsetStart="0dp"
         toolbar:theme="@style/FeedToolbar"
-        toolbar:popupTheme="@style/ThemeOverlay.AppCompat.Light"><!--
+        toolbar:popupTheme="@style/ThemeOverlay.AppCompat.Light">--><!--
         app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light">-->
 
         <LinearLayout
             android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:minHeight="@dimen/toolbar_height"
+            android:background="@color/feed_toolbar_background"
+            android:layout_below="@id/feedItemBackground"
+            android:id="@+id/feedWrapper"><!--
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="#00ffff">-->
 
             <com.duckduckgo.mobile.android.download.AsyncImageView
                 style="@style/MainFeedText"
@@ -54,16 +61,18 @@
                       android:layout_height="wrap_content"
                       android:layout_gravity="center_vertical"
                       android:layout_marginLeft="@dimen/toolbar_title_left_margin"
+                      android:layout_marginRight="8dp"
                       android:text="This is a Test String!"
                       android:id="@+id/feedTitleTextView"
-                      style="@style/FeedTitle" />
+                      style="@style/FeedTitle" /><!--
+                      android:layout_marginLeft="@dimen/toolbar_title_left_margin"-->
 
         </LinearLayout>
         <!--
                       android:paddingLeft="5dp"
                       android:paddingTop="5dp"
-                      android:paddingBottom="5dp"-->
-    </android.support.v7.widget.Toolbar>
+                      android:paddingBottom="5dp"--><!--
+    </android.support.v7.widget.Toolbar>-->
     <View
         android:id="@+id/divider_1"
         android:visibility="gone"

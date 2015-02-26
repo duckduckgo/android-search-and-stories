@@ -16,8 +16,8 @@ public final class SavedSearchMenuDialog extends AlertDialog.Builder{
 	public SavedSearchMenuDialog(final Context context, String query) {
 		super(context);
 
-        final PageMenuContextAdapter contextAdapter = new SavedSearchMenuAdapter(context, android.R.layout.select_dialog_item, android.R.id.text1, query);
-        setTitle(R.string.SearchOptionsTitle);
+        final PageMenuContextAdapter contextAdapter = new SavedSearchMenuAdapter(context, R.layout.temp_dialog_item/*android.R.layout.select_dialog_item*/, android.R.id.text1, query);
+        //setTitle(R.string.SearchOptionsTitle);
         setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
 	}
 }

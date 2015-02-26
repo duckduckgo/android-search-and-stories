@@ -269,6 +269,7 @@ public class WebFragment extends Fragment {
 					final String touchedUrl = hitTestResult.getExtra();
 
 					new OpenInExternalDialogBuilder(getActivity(), touchedUrl).show();
+                    //new
 				}
 
 				return false;
@@ -357,7 +358,7 @@ public class WebFragment extends Fragment {
 			}
 		}
 	}
-
+/*
 	public void searchExternal(String term) {
 		String url;
 		if(DDGControlVar.regionString == "wt-wt"){	// default
@@ -369,7 +370,7 @@ public class WebFragment extends Fragment {
 		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 		startActivity(browserIntent);
 	}
-
+*/
 	public void searchWebTerm(String term) {
 		DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_SEARCH;
 
@@ -377,7 +378,7 @@ public class WebFragment extends Fragment {
 		DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
 
 		if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
-			searchExternal(term);
+			DDGUtils.searchExternal(getActivity(), term);
 			return;
 		}
 
@@ -572,12 +573,12 @@ public class WebFragment extends Fragment {
 	public void onWebViewBackPressActionEvent(WebViewBackPressActionEvent event) {
 		mainWebView.backPressAction(true);
 	}
-
+/*
 	@Subscribe
 	public void onSearchExternalEvent(SearchExternalEvent event) {
 		searchExternal(event.query);
 	}
-
+*/
 	@Subscribe
 	public void onTurnReadabilityOffEvent(TurnReadabilityOffEvent event) {
 		mainWebView.forceOriginal();

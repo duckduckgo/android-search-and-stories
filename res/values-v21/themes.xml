@@ -4,12 +4,30 @@
         <item name="android:colorPrimary">@color/colorPrimary</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:colorAccent">@color/colorPrimary</item>
+
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/move</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/move</item>
+<!--
+        <item name="android:actionModeStyle">@style/DDGActionMode</item>
+        -->
+        <item name="android:actionModeCopyDrawable">@drawable/home</item>
+<!--
+        <item name="android:actionModeBackground">@color/action_mode_background</item>
+        --><!--
+        <item name="android:textColorSecondary">@color/white</item>-->
 <!--
         <item name="android:preferenceCategoryStyle">@style/DDGPreferenceCategory</item>
 -->
 
     </style>
-
+<!--
+    <style name="DDGActionMode" parent="Base.Widget.AppCompat.ActionMode">
+        <item name="android:actionModeBackground">@color/black</item>
+    </style>
+-->
     <style name="DDGThemeRed" parent="DDGLight"><!--
         <item name="android:colorPrimary">@color/colorPrimaryRed</item>
         <item name="android:colorPrimaryDark">@color/colorPrimaryDarkRed</item>

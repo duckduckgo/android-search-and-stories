@@ -10,7 +10,7 @@ import com.duckduckgo.mobile.android.util.Item;
 public class SaveStoryMenuItem extends Item {
 
 	public SaveStoryMenuItem(Context context, FeedObject feedObject){
-		super(context.getResources().getString(R.string.Save), android.R.drawable.ic_menu_save, ItemType.SAVE);
+		super(context.getResources().getString(R.string.action_add_favorite), android.R.drawable.ic_menu_save, ItemType.SAVE);
 		EventToFire = new SaveStoryEvent(feedObject);
 	}
 

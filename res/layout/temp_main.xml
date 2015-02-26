@@ -1,22 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/activityContainer"
     android:background="@color/colorPrimaryRed"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-            <android.support.v7.widget.Toolbar
-                android:layout_alignParentTop="true"
-                android:id="@+id/toolbar"
-                android:minHeight="56dp"
-                android:background="@color/colorPrimary"
-                app:contentInsetStart="0dp"
-                app:contentInsetEnd="48dp"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                app:theme="@style/DDGWhiteOverflow"/>
+    <include android:id="@+id/toolbar" layout="@layout/temp_actionbar" />
 
             <FrameLayout
                 android:id="@+id/fragmentContainer"

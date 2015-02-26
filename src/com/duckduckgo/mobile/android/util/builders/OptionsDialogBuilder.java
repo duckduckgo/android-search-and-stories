@@ -13,13 +13,13 @@ public class OptionsDialogBuilder extends Builder {
 
 	public OptionsDialogBuilder(Context context, PageMenuContextAdapter contextAdapter, int title){
 		super(context);
-		setTitle(title);
+		//setTitle(title);
 		setContextAdapter(contextAdapter);
 	}
 
     public OptionsDialogBuilder(Context context, int title){
         super(context);
-        setTitle(title);
+        //setTitle(title);
     }
 
     public void setContextAdapter(PageMenuContextAdapter contextAdapter){

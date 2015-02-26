@@ -22,19 +22,15 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.adapters.FavoriteResultCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
-import com.duckduckgo.mobile.android.adapters.SavedResultCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SearchAdapter;
-import com.duckduckgo.mobile.android.adapters.SeparatedListAdapter;
-import com.duckduckgo.mobile.android.adapters._SearchAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.AutoCompleteResultClickEvent;
-import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
-import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.views.SearchListView;
@@ -51,7 +47,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     private SearchAdapter adapter;
     //private SeparatedListAdapter adapter;
 
-    private SavedResultCursorAdapter savedSearchAdapter;
+    private FavoriteResultCursorAdapter savedSearchAdapter;
     private RecentResultCursorAdapter recentAdapter;
 
     private int maxRecents = 1;
@@ -88,7 +84,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         search_container = (LinearLayout) fragmentView.findViewById(R.id.search_container);
 
         searchListView = (SearchListView) fragmentView.findViewById(R.id.search_list);
-        savedSearchAdapter = new SavedResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
+        savedSearchAdapter = new FavoriteResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSavedSearch());
 
         recentAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory());
 

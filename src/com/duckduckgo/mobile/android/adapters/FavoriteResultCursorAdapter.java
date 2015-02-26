@@ -17,9 +17,9 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.pasteEvents.SavedSearchPasteEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 
-public class SavedResultCursorAdapter extends CursorAdapter {
+public class FavoriteResultCursorAdapter extends CursorAdapter {
 	
-    public SavedResultCursorAdapter(Context context, Cursor c) {
+    public FavoriteResultCursorAdapter(Context context, Cursor c) {
         super(context, c);
     }
 

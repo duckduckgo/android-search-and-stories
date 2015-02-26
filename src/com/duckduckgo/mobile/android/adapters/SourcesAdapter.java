@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -37,13 +38,13 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 	private final class ToggleCheckBoxOnClickListener implements
 			OnClickListener {
 		
-		private CheckBox checkBox;
-		public ToggleCheckBoxOnClickListener(CheckBox checkBox){
-			this.checkBox = checkBox;  
+		private SwitchCompat switchCompat;
+		public ToggleCheckBoxOnClickListener(SwitchCompat switchCompat){
+			this.switchCompat= switchCompat;
 		}
 		@Override
 		public void onClick(View view) {
-			checkBox.setChecked(!checkBox.isChecked());
+			switchCompat.setChecked(!switchCompat.isChecked());
 		}
 	}
 
@@ -83,7 +84,7 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 				cv.setTag(new SourceHolder((TextView)cv.findViewById(R.id.sourceTitleTextView),
 									 (TextView)cv.findViewById(R.id.sourceTitleSubTextView),
 						             (AsyncImageView)cv.findViewById(R.id.sourceItemBackground),
-						             (CheckBox)cv.findViewById(R.id.sourceCheckbox)));
+						             (SwitchCompat)cv.findViewById(R.id.sourceCheckbox)));
 			}
 		
 			SourcesObject feed = (SourcesObject) item;
@@ -123,17 +124,17 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 				
 				if(DDGControlVar.userAllowedSources.contains(holder.id) 
 						|| (!DDGControlVar.userDisallowedSources.contains(holder.id) && DDGControlVar.defaultSources.contains(holder.id)) ){
-					holder.checkbox.setChecked(true);
+					holder.switchCompat.setChecked(true);
 				}
 				else {
-					holder.checkbox.setChecked(false);
+					holder.switchCompat.setChecked(false);
 				}
 				
-				OnClickListener toggleCheckBoxOnClickListener = new ToggleCheckBoxOnClickListener(holder.checkbox);
+				OnClickListener toggleCheckBoxOnClickListener = new ToggleCheckBoxOnClickListener(holder.switchCompat);
 				holder.textViewTitle.setOnClickListener(toggleCheckBoxOnClickListener);
 				holder.textViewDescription.setOnClickListener(toggleCheckBoxOnClickListener);
 				holder.imageViewBackground.setOnClickListener(toggleCheckBoxOnClickListener);
-				holder.checkbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				holder.switchCompat.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 																						

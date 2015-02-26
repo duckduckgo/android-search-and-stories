@@ -88,12 +88,12 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
 	public View getView(int position, View cv, ViewGroup parent) {
 		if (cv == null) {
 			cv = inflater.inflate(R.layout.temp_main_feed_layout, null);
-			Holder holder = new Holder((Toolbar) cv.findViewById(R.id.feedWrapper),
+			Holder holder = new Holder(/*(Toolbar) cv.findViewById(R.id.feedWrapper),*/
 					(TextView)cv.findViewById(R.id.feedTitleTextView),
 					(TextView)cv.findViewById(R.id.feedCategoryTextView),
 					(AsyncImageView)cv.findViewById(R.id.feedItemBackground),
 					(AsyncImageView)cv.findViewById(R.id.feedItemSourceIcon));
-			holder.toolbar.inflateMenu(R.menu.feed);
+			//holder.toolbar.inflateMenu(R.menu.feed);
 			cv.setTag(holder);
 		}
 		
@@ -203,7 +203,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
                     }
                 }
             });
-
+/*
 			//set the toolbar Menu
             if(DDGApplication.getDB().isSaved(feedId)) {
                 holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
@@ -242,7 +242,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
 							return false;
 					}
 				}
-			});
+			});*/
 			
 			if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
 				try {

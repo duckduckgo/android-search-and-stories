@@ -64,8 +64,10 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
 
         sourcesView = (ListView) fragmentView.findViewById(R.id.sourceItems);
         //sourcesView.addHeaderView(createHeaderView());
+
+        //sourcesView.addFooterView(createDividerView());
         sourcesView.addFooterView(createFooterView());
-        sourcesView.addFooterView(createSuggestSourceButton());
+        //sourcesView.addFooterView(createSuggestSourceButton());
 
         sourcesView.setAdapter(sourcesAdapter);
 
@@ -88,6 +90,7 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
             }
         });
 
+        suggestSourceButton = (Button) fragmentView.findViewById(R.id.suggestSourceButton);
         suggestSourceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,14 +110,24 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
         return headerView;
     }
 
+    private View createDividerView() {
+        View dividerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.search_divider, null, false);
+        return dividerView;
+    }
+/*
     private View createFooterView() {
-        View footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
+        View footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_default_button_layout, null, false);
+        return footerView;
+    }
+  */
+    private View createFooterView() {
+        View footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_sources_footer, null, false);
         return footerView;
     }
 
     private View createSuggestSourceButton() {
         View footerView;
-        footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.default_button_layout, null, false);
+        footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_default_button_layout, null, false);
         footerView.findViewById(R.id.sourceDefaultButton).setId(R.id.suggestSourceButton);
         suggestSourceButton = (Button) footerView.findViewById(R.id.suggestSourceButton);
         suggestSourceButton.setText(R.string.SuggestSource);
