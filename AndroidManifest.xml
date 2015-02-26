@@ -92,7 +92,7 @@
             android:theme="@android:style/Theme.Dialog"
             android:taskAffinity="" />
 
-        <!--<activity android:name="net.hockeyapp.android.UpdateActivity" />-->
+        <activity android:name="net.hockeyapp.android.UpdateActivity" />
 		
 		<service android:name="com.duckduckgo.mobile.android.subscribers.MainSubscriber" />
 		
