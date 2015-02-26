@@ -683,8 +683,9 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             if(!getSearchField().getText().toString().equals("")) {
                 actionBar.clearSearchBar();
             }
-			displayScreen(DDGControlVar.START_SCREEN, true);
-            keyboardService.showKeyboard(getSearchField());
+			//displayScreen(DDGControlVar.START_SCREEN, true);
+            displayScreen(SCREEN.SCR_SEARCH, true);
+            //keyboardService.showKeyboard(getSearchField());
 		}
         else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
             searchOrGoToUrl(intent.getDataString());
