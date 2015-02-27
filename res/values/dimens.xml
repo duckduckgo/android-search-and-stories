@@ -10,11 +10,12 @@
     <dimen name="actionbar_tab_height">51.3dp</dimen>
     <dimen name="actionbar_margin">8dp</dimen>
     <dimen name="actionbar_padding">8dp</dimen> <!-- aaa try to change margin with padding -->
-    <dimen name="actionbar_title_left_margin">24dp</dimen>
-    <dimen name="actionbar_sources_title_left_margin">12dp</dimen>
+    <dimen name="actionbar_title_left_margin">72dp</dimen><!-- 24dp -->
+    <dimen name="actionbar_sources_title_left_margin">60dp</dimen><!-- 12dp -->
     <dimen name="actionbar_overflow_width">48dp</dimen><!--48 poi 44-->
     <dimen name="actionbar_button_height">56dp</dimen>
     <dimen name="actionbar_button_width">48dp</dimen>
+    <dimen name="actionbar_searchbar_left_margin_with_button">@dimen/actionbar_button_width</dimen>
 
     <dimen name="toolbar_height">64.3dp</dimen>
     <dimen name="toolbar_icon_margin">16dp</dimen>

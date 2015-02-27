@@ -1,8 +1,10 @@
 package com.duckduckgo.mobile.android.actionbar;
 
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
@@ -13,10 +15,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.KeyboardService;
@@ -32,7 +38,7 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
 
-public class DDGActionBarManager {
+public class DDGActionBarManager implements View.OnClickListener, View.OnLongClickListener {
 
     private Activity activity;
     private Context context;
@@ -42,11 +48,16 @@ public class DDGActionBarManager {
     private RelativeLayout searchFieldContainer = null;
     private TextView actionBarTitle;
 
+    private ImageButton homeButton;
+    private ImageButton bangbutton;
+
     private Toolbar toolbar;
     private ActionBar actionBar;
 
     private View searchBar;
     private View dropShadowDivider;
+
+    private SCREEN screen;
 
     public DDGActionBarManager(Activity activity, Context context, Toolbar toolbar, View dropShadowDivider) {
         this.activity = activity;
@@ -63,11 +74,53 @@ public class DDGActionBarManager {
         actionBarTitle.setTypeface(typeface);
 
         searchField = (DDGAutoCompleteTextView) toolbar.findViewById(R.id.searchEditText);
+
+        homeButton = (ImageButton) toolbar.findViewById(R.id.home);
+        homeButton.setOnClickListener(this);
+        homeButton.setOnLongClickListener(this);
+        bangbutton = (ImageButton) toolbar.findViewById(R.id.bang);
+        bangbutton.setOnClickListener(this);
+        bangbutton.setOnLongClickListener(this);
+
         keyboardService = new KeyboardService(activity);
     }
 
     public DDGAutoCompleteTextView getSearchField() {
         return this.searchField;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.home:
+                Log.e("aaa", "home button clicked");
+                BusProvider.getInstance().post(new DisplayHomeScreenEvent());
+                break;
+            case R.id.bang:
+                Log.e("aaa", "bang button clicked");
+                keyboardService.showKeyboard(getSearchField());
+                getSearchField().addBang();
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        switch(v.getId()) {
+            case R.id.home:
+                Log.e("aaa", "home long click");
+                Toast.makeText(context, "Home", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.bang:
+                Log.e("aaa", "bang long click");
+                Toast.makeText(context, "Bang", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return false;
+        }
     }
 
     public void updateActionBar(FragmentManager fragmentManager, String tag) {
@@ -78,6 +131,7 @@ public class DDGActionBarManager {
         dropShadowDivider.setVisibility(View.VISIBLE);
 
         SCREEN screen = DDGUtils.getScreenByTag(tag);
+        this.screen = screen;
         Log.e("aaa", "update actionbar: "+tag+" - screen: "+screen+" - start screen: "+DDGControlVar.START_SCREEN);
 
         boolean isStartingScreen = DDGControlVar.START_SCREEN==screen;
@@ -103,43 +157,86 @@ public class DDGActionBarManager {
             }
         }
 
+        int standardMargin = (int) context.getResources().getDimension(R.dimen.actionbar_margin);
+        int overflowVisibleRightMargin = 0;
+        int actionButtonVisibleLeftMargin = (int) context.getResources().getDimension(R.dimen.actionbar_searchbar_left_margin_with_button);
+        Log.e("aaa^^^^^^^", "standard margin: "+standardMargin+" - overflow visible right: "+overflowVisibleRightMargin+ " - action button visible left: "+actionButtonVisibleLeftMargin);
+
+        int leftMargin , rightMargin;
+
+
         switch(screen) {
             case SCR_STORIES:
                 clearSearchBar();
-                showSearchField();
-                setShadow(true);
-                hasOverflowButtonVisible(isStartingScreen);
 
-                setActionBarMarginBottom(true);
+                showSearchField();//
+
+
+                setShadow(true);
+                //int standardMargin = (int) context.getResources().getDimension(R.dimen.actionbar_margin);
+                //int overflowRightMargin = 0;
+
+                leftMargin = isStartingScreen ? standardMargin : actionButtonVisibleLeftMargin;
+                rightMargin = isStartingScreen ? overflowVisibleRightMargin : standardMargin;
+
+                setActionBarMargins(leftMargin, standardMargin, rightMargin, standardMargin);
+
+                //hasOverflowButtonVisible(isStartingScreen);
+
+                //setActionBarMarginBottom(true);//aaa
 
                 setHomeButton(!isStartingScreen);
+
                 setHomeButtonMarginTop(false);
+
                 setStandardActionBarHeight(true);
                 break;
             case SCR_RECENTS:
-                showSearchField();
+
+                showSearchField();//
+
                 setShadow(false);
-                setActionBarMarginBottom(false);
-                hasOverflowButtonVisible(isStartingScreen);
+                //setActionBarMarginBottom(false);//aaa
+
+                leftMargin = isStartingScreen ? standardMargin : actionButtonVisibleLeftMargin;
+                rightMargin = isStartingScreen ? overflowVisibleRightMargin : standardMargin;
+
+                setActionBarMargins(leftMargin, standardMargin, rightMargin, 0);
+
+                //hasOverflowButtonVisible(isStartingScreen);
                 setHomeButton(!isStartingScreen);
                 setHomeButtonMarginTop(true);
                 setStandardActionBarHeight(false);
                 break;
             case SCR_FAVORITE:
+
                 showSearchField();
+
                 setShadow(false);
-                setActionBarMarginBottom(false);
-                hasOverflowButtonVisible(isStartingScreen);
+
+
+                leftMargin = isStartingScreen ? standardMargin : actionButtonVisibleLeftMargin;
+                rightMargin = isStartingScreen ? overflowVisibleRightMargin : standardMargin;
+
+                setActionBarMargins(leftMargin, standardMargin, rightMargin, 0);
+
+                //setActionBarMarginBottom(false);
+                //hasOverflowButtonVisible(isStartingScreen);
                 setHomeButton(!isStartingScreen);
                 setHomeButtonMarginTop(true);
                 setStandardActionBarHeight(false);
                 break;
             case SCR_WEBVIEW:
                 showSearchField();
+
+
                 setShadow(true);
+
+                setActionBarMargins(actionButtonVisibleLeftMargin, standardMargin, overflowVisibleRightMargin, standardMargin);
+
                 hasOverflowButtonVisible(true);
 
-                setActionBarMarginBottom(true);
+                //setActionBarMarginBottom(true);
 
                 //setSearchBarText(DDGControlVar.mDuckDuckGoContainer.currentUrl);
                 setHomeButton(true);
@@ -150,9 +247,13 @@ public class DDGActionBarManager {
             case SCR_SEARCH_HOME_PAGE:
                 showSearchField();
                 setShadow(true);
+
+                rightMargin = screen==SCREEN.SCR_SEARCH ? standardMargin : overflowVisibleRightMargin;
+                setActionBarMargins(actionButtonVisibleLeftMargin, standardMargin, rightMargin, standardMargin);
+
                 hasOverflowButtonVisible(screen==SCREEN.SCR_SEARCH_HOME_PAGE);
 
-                setActionBarMarginBottom(true);
+                //setActionBarMarginBottom(true);
                 setHomeButtonMarginTop(false);
 
                 setBangButton();
@@ -212,11 +313,67 @@ public class DDGActionBarManager {
     }
 
     private void showSearchField() {
-        toggleActionBarView(false, "", "");
+        toggleActionBarView(true);
     }
-
+/*
     private void showTitle(String tag, String newTitle) {
         toggleActionBarView(true, tag, newTitle);
+    }
+*/
+    private void showTitle() {
+        toggleActionBarView(false);
+    }
+
+    private void showTitle(String tag, String title) {
+        toggleActionBarView(false);
+        setTitle(tag, title);
+    }
+
+    private void setTitle(String tag, String title) {
+        actionBarTitle.setText(title);
+        setTitleLeftMargin(tag);
+    }
+
+    private void setTitleLeftMargin(String tag) {
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) actionBarTitle.getLayoutParams();
+        int resId = tag.equals(SourcesFragment.TAG) ? R.dimen.actionbar_sources_title_left_margin : R.dimen.actionbar_title_left_margin;
+        final int currentLeftMargin = params.leftMargin;
+        final int newLeftMargin = (int) context.getResources().getDimension(resId);
+        if(currentLeftMargin!=newLeftMargin) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                ValueAnimator valueAnimator = ValueAnimator.ofInt(currentLeftMargin, newLeftMargin);
+                valueAnimator.setDuration(250);
+                valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) actionBarTitle.getLayoutParams();
+                        params.leftMargin = (Integer) animation.getAnimatedValue();
+                        actionBarTitle.setLayoutParams(params);
+                    }
+                });
+                valueAnimator.start();
+            } else {
+                Animation animation = new Animation() {
+                    @Override
+                    protected void applyTransformation(float interpolatedTime, Transformation t) {
+                        //super.applyTransformation(interpolatedTime, t);
+                        if(currentLeftMargin>newLeftMargin) {
+                            params.leftMargin = currentLeftMargin - ((int) (newLeftMargin * interpolatedTime));
+                        } else {
+                            params.leftMargin = currentLeftMargin + ((int) (newLeftMargin * interpolatedTime));
+                        }
+                        actionBarTitle.setLayoutParams(params);
+                    }
+                };
+                animation.setDuration(250);
+                actionBarTitle.startAnimation(animation);
+            }
+        }
+    }
+
+    private void toggleActionBarView(boolean searchVisible) {
+        searchFieldContainer.setVisibility(searchVisible ? View.VISIBLE : View.GONE);
+        actionBarTitle.setVisibility(searchVisible ? View.GONE : View.VISIBLE);
     }
 
     private void toggleActionBarView(boolean showTitle, String tag, String newTitle) {
@@ -224,13 +381,60 @@ public class DDGActionBarManager {
             searchFieldContainer.setVisibility(View.GONE);
             actionBarTitle.setVisibility(View.VISIBLE);
             actionBarTitle.setText(newTitle);
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) actionBarTitle.getLayoutParams();
-            int resId = R.dimen.actionbar_title_left_margin;
-            if(tag.equals(SourcesFragment.TAG)) {
-                resId = R.dimen.actionbar_sources_title_left_margin;
+            final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) actionBarTitle.getLayoutParams();
+            int resId = tag.equals(SourcesFragment.TAG) ? R.dimen.actionbar_sources_title_left_margin : R.dimen.actionbar_title_left_margin;
+            final int currentLeftMargin = params.leftMargin;
+            final int newLeftMargin = (int) context.getResources().getDimension(resId);
+
+            if(currentLeftMargin!=newLeftMargin) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    ValueAnimator valueAnimator = ValueAnimator.ofInt(currentLeftMargin, newLeftMargin);
+                    valueAnimator.setDuration(250);
+                    valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                        @Override
+                        public void onAnimationUpdate(ValueAnimator animation) {
+                            //RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) actionBarTitle.getLayoutParams();
+                            params.leftMargin = (Integer) animation.getAnimatedValue();
+                            actionBarTitle.setLayoutParams(params);
+                        }
+                    });
+                    valueAnimator.start();
+                } else {
+                    Animation animation = new Animation() {
+                        @Override
+                        protected void applyTransformation(float interpolatedTime, Transformation t) {
+                            //super.applyTransformation(interpolatedTime, t);
+                            if(currentLeftMargin>newLeftMargin) {
+                                params.leftMargin = currentLeftMargin - ((int) (newLeftMargin * interpolatedTime));
+                            } else {
+                                params.leftMargin = currentLeftMargin + ((int) (newLeftMargin * interpolatedTime));
+                            }
+                            actionBarTitle.setLayoutParams(params);
+                        }
+                    };
+                    animation.setDuration(250);
+                    actionBarTitle.startAnimation(animation);
+                }
             }
-            int leftMargin = (int) context.getResources().getDimension(resId);
-            params.leftMargin = leftMargin;
+/*
+            if(currentLeftMargin!=newLeftMargin) {
+                Animation animation = new Animation() {
+                    @Override
+                    protected void applyTransformation(float interpolatedTime, Transformation t) {
+                        //super.applyTransformation(interpolatedTime, t);
+                        if(currentLeftMargin>newLeftMargin) {
+                            params.leftMargin = currentLeftMargin - ((int) (newLeftMargin * interpolatedTime));
+                        } else {
+                            params.leftMargin = currentLeftMargin + ((int) (newLeftMargin * interpolatedTime));
+                        }
+                        actionBarTitle.setLayoutParams(params);
+                    }
+                };
+                animation.setDuration(250);
+                actionBarTitle.startAnimation(animation);
+            }
+*/
+            //params.leftMargin = leftMargin;
         } else {
             searchFieldContainer.setVisibility(View.VISIBLE);
             actionBarTitle.setVisibility(View.GONE);
@@ -246,8 +450,55 @@ public class DDGActionBarManager {
         if(visible) {
             endMargin = (int) context.getResources().getDimension(R.dimen.actionbar_overflow_width);
         }
-        toolbar.setContentInsetsRelative(0, endMargin);
-        setActionBarMarginEnd(!visible);
+        //toolbar.setContentInsetsRelative(0, endMargin);
+        //setActionBarMarginEnd(!visible);//aaa
+    }
+
+    private void setActionBarMargins(int newLeft, int newTop, int newRight, int newBottom) {
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) searchFieldContainer.getLayoutParams();
+        //params.setMargins(newLeft, newTop, newRight, newBottom);
+        params.rightMargin = newRight;
+        ValueAnimator leftValueAnimator = ValueAnimator.ofInt(params.leftMargin, newLeft);
+        leftValueAnimator.setDuration(250);
+        leftValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                params.leftMargin = (Integer) animation.getAnimatedValue();
+                searchFieldContainer.setLayoutParams(params);
+            }
+        });
+        ValueAnimator rightValueAnimator = ValueAnimator.ofInt(params.rightMargin, newRight);
+        rightValueAnimator.setDuration(250);
+        rightValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                params.rightMargin= (Integer) animation.getAnimatedValue();
+                searchFieldContainer.setLayoutParams(params);
+            }
+        });
+        ValueAnimator topValueAnimator = ValueAnimator.ofInt(params.topMargin, newTop);
+        topValueAnimator.setDuration(250);
+        topValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                params.topMargin= (Integer) animation.getAnimatedValue();
+                searchFieldContainer.setLayoutParams(params);
+            }
+        });
+        ValueAnimator bottomValueAnimator = ValueAnimator.ofInt(params.bottomMargin, newBottom);
+        bottomValueAnimator.setDuration(250);
+        bottomValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                params.bottomMargin= (Integer) animation.getAnimatedValue();
+                searchFieldContainer.setLayoutParams(params);
+            }
+        });
+
+        leftValueAnimator.start();
+        rightValueAnimator.start();
+        topValueAnimator.start();
+        bottomValueAnimator.start();
     }
 
     private void setActionBarMarginBottom(boolean visible) {
@@ -260,38 +511,91 @@ public class DDGActionBarManager {
     }
 
     private void setActionBarMarginStart(boolean visible) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) searchFieldContainer.getLayoutParams();
-        int margin = 0;
-        if(visible) {
-            margin = (int) context.getResources().getDimension(R.dimen.actionbar_margin);
-        }
-        params.leftMargin = margin;
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) searchFieldContainer.getLayoutParams();
+        int resId = visible ? R.dimen.actionbar_searchbar_left_margin_with_button : R.dimen.actionbar_margin;
+        final int newLeftMargin = (int) context.getResources().getDimension(resId);
+        final int currentLeftMargin = params.leftMargin;
+        Log.e("aaa+++++", "set action bar margin start, currentLeft: "+currentLeftMargin+" newLeft: "+newLeftMargin);
+
+        params.leftMargin = newLeftMargin;
+/*
+        Animation animation = new Animation() {
+            @Override
+            protected void applyTransformation(float interpolatedTime, Transformation t) {
+                super.applyTransformation(interpolatedTime, t);
+
+                //if(currentLeftMargin>newLeftMargin) {
+                    //params.leftMargin = ((int) (newLeftMargin * interpolatedTime));
+                params.setMargins(((int) (newLeftMargin * interpolatedTime)), params.topMargin, params.rightMargin, params.rightMargin);
+                //} else {
+                    //params.leftMargin = currentLeftMargin + ((int) (newLeftMargin * interpolatedTime));
+                //}
+                searchField.setLayoutParams(params);
+            }
+        };
+        animation.setDuration(250);
+        searchField.startAnimation(animation);
+        */
     }
 
     private void setActionBarMarginEnd(boolean visible) {
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) searchFieldContainer.getLayoutParams();
-        int margin = 0;
-        if(visible) {
-            margin = (int) context.getResources().getDimension(R.dimen.actionbar_margin);
-        }
+        int margin = visible ? (int) context.getResources().getDimension(R.dimen.actionbar_margin) : 0;
         params.rightMargin = margin;
     }
 
     private void setStandardActionBarHeight(boolean normal) {
         //int height = 0;
-        int resId;
-        if(normal) {
-            resId = R.dimen.actionbar_height;
-            //height = (int) context.getResources().getDimension(R.dimen.actionbar_height);
-        } else {
-            resId = R.dimen.actionbar_height_low;
-            //height = (int) context.getResources().getDimension(R.dimen.actionbar_height_low);
-        }
+        int resId = normal ? R.dimen.actionbar_height : R.dimen.actionbar_height_low;
+        int newHeight = (int) context.getResources().getDimension(resId);
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbar.getLayoutParams();
+
+
         //toolbar.setMinimumHeight(height);
-        toolbar.getLayoutParams().height = (int) context.getResources().getDimension(resId);;
+        //toolbar.getLayoutParams().height = (int) context.getResources().getDimension(resId);
+
+        //toolbar.getLayoutParams().height = newHeight;
+
+        ValueAnimator heightValueAnimator = ValueAnimator.ofInt(params.height, newHeight);
+        heightValueAnimator.setDuration(250);
+        heightValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                params.height = (Integer) animation.getAnimatedValue();
+                toolbar.setLayoutParams(params);
+            }
+        });
+        heightValueAnimator.start();
+
     }
 
     private void setHomeButton(boolean visible) {
+
+        Animation fadeIn = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_out);
+
+        if (bangbutton.getVisibility() == View.VISIBLE) {
+            Log.e("aaa", "set home button: bang -> gone");
+            bangbutton.setAnimation(fadeOut);
+            bangbutton.setVisibility(View.GONE);
+        }
+
+        if(visible) {
+            if (homeButton.getVisibility() == View.GONE) {
+                Log.e("aaa", "set home button: home -> visible");
+                homeButton.setAnimation(fadeIn);
+                homeButton.setVisibility(View.VISIBLE);
+            }
+        } else if(homeButton.getVisibility() == View.VISIBLE) {
+            Log.e("aaa", "set home button: home -> gone");
+            homeButton.setAnimation(fadeOut);
+            homeButton.setVisibility(View.GONE);
+        }
+
+        //setActionBarMarginStart(visible);//aaa
+
+        /*
+
         ImageButton homeButton = (ImageButton) toolbar.findViewById(R.id.home);
         toolbar.findViewById(R.id.bang).setVisibility(View.GONE);
         if(visible) {
@@ -300,25 +604,57 @@ public class DDGActionBarManager {
                 @Override
                 public void onClick(View v) {
                     //displayHomeScreen();
-                    BusProvider.getInstance().post(new DisplayHomeScreenEvent());
+
+                    Log.e("aaa", "home button click!");
+                    //BusProvider.getInstance().post(new DisplayHomeScreenEvent());
                 }
             });
         } else {
             homeButton.setVisibility(View.GONE);
-        }
-        setActionBarMarginStart(!visible);
+        }*/
     }
 
     private void setHomeButtonMarginTop(boolean visible) {
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbar.findViewById(R.id.home).getLayoutParams();
-        int padding = 0;
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbar.findViewById(R.id.home).getLayoutParams();
+        int padding = visible ? (int) context.getResources().getDimension(R.dimen.actionbar_margin) : 0;
+        /*
         if(visible) {
             padding = (int) context.getResources().getDimension(R.dimen.actionbar_margin);
-        }
+        }*/
+        /*
+        ValueAnimator topAnimator = ValueAnimator.ofInt(params.topMargin, padding);
+        topAnimator.setDuration(250);
+        topAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                params.topMargin = (Integer) animation.getAnimatedValue();
+                toolbar.setLayoutParams(params);
+            }
+        });
+        topAnimator.start();
+*/
         params.topMargin = padding;
     }
 
     private void setBangButton() {
+
+        Animation fadeIn = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_out);
+
+        if(homeButton.getVisibility()==View.VISIBLE) {
+            Log.e("aaa", "set bang button: home -> gone");
+            homeButton.setAnimation(fadeOut);
+            homeButton.setVisibility(View.GONE);
+        }
+
+        if(bangbutton.getVisibility()==View.GONE) {
+            Log.e("aaa", "set bang button: bang -> visible");
+            bangbutton.setAnimation(fadeIn);
+            bangbutton.setVisibility(View.VISIBLE);
+        }
+
+
+        /*
         toolbar.findViewById(R.id.home).setVisibility(View.GONE);
 
         ImageButton bang = (ImageButton) toolbar.findViewById(R.id.bang);
@@ -331,8 +667,8 @@ public class DDGActionBarManager {
                 keyboardService.showKeyboard(getSearchField());
                 getSearchField().addBang();
             }
-        });
-        setActionBarMarginStart(false);
+        });*/
+        //setActionBarMarginStart(true);//aaa
     }
 
     public void setSearchBarText(String text) {

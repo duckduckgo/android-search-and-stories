@@ -93,8 +93,9 @@
             android:taskAffinity="" />
 
         <activity android:name="net.hockeyapp.android.UpdateActivity" />
-		
-		<service android:name="com.duckduckgo.mobile.android.subscribers.MainSubscriber" />
+        <activity android:name=".activity.TempPreferences"/>
+
+        <service android:name="com.duckduckgo.mobile.android.subscribers.MainSubscriber" />
 		
     </application>
 

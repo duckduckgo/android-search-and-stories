@@ -751,8 +751,9 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             BusProvider.getInstance().post(new FeedCancelCategoryFilterEvent());
         }
         else if(fragmentManager.getBackStackEntryCount()==1) {
-            fragmentManager.popBackStackImmediate();
-            super.onBackPressed();
+            //fragmentManager.popBackStackImmediate();
+            finish();
+            //super.onBackPressed();
         }
 		else {
 			DDGControlVar.hasUpdatedFeed = false;
@@ -912,15 +913,23 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
         if(newTag.equals(SearchFragment.TAG) || (!backState && fragmentManager.findFragmentByTag(newTag)==null)) {
             Fragment currentFragment = fragmentManager.findFragmentByTag(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
             if(currentFragment!=null && currentFragment.isAdded()) {// && currentFragment.isVisible()) {
-                transaction.hide(currentFragment);
+                //transaction.hide(currentFragment);
                 //currentFragment.onHiddenChanged(true);
             }
             //transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             Fragment f = fragmentManager.findFragmentByTag(newTag);
+            if(newTag.equals(WebFragment.TAG) || newTag.equals(SourcesFragment.TAG) || newTag.equals(AboutFragment.TAG  )) {
+                transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.empty, R.anim.empty, R.anim.slide_out_to_right);
+            } else if(newTag.equals(PrefFragment.TAG) || newTag.equals(HelpFeedbackFragment.TAG)) {
+                transaction.setCustomAnimations(R.anim.slide_in_from_bottom2, R.anim.empty, R.anim.empty, R.anim.slide_out_to_bottom);
+            }
             if(f==null) {
                 transaction.add(fragmentContainer.getId(), newFragment, newTag);
             } else {
                 transaction.show(newFragment);
+            }
+            if(currentFragment!=null && currentFragment.isAdded()) {// && currentFragment.isVisible()) {
+                transaction.hide(currentFragment);
             }
             transaction.addToBackStack(newTag);
             transaction.commit();
