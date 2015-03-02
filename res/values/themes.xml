@@ -7,8 +7,8 @@
 
     </style>
 
-    <style name="DDGTheme.Base" parent="Theme.AppCompat.Light.NoActionBar"><!--
-        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>-->
+    <style name="DDGTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
         <item name="leftButtonTextSize">18sp</item>
         <item name="leftTitleTextSize">12sp</item>
         <item name="mainTextSize">14sp</item>
@@ -30,6 +30,7 @@
 
         <item name="popUp">@style/DDGPopup</item>
 
+        <item name="topDropShadow">@drawable/dropshadow_up_light</item>
 
 
 <!--
@@ -94,8 +95,13 @@
         <item name="android:padding">0dp</item>
     </style>
 
-    <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">
-        <item name="android:popupBackground">@drawable/new_spinner_dropdown_background</item>
+    <style name="Test" parent="Widget.AppCompat.ActionButton.Overflow">
+
+    </style>
+
+    <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView"><!--
+        <item name="android:popupBackground">@drawable/new_spinner_dropdown_background</item>-->
+        <item name="android:popupBackground">@color/background</item>
     </style>
 	
 	<style name="DDGTabText">
@@ -204,5 +210,9 @@
         <item name="android:textColorSecondary">@android:color/white</item>
     </style>
 
+    <style name="DDGPopupAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/test_menu_open</item>
+        <item name="android:windowExitAnimation">@anim/test_menu_close</item>
+    </style>
 
 </resources>

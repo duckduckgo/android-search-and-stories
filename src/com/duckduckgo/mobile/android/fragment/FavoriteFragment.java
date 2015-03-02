@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.internal.view.menu.MenuBuilder;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -16,9 +17,13 @@ import android.view.ViewGroup;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.SCREEN;
+import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.SlidingTabLayout;
+import com.squareup.otto.Subscribe;
 
 public class FavoriteFragment extends Fragment {
 
@@ -30,17 +35,19 @@ public class FavoriteFragment extends Fragment {
 
 	private View fragmentView;
 
+    private Menu favoriteMenu = null;
+    private DDGOverflowMenu overflowMenu = null;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-		//BusProvider.getInstance().register(this);
+        BusProvider.getInstance().register(this);
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		//BusProvider.getInstance().unregister(this);
+		BusProvider.getInstance().unregister(this);
 	}
 
 	@Override
@@ -80,6 +87,9 @@ public class FavoriteFragment extends Fragment {
 
         slidingTabLayout.setViewPager(viewPager);
 
+        favoriteMenu = new MenuBuilder(getActivity());
+        getActivity().getMenuInflater().inflate(R.menu.main, favoriteMenu);
+
 		if(savedInstanceState!=null) {
 			//savedTabHost.setCurrentTabByTag(savedInstanceState.getString("tag"));
 		}
@@ -88,7 +98,7 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_FAVORITE && DDGControlVar.homeScreenShowing);
+        //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_FAVORITE && DDGControlVar.homeScreenShowing);//aaa
     }
 
     @Override
@@ -110,4 +120,23 @@ public class FavoriteFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 		//outState.putString("tag", savedTabHost.getCurrentTabTag());
 	}
+
+    @Subscribe
+    public void onOverflowButtonClickEvent(OverflowButtonClickEvent event) {
+        if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(getTag()) && favoriteMenu!=null) {
+            favoriteMenu.findItem(R.id.action_favorites).setEnabled(false);
+            if(overflowMenu!=null && overflowMenu.isShowing()) {
+                return;
+            }
+
+            overflowMenu = new DDGOverflowMenu(getActivity());
+            //overflowMenu.setHeaderMenu(feedMenu);
+            overflowMenu.setMenu(favoriteMenu);
+            overflowMenu.show(event.anchor);
+
+            Log.e("aaa", "shuld open feed menu now, feed menu != null");
+        } else {
+            Log.e("aaa", "shuld open feed menu now, feed menu == null");
+        }
+    }
 }

@@ -28,6 +28,7 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.KeyboardService;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.DisplayHomeScreenEvent;
+import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.fragment.SearchFragment;
 import com.duckduckgo.mobile.android.fragment.SourcesFragment;
@@ -50,6 +51,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
 
     private ImageButton homeButton;
     private ImageButton bangbutton;
+    private ImageButton overflowButton;
 
     private Toolbar toolbar;
     private ActionBar actionBar;
@@ -81,6 +83,9 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
         bangbutton = (ImageButton) toolbar.findViewById(R.id.bang);
         bangbutton.setOnClickListener(this);
         bangbutton.setOnLongClickListener(this);
+        overflowButton = (ImageButton) toolbar.findViewById(R.id.overflow);
+        overflowButton.setOnClickListener(this);
+        overflowButton.setOnLongClickListener(this);
 
         keyboardService = new KeyboardService(activity);
     }
@@ -101,6 +106,9 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 keyboardService.showKeyboard(getSearchField());
                 getSearchField().addBang();
                 break;
+            case R.id.overflow:
+                BusProvider.getInstance().post(new OverflowButtonClickEvent(overflowButton));
+                //BusProvider.getInstance().post(new OverflowButtonClickEvent(toolbar));
             default:
                 break;
         }
@@ -160,6 +168,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
         int standardMargin = (int) context.getResources().getDimension(R.dimen.actionbar_margin);
         int overflowVisibleRightMargin = 0;
         int actionButtonVisibleLeftMargin = (int) context.getResources().getDimension(R.dimen.actionbar_searchbar_left_margin_with_button);
+        overflowVisibleRightMargin = actionButtonVisibleLeftMargin;
         Log.e("aaa^^^^^^^", "standard margin: "+standardMargin+" - overflow visible right: "+overflowVisibleRightMargin+ " - action button visible left: "+actionButtonVisibleLeftMargin);
 
         int leftMargin , rightMargin;
@@ -186,6 +195,8 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 //setActionBarMarginBottom(true);//aaa
 
                 setHomeButton(!isStartingScreen);
+                setOverflowButton(isStartingScreen);
+                setOverflowButtonMarginTop(false);
 
                 setHomeButtonMarginTop(false);
 
@@ -204,6 +215,9 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 setActionBarMargins(leftMargin, standardMargin, rightMargin, 0);
 
                 //hasOverflowButtonVisible(isStartingScreen);
+
+                setOverflowButton(isStartingScreen);
+                setOverflowButtonMarginTop(true);
                 setHomeButton(!isStartingScreen);
                 setHomeButtonMarginTop(true);
                 setStandardActionBarHeight(false);
@@ -222,6 +236,9 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
 
                 //setActionBarMarginBottom(false);
                 //hasOverflowButtonVisible(isStartingScreen);
+
+                setOverflowButton(isStartingScreen);
+                setOverflowButtonMarginTop(true);
                 setHomeButton(!isStartingScreen);
                 setHomeButtonMarginTop(true);
                 setStandardActionBarHeight(false);
@@ -239,6 +256,9 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 //setActionBarMarginBottom(true);
 
                 //setSearchBarText(DDGControlVar.mDuckDuckGoContainer.currentUrl);
+
+                setOverflowButton(true);
+                setOverflowButtonMarginTop(false);
                 setHomeButton(true);
                 setHomeButtonMarginTop(false);
                 setStandardActionBarHeight(true);
@@ -255,6 +275,8 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
 
                 //setActionBarMarginBottom(true);
                 setHomeButtonMarginTop(false);
+                setOverflowButton(screen == SCREEN.SCR_SEARCH_HOME_PAGE);
+                setOverflowButtonMarginTop(false);
 
                 setBangButton();
                 setStandardActionBarHeight(true);
@@ -264,6 +286,8 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 showTitle(tag, context.getResources().getString(R.string.about));
                 setShadow(true);
                 hasOverflowButtonVisible(false);
+                setOverflowButton(false);
+                setOverflowButtonMarginTop(false);
                 setHomeButton(true);
                 setHomeButtonMarginTop(false);
                 setStandardActionBarHeight(true);
@@ -272,6 +296,8 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 showTitle(tag, context.getResources().getString(R.string.help_feedback));
                 setShadow(true);
                 hasOverflowButtonVisible(false);
+                setOverflowButton(false);
+                setOverflowButtonMarginTop(false);
                 setHomeButton(true);
                 setHomeButtonMarginTop(false);
                 setStandardActionBarHeight(true);
@@ -280,6 +306,8 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 showTitle(tag, context.getResources().getString(R.string.settings));
                 setShadow(true);
                 hasOverflowButtonVisible(false);
+                setOverflowButton(false);
+                setOverflowButtonMarginTop(false);
                 setHomeButton(true);
                 setHomeButtonMarginTop(false);
                 setStandardActionBarHeight(true);
@@ -288,6 +316,8 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 showTitle(tag, context.getResources().getString(R.string.change_sources));
                 setShadow(true);
                 hasOverflowButtonVisible(false);
+                setOverflowButton(false);
+                setOverflowButtonMarginTop(false);
                 setHomeButton(true);
                 setHomeButtonMarginTop(false);
                 setStandardActionBarHeight(true);
@@ -353,20 +383,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 });
                 valueAnimator.start();
             } else {
-                Animation animation = new Animation() {
-                    @Override
-                    protected void applyTransformation(float interpolatedTime, Transformation t) {
-                        //super.applyTransformation(interpolatedTime, t);
-                        if(currentLeftMargin>newLeftMargin) {
-                            params.leftMargin = currentLeftMargin - ((int) (newLeftMargin * interpolatedTime));
-                        } else {
-                            params.leftMargin = currentLeftMargin + ((int) (newLeftMargin * interpolatedTime));
-                        }
-                        actionBarTitle.setLayoutParams(params);
-                    }
-                };
-                animation.setDuration(250);
-                actionBarTitle.startAnimation(animation);
+                params.leftMargin = newLeftMargin;
             }
         }
     }
@@ -400,20 +417,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                     });
                     valueAnimator.start();
                 } else {
-                    Animation animation = new Animation() {
-                        @Override
-                        protected void applyTransformation(float interpolatedTime, Transformation t) {
-                            //super.applyTransformation(interpolatedTime, t);
-                            if(currentLeftMargin>newLeftMargin) {
-                                params.leftMargin = currentLeftMargin - ((int) (newLeftMargin * interpolatedTime));
-                            } else {
-                                params.leftMargin = currentLeftMargin + ((int) (newLeftMargin * interpolatedTime));
-                            }
-                            actionBarTitle.setLayoutParams(params);
-                        }
-                    };
-                    animation.setDuration(250);
-                    actionBarTitle.startAnimation(animation);
+                    params.leftMargin = newLeftMargin;
                 }
             }
 /*
@@ -457,48 +461,53 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
     private void setActionBarMargins(int newLeft, int newTop, int newRight, int newBottom) {
         final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) searchFieldContainer.getLayoutParams();
         //params.setMargins(newLeft, newTop, newRight, newBottom);
-        params.rightMargin = newRight;
-        ValueAnimator leftValueAnimator = ValueAnimator.ofInt(params.leftMargin, newLeft);
-        leftValueAnimator.setDuration(250);
-        leftValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                params.leftMargin = (Integer) animation.getAnimatedValue();
-                searchFieldContainer.setLayoutParams(params);
-            }
-        });
-        ValueAnimator rightValueAnimator = ValueAnimator.ofInt(params.rightMargin, newRight);
-        rightValueAnimator.setDuration(250);
-        rightValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                params.rightMargin= (Integer) animation.getAnimatedValue();
-                searchFieldContainer.setLayoutParams(params);
-            }
-        });
-        ValueAnimator topValueAnimator = ValueAnimator.ofInt(params.topMargin, newTop);
-        topValueAnimator.setDuration(250);
-        topValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                params.topMargin= (Integer) animation.getAnimatedValue();
-                searchFieldContainer.setLayoutParams(params);
-            }
-        });
-        ValueAnimator bottomValueAnimator = ValueAnimator.ofInt(params.bottomMargin, newBottom);
-        bottomValueAnimator.setDuration(250);
-        bottomValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                params.bottomMargin= (Integer) animation.getAnimatedValue();
-                searchFieldContainer.setLayoutParams(params);
-            }
-        });
+        //params.rightMargin = newRight;
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+            ValueAnimator leftValueAnimator = ValueAnimator.ofInt(params.leftMargin, newLeft);
+            leftValueAnimator.setDuration(250);
+            leftValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    params.leftMargin = (Integer) animation.getAnimatedValue();
+                    searchFieldContainer.setLayoutParams(params);
+                }
+            });
+            Log.e("aaa", "set margins old right: " + params.rightMargin + " - new right: " + newRight);
+            ValueAnimator rightValueAnimator = ValueAnimator.ofInt(params.rightMargin, newRight);
+            rightValueAnimator.setDuration(250);
+            rightValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    params.rightMargin = (Integer) animation.getAnimatedValue();
+                    searchFieldContainer.setLayoutParams(params);
+                }
+            });
+            ValueAnimator topValueAnimator = ValueAnimator.ofInt(params.topMargin, newTop);
+            topValueAnimator.setDuration(250);
+            topValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    params.topMargin = (Integer) animation.getAnimatedValue();
+                    searchFieldContainer.setLayoutParams(params);
+                }
+            });
+            ValueAnimator bottomValueAnimator = ValueAnimator.ofInt(params.bottomMargin, newBottom);
+            bottomValueAnimator.setDuration(250);
+            bottomValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    params.bottomMargin = (Integer) animation.getAnimatedValue();
+                    searchFieldContainer.setLayoutParams(params);
+                }
+            });
 
-        leftValueAnimator.start();
-        rightValueAnimator.start();
-        topValueAnimator.start();
-        bottomValueAnimator.start();
+            leftValueAnimator.start();
+            rightValueAnimator.start();
+            topValueAnimator.start();
+            bottomValueAnimator.start();
+        } else {
+            params.setMargins(newLeft, newTop, newRight, newBottom);
+        }
     }
 
     private void setActionBarMarginBottom(boolean visible) {
@@ -556,16 +565,20 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
 
         //toolbar.getLayoutParams().height = newHeight;
 
-        ValueAnimator heightValueAnimator = ValueAnimator.ofInt(params.height, newHeight);
-        heightValueAnimator.setDuration(250);
-        heightValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                params.height = (Integer) animation.getAnimatedValue();
-                toolbar.setLayoutParams(params);
-            }
-        });
-        heightValueAnimator.start();
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+            ValueAnimator heightValueAnimator = ValueAnimator.ofInt(params.height, newHeight);
+            heightValueAnimator.setDuration(250);
+            heightValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(ValueAnimator animation) {
+                    params.height = (Integer) animation.getAnimatedValue();
+                    toolbar.setLayoutParams(params);
+                }
+            });
+            heightValueAnimator.start();
+        } else {
+            params.height = newHeight;
+        }
 
     }
 
@@ -669,6 +682,44 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
             }
         });*/
         //setActionBarMarginStart(true);//aaa
+    }
+
+    public void setOverflowButton(boolean visible) {
+        Animation fadeIn = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_in);
+        Animation fadeOut = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_out);
+        if(visible) {
+            if(overflowButton.getVisibility()==View.GONE) {
+                overflowButton.setAnimation(fadeIn);
+                overflowButton.setVisibility(View.VISIBLE);
+            }
+        } else {
+            if(overflowButton.getVisibility()==View.VISIBLE) {
+                overflowButton.setAnimation(fadeOut);
+                overflowButton.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void setOverflowButtonMarginTop(boolean visible) {
+        final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbar.findViewById(R.id.overflow).getLayoutParams();
+        int padding = visible ? (int) context.getResources().getDimension(R.dimen.actionbar_margin) : 0;
+        /*
+        if(visible) {
+            padding = (int) context.getResources().getDimension(R.dimen.actionbar_margin);
+        }*/
+        /*
+        ValueAnimator topAnimator = ValueAnimator.ofInt(params.topMargin, padding);
+        topAnimator.setDuration(250);
+        topAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                params.topMargin = (Integer) animation.getAnimatedValue();
+                toolbar.setLayoutParams(params);
+            }
+        });
+        topAnimator.start();
+*/
+        params.topMargin = padding;
     }
 
     public void setSearchBarText(String text) {

@@ -26,6 +26,7 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialo
 import com.duckduckgo.mobile.android.download.ContentDownloader;
 import com.duckduckgo.mobile.android.events.DismissBangPopupEvent;
 import com.duckduckgo.mobile.android.events.HandleShareButtonClickEvent;
+import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewBackPressActionEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearBrowserStateEvent;
@@ -129,13 +130,15 @@ public class WebFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setHasOptionsMenu(true);
+        //setHasOptionsMenu(true);//aaa temp
+        setHasOptionsMenu(false);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        setHasOptionsMenu(!hidden);
+        //setHasOptionsMenu(!hidden);
+        setHasOptionsMenu(false);
         Log.e("aaa", "WEB fragment on hidden changed, HIDDEN: "+hidden+" - url: "+mainWebView.getUrl());
         if(!hidden) {
             BusProvider.getInstance().post(new SearchBarSetTextEvent(mainWebView.getUrl()));
@@ -286,6 +289,11 @@ public class WebFragment extends Fragment {
 				contentDownloader.downloadContent(url, mimetype);
 			}
 		});
+
+        webMenu = new MenuBuilder(getActivity());
+        getActivity().getMenuInflater().inflate(R.menu.feed, webMenu);
+        headerMenu = new MenuBuilder(getActivity());
+        getActivity().getMenuInflater().inflate(R.menu.web_navigation, headerMenu);
 	}
 
 	public boolean getSavedState() {
@@ -648,4 +656,26 @@ public class WebFragment extends Fragment {
 
         }
     }
+
+    @Subscribe
+    public void onOverflowButtonClickEvent(OverflowButtonClickEvent event) {
+        if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(getTag()) && webMenu!=null) {
+            //feedMenu.findItem(R.id.action_stories).setEnabled(false);
+            if(overflowMenu!=null && overflowMenu.isShowing()) {
+                return;
+            }
+
+            onPrepareOptionsMenu(webMenu);
+
+            overflowMenu = new DDGOverflowMenu(getActivity());
+            overflowMenu.setHeaderMenu(headerMenu);
+            overflowMenu.setMenu(webMenu);
+            overflowMenu.show(event.anchor);
+
+            Log.e("aaa", "shuld open feed menu now, feed menu != null");
+        } else {
+            Log.e("aaa", "shuld open feed menu now, feed menu == null");
+        }
+    }
+
 }

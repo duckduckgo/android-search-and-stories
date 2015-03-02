@@ -24,6 +24,14 @@
 
     <item android:id="@+id/action_help_feedback"
           android:title="@string/action_help_feedback"
-          android:orderInCategory="50" />
+          android:orderInCategory="50"
+          app:showAsAction="never" />
+
+    <item android:id="@+id/action_test" android:visible="false"
+          android:title="test"
+          android:icon="@drawable/test_overflow"
+          style="@style/Test"
+          android:orderInCategory="60"
+          app:showAsAction="always" />
 
 </menu>

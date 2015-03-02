@@ -1,17 +1,21 @@
 package com.duckduckgo.mobile.android.views;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Build;
 import android.support.v7.widget.ListPopupWindow;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
@@ -21,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
@@ -39,7 +44,8 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     private View container;
 
     private ListView menuListView = null;
-    private ArrayAdapter adapter;
+    //private ArrayAdapter adapter;
+    private DDGOverflowAdapter overflowAdapter;
     private List<MenuItem> menuItems;
 
     private LinearLayout header = null;
@@ -91,8 +97,16 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
                 menuItems.add(menu.getItem(i));
             }
         }
-        adapter = new ArrayAdapter(context, R.layout.temp_menuitem, R.id.text1, menuItems);
-        menuListView.setAdapter(adapter);
+        //adapter = new ArrayAdapter(context, R.layout.temp_menuitem, R.id.text1, menuItems);
+        overflowAdapter = new DDGOverflowAdapter(context, R.layout.temp_menuitem, menuItems);
+        //menuListView.setAdapter(adapter);
+        menuListView.setAdapter(overflowAdapter);
+        /*
+        for(int i=0; i<adapter.getCount(); i++) {
+            MenuItem item = (MenuItem) adapter.getItem(i);
+            Log.e("aaa", "item: "+item.getTitle()+" - enabled: "+item.isEnabled());
+            //menuListView.getChildAt(i).setEnabled(item.isEnabled());
+        }*/
         menuListView.setOnItemClickListener(this);
         menuListView.setOnItemSelectedListener(this);
     }
@@ -125,7 +139,10 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         float item = value.getDimension(display);
         //Log.e("aaa", "single item is: "+item);
 
-        setWidth(getMaxWidth(context, adapter));
+        //setWidth(getMaxWidth(context, adapter));
+
+        setWidth(getMaxWidth(context, overflowAdapter));//aaa ----- temp
+
         //setWidth(54*3*3);
         int height = ((int) context.getResources().getDimension(R.dimen.listview_item_height)) * (menuItems.size() + 1);
         //setHeight(height);
@@ -141,7 +158,13 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
         //setHeight(height);
 
-        showAsDropDown(anchor, xOffset, yOffset*-1);
+        showAsDropDown(anchor, xOffset, yOffset*-1);//aaa ----- temp
+        //showAsDropDown(anchor);
+
+
+
+        //showAtLocation(anchor, Gravity.TOP|Gravity.RIGHT, (int)context.getResources().getDimension(R.dimen.menu_outer_margin), (int)context.getResources().getDimension(R.dimen.menu_outer_margin)+getStatusBarHeight());
+        //showAtLocation(anchor, Gravity.CENTER, 0, 0);
     }
 
     @Override
@@ -201,6 +224,13 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         return maxWidth;
     }
 
+    private int getStatusBarHeight() {
+        Rect rect = new Rect();
+        Window window = ((DuckDuckGo)context).getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rect);
+        return rect.top;
+    }
+
     @Subscribe
     public void onWebViewDisableMenuNavigationButtonEvent(WebViewUpdateMenuNavigationEvent event) {
         ImageButton imageButton = (ImageButton) header.findViewById(event.disableId);
@@ -211,6 +241,50 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         if(imageButton!=null) {
             imageButton.setEnabled(true);
         }
+    }
+
+    public class DDGOverflowAdapter extends ArrayAdapter<MenuItem> {
+
+        private Context context;
+        private int layoutResId;
+        private List<MenuItem> menuItems;
+
+        public DDGOverflowAdapter(Context context, int layoutResId, List<MenuItem> menuItems) {
+            super(context, layoutResId, menuItems);
+            this.context = context;
+            this.layoutResId = layoutResId;
+            this.menuItems = menuItems;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View root = convertView;
+            Holder holder = null;
+
+            if(root==null) {
+                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                root = inflater.inflate(layoutResId, parent, false);
+
+                holder = new Holder();
+                holder.text = (TextView) root.findViewById(R.id.text1);
+                root.setTag(holder);
+            } else {
+                holder = (Holder) root.getTag();
+            }
+
+            MenuItem item = menuItems.get(position);
+            holder.text.setText(item.getTitle());
+            holder.text.setEnabled(item.isEnabled());
+            Log.e("aaa", "get view position: "+position+" - text: "+item.getTitle()+" - enabled: "+item.isEnabled());
+
+            return root;
+        }
+
+        class Holder {
+            TextView text;
+        }
+
+
     }
 
 

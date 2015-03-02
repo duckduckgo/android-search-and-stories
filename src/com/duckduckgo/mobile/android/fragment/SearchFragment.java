@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.internal.view.menu.MenuBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,11 +29,13 @@ import com.duckduckgo.mobile.android.adapters.SearchAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.AutoCompleteResultClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
+import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.SCREEN;
+import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.SearchListView;
 import com.squareup.otto.Subscribe;
 
@@ -55,6 +58,9 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     View headerPadding;
     private LinearLayout search_container;
     private View fragmentView = null;
+
+    private Menu searchMenu = null;
+    private DDGOverflowMenu overflowMenu = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,13 +118,17 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
         fragmentView.findViewById(R.id.recent_saved_container).setVisibility(View.GONE);
 
+        searchMenu = new MenuBuilder(getActivity());
+        getActivity().getMenuInflater().inflate(R.menu.main, searchMenu);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
         //Log.e("aaa", "Search on resume: "+getId()+getTag());
-        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_SEARCH_HOME_PAGE && getTag().equals(TAG_HOME_PAGE));
+        //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_SEARCH_HOME_PAGE && getTag().equals(TAG_HOME_PAGE));//aaa
+        setHasOptionsMenu(false);
         syncAdapters();
 
         if(DDGControlVar.isAutocompleteActive) {
@@ -363,6 +373,24 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
             fragmentView.findViewById(R.id.search_divider).setVisibility(View.VISIBLE);
         } else {
             fragmentView.findViewById(R.id.search_divider).setVisibility(View.GONE);
+        }
+    }
+
+    @Subscribe
+    public void onOverflowButtonClickEvent(OverflowButtonClickEvent event) {
+        if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(getTag()) && searchMenu!=null) {
+            if(overflowMenu!=null && overflowMenu.isShowing()) {
+                return;
+            }
+
+            overflowMenu = new DDGOverflowMenu(getActivity());
+            //overflowMenu.setHeaderMenu(feedMenu);
+            overflowMenu.setMenu(searchMenu);
+            overflowMenu.show(event.anchor);
+
+            Log.e("aaa", "shuld open feed menu now, feed menu != null");
+        } else {
+            Log.e("aaa", "shuld open feed menu now, feed menu == null");
         }
     }
 

@@ -9,10 +9,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.internal.view.menu.MenuBuilder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -23,9 +25,11 @@ import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.events.RequestKeepFeedUpdatedEvent;
 import com.duckduckgo.mobile.android.events.RequestOpenWebPageEvent;
 import com.duckduckgo.mobile.android.events.RequestSyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCleanImageTaskEvent;
@@ -41,6 +45,7 @@ import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
+import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.squareup.otto.Subscribe;
 
@@ -68,6 +73,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public String category_m_objectId = null;
     public int category_m_itemHeight;
     public int category_m_yOffset;
+
+    private Menu feedMenu = null;
+    private DDGOverflowMenu overflowMenu = null;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -118,7 +126,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         Log.e("aaa", "on resume: "+getTag());
 
-        setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && DDGControlVar.homeScreenShowing);
+        //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && DDGControlVar.homeScreenShowing);
+        setHasOptionsMenu(false);
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
@@ -141,7 +150,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onStop();
         Log.e("aaa", "on stop: "+getTag());
     }
-
+/*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
@@ -150,6 +159,21 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        if(menu==null) {
+            //return;
+        }
+        feedMenu = menu;
+    }
+*/
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Log.e("aaa", "feed fragment on options item selected: "+item.getTitle());
+        return super.onOptionsItemSelected(item);
+    }
+
+        @Override
     public void onRefresh() {
         // refresh the list
         DDGControlVar.hasUpdatedFeed = false;
@@ -169,6 +193,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
         feedView = (MainFeedListView) fragmentView.findViewById(R.id.feed_list_view);
 		feedView.setAdapter(feedAdapter);
+
+        feedMenu = new MenuBuilder(getActivity());
+        getActivity().getMenuInflater().inflate(R.menu.main, feedMenu);
 
 	}
 
@@ -395,5 +422,25 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	public void onFeedCleanImageTaskEvent(FeedCleanImageTaskEvent event) {
 		feedView.cleanImageTasks();
 	}
+
+    @Subscribe
+    public void onOverflowButtonClickEvent(OverflowButtonClickEvent event) {
+        if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(getTag()) && feedMenu!=null) {
+            feedMenu.findItem(R.id.action_stories).setEnabled(false);
+            if(overflowMenu!=null && overflowMenu.isShowing()) {
+                return;
+            }
+
+            overflowMenu = new DDGOverflowMenu(getActivity());
+            //overflowMenu.setHeaderMenu(feedMenu);
+            overflowMenu.setMenu(feedMenu);
+            overflowMenu.setAnimationStyle(R.style.DDGPopupAnimation);
+            overflowMenu.show(event.anchor);
+
+            Log.e("aaa", "shuld open feed menu now, feed menu != null");
+        } else {
+            Log.e("aaa", "shuld open feed menu now, feed menu == null");
+        }
+    }
 
 }

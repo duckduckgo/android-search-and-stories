@@ -71,6 +71,10 @@
         <activity 
             android:name=".activity.SourcePreferences" 
             android:label="@string/PrefSources" />
+
+        <activity
+            android:name=".activity.TempPreferences"
+            android:label="@string/SettingsButtonContentDescription" />
         
         <activity android:name="org.acra.CrashReportDialog"
 	        android:theme="@android:style/Theme.Dialog"
