@@ -670,7 +670,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             //Log.e("aaa", "not display search fragment");
             //return;
         }*/
-        if(false && tag.equals(SearchFragment.TAG)) {
+        if(tag.equals(SearchFragment.TAG)) {
             delayedChangeFragment(fragment, tag);
         } else if(!tag.equals("")) {
             changeFragment(fragment, tag, displayHomeScreen);
@@ -1017,6 +1017,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             Log.e("aaa", "current tag != new tag, CHAnGE fragment");
         }
 
+        //fragmentManager.executePendingTransactions();
+
         //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         //imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
 
@@ -1062,6 +1064,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             } else if(newTag.equals(SearchFragment.TAG)) {
                 transaction.setCustomAnimations(R.anim.slide_in_from_bottom2, R.anim.empty, R.anim.empty, R.anim.slide_out_to_bottom2);
                 //transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.empty, R.anim.empty, R.anim.slide_out_to_right);
+                //transaction.setCustomAnimations(R.anim.temp_animation, R.anim.empty, R.anim.empty, R.anim.slide_out_to_bottom2);
             }
             if(true || f==null) {
                 Log.e("aaa", "f==null, adding new fragment");
@@ -1075,11 +1078,66 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             }
             transaction.addToBackStack(newTag);
             transaction.commit();
-            fragmentManager.executePendingTransactions();
+
+            if(newTag.equals(WebFragment.TAG)) {
+                fragmentManager.executePendingTransactions();
+            }
+            //fragmentManager.executePendingTransactions();
         }
 	}
 
     private void delayedChangeFragment(final Fragment f, final String tag) {
+        Log.e("aaa", "inside delayed change fragment");
+
+        fragmentManager.executePendingTransactions();
+
+        final ViewTreeObserver observer = activityContainer.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int totalHeight = activityContainer.getRootView().getHeight();
+                int visibleHeight = activityContainer.getHeight();
+
+                boolean portrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+
+                int statusBar = DDGUtils.getStatusBarHeight(DuckDuckGo.this);
+                int navigationBar = DDGUtils.getNavigationBarHeight(DuckDuckGo.this);
+                int actionBarHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
+                //Log.e("aaa", "status bar: "+statusBar);
+                //Log.e("aaa", "navigation bar: "+navigationBar);
+                totalHeight = totalHeight - statusBar - navigationBar - actionBarHeight;
+                if(portrait && (totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
+                    Log.e("aaa", "keyboard open!");
+                    //changeFragment(f, tag);
+/*
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    Fragment oldFragment = fragmentManager.findFragmentByTag(tag);
+
+                    transaction.setCustomAnimations(R.anim.slide_in_from_bottom2, R.anim.empty, R.anim.empty, R.anim.slide_out_to_bottom2);
+
+                    //transaction.setCustomAnimations(R.anim.temp_animation, R.anim.empty, R.anim.empty, R.anim.slide_out_to_right);
+                    if(oldFragment==null || !oldFragment.isAdded()) {
+                        transaction.add(fragmentContainer.getId(), f, tag);
+                    } else {
+                        transaction.show(oldFragment);
+                    }
+                    transaction.addToBackStack(tag);
+                    transaction.commit();
+*/
+                    changeFragment(f, tag);
+
+                    if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN) {
+                        observer.removeOnGlobalLayoutListener(this);
+                    } else {
+                        observer.removeGlobalOnLayoutListener(this);
+                    }
+
+                    //activityContainer.getViewTreeObserver().removeOnGlobalLayoutListener();
+                }
+            }
+        });
+
+        /*
         activityContainer.getViewTreeObserver().addOnGlobalLayoutListener(this);
 
         activityContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -1103,7 +1161,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 }
 
             }
-        });
+        });*/
     }
 
     public void removeSearchFragment() {

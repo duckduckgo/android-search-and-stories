@@ -181,7 +181,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
 
         switch(screen) {
             case SCR_STORIES:
-                //clearSearchBar();
+                clearSearchBar();
                 /*
                 InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
@@ -216,8 +216,10 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 break;
             case SCR_RECENTS:
 
+               clearSearchBar();
+
                 showSearchField();//
-                searchField.clearFocus();
+                //searchField.clearFocus();
 
                 setShadow(false);
                 //setActionBarMarginBottom(false);//aaa
@@ -237,9 +239,10 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 setStandardActionBarHeight(false);
                 break;
             case SCR_FAVORITE:
+                clearSearchBar();
 
                 showSearchField();
-                searchField.clearFocus();
+                //searchField.clearFocus();
 
                 setShadow(false);
 
@@ -262,7 +265,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
             case SCR_WEBVIEW:
                 showSearchField();
 
-                searchField.clearFocus();
+                //searchField.clearFocus();
 
                 setShadow(true);
 
@@ -321,7 +324,8 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 break;
             case SCR_SETTINGS:
 
-                searchField.clearFocus();
+                //
+                // searchField.clearFocus();
 
                 showTitle(tag, context.getResources().getString(R.string.settings));
                 setShadow(true);
