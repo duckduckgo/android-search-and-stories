@@ -39,7 +39,7 @@
         <CheckBoxPreference
             android:title="@string/PrefAutocomplete"
             android:key="autocompletePref"
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:disableDependentsState="true" />
 
         <ListPreference

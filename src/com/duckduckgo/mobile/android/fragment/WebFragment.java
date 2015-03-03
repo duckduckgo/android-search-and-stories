@@ -305,7 +305,7 @@ public class WebFragment extends Fragment {
 	}
 
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
-		keyboardService.hideKeyboard(mainWebView);
+		//keyboardService.hideKeyboard(mainWebView);//aaa keyboard
 		savedState = false;
 
 		BusProvider.getInstance().post(new DismissBangPopupEvent());
@@ -471,7 +471,7 @@ public class WebFragment extends Fragment {
 	}
 
 	private void handleShareButtonClick() {
-		keyboardService.hideKeyboard(mainWebView);
+		//keyboardService.hideKeyboard(mainWebView);//aaa keyboard
 
 		// XXX should make Page Options button disabled if the page is not loaded yet
 		// url = null case

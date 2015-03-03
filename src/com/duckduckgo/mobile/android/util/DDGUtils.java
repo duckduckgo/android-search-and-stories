@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -35,6 +37,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Toast;
 import ch.boye.httpclientandroidlib.HttpEntity;
 
@@ -477,6 +480,23 @@ public final class DDGUtils {
             default:
                 return FeedFragment.TAG;
         }
+    }
+
+    public static int getStatusBarHeight(Activity activity) {
+        Rect rect = new Rect();
+        Window window = activity.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rect);
+        return rect.top;
+    }
+
+    public static int getNavigationBarHeight(Context context) {
+        int id = context.getResources().getIdentifier(
+                context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT? "navigation_bar_height" : "navigation_bar_height_landscape",
+                "dimen", "android");
+        if (id > 0) {
+            return context.getResources().getDimensionPixelSize(id);
+        }
+        return 0;
     }
 	
 }

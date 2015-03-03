@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -152,9 +153,27 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
     public void onResume() {
         super.onResume();
 
-        sourcesTask = new SourcesTask(getActivity(), this);
-        sourcesTask.execute();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                sourcesTask = new SourcesTask(getActivity(), SourcesFragment.this);
+                sourcesTask.execute();
+            }
+        }, 200);
+        //sourcesTask = new SourcesTask(getActivity(), this);
+        //sourcesTask.execute();
     }
+/*
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+
+        if(!hidden) {
+            sourcesTask = new SourcesTask(getActivity(), this);
+            sourcesTask.execute();
+        }
+    }*/
 /*
     @Override
     public Object onRetainNonConfigurationInstance() {

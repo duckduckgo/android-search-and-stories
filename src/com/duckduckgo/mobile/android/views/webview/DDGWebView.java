@@ -155,7 +155,7 @@ public class DDGWebView extends WebView {
 		if(!isReadable)
 			setIsReadable(true);
 		readableList.add(feedObject.getUrl());
-		loadDataWithBaseURL(feedObject.getUrl(), feedObject.getHtml(), "text/html", "utf8", feedObject.getUrl());
+		loadDataWithBaseURL(feedObject.getUrl(), feedObject.getHtml(), "text/html", "UTF-8", feedObject.getUrl());
 		forceOriginalFormat = false;
 //		clearHistory();
 	}

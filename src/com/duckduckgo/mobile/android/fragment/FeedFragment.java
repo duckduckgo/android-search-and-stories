@@ -102,6 +102,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		super.onActivityCreated(savedInstanceState);
         Log.e("aaa", "on activity created: "+getTag());
 		setRetainInstance(true);
+        setHasOptionsMenu(false);
         activity = getActivity();
 		init();
         if(savedInstanceState!=null) {
@@ -127,7 +128,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         Log.e("aaa", "on resume: "+getTag());
 
         //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && DDGControlVar.homeScreenShowing);
-        setHasOptionsMenu(false);
+        //setHasOptionsMenu(false);
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
@@ -139,6 +140,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	public void onPause() {
 		super.onPause();
         Log.e("aaa", "on pause: "+getTag());
+        swipeRefreshLayout.setRefreshing(false);
 		if (mainFeedTask != null) {
 			mainFeedTask.cancel(false);
 			mainFeedTask = null;
@@ -317,12 +319,15 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	public void keepFeedUpdated(){
         Log.e("aaa", "keep feed updated");
 		if(TorIntegrationProvider.getInstance(getActivity()).isOrbotRunningAccordingToSettings()) {
+            Log.e("aaa", "keep feed updated 1");
 			if (!DDGControlVar.hasUpdatedFeed) {
 				if (DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
+                    Log.e("aaa", "keep feed updated 2");
 					// respect user choice of empty source list: show nothing
 					BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(new ArrayList<FeedObject>(),
 							REQUEST_TYPE.FROM_CACHE));
 				} else {
+                    Log.e("aaa", "keep feed updated 3");
 					// cache
 					CacheFeedTask cacheTask = new CacheFeedTask(getActivity());
 
@@ -330,22 +335,34 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 					mainFeedTask = new MainFeedTask(feedView);
 
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                        Log.e("aaa", "keep feed updated 4");
 						cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 						if (DDGControlVar.automaticFeedUpdate || swipeRefreshLayout.isRefreshing()
 								|| DDGControlVar.changedSources) {
+                            Log.e("aaa", "keep feed updated 5");
+                            Log.e("aaa", "main feed task execute");
 							mainFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 							DDGControlVar.changedSources = false;
-						}
+						} else {
+
+                            Log.e("aaa", "keep feed updated 6");
+                        }
 					} else {
+                        Log.e("aaa", "keep feed updated 7");
 						cacheTask.execute();
 						if (DDGControlVar.automaticFeedUpdate || swipeRefreshLayout.isRefreshing()
 								|| DDGControlVar.changedSources) {
+                            Log.e("aaa", "keep feed updated 8");
 							mainFeedTask.execute();
 							DDGControlVar.changedSources = false;
-						}
+						} else {
+
+                            Log.e("aaa", "keep feed updated 9");
+                        }
 					}
 				}
 			} else {
+                Log.e("aaa", "keep feed updated 10");
 				// complete the action anyway
                 swipeRefreshLayout.setRefreshing(false);
 			}
@@ -354,15 +371,18 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 	@Subscribe
 	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {
+        Log.e("aaa", "inside on feed retrieve success");
 		if(event.requestType == REQUEST_TYPE.FROM_NETWORK) {
 			synchronized(feedAdapter) {
 				feedAdapter.clear();
 			}
 		}
 
+        Log.e("aaa", "new feed size: "+event.feed.size());
 		feedAdapter.addData(event.feed);
         feedAdapter.getFilter().filter("");
 		feedAdapter.notifyDataSetChanged();
+        Log.e("aa", "feed adapter post size: "+feedAdapter.getCount());
 
 		// update pull-to-refresh header to reflect task completion
         swipeRefreshLayout.setRefreshing(false);
@@ -434,7 +454,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             overflowMenu = new DDGOverflowMenu(getActivity());
             //overflowMenu.setHeaderMenu(feedMenu);
             overflowMenu.setMenu(feedMenu);
-            overflowMenu.setAnimationStyle(R.style.DDGPopupAnimation);
+            //overflowMenu.setAnimationStyle(R.style.DDGPopupAnimation);
             overflowMenu.show(event.anchor);
 
             Log.e("aaa", "shuld open feed menu now, feed menu != null");

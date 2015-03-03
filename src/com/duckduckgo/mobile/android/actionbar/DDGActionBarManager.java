@@ -19,6 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -103,7 +104,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 break;
             case R.id.bang:
                 Log.e("aaa", "bang button clicked");
-                keyboardService.showKeyboard(getSearchField());
+                //keyboardService.showKeyboard(getSearchField());//aaa keyboard
                 getSearchField().addBang();
                 break;
             case R.id.overflow:
@@ -149,21 +150,25 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 Log.e("aaa", "ERROR 9 - aka 1, tag: " + tag);
                 //getSearchField().clearFocus();
 
-                /*
+
                 getSearchField().setFocusable(false);
                 getSearchField().setFocusableInTouchMode(false);
                 //getSearchField().setText(text);
                 getSearchField().setFocusable(true);
                 getSearchField().setFocusableInTouchMode(true);
-                */
 
+
+                /*
                 searchField.setFocusable(false);
                 searchField.setFocusableInTouchMode(false);
                 //getSearchField().setText(text);
+
                 searchField.setFocusable(true);
-                searchField.setFocusableInTouchMode(true);
+                searchField.setFocusableInTouchMode(true);*/
             }
         }
+
+        //keyboardService.hideKeyboard(searchField);
 
         int standardMargin = (int) context.getResources().getDimension(R.dimen.actionbar_margin);
         int overflowVisibleRightMargin = 0;
@@ -176,7 +181,13 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
 
         switch(screen) {
             case SCR_STORIES:
-                clearSearchBar();
+                //clearSearchBar();
+                /*
+                InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
+                */
+                //keyboardService.hideKeyboard(searchField);
+                //searchField.clearFocus();
 
                 showSearchField();//
 
@@ -186,7 +197,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 //int overflowRightMargin = 0;
 
                 leftMargin = isStartingScreen ? standardMargin : actionButtonVisibleLeftMargin;
-                rightMargin = isStartingScreen ? overflowVisibleRightMargin : standardMargin;
+                rightMargin = (true||isStartingScreen) ? overflowVisibleRightMargin : standardMargin;
 
                 setActionBarMargins(leftMargin, standardMargin, rightMargin, standardMargin);
 
@@ -195,7 +206,8 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 //setActionBarMarginBottom(true);//aaa
 
                 setHomeButton(!isStartingScreen);
-                setOverflowButton(isStartingScreen);
+                //setOverflowButton(isStartingScreen);
+                setOverflowButton(true);
                 setOverflowButtonMarginTop(false);
 
                 setHomeButtonMarginTop(false);
@@ -205,18 +217,20 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
             case SCR_RECENTS:
 
                 showSearchField();//
+                searchField.clearFocus();
 
                 setShadow(false);
                 //setActionBarMarginBottom(false);//aaa
 
                 leftMargin = isStartingScreen ? standardMargin : actionButtonVisibleLeftMargin;
-                rightMargin = isStartingScreen ? overflowVisibleRightMargin : standardMargin;
+                rightMargin = (true||isStartingScreen) ? overflowVisibleRightMargin : standardMargin;
 
                 setActionBarMargins(leftMargin, standardMargin, rightMargin, 0);
 
                 //hasOverflowButtonVisible(isStartingScreen);
 
-                setOverflowButton(isStartingScreen);
+                //setOverflowButton(isStartingScreen);
+                setOverflowButton(true);
                 setOverflowButtonMarginTop(true);
                 setHomeButton(!isStartingScreen);
                 setHomeButtonMarginTop(true);
@@ -225,19 +239,21 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
             case SCR_FAVORITE:
 
                 showSearchField();
+                searchField.clearFocus();
 
                 setShadow(false);
 
 
                 leftMargin = isStartingScreen ? standardMargin : actionButtonVisibleLeftMargin;
-                rightMargin = isStartingScreen ? overflowVisibleRightMargin : standardMargin;
+                rightMargin = (true||isStartingScreen) ? overflowVisibleRightMargin : standardMargin;
 
                 setActionBarMargins(leftMargin, standardMargin, rightMargin, 0);
 
                 //setActionBarMarginBottom(false);
                 //hasOverflowButtonVisible(isStartingScreen);
 
-                setOverflowButton(isStartingScreen);
+                //setOverflowButton(isStartingScreen);
+                setOverflowButton(true);
                 setOverflowButtonMarginTop(true);
                 setHomeButton(!isStartingScreen);
                 setHomeButtonMarginTop(true);
@@ -246,6 +262,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
             case SCR_WEBVIEW:
                 showSearchField();
 
+                searchField.clearFocus();
 
                 setShadow(true);
 
@@ -280,7 +297,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
 
                 setBangButton();
                 setStandardActionBarHeight(true);
-                keyboardService.showKeyboard(getSearchField());
+                //keyboardService.showKeyboard(getSearchField());//aaa keyboard
                 break;
             case SCR_ABOUT:
                 showTitle(tag, context.getResources().getString(R.string.about));
@@ -303,6 +320,9 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 setStandardActionBarHeight(true);
                 break;
             case SCR_SETTINGS:
+
+                searchField.clearFocus();
+
                 showTitle(tag, context.getResources().getString(R.string.settings));
                 setShadow(true);
                 hasOverflowButtonVisible(false);
@@ -326,9 +346,11 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
         }
 
         if(tag.equals(SearchFragment.TAG) || tag.equals(SearchFragment.TAG_HOME_PAGE)) {
+            Log.e("aaa", "]]]]]]]]]new tag == search fragment, nothing here");
             //keyboardService.showKeyboard(getSearchField());
         } else {
-            keyboardService.hideKeyboard(getSearchField());//todo check if ok or remove
+            Log.e("aaa", "]]]]]]]]]]new tag != search fragment should hide the keyboard");
+            //keyboardService.hideKeyboard(getSearchField());//todo check if ok or remove
         }
     }
 

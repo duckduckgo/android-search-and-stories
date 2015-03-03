@@ -13,7 +13,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
-public class DDGAutoCompleteTextView extends AutoCompleteTextView implements View.OnLongClickListener {
+public class DDGAutoCompleteTextView extends EditText implements View.OnLongClickListener {
 
     private android.view.ActionMode actionMode;
     private android.view.ActionMode.Callback actionModeCallback;

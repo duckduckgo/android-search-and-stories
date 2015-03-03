@@ -30,17 +30,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-                <action android:name="android.intent.action.SEARCH_LONG_PRESS" />
-                <action android:name="android.intent.action.ASSIST" />
+                <action android:name="android.intent.action.ASSIST"/>
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH_LONG_PRESS" />
+                <category android:name="android.intent.category.DEFAULT" />\
+            </intent-filter>
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="http" />
                 <data android:scheme="https" />
                 <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
+            </intent-filter>-->
             
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
@@ -63,6 +67,8 @@
 		    <meta-data android:name="android.appwidget.provider"
 		        	   android:resource="@xml/widget_info_white" />
 		</receiver>
+
+
 		
         <activity 
             android:name=".activity.Preferences" 
@@ -97,7 +103,6 @@
             android:taskAffinity="" />
 
         <activity android:name="net.hockeyapp.android.UpdateActivity" />
-        <activity android:name=".activity.TempPreferences"/>
 
         <service android:name="com.duckduckgo.mobile.android.subscribers.MainSubscriber" />
 		
