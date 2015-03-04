@@ -158,12 +158,12 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
         //setHeight(height);
 
-        //showAsDropDown(anchor, xOffset, yOffset*-1);//aaa ----- temp
+        showAsDropDown(anchor, xOffset, yOffset*-1);//aaa ----- temp
         //showAsDropDown(anchor);
 
 
 
-        showAtLocation(anchor, Gravity.TOP|Gravity.RIGHT, (int)context.getResources().getDimension(R.dimen.menu_outer_margin), (int)context.getResources().getDimension(R.dimen.menu_outer_margin)+getStatusBarHeight());
+        //showAtLocation(anchor, Gravity.TOP|Gravity.RIGHT, (int)context.getResources().getDimension(R.dimen.menu_outer_margin), (int)context.getResources().getDimension(R.dimen.menu_outer_margin)+getStatusBarHeight());
         //showAtLocation(anchor, Gravity.CENTER, 0, 0);
     }
 
@@ -275,7 +275,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
             MenuItem item = menuItems.get(position);
             holder.text.setText(item.getTitle());
             holder.text.setEnabled(item.isEnabled());
-            Log.e("aaa", "get view position: "+position+" - text: "+item.getTitle()+" - enabled: "+item.isEnabled());
+            //Log.e("aaa", "get view position: "+position+" - text: "+item.getTitle()+" - enabled: "+item.isEnabled());
 
             return root;
         }

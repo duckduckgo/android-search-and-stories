@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.http.conn.util.InetAddressUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -421,13 +422,15 @@ public final class DDGUtils {
     }
 
     public static String getUrlToDisplay(String url) {
-        if(url.startsWith("https://")) {
-            url = url.replace("https://", "");
-        } else if(url.startsWith("http://")) {
-            url = url.replace("http://", "");
-        }
-        if(url.startsWith("www.")) {
-            url = url.replace("www.", "");
+        if(InetAddressUtils.isIPv4Address(url) || InetAddressUtils.isIPv6Address(url)) {
+            if (url.startsWith("https://")) {
+                url = url.replace("https://", "");
+            } else if (url.startsWith("http://")) {
+                url = url.replace("http://", "");
+            }
+            if (url.startsWith("www.")) {
+                url = url.replace("www.", "");
+            }
         }
         return url;
     }

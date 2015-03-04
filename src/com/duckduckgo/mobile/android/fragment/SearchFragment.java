@@ -252,20 +252,21 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
         //visibleHeight = visibleHeight - (searchParams.topMargin * 3);
         //visibleHeight = visibleHeight - (headerParams.height * 3);
-        visibleHeight = visibleHeight - (searchListView.getPaddingTop() * 3);
+        visibleHeight = visibleHeight - actionBarHeight - (searchListView.getPaddingTop() * 3);
 
         int maxItems = visibleHeight / itemHeight;
         int recentItems = 0;
         //Log.e("aaa", "total: "+totalHeight+" - visible: "+visibleHeight+" - max items: "+maxItems+" - search margin: "+searchParams.topMargin+" - item height: "+itemHeight);
 
-        if(portrait && (totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
-            //Log.e("aaa", "open keyboard");
+        //if(portrait && (totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
+        if(totalHeight>visibleHeight) {
+            Log.e("aaa", "open keyboard");
             //Log.e("aaa", "max items: "+maxItems);
 
             recentItems = (maxItems - 1) <= recentAdapter.getCount() ? (maxItems - 1) : recentAdapter.getCount();
 
         } else {
-            //Log.e("aaa", "close keyboard");
+            Log.e("aaa", "close keyboard");
             //Log.e("aaa", "max items: "+maxItems);
             int halfItems = maxItems / 2;
             //recentItems = halfItems <= DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount() ? halfItems : DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount();

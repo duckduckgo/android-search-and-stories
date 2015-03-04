@@ -267,7 +267,8 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
 		}
 		
 		if(cv != null) {
-			if((markedItem != null && markedItem.equals(feed.getId())) || (markedSource!=null && markedSource.equals(feed.getId()) || markedCategory!=null && markedCategory.equals(feed.getId()))) {
+			//if((markedItem != null && markedItem.equals(feed.getId())) || (markedSource!=null && markedSource.equals(feed.getId()) || markedCategory!=null && markedCategory.equals(feed.getId()))) {
+            if((markedItem != null && markedItem.equals(feed.getId())) || (markedSource!=null && markedSource.equals(feed.getId()))) {
 				blinkanimation.reset();
 				cv.startAnimation(blinkanimation);
 			}/*

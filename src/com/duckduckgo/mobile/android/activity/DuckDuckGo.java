@@ -1097,6 +1097,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             public void onGlobalLayout() {
                 int totalHeight = activityContainer.getRootView().getHeight();
                 int visibleHeight = activityContainer.getHeight();
+                int totalHeight2;
 
                 boolean portrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
@@ -1105,8 +1106,18 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 int actionBarHeight = (int) getResources().getDimension(R.dimen.actionbar_height);
                 //Log.e("aaa", "status bar: "+statusBar);
                 //Log.e("aaa", "navigation bar: "+navigationBar);
-                totalHeight = totalHeight - statusBar - navigationBar - actionBarHeight;
-                if(portrait && (totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
+                totalHeight2 = totalHeight - statusBar - navigationBar - actionBarHeight;
+                visibleHeight = visibleHeight - actionBarHeight;
+                Log.e("aaa", "status bar: "+statusBar);
+                Log.e("aaa", "navigation bar: "+navigationBar);
+                Log.e("aaa", "actionbar height: "+actionBarHeight);
+                Log.e("aaa", "total height: "+totalHeight);
+                Log.e("aaa", "total height 2: "+totalHeight2);
+                Log.e("aaa", "visible height: "+visibleHeight);
+                Log.e("aaa", "total - visible: "+(totalHeight-visibleHeight));
+                Log.e("aaa", "status + navigation + actionbar: "+(statusBar + navigationBar + actionBarHeight));
+                //if(portrait && (totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
+                if((totalHeight2>visibleHeight)) {
                     Log.e("aaa", "keyboard open!");
                     //changeFragment(f, tag);
 /*
@@ -1133,6 +1144,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                     }
 
                     //activityContainer.getViewTreeObserver().removeOnGlobalLayoutListener();
+                } else {
+                    Log.e("aaa", "keyboard close!");
                 }
             }
         });

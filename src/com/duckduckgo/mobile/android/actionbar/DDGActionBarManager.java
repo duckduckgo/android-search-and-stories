@@ -108,7 +108,7 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
                 getSearchField().addBang();
                 break;
             case R.id.overflow:
-                BusProvider.getInstance().post(new OverflowButtonClickEvent(overflowButton));
+                BusProvider.getInstance().post(new OverflowButtonClickEvent(toolbar));
                 //BusProvider.getInstance().post(new OverflowButtonClickEvent(toolbar));
             default:
                 break;
@@ -218,24 +218,21 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
 
                clearSearchBar();
 
-                showSearchField();//
-                //searchField.clearFocus();
+                showSearchField();
 
                 setShadow(false);
-                //setActionBarMarginBottom(false);//aaa
 
                 leftMargin = isStartingScreen ? standardMargin : actionButtonVisibleLeftMargin;
                 rightMargin = (true||isStartingScreen) ? overflowVisibleRightMargin : standardMargin;
 
                 setActionBarMargins(leftMargin, standardMargin, rightMargin, 0);
 
-                //hasOverflowButtonVisible(isStartingScreen);
-
-                //setOverflowButton(isStartingScreen);
                 setOverflowButton(true);
                 setOverflowButtonMarginTop(true);
+
                 setHomeButton(!isStartingScreen);
                 setHomeButtonMarginTop(true);
+
                 setStandardActionBarHeight(false);
                 break;
             case SCR_FAVORITE:
@@ -370,14 +367,6 @@ public class DDGActionBarManager implements View.OnClickListener, View.OnLongCli
 
     private void showSearchField() {
         toggleActionBarView(true);
-    }
-/*
-    private void showTitle(String tag, String newTitle) {
-        toggleActionBarView(true, tag, newTitle);
-    }
-*/
-    private void showTitle() {
-        toggleActionBarView(false);
     }
 
     private void showTitle(String tag, String title) {
