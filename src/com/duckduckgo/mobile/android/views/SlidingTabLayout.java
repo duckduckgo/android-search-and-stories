@@ -183,9 +183,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
      */
     protected TextView createDefaultTabView(Context context) {
         TextView textView = new TextView(context);
-        textView.setGravity(Gravity.CENTER);
+        textView.setGravity(Gravity.TOP|Gravity.CENTER);
         textView.setTextAppearance(context, R.style.TabTitle);
-        textView.setHeight((int)getResources().getDimension(R.dimen.actionbar_tab_height));
+        textView.setHeight((int)getResources().getDimension(R.dimen.actionbar_tab_height2));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             // If we're running on Honeycomb or newer, then we can use the Theme's
@@ -202,7 +202,9 @@ public class SlidingTabLayout extends HorizontalScrollView {
         }
 
         int padding = (int) (TAB_VIEW_PADDING_DIPS * getResources().getDisplayMetrics().density);
-        textView.setPadding(padding, padding, padding, padding);
+        int halfPadding = (int) (padding * 0.5);
+        //textView.setPadding(padding, padding, padding, padding);
+        textView.setPadding(padding, halfPadding, padding, padding);
 
         WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = windowManager.getDefaultDisplay();

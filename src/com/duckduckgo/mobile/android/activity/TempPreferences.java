@@ -62,8 +62,8 @@ public class TempPreferences extends ActionBarActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        actionBar = new DDGActionBarManager(this, this, toolbar, findViewById(R.id.dropshadow_top));
-        actionBar.init();
+        //actionBar = new DDGActionBarManager(this, this, toolbar, findViewById(R.id.dropshadow_top));
+        //actionBar.init();
 
         fragmentManager = getSupportFragmentManager();
 
@@ -87,7 +87,7 @@ public class TempPreferences extends ActionBarActivity {
                         fragmentManager.findFragmentByTag(tag).setHasOptionsMenu(DDGControlVar.homeScreenShowing || DDGControlVar.mDuckDuckGoContainer.webviewShowing);
                         */
 
-                        actionBar.updateActionBar(fragmentManager, tag);
+                        //actionBar.updateActionBar(fragmentManager, tag);
                     }
                     Log.e("aaa", "inside back stack, current tag: "+DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
                     showAllFragments();
@@ -167,7 +167,7 @@ public class TempPreferences extends ActionBarActivity {
                 tag = AboutFragment.TAG;
                 break;
             case SCR_HELP:
-                actionBar.resetScreenState();
+                //actionBar.resetScreenState();
                 fragment = new HelpFeedbackFragment();
                 tag = HelpFeedbackFragment.TAG;
                 break;

@@ -62,10 +62,12 @@
                       android:layout_gravity="center_vertical"
                       android:layout_marginLeft="@dimen/toolbar_title_left_margin"
                       android:layout_marginRight="8dp"
-                      android:text="This is a Test String!"
+                      android:ellipsize="end"
                       android:id="@+id/feedTitleTextView"
                       style="@style/FeedTitle" /><!--
                       android:layout_marginLeft="@dimen/toolbar_title_left_margin"-->
+            <!--
+                      android:text="This is a Test String!"-->
 
         </LinearLayout>
         <!--

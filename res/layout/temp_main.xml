@@ -8,20 +8,20 @@
 
     <include android:id="@+id/toolbar" layout="@layout/temp_actionbar" />
 
-            <FrameLayout
-                android:id="@+id/fragmentContainer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/toolbar"
-                android:background="@color/background"/>
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar"
+        android:background="@color/background"/>
 
-            <View
-                android:visibility="gone"
-                android:id="@+id/dropshadow_top"
-                android:layout_width="fill_parent"
-                android:layout_height="2dp"
-                android:layout_below="@id/toolbar"
-                android:background="?attr/topDropShadow"/>
+    <View
+        android:visibility="visible"
+        android:id="@+id/dropshadow_top"
+        android:layout_width="fill_parent"
+        android:layout_height="2dp"
+        android:layout_below="@id/toolbar"
+        android:background="?attr/topDropShadow"/>
 
     <include android:id="@+id/fontSeekLayout" layout="@layout/font_seekbar" />
 

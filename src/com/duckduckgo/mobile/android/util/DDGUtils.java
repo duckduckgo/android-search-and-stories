@@ -422,6 +422,9 @@ public final class DDGUtils {
     }
 
     public static String getUrlToDisplay(String url) {
+        if(url==null || url.length()==0) {
+            return "";
+        }
         if(InetAddressUtils.isIPv4Address(url) || InetAddressUtils.isIPv6Address(url)) {
             if (url.startsWith("https://")) {
                 url = url.replace("https://", "");

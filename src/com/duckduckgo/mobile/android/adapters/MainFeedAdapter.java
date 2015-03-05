@@ -194,12 +194,12 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
                         Log.e("aaa", "should remove filter: "+category);
                         DDGControlVar.targetCategory = null;
                         unmarkCategory();
-                        getFilter().filter(category);
+                        //getFilter().filter(category);
                     } else {
                         Log.e("aaa", "must add filter: "+category);
-                        DDGControlVar.targetCategory = category;
-                        markCategory(feedId);
-                        getFilter().filter(category);
+                        //DDGControlVar.targetCategory = category;
+                        //markCategory(feedId);
+                        //getFilter().filter(category);
                     }
                 }
             });
@@ -291,6 +291,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
                 ArrayList<FeedObject> newResults = new ArrayList<FeedObject>();
+                ArrayList<Integer> newResults2 = new ArrayList<Integer>();
                 if(DDGControlVar.targetCategory==null) {
                     newResults = feedObjects;
                 } else {
@@ -311,8 +312,16 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                clear();
-                if(results!=null    && results.count>0) {
+                //clear();
+
+                if(results!=null && results.count>0) {
+                    ArrayList<FeedObject> newResults = (ArrayList<FeedObject>) results.values;
+
+/*
+                    for(FeedObject feed : feedObjects) {
+                        if(newResults.)
+                    }
+*/
                     if(Build.VERSION.SDK_INT>+Build.VERSION_CODES.HONEYCOMB) {
                         addAll((ArrayList<FeedObject>)results.values);
                     } else {

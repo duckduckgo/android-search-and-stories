@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
+import android.animation.Animator;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.os.Build;
@@ -14,8 +15,15 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Transformation;
+import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
@@ -33,10 +41,14 @@ public class FavoriteFragment extends Fragment {
     private ViewPager viewPager;
     private SlidingTabLayout slidingTabLayout;
 
+    //private DDGActionBarManager
+
 	private View fragmentView;
 
     private Menu favoriteMenu = null;
     private DDGOverflowMenu overflowMenu = null;
+
+    private boolean isVisible = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -82,10 +94,15 @@ public class FavoriteFragment extends Fragment {
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
 
-        slidingTabLayout = (SlidingTabLayout) fragmentView.findViewById(R.id.sliding_tabs);
-        slidingTabLayout.setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
+        //slidingTabLayout = (SlidingTabLayout) fragmentView.findViewById(R.id.sliding_tabs);
+        //slidingTabLayout = DDGActionBarManager.getInstance().getSlidingTabLayout();
+        //slidingTabLayout.setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
+        DDGActionBarManager.getInstance().getSlidingTabLayout().setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
 
-        slidingTabLayout.setViewPager(viewPager);
+        //slidingTabLayout.setViewPager(viewPager);
+        DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
+
+        //slidingTabLayout.setVisibility(View.VISIBLE);
 
         favoriteMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.main, favoriteMenu);
@@ -98,14 +115,26 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        //viewPager.setAdapter(pagerAdapter);
+        //DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
         //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_FAVORITE && DDGControlVar.homeScreenShowing);//aaa
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden) {
+            viewPager.setAdapter(pagerAdapter);
+            DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
+        }
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.e("aaa", "configuration changed");
-        slidingTabLayout.setViewPager(viewPager);
+        //slidingTabLayout.setViewPager(viewPager);
+        DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
     }
 
     @Override
@@ -121,6 +150,36 @@ public class FavoriteFragment extends Fragment {
 		//outState.putString("tag", savedTabHost.getCurrentTabTag());
 	}
 
+    @Override
+    public Animation onCreateAnimation(int transit, final boolean enter, int nextAnim) {
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), nextAnim);
+
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if(enter) {
+                    DDGActionBarManager.getInstance().showTabLayout();
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        AnimationSet animSet = new AnimationSet(true);
+        animSet.addAnimation(anim);
+
+
+        return animSet;
+    }
+
     @Subscribe
     public void onOverflowButtonClickEvent(OverflowButtonClickEvent event) {
         if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(getTag()) && favoriteMenu!=null) {
@@ -133,10 +192,7 @@ public class FavoriteFragment extends Fragment {
             //overflowMenu.setHeaderMenu(feedMenu);
             overflowMenu.setMenu(favoriteMenu);
             overflowMenu.show(event.anchor);
-
-            Log.e("aaa", "shuld open feed menu now, feed menu != null");
-        } else {
-            Log.e("aaa", "shuld open feed menu now, feed menu == null");
         }
     }
+
 }

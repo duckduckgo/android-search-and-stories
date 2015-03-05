@@ -31,6 +31,7 @@ public class FavoriteFeedListView extends ListView implements android.widget.Ada
         }
 
         if (obj != null) {
+            Log.e("aaa", "obj: "+obj.toString());
             BusProvider.getInstance().post(new MainFeedItemSelectedEvent(obj));
         }
     }

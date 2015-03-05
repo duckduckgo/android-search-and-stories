@@ -10,4 +10,6 @@
           android:paddingLeft="21dip"
           android:paddingRight="15dip"
           android:ellipsize="marquee"
-    />
+    /><!--
+          android:layout_height="@dimen/listview_item_height"
+          android:textSize="19sp"-->

@@ -97,7 +97,7 @@ public class AsyncImageView extends ImageView {
 			Picasso.with(getContext()).cancelRequest(this);
 		}
 	}
-
+/*
     @Override
     public void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         //Log.e("aaa", "Feed image on measure");
@@ -120,5 +120,5 @@ public class AsyncImageView extends ImageView {
         }
         //super.onMeasure(width, height);
     }
-
+*/
 }

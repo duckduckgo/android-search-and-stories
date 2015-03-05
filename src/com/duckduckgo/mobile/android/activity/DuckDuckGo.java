@@ -11,6 +11,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -133,7 +134,7 @@ import java.util.List;
 import net.hockeyapp.android.CrashManager;
 import net.hockeyapp.android.UpdateManager;
 
-public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/ implements ViewTreeObserver.OnGlobalLayoutListener {
+public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/ /*implements ViewTreeObserver.OnGlobalLayoutListener*/ {
 	protected final String TAG = "DuckDuckGo";
     private KeyboardService keyboardService;
     private DDGAutoCompleteTextView searchField = null;
@@ -151,7 +152,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
 	private FragmentManager fragmentManager;
 
-    private DDGActionBarManager actionBar;
+    //private DDGActionBarManager actionBar;
     private Toolbar toolbar;
 /*
 	public Toolbar toolbar;
@@ -161,6 +162,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 		
 	public boolean savedState = false;
     private boolean backPressed = false;
+    private boolean assistAction = false;
 		
 	private final int PREFERENCES_RESULT = 0;
 /*
@@ -269,8 +271,9 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 Log.e("aaa", "menu visibility changed");
             }
         });
-        actionBar = new DDGActionBarManager(this, this, toolbar, findViewById(R.id.dropshadow_top));
-        actionBar.init();
+        //actionBar = new DDGActionBarManager(this, this, toolbar, findViewById(R.id.dropshadow_top));
+        DDGActionBarManager.getInstance().init(this, this, toolbar, findViewById(R.id.dropshadow_top));
+        //actionBar.init();
         initSearchField();
 
 		fragmentManager = getSupportFragmentManager();
@@ -294,7 +297,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
                         //fragmentManager.findFragmentByTag(tag).setHasOptionsMenu(DDGControlVar.homeScreenShowing || DDGControlVar.mDuckDuckGoContainer.webviewShowing);//aaa overflow temp
 
-                        actionBar.updateActionBar(fragmentManager, tag);
+                        DDGActionBarManager.getInstance().updateActionBar(fragmentManager, tag);
                         if ((tag.equals(SearchFragment.TAG) || tag.equals(SearchFragment.TAG_HOME_PAGE)) && !backPressed) {
                             Log.e("aaa", "show keyboard!");
                             keyboardService.showKeyboard(getSearchField());
@@ -309,6 +312,11 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                             //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                             //imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
                             //keyboardService.hideKeyboard(searchField);
+                        }
+                        if(false && assistAction) {
+                            Log.e("aaa", "assist action clearing focus and showing keyboard");
+                            getSearchField().clearFocus();
+                            keyboardService.showKeyboard(getSearchField());
                         }
                         backPressed = false;
                     }
@@ -587,7 +595,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 			
 		switch(screenToDisplay) {
 			case SCR_STORIES:
-                actionBar.resetScreenState();
+                DDGActionBarManager.getInstance().resetScreenState();
                 stopAction();
 
                 // ensures feed refresh every time user switches to Stories screen
@@ -601,7 +609,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 tag = FeedFragment.TAG;
 				break;
 			case SCR_RECENTS:
-                actionBar.resetScreenState();
+                DDGActionBarManager.getInstance().resetScreenState();
 
                 //keyboardService.hideKeyboard(getSearchField());
 
@@ -610,7 +618,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
 				break;
             case SCR_WEBVIEW:
-                actionBar.resetSearchBar();
+                DDGActionBarManager.getInstance().resetSearchBar();
                 //setSearchBarText(DDGControlVar.mDuckDuckGoContainer.currentUrl);
 
                 //keyboardService.hideKeyboard(getSearchField());
@@ -625,13 +633,13 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
                 break;
             case SCR_SEARCH_HOME_PAGE:
-                actionBar.resetScreenState();
+                DDGActionBarManager.getInstance().resetScreenState();
                 fragment = new SearchFragment();
                 tag = SearchFragment.TAG_HOME_PAGE;
 
                 break;
 			case SCR_FAVORITE:
-                actionBar.resetScreenState();
+                DDGActionBarManager.getInstance().resetScreenState();
 
                 //keyboardService.hideKeyboard(getSearchField());
 
@@ -644,7 +652,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 tag = AboutFragment.TAG;
                 break;
             case SCR_HELP:
-                actionBar.resetScreenState();
+                DDGActionBarManager.getInstance().resetScreenState();
                 fragment = new HelpFeedbackFragment();
                 tag = HelpFeedbackFragment.TAG;
                 break;
@@ -670,9 +678,10 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             //Log.e("aaa", "not display search fragment");
             //return;
         }*/
-        if(tag.equals(SearchFragment.TAG)) {
+        if(!assistAction && tag.equals(SearchFragment.TAG)) {
             delayedChangeFragment(fragment, tag);
         } else if(!tag.equals("")) {
+            //assistAction = false;
             changeFragment(fragment, tag, displayHomeScreen);
         }
 	}
@@ -733,6 +742,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
         Intent intent = getIntent();
         if(intent!=null) {
             Log.e("aaa", "intent!=null, action: "+intent.getAction());
+            Log.e("aaa", "intent!=null, categories: "+intent.getCategories());
         } else {
             Log.e("aaa", "intent==null");
         }
@@ -741,13 +751,13 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             Log.e("aaa", "intent == action search");
 			intent.setAction(Intent.ACTION_MAIN);
 			String query = intent.getStringExtra(SearchManager.QUERY);
-			actionBar.setSearchBarText(query);
+            DDGActionBarManager.getInstance().setSearchBarText(query);
 			BusProvider.getInstance().post(new WebViewSearchWebTermEvent(query));
 		}
 		else if(intent.getBooleanExtra("widget", false)) {
             Log.e("aaa", "intent == widget");
             if(!getSearchField().getText().toString().equals("")) {
-                actionBar.clearSearchBar();
+                DDGActionBarManager.getInstance().clearSearchBar();
             }
 			//displayScreen(DDGControlVar.START_SCREEN, true);
             displayScreen(SCREEN.SCR_SEARCH, true);
@@ -761,8 +771,20 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             Log.e("aaa", "intent == action assist");
             //keyboardService.showKeyboard(getSearchField());
             //if(DDGControlVar.START_SCREEN!=SCREEN.SCR_SEARCH_HOME_PAGE) {
-                displayScreen(SCREEN.SCR_SEARCH, true);
+            //actionBar.clearSearchBar();
+                //displayScreen(SCREEN.SCR_SEARCH, true);
             //}
+            //keyboardService.showKeyboard(getSearchField());
+            //delayedChangeFragment(new SearchFragment(), SearchFragment.TAG);
+            //getSearchField().requestFocus();
+            //keyboardService.showKeyboard(getSearchField());
+            assistAction = true;
+            //actionBar.clearSearchBar();
+            //keyboardService.showKeyboard(getSearchField());
+            //getSearchField().requestFocus();
+            //changeFragment(new SearchFragment(), SearchFragment.TAG);
+            //displayScreen(SCREEN.SCR_SEARCH, true);
+            Toast.makeText(this, "TO OPEN SEARCH", Toast.LENGTH_SHORT).show();
         }
 		else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
             Log.e("aaa", "intent == action search");
@@ -829,11 +851,11 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             //super.onBackPressed();
         }
 		else {
-			DDGControlVar.hasUpdatedFeed = false;
-			super.onBackPressed();
+            DDGControlVar.hasUpdatedFeed = false;
+            super.onBackPressed();
 		}
 	}
-
+/*
     @Override
     public void onGlobalLayout() {
         int totalHeight = activityContainer.getRootView().getHeight();
@@ -859,7 +881,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             //activityContainer.getViewTreeObserver().removeOnGlobalLayoutListener();
         }
 
-    }
+    }*/
 /*
     @Override
     public void onNewIntent(Intent intent) {
@@ -1046,15 +1068,21 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             }
         }
 
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+
 
         if(newTag.equals(SearchFragment.TAG) || (!backState && fragmentManager.findFragmentByTag(newTag)==null)) {
             Log.e("aaa", "inside main change fragment");
-            Fragment currentFragment = fragmentManager.findFragmentByTag(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+            final Fragment currentFragment = fragmentManager.findFragmentByTag(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
             if(currentFragment!=null && currentFragment.isAdded()) {// && currentFragment.isVisible()) {
                 //transaction.hide(currentFragment);
                 //currentFragment.onHiddenChanged(true);
+                if(currentFragment.getTag().equals(FavoriteFragment.TAG)) {
+                    //((FavoriteFragment)currentFragment).collapseTabLayout();
+                }
             }
+
+
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
             //transaction.setCustomAnimations(android.R.anim.slide_in_left, android.R.anim.slide_out_right, android.R.anim.slide_in_left, android.R.anim.slide_out_right);
             Fragment f = fragmentManager.findFragmentByTag(newTag);
             if(newTag.equals(WebFragment.TAG) || newTag.equals(SourcesFragment.TAG) || newTag.equals(AboutFragment.TAG  )) {
@@ -1065,6 +1093,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 transaction.setCustomAnimations(R.anim.slide_in_from_bottom2, R.anim.empty, R.anim.empty, R.anim.slide_out_to_bottom2);
                 //transaction.setCustomAnimations(R.anim.slide_in_from_right, R.anim.empty, R.anim.empty, R.anim.slide_out_to_right);
                 //transaction.setCustomAnimations(R.anim.temp_animation, R.anim.empty, R.anim.empty, R.anim.slide_out_to_bottom2);
+            } else {
+                transaction.setCustomAnimations(R.anim.empty_immediate, R.anim.empty, R.anim.empty_immediate, R.anim.empty_immediate);
             }
             if(true || f==null) {
                 Log.e("aaa", "f==null, adding new fragment");
@@ -1083,6 +1113,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 fragmentManager.executePendingTransactions();
             }
             //fragmentManager.executePendingTransactions();
+
+
         }
 	}
 
@@ -1108,6 +1140,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 //Log.e("aaa", "navigation bar: "+navigationBar);
                 totalHeight2 = totalHeight - statusBar - navigationBar - actionBarHeight;
                 visibleHeight = visibleHeight - actionBarHeight;
+                /*
                 Log.e("aaa", "status bar: "+statusBar);
                 Log.e("aaa", "navigation bar: "+navigationBar);
                 Log.e("aaa", "actionbar height: "+actionBarHeight);
@@ -1115,8 +1148,9 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 Log.e("aaa", "total height 2: "+totalHeight2);
                 Log.e("aaa", "visible height: "+visibleHeight);
                 Log.e("aaa", "total - visible: "+(totalHeight-visibleHeight));
-                Log.e("aaa", "status + navigation + actionbar: "+(statusBar + navigationBar + actionBarHeight));
+                Log.e("aaa", "status + navigation + actionbar: "+(statusBar + navigationBar + actionBarHeight));*/
                 //if(portrait && (totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
+                //if((assistAction || totalHeight2>visibleHeight)) {
                 if((totalHeight2>visibleHeight)) {
                     Log.e("aaa", "keyboard open!");
                     //changeFragment(f, tag);
@@ -1135,6 +1169,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                     transaction.addToBackStack(tag);
                     transaction.commit();
 */
+                    //assistAction = false;
                     changeFragment(f, tag);
 
                     if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.JELLY_BEAN) {
@@ -1190,7 +1225,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             fragmentManager.executePendingTransactions();
         }
 
-        actionBar.updateActionBar(fragmentManager, DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+        DDGActionBarManager.getInstance().updateActionBar(fragmentManager, DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
     }
 /*
     public void addSearchFragment() {
@@ -1290,7 +1325,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(tag)).commit();
         }
 
-        actionBar.updateActionBar(fragmentManager, DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+        DDGActionBarManager.getInstance().updateActionBar(fragmentManager, DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
 	}
 
 
@@ -1497,12 +1532,12 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
 	@Subscribe
 	public void onSearchBarClearEvent(SearchBarClearEvent event) {
-		actionBar.clearSearchBar();
+        DDGActionBarManager.getInstance().clearSearchBar();
 	}
 
 	@Subscribe
 	public void onSearchBarSetTextEvent(SearchBarSetTextEvent event) {
-		actionBar.setSearchBarText(event.text);
+        DDGActionBarManager.getInstance().setSearchBarText(event.text);
 	}
 
 	@Subscribe

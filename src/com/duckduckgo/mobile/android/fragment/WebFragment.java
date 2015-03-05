@@ -173,6 +173,8 @@ public class WebFragment extends Fragment {
         if(menu==null) {
             return;
         }
+        MenuItem reloadItem = menu.findItem(R.id.action_reload);
+        reloadItem.setVisible(true);
         MenuItem saveItem = menu.findItem(R.id.action_add_favorite);
         MenuItem deleteItem = menu.findItem(R.id.action_remove_favorite);
         switch(urlType) {
@@ -216,6 +218,9 @@ public class WebFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
+            case R.id.action_reload:
+                actionReload();
+                return true;
             case R.id.action_add_favorite:
                 actionSave();
                 return true;

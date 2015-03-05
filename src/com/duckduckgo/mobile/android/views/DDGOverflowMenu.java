@@ -22,9 +22,11 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
@@ -51,6 +53,8 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     private LinearLayout header = null;
     private List<ImageButton> headerButtons;
     private HashMap<Integer, MenuItem> headerItems;
+
+    private ImageView closeView = null;
 
     public DDGOverflowMenu(Context context) {
         //super(context, null, android.R.attr.listPopupWindowStyle);
@@ -112,6 +116,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     }
 
     public void setHeaderMenu(Menu menu) {
+
         header.setVisibility(View.VISIBLE);
         //headerButtons = new ArrayList<ImageButton>();
         headerItems = new HashMap<Integer, MenuItem>();
@@ -124,10 +129,55 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
             imageButton.setEnabled(menu.getItem(i).isEnabled());
             imageButton.setImageDrawable(menu.getItem(i).getIcon());
             imageButton.setOnClickListener(this);
+
             //headerButtons.add(imageButton);
             headerItems.put(imageButton.getId(), menu.getItem(i));
             header.addView(imageButton);
         }
+/*
+        header.setVisibility(View.VISIBLE);
+        headerItems = new HashMap<Integer, MenuItem>();
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        for(int i=0; i<menu.size(); i++) {
+            RelativeLayout headerButton = (RelativeLayout) inflater.inflate(R.layout.temp_header_item2, header, false);
+            ImageView image = (ImageView) headerButton.findViewById(R.id.button_header_image);
+            final String title = ""+menu.getItem(i).getTitle();
+            final int actionId = menu.getItem(i).getItemId();
+            headerButton.setId(actionId);
+            headerButton.setEnabled(menu.getItem(i).isEnabled());
+            image.setImageDrawable(menu.getItem(i).getIcon());
+            image.setEnabled(menu.getItem(i).isEnabled());
+            if(i==menu.size()-1) {
+                closeView = image;*//*
+                ((RelativeLayout.LayoutParams)image.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+                int actionBarButtonWidth = (int) context.getResources().getDimension(R.dimen.actionbar_button_width);
+                int halfWidth = (int) (actionBarButtonWidth * 0.5);
+                int menuMargin = (int) context.getResources().getDimension(R.dimen.menu_outer_margin);;
+                Log.e("aaa", "button width: "+actionBarButtonWidth);
+                Log.e("aaa", "button width/2: "+halfWidth);
+                Log.e("aaa", "menu margin: "+menuMargin);
+                int imageWidth = image.getWidth();
+                int imageMeasuredWidth = image.getMeasuredWidth();
+                Log.e("aaa", "image width: "+imageWidth);
+                Log.e("aaa", "image meas width: "+imageMeasuredWidth);
+                int totalWidth = getWidth();
+                int totalWidthThird = totalWidth / 3;
+                int halfTotalWidthThird = (int) (totalWidthThird * 0.5);
+                Log.e("aaa", "total width: "+totalWidth);
+                Log.e("aaa", "total width third: "+totalWidthThird);
+                Log.e("aaa", "half total width: "+halfTotalWidthThird);
+
+                //rightPadding -= (int) context.getResources().getDimension(R.dimen.menu_outer_margin);
+                //Log.e("aaa", "right padding: "+rightPadding);
+                image.setPadding(0,0,25,0);*//*
+            }
+            headerButton.setOnClickListener(this);
+
+            //headerButtons.add(imageButton);
+            headerItems.put(headerButton.getId(), menu.getItem(i));
+            header.addView(headerButton);
+        }*/
+
     }
 
     public void show(View anchor) {
@@ -142,6 +192,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         //setWidth(getMaxWidth(context, adapter));
 
         setWidth(getMaxWidth(context, overflowAdapter));//aaa ----- temp
+        setCloseButtonPadding();
 
         //setWidth(54*3*3);
         int height = ((int) context.getResources().getDimension(R.dimen.listview_item_height)) * (menuItems.size() + 1);
@@ -193,6 +244,14 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         dismiss();
     }
 
+    private void setCloseButtonPadding() {
+        int maxWith = getWidth();
+        Log.e("aaa", "max width: "+maxWith);
+        int widthThird = maxWith / 3;
+        Log.e("aaa", "max width: "+widthThird);
+
+    }
+
     public static int getMaxWidth(Context context, Adapter adapter) {
         //Log.e("aaa", "-------------get max width");
         int maxLength = 0;
@@ -233,6 +292,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     @Subscribe
     public void onWebViewDisableMenuNavigationButtonEvent(WebViewUpdateMenuNavigationEvent event) {
+
         ImageButton imageButton = (ImageButton) header.findViewById(event.disableId);
         if(imageButton!=null) {
             imageButton.setEnabled(false);
@@ -240,7 +300,15 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         imageButton = (ImageButton) header.findViewById(event.enableId);
         if(imageButton!=null) {
             imageButton.setEnabled(true);
+        }/*
+        RelativeLayout imageButton= (RelativeLayout) header.findViewById(event.disableId);
+        if(imageButton!=null) {
+            imageButton.setEnabled(false);
         }
+        imageButton = (RelativeLayout) header.findViewById(event.enableId);
+        if(imageButton!=null) {
+            imageButton.setEnabled(true);
+        }*/
     }
 
     public class DDGOverflowAdapter extends ArrayAdapter<MenuItem> {

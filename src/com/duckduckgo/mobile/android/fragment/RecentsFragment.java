@@ -15,8 +15,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.adapters.DDGPagerAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
@@ -53,6 +57,7 @@ public class RecentsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        //setRetainInstance(true);
         fragmentView = inflater.inflate(R.layout.fragment_favorite_recents, container, false);
         return fragmentView;
     }
@@ -81,9 +86,12 @@ public class RecentsFragment extends Fragment {
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
 
-        slidingTabLayout = (SlidingTabLayout) fragmentView.findViewById(R.id.sliding_tabs);
-        slidingTabLayout.setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
-        slidingTabLayout.setViewPager(viewPager);
+        //slidingTabLayout = (SlidingTabLayout) fragmentView.findViewById(R.id.sliding_tabs);
+        //slidingTabLayout = DDGActionBarManager.getInstance().getSlidingTabLayout();
+        //slidingTabLayout.setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
+        DDGActionBarManager.getInstance().getSlidingTabLayout().setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
+        //slidingTabLayout.setViewPager(viewPager);
+        DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
 
         recentMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.main, recentMenu);
@@ -92,13 +100,16 @@ public class RecentsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        //viewPager.setAdapter(pagerAdapter);
+        //DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
         //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_RECENTS && DDGControlVar.homeScreenShowing);//aaa
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        slidingTabLayout.setViewPager(viewPager);
+        //slidingTabLayout.setViewPager(viewPager);
+        DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
     }
 /*
     @Override
@@ -111,6 +122,34 @@ public class RecentsFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Animation onCreateAnimation(int transit, final boolean enter, int nextAnim) {
+        Animation anim = AnimationUtils.loadAnimation(getActivity(), nextAnim);
+        anim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                if(enter) {
+                    //DDGActionBarManager.getInstance().expandTabLayout();
+                    DDGActionBarManager.getInstance().showTabLayout();
+                }
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        AnimationSet animSet = new AnimationSet(true);
+        animSet.addAnimation(anim);
+        return animSet;
     }
 
     @Subscribe
