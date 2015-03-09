@@ -236,9 +236,19 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
         decorView.setSystemUiVisibility(uiOptions);
 */
+/*
+        View decorView = getWindow().getDecorView();
+        decorView.setSystemUiVisibility(
+                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        | View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE);
+*/
 
         keyboardService = new KeyboardService(this);
-        supportRequestWindowFeature(Window.FEATURE_PROGRESS);
+        //supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
         showNewSourcesDialog();
 
