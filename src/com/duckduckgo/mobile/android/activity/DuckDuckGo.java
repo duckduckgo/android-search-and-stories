@@ -229,6 +229,14 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
         super.onCreate(savedInstanceState);
         Log.e("aaa", "on create ---------------------------------------------------------------------");
         Log.w("www", "on create start");
+
+/*
+        View decorView = getWindow().getDecorView();
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
+
+        decorView.setSystemUiVisibility(uiOptions);
+*/
+
         keyboardService = new KeyboardService(this);
         supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
@@ -608,7 +616,9 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 //keyboardService.hideKeyboard(getSearchField());
 
                 fragment = new FeedFragment();
+                //fragment = new RecentsFragment();
                 tag = FeedFragment.TAG;
+                //tag = RecentsFragment.TAG;
 				break;
 			case SCR_RECENTS:
                 DDGActionBarManager.getInstance().resetScreenState();
@@ -680,7 +690,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             //Log.e("aaa", "not display search fragment");
             //return;
         }*/
-        if(!assistAction && tag.equals(SearchFragment.TAG)) {
+        if(false && !assistAction && tag.equals(SearchFragment.TAG)) {
         //if(tag.equals(SearchFragment.TAG)) {
             delayedChangeFragment(fragment, tag);
         } else if(!tag.equals("")) {
@@ -1139,7 +1149,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             @Override
             public void onGlobalLayout() {
                 int totalHeight = activityContainer.getRootView().getHeight();
-                int visibleHeight = fragmentContainer.getHeight();
+                int visibleHeight = activityContainer.getHeight();
                 int totalHeight2;
 
                 boolean portrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
@@ -1150,7 +1160,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 //Log.e("aaa", "status bar: "+statusBar);
                 //Log.e("aaa", "navigation bar: "+navigationBar);
                 totalHeight2 = totalHeight - statusBar - navigationBar - actionBarHeight;
-                //visibleHeight = visibleHeight - actionBarHeight;
+                visibleHeight = visibleHeight - actionBarHeight;
 
                 Log.e("aaa", "status bar: "+statusBar);
                 Log.e("aaa", "navigation bar: "+navigationBar);

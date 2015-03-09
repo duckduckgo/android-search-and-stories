@@ -3,8 +3,6 @@
 
     <style name="DDGTheme" parent="DDGTheme.Base">
 
-
-
     </style>
 
     <style name="DDGTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
