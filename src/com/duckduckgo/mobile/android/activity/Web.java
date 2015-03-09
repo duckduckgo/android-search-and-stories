@@ -79,7 +79,7 @@ public class Web extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);/*
         keyboardService = new KeyboardService(this);
         supportRequestWindowFeature(Window.FEATURE_PROGRESS);
 
@@ -97,13 +97,26 @@ public class Web extends ActionBarActivity {
 
         initActionBar();
 
-        updateActionBar(WebFragment.TAG);
+        updateActionBar(WebFragment.TAG);*/
+        //getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.background));
+        Intent intent = getIntent();
+        Intent searchIntent = new Intent(this, DuckDuckGo.class);
+        if(intent!=null) {
+            Log.e("aaa", "intent: " + intent.toString());
+            searchIntent.putExtra("assist", true);
+        } else {
+            Log.e("aaa", "intent is null");
+        }
+
+        searchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(searchIntent);
+        //finish();
 
     }
 
     @Override
     public void onResume() {
-        super.onResume();
+        super.onResume();/*
         BusProvider.getInstance().register(this);
 
         Intent intent = getIntent();
@@ -117,14 +130,15 @@ public class Web extends ActionBarActivity {
                 sessionType = SESSIONTYPE.SESSION_BROWSE;
             }
             searchOrGoToUrl(url, sessionType);
-        }
+        }*/
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        finish();
 
-        BusProvider.getInstance().unregister(this);
+        //BusProvider.getInstance().unregister(this);
     }
 
     @Override

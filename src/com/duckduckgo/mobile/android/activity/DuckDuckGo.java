@@ -244,7 +244,6 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
 		setContentView(R.layout.temp_main);
         getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.background));
-        //getWindow().setBackgroundDrawableResource(R.drawable.standard_window_background);
         
         DDGUtils.displayStats = new DisplayStats(this);
 
@@ -263,7 +262,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 		fragmentContainer = (FrameLayout) findViewById(R.id.fragmentContainer);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        searchField = (DDGAutoCompleteTextView) toolbar.findViewById(R.id.searchEditText);
+        //searchField = (DDGAutoCompleteTextView) toolbar.findViewById(R.id.searchEditText);
         setSupportActionBar(toolbar);
         getSupportActionBar().addOnMenuVisibilityListener(new ActionBar.OnMenuVisibilityListener() {
             @Override
@@ -299,25 +298,28 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
                         DDGActionBarManager.getInstance().updateActionBar(fragmentManager, tag);
                         if ((tag.equals(SearchFragment.TAG) || tag.equals(SearchFragment.TAG_HOME_PAGE)) && !backPressed) {
-                            Log.e("aaa", "show keyboard!");
+                            Log.e("aaa", "show keyboard! - back stack - 1");
                             keyboardService.showKeyboard(getSearchField());
                             //Log.e("aaa", "[[[[[[[[[should hide the keyboard, fragmentmanager backstack, has focus?: "+getSearchField().hasFocus());
                             //keyboardService.hideKeyboard(getSearchField());
-                        } else {
+                        } else if(!assistAction) {
                             Log.e("aaa", "hide keyboard!");
-                            Log.e("aaa", "search field has focus: " + searchField.hasFocus());
-                            keyboardService.hideKeyboardDelayed(getSearchField());
+                            Log.e("aaa", "search field has focus: " + getSearchField().hasFocus());
+                            Log.e("aaa", "hide delayed - backstack 2");
+                            //keyboardService.hideKeyboardDelayed(getSearchField());
                             //searchField.clearFocus();
                             //searchField.clearFocus();
                             //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                             //imm.hideSoftInputFromWindow(searchField.getWindowToken(), 0);
-                            //keyboardService.hideKeyboard(searchField);
-                        }
-                        if(false && assistAction) {
+                            keyboardService.hideKeyboard(getSearchField());
+                        } else if(assistAction) {
                             Log.e("aaa", "assist action clearing focus and showing keyboard");
-                            getSearchField().clearFocus();
-                            keyboardService.showKeyboard(getSearchField());
+                            Log.e("aaa", "show keyboard! - back stack - 3");
+                            //getSearchField().clearFocus();
+                            //keyboardService.showKeyboard(getSearchField());
+                            assistAction = false;
                         }
+                        assistAction = false;
                         backPressed = false;
                     }
                     Log.e("aaa", "inside back stack, current tag: " + DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
@@ -679,6 +681,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             //return;
         }*/
         if(!assistAction && tag.equals(SearchFragment.TAG)) {
+        //if(tag.equals(SearchFragment.TAG)) {
             delayedChangeFragment(fragment, tag);
         } else if(!tag.equals("")) {
             //assistAction = false;
@@ -743,6 +746,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
         if(intent!=null) {
             Log.e("aaa", "intent!=null, action: "+intent.getAction());
             Log.e("aaa", "intent!=null, categories: "+intent.getCategories());
+            Log.e("aaa", "intent: "+intent.toString());
         } else {
             Log.e("aaa", "intent==null");
         }
@@ -767,6 +771,12 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             Log.e("aaa", "intent == action view");
             searchOrGoToUrl(intent.getDataString());
         }
+        else if(intent.getBooleanExtra("assist", false)) {
+            Log.e("aaa", "intent == assist");
+            assistAction = true;
+            Log.e("aaa", "show keyboard! - on resume - 1");
+            keyboardService.showKeyboard(getSearchField());
+        }
         else if(Intent.ACTION_ASSIST.equals(intent.getAction())){
             Log.e("aaa", "intent == action assist");
             //keyboardService.showKeyboard(getSearchField());
@@ -780,7 +790,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             //keyboardService.showKeyboard(getSearchField());
             assistAction = true;
             //actionBar.clearSearchBar();
-            //keyboardService.showKeyboard(getSearchField());
+            Log.e("aaa", "show keyboard! - on resume - 2");
+            keyboardService.showKeyboard(getSearchField());
             //getSearchField().requestFocus();
             //changeFragment(new SearchFragment(), SearchFragment.TAG);
             //displayScreen(SCREEN.SCR_SEARCH, true);
@@ -1344,7 +1355,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	}
 
 	public DDGAutoCompleteTextView getSearchField() {
-		return searchField;
+		//return searchField;
+        return DDGActionBarManager.getInstance().getSearchField();
 	}
 
     private void checkForCrashes() {
@@ -1511,6 +1523,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	@Subscribe
 	public void onRecentSearchPaste(RecentSearchPasteEvent event) {
         getSearchField().pasteQuery(event.query);
+        Log.e("aaa", "show keyboard! - on recent search paste");
         keyboardService.showKeyboard(getSearchField());//aaa keyboard
 	}
 
@@ -1522,6 +1535,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	@Subscribe
 	public void onSavedSearchPaste(SavedSearchPasteEvent event) {
         getSearchField().pasteQuery(event.query);
+        Log.e("aaa", "show keyboard! - on saved search paste");
         keyboardService.showKeyboard(getSearchField());//aaa keyboard
 	}
 

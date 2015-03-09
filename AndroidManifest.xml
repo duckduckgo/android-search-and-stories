@@ -31,8 +31,9 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.ASSIST"/>
-                <category android:name="android.intent.category.DEFAULT" />\
-            </intent-filter><!--
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!--
             <intent-filter>
                 <action android:name="android.intent.action.ASSIST"/>
                 <action android:name="android.intent.action.SEARCH" />
@@ -50,7 +51,22 @@
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        
+
+        <activity
+            android:name=".activity.Assist"
+            android:label="@string/AppName"><!--
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+
+            <!--
+                        <intent-filter>
+                            <action android:name="android.intent.action.ASSIST"/>
+                            <category android:name="android.intent.category.DEFAULT" />
+                        </intent-filter>-->
+        </activity>
+        <!--
         <receiver android:name="com.duckduckgo.mobile.android.DuckDuckGoWidgetProviderRed">
 		    <intent-filter>
 		        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -59,7 +75,7 @@
 		    <meta-data android:name="android.appwidget.provider"
 		        	   android:resource="@xml/widget_info_red" />
 		</receiver>
-		
+		-->
         <receiver android:name="com.duckduckgo.mobile.android.DuckDuckGoWidgetProviderWhite">
 		    <intent-filter>
 		        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -82,6 +98,16 @@
         <activity
             android:name=".activity.TempPreferences"
             android:label="@string/SettingsButtonContentDescription" />
+
+        <activity
+            android:name=".activity.Web"
+            android:label="@string/SettingsButtonContentDescription">
+<!--
+            <intent-filter>
+                <action android:name="android.intent.action.ASSIST"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>-->
+            </activity>
         
         <activity android:name="org.acra.CrashReportDialog"
 	        android:theme="@android:style/Theme.Dialog"

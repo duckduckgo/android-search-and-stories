@@ -45,7 +45,7 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.squareup.picasso.Picasso;
 
 
-public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filterable {
+public class MainFeedAdapter extends ArrayAdapter<FeedObject>/* implements Filterable */{
 	private static final String TAG = "MainFeedAdapter";
 	
 	private Context context;
@@ -86,20 +86,21 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
 	
 	@Override
 	public View getView(int position, View cv, ViewGroup parent) {
-		if (cv == null) {
-			cv = inflater.inflate(R.layout.temp_main_feed_layout, null);
+        View view = cv;
+		if (view == null) {
+			view = inflater.inflate(R.layout.temp_main_feed_layout, null);
 			Holder holder = new Holder(/*(Toolbar) cv.findViewById(R.id.feedWrapper),*/
-					(TextView)cv.findViewById(R.id.feedTitleTextView),
-					(TextView)cv.findViewById(R.id.feedCategoryTextView),
-					(AsyncImageView)cv.findViewById(R.id.feedItemBackground),
-					(AsyncImageView)cv.findViewById(R.id.feedItemSourceIcon));
+					(TextView)view.findViewById(R.id.feedTitleTextView),
+					(TextView)view.findViewById(R.id.feedCategoryTextView),
+					(AsyncImageView)view.findViewById(R.id.feedItemBackground),
+					(AsyncImageView)view.findViewById(R.id.feedItemSourceIcon));
 			//holder.toolbar.inflateMenu(R.menu.feed);
-			cv.setTag(holder);
+			view.setTag(holder);
 		}
 		
 		final FeedObject feed = getItem(position);
 		
-		final Holder holder = (Holder) cv.getTag();
+		final Holder holder = (Holder) view.getTag();
 		URL feedUrl = null;
 
 		if (feed != null) {
@@ -136,7 +137,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
                 }
             });*/
 
-			final View iconParent = (View) cv.findViewById(R.id.feedWrapper);
+			final View iconParent = (View) view.findViewById(R.id.feedWrapper);
 			iconParent.post(new Runnable() {
 	            public void run() {
 	                // Post in the parent's message queue to make sure the parent
@@ -186,7 +187,9 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
                     Log.e("aaa", "catgory clicked: "+category);
                 }
             });*/
-            //holder.textViewCategory.setOnClickListener(categoryClickListener);
+            holder.textViewCategory.setOnClickListener(categoryClickListener);
+            /*
+            final View view = cv;
             holder.textViewCategory.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -195,14 +198,16 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
                         DDGControlVar.targetCategory = null;
                         unmarkCategory();
                         //getFilter().filter(category);
-                    } else {
+                    } else if(DDGControlVar.targetSource!=null) {
                         Log.e("aaa", "must add filter: "+category);
                         //DDGControlVar.targetCategory = category;
                         //markCategory(feedId);
                         //getFilter().filter(category);
+
                     }
+                    view.animate().setDuration(1000).alpha(0)
                 }
-            });
+            });*/
 /*
 			//set the toolbar Menu
             if(DDGApplication.getDB().isSaved(feedId)) {
@@ -266,7 +271,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
 			}
 		}
 		
-		if(cv != null) {
+		if(view != null) {
 			//if((markedItem != null && markedItem.equals(feed.getId())) || (markedSource!=null && markedSource.equals(feed.getId()) || markedCategory!=null && markedCategory.equals(feed.getId()))) {
             if((markedItem != null && markedItem.equals(feed.getId())) || (markedSource!=null && markedSource.equals(feed.getId()))) {
 				blinkanimation.reset();
@@ -277,13 +282,13 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
                 cv.startAnimation(blinkanimation);
             }*/
 			else {
-				cv.setAnimation(null);
+				view.setAnimation(null);
 			}
 		}
 		
-		return cv;
+		return view;
 	}
-
+/*
     @Override
     public Filter getFilter() {
         Filter feedFilter = new Filter() {
@@ -298,10 +303,10 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
                     for (FeedObject feed : feedObjects) {
                         if (feed != null) {
                             if(DDGControlVar.targetCategory!=null && DDGControlVar.targetCategory.equals(feed.getCategory()))
-                                newResults.add(feed);/*
+                                newResults.add(feed);*//*
                             if(DDGControlVar.targetSource!=null && DDGControlVar.targetSource.equals(feed.getType())) {
                                 newResults.add(feed);
-                            }*/
+                            }*//*
                         }
                     }
                 }
@@ -317,11 +322,11 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
                 if(results!=null && results.count>0) {
                     ArrayList<FeedObject> newResults = (ArrayList<FeedObject>) results.values;
 
-/*
+*//*
                     for(FeedObject feed : feedObjects) {
                         if(newResults.)
                     }
-*/
+*//*
                     if(Build.VERSION.SDK_INT>+Build.VERSION_CODES.HONEYCOMB) {
                         addAll((ArrayList<FeedObject>)results.values);
                     } else {
@@ -340,14 +345,26 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> implements Filtera
 
         return feedFilter;
     }
+*/
+    /*
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
 
+    @Override
+    public long getItemId(int position) {
+        String id = getItem(position).getId();
+        return Long.parseLong(id);
+    }
+*/
 	public void setList(List<FeedObject> feed) {
 		this.clear();
-        feedObjects.clear();
-        getFilter().filter("");
+        //feedObjects.clear();
+        //getFilter().filter("");
 		for (FeedObject next : feed) {
 			this.add(next);
-            feedObjects.add(next);
+            //feedObjects.add(next);
 		}
 	}
 

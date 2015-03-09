@@ -238,7 +238,17 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         int actionBarHeight = (int) getActivity().getResources().getDimension(R.dimen.actionbar_height);
         //Log.e("aaa", "status bar: "+statusBar);
         //Log.e("aaa", "navigation bar: "+navigationBar);
+        //domani sera boh
+        // Log.e("aaa", "---------search fragment");
+        //Log.e("aaa", "status bar: "+statusBar);
+        //Log.e("aaa", "navigation bar: "+navigationBar);
+        //Log.e("aaa", "action bar: "+actionBarHeight);
+        //Log.e("aaa", "total height: "+totalHeight);
+        //Log.e("aaa", "visible height: "+visibleHeight);
+        //visibleHeight = visibleHeight - actionBarHeight;
+
         totalHeight = totalHeight - statusBar - navigationBar - actionBarHeight;
+        //Log.e("aaa", "total height calculated: "+totalHeight);
 
 
         int itemHeight = (int) getActivity().getResources().getDimension(R.dimen.temp_item_height);
@@ -252,9 +262,14 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
         //visibleHeight = visibleHeight - (searchParams.topMargin * 3);
         //visibleHeight = visibleHeight - (headerParams.height * 3);
-        visibleHeight = visibleHeight - actionBarHeight - (searchListView.getPaddingTop() * 3);
+        //visibleHeight = visibleHeight - actionBarHeight - (searchListView.getPaddingTop() * 3);
+        //visibleHeight = visibleHeight - (searchListView.getPaddingTop() * 3);
+        //totalHeight = totalHeight - (searchListView.getPaddingTop() * 3);
 
-        int maxItems = visibleHeight / itemHeight;
+        //Log.e("aaa", "total height: "+totalHeight);
+        //Log.e("aaa", "visible height: "+visibleHeight);
+
+        int maxItems = (visibleHeight - (searchListView.getPaddingTop() * 3)) / itemHeight;
         int recentItems = 0;
         //Log.e("aaa", "total: "+totalHeight+" - visible: "+visibleHeight+" - max items: "+maxItems+" - search margin: "+searchParams.topMargin+" - item height: "+itemHeight);
 
