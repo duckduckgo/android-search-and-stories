@@ -1139,7 +1139,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             @Override
             public void onGlobalLayout() {
                 int totalHeight = activityContainer.getRootView().getHeight();
-                int visibleHeight = activityContainer.getHeight();
+                int visibleHeight = fragmentContainer.getHeight();
                 int totalHeight2;
 
                 boolean portrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
@@ -1150,8 +1150,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 //Log.e("aaa", "status bar: "+statusBar);
                 //Log.e("aaa", "navigation bar: "+navigationBar);
                 totalHeight2 = totalHeight - statusBar - navigationBar - actionBarHeight;
-                visibleHeight = visibleHeight - actionBarHeight;
-                /*
+                //visibleHeight = visibleHeight - actionBarHeight;
+
                 Log.e("aaa", "status bar: "+statusBar);
                 Log.e("aaa", "navigation bar: "+navigationBar);
                 Log.e("aaa", "actionbar height: "+actionBarHeight);
@@ -1159,7 +1159,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 Log.e("aaa", "total height 2: "+totalHeight2);
                 Log.e("aaa", "visible height: "+visibleHeight);
                 Log.e("aaa", "total - visible: "+(totalHeight-visibleHeight));
-                Log.e("aaa", "status + navigation + actionbar: "+(statusBar + navigationBar + actionBarHeight));*/
+                Log.e("aaa", "status + navigation + actionbar: "+(statusBar + navigationBar + actionBarHeight));
                 //if(portrait && (totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
                 //if((assistAction || totalHeight2>visibleHeight)) {
                 if((totalHeight2>visibleHeight)) {

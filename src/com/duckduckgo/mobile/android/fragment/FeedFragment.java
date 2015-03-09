@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.internal.view.menu.MenuBuilder;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -24,6 +26,7 @@ import android.widget.TextView;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
+import com.duckduckgo.mobile.android.adapters.TempMainFeedAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
@@ -31,6 +34,7 @@ import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.events.RequestKeepFeedUpdatedEvent;
 import com.duckduckgo.mobile.android.events.RequestOpenWebPageEvent;
 import com.duckduckgo.mobile.android.events.RequestSyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.SourceFilterEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
@@ -60,12 +64,16 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private Activity activity = null;
 
+    private RecyclerView recyclerView = null;
 	private MainFeedListView feedView = null;
     private SwipeRefreshLayout swipeRefreshLayout = null;
 	private View fragmentView;
 
+    private TempMainFeedAdapter recyclerAdapter = null;
 	private MainFeedAdapter feedAdapter = null;
 	private MainFeedTask mainFeedTask = null;
+
+    private RecyclerView.LayoutManager layoutManager;
 
 	// for keeping filter source at same position
 	public String source_m_objectId = null;
@@ -130,6 +138,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		super.onResume();
 
         Log.e("aaa", "on resume: "+getTag());
+        Log.e("aaa", "source: "+gettargetsource());
+        Log.e("aaa", "category: "+gettargetcategory());
 
         //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_STORIES && DDGControlVar.homeScreenShowing);
         //setHasOptionsMenu(false);
@@ -138,6 +148,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		// ensure we refresh in such cases
 
 		keepFeedUpdated();
+        if(DDGControlVar.targetCategory!=null) {
+            //recyclerAdapter.filterCategory(DDGControlVar.targetCategory);
+        }
 	}
 
 	@Override
@@ -191,19 +204,67 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		SourceClickListener sourceClickListener = new SourceClickListener();
         CategoryClickListener categoryClickListener = new CategoryClickListener();
 		feedAdapter = new MainFeedAdapter(getActivity(), sourceClickListener, categoryClickListener);
+        recyclerAdapter = new TempMainFeedAdapter(getActivity(), sourceClickListener, categoryClickListener);
 
 		mainFeedTask = null;
 
         swipeRefreshLayout = (SwipeRefreshLayout) fragmentView.findViewById(R.id.swipe_refresh_layout);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary);
-        feedView = (MainFeedListView) fragmentView.findViewById(R.id.feed_list_view);
-		feedView.setAdapter(feedAdapter);
+        //feedView = (MainFeedListView) fragmentView.findViewById(R.id.feed_list_view);
+		//feedView.setAdapter(feedAdapter);
+
+        recyclerView = (RecyclerView) fragmentView.findViewById(R.id.feed_list_view);
+
+        layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(recyclerAdapter);
+
 
         feedMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.main, feedMenu);
 
 	}
+
+    private String gettargetcategory() {
+        if(DDGControlVar.targetCategory==null) {
+            return " null";
+        } else if(DDGControlVar.targetCategory.length()==0) {
+            return " empty";
+        } else {
+            return " "+DDGControlVar.targetCategory;
+        }
+    }
+
+    private String gettargetsource() {
+        if(DDGControlVar.targetSource==null) {
+            return " null";
+        } else if(DDGControlVar.targetSource.length()==0) {
+            return " empty";
+        } else {
+            return " "+DDGControlVar.targetSource;
+        }
+    }
+
+    private void sourceFilter(View itemView, String sourceType, FeedObject feedObject) {
+        Log.e("aaa", "inside source filter method: "+gettargetsource());
+        if(DDGControlVar.targetSource!=null) {
+            cancelSourceFilter();
+        } else {
+            source_m_objectId = feedObject.getId();
+
+            Rect r = new Rect();
+            Point offset = new Point();
+            recyclerView.getChildVisibleRect(itemView, r, offset);
+            source_m_yOffset = offset.y;
+
+            DDGControlVar.targetSource = sourceType;
+
+            DDGControlVar.hasUpdatedFeed = false;
+            keepFeedUpdated();
+        }
+
+    }
 
 	class SourceClickListener implements View.OnClickListener {
 		public void onClick(View v) {
@@ -216,6 +277,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 				View itemParent = (View) v.getParent().getParent();
 				int pos = feedView.getPositionForView(itemParent);
+                //int pos = recyclerView.getPositionForView(itemParent);
 				source_m_objectId = ((FeedObject) feedView.getItemAtPosition(pos)).getId();
                 FeedObject feedObject = (FeedObject) feedView.getItemAtPosition(pos);
 				source_m_itemHeight = itemParent.getHeight();
@@ -364,10 +426,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	 * Cancels source filter applied with source icon click from feed item
 	 */
 	public void cancelSourceFilter() {
-        Log.e("aaa", "inside cancel source filter");
+        Log.e("aaa", "inside cancel source filter: "+gettargetsource());
 		DDGControlVar.targetSource = null;
 		DDGControlVar.hasUpdatedFeed = false;
 		feedAdapter.unmark();
+        recyclerAdapter.unmarkSource();
 		keepFeedUpdated();
 	}
 
@@ -383,7 +446,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //feedAdapter.getFilter().filter("");--temp
 
         //feedAdapter.unmark();
-        //keepFeedUpdated();
+        keepFeedUpdated();
     }
 
 	/**
@@ -391,7 +454,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	 */
 	@SuppressLint("NewApi")
 	public void keepFeedUpdated(){
-        Log.e("aaa", "keep feed updated");
+        Log.e("aaa", "keep feed updated, target source: "+gettargetsource());
 		if(TorIntegrationProvider.getInstance(getActivity()).isOrbotRunningAccordingToSettings()) {
 			if (!DDGControlVar.hasUpdatedFeed) {
 				if (DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
@@ -437,11 +500,12 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 			}
 		}
 
-		feedAdapter.addData(event.feed);
+		//feedAdapter.addData(event.feed);
+        recyclerAdapter.addData(event.feed);
 
         //feedAdapter.getFilter().filter("");temp
 
-		feedAdapter.notifyDataSetChanged();
+		//feedAdapter.notifyDataSetChanged();
 
 		// update pull-to-refresh header to reflect task completion
         swipeRefreshLayout.setRefreshing(false);
@@ -450,11 +514,23 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 		// do this upon filter completion
 		if(DDGControlVar.targetSource != null && source_m_objectId != null) {
-			int nPos = feedView.getSelectionPosById(source_m_objectId);
-			feedView.setSelectionFromTop(nPos,source_m_yOffset);
+			//int nPos = feedView.getSelectionPosById(source_m_objectId);
+			//feedView.setSelectionFromTop(nPos,source_m_yOffset);
 			// mark for blink animation (as a visual cue after list update)
-			feedAdapter.mark(source_m_objectId);
+			//  feedAdapter.mark(source_m_objectId);
+
+            int pos=-1;
+            for(int i=0; pos<0 && i<recyclerAdapter.getItemCount(); i++) {
+                if(recyclerAdapter.getItem(i).getId()==source_m_objectId) {
+                    pos = i;
+                }
+            }
+            recyclerView.offsetChildrenVertical(source_m_yOffset);
+            recyclerAdapter.markSource(source_m_objectId);
 		}
+        if(DDGControlVar.targetCategory!=null) {
+            recyclerAdapter.filterCategory(DDGControlVar.targetCategory);
+        }
 
 	}
 
@@ -482,8 +558,15 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		}
 	}
 
+    @Subscribe
+    public void onSourceFilterEvent(SourceFilterEvent event) {
+        Log.e("aaa", "inside source filter event: "+gettargetsource());
+        sourceFilter(event.itemView, event.sourceType, event.feedObject);
+    }
+
 	@Subscribe
 	public void onFeedCancelSourceFilterEvent(FeedCancelSourceFilterEvent event) {
+        Log.e("aaa", "inside on feed cancel source filter event: "+gettargetsource());
 		cancelSourceFilter();
 	}
 
