@@ -34,6 +34,7 @@ import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewUpdateMenuNavigationEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
+import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -52,7 +53,9 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     private LinearLayout header = null;
     private List<ImageButton> headerButtons;
-    private HashMap<Integer, MenuItem> headerItems;
+    private HashMap<Integer, MenuItem> headerItems = null;
+
+    private FeedObject feed = null;
 
     private ImageView closeView = null;
 
@@ -75,7 +78,6 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     }
 
     public void init() {
-        BusProvider.getInstance().register(this);
         setFocusable(true);
         setOutsideTouchable(true);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -83,6 +85,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         setContentView(container);
         setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        //setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         ListPopupWindow temp = new ListPopupWindow(context);
         //setBackgroundDrawable(temp.getBackground());
@@ -116,6 +119,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     }
 
     public void setHeaderMenu(Menu menu) {
+        BusProvider.getInstance().register(this);
 
         header.setVisibility(View.VISIBLE);
         //headerButtons = new ArrayList<ImageButton>();
@@ -180,7 +184,25 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     }
 
+    public void setFeed(FeedObject feed) {
+        this.feed = feed;
+    }
+
     public void show(View anchor) {
+        show(anchor, true);
+    }
+
+    public void showFeedMenu(View anchor) {
+        Rect rect = new Rect();
+        anchor.getGlobalVisibleRect(rect);
+        Log.e("aaa", "rect: "+rect.toString());
+        Log.e("aaa", "rect h: "+rect.height());
+        Log.e("aaa", "rect w: "+rect.width());
+        show(anchor, false);
+        //showAsDropDown(anchor);
+    }
+
+    public void show(View anchor, boolean withMarginOnAnchor) {
         TypedValue value = new TypedValue();
         context.getTheme().resolveAttribute(android.R.attr.listPreferredItemHeight, value, true);
         String s = TypedValue.coerceToString(value.type, value.data);
@@ -201,7 +223,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         int xOffset = anchor.getMeasuredWidth() - getWidth();
         int yOffset = anchor.getMeasuredHeight() - getHeight();
 
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP && withMarginOnAnchor) {
             int screenMargin = (int) context.getResources().getDimension(R.dimen.menu_outer_margin);
             xOffset -= screenMargin;
             yOffset -= screenMargin;
@@ -220,7 +242,9 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     @Override
     public void dismiss() {
-        BusProvider.getInstance().unregister(this);
+        if(headerItems!=null) {
+            BusProvider.getInstance().unregister(this);
+        }
         super.dismiss();
     }
 
@@ -231,7 +255,12 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        BusProvider.getInstance().post(new WebViewItemMenuClickEvent(menuItems.get(position)));
+        Log.e("aaa", "on item clicked: "+menuItems.get(position));
+        if(feed==null) {
+            BusProvider.getInstance().post(new WebViewItemMenuClickEvent(menuItems.get(position)));
+        } else {
+            BusProvider.getInstance().post(new WebViewItemMenuClickEvent(menuItems.get(position), feed));
+        }
         dismiss();
     }
 

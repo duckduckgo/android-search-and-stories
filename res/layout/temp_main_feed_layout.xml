@@ -14,13 +14,26 @@
 
     <TextView
         android:id="@+id/feedCategoryTextView"
-        android:layout_margin="@dimen/toolbar_category_margin"
+        android:layout_marginTop="@dimen/toolbar_category_margin"
+        android:layout_marginRight="@dimen/actionbar_overflow_width"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/toolbar_category_height"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:background="@drawable/temp_feed_category_background"
         style="@style/FeedCategory"/>
+
+    <ImageButton
+        android:id="@+id/feedMenuButton"
+        android:layout_width="@dimen/toolbar_menu_width"
+        android:layout_height="@dimen/toolbar_category_height"
+        android:layout_marginTop="@dimen/toolbar_category_margin"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/temp_feed_category_background"
+        android:src="@drawable/menu_white_horizontal"
+        android:scaleType="center"/>
 <!--
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"

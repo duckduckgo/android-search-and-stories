@@ -24,6 +24,7 @@
     <dimen name="toolbar_title_left_margin">@dimen/toolbar_icon_margin</dimen><!--24dp-->
     <dimen name="toolbar_category_margin">8dp</dimen>
     <dimen name="toolbar_category_height">22dp</dimen>
+    <dimen name="toolbar_menu_width">32dp</dimen>
     <dimen name="toolbar_divider_height">8dp</dimen>
 
     <dimen name="listview_item_height">48dp</dimen>

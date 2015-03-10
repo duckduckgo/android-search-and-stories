@@ -1675,6 +1675,31 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
     @Subscribe
     public void onWebViewItemMenuClickEvent(WebViewItemMenuClickEvent event) {
-        onOptionsItemSelected(event.item);
+        if(event.feed==null) {
+            onOptionsItemSelected(event.item);
+        } else {
+            Log.e("aaa", "action even with feed: "+event.feed.getTitle()+" - action: "+event.item.getTitle());
+            switch(event.item.getItemId()) {
+                case R.id.action_add_favorite:
+                    itemSaveFeed(event.feed, null);
+                    syncAdapters();
+                    Toast.makeText(this, R.string.ToastSaveStory, Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.action_remove_favorite:
+                    final long delResult = DDGApplication.getDB().makeItemHidden(event.feed.getId());
+                    if(delResult != 0) {
+                        syncAdapters();
+                    }
+                    Toast.makeText(this, R.string.ToastUnSaveStory, Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.action_share:
+                    Sharer.shareStory(this, event.feed.getTitle(), event.feed.getUrl());
+                    break;
+                case R.id.action_external:
+                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(event.feed.getUrl()));
+                    DDGUtils.execIntentIfSafe(this, browserIntent);
+                    break;
+            }
+        }
     }
 }
