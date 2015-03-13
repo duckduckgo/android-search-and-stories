@@ -27,16 +27,15 @@ public class RecentResultCursorAdapter extends CursorAdapter {
     private CharSequence userInput = "";
 
     private boolean hidePasteButton = false;
-    private boolean hideIcon = false;
 
     public RecentResultCursorAdapter(Context context, Cursor c) {
         super(context, c);
         //super context, c, flags api 11
     }
 
-    public RecentResultCursorAdapter(Context context, Cursor c, boolean hideIcon, boolean hidePasteButton) {
+    public RecentResultCursorAdapter(Context context, Cursor c, boolean hidePasteButton) {
         super(context, c);
-        this.hideIcon = hideIcon;
+        //this.hideIcon = hideIcon;
         this.hidePasteButton = hidePasteButton;
     }
 
@@ -88,11 +87,9 @@ public class RecentResultCursorAdapter extends CursorAdapter {
             }
         }
 
-        if(!hideIcon) {
-            ImageView icon = (ImageView) view.findViewById(R.id.item_icon);
-            if (icon != null) {
-                icon.setImageDrawable(context.getResources().getDrawable(R.drawable.time));
-            }
+        ImageView icon = (ImageView) view.findViewById(R.id.item_icon);
+        if (icon != null) {
+            icon.setImageDrawable(context.getResources().getDrawable(R.drawable.time));
         }
 
         ImageButton pasteButton = (ImageButton) view.findViewById(R.id.item_paste);
