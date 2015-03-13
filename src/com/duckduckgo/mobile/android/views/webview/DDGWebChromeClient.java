@@ -59,7 +59,7 @@ public class DDGWebChromeClient extends WebChromeClient {
 			}
 		}
 
-        if(!DDGControlVar.mCleanSearchBar) {
+        if(!DDGControlVar.mCleanSearchBar/* && !DDGControlVar.pageLoaded*/) {
 
             DDGActionBarManager.getInstance().setProgress(newProgress);
         }

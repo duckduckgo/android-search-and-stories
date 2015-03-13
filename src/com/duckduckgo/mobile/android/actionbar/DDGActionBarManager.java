@@ -136,11 +136,13 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
             case R.id.home:
                 Log.e("aaa", "home button clicked");
                 stopProgress();
+                setProgressBarVisible(false);
                 BusProvider.getInstance().post(new DisplayHomeScreenEvent());
                 break;
             case R.id.bang:
                 Log.e("aaa", "bang button clicked");
                 stopProgress();
+                setProgressBarVisible(false);
                 //keyboardService.showKeyboard(getSearchField());//aaa keyboard
                 getSearchField().addBang();
                 break;
@@ -449,7 +451,14 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
     }
 
     public void setProgressBarVisible(boolean visible) {
-        toolbar.findViewById(R.id.progress_container).setVisibility(visible ? View.VISIBLE : View.GONE);
+        View progressBarContainer = toolbar.findViewById(R.id.progress_container);
+        if((!visible && progressBarContainer.getVisibility()==View.GONE) || (visible && progressBarContainer.getVisibility()==View.VISIBLE)) {
+            return;
+        }
+        int resId = visible ? R.anim.show_progressbar : R.anim.hide_progressbar;
+        Animation animation = AnimationUtils.loadAnimation(context, resId);
+        progressBarContainer.setAnimation(animation);
+        progressBarContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
     }
 
     public void setProgress(int newProgress) {
@@ -460,6 +469,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
         if(toolbar.findViewById(R.id.progress_container).getVisibility()==View.GONE) {
             //expandView(toolbar.findViewById(R.id.progress_container));
+            setProgressBarVisible(true);
         }
 
         if(false && oldProgress>=100) {
@@ -490,6 +500,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
         if(oldProgress>=100) {
             oldProgress = 0;
+            DDGControlVar.pageLoaded = true;
+            setProgressBarVisible(false);
             //collapseView(toolbar.findViewById(R.id.progress_container));
         }
 

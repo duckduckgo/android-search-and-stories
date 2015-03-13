@@ -87,6 +87,7 @@ public class DDGWebViewClient extends WebViewClient {
             return;
         }
 		mLoaded = false;
+        DDGControlVar.pageLoaded = false;
         view.getSettings().setDomStorageEnabled(true);
         view.getSettings().setPluginState(PluginState.ON_DEMAND);
 		
