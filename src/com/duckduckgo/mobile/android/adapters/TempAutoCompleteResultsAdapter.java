@@ -159,11 +159,13 @@ public class TempAutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> 
                             .transform(roundTransform)
                             .into(holder.icon);
                 } else {
-                    holder.icon.setImageDrawable(null);
+                    //holder.icon.setImageDrawable(null);
+                    holder.icon.setVisibility(View.INVISIBLE);
                 }
             }
             else {
-                holder.icon.setImageResource(R.drawable.time);
+                //holder.icon.setImageResource(R.drawable.time);
+                holder.icon.setVisibility(View.INVISIBLE);
             }
 
             /*
