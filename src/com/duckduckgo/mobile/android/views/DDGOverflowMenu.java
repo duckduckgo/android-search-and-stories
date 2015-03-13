@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
@@ -32,9 +33,11 @@ import android.widget.TextView;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.DimBackgroundEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewUpdateMenuNavigationEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.util.Action;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -58,6 +61,8 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     private FeedObject feed = null;
 
     private ImageView closeView = null;
+
+    private boolean backgroundDimmed = false;
 
     public DDGOverflowMenu(Context context) {
         //super(context, null, android.R.attr.listPopupWindowStyle);
@@ -264,7 +269,17 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
         //setHeight(height);
 
-        showAsDropDown(anchor, xOffset, yOffset*-1);//aaa ----- temp
+        if(coverAnchor) {
+            showAsDropDown(anchor, xOffset, yOffset * -1);//aaa ----- temp
+        } else {
+
+            View background = ((Activity)context).findViewById(android.R.id.content);
+            boolean backgroundIsNull = background==null;
+            Log.e("aaa", "backgroundview is null: "+backgroundIsNull);
+            BusProvider.getInstance().post(new DimBackgroundEvent(true));
+            backgroundDimmed = true;
+            showAtLocation(anchor, Gravity.CENTER, 0, 0);
+        }
         //showAsDropDown(anchor);
 
         //int dpTest = (int) context.getResources().getDimension(R.dimen.menu_outer_margin_2);
@@ -286,6 +301,9 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     public void dismiss() {
         if(headerItems!=null) {
             BusProvider.getInstance().unregister(this);
+        }
+        if(backgroundDimmed) {
+            BusProvider.getInstance().post(new DimBackgroundEvent(false));
         }
         super.dismiss();
     }

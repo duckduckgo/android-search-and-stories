@@ -1,28 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activityContainer"
-    android:background="@color/colorPrimaryRed"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent">
 
-    <include android:id="@+id/toolbar" layout="@layout/temp_actionbar" />
-
-    <FrameLayout
-        android:id="@+id/fragmentContainer"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/toolbar"
-        android:background="@color/background"/>
+        android:layout_height="match_parent">
 
-    <View
-        android:visibility="visible"
-        android:id="@+id/dropshadow_top"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_below="@id/toolbar"
-        android:background="?attr/topDropShadow"/>
+        <include android:id="@+id/toolbar" layout="@layout/temp_actionbar" />
 
-    <include android:id="@+id/fontSeekLayout" layout="@layout/font_seekbar" />
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:background="@color/background"/>
 
-</RelativeLayout>
+        <View
+            android:visibility="visible"
+            android:id="@+id/dropshadow_top"
+            android:layout_width="fill_parent"
+            android:layout_height="2dp"
+            android:layout_below="@id/toolbar"
+            android:background="?attr/topDropShadow"/>
+
+        <include android:id="@+id/fontSeekLayout" layout="@layout/font_seekbar" />
+
+    </RelativeLayout>
+
+</FrameLayout>

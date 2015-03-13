@@ -55,7 +55,7 @@ public class FavoriteSearchListView extends ListView implements AdapterView.OnIt
 		}
 		
 		if (query != null) {
-			BusProvider.getInstance().post(new SavedSearchItemLongClickEvent(query));/*
+			BusProvider.getInstance().post(new SavedSearchItemLongClickEvent(query));
             DDGOverflowMenu menuFeed = new DDGOverflowMenu(getContext());
             Menu menu = new MenuBuilder(getContext());
             ((DuckDuckGo) getContext()).getMenuInflater().inflate(R.menu.feed, menu);
@@ -63,8 +63,14 @@ public class FavoriteSearchListView extends ListView implements AdapterView.OnIt
             menuFeed.setMenu(menu);
             //menu.show(view);
             //menuFeed.show(view);
-            menuFeed.showBelowAnchor(view);*/
+
+            ////menuFeed.showBelowAnchor(view);
+
             //menuFeed.showCentered(view);
+
+            //DDGDialogMenu dialogMenu = new DDGDialogMenu();
+            //dialogMenu.setMenu(menu);
+            //dialogMenu.show();
             return true;
 		}
 		

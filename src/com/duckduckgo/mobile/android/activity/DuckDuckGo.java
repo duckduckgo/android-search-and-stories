@@ -17,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.view.*;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
@@ -53,6 +54,7 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedSearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.SavedStoryMenuDialog;
 import com.duckduckgo.mobile.android.events.AutoCompleteResultClickEvent;
 import com.duckduckgo.mobile.android.events.ConfirmDialogOkEvent;
+import com.duckduckgo.mobile.android.events.DimBackgroundEvent;
 import com.duckduckgo.mobile.android.events.DismissBangPopupEvent;
 import com.duckduckgo.mobile.android.events.DisplayHomeScreenEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
@@ -123,6 +125,7 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
 import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
+import com.duckduckgo.mobile.android.views.DDGDialogMenu;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
@@ -147,7 +150,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
 	//private HistoryListView recentSearchView = null;//recent search fragment
 
-	private RelativeLayout activityContainer;
+	private FrameLayout activityContainer;
     private FrameLayout fragmentContainer;
 
 	private FragmentManager fragmentManager;
@@ -276,7 +279,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             initializeContainer();
     	}
 
-        activityContainer = (RelativeLayout) findViewById(R.id.activityContainer);
+        activityContainer = (FrameLayout) findViewById(R.id.activityContainer);
+        toggleBackgroundShadow(false);
 		fragmentContainer = (FrameLayout) findViewById(R.id.fragmentContainer);
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -1440,6 +1444,17 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
         UpdateManager.register(this, DDGConstants.HOCKEY_APP_ID);
     }
 
+    private void toggleBackgroundShadow(boolean visible) {
+        int alpha = visible ? 250 : 0;
+        //activityContainer.getForeground().setAlpha(alpha);
+        if(visible) {
+            //getWindow().setBackgroundDrawable(getResources().getDrawable(R.drawable.activity_foreground_shadow));
+            //getWindow().addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        } else {
+            //getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        }
+    }
+
 	@Subscribe
 	public void onDeleteStoryInHistoryEvent(DeleteStoryInHistoryEvent event) {//left menu
 		final long delResult = DDGApplication.getDB().deleteHistoryByFeedId(event.feedObjectId);
@@ -1587,6 +1602,14 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	@Subscribe
 	public void onSavedSearchItemLongClick(SavedSearchItemLongClickEvent event) {
 		new SavedSearchMenuDialog(this, event.query).show();
+        /*
+        DDGDialogMenu dialogMenu = new DDGDialogMenu();
+        Menu menu = new MenuBuilder(this);
+        getMenuInflater().inflate(R.menu.feed, menu);
+        menu.findItem(R.id.action_add_favorite).setVisible(false);
+        dialogMenu.setMenu(menu);
+        dialogMenu.show(fragmentManager, dialogMenu.TAG);
+        */
 	}
 
 	@Subscribe
@@ -1752,5 +1775,10 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             }
         }
         //onMenuItemClicked(event.item, event.feed);
+    }
+
+    @Subscribe
+    public void onDimBackgroundEvent(DimBackgroundEvent event) {
+        toggleBackgroundShadow(event.dim);
     }
 }

@@ -106,6 +106,15 @@ public class RecentsFragment extends Fragment {
     }
 
     @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden) {
+            viewPager.setAdapter(pagerAdapter);
+            DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
+        }
+    }
+
+    @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         //slidingTabLayout.setViewPager(viewPager);
