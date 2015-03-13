@@ -23,6 +23,7 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,9 +56,12 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
     private TextView actionBarTitle;
 
     private ImageButton homeButton;
-    private ImageButton bangbutton;
+    private ImageButton bangButton;
     private ImageButton overflowButton;
 
+    private ProgressBar progressBar;
+    private ProgressBarAnimation progressBarAnimation = null;
+    private int oldProgress = 0;
     private SlidingTabLayout slidingTabLayout;
 
     private Toolbar toolbar;
@@ -101,14 +105,16 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         boolean slidingIsNull = slidingTabLayout == null;
         Log.e("aaa", "+++++++++++++ sliding is null: "+slidingIsNull);
 
+        progressBar = (ProgressBar) toolbar.findViewById(R.id.progress_bar);
+
         searchField = (DDGAutoCompleteTextView) toolbar.findViewById(R.id.searchEditText);
 
         homeButton = (ImageButton) toolbar.findViewById(R.id.home);
         homeButton.setOnClickListener(this);
         homeButton.setOnLongClickListener(this);
-        bangbutton = (ImageButton) toolbar.findViewById(R.id.bang);
-        bangbutton.setOnClickListener(this);
-        bangbutton.setOnLongClickListener(this);
+        bangButton = (ImageButton) toolbar.findViewById(R.id.bang);
+        bangButton.setOnClickListener(this);
+        bangButton.setOnLongClickListener(this);
         overflowButton = (ImageButton) toolbar.findViewById(R.id.overflow);
         overflowButton.setOnClickListener(this);
         overflowButton.setOnLongClickListener(this);
@@ -129,10 +135,12 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         switch(v.getId()) {
             case R.id.home:
                 Log.e("aaa", "home button clicked");
+                stopProgress();
                 BusProvider.getInstance().post(new DisplayHomeScreenEvent());
                 break;
             case R.id.bang:
                 Log.e("aaa", "bang button clicked");
+                stopProgress();
                 //keyboardService.showKeyboard(getSearchField());//aaa keyboard
                 getSearchField().addBang();
                 break;
@@ -246,6 +254,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setStandardActionBarHeight(true);
 
                 setTabLayout(false);
+
+                setProgressBarVisible(false);
                 break;
             case SCR_RECENTS:
 
@@ -272,6 +282,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setStandardActionBarHeight(true);
 
                 //setTabLayout(true);
+
+                setProgressBarVisible(false);
                 break;
             case SCR_FAVORITE:
                 clearSearchBar();
@@ -303,6 +315,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setStandardActionBarHeight(true);
 
                 //setTabLayout(true);
+
+                setProgressBarVisible(false);
                 break;
             case SCR_WEBVIEW:
                 showSearchField();
@@ -326,6 +340,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setStandardActionBarHeight(true);
 
                 setTabLayout(false);
+
+                setProgressBarVisible(true);
                 break;
             case SCR_SEARCH:
             case SCR_SEARCH_HOME_PAGE:
@@ -347,6 +363,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 //keyboardService.showKeyboard(getSearchField());//aaa keyboard
 
                 setTabLayout(false);
+
+                setProgressBarVisible(false);
                 break;
             case SCR_ABOUT:
                 showTitle(tag, context.getResources().getString(R.string.about));
@@ -359,6 +377,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setStandardActionBarHeight(true);
 
                 setTabLayout(false);
+
+                setProgressBarVisible(false);
                 break;
             case SCR_HELP:
                 showTitle(tag, context.getResources().getString(R.string.help_feedback));
@@ -371,6 +391,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setStandardActionBarHeight(true);
 
                 setTabLayout(false);
+
+                setProgressBarVisible(false);
                 break;
             case SCR_SETTINGS:
 
@@ -387,6 +409,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setStandardActionBarHeight(true);
 
                 setTabLayout(false);
+
+                setProgressBarVisible(false);
                 break;
             case SCR_SOURCES:
                 showTitle(tag, context.getResources().getString(R.string.change_sources));
@@ -399,6 +423,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setStandardActionBarHeight(true);
 
                 setTabLayout(false);
+
+                setProgressBarVisible(false);
             default:
                 break;
         }
@@ -420,6 +446,68 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         searchField.setText("");
         searchField.setCompoundDrawables(null, null, null, null);
         //getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable);//aaa
+    }
+
+    public void setProgressBarVisible(boolean visible) {
+        toolbar.findViewById(R.id.progress_container).setVisibility(visible ? View.VISIBLE : View.GONE);
+    }
+
+    public void setProgress(int newProgress) {
+        Log.e("aaa", "set progress, new progress: "+newProgress);
+        if(newProgress<oldProgress) {
+            return;
+        }
+
+        if(toolbar.findViewById(R.id.progress_container).getVisibility()==View.GONE) {
+            //expandView(toolbar.findViewById(R.id.progress_container));
+        }
+
+        if(false && oldProgress>=100) {
+            oldProgress = 0;
+            //collapseView(toolbar.findViewById(R.id.progress_container));
+        }
+
+
+        if(true || progressBarAnimation==null) {
+            Log.e("aaa", "progress anim == null");
+
+            //progressBarAnimation = new ProgressBarAnimation(progressBar, progressBar.getProgress(), newProgress);
+            progressBarAnimation = new ProgressBarAnimation(progressBar, oldProgress, newProgress);
+            progressBarAnimation.setDuration(500);
+            progressBar.startAnimation(progressBarAnimation);
+            oldProgress = newProgress;
+        } else {/*
+            int oldProgress = (int) progressBarAnimation.getLastValue();
+            progressBar.clearAnimation();
+            Log.e("aaa", "progress anim != null");
+            Log.e("aaa", "progress bar get: "+progressBar.getProgress());
+            Log.e("aaa", "anim get: "+progressBarAnimation.getLastValue());
+
+            progressBarAnimation = new ProgressBarAnimation(progressBar, oldProgress, newProgress);
+            progressBarAnimation.setDuration(500);
+            progressBar.startAnimation(progressBarAnimation);*/
+        }
+
+        if(oldProgress>=100) {
+            oldProgress = 0;
+            //collapseView(toolbar.findViewById(R.id.progress_container));
+        }
+
+        /*
+        if(newProgress==100) {
+            progressBar.setVisibility(View.GONE);
+        } else {
+            progressBar.setVisibility(View.VISIBLE);
+        }*/
+    }
+
+    public void stopProgress() {
+        //Animation fadeOut = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_out);
+        //progressBar.startAnimation(fadeOut);
+        //progressBar.setVisibility(View.GONE);
+        progressBar.clearAnimation();
+        progressBar.setProgress(0);
+        oldProgress = 0;
     }
 
     private void showSearchField() {
@@ -661,10 +749,10 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         Animation fadeIn = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_in);
         Animation fadeOut = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_out);
 
-        if (bangbutton.getVisibility() == View.VISIBLE) {
+        if (bangButton.getVisibility() == View.VISIBLE) {
             Log.e("aaa", "set home button: bang -> gone");
-            bangbutton.setAnimation(fadeOut);
-            bangbutton.setVisibility(View.GONE);
+            bangButton.setAnimation(fadeOut);
+            bangButton.setVisibility(View.GONE);
         }
 
         if(visible) {
@@ -734,10 +822,10 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
             homeButton.setVisibility(View.GONE);
         }
 
-        if(bangbutton.getVisibility()==View.GONE) {
+        if(bangButton.getVisibility()==View.GONE) {
             Log.e("aaa", "set bang button: bang -> visible");
-            bangbutton.setAnimation(fadeIn);
-            bangbutton.setVisibility(View.VISIBLE);
+            bangButton.setAnimation(fadeIn);
+            bangButton.setVisibility(View.VISIBLE);
         }
 
 
@@ -805,14 +893,15 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         Log.e("aaa", "set tab layout, visible: "+visible+" - sliding tab visibility==gone: "+gone);
         if(visible) {
             if(slidingTabLayout.getVisibility()==View.GONE) {
-                expandTabLayout();
+                expandView(slidingTabLayout);
                 Log.e("aaa", "must expand tab layout");
             } else {
                 Log.e("aaa", "should expand tab layout but is visible");
             }
         } else {
             if(slidingTabLayout.getVisibility()==View.VISIBLE) {
-                collapseTabLayout();
+                //collapseTabLayout();
+                collapseView(slidingTabLayout);
                 Log.e("aaa", "must collapse tab layout");
             } else {
                 Log.e("aaa", "should collapse tab layout but is gone");
@@ -820,20 +909,20 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         }
     }
 
-    public void expandTabLayout() {
-        slidingTabLayout.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        final int targetHeight = slidingTabLayout.getMeasuredHeight();
+    public void expandView(final View view) {
+        view.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int targetHeight = view.getMeasuredHeight();
 
-        slidingTabLayout.getLayoutParams().height = 0;
-        slidingTabLayout.setVisibility(View.VISIBLE);
+        view.getLayoutParams().height = 0;
+        view.setVisibility(View.VISIBLE);
         Animation a = new Animation()
         {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
-                slidingTabLayout.getLayoutParams().height = interpolatedTime == 1
+                view.getLayoutParams().height = interpolatedTime == 1
                         ? ViewGroup.LayoutParams.WRAP_CONTENT
                         : (int)(targetHeight * interpolatedTime);
-                slidingTabLayout.requestLayout();
+                view.requestLayout();
             }
 
             @Override
@@ -845,21 +934,21 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         // 1dp/ms
         //a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
-        slidingTabLayout.startAnimation(a);
+        view.startAnimation(a);
     }
 
-    public void collapseTabLayout() {
-        final int initialHeight = slidingTabLayout.getMeasuredHeight();
+    public void collapseView(final View view) {
+        final int initialHeight = view.getMeasuredHeight();
 
         Animation a = new Animation()
         {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 if(interpolatedTime == 1){
-                    slidingTabLayout.setVisibility(View.GONE);
+                    view.setVisibility(View.GONE);
                 }else{
-                    slidingTabLayout.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
-                    slidingTabLayout.requestLayout();
+                    view.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    view.requestLayout();
                 }
             }
 
@@ -872,7 +961,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         // 1dp/ms
         //a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
-        slidingTabLayout.startAnimation(a);
+        view.startAnimation(a);
     }
 
     public void setSearchBarText(String text) {
@@ -917,6 +1006,39 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
     public void resetSearchBar() {
         //searchBar.setBackgroundResource(R.color.topbar_background);
         dropShadowDivider.setVisibility(View.VISIBLE);
+    }
+
+    public class ProgressBarAnimation extends Animation {
+        private ProgressBar progressBar;
+        private float from;
+        private float  to;
+
+        public ProgressBarAnimation(ProgressBar progressBar, float from, float to) {
+            super();
+            this.progressBar = progressBar;
+            this.from = from;
+            this.to = to;
+            progressBar.setProgress(0);
+            //progressBar.setVisibility(View.VISIBLE);
+        }
+/*
+        public float getLastValue() {
+            return progressBar.getProgress();
+        }
+*/
+        @Override
+        protected void applyTransformation(float interpolatedTime, Transformation t) {
+            super.applyTransformation(interpolatedTime, t);
+            float value = from + (to - from) * interpolatedTime;
+            progressBar.setProgress((int) value);
+            if(value>=100) {
+                //Animation fadeOut = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_out);
+                //progressBar.startAnimation(fadeOut);
+                //progressBar.setVisibility(View.GONE);
+                //progressBar.setProgress(0);
+            }
+        }
+
     }
 
 }

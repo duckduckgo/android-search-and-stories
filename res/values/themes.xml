@@ -54,8 +54,7 @@
 
     </style>
 
-    <style name="DDGPopup" parent="Widget.AppCompat.PopupMenu">
-
+    <style name="DDGPopup" parent="Widget.AppCompat.PopupMenu"><!--PopupMenu-->
     </style>
 
     <style name="DDGActionMode" parent="Theme.AppCompat">

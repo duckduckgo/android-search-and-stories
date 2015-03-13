@@ -562,7 +562,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
         DDGControlVar.mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
         DDGControlVar.mDuckDuckGoContainer.tempAdapter = new TempAutoCompleteResultsAdapter(this);
-        DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter = new RecentResultCursorAdapter(this, DDGApplication.getDB().getCursorSearchHistory());
+        DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter = new RecentResultCursorAdapter(this, DDGApplication.getDB().getCursorSearchHistory(), true, false);
     }
 
     // Assist action is better known as Google Now gesture
@@ -870,10 +870,12 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 		}
 		// main feed showing & source filter is active
 		else if(DDGControlVar.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_STORIES && DDGControlVar.targetSource != null){
+        //else if(DDGControlVar.targetSource != null){
 			BusProvider.getInstance().post(new FeedCancelSourceFilterEvent());
 		}
         // main feed showing & category filter is active
         else if(DDGControlVar.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_STORIES && DDGControlVar.targetCategory != null) {
+        //else if(DDGControlVar.targetCategory != null) {
             BusProvider.getInstance().post(new FeedCancelCategoryFilterEvent());
         }
         else if(fragmentManager.getBackStackEntryCount()==1) {
@@ -987,6 +989,51 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
         }
     }
 
+    private void onMenuItemClicked(MenuItem menuItem) {
+        onMenuItemClicked(menuItem, null);
+    }
+
+    private void onMenuItemClicked(MenuItem menuItem, FeedObject feed) {
+        switch(menuItem.getItemId()) {
+            case R.id.action_stories:
+                actionStories();
+                break;
+            case R.id.action_favorites:
+                actionFavorites();
+                break;
+            case R.id.action_recents:
+                actionRecents();
+                break;
+            case R.id.action_settings:
+                actionSettings();
+                break;
+            case R.id.action_help_feedback:
+                actionHelpFeedback();
+                break;
+            case R.id.action_add_favorite:
+                itemSaveFeed(feed, null);
+                syncAdapters();
+                Toast.makeText(this, R.string.ToastSaveStory, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_remove_favorite:
+                final long delResult = DDGApplication.getDB().makeItemHidden(feed.getId());
+                if(delResult != 0) {
+                    syncAdapters();
+                }
+                Toast.makeText(this, R.string.ToastUnSaveStory, Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.action_share:
+                Sharer.shareStory(this, feed.getTitle(), feed.getUrl());
+                break;
+            case R.id.action_external:
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(feed.getUrl()));
+                DDGUtils.execIntentIfSafe(this, browserIntent);
+                break;
+
+        }
+
+    }
+
     private void actionStories() {
         displayScreen(SCREEN.SCR_STORIES, true);
     }
@@ -1021,6 +1068,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	private void stopAction() {
         //Log.e("aaa", "stop action");
 		DDGControlVar.mCleanSearchBar = true;
+        DDGActionBarManager.getInstance().stopProgress();
     	getSearchField().setText("");
 
     	// This makes a little (X) to clear the search bar.
@@ -1038,7 +1086,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	}
 
 	public void clearRecentSearch() {
-		DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
+        BusProvider.getInstance().post(new SyncAdaptersEvent());
+		//DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
 	}
 
 	/**
@@ -1675,6 +1724,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
     @Subscribe
     public void onWebViewItemMenuClickEvent(WebViewItemMenuClickEvent event) {
+        Log.e("aaa", "//////////// - event received: Activity");
         if(event.feed==null) {
             onOptionsItemSelected(event.item);
         } else {
@@ -1701,5 +1751,6 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                     break;
             }
         }
+        //onMenuItemClicked(event.item, event.feed);
     }
 }

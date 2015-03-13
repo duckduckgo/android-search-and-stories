@@ -38,6 +38,9 @@
     <color name="actionbar_tab_selected">@color/white</color>
     <color name="actionbar_tab_unselected">#7fffffff</color>
 
+    <color name="actionbar_progressbar_background">#98c5e7</color>
+    <color name="actionbar_progressbar_color">#4495d4</color>
+
     <color name="search_dark">#212121</color>
     <color name="search_light">#a4a4a4</color>
 

@@ -19,7 +19,7 @@ public class FavoriteFeedListView extends ListView implements android.widget.Ada
         super(context, attrs);
 
         this.setOnItemClickListener(this);
-        this.setOnItemLongClickListener(this);
+        //this.setOnItemLongClickListener(this);
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

@@ -2,38 +2,55 @@ package com.duckduckgo.mobile.android.adapters;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
+import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.squareup.picasso.Picasso;
 
 public class FavoriteFeedCursorAdapter extends CursorAdapter {
+
+    private DDGOverflowMenu feedMenu = null;
+    private Menu menu = null;
 		
-    public FavoriteFeedCursorAdapter(Context context, Cursor c) {
+    public FavoriteFeedCursorAdapter(Activity activity, Context context, Cursor c) {
         super(context, c);
+        menu = new MenuBuilder(context);
+        activity.getMenuInflater().inflate(R.menu.feed, menu);
+        menu.findItem(R.id.action_add_favorite).setVisible(false);
+        feedMenu = new DDGOverflowMenu(context);
     }
 
     @Override
@@ -47,7 +64,7 @@ public class FavoriteFeedCursorAdapter extends CursorAdapter {
     }
 
     @Override
-    public void bindView(View view, Context context, Cursor cursor) {
+    public void bindView(View view, Context context, final Cursor cursor) {
         // here we are setting our data
         // that means, take the data from the cursor and put it in views
 
@@ -60,12 +77,13 @@ public class FavoriteFeedCursorAdapter extends CursorAdapter {
     	
     	final TextView textViewTitle = (TextView) view.findViewById(R.id.feedTitleTextView);
         final TextView textViewCategory = (TextView) view.findViewById(R.id.feedCategoryTextView);
+        final FrameLayout frameMenuContainer = (FrameLayout) view.findViewById(R.id.feedMenuContainer);
+        final ImageView imageViewMenu = (ImageView) view.findViewById(R.id.feedMenuImage);
     	final AsyncImageView imageViewBackground = (AsyncImageView) view.findViewById(R.id.feedItemBackground);
     	final AsyncImageView imageViewFeedIcon = (AsyncImageView) view.findViewById(R.id.feedItemSourceIcon);
         //final Toolbar toolbar = (Toolbar) view.findViewById(R.id.feedWrapper);
         //toolbar.getMenu().clear();
         //toolbar.inflateMenu(R.menu.feed);
-    			
 
     	URL feedUrl = null;
 
@@ -148,6 +166,20 @@ public class FavoriteFeedCursorAdapter extends CursorAdapter {
         } else {
             url = feedUrl.toString();
         }
+
+        frameMenuContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(feedMenu.isShowing()) {
+                    //feedMenu.dismiss();
+                    return;
+                } else {
+                    feedMenu.setFeed(DDGApplication.getDB().selectFeedById(feedId));
+                    feedMenu.setMenu(menu);
+                    feedMenu.showFeedMenu(imageViewMenu);
+                }
+            }
+        });
 /*
         toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
         //aaa todo check why removing a feed inflate more items in other menus
@@ -177,6 +209,26 @@ public class FavoriteFeedCursorAdapter extends CursorAdapter {
             }
         });
 */
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BusProvider.getInstance().post(new MainFeedItemSelectedEvent(new FeedObject((SQLiteCursor)cursor)));
+            }
+        });
+
+        view.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if(!feedMenu.isShowing()) {
+                    //feedMenu.setFeed(DDGApplication.getDB().selectFeedById(feedId));
+                    feedMenu.setFeed(new FeedObject((SQLiteCursor)cursor));
+                    feedMenu.setMenu(menu);
+                    feedMenu.showFeedMenu(imageViewMenu);
+                    return true;
+                }
+                return false;
+            }
+        });
 
     }
 }

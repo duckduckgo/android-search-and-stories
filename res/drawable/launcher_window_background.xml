@@ -5,7 +5,7 @@
             <solid android:color="@color/colorPrimaryLightRed"/>
         </shape>
     </item>
-    <item>
+    <item android:bottom="25dp"><!--padding bottom 25dp-->
         <bitmap android:src="@drawable/logo" android:gravity="center"/>
     </item>
 </layer-list>

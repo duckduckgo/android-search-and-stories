@@ -1,31 +1,40 @@
 package com.duckduckgo.mobile.android.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.ListFragment;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.RecentFeedCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.RecyclerRecentFeedAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
+import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
-import com.duckduckgo.mobile.android.views.MainFeedListView;
+import com.duckduckgo.mobile.android.views.DDGRecyclerView;
 import com.duckduckgo.mobile.android.views.RecentFeedListView;
 import com.squareup.otto.Subscribe;
 
-public class RecentFeedTabFragment extends ListFragment implements AdapterView.OnItemLongClickListener{
+import java.util.ArrayList;
+
+public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements AdapterView.OnItemLongClickListener*/ {
 
     public static final String TAG = "recent_feed_tab_fragment";
 
     RecentFeedListView recentFeedListView;
     RecentFeedCursorAdapter recentFeedAdapter;
+
+    private RecyclerRecentFeedAdapter recyclerRecentFeedAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private DDGRecyclerView recentFeedRecyclerView;
 
     private View fragmentView = null;
 
@@ -50,23 +59,43 @@ public class RecentFeedTabFragment extends ListFragment implements AdapterView.O
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(PreferencesManager.getRecordHistory()) {
-            recentFeedListView = (RecentFeedListView) getListView();
-            recentFeedListView.setOnItemLongClickListener(this);
-            recentFeedAdapter = new RecentFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorRecentFeed());
-            recentFeedListView.setAdapter(recentFeedAdapter);
-        } else {
-            getListView().setVisibility(View.GONE);
 
-            TextView title = (TextView) fragmentView.findViewById(R.id.empty_title);
-            title.setText(getResources().getString(R.string.disabled_recents_title));
+        recentFeedRecyclerView = (DDGRecyclerView) fragmentView.findViewById(R.id.list);
 
-            TextView text = (TextView) fragmentView.findViewById(R.id.empty_text);
-            text.setText(getResources().getString(R.string.disabled_recents_text));
+        //recentFeedRecyclerView = (DDGRecyclerView) fragmentView.findViewById(R.id.list);
+        recentFeedRecyclerView.setEmptyView(fragmentView.findViewById(R.id.empty));
+        //recyclerRecentFeedCursorAdapter = new RecyclerRecentFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorRecentFeed());
+        recyclerRecentFeedAdapter = new RecyclerRecentFeedAdapter(getActivity(), DDGApplication.getDB().getAllRecentFeed());
+        ArrayList<FeedObject> feeds = DDGApplication.getDB().getAllRecentFeed();
+        int i = 1;
+        for(FeedObject feedObject : feeds) {
+            Log.e("aaa", i+" - feed: "+feedObject.toString());
+            i++;
         }
+
+        layoutManager = new LinearLayoutManager(getActivity());
+        recentFeedRecyclerView.setLayoutManager(layoutManager);
+        recentFeedRecyclerView.setAdapter(recyclerRecentFeedAdapter);
+
+        checkIfRecordHistory();
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        checkIfRecordHistory();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.e("aaa", "on hidden change, recording: "+PreferencesManager.getRecordHistory());
+        if(!hidden) {
+            checkIfRecordHistory();
+        }
+    }
+/*
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         Log.e("aaa", "on click");
@@ -79,10 +108,49 @@ public class RecentFeedTabFragment extends ListFragment implements AdapterView.O
         recentFeedListView.onItemLongClick(parent, v, position, id);
         return true;
     }
+*/
+
+    public void checkIfRecordHistory() {
+        if(!PreferencesManager.getRecordHistory()) {
+
+            //getListView().setVisibility(View.GONE);
+            //recentFeedRecyclerView.setVisibility(View.GONE);
+
+            //fragmentView.findViewById(R.id.empty).setVisibility(View.VISIBLE);
+            //recyclerRecentFeedCursorAdapter.clear();
+
+            TextView title = (TextView) fragmentView.findViewById(R.id.empty_title);
+            title.setText(getResources().getString(R.string.disabled_recents_title));
+
+            TextView text = (TextView) fragmentView.findViewById(R.id.empty_text);
+            text.setText(getResources().getString(R.string.disabled_recents_text));
+        } else {
+            recentFeedRecyclerView.setVisibility(View.VISIBLE);
+            fragmentView.findViewById(R.id.empty).setVisibility(View.GONE);
+        }
+
+    }
+    private void cancelCategoryFilter() {
+        recyclerRecentFeedAdapter.resetFilterCategory();
+
+    }
+
+    @Subscribe
+    public void onFeedCancelCategoryFilterEvent(FeedCancelCategoryFilterEvent event) {
+        cancelCategoryFilter();
+    }
 
     @Subscribe
     public void onSyncAdaptersEvent(SyncAdaptersEvent event) {
-        recentFeedAdapter.changeCursor(DDGApplication.getDB().getCursorRecentFeed());
-        recentFeedAdapter.notifyDataSetChanged();
+        Log.e("aaa", "on sync adapters event, record history: "+PreferencesManager.getRecordHistory());
+
+        //recentFeedAdapter.changeCursor(DDGApplication.getDB().getCursorRecentFeed());
+        //recentFeedAdapter.notifyDataSetChanged();
+        //if(PreferencesManager.getRecordHistory()) {
+            recyclerRecentFeedAdapter.changeData(DDGApplication.getDB().getAllRecentFeed());
+        //} else {
+            //recyclerRecentFeedCursorAdapter.changeData(new ArrayList<FeedObject>());
+        //}
+        //checkIfRecordHistory();
     }
 }

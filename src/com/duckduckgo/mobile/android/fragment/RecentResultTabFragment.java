@@ -14,6 +14,7 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.squareup.otto.Subscribe;
@@ -58,7 +59,7 @@ public class RecentResultTabFragment extends ListFragment {
             //historyListView = (HistoryListView) getListView();
             recentSearchListView = (RecentSearchListView) getListView();
             //recentSearchListView = (RecentSearchListView) fragmentView.findViewById(R.id.listview);
-            recentResultAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory(), true);
+            recentResultAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory(), false, true);
             //historyListView.setAdapter(recentResultAdapter);
             recentSearchListView.setAdapter(recentResultAdapter);
         } else {

@@ -311,6 +311,8 @@ public class WebFragment extends Fragment {
 
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
 		//keyboardService.hideKeyboard(mainWebView);//aaa keyboard
+
+        DDGControlVar.mCleanSearchBar = false;
 		savedState = false;
 
 		BusProvider.getInstance().post(new DismissBangPopupEvent());

@@ -139,6 +139,26 @@
                 android:id="@+id/searchEditText"/><!--paddingright 18.6dp/ paddingleft 22.6dp-->
 
         </RelativeLayout>
+
+        <FrameLayout
+            android:visibility="visible"
+            android:id="@+id/progress_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+            <ProgressBar
+                android:visibility="visible"
+                android:id="@+id/progress_bar"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:progress="0"
+                android:max="100"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:indeterminate="false"
+                android:progressDrawable="@drawable/progressbar"
+                />
+        </FrameLayout>
+
     </RelativeLayout>
 
         <com.duckduckgo.mobile.android.views.SlidingTabLayout
@@ -147,6 +167,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"/>
+        <!--
+        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+        -->
 
     </LinearLayout>
 </android.support.v7.widget.Toolbar>

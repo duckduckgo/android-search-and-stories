@@ -12,6 +12,43 @@
                                                            android:scaleType="centerCrop"
                                                            android:id="@+id/feedItemBackground" />
 
+    <FrameLayout
+        android:id="@+id/feedMenuContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/feedMenuImage"
+            android:layout_width="@dimen/toolbar_menu_width"
+            android:layout_height="@dimen/toolbar_category_height"
+            android:background="@drawable/temp_feed_category_background"
+            android:src="@drawable/menu_white_horizontal"
+            android:scaleType="center"/>
+
+    </FrameLayout>
+    
+    <FrameLayout
+        android:id="@+id/feedCategoryContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/feedMenuContainer"
+        android:paddingTop="@dimen/toolbar_category_margin"
+        android:paddingLeft="@dimen/toolbar_category_margin"
+        android:paddingBottom="@dimen/toolbar_category_margin">
+
+        <TextView
+            android:id="@+id/feedCategoryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/toolbar_category_height"
+            android:background="@drawable/temp_feed_category_background"
+            style="@style/FeedCategory"/>
+
+    </FrameLayout>
+<!--
     <TextView
         android:id="@+id/feedCategoryTextView"
         android:layout_marginTop="@dimen/toolbar_category_margin"
@@ -21,8 +58,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:background="@drawable/temp_feed_category_background"
-        style="@style/FeedCategory"/>
-
+        style="@style/FeedCategory"/>-->
+<!--
     <ImageButton
         android:id="@+id/feedMenuButton"
         android:layout_width="@dimen/toolbar_menu_width"
@@ -33,7 +70,7 @@
         android:layout_alignParentRight="true"
         android:background="@drawable/temp_feed_category_background"
         android:src="@drawable/menu_white_horizontal"
-        android:scaleType="center"/>
+        android:scaleType="center"/>-->
 <!--
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"

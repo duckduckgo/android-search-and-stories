@@ -3,19 +3,18 @@ package com.duckduckgo.mobile.android.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Rect;
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
-import android.widget.ImageButton;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -24,7 +23,7 @@ import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.SourceFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
-import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -37,10 +36,9 @@ import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapter.ViewHolder> {
+public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFeedAdapter.ViewHolder> {
     private static final String TAG = "MainFeedAdapter";
 
     private Context context;
@@ -52,11 +50,11 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
     private SimpleDateFormat dateFormat;
     private Date lastFeedDate = null;
 
-    private String markedItem = null;
-    private String markedSource = null;
-    private String markedCategory = null;
+    //private String markedItem = null;
+    //private String markedSource = null;
+    //private String markedCategory = null;
 
-    private AlphaAnimation blinkanimation = null;
+    //private AlphaAnimation blinkanimation = null;
 
     private DDGOverflowMenu feedMenu = null;
     private Menu menu = null;
@@ -66,22 +64,26 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public final TextView textViewTitle;
+        public final FrameLayout frameCategoryContainer;
         public final TextView textViewCategory;
-        public final ImageButton imageButtonMenu;
+        public final FrameLayout frameMenuContainer;
+        public final ImageView imageViewMenu;
         public final AsyncImageView imageViewBackground;
         public final AsyncImageView imageViewFeedIcon; // Bottom Left Icon (Feed Source)
 
         public ViewHolder(View v) {
             super(v);
             this.textViewTitle = (TextView) v.findViewById(R.id.feedTitleTextView);
+            this.frameCategoryContainer = (FrameLayout) v.findViewById(R.id.feedCategoryContainer);
             this.textViewCategory = (TextView) v.findViewById(R.id.feedCategoryTextView);
-            this.imageButtonMenu = (ImageButton) v.findViewById(R.id.feedMenuButton);
+            this.frameMenuContainer = (FrameLayout) v.findViewById(R.id.feedMenuContainer);
+            this.imageViewMenu = (ImageView) v.findViewById(R.id.feedMenuImage);
             this.imageViewBackground = (AsyncImageView) v.findViewById(R.id.feedItemBackground);
             this.imageViewFeedIcon = (AsyncImageView) v.findViewById(R.id.feedItemSourceIcon);
         }
     }
 
-    public TempMainFeedAdapter(Activity activity, Context context, View.OnClickListener sourceClickListener, View.OnClickListener categoryClickListener) {
+    public RecyclerMainFeedAdapter(Context context, View.OnClickListener sourceClickListener, View.OnClickListener categoryClickListener) {
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         data = new ArrayList<FeedObject>();
@@ -91,14 +93,14 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
         // animation to use for blinking cue
-        blinkanimation = new AlphaAnimation(1, 0.3f);
+        /*blinkanimation = new AlphaAnimation(1, 0.3f);
         blinkanimation.setDuration(300);
         blinkanimation.setInterpolator(new LinearInterpolator());
         blinkanimation.setRepeatCount(2);
-        blinkanimation.setRepeatMode(Animation.REVERSE);
+        blinkanimation.setRepeatMode(Animation.REVERSE);*/
 
         menu = new MenuBuilder(context);
-        activity.getMenuInflater().inflate(R.menu.feed, menu);
+        ((Activity)context).getMenuInflater().inflate(R.menu.feed, menu);
         feedMenu = new DDGOverflowMenu(context);
     }
 
@@ -142,7 +144,17 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
             holder.imageViewFeedIcon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    BusProvider.getInstance().post(new SourceFilterEvent(itemView, sourceType, feed));
+                    //BusProvider.getInstance().post(new SourceFilterEvent(itemView, sourceType, feed));
+                    if(DDGControlVar.targetSource!=null) {
+                        DDGControlVar.targetSource=null;
+                        BusProvider.getInstance().post(new FeedCancelSourceFilterEvent());
+                    } else {
+                        DDGControlVar.targetSource = sourceType;
+                        DDGControlVar.hasUpdatedFeed = false;
+                        Log.e("aaa", "ddg target source: "+DDGControlVar.targetSource);
+                        BusProvider.getInstance().post(new SourceFilterEvent(itemView, sourceType, feed));
+                        filterSource(sourceType);
+                    }
                 }
             });
 
@@ -213,7 +225,7 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
                 }
             });*/
             //holder.textViewCategory.setOnClickListener(categoryClickListener);
-            holder.textViewCategory.setOnClickListener(new View.OnClickListener() {
+            holder.frameCategoryContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if(DDGControlVar.targetCategory!=null) {
@@ -247,27 +259,10 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
                 }
             });*/
 
-            holder.imageButtonMenu.setOnClickListener(new View.OnClickListener() {
+            holder.frameMenuContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if(feedMenu==null) {
-                        feedMenu = new DDGOverflowMenu(context);
-                    }
-                    if(feedMenu.isShowing()) {
-                        //feedMenu.dismiss();
-                        return;
-                    } else {
-                        if(DDGApplication.getDB().isSaved(feedId)) {
-                            menu.findItem(R.id.action_add_favorite).setVisible(false);
-                            menu.findItem(R.id.action_remove_favorite).setVisible(true);
-                        } else {
-                            menu.findItem(R.id.action_add_favorite).setVisible(true);
-                            menu.findItem(R.id.action_remove_favorite).setVisible(false);
-                        }
-                        feedMenu.setFeed(feed);
-                        feedMenu.setMenu(menu);
-                        feedMenu.showFeedMenu(holder.imageButtonMenu);
-                    }
+                    showMenu(holder.imageViewMenu, feed);
                 }
             });
 
@@ -343,22 +338,7 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
                     @Override
                     public boolean onLongClick(View v) {
                         //BusProvider.getInstance().post(new MainFeedItemLongClickEvent(feed));
-                        if(feedMenu==null) {
-                            feedMenu = new DDGOverflowMenu(context);
-                        }
-                        if(!feedMenu.isShowing()) {
-                            if(DDGApplication.getDB().isSaved(feedId)) {
-                                menu.findItem(R.id.action_add_favorite).setVisible(false);
-                                menu.findItem(R.id.action_remove_favorite).setVisible(true);
-                            } else {
-                                menu.findItem(R.id.action_add_favorite).setVisible(true);
-                                menu.findItem(R.id.action_remove_favorite).setVisible(false);
-                            }
-                            feedMenu.setFeed(feed);
-                            feedMenu.setMenu(menu);
-                            feedMenu.showFeedMenu(holder.imageButtonMenu);
-                        }
-
+                        showMenu(holder.imageViewMenu, feed);
                         return true;
                     }
                 });
@@ -366,8 +346,8 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
             }
         }
 
-
-        if(holder.itemView != null) {
+/*
+        if(false && holder.itemView != null) {
             if((markedItem != null && markedItem.equals(feed.getId())) || (markedSource!=null && markedSource.equals(feed.getId()))) {
                 blinkanimation.reset();
                 holder.itemView.startAnimation(blinkanimation);
@@ -375,7 +355,7 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
             else {
                 holder.itemView.setAnimation(null);
             }
-        }
+        }*/
     }
 
     public FeedObject getItem(int position) {
@@ -387,13 +367,54 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
         return data.size();
     }
 
+    private void showMenu(View anchor, FeedObject feed) {
+        if(feedMenu==null) {
+            feedMenu = new DDGOverflowMenu(context);
+        }
+        if(!feedMenu.isShowing()) {
+            if(DDGApplication.getDB().isSaved(feed.getId())) {
+                menu.findItem(R.id.action_add_favorite).setVisible(false);
+                menu.findItem(R.id.action_remove_favorite).setVisible(true);
+            } else {
+                menu.findItem(R.id.action_add_favorite).setVisible(true);
+                menu.findItem(R.id.action_remove_favorite).setVisible(false);
+            }
+            feedMenu.setFeed(feed);
+            feedMenu.setMenu(menu);
+            feedMenu.showFeedMenu(anchor);
+        }
+
+    }
+
     public void addData(List<FeedObject> newData) {
         this.data = (ArrayList) newData;
         notifyDataSetChanged();
     }
 
+    public void addSourceData(List<FeedObject> newSources) {
+        Log.e("aaa", "add source data, data size: "+data.size());
+        for(FeedObject feed : data) {
+            Log.e("aaa", "old feed: "+feed.getTitle());
+        }
+        for(FeedObject newFeed : newSources) {
+            boolean isPresent = false;
+            for(FeedObject feed : data) {
+                if(feed.getId().equals(newFeed.getId())) {
+                    isPresent = true;
+                }
+            }
+            //boolean isPresent = data.contains(feed);
+            Log.e("aaa", "feed: "+newFeed.getTitle()+" - is present: "+isPresent);
+
+            if(!isPresent) {
+                data.add(newFeed);
+                notifyItemInserted(data.size());
+            }
+        }
+    }
+
     public void filterCategory(String category) {
-        int i = data.size() -1;
+        int i = data.size() - 1;
         for(; i>=0; i--) {
             if(!data.get(i).getCategory().equals(category)) {
                 data.remove(i);
@@ -402,11 +423,21 @@ public class TempMainFeedAdapter extends RecyclerView.Adapter<TempMainFeedAdapte
         }
     }
 
+    private void filterSource(String source) {
+        int i = data.size() - 1;
+        for(; i>=0; i--) {
+            if(!data.get(i).getType().equals(source)) {
+                data.remove(i);
+                notifyItemRemoved(i);
+            }
+        }
+    }
+/*
     public void markSource(String itemId) {
         markedSource = itemId;
     }
 
     public void unmarkSource() {
         markedSource = null;
-    }
+    }*/
 }

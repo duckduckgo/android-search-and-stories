@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteQueryBuilder;
@@ -509,6 +510,32 @@ public class DdgDB {
 		
 		return null;
 	}
+
+    public ArrayList<FeedObject> getAllRecentFeed() {
+        ArrayList<FeedObject> recentFeeds = new ArrayList<FeedObject>();
+        Cursor cursor = getCursorRecentFeed();
+        if(cursor.moveToFirst()) {
+            do {
+                FeedObject feed = new FeedObject((SQLiteCursor)cursor);
+                recentFeeds.add(feed);
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        return recentFeeds;
+    }
+
+    public ArrayList<FeedObject> getAllFavoriteFeed() {
+        ArrayList<FeedObject> favoriteFeeds = new ArrayList<FeedObject>();
+        Cursor cursor = getCursorStoryFeed();
+        if(cursor.moveToFirst()) {
+            do {
+                FeedObject feed = new FeedObject((SQLiteCursor)cursor);
+                favoriteFeeds.add(feed);
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        return favoriteFeeds;
+    }
 	
 	public Cursor getCursorSearchHistory() {
 		return this.db.query(HISTORY_TABLE, null, "type='R'", null , null, null, "_id DESC");
