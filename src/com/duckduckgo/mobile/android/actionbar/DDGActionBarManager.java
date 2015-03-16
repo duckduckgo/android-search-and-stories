@@ -64,6 +64,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
     private int oldProgress = 0;
     private SlidingTabLayout slidingTabLayout;
 
+    private boolean isTabAnimating = false;
+
     private Toolbar toolbar;
     private ActionBar actionBar;
 
@@ -921,6 +923,22 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         }
     }
 
+    public boolean isTabAnimating() {
+        return isTabAnimating;
+    }
+
+    public void tryToShowTab() {
+        if(!isTabAnimating && slidingTabLayout.getVisibility()!=View.VISIBLE) {
+            expandView(slidingTabLayout);
+        }
+    }
+
+    public void tryToHideTab() {
+        if(!isTabAnimating && slidingTabLayout.getVisibility()!=View.GONE) {
+            collapseView(slidingTabLayout);
+        }
+    }
+
     public void expandView(final View view) {
         view.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         final int targetHeight = view.getMeasuredHeight();
@@ -946,6 +964,22 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         // 1dp/ms
         //a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                isTabAnimating = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isTabAnimating = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         view.startAnimation(a);
     }
 
@@ -973,6 +1007,22 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         // 1dp/ms
         //a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
         a.setDuration(250);
+        a.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                isTabAnimating = true;
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                isTabAnimating = false;
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
         view.startAnimation(a);
     }
 

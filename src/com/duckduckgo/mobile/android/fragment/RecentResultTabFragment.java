@@ -2,15 +2,18 @@ package com.duckduckgo.mobile.android.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
@@ -27,7 +30,9 @@ public class RecentResultTabFragment extends ListFragment {
     private RecentSearchListView recentSearchListView;
     private RecentResultCursorAdapter recentResultAdapter;
 
-    private boolean recordHistory = true;
+    //private boolean recordHistory = true;
+
+    private int lastFirstVisibleItem;
 
     private View fragmentView = null;
 
@@ -45,8 +50,8 @@ public class RecentResultTabFragment extends ListFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        recordHistory = PreferencesManager.getRecordHistory();
-        Log.e("aaa", "record history: "+recordHistory);
+        //recordHistory = PreferencesManager.getRecordHistory();
+        //Log.e("aaa", "record history: "+recordHistory);
         fragmentView = inflater.inflate(R.layout.fragment_tab_recentsresult, container, false);
         return fragmentView;
     }
@@ -62,6 +67,24 @@ public class RecentResultTabFragment extends ListFragment {
             recentResultAdapter = new RecentResultCursorAdapter(getActivity(), DDGApplication.getDB().getCursorSearchHistory(), true);
             //historyListView.setAdapter(recentResultAdapter);
             recentSearchListView.setAdapter(recentResultAdapter);
+
+            recentSearchListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(AbsListView view, int scrollState) {
+                }
+
+                @Override
+                public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                    final int currentFirstVisibleItem = recentSearchListView.getFirstVisiblePosition();;
+                    if (currentFirstVisibleItem > lastFirstVisibleItem) {
+                        DDGActionBarManager.getInstance().tryToHideTab();
+                    } else if (currentFirstVisibleItem < lastFirstVisibleItem) {
+                        DDGActionBarManager.getInstance().tryToShowTab();
+                    }
+                    lastFirstVisibleItem = currentFirstVisibleItem;
+                }
+            });
+
         } else {
             getListView().setVisibility(View.GONE);
 
@@ -73,6 +96,13 @@ public class RecentResultTabFragment extends ListFragment {
             //fragmentView.findViewById(R.id.contenitore).setVisibility(View.GONE);
             //fragmentView.findViewById(R.id.text).setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.e("aaa", "is visible to user");
+        DDGActionBarManager.getInstance().tryToShowTab();
     }
 
     @Override

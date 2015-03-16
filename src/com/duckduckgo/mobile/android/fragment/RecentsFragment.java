@@ -98,14 +98,6 @@ public class RecentsFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        //viewPager.setAdapter(pagerAdapter);
-        //DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
-        //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_RECENTS && DDGControlVar.homeScreenShowing);//aaa
-    }
-
-    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         if(!hidden) {

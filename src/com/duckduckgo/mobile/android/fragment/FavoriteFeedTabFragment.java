@@ -15,11 +15,15 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.adapters.FavoriteFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.RecyclerFavoriteFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.RecyclerRecentFeedAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.views.DDGRecyclerView;
 import com.duckduckgo.mobile.android.views.FavoriteFeedListView;
 import com.squareup.otto.Subscribe;
@@ -88,6 +92,17 @@ public class FavoriteFeedTabFragment extends /*ListFragment*/Fragment {
         recyclerFavoriteFeedAdapter = new RecyclerFavoriteFeedAdapter(getActivity(), DDGApplication.getDB().getAllFavoriteFeed());
         favoriteFeedRecyclerView.setAdapter(recyclerFavoriteFeedAdapter);
 
+        favoriteFeedRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy > 10) {
+                    DDGActionBarManager.getInstance().tryToHideTab();
+                } else if(dy < -10) {
+                    DDGActionBarManager.getInstance().tryToShowTab();
+                }
+            }
+        });
 
 	}
 
@@ -95,7 +110,35 @@ public class FavoriteFeedTabFragment extends /*ListFragment*/Fragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.e("aaa", "new config");
+    }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Log.e("aaa", "is visible to user");
+        DDGActionBarManager.getInstance().tryToShowTab();
+    }
+
+    private void cancelCategoryFilter() {
+        //recyclerFavoriteFeedAdapter.resetFilterCategory();
+        DDGControlVar.targetCategory = null;
+        recyclerFavoriteFeedAdapter.changeData(DDGApplication.getDB().getAllFavoriteFeed());
+
+    }
+
+    private void cancelSourceFilter() {
+        DDGControlVar.targetSource = null;
+        recyclerFavoriteFeedAdapter.changeData(DDGApplication.getDB().getAllFavoriteFeed());
+    }
+
+    @Subscribe
+    public void onFeedCancelCategoryFilterEvent(FeedCancelCategoryFilterEvent event) {
+        cancelCategoryFilter();
+    }
+
+    @Subscribe
+    public void onFeedCancelSourceFilterEvent(FeedCancelSourceFilterEvent event) {
+        cancelSourceFilter();
     }
 /*
 	@Override

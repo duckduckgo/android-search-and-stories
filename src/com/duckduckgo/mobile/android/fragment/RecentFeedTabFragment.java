@@ -12,12 +12,15 @@ import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.adapters.RecentFeedCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.RecyclerRecentFeedAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.DDGRecyclerView;
 import com.duckduckgo.mobile.android.views.RecentFeedListView;
@@ -29,8 +32,8 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
 
     public static final String TAG = "recent_feed_tab_fragment";
 
-    RecentFeedListView recentFeedListView;
-    RecentFeedCursorAdapter recentFeedAdapter;
+    //RecentFeedListView recentFeedListView;
+    //RecentFeedCursorAdapter recentFeedAdapter;
 
     private RecyclerRecentFeedAdapter recyclerRecentFeedAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -66,19 +69,22 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
         recentFeedRecyclerView.setEmptyView(fragmentView.findViewById(R.id.empty));
         //recyclerRecentFeedCursorAdapter = new RecyclerRecentFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorRecentFeed());
         recyclerRecentFeedAdapter = new RecyclerRecentFeedAdapter(getActivity(), DDGApplication.getDB().getAllRecentFeed());
-        ArrayList<FeedObject> feeds = DDGApplication.getDB().getAllRecentFeed();
-        int i = 1;
-        for(FeedObject feedObject : feeds) {
-            Log.e("aaa", i+" - feed: "+feedObject.toString());
-            i++;
-        }
 
         layoutManager = new LinearLayoutManager(getActivity());
         recentFeedRecyclerView.setLayoutManager(layoutManager);
         recentFeedRecyclerView.setAdapter(recyclerRecentFeedAdapter);
 
-        checkIfRecordHistory();
-
+        recentFeedRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if(dy > 10) {
+                    DDGActionBarManager.getInstance().tryToHideTab();
+                } else if(dy < -10) {
+                    DDGActionBarManager.getInstance().tryToShowTab();
+                }
+            }
+        });
     }
 
     @Override
@@ -88,12 +94,9 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
     }
 
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.e("aaa", "on hidden change, recording: "+PreferencesManager.getRecordHistory());
-        if(!hidden) {
-            checkIfRecordHistory();
-        }
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        DDGActionBarManager.getInstance().tryToShowTab();
     }
 /*
     @Override
@@ -124,15 +127,20 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
 
             TextView text = (TextView) fragmentView.findViewById(R.id.empty_text);
             text.setText(getResources().getString(R.string.disabled_recents_text));
-        } else {
-            recentFeedRecyclerView.setVisibility(View.VISIBLE);
-            fragmentView.findViewById(R.id.empty).setVisibility(View.GONE);
         }
 
     }
-    private void cancelCategoryFilter() {
-        recyclerRecentFeedAdapter.resetFilterCategory();
 
+    private void cancelCategoryFilter() {
+        //recyclerRecentFeedAdapter.resetFilterCategory();
+        DDGControlVar.targetCategory = null;
+        recyclerRecentFeedAdapter.changeData(DDGApplication.getDB().getAllRecentFeed());
+
+    }
+
+    private void cancelSourceFilter() {
+        DDGControlVar.targetSource = null;
+        recyclerRecentFeedAdapter.changeData(DDGApplication.getDB().getAllRecentFeed());
     }
 
     @Subscribe
@@ -141,8 +149,13 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
     }
 
     @Subscribe
+    public void onFeedCancelSourceFilterEvent(FeedCancelSourceFilterEvent event) {
+        cancelSourceFilter();
+    }
+
+    @Subscribe
     public void onSyncAdaptersEvent(SyncAdaptersEvent event) {
-        Log.e("aaa", "on sync adapters event, record history: "+PreferencesManager.getRecordHistory());
+        Log.e("aaa", "on sync adapters event, record history: " + PreferencesManager.getRecordHistory());
 
         //recentFeedAdapter.changeCursor(DDGApplication.getDB().getCursorRecentFeed());
         //recentFeedAdapter.notifyDataSetChanged();

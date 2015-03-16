@@ -873,13 +873,13 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 			BusProvider.getInstance().post(new WebViewBackPressActionEvent());
 		}
 		// main feed showing & source filter is active
-		else if(DDGControlVar.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_STORIES && DDGControlVar.targetSource != null){
-        //else if(DDGControlVar.targetSource != null){
+		//else if(DDGControlVar.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_STORIES && DDGControlVar.targetSource != null){
+        else if(DDGControlVar.targetSource != null){
 			BusProvider.getInstance().post(new FeedCancelSourceFilterEvent());
 		}
         // main feed showing & category filter is active
-        else if(DDGControlVar.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_STORIES && DDGControlVar.targetCategory != null) {
-        //else if(DDGControlVar.targetCategory != null) {
+        //else if(DDGControlVar.mDuckDuckGoContainer.currentScreen == SCREEN.SCR_STORIES && DDGControlVar.targetCategory != null) {
+        else if(DDGControlVar.targetCategory != null) {
             BusProvider.getInstance().post(new FeedCancelCategoryFilterEvent());
         }
         else if(fragmentManager.getBackStackEntryCount()==1) {
