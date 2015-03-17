@@ -62,6 +62,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
     private ProgressBar progressBar;
     private ProgressBarAnimation progressBarAnimation = null;
     private int oldProgress = 0;
+    private boolean isProgressVisible = false;
     private SlidingTabLayout slidingTabLayout;
 
     private boolean isTabAnimating = false;
@@ -452,67 +453,53 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         //getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable);//aaa
     }
 
-    public void setProgressBarVisible(boolean visible) {
+
+    public void toggleProgressBarVisibility(boolean visible, boolean withAnimation) {
         View progressBarContainer = toolbar.findViewById(R.id.progress_container);
         if((!visible && progressBarContainer.getVisibility()==View.GONE) || (visible && progressBarContainer.getVisibility()==View.VISIBLE)) {
             return;
         }
-        int resId = visible ? R.anim.show_progressbar : R.anim.hide_progressbar;
-        Animation animation = AnimationUtils.loadAnimation(context, resId);
-        progressBarContainer.setAnimation(animation);
+
+        if(withAnimation) {
+            int resId = visible ? R.anim.show_progressbar : R.anim.hide_progressbar;
+            Animation animation = AnimationUtils.loadAnimation(context, resId);
+            progressBarContainer.setAnimation(animation);
+        }
         progressBarContainer.setVisibility(visible ? View.VISIBLE : View.GONE);
+
+    }
+
+    public void setProgressBarVisible(boolean visible) {
+        isProgressVisible = visible;
+
+        if(!visible) {
+            toggleProgressBarVisibility(false, false);
+        } else {
+            toggleProgressBarVisibility(true, true);
+        }
     }
 
     public void setProgress(int newProgress) {
         Log.e("aaa", "set progress, new progress: "+newProgress);
+        Log.e("aaa", "is progress visible: "+isProgressVisible);
+        if(!isProgressVisible) {
+            return;
+        }
         if(newProgress<oldProgress) {
             return;
         }
 
-        if(toolbar.findViewById(R.id.progress_container).getVisibility()==View.GONE) {
-            //expandView(toolbar.findViewById(R.id.progress_container));
-            setProgressBarVisible(true);
-        }
+        toggleProgressBarVisibility(true, true);
 
-        if(false && oldProgress>=100) {
-            oldProgress = 0;
-            //collapseView(toolbar.findViewById(R.id.progress_container));
-        }
-
-
-        if(true || progressBarAnimation==null) {
-            Log.e("aaa", "progress anim == null");
-
-            //progressBarAnimation = new ProgressBarAnimation(progressBar, progressBar.getProgress(), newProgress);
-            progressBarAnimation = new ProgressBarAnimation(progressBar, oldProgress, newProgress);
-            progressBarAnimation.setDuration(500);
-            progressBar.startAnimation(progressBarAnimation);
-            oldProgress = newProgress;
-        } else {/*
-            int oldProgress = (int) progressBarAnimation.getLastValue();
-            progressBar.clearAnimation();
-            Log.e("aaa", "progress anim != null");
-            Log.e("aaa", "progress bar get: "+progressBar.getProgress());
-            Log.e("aaa", "anim get: "+progressBarAnimation.getLastValue());
-
-            progressBarAnimation = new ProgressBarAnimation(progressBar, oldProgress, newProgress);
-            progressBarAnimation.setDuration(500);
-            progressBar.startAnimation(progressBarAnimation);*/
-        }
+        progressBarAnimation = new ProgressBarAnimation(progressBar, oldProgress, newProgress);
+        progressBarAnimation.setDuration(500);
+        progressBar.startAnimation(progressBarAnimation);
+        oldProgress = newProgress;
 
         if(oldProgress>=100) {
             oldProgress = 0;
-            DDGControlVar.pageLoaded = true;
-            setProgressBarVisible(false);
-            //collapseView(toolbar.findViewById(R.id.progress_container));
+            toggleProgressBarVisibility(false, true);
         }
-
-        /*
-        if(newProgress==100) {
-            progressBar.setVisibility(View.GONE);
-        } else {
-            progressBar.setVisibility(View.VISIBLE);
-        }*/
     }
 
     public void stopProgress() {

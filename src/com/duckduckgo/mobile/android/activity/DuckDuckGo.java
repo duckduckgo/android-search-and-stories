@@ -820,7 +820,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             //getSearchField().requestFocus();
             //changeFragment(new SearchFragment(), SearchFragment.TAG);
             //displayScreen(SCREEN.SCR_SEARCH, true);
-            Toast.makeText(this, "TO OPEN SEARCH", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "TO OPEN SEARCH", Toast.LENGTH_SHORT).show();
         }
 		else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
             Log.e("aaa", "intent == action search");

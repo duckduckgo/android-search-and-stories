@@ -81,13 +81,14 @@ public class DDGWebViewClient extends WebViewClient {
 	@SuppressLint("NewApi")
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
+        Log.e("aaa", "on page started: "+url);
         if(url.equals(DDGWebView.ABOUT_BLANK)){
             //activity.clearSearchBar();//to delete
 			BusProvider.getInstance().post(new SearchBarClearEvent());
             return;
         }
 		mLoaded = false;
-        DDGControlVar.pageLoaded = false;
+        //DDGControlVar.newPageLoading = true;
         view.getSettings().setDomStorageEnabled(true);
         view.getSettings().setPluginState(PluginState.ON_DEMAND);
 		
@@ -183,7 +184,7 @@ public class DDGWebViewClient extends WebViewClient {
 	
 	public void onPageFinished (WebView view, String url) {
 		super.onPageFinished(view, url);
-		
+		Log.e("aaa", "on page finished: "+url);
 		mLoaded = true;
 
 		DDGControlVar.mCleanSearchBar = false;

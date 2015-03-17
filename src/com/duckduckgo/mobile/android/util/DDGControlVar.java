@@ -36,7 +36,6 @@ public class DDGControlVar {
 
 	public static FeedObject currentFeedObject = null;
 	public static boolean mCleanSearchBar = false;
-    public static boolean pageLoaded = false;
 		
 	public static boolean hasAppsIndexed = false;
 	

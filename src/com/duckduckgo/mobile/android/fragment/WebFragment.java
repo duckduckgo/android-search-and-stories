@@ -312,6 +312,7 @@ public class WebFragment extends Fragment {
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
 		//keyboardService.hideKeyboard(mainWebView);//aaa keyboard
 
+        //DDGControlVar.newPageLoading = true;
         DDGControlVar.mCleanSearchBar = false;
 		savedState = false;
 
