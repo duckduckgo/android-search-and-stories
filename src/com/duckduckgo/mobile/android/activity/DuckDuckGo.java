@@ -437,8 +437,10 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
             public void onBackButtonPressed() {/*
 				if(getSearchField().isPopupShowing()){
 					getSearchField().dismissDropDown();
-				}
-//				showBangButton(false);*/
+				}*/
+//				showBangButton(false);
+                Log.e("aaa", "keyboard on back button pressed");
+                onBackPressed();
             }
         });
 /*
