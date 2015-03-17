@@ -1,0 +1,43 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:1.1.3'
+  }
+}
+
+apply plugin: 'com.android.application'
+
+android {
+  compileSdkVersion 22
+  buildToolsVersion "22"
+
+  repositories {
+    mavenCentral()
+  }
+
+  defaultConfig {
+    versionName "2.1.2"
+    versionCode 53
+    minSdkVersion 9
+    targetSdkVersion 22
+  }
+
+  dependencies {
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile project(':libs:OnionKit:libnetcipher')
+  }
+
+  sourceSets {
+    main {
+      manifest.srcFile 'AndroidManifest.xml'
+      java.srcDirs = ['src']
+      resources.srcDirs = ['src']
+      aidl.srcDirs = ['src']
+      renderscript.srcDirs = ['src']
+      res.srcDirs = ['res']
+      assets.srcDirs = ['assets']
+    }
+  }
+}
