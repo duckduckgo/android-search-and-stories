@@ -2,9 +2,11 @@ package com.duckduckgo.mobile.android.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -19,6 +21,7 @@ import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.duckduckgo.mobile.android.views.DDGDialogMenu;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.squareup.otto.Subscribe;
 
@@ -108,6 +111,20 @@ public class RecentResultTabFragment extends ListFragment {
     @Override
     public void onListItemClick(ListView l, View v, int position, long id) {
         recentSearchListView.onItemClick(l, v, position, id);
+
+/*
+        DDGDialogMenu dialog = new DDGDialogMenu();
+        Menu menu = new MenuBuilder(getActivity());
+        getActivity().getMenuInflater().inflate(R.menu.feed, menu);
+        //if(DDGApplication.getDB().isSaved())
+
+        dialog.setMenu(menu);
+        //dialog.setFeed();
+        dialog.show(getChildFragmentManager(), "dialog");
+        //dialog.show(getChildFragmentManager(), DDGDialogMenu.TAG);
+*/
+
+
         /*
         Log.e("aaa", "recent result tab fragment onitem click");
         super.onListItemClick(l, v, position, id);

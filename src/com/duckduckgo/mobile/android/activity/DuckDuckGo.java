@@ -272,6 +272,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
         	savedState = true;
         
         DDGControlVar.isAutocompleteActive = PreferencesManager.getAutocomplete();
+        Log.e("aaa", "is autocomplete active: "+DDGControlVar.isAutocompleteActive);
         // always refresh on start
         DDGControlVar.hasUpdatedFeed = false;
         DDGControlVar.mDuckDuckGoContainer = (DuckDuckGoContainer) getLastCustomNonConfigurationInstance();
@@ -1415,6 +1416,7 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
 	@Override
 	public void onConfigurationChanged(Configuration newConfig) {
+        Log.e("aaa", "activity on configuration changed");
 		DDGUtils.displayStats.refreshStats(this);
 		super.onConfigurationChanged(newConfig);
 	}

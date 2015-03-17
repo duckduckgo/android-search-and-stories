@@ -90,6 +90,7 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
     @Override
     public void onResume() {
         super.onResume();
+        //Log.e("aaa", "recent feed tab on resume");
         checkIfRecordHistory();
     }
 

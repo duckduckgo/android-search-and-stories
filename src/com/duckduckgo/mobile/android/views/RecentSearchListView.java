@@ -1,14 +1,20 @@
 package com.duckduckgo.mobile.android.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.internal.view.menu.MenuBuilder;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.duckduckgo.mobile.android.DDGApplication;
+import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
@@ -57,7 +63,21 @@ public class RecentSearchListView extends ListView implements AdapterView.OnItem
         }
 
         if (obj != null) {
-            Log.e("aaa", "history object: "+obj.toString());
+            Log.e("aaa", "history object: "+obj.toString());/*
+            Menu menu = new MenuBuilder(getContext());
+            ((Activity)getContext()).getMenuInflater().inflate(R.menu.feed, menu);
+            if(DDGApplication.getDB().isSavedSearch(obj.getData())) {
+                menu.findItem(R.id.action_add_favorite).setVisible(false);
+                menu.findItem(R.id.action_remove_favorite).setVisible(true);
+            } else {
+                menu.findItem(R.id.action_add_favorite).setVisible(true);
+                menu.findItem(R.id.action_remove_favorite).setVisible(false);
+            }
+
+            DDGDialogMenu dialog = new DDGDialogMenu();
+            dialog.setMenu(menu);
+            dialog.show(((ActionBarActivity)getContext()).getSupportFragmentManager(), DDGDialogMenu.TAG);
+            */
             BusProvider.getInstance().post(new HistoryItemLongClickEvent(obj));
         }
 

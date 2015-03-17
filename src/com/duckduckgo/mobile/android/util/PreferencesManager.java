@@ -51,7 +51,7 @@ public class PreferencesManager {
     }
 	
 	public static boolean getAutocomplete() {
-		return DDGApplication.getSharedPreferences().getBoolean("autocompletePref", false);
+		return DDGApplication.getSharedPreferences().getBoolean("autocompletePref", true);
 	}
 	
 	public static boolean getRecordHistory() {
@@ -151,7 +151,7 @@ public class PreferencesManager {
         }
         else if(key.equals("autocompletePref")){
             Log.e("aaa", "turn off autocomplete");
-            DDGControlVar.isAutocompleteActive = sharedPreferences.getBoolean(key, false);
+            DDGControlVar.isAutocompleteActive = sharedPreferences.getBoolean(key, true);
             Log.e("aaa", "is autocomplete active: "+DDGControlVar.isAutocompleteActive);
         }
         else if(key.equals("autoUpdatePref")){

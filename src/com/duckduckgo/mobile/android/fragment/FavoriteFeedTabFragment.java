@@ -105,13 +105,13 @@ public class FavoriteFeedTabFragment extends /*ListFragment*/Fragment {
         });
 
 	}
-
+/*
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         Log.e("aaa", "new config");
     }
-
+*/
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);

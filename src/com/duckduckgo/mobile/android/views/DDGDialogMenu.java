@@ -1,8 +1,12 @@
 package com.duckduckgo.mobile.android.views;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,19 +26,63 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DDGDialogMenu extends DialogFragment implements AdapterView.OnItemClickListener {
+public class DDGDialogMenu extends DialogFragment {
 
     public static final String TAG = "dialog_menu";
+
+    private Context context;
+    private LayoutInflater inflater;
 
     private ListView menuListView = null;
 
     private DDGMenuAdapter menuAdapter;
     private List<MenuItem> menuItems;
+    private CharSequence[] items;// = {"ciao", "champagne", "bello"};
 
     private View fragmentView = null;
 
     private FeedObject feed = null;
 
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        fragmentView = inflater.inflate(R.layout.temp_popupwindows, null);
+        menuListView = (ListView) fragmentView.findViewById(R.id.menu_listview);
+        menuListView.setVisibility(View.VISIBLE);
+        menuAdapter = new DDGMenuAdapter(getActivity(), R.layout.temp_menuitem, menuItems);
+        Log.e("aaa", "menu adapter count: "+menuAdapter.getCount());
+        menuListView.setAdapter(menuAdapter);
+
+        builder.setView(fragmentView);
+
+
+
+        //builder.setTitle("test");
+        //builder.setMessage("ciao test test");
+        /*
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Log.e("aaa", "clicked: "+items[which]);
+            }
+        });*/
+
+        boolean test = items == null;
+        Log.e("aaa", "items==null: "+test);
+        if(!test) {
+            Log.e("aaa", "items length: "+items.length);
+            for(int i=0; i<items.length; i++) {
+                Log.e("aaa", "items["+i+"]: "+items[i]);
+            }
+        }
+
+        return builder.create();
+    }
+
+    //@Override
+    //public void
+/*
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         fragmentView = inflater.inflate(R.layout.temp_popupwindows, container, false);
@@ -61,7 +109,7 @@ public class DDGDialogMenu extends DialogFragment implements AdapterView.OnItemC
         }
         dismiss();
     }
-
+*/
     public void setFeed(FeedObject feed) {
         this.feed = feed;
     }
@@ -72,7 +120,12 @@ public class DDGDialogMenu extends DialogFragment implements AdapterView.OnItemC
         for(int i=0; i<menu.size(); i++) {
             if(menu.getItem(i).isVisible()) {
                 menuItems.add(menu.getItem(i));
+                //items[i] = menu.getItem(i).getTitle();
             }
+        }
+        items = new String[menuItems.size()];
+        for(int i=0; i<menuItems.size(); i++) {
+            items[i] = menuItems.get(i).toString();
         }
         //adapter = new ArrayAdapter(context, R.layout.temp_menuitem, R.id.text1, menuItems);
 
