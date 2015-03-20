@@ -50,6 +50,8 @@
 
     <dimen name="dialog_text_size">10sp</dimen>
 
+    <dimen name="widget_margin">8dp</dimen>
+
     <!-- old dimen -->
     
     <dimen name="default_margin">8dp</dimen>

@@ -1,4 +1,56 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+
+                android:padding="@dimen/widget_margin"
+                android:background="@drawable/widget_bg"><!--
+                android:padding="@dimen/widget_margin"
+                android:background="#ff00ff">-->
+    <!--
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">-->
+
+    <!--
+    android:background="#ff00ff">
+    android:background="@drawable/background_9_patch_test">-->
+
+    <TextView
+        android:id="@+id/appwidget_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+
+        android:gravity="center_vertical"
+
+        android:text="Search DuckDuckGo"
+        android:textColor="#a4a4a4"
+        android:textSize="16sp"
+        android:drawableRight="@drawable/logo_widget"
+
+        android:layout_marginLeft="22.6dp"
+        android:layout_marginRight="11.6dp"
+
+        android:contentDescription="Test"/><!--
+
+
+        android:paddingLeft="11dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+
+        android:layout_margin="8dp"
+
+        android:background="#09C"/>-->
+    <!--
+        </RelativeLayout>
+        -->
+
+</RelativeLayout>
+
+
+
+<!--
 <Button xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/search_widget"
         android:background="@drawable/widget_frame_bg_white"
@@ -11,9 +63,10 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:orientation="vertical">-->
+    <!-- old version
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/search_widget"
-        android:background="@color/background"
+        android:background="@drawable/widget_bg"
         android:text="Search DuckDuckGo"
         android:gravity="left|center_vertical"
         android:drawableRight="@drawable/widget_logo"
@@ -26,7 +79,11 @@
         android:minWidth="344dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-</TextView><!--
+</TextView>
+-->
+
+
+<!--
     <View
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

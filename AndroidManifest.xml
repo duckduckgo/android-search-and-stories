@@ -67,6 +67,8 @@
                         </intent-filter>-->
         </activity>
 
+        <!--
+
         <receiver android:name="com.duckduckgo.mobile.android.DuckDuckGoWidgetProviderRed">
 		    <intent-filter>
 		        <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
@@ -85,6 +87,18 @@
 		        	   android:resource="@xml/widget_info_white" />
 		</receiver>
 
+        -->
+
+
+        <receiver android:name=".Widget" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                    android:resource="@xml/widget" />
+        </receiver>
 
 		
         <activity 
