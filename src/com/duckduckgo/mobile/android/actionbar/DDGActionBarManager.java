@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.actionbar;
 
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -19,8 +20,10 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -522,9 +525,9 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
     private void setTitle(String tag, String title) {
         actionBarTitle.setText(title);
-        setTitleLeftMargin(tag);
+        //setTitleLeftMargin(tag);
     }
-
+/*
     private void setTitleLeftMargin(String tag) {
         final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) actionBarTitle.getLayoutParams();
         int resId = tag.equals(SourcesFragment.TAG) ? R.dimen.actionbar_sources_title_left_margin : R.dimen.actionbar_title_left_margin;
@@ -548,7 +551,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
             }
         }
     }
-
+*/
     private void toggleActionBarView(boolean searchVisible) {
         searchFieldContainer.setVisibility(searchVisible ? View.VISIBLE : View.GONE);
         actionBarTitle.setVisibility(searchVisible ? View.GONE : View.VISIBLE);
@@ -563,7 +566,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
             int resId = tag.equals(SourcesFragment.TAG) ? R.dimen.actionbar_sources_title_left_margin : R.dimen.actionbar_title_left_margin;
             final int currentLeftMargin = params.leftMargin;
             final int newLeftMargin = (int) context.getResources().getDimension(resId);
-
+/*
             if(currentLeftMargin!=newLeftMargin) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     ValueAnimator valueAnimator = ValueAnimator.ofInt(currentLeftMargin, newLeftMargin);
@@ -581,6 +584,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                     params.leftMargin = newLeftMargin;
                 }
             }
+            */
 /*
             if(currentLeftMargin!=newLeftMargin) {
                 Animation animation = new Animation() {
@@ -719,7 +723,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         int resId = normal ? R.dimen.actionbar_height : R.dimen.actionbar_height_low;
         int newHeight = (int) context.getResources().getDimension(resId);
         //final RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) toolbar.getLayoutParams();
-        final LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) searchBar.getLayoutParams();
+        final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) searchBar.getLayoutParams();
 
 
         //toolbar.setMinimumHeight(height);
@@ -727,7 +731,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
         //toolbar.getLayoutParams().height = newHeight;
 
-        if(false && Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {
+        if(false && Build.VERSION.SDK_INT>=Build.VERSION_CODES.HONEYCOMB) {/*
             ValueAnimator heightValueAnimator = ValueAnimator.ofInt(params.height, newHeight);
             heightValueAnimator.setDuration(250);
             heightValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -738,7 +742,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                     searchBar.setLayoutParams(params);
                 }
             });
-            heightValueAnimator.start();
+            heightValueAnimator.start();*/
         } else {
             params.height = newHeight;
         }
@@ -930,15 +934,23 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         view.measure(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         final int targetHeight = view.getMeasuredHeight();
 
-        view.getLayoutParams().height = 0;
+        final int standardMargin = (int) context.getResources().getDimension(R.dimen.actionbar_height);
+        final int tabHeight = (int) context.getResources().getDimension(R.dimen.actionbar_tab_height2);
+        final int actualMargin = (int) standardMargin - tabHeight;
+
+        //view.getLayoutParams().height = 0;
         view.setVisibility(View.VISIBLE);
         Animation a = new Animation()
         {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
+                /*
                 view.getLayoutParams().height = interpolatedTime == 1
                         ? ViewGroup.LayoutParams.WRAP_CONTENT
-                        : (int)(targetHeight * interpolatedTime);
+                        : (int)(targetHeight * interpolatedTime);*/
+                ((FrameLayout.LayoutParams)view.getLayoutParams()).topMargin = interpolatedTime == 1
+                        ? standardMargin
+                        : (int) (actualMargin + (tabHeight * interpolatedTime));
                 view.requestLayout();
             }
 
@@ -968,10 +980,58 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
             }
         });
         view.startAnimation(a);
+
+        /*
+        final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) view.getLayoutParams();
+        int oldMargin = params.topMargin;
+        int newMargin = (int) context.getResources().getDimension(R.dimen.actionbar_height);
+
+        ValueAnimator valueAnimator = ValueAnimator.ofInt(oldMargin, newMargin);
+        valueAnimator.setDuration(250);
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                params.topMargin = (Integer) animation.getAnimatedValue();
+            }
+        });
+        */
     }
 
     public void collapseView(final View view) {
+        Log.e("aaa", "collapse view");
         final int initialHeight = view.getMeasuredHeight();
+        Log.e("aaa", "initial height: "+initialHeight);
+
+        /*
+        TranslateAnimation tAnimation = new TranslateAnimation(0, 0, 0, (-1*initialHeight));
+        tAnimation.setDuration(250);
+        //tAnimation.willChangeBounds();
+        tAnimation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                view.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        //view.startAnimation(tAnimation);
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "translationY", 0, -initialHeight);
+        animator.setDuration(2500);
+        //animator.start();
+        */
+
+
+        final int standardMargin = (int) context.getResources().getDimension(R.dimen.actionbar_height);
+        final int tabHeight = (int) context.getResources().getDimension(R.dimen.actionbar_tab_height2);
+        final int actualMargin = (int) standardMargin - tabHeight;
 
         Animation a = new Animation()
         {
@@ -980,7 +1040,12 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 if(interpolatedTime == 1){
                     view.setVisibility(View.GONE);
                 }else{
-                    view.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    Log.e("aaa", "interpolated time: "+interpolatedTime+" - new height: "+(initialHeight - (int)(initialHeight * interpolatedTime)));
+                    //view.getLayoutParams().height = initialHeight - (int)(initialHeight * interpolatedTime);
+                    //view.setTranslationY(-1*((int)(initialHeight * interpolatedTime)));
+
+                    ((FrameLayout.LayoutParams)view.getLayoutParams()).topMargin = standardMargin -(int)(tabHeight * interpolatedTime);
+
                     view.requestLayout();
                 }
             }
@@ -1011,6 +1076,8 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
             }
         });
         view.startAnimation(a);
+        //view.setVisibility(View.GONE);
+        view.getParent().requestLayout();
     }
 
     public void setSearchBarText(String text) {

@@ -5,7 +5,6 @@
     android:layout_alignParentTop="true"
     android:id="@+id/toolbar"
     android:minHeight="56dp"
-    android:background="@color/colorPrimary"
     app:contentInsetStart="0dp"
     app:contentInsetEnd="0dp"
     android:layout_width="match_parent"
@@ -17,15 +16,25 @@
     app:contentInsetEnd="48dp"
     app:theme="@style/DDGWhiteOverflow">-->
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
+
+        <com.duckduckgo.mobile.android.views.SlidingTabLayout
+            android:layout_gravity="top"
+            android:layout_marginTop="56dp"
+            android:visibility="visible"
+            android:id="@+id/sliding_tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"/>
 
     <RelativeLayout
         android:id="@+id/searchBar"
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="56dp"
+        android:layout_gravity="top"
         android:gravity="center_vertical">
 
         <ImageButton
@@ -160,16 +169,9 @@
         </FrameLayout>
 
     </RelativeLayout>
-
-        <com.duckduckgo.mobile.android.views.SlidingTabLayout
-            android:visibility="visible"
-            android:id="@+id/sliding_tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"/>
         <!--
         style="@android:style/Widget.Holo.ProgressBar.Horizontal"
         -->
 
-    </LinearLayout>
+    </FrameLayout>
 </android.support.v7.widget.Toolbar>

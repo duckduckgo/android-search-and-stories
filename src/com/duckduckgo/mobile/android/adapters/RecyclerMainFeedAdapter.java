@@ -24,6 +24,7 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.SourceFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -337,8 +338,8 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
                 holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        //BusProvider.getInstance().post(new MainFeedItemLongClickEvent(feed));
-                        showMenu(holder.imageViewMenu, feed);
+                        BusProvider.getInstance().post(new MainFeedItemLongClickEvent(feed));
+                        //showMenu(holder.imageViewMenu, feed);
                         return true;
                     }
                 });

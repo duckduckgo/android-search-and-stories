@@ -83,6 +83,10 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
                 } else if(dy < -10) {
                     DDGActionBarManager.getInstance().tryToShowTab();
                 }
+                if(dy <0 &&
+                        ((LinearLayoutManager)recentFeedRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition()==0) {
+                    DDGActionBarManager.getInstance().showTabLayout();
+                }
             }
         });
     }

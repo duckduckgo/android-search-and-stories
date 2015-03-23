@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.activity;
 
+import android.animation.LayoutTransition;
 import android.app.AlertDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -367,6 +368,11 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 		}
 
         checkForUpdates();
+
+        //RelativeLayout container = (RelativeLayout) findViewById(R.id.main_container);
+        //LayoutTransition transition = container.getLayoutTransition();
+        //transition.enableTransitionType(LayoutTransition.CHANGING);
+
         Log.w("www", "on create end");
     }
 /*
@@ -1559,7 +1565,22 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 
 	@Subscribe
 	public void onMainFeedItemLongClick(MainFeedItemLongClickEvent event) {
-		new MainFeedMenuDialog(this, event.feedObject).show();
+		//new MainFeedMenuDialog(this, event.feedObject).show();
+
+
+        if(toolbar.getVisibility()==View.VISIBLE) {
+            toolbar.setVisibility(View.GONE);
+        } else {
+            toolbar.setVisibility(View.VISIBLE);
+        }
+        /*
+        if(getSupportActionBar().isShowing()) {
+            getSupportActionBar().hide();
+        } else {
+            getSupportActionBar().show();
+        }*/
+
+
 //        MainFeedMenuDialog dialog = new MainFeedMenuDialog(this, event.feedObject);
 //        dialog.setpadd
         //AlertDialog.Builder builder = new AlertDialog.Builder(this);
