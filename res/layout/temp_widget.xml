@@ -7,7 +7,7 @@
 
 <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
 
                 android:background="@drawable/widget_bg">
@@ -27,7 +27,7 @@
         android:visibility="visible"
         android:id="@+id/appwidget_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_centerVertical="true"
 
         android:background="#0000ffff"
