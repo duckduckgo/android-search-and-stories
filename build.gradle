@@ -17,13 +17,6 @@ android {
     mavenCentral()
   }
 
-  defaultConfig {
-    versionName "2.1.2"
-    versionCode 53
-    minSdkVersion 9
-    targetSdkVersion 22
-  }
-
   dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':libs:OnionKit:libnetcipher')
