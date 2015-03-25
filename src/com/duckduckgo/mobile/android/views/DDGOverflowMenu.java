@@ -42,6 +42,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
@@ -383,6 +384,14 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     @Subscribe
     public void onWebViewDisableMenuNavigationButtonEvent(WebViewUpdateMenuNavigationEvent event) {
 
+        for(HashMap.Entry<Integer, Boolean> entry : event.newStates.entrySet()) {
+            Log.e("aaa web", "key: "+entry.getKey()+" - key:"+entry.getValue());
+            ImageButton imageButton = (ImageButton) header.findViewById(entry.getKey());
+            if(imageButton!=null) {
+                imageButton.setEnabled(entry.getValue());
+            }
+        }
+/*
         ImageButton imageButton = (ImageButton) header.findViewById(event.disableId);
         if(imageButton!=null) {
             imageButton.setEnabled(false);
@@ -390,7 +399,9 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         imageButton = (ImageButton) header.findViewById(event.enableId);
         if(imageButton!=null) {
             imageButton.setEnabled(true);
-        }/*
+        }*/
+
+        /*
         RelativeLayout imageButton= (RelativeLayout) header.findViewById(event.disableId);
         if(imageButton!=null) {
             imageButton.setEnabled(false);

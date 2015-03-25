@@ -685,7 +685,7 @@ public class Web extends ActionBarActivity {
             Log.e("aaa", "text is already set");
             return;
         }
-        Log.e("aaa", "text is not set, changing it now");
+        Log.e("aaa text", "text is not set, changing it now");
         DDGControlVar.mDuckDuckGoContainer.currentUrl = text;
 /*
         if(text.startsWith("https://")) {

@@ -73,6 +73,7 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.HashMap;
 
 public class WebFragment extends Fragment {
 
@@ -217,6 +218,7 @@ public class WebFragment extends Fragment {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+        HashMap<Integer, Boolean> newStates;
 		switch(item.getItemId()) {
             case R.id.action_reload:
                 actionReload();
@@ -234,16 +236,32 @@ public class WebFragment extends Fragment {
                 actionExternalBrowser();
                 return true;
             case R.id.action_back:
+                Log.e("aaa web", "actionbar, before press action, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
                 mainWebView.backPressAction(false);
-                if(!mainWebView.canGoBack()) {
-                    BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(R.id.action_back, R.id.action_forward));
-                }
+                Log.e("aaa web", "actionbar, after press action, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
+                //if(!mainWebView.canGoBack()) {
+                    //newStates.put(R.id.action_back, mainwebvi)
+                    //BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(R.id.action_back, R.id.action_forward));
+                //}
+                newStates = new HashMap<Integer, Boolean>();
+                newStates.put(R.id.action_back, mainWebView.canGoBack());
+                newStates.put(R.id.action_forward, mainWebView.canGoForward());
+                BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(newStates));
+                Log.e("aaa web", "actionbar, after can go back, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
                 return true;
             case R.id.action_forward:
+                Log.e("aaa web", "actionbar, before press action, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
                 mainWebView.forwardPressAction();
-                if(!mainWebView.canGoForward()) {
-                    BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(R.id.action_forward, R.id.action_back));
-                }
+                Log.e("aaa web", "actionbar, after press action, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
+                //if(!mainWebView.canGoForward()) {
+                    ///BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(R.id.action_forward, R.id.action_back));
+                //}
+                newStates = new HashMap<Integer, Boolean>();
+                newStates.put(R.id.action_back, mainWebView.canGoBack());
+                newStates.put(R.id.action_forward, mainWebView.canGoForward());
+                BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(newStates));
+                Log.e("aaa web", "actionbar, after can go back, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
+                Log.e("aaa web", "actionbar, after can go forward, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
                 return true;
             case R.id.action_close:
                 overflowMenu.dismiss();
@@ -644,6 +662,7 @@ public class WebFragment extends Fragment {
 
     @Subscribe
     public void onWebViewItemMenuClickEvent(WebViewItemMenuClickEvent event) {
+        Log.e("aaa web", "on web view item menu clicked: "+event.item.getTitle());
         onOptionsItemSelected(event.item);
     }
 

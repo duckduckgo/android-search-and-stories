@@ -1084,16 +1084,16 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         if(text==null) {
             text = "";
         }
-        Log.e("aaa", "inside set search bar text: "+text);
+        Log.e("aaa text", "inside set search bar text: "+text);
         if(getSearchField().getText().toString().equals(text) || DDGControlVar.mDuckDuckGoContainer.currentUrl.equals(text)) {
-            Log.e("aaa", "text is already set");
+            Log.e("aaa text", "text is already set");
             //return;
         }
         if(DDGControlVar.homeScreenShowing) {
             DDGControlVar.mDuckDuckGoContainer.currentUrl = "";
             return;
         }
-        Log.e("aaa", "text is not set, changing it now");
+        Log.e("aaa text", "text is not set, changing it now");
         DDGControlVar.mDuckDuckGoContainer.currentUrl = text;
 /*
         if(text.startsWith("https://")) {
