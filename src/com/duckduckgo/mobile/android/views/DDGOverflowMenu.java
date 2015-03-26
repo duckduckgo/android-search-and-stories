@@ -138,7 +138,11 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
             imageButton.setId(actionId);
             imageButton.setEnabled(menu.getItem(i).isEnabled());
             imageButton.setImageDrawable(menu.getItem(i).getIcon());
-            imageButton.setOnClickListener(this);
+            if(menu.getItem(i).getIcon()==null) {
+                imageButton.setEnabled(false);
+            } else {
+                imageButton.setOnClickListener(this);
+            }
 
             //headerButtons.add(imageButton);
             headerItems.put(imageButton.getId(), menu.getItem(i));
@@ -388,7 +392,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
             Log.e("aaa web", "key: "+entry.getKey()+" - key:"+entry.getValue());
             ImageButton imageButton = (ImageButton) header.findViewById(entry.getKey());
             if(imageButton!=null) {
-                imageButton.setEnabled(entry.getValue());
+                imageButton.setEnabled(entry.getValue() );
             }
         }
 /*

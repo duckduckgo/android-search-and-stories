@@ -244,7 +244,7 @@
     <string name="action_favorites">@string/favorites</string>
     <string name="action_settings">@string/settings</string>
     <string name="action_help_feedback">Help &amp; Feedback</string>
-    <string name="action_reload">Reload</string>
+    <string name="action_reload">Refresh Page</string>
     <string name="action_add_favorite">Add to Favorites</string>
     <string name="action_remove_favorite">Unfavorite</string>
     <string name="action_share">Share</string>

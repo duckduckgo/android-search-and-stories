@@ -16,8 +16,8 @@
 
     <item android:id="@+id/action_close"
           android:title="@string/action_close"
-          android:icon="@drawable/menu_red"
+          android:icon="@null"
           android:orderInCategory="30"
-          app:showAsAction="never"/>
+          app:showAsAction="never"/><!--android:icon="@drawable/menu_red"-->
 
 </menu>

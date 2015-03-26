@@ -338,8 +338,8 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
                 holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
-                        BusProvider.getInstance().post(new MainFeedItemLongClickEvent(feed));
-                        //showMenu(holder.imageViewMenu, feed);
+                        //BusProvider.getInstance().post(new MainFeedItemLongClickEvent(feed));
+                        showMenu(holder.imageViewMenu, feed);
                         return true;
                     }
                 });
