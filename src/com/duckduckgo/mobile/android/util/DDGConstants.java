@@ -24,8 +24,9 @@ public class DDGConstants {
 	public static final int FONT_SEEKBAR_MID = 5;
 
     public static final int ALWAYS_INTERNAL = 0;
-    public static final int EXTERNAL_EXCEPT_SEARCHES = 1;
-    public static final int ALWAYS_EXTERNAL = 2;
+    //public static final int EXTERNAL_EXCEPT_SEARCHES = 1;
+    //public static final int ALWAYS_EXTERNAL = 2;
+    public static final int ALWAYS_EXTERNAL = 1;
 
     public static final int CONFIRM_CLEAR_HISTORY = 100;
     public static final int CONFIRM_CLEAR_COOKIES = 200;

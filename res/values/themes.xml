@@ -30,7 +30,6 @@
 
         <item name="topDropShadow">@drawable/dropshadow_up_light</item>
 
-
 <!--
         <item name="android:preferenceCategoryStyle">@style/DDGPreferenceCategory</item>
 -->

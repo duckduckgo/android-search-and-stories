@@ -703,7 +703,14 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 tag = SourcesFragment.TAG;
             default:
 				break;
-		}/*
+		}
+
+        if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag==SearchFragment.TAG_HOME_PAGE
+                && (!tag.equals(SearchFragment.TAG) && !tag.equals(SearchFragment.TAG_HOME_PAGE))) {
+            keyboardService.hideKeyboardDelayed(getSearchField());
+        }
+
+		/*
 	    if(!DDGControlVar.mDuckDuckGoContainer.webviewShowing && screenToDisplay!=SCREEN.SCR_SEARCH) {
 			//DDGControlVar.mDuckDuckGoContainer.prevScreen = DDGControlVar.mDuckDuckGoContainer.currentScreen;
 			//DDGControlVar.mDuckDuckGoContainer.currentScreen = screenToDisplay;
@@ -1090,8 +1097,17 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	}
 
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
-        displayScreen(SCREEN.SCR_WEBVIEW, false);
-		BusProvider.getInstance().post(new WebViewSearchOrGoToUrlEvent(text, sessionType));
+        if(DDGControlVar.useExternalBrowser==DDGConstants.ALWAYS_INTERNAL) {
+            displayScreen(SCREEN.SCR_WEBVIEW, false);
+            BusProvider.getInstance().post(new WebViewSearchOrGoToUrlEvent(text, sessionType));
+        } else {
+            Fragment webFragment = fragmentManager.findFragmentByTag(WebFragment.TAG);
+            if(webFragment==null) {
+                webFragment = new WebFragment();
+                ((WebFragment)webFragment).setContext(this);
+            }
+            ((WebFragment)webFragment).searchOrGoToUrl(text, sessionType);
+        }
 	}
 
 	public void searchOrGoToUrl(String text) {

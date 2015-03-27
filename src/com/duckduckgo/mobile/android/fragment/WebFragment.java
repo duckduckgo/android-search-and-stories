@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -80,6 +81,8 @@ public class WebFragment extends Fragment {
 	public static final String TAG = "web_fragment";
 	public static final String URL = "url";
 
+    private Context context = null;
+
 	private String mWebViewDefaultUA = null;
 	private DDGWebView mainWebView = null;
 	private ContentDownloader contentDownloader;
@@ -96,6 +99,7 @@ public class WebFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+        Log.e("web fragment", "on create");
 		BusProvider.getInstance().register(this);
 	}
 
@@ -117,8 +121,10 @@ public class WebFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+        Log.e("web fragment", "on activity created");
 
 		setRetainInstance(true);
+        context = getActivity();
         init();
 
 		// Restore the state of the WebView
@@ -156,7 +162,7 @@ public class WebFragment extends Fragment {
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        headerMenu = new MenuBuilder(getActivity());
+        headerMenu = new MenuBuilder(context);
         inflater.inflate(R.menu.web_navigation, headerMenu);
 		inflater.inflate(R.menu.feed, menu);
 		super.onCreateOptionsMenu(menu, inflater);
@@ -323,18 +329,21 @@ public class WebFragment extends Fragment {
 		return savedState;
 	}
 
+    //public static String get
+
 	public void searchOrGoToUrl(String text) {
 		searchOrGoToUrl(text, SESSIONTYPE.SESSION_BROWSE);
 	}
 
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
+        Log.e("web fragment", "search or go to url");
 		//keyboardService.hideKeyboard(mainWebView);//aaa keyboard
 
         //DDGControlVar.newPageLoading = true;
         DDGControlVar.mCleanSearchBar = false;
 		savedState = false;
 
-		BusProvider.getInstance().post(new DismissBangPopupEvent());
+		//BusProvider.getInstance().post(new DismissBangPopupEvent());
 
 		DDGControlVar.mDuckDuckGoContainer.sessionType = sessionType;
 
@@ -412,7 +421,7 @@ public class WebFragment extends Fragment {
 		DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
 
 		if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
-			DDGUtils.searchExternal(getActivity(), term);
+			DDGUtils.searchExternal(context, term);
 			return;
 		}
 
@@ -449,10 +458,10 @@ public class WebFragment extends Fragment {
 	}
 
 	public void showWebUrl(String url) {
-		if(DDGControlVar.useExternalBrowser == DDGConstants.EXTERNAL_EXCEPT_SEARCHES
-				|| DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
+		if(/*DDGControlVar.useExternalBrowser == DDGConstants.EXTERNAL_EXCEPT_SEARCHES
+				|| */DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-			DDGUtils.execIntentIfSafe(getActivity(), browserIntent);
+			DDGUtils.execIntentIfSafe(context, browserIntent);
 			return;
 		}
 
@@ -512,14 +521,14 @@ public class WebFragment extends Fragment {
 		if(isStorySessionOrStoryUrl()) {
 			DDGControlVar.mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
 			if(DDGControlVar.currentFeedObject != null) {
-				new WebViewStoryMenuDialog(getActivity(), DDGControlVar.currentFeedObject, mainWebView.isReadable).show();
+				new WebViewStoryMenuDialog(context, DDGControlVar.currentFeedObject, mainWebView.isReadable).show();
 			}
 		}
 		else if(DDGUtils.isSerpUrl(webViewUrl)) {
-			new WebViewQueryMenuDialog(getActivity(), webViewUrl).show();
+			new WebViewQueryMenuDialog(context, webViewUrl).show();
 		}
 		else {
-			new WebViewWebPageMenuDialog(getActivity(), webViewUrl).show();
+			new WebViewWebPageMenuDialog(context, webViewUrl).show();
 		}
 	}
 
@@ -581,6 +590,12 @@ public class WebFragment extends Fragment {
 		mainWebView.forceOriginal();
 		showWebUrl(webViewUrl);
 	}
+
+    public void setContext(Context context) {
+       if(this.context==null) {
+           this.context = context;
+       }
+    }
 
 	private void actionTurnReadabilityOn() {
 		new ReadableFeedTask(DDGControlVar.currentFeedObject);
