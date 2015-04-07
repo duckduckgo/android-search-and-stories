@@ -135,9 +135,6 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
-import net.hockeyapp.android.CrashManager;
-import net.hockeyapp.android.UpdateManager;
-
 public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/ /*implements ViewTreeObserver.OnGlobalLayoutListener*/ {
 	protected final String TAG = "DuckDuckGo";
     private KeyboardService keyboardService;
@@ -366,8 +363,6 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 		if(savedInstanceState==null) {
 			displayHomeScreen();
 		}
-
-        checkForUpdates();
 
         //RelativeLayout container = (RelativeLayout) findViewById(R.id.main_container);
         //LayoutTransition transition = container.getLayoutTransition();
@@ -846,11 +841,6 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 displayScreen(SCREEN.SCR_WEBVIEW, false);
             }
 		}
-
-        Log.e("aaa", "duckduck go on resume");
-
-        checkForCrashes();
-        Log.w("www", "on resume end");
 	}
 
 	@Override
@@ -1457,18 +1447,6 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 		//return searchField;
         return DDGActionBarManager.getInstance().getSearchField();
 	}
-
-    private void checkForCrashes() {
-        if(DDGApplication.isIsReleaseBuild())
-            return;
-        CrashManager.register(this, DDGConstants.HOCKEY_APP_ID);
-    }
-
-    private void checkForUpdates() {
-        if(DDGApplication.isIsReleaseBuild())
-            return;
-        UpdateManager.register(this, DDGConstants.HOCKEY_APP_ID);
-    }
 
     private void toggleBackgroundShadow(boolean visible) {
         int alpha = visible ? 250 : 0;

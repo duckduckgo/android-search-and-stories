@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.duckduckgo.mobile.android"
-    android:versionCode="61"
-    android:versionName="2.1.10">
+    android:versionCode="62"
+    android:versionName="3.0.1">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="21" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -142,8 +142,6 @@
             android:configChanges="locale|orientation"
             android:theme="@android:style/Theme.Dialog"
             android:taskAffinity="" />
-
-        <activity android:name="net.hockeyapp.android.UpdateActivity" />
 
         <service android:name="com.duckduckgo.mobile.android.subscribers.MainSubscriber" />
 		
