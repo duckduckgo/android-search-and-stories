@@ -14,9 +14,11 @@ Desktop.ini
 bin
 gen
 local.properties
-*.jar
 .idea/
 DuckDuckGo.eml
 DuckDuckGo.iml
 out/
 *.iml
+
+.gradle
+build
