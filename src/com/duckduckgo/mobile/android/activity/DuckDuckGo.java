@@ -133,6 +133,9 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
 import com.squareup.otto.Subscribe;
 
+import net.hockeyapp.android.CrashManager;
+import net.hockeyapp.android.UpdateManager;
+
 import java.util.List;
 
 public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/ /*implements ViewTreeObserver.OnGlobalLayoutListener*/ {
@@ -367,6 +370,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
         //RelativeLayout container = (RelativeLayout) findViewById(R.id.main_container);
         //LayoutTransition transition = container.getLayoutTransition();
         //transition.enableTransitionType(LayoutTransition.CHANGING);
+
+        checkForUpdates();
 
         Log.w("www", "on create end");
     }
@@ -756,6 +761,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 		BusProvider.getInstance().register(this);
 		
         DDGUtils.displayStats.refreshStats(this);
+
+        checkForCrashes();
 
 		// update feeds
 		// https://app.asana.com/0/2891531242889/2858723303746
@@ -1447,6 +1454,18 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 		//return searchField;
         return DDGActionBarManager.getInstance().getSearchField();
 	}
+
+    private void checkForCrashes() {
+        if(DDGApplication.isIsReleaseBuild())
+            return;
+        CrashManager.register(this, DDGConstants.HOCKEY_APP_ID);
+    }
+
+    private void checkForUpdates() {
+        if(DDGApplication.isIsReleaseBuild())
+            return;
+        UpdateManager.register(this, DDGConstants.HOCKEY_APP_ID);
+    }
 
     private void toggleBackgroundShadow(boolean visible) {
         int alpha = visible ? 250 : 0;
