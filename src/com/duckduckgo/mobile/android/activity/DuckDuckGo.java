@@ -186,14 +186,17 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
     public void itemSaveFeed(FeedObject feedObject, String pageFeedId) {
     	if(feedObject != null) {
     		if(DDGApplication.getDB().existsAllFeedById(feedObject.getId())) {
-    			DDGApplication.getDB().makeItemVisible(feedObject.getId());
+    			//DDGApplication.getDB().makeItemVisible(feedObject.getId());
+                DDGApplication.getDB().makeItemFavorite(feedObject.getId());
     		}
     		else {
-    			DDGApplication.getDB().insertVisible(feedObject);
+    			//DDGApplication.getDB().insertVisible(feedObject);
+                DDGApplication.getDB().insertFavorite(feedObject);
     		}
     	}
     	else if(pageFeedId != null && pageFeedId.length() != 0){
-    		DDGApplication.getDB().makeItemVisible(pageFeedId);
+    		//DDGApplication.getDB().makeItemVisible(pageFeedId);
+            DDGApplication.getDB().makeItemFavorite(pageFeedId);
     	}
     }
     
@@ -1033,7 +1036,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                 Toast.makeText(this, R.string.ToastSaveStory, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.action_remove_favorite:
-                final long delResult = DDGApplication.getDB().makeItemHidden(feed.getId());
+                //final long delResult = DDGApplication.getDB().makeItemHidden(feed.getId());
+                final long delResult = DDGApplication.getDB().makeItemUnfavorite(feed.getId());
                 if(delResult != 0) {
                     syncAdapters();
                 }
@@ -1553,7 +1557,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
 	
 	@Subscribe
 	public void onUnSaveStoryEvent(UnSaveStoryEvent event) {
-		final long delResult = DDGApplication.getDB().makeItemHidden(event.feedObjectId);
+		//final long delResult = DDGApplication.getDB().makeItemHidden(event.feedObjectId);
+        final long delResult = DDGApplication.getDB().makeItemUnfavorite(event.feedObjectId);
 		if(delResult != 0) {							
 			syncAdapters();
 		}
@@ -1797,7 +1802,8 @@ public class DuckDuckGo extends ActionBarActivity/* implements OnClickListener*/
                     Toast.makeText(this, R.string.ToastSaveStory, Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.action_remove_favorite:
-                    final long delResult = DDGApplication.getDB().makeItemHidden(event.feed.getId());
+                    //final long delResult = DDGApplication.getDB().makeItemHidden(event.feed.getId());
+                    final long delResult = DDGApplication.getDB().makeItemUnfavorite(event.feed.getId());
                     if(delResult != 0) {
                         syncAdapters();
                     }

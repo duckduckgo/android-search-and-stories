@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.RecyclerMainFeedAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
@@ -399,11 +400,15 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 		String url = feedObject.getUrl();
 		if (url != null) {
-			if(!DDGApplication.getDB().existsVisibleFeedById(feedObject.getId())) {
+			//if(!DDGApplication.getDB().existsVisibleFeedById(feedObject.getId())) {
+            if(!DDGApplication.getDB().existsFavoriteFeedById(feedObject.getId())) {
 				DDGApplication.getDB().insertFeedItem(feedObject);
 				BusProvider.getInstance().post(new RequestSyncAdaptersEvent());
 
-			}
+			} else {
+                DDGApplication.getDB().insertFeedItemToHistory(feedObject.getTitle(), feedObject.getUrl(), feedObject.getType(), feedObject.getId());
+                BusProvider.getInstance().post(new RequestSyncAdaptersEvent());
+            }
 			BusProvider.getInstance().post(new RequestOpenWebPageEvent(url, SESSIONTYPE.SESSION_FEED));
 		}
 
