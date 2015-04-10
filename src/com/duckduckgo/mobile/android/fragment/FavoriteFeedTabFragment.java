@@ -38,6 +38,8 @@ public class FavoriteFeedTabFragment extends /*ListFragment*/Fragment {
     private RecyclerView.LayoutManager layoutManager;
     private DDGRecyclerView favoriteFeedRecyclerView;
 
+    private boolean recyclerScrollPerformed = false;    
+
     private View fragmentView = null;
 
     @Override
@@ -100,6 +102,18 @@ public class FavoriteFeedTabFragment extends /*ListFragment*/Fragment {
                     DDGActionBarManager.getInstance().tryToHideTab();
                 } else if(dy < -10) {
                     DDGActionBarManager.getInstance().tryToShowTab();
+                }
+                recyclerScrollPerformed = true;
+            }
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState==RecyclerView.SCROLL_STATE_IDLE) {
+                    if(recyclerScrollPerformed) {
+                        recyclerScrollPerformed = false;
+                    } else {
+                        DDGActionBarManager.getInstance().tryToShowTab();
+                    }
                 }
             }
         });

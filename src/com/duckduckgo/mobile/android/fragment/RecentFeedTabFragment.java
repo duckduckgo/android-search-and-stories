@@ -39,6 +39,8 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
     private RecyclerView.LayoutManager layoutManager;
     private DDGRecyclerView recentFeedRecyclerView;
 
+    private boolean recyclerScrollPerformed = false;
+
     private View fragmentView = null;
 
     @Override
@@ -83,9 +85,17 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
                 } else if(dy < -10) {
                     DDGActionBarManager.getInstance().tryToShowTab();
                 }
-                if(dy <0 &&
-                        ((LinearLayoutManager)recentFeedRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition()==0) {
-                    DDGActionBarManager.getInstance().showTabLayout();
+                recyclerScrollPerformed = true;
+            }
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if(newState==RecyclerView.SCROLL_STATE_IDLE) {
+                    if(recyclerScrollPerformed) {
+                        recyclerScrollPerformed = false;
+                    } else {
+                        DDGActionBarManager.getInstance().tryToShowTab();
+                    }
                 }
             }
         });
