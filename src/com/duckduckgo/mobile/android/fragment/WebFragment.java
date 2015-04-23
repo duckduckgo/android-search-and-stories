@@ -94,6 +94,7 @@ public class WebFragment extends Fragment {
 
     private Menu webMenu = null;
     private Menu headerMenu = null;
+    private Menu footerMenu = null;
     private DDGOverflowMenu overflowMenu = null;
 
 	@Override
@@ -323,6 +324,8 @@ public class WebFragment extends Fragment {
         getActivity().getMenuInflater().inflate(R.menu.feed, webMenu);
         headerMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.web_navigation, headerMenu);
+        footerMenu = new MenuBuilder(getActivity());
+        getActivity().getMenuInflater().inflate(R.menu.web_settings, footerMenu);
 	}
 
 	public boolean getSavedState() {
@@ -693,6 +696,7 @@ public class WebFragment extends Fragment {
 
             overflowMenu = new DDGOverflowMenu(getActivity());
             overflowMenu.setHeaderMenu(headerMenu);
+            overflowMenu.setFooterButton(footerMenu);
             overflowMenu.setMenu(webMenu);
             overflowMenu.show(event.anchorView);
 
@@ -711,6 +715,7 @@ public class WebFragment extends Fragment {
 
             overflowMenu = new DDGOverflowMenu(getActivity());
             overflowMenu.setHeaderMenu(headerMenu);
+            overflowMenu.setFooterButton(footerMenu);
             overflowMenu.setMenu(webMenu);
             overflowMenu.show(event.anchor);
 

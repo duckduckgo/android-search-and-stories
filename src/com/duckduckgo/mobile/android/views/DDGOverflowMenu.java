@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -58,6 +59,9 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     private LinearLayout header = null;
     private List<ImageButton> headerButtons;
     private HashMap<Integer, MenuItem> headerItems = null;
+
+    private LinearLayout footerContainer;
+    private Button footerButton;
 
     private FeedObject feed = null;
 
@@ -98,6 +102,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
         menuListView = (ListView) container.findViewById(R.id.menu_listview);
         header = (LinearLayout) container.findViewById(R.id.header_container);
+        footerContainer = (LinearLayout) container.findViewById(R.id.footer_container);
 
         //menuListView.setOnTouchListener(this);
     }
@@ -192,6 +197,20 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
             header.addView(headerButton);
         }*/
 
+    }
+
+    public void setFooterButton(Menu menu) {
+        footerContainer.setVisibility(View.VISIBLE);
+        footerButton = (Button) footerContainer.findViewById(R.id.footer_button);
+        final MenuItem item = menu.getItem(0);
+        footerButton.setText(item.getTitle());
+        footerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BusProvider.getInstance().post(new WebViewItemMenuClickEvent(item));
+                dismiss();
+            }
+        });
     }
 
     public void setFeed(FeedObject feed) {

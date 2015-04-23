@@ -6,26 +6,26 @@
           android:title="@string/action_reload"
           android:orderInCategory="10"
           android:visible="false"
-          app:showAsAction="never" />
+          android:showAsAction="never" />
 
     <item android:id="@+id/action_add_favorite"
           android:title="@string/action_add_favorite"
           android:orderInCategory="20"
-          app:showAsAction="never" />
+          android:showAsAction="never" />
 
     <item android:id="@+id/action_remove_favorite"
           android:title="@string/action_remove_favorite"
           android:orderInCategory="30"
-          app:showAsAction="never" />
+          android:showAsAction="never" />
 
     <item android:id="@+id/action_share"
           android:title="@string/action_share"
           android:orderInCategory="40"
-          app:showAsAction="never" />
+          android:showAsAction="never" />
 
     <item android:id="@+id/action_external"
           android:title="@string/action_view_external"
           android:orderInCategory="50"
-          app:showAsAction="never" />
+          android:showAsAction="never" />
 
 </menu>

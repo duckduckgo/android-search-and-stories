@@ -49,6 +49,8 @@
     <color name="background">#eeeeee</color>
     <color name="action_mode_background">#9b3d24</color>
 
+    <color name="overflow_menu_divider">#dddddd</color>
+
     <!-- old colors -->
 
     <color name="welcome_button">#d24e25</color>

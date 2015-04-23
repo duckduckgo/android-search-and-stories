@@ -356,14 +356,14 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 showSearchField();
                 //setShadow(true);
 
-                rightMargin = screen==SCREEN.SCR_SEARCH ? standardMargin : overflowVisibleRightMargin;
+                rightMargin = false&&screen==SCREEN.SCR_SEARCH ? standardMargin : overflowVisibleRightMargin;
                 setActionBarMargins(actionButtonVisibleLeftMargin, standardMargin, rightMargin, standardMargin);
 
-                hasOverflowButtonVisible(screen==SCREEN.SCR_SEARCH_HOME_PAGE);
+                hasOverflowButtonVisible(true||screen==SCREEN.SCR_SEARCH_HOME_PAGE);
 
                 //setActionBarMarginBottom(true);
                 setHomeButtonMarginTop(false);
-                setOverflowButton(screen == SCREEN.SCR_SEARCH_HOME_PAGE);
+                setOverflowButton(true||    screen == SCREEN.SCR_SEARCH_HOME_PAGE);
                 setOverflowButtonMarginTop(false);
 
                 setBangButton();
@@ -435,6 +435,10 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setProgressBarVisible(false);
             default:
                 break;
+        }
+
+        if(!tag.equals(SearchFragment.TAG) && !tag.equals(SearchFragment.TAG_HOME_PAGE)) {
+            keyboardService.hideKeyboardDelayed(searchField);
         }
 
         if(tag.equals(SearchFragment.TAG) || tag.equals(SearchFragment.TAG_HOME_PAGE)) {

@@ -29,6 +29,7 @@
     <dimen name="toolbar_divider_height">8dp</dimen>
 
     <dimen name="listview_item_height">48dp</dimen>
+    <dimen name="web_settings_button_height">56dp</dimen>
     <dimen name="searchlistview_item_icon_dimen">@dimen/listview_item_height</dimen>
     <dimen name="searchlistview_item_text_margin">16dp</dimen><!--24dp-->
     <dimen name="searchlistview_item_plus_margin">18dp</dimen><!--26dp-->

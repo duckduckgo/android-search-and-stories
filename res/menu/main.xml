@@ -5,33 +5,33 @@
     <item android:id="@+id/action_stories"
           android:title="@string/action_stories"
           android:orderInCategory="10"
-          app:showAsAction="never" />
+          android:showAsAction="never" />
 
     <item android:id="@+id/action_favorites"
           android:title="@string/action_favorites"
           android:orderInCategory="20"
-          app:showAsAction="never" />
+          android:showAsAction="never" />
 
     <item android:id="@+id/action_recents"
           android:title="@string/action_recents"
           android:orderInCategory="30"
-          app:showAsAction="never" />
+          android:showAsAction="never" />
 
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"
           android:orderInCategory="40"
-          app:showAsAction="never" />
+          android:showAsAction="never" />
 
     <item android:id="@+id/action_help_feedback"
           android:title="@string/action_help_feedback"
           android:orderInCategory="50"
-          app:showAsAction="never" />
+          android:showAsAction="never" />
 
     <item android:id="@+id/action_test" android:visible="false"
           android:title="test"
           android:icon="@drawable/test_overflow"
           style="@style/Test"
           android:orderInCategory="60"
-          app:showAsAction="always" />
+          android:showAsAction="always" />
 
 </menu>
