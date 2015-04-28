@@ -54,7 +54,7 @@
     <string name="PrefSearchResults">Search Results</string>
     <string name="PrefTurnOffAutocomplete">Disabled</string>
 
-    <string name="PrefAutoUpdate">Automatic Update</string>
+    <string name="PrefAutoUpdate">Automatic Feed Refresh</string>
     <string name="PrefReadable">Readability</string>
     <string name="PrefReadableSummary">On, when available</string>
     <string name="PrefGroupTor">Tor</string>
