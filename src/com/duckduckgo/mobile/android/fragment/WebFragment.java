@@ -501,10 +501,17 @@ public class WebFragment extends Fragment {
 	}
 
 	private boolean isStorySessionOrStoryUrl() {
+        String originalUrl = null;
+        try {
+            originalUrl = mainWebView.getOriginalUrl();
+        } catch(NullPointerException e) {
+            e.printStackTrace();
+        }
 		return DDGControlVar.mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_FEED
 				||
 				( DDGControlVar.mDuckDuckGoContainer.sessionType == SESSIONTYPE.SESSION_BROWSE
-						&& DDGControlVar.mDuckDuckGoContainer.lastFeedUrl.equals(mainWebView.getOriginalUrl())
+                        && originalUrl!=null
+						&& DDGControlVar.mDuckDuckGoContainer.lastFeedUrl.equals(originalUrl)
 				);
 	}
 
