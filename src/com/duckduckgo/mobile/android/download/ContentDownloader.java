@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.widget.Toast;
@@ -37,12 +38,21 @@ public class ContentDownloader {
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
             if(url.startsWith("https")) {
                 //download scheme not supported yet
-                Toast.makeText(context, R.string.ToastSchemeNotSupported, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.ToastDownloadManagerUnavailable, Toast.LENGTH_SHORT).show();
                 return;
             }
         }
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+
+            int downloadManagerState = context.getPackageManager().getApplicationEnabledSetting("com.android.providers.downloads");
+            if(downloadManagerState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                    || downloadManagerState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
+                    || downloadManagerState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED) {
+                Toast.makeText(context, R.string.ToastSchemeNotSupported, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
 			Uri uri = Uri.parse(url);
 			DownloadManager.Request request = new DownloadManager.Request(uri);
 			// When downloading music and videos they will be listed in the

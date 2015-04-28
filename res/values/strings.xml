@@ -129,6 +129,7 @@
     <string name="ErrorDownloadOpenFail">Downloaded file could not be opened!</string>
 
     <string name="ToastSchemeNotSupported">Unable to download file</string>
+    <string name="ToastDownloadManagerUnavailable">Unable to download file</string>
     
     <string name="InfoReadStoriesFromCache">Connection failed! Stories retrieved from cache&#8230;</string>
     <string name="DefaultsSetToast">Sources reset to default.</string>
