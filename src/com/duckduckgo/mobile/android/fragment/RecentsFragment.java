@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.fragment;
 
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.os.Build;
 import android.os.Bundle;
@@ -127,7 +128,16 @@ public class RecentsFragment extends Fragment {
 
     @Override
     public Animation onCreateAnimation(int transit, final boolean enter, int nextAnim) {
-        Animation anim = AnimationUtils.loadAnimation(getActivity(), nextAnim);
+        Animation anim = null;
+        try {
+            anim = AnimationUtils.loadAnimation(getActivity(), nextAnim);
+        } catch(Resources.NotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if(anim==null) {
+            return null;
+        }
         anim.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
