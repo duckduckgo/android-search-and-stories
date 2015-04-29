@@ -231,71 +231,74 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         int totalHeight = search_container.getRootView().getHeight();
         int visibleHeight = search_container.getHeight();
 
-        boolean portrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
+        if(isAdded()) {
 
-        int statusBar = getStatusBarHeight();
-        int navigationBar = getNavigationBarHeight();
-        int actionBarHeight = (int) getActivity().getResources().getDimension(R.dimen.actionbar_height);
-        //Log.e("aaa", "status bar: "+statusBar);
-        //Log.e("aaa", "navigation bar: "+navigationBar);
-        //domani sera boh
-        // Log.e("aaa", "---------search fragment");
-        //Log.e("aaa", "status bar: "+statusBar);
-        //Log.e("aaa", "navigation bar: "+navigationBar);
-        //Log.e("aaa", "action bar: "+actionBarHeight);
-        //Log.e("aaa", "total height: "+totalHeight);
-        //Log.e("aaa", "visible height: "+visibleHeight);
-        //visibleHeight = visibleHeight - actionBarHeight;
+            boolean portrait = getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
 
-        totalHeight = totalHeight - statusBar - navigationBar - actionBarHeight;
-        //Log.e("aaa", "total height calculated: "+totalHeight);
+            int statusBar = getStatusBarHeight();
+            int navigationBar = getNavigationBarHeight();
+            int actionBarHeight = (int) getActivity().getResources().getDimension(R.dimen.actionbar_height);
+            //Log.e("aaa", "status bar: "+statusBar);
+            //Log.e("aaa", "navigation bar: "+navigationBar);
+            //domani sera boh
+            // Log.e("aaa", "---------search fragment");
+            //Log.e("aaa", "status bar: "+statusBar);
+            //Log.e("aaa", "navigation bar: "+navigationBar);
+            //Log.e("aaa", "action bar: "+actionBarHeight);
+            //Log.e("aaa", "total height: "+totalHeight);
+            //Log.e("aaa", "visible height: "+visibleHeight);
+            //visibleHeight = visibleHeight - actionBarHeight;
+
+            totalHeight = totalHeight - statusBar - navigationBar - actionBarHeight;
+            //Log.e("aaa", "total height calculated: "+totalHeight);
 
 
-        int itemHeight = (int) getActivity().getResources().getDimension(R.dimen.temp_item_height);
+            int itemHeight = (int) getActivity().getResources().getDimension(R.dimen.temp_item_height);
 
-        LinearLayout.LayoutParams searchParams = (LinearLayout.LayoutParams) searchListView.getLayoutParams();
+            LinearLayout.LayoutParams searchParams = (LinearLayout.LayoutParams) searchListView.getLayoutParams();
 
-        ListView.LayoutParams headerParams = (ListView.LayoutParams) headerPadding.getLayoutParams();
+            ListView.LayoutParams headerParams = (ListView.LayoutParams) headerPadding.getLayoutParams();
 
-        //Log.e("aaa", "top margin: "+searchParams.topMargin);
-        //  Log.e("aaa", "header height: "+headerParams.height);
+            //Log.e("aaa", "top margin: "+searchParams.topMargin);
+            //  Log.e("aaa", "header height: "+headerParams.height);
 
-        //visibleHeight = visibleHeight - (searchParams.topMargin * 3);
-        //visibleHeight = visibleHeight - (headerParams.height * 3);
-        //visibleHeight = visibleHeight - actionBarHeight - (searchListView.getPaddingTop() * 3);
-        //visibleHeight = visibleHeight - (searchListView.getPaddingTop() * 3);
-        //totalHeight = totalHeight - (searchListView.getPaddingTop() * 3);
+            //visibleHeight = visibleHeight - (searchParams.topMargin * 3);
+            //visibleHeight = visibleHeight - (headerParams.height * 3);
+            //visibleHeight = visibleHeight - actionBarHeight - (searchListView.getPaddingTop() * 3);
+            //visibleHeight = visibleHeight - (searchListView.getPaddingTop() * 3);
+            //totalHeight = totalHeight - (searchListView.getPaddingTop() * 3);
 
-        //Log.e("aaa", "total height: "+totalHeight);
-        //Log.e("aaa", "visible height: "+visibleHeight);
+            //Log.e("aaa", "total height: "+totalHeight);
+            //Log.e("aaa", "visible height: "+visibleHeight);
 
-        int maxItems = (visibleHeight - (searchListView.getPaddingTop() * 3)) / itemHeight;
-        int recentItems = 0;
-        //Log.e("aaa", "total: "+totalHeight+" - visible: "+visibleHeight+" - max items: "+maxItems+" - search margin: "+searchParams.topMargin+" - item height: "+itemHeight);
+            int maxItems = (visibleHeight - (searchListView.getPaddingTop() * 3)) / itemHeight;
+            int recentItems = 0;
+            //Log.e("aaa", "total: "+totalHeight+" - visible: "+visibleHeight+" - max items: "+maxItems+" - search margin: "+searchParams.topMargin+" - item height: "+itemHeight);
 
-        //if(portrait && (totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
-        if(totalHeight>visibleHeight) {
-            Log.e("aaa", "open keyboard");
-            //Log.e("aaa", "max items: "+maxItems);
+            //if(portrait && (totalHeight - visibleHeight) > (statusBar + navigationBar + actionBarHeight)) {
+            if (totalHeight > visibleHeight) {
+                Log.e("aaa", "open keyboard");
+                //Log.e("aaa", "max items: "+maxItems);
 
-            recentItems = (maxItems - 1) <= recentAdapter.getCount() ? (maxItems - 1) : recentAdapter.getCount();
+                recentItems = (maxItems - 1) <= recentAdapter.getCount() ? (maxItems - 1) : recentAdapter.getCount();
 
-        } else {
-            Log.e("aaa", "close keyboard");
-            //Log.e("aaa", "max items: "+maxItems);
-            int halfItems = maxItems / 2;
-            //recentItems = halfItems <= DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount() ? halfItems : DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount();
-        }
+            } else {
+                Log.e("aaa", "close keyboard");
+                //Log.e("aaa", "max items: "+maxItems);
+                int halfItems = maxItems / 2;
+                //recentItems = halfItems <= DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount() ? halfItems : DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getCount();
+            }
 
-        //Log.e("aaa", "recent items: "+recentItems);
-        boolean shouldUpdateAdapters = recentItems!=0 && recentItems!=recentAdapter.getCount();
-        //Log.e("aaa", "should update adapters: "+shouldUpdateAdapters);
-        if(shouldUpdateAdapters) {/*
+            //Log.e("aaa", "recent items: "+recentItems);
+            boolean shouldUpdateAdapters = recentItems != 0 && recentItems != recentAdapter.getCount();
+            //Log.e("aaa", "should update adapters: "+shouldUpdateAdapters);
+            if (shouldUpdateAdapters) {/*
             DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory(recentItems));
             DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
             adapter.notifyDataSetChanged();
             searchListView.setLimit(recentItems);*/
-            syncAdapters(recentItems);
+                syncAdapters(recentItems);
+            }
         }
 
     }

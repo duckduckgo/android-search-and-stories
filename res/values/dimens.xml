@@ -32,7 +32,7 @@
     <dimen name="web_settings_button_height">56dp</dimen>
     <dimen name="searchlistview_item_icon_dimen">@dimen/listview_item_height</dimen>
     <dimen name="searchlistview_item_text_margin">16dp</dimen><!--24dp-->
-    <dimen name="searchlistview_item_plus_margin">18dp</dimen><!--26dp-->
+    <dimen name="searchlistview_item_plus_margin">12dp</dimen><!--26dp-->
     <dimen name="source_icon_dimen">30dp</dimen>
 
     <dimen name="about_container_padding">48dp</dimen>
