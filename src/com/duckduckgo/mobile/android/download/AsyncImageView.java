@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -21,6 +22,8 @@ public class AsyncImageView extends ImageView {
 	private float cornerRadius = 0;
 	
 	private boolean usePicasso = true;
+
+    private float heightRatio = 0;
 		
 	public AsyncImageView(Context context, AttributeSet attr) {
 		super (context, attr);
@@ -45,7 +48,8 @@ public class AsyncImageView extends ImageView {
 	    // Get proportion.
 	    TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.AsyncImageView);
 	    cornerRadius = a.getDimension(R.styleable.AsyncImageView_cornerRadius, 0);		 
-	    usePicasso = a.getBoolean(R.styleable.AsyncImageView_usePicasso, true);		 
+	    usePicasso = a.getBoolean(R.styleable.AsyncImageView_usePicasso, true);
+        heightRatio = a.getFloat(R.styleable.AsyncImageView_heightRatio, 0);
 	    a.recycle();
 	  }
 	  
@@ -93,5 +97,28 @@ public class AsyncImageView extends ImageView {
 			Picasso.with(getContext()).cancelRequest(this);
 		}
 	}
-
+/*
+    @Override
+    public void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
+        //Log.e("aaa", "Feed image on measure");
+        final int width;
+        final int height;
+        if(heightRatio!=0) {
+            //Log.e("aaa", "height ratio != 0: "+heightRatio);
+            width = MeasureSpec.getSize(widthMeasureSpec);
+            //float tempHeight = widthMeasureSpec * heightRatio;
+            height = (int) (width * heightRatio);
+            Log.e("aaa", "width: "+width+" - widthMeasureSpec: "+widthMeasureSpec);
+            Log.e("aaa", "height: "+height+" - heightMeasureSpec: "+heightMeasureSpec);
+            Log.e("aaa", "ratio: "+heightRatio);
+            setMeasuredDimension(width, height);
+        } else {
+            //Log.e("aaa", "height ratio ==0 ")
+            //width = widthMeasureSpec;
+            //height = heightMeasureSpec;
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        }
+        //super.onMeasure(width, height);
+    }
+*/
 }

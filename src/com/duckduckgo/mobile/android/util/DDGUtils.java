@@ -3,16 +3,19 @@ package com.duckduckgo.mobile.android.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.http.conn.util.InetAddressUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
@@ -22,6 +25,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.ResolveInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -34,12 +38,22 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
+import android.view.Window;
 import android.widget.Toast;
 import ch.boye.httpclientandroidlib.HttpEntity;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.download.FileCache;
+import com.duckduckgo.mobile.android.fragment.AboutFragment;
+import com.duckduckgo.mobile.android.fragment.FavoriteFragment;
+import com.duckduckgo.mobile.android.fragment.FeedFragment;
+import com.duckduckgo.mobile.android.fragment.HelpFeedbackFragment;
+import com.duckduckgo.mobile.android.fragment.PrefFragment;
+import com.duckduckgo.mobile.android.fragment.RecentsFragment;
+import com.duckduckgo.mobile.android.fragment.SearchFragment;
+import com.duckduckgo.mobile.android.fragment.SourcesFragment;
+import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
@@ -373,35 +387,120 @@ public final class DDGUtils {
         }
 	}
 
-    public static boolean mustClearCacheAnCookies() {
-        int daysInterval = 0;
-        switch (DDGControlVar.CLEAR_INTERVAL) {
-            case EVERY_LAUNCH:
-                return true;
-            case WEEKLY:
-                daysInterval = 7;
-                break;
-            case MONTHLY:
-                daysInterval = 30;
-                break;
-            case NEVER:
-            default:
-                return false;
+	public static String getVersionName(Context context) {
+		String versionName = "";
+		try {
+			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			versionName = packageInfo.versionName;
+		} catch(NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return versionName;
+	}
+
+	public static int getVersionCode(Context context) {
+		int versionCode = 0;
+		try {
+			PackageInfo packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
+			versionCode = packageInfo.versionCode;
+		} catch(NameNotFoundException e) {
+			e.printStackTrace();
+		}
+		return versionCode;
+	}
+
+    public static void searchExternal(Context context, String term) {
+        String url;
+        if(DDGControlVar.regionString == "wt-wt"){	// default
+            url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term);
         }
-		long currentTime = System.currentTimeMillis();
-        long clearInterval = daysInterval * 24l * 60l * 60l * 1000l;
-        long nextClear = DDGControlVar.lastClearCacheAndCookies + clearInterval;
-        if(currentTime >= nextClear) {
-            return true;
+        else {
+            url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
         }
-        return false;
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(browserIntent);
     }
 
-    public static void clearCacheAndCookies(DDGWebView ddgWebView) {
-        DDGWebView.clearCookies();
-        ddgWebView.clearCache();
-        DDGControlVar.lastClearCacheAndCookies = System.currentTimeMillis();
-        PreferencesManager.setLastClearCacheAndCookies(DDGControlVar.lastClearCacheAndCookies);
+    public static String getUrlToDisplay(String url) {
+        if(url==null || url.length()==0) {
+            return "";
+        }
+        if (url.startsWith("https://")) {
+            url = url.replace("https://", "");
+        } else if (url.startsWith("http://")) {
+            url = url.replace("http://", "");
+        }
+        if (url.startsWith("www.")) {
+            url = url.replace("www.", "");
+        }
+        return url;
+    }
+
+    public static SCREEN getScreenByTag(String tag) {
+        if(tag.equals(RecentsFragment.TAG)) {
+            return SCREEN.SCR_RECENTS;
+        } else if(tag.equals(FavoriteFragment.TAG)) {
+            return SCREEN.SCR_FAVORITE;
+        } else if(tag.equals(WebFragment.TAG)) {
+            return SCREEN.SCR_WEBVIEW;
+        } else if(tag.equals(SearchFragment.TAG)) {
+            return SCREEN.SCR_SEARCH;
+        } else if(tag.equals(AboutFragment.TAG)) {
+            return SCREEN.SCR_ABOUT;
+        } else if(tag.equals(HelpFeedbackFragment.TAG)) {
+            return SCREEN.SCR_HELP;
+        } else if(tag.equals(PrefFragment.TAG)) {
+            return SCREEN.SCR_SETTINGS;
+        } else  if(tag.equals(SearchFragment.TAG_HOME_PAGE)) {
+            return SCREEN.SCR_SEARCH_HOME_PAGE;
+        } else if(tag.equals(SourcesFragment.TAG)) {
+            return SCREEN.SCR_SOURCES;
+        }
+        return SCREEN.SCR_STORIES;
+    }
+
+    public static String getTagByScreen(SCREEN screen) {
+        switch(screen) {
+            case SCR_STORIES:
+                return FeedFragment.TAG;
+            case SCR_RECENTS:
+                return RecentsFragment.TAG;
+            case SCR_FAVORITE:
+                return FavoriteFragment.TAG;
+            case SCR_WEBVIEW:
+                return WebFragment.TAG;
+            case SCR_SEARCH:
+                return SearchFragment.TAG;
+            case SCR_ABOUT:
+                return AboutFragment.TAG;
+            case SCR_HELP:
+                return HelpFeedbackFragment.TAG;
+            case SCR_SETTINGS:
+                return PrefFragment.TAG;
+            case SCR_SEARCH_HOME_PAGE:
+                return SearchFragment.TAG_HOME_PAGE;
+            case SCR_SOURCES:
+                return SourcesFragment.TAG;
+            default:
+                return FeedFragment.TAG;
+        }
+    }
+
+    public static int getStatusBarHeight(Activity activity) {
+        Rect rect = new Rect();
+        Window window = activity.getWindow();
+        window.getDecorView().getWindowVisibleDisplayFrame(rect);
+        return rect.top;
+    }
+
+    public static int getNavigationBarHeight(Context context) {
+        int id = context.getResources().getIdentifier(
+                context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT? "navigation_bar_height" : "navigation_bar_height_landscape",
+                "dimen", "android");
+        if (id > 0) {
+            return context.getResources().getDimensionPixelSize(id);
+        }
+        return 0;
     }
 	
 }

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/search_container"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background"
+              android:descendantFocusability="blocksDescendants">
+
+    <com.duckduckgo.mobile.android.views.SearchListView
+        android:id="@+id/search_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+        android:divider="@null"/>
+
+
+    <ListView
+        android:id="@+id/autocomplete_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+        android:divider="@null"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/recent_saved_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.duckduckgo.mobile.android.views.RecentSearchListView
+            android:id="@+id/recent_list"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/><!--
+            android:layout_weight="0.5"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>-->
+
+        <View
+            android:id="@+id/search_divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#55a4a4a4"/>
+
+        <com.duckduckgo.mobile.android.views.FavoriteSearchListView
+            android:id="@+id/saved_list"
+            android:layout_marginTop="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/><!--
+            android:layout_weight="0.5"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>-->
+
+    </LinearLayout>
+
+</LinearLayout>

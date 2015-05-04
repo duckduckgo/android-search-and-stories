@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+<!--
+    <com.duckduckgo.mobile.android.views.RecentFeedListView-->
+    <com.duckduckgo.mobile.android.views.DDGRecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:divider="@null"
+        android:dividerHeight="0dp"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:smoothScrollbar="true"
+        android:id="@+id/list"/><!--
+        android:id="@android:id/list"/>-->
+<!--
+    <LinearLayout android:id="@android:id/empty"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:orientation="vertical"
+                  android:gravity="center"
+                  android:layout_margin="40dp"
+                  android:paddingBottom="50dp">
+        <ImageView android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:src="@drawable/time_large" />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="20dp"
+                  android:textSize="8.94pt"
+                  android:textColor="?attr/emptyListTitleColor"
+                  android:text="No Recents" />
+        <TextView android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:gravity="center_horizontal"
+                  android:textSize="6.59pt"
+                  android:textColor="?attr/emptyListSubTitleColor"
+                  android:text="Once you start searching\nor browsing stories, you activity\nwill be shown here." />
+    </LinearLayout>-->
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="93.3dp"
+            android:paddingBottom="93.3dp">
+
+            <ImageView
+                android:id="@+id/empty_logo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/time_large"/>
+
+            <TextView
+                android:id="@+id/empty_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/empty_logo"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/empty_recents_title"
+                android:textColor="@color/search_dark"
+                android:textSize="21sp"/>
+
+            <TextView
+                android:id="@+id/empty_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/empty_title"
+                android:gravity="center"
+                android:text="@string/empty_recents_text"
+                android:textColor="@color/search_light"
+                android:textSize="16sp"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+
+</LinearLayout>

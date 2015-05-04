@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_alignParentTop="true"
+    android:id="@+id/toolbar"
+    android:minHeight="56dp"
+    android:background="@color/colorPrimary"
+    app:contentInsetStart="0dp"
+    app:contentInsetEnd="0dp"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+    app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+    <!--
+
+    app:contentInsetEnd="48dp"
+    app:theme="@style/DDGWhiteOverflow">-->
+
+    <RelativeLayout
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/home"
+            android:layout_width="@dimen/actionbar_button_width"
+            android:layout_height="@dimen/actionbar_button_height"
+            android:src="@drawable/home"
+            android:layout_alignParentLeft="true"
+            android:scaleType="center"
+            android:background="?attr/actionBarItemBackground"/>
+
+        <ImageButton
+            android:visibility="gone"
+            android:id="@+id/bang"
+            android:layout_width="@dimen/actionbar_button_width"
+            android:layout_height="@dimen/actionbar_button_height"
+            android:src="@drawable/bang"
+            android:layout_alignParentLeft="true"
+            android:scaleType="center"
+            android:background="?attr/actionBarItemBackground"/><!--
+
+            android:layout_toRightOf="@id/home"-->
+        <!--
+            <ImageButton
+                android:visibility="gone"
+                android:id="@+id/overflow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginRight="14dp"
+                android:layout_marginLeft="14dp"
+                android:src="@drawable/home"
+                android:layout_alignParentRight="true"
+                android:scaleType="center"
+                android:background="?attr/actionBarItemBackground"/>-->
+        <TextView
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/actionbar_title_left_margin"
+            android:gravity="center_vertical"
+            android:id="@+id/actionbar_title"
+            android:textColor="@color/actionbar_title"
+            android:textSize="18sp"/><!--
+            android:layout_toRightOf="@id/bang"-->
+
+
+    </RelativeLayout>
+</android.support.v7.widget.Toolbar>

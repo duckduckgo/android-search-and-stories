@@ -1,8 +1,16 @@
 package com.duckduckgo.mobile.android.views.webview;
 
+import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarAddClearTextDrawable;
+import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetProgressEvent;
+import com.duckduckgo.mobile.android.fragment.WebFragment;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 
+import android.app.Activity;
 import android.content.pm.ActivityInfo;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
@@ -12,7 +20,8 @@ import android.widget.RelativeLayout;
 
 public class DDGWebChromeClient extends WebChromeClient {
 	
-	DuckDuckGo activity;
+	Activity activity;
+	WebFragment fragment;
 	FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(
 			FrameLayout.LayoutParams.MATCH_PARENT,
 			FrameLayout.LayoutParams.MATCH_PARENT);
@@ -23,9 +32,10 @@ public class DDGWebChromeClient extends WebChromeClient {
 
 	public boolean isVideoPlayingFullscreen = false;
 
-	public DDGWebChromeClient(DuckDuckGo activity, View contentView) {
-		this.activity = activity;
+	public DDGWebChromeClient(WebFragment fragment, View contentView) {
+		this.fragment = fragment;
 		this.contentView = contentView;
+		activity = fragment.getActivity();
 	}
 	
 	@Override
@@ -35,17 +45,24 @@ public class DDGWebChromeClient extends WebChromeClient {
 		if(view.getVisibility() != View.VISIBLE) {
 			return;
 		}
-		
-		if(newProgress == 100){
-			activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.searchFieldDrawable);        			
+        Log.e("aaa", "new progress: "+newProgress);
+
+        if(newProgress == 100){
+			BusProvider.getInstance().post(new SearchBarAddClearTextDrawable());
+			//activity.getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable);
 		}
 		else {
-			if(!activity.mCleanSearchBar) {
-				activity.mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
-				activity.getSearchField().setBackgroundDrawable(activity.mDuckDuckGoContainer.progressDrawable);
+			if(!DDGControlVar.mCleanSearchBar) {
+				//DDGControlVar.mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
+				//BusProvider.getInstance().post(new SearchBarSetProgressEvent(newProgress*100));//aaa - blue bar loading page
+				//activity.getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.progressDrawable);
 			}
 		}
 
+        if(!DDGControlVar.mCleanSearchBar/* && !DDGControlVar.pageLoaded*/) {
+
+            DDGActionBarManager.getInstance().setProgress(newProgress);
+        }
 	}
 
 	@Override

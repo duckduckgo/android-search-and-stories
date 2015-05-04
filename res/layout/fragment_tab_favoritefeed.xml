@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="@color/background"
+  android:orientation="vertical">
+
+    <!--
+    <com.duckduckgo.mobile.android.views.FavoriteFeedListView-->
+    <com.duckduckgo.mobile.android.views.DDGRecyclerView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:fadingEdge="none"
+        	android:fastScrollEnabled="false"
+        	android:footerDividersEnabled="false"
+        	android:headerDividersEnabled="false"
+        	android:smoothScrollbar="true"
+            android:id="@+id/list"/><!--
+            android:id="@android:id/list"/>-->
+	<!--
+	<LinearLayout android:id="@android:id/empty"
+   	    		  android:layout_width="match_parent"
+   	    		  android:layout_height="match_parent"
+   	    		  android:orientation="vertical"
+   	    		  android:gravity="center"
+   	    		  android:layout_margin="40dp"
+   	    		  android:paddingBottom="50dp">
+   	    <ImageView android:layout_width="wrap_content"
+   	        	   android:layout_height="wrap_content"
+   	        	   android:src="@drawable/favorite_large" />
+   	    <TextView android:layout_width="wrap_content"
+   	        	  android:layout_height="wrap_content"
+   	        	  android:layout_marginBottom="20dp"
+   	        	  android:textSize="21sp"
+   	        	  android:textColor="@color/search_dark"
+   	        	  android:text="@string/no_favorites_title" />
+   	    <TextView android:layout_width="wrap_content"
+   	        	  android:layout_height="wrap_content"
+   	        	  android:gravity="center_horizontal"
+   	        	  android:textSize="14sp"
+   	        	  android:textColor="@color/search_light"
+   	        	  android:text="@string/no_favorites_text" />
+   	</LinearLayout>-->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"><!-- aaa this it the almost right one -->
+
+        <RelativeLayout
+            android:id="@+id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="93.3dp"
+            android:paddingBottom="93.3dp">
+
+            <ImageView
+                android:id="@+id/empty_logo"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/favorite_large"/>
+
+            <TextView
+                android:id="@+id/empty_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/empty_logo"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="10dp"
+                android:text="@string/empty_favorites_title"
+                android:textColor="@color/search_dark"
+                android:textSize="21sp"/><!--
+                android:layout_marginTop="18.3dp"
+                android:layout_marginBottom="24dp"-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/empty_title"
+                android:gravity="center"
+                android:text="@string/empty_favorites_text"
+                android:textColor="@color/search_light"
+                android:textSize="16sp"/>
+
+        </RelativeLayout>
+    </ScrollView>
+
+</LinearLayout>

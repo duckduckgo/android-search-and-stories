@@ -93,11 +93,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 		
 		if (suggestion != null) {
 			holder.autoCompleteResult.setText(suggestion.getPhrase());
-			final int pixelValue = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 
-	                (float) 2.0, getContext().getResources().getDisplayMetrics());
-			holder.autoCompleteResult.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize+pixelValue);
 			holder.autoCompleteDetail.setText(suggestion.getSnippet());
-			holder.autoCompleteDetail.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
 			holder.plusImage.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View view) {

@@ -9,8 +9,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteCursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.database.sqlite.SQLiteStatement;
 import android.util.Log;
 
@@ -24,7 +26,7 @@ import com.duckduckgo.mobile.android.util.PreferencesManager;
 public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 14;
+	private static final int DATABASE_VERSION = 15;
 	private static final String FEED_TABLE = "feed";
 	private static final String APP_TABLE = "apps";
 	private static final String HISTORY_TABLE = "history";
@@ -70,7 +72,8 @@ public class DdgDB {
 	 * @param e
 	 * @return if FeedObject(url,title) both null, return -1. Return Insert execution result otherwise
 	 */
-	public long insert(FeedObject e, String hidden) {
+	//public long insert(FeedObject e, String hidden) {
+    public long insert(FeedObject e, String hidden, String favorite) {
 		String title = e.getTitle();		
 		String url = e.getUrl();
 		if(url == null || url.length() == 0)
@@ -105,6 +108,8 @@ public class DdgDB {
 		Log.v("insert", e.getArticleUrl());
 		contentValues.put("hidden", hidden);
 		Log.v("insert", hidden);
+        contentValues.put("favorite", favorite);
+        Log.v("insert", favorite);
 		long result = this.db.insert(FEED_TABLE, null, contentValues);
 		return result;
 	}
@@ -116,29 +121,37 @@ public class DdgDB {
 	 */
 	public long insert(FeedObject e) {
 		// hidden = False, F
-		return this.insert(e, e.getHidden());
+		return this.insert(e, e.getHidden(), "F");
 	}
 	
 	/**
 	 * Ordinary item Save operation - keep Saved item VISIBLE  
 	 * @param e
 	 * @return
-	 */
+	 *//*
 	public long insertVisible(FeedObject e) {
 		// hidden = False, F
 		return this.insert(e, "F");
-	}
+	}*/
+
+    public long insertFavorite(FeedObject e) {
+        return this.insert(e, "F", String.valueOf(System.currentTimeMillis()));
+    }
 	
 	/**
 	 * default item Save for browsed feed items - HIDDEN
 	 * when Save is used this will become VISIBLE 
 	 * @param e
 	 * @return
-	 */
+	 *//*
 	public long insertHidden(FeedObject e) {
 		// hidden = True, T
 		return this.insert(e, "T");
-	}
+	}*/
+
+    public long insertUnfavorite(FeedObject e) {
+        return this.insert(e, "T", "F");
+    }
 	
 	public long insertApp(AppShortInfo appInfo) {
 	      this.insertStmtApp.bindString(1, appInfo.name);
@@ -219,23 +232,35 @@ public class DdgDB {
 	 * make a hidden feed item VISIBLE
 	 * @param feedObject
 	 * @return
-	 */
+	 *//*
 	public long makeItemVisible(String id) {
 	      ContentValues args = new ContentValues();
 	      args.put("hidden", "F");
 		return this.db.update(FEED_TABLE, args, "_id=?", new String[]{id});
-	}
+	}*/
+
+    public long makeItemFavorite(String id) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("favorite", String.valueOf(System.currentTimeMillis()));
+        return this.db.update(FEED_TABLE, contentValues, "_id=?", new String[]{id});
+    }
 	
 	/**
 	 * make a hidden feed item VISIBLE
 	 * @param feedObject
 	 * @return
-	 */
+	 *//*
 	public long makeItemHidden(String id) {
 	      ContentValues args = new ContentValues();
 	      args.put("hidden", "T");
 		return this.db.update(FEED_TABLE, args, "_id=?", new String[]{id});
-	}
+	}*/
+
+    public long makeItemUnfavorite(String id) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("favorite", "F");
+        return this.db.update(FEED_TABLE, contentValues, "_id=?", new String[]{id});
+    }
 	
 	public void deleteApps() {
 	      this.db.delete(APP_TABLE, null, null);
@@ -305,6 +330,7 @@ public class DdgDB {
 
 			return apps;
 		}
+        c.close();
 		
 		return null;
 	}
@@ -319,6 +345,7 @@ public class DdgDB {
 
 			return feeds;
 		}
+        c.close();
 		
 		return null;
 	}
@@ -329,8 +356,11 @@ public class DdgDB {
 	 * @return
 	 */
 	public boolean isSaved(String id) {
-		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
-		return c.moveToFirst();
+		//Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
+        Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND favorite!='F'", new String[]{id} , null, null, null);
+        boolean out = c.moveToFirst();
+        c.close();
+		return out;
 	}
 	
 	/**
@@ -343,7 +373,9 @@ public class DdgDB {
 			return false;
 		
 		Cursor c = this.db.query(SAVED_SEARCH_TABLE, null, "query=?", new String[]{query} , null, null, null);
-		return c.moveToFirst();
+		boolean out = c.moveToFirst();
+        c.close();
+        return out;
 	}
 	
 	/**
@@ -359,8 +391,11 @@ public class DdgDB {
 		if(pageTitle == null)
 			pageTitle = "";
 			
-		Cursor c = this.db.query(FEED_TABLE, null, "title=? AND url=? AND hidden='F'", new String[]{pageTitle, pageUrl} , null, null, null);
-		return c.moveToFirst();
+		//Cursor c = this.db.query(FEED_TABLE, null, "title=? AND url=? AND hidden='F'", new String[]{pageTitle, pageUrl} , null, null, null);
+        Cursor c = this.db.query(FEED_TABLE, null, "title=? AND url=? AND favorite!='F'", new String[]{pageTitle, pageUrl} , null, null, null);
+        boolean out = c.moveToFirst();
+        c.close();
+		return out;
 	}
 	
 	/**
@@ -377,7 +412,8 @@ public class DdgDB {
 			data = "";
 			
 		Cursor c = this.db.query(HISTORY_TABLE, null, "data=? AND url=?", new String[]{data, url} , null, null, null);
-		return c.moveToFirst();
+        boolean out = c.moveToFirst();
+		return out;
 	}
 	
 	public boolean isQueryInHistory(String query) {
@@ -385,55 +421,73 @@ public class DdgDB {
 			return false;
 			
 		Cursor c = this.db.query(HISTORY_TABLE, null, "data=? AND url='' AND type='R'", new String[]{query} , null, null, null);
-		return c.moveToFirst();
+		boolean out = c.moveToFirst();
+        c.close();
+        return out;
 	}
 	
 	public FeedObject selectFeedById(String id){
 		Cursor c = this.db.query(FEED_TABLE, null, "_id=?", new String[]{id} , null, null, null);
+        FeedObject out = null;
 		if(c.moveToFirst()) {
-			return getFeedObject(c);
+            out = getFeedObject(c);
 		}
-		return null;
+        c.close();
+		return out;
 	}
-	
+	/*
 	public boolean existsVisibleFeedById(String id){
 		Cursor c = this.db.query(FEED_TABLE, new String[]{"_id"}, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
 		if(c.moveToFirst()) {
 			return true;
 		}
 		return false;
-	}
+	}*/
+
+    public boolean existsFavoriteFeedById(String id) {
+        Cursor c = this.db.query(FEED_TABLE, new String[]{"_id"}, "_id=? AND favorite!='F'", new String[]{id} , null, null, null);
+        boolean out = c.moveToFirst();
+        c.close();
+        return out;
+    }
 	
 	public boolean existsAllFeedById(String id){
 		Cursor c = this.db.query(FEED_TABLE, new String[]{"_id"}, "_id=?", new String[]{id} , null, null, null);
-		if(c.moveToFirst()) {
-			return true;
-		}
-		return false;
+        boolean out = c.moveToFirst();
+        c.close();
+        return out;
 	}
 	
 	public FeedObject selectById(String id){
-		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
+		//Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
+        Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND favorite!='F'", new String[]{id} , null, null, null);
+        FeedObject out = null;
 		if(c.moveToFirst()) {
-			return getFeedObject(c);
+			out = getFeedObject(c);
 		}
+        c.close();
 		return null;
 	}
 	
 	public FeedObject selectHiddenById(String id){
 		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='T'", new String[]{id} , null, null, null);
+        FeedObject out = null;
 		if(c.moveToFirst()) {
-			return getFeedObject(c);
+			out = getFeedObject(c);
 		}
-		return null;
+        c.close();
+		return out;
 	}
 	
 	public FeedObject selectByIdType(String id, String type){
-		Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND type = ? AND hidden='F'", new String[]{id,type} , null, null, null);
+		//Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND type = ? AND hidden='F'", new String[]{id,type} , null, null, null);
+        Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND type = ? AND favorite!='F'", new String[]{id,type} , null, null, null);
+        FeedObject out = null;
 		if(c.moveToFirst()) {
-			return getFeedObject(c);
+			out = getFeedObject(c);
 		}
-		return null;
+        c.close();
+		return out;
 	}
 	
 	public ArrayList<FeedObject> selectByType(String type){
@@ -442,7 +496,8 @@ public class DdgDB {
 		}
 		
 		ArrayList<FeedObject> feeds = new ArrayList<FeedObject>(20);
-		Cursor c = this.db.query(FEED_TABLE, null, "type = ? AND hidden='F'", new String[]{type}, null, null, null, null);
+		//Cursor c = this.db.query(FEED_TABLE, null, "type = ? AND hidden='F'", new String[]{type}, null, null, null, null);
+        Cursor c = this.db.query(FEED_TABLE, null, "type = ? AND favorite!='F'", new String[]{type}, null, null, null, null);
 		if (c.moveToFirst()) {
 			do {
 				FeedObject e = getFeedObject(c);
@@ -497,25 +552,59 @@ public class DdgDB {
 	
 	public ArrayList<HistoryObject> selectHistory(){
 		Cursor c = this.db.query(HISTORY_TABLE, null, null, null , null, null, null);
+        ArrayList<HistoryObject> historyItems = null;
 		if(c.moveToFirst()) {
-			ArrayList<HistoryObject> historyItems = new ArrayList<HistoryObject>(30);
+			historyItems = new ArrayList<HistoryObject>(30);
 			do {
 				historyItems.add(getHistoryObject(c));
 			} while(c.moveToNext());
-
-			return historyItems;
 		}
+        c.close();
 		
-		return null;
+		return historyItems;
 	}
+
+    public ArrayList<FeedObject> getAllRecentFeed() {
+        ArrayList<FeedObject> recentFeeds = new ArrayList<FeedObject>();
+        Cursor cursor = getCursorRecentFeed();
+        if(cursor.moveToFirst()) {
+            do {
+                FeedObject feed = new FeedObject((SQLiteCursor)cursor);
+                recentFeeds.add(feed);
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        return recentFeeds;
+    }
+
+    public ArrayList<FeedObject> getAllFavoriteFeed() {
+        ArrayList<FeedObject> favoriteFeeds = new ArrayList<FeedObject>();
+        Cursor cursor = getCursorStoryFeed();
+        if(cursor.moveToFirst()) {
+            do {
+                FeedObject feed = new FeedObject((SQLiteCursor)cursor);
+                favoriteFeeds.add(feed);
+            } while(cursor.moveToNext());
+        }
+        cursor.close();
+        return favoriteFeeds;
+    }
 	
 	public Cursor getCursorSearchHistory() {
 		return this.db.query(HISTORY_TABLE, null, "type='R'", null , null, null, "_id DESC");
 	}
+
+    public Cursor getCursorSearchHistory(int limit) {
+        return this.db.query(HISTORY_TABLE, null, "type='R'", null , null, null, "_id DESC", ""+(limit>=0?limit:1));
+    }
 	
 	public Cursor getCursorStoryHistory() {
 		return this.db.query(HISTORY_TABLE, null, "type='F'", null , null, null, "_id DESC");
 	}
+
+    public Cursor getCursorSearchHistory(String input) {
+        return this.db.query(HISTORY_TABLE, null, "type='R' AND data LIKE '"+input+"%'", null , null, null, "_id DESC");
+    }
 	
 	public Cursor getCursorHistory() {
 		return this.db.query(HISTORY_TABLE, null, null, null , null, null, "_id DESC");
@@ -526,9 +615,17 @@ public class DdgDB {
 	}
 	
 	public Cursor getCursorStoryFeed() {
-		return this.db.query(FEED_TABLE, null, "NOT feed='' AND hidden='F'", null , null, null, null);
+		//return this.db.query(FEED_TABLE, null, "NOT feed='' AND hidden='F'", null , null, null, null);
+        return this.db.query(FEED_TABLE, null, "NOT feed='' AND favorite!='F'", null , null, null, "favorite DESC");
 	}
 
+    public Cursor getCursorRecentFeed() {
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(HISTORY_TABLE + " inner join " + FEED_TABLE + " ON " + HISTORY_TABLE + ".feedId = " + FEED_TABLE + "._id");
+        return builder.query(this.db, null, null, null, null, null, HISTORY_TABLE+"._id DESC");
+
+        //return this.db.rawQuery("select * from "+FEED_TABLE+", "+HISTORY_TABLE+" where "+HISTORY_TABLE+".feedId = "+FEED_TABLE+"._id order by "+HISTORY_TABLE+"._id DESC", null);
+    }
 	
 	
 	private static class OpenHelper extends SQLiteOpenHelper {
@@ -557,7 +654,9 @@ public class DdgDB {
 		  			    +"category VARCHAR(300), "
 		  			    +"type VARCHAR(300), "
 		  			    +"articleurl VARCHAR(300), "
-		  			    +"hidden CHAR(1)"
+		  			    //+"hidden CHAR(1)"
+                        +"hidden CHAR(1), "
+                        +"favorite VARCHAR(300)"
 		  			    +")"
 		  			    );
 		  			  
@@ -663,6 +762,25 @@ public class DdgDB {
 		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
 		  			// ****************************
 		  		}
+                else if(oldVersion == 14 && newVersion >=15) {
+                    // shape old FEED_TABLE like the new, and rename it as FEED_TABLE_old
+                    db.execSQL("DROP INDEX IF EXISTS idx_id");
+                    db.execSQL("DROP INDEX IF EXISTS idx_idtype");
+                    db.execSQL("ALTER TABLE " + FEED_TABLE + " RENAME TO " + FEED_TABLE + "_old");
+
+                    db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
+                    createFeedTable(db);
+
+                    // ***** saved feed items *****
+                    db.execSQL("DELETE FROM " + FEED_TABLE + "_old WHERE feed='' ");
+                    db.execSQL("INSERT INTO " + FEED_TABLE + " SELECT _id, title, description, feed, url, imageurl," +
+                            "favicon, timestamp, category, type, articleurl, hidden, 'F' FROM " + FEED_TABLE + "_old");
+                    db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
+                    //***** set new favlue for favorite *****
+                    String newFavoriteValue = String.valueOf(System.currentTimeMillis());
+                    db.execSQL("UPDATE " + FEED_TABLE + " SET favorite="+newFavoriteValue+" WHERE hidden='F'");
+                    // ****************************
+                }
 		  		else {
 		  			dropTables(db);
 			  		onCreate(db);

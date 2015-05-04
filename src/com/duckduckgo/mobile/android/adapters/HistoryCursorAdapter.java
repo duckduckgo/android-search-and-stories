@@ -35,6 +35,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
+        //View retView = inflater.inflate(R.layout.temp_search_layout, parent, false);
 
         return retView;
     }
@@ -49,7 +50,6 @@ public class HistoryCursorAdapter extends CursorAdapter {
     	
         TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
         textViewHistory.setText(data);
-        textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
         
         String strUrl = cursor.getString(cursor.getColumnIndex("url"));
         String extraType = cursor.getString(cursor.getColumnIndex("extraType"));
@@ -88,7 +88,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
         else {
         	imageViewHistory.setImageResource(R.drawable.icon_history_search);
         }
-        
+
         // query use button
         ImageView buttonHistory = (ImageView) view.findViewById(R.id.recentSearchPaste);
         

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:padding="0dp"
+              android:clickable="true">
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:text="@string/Defaults"
+        android:textSize="14sp"
+        android:textColor="@color/search_dark"
+        android:textStyle="normal"
+        android:textAllCaps="false"
+        android:paddingLeft="60dp"
+        android:gravity="left|center_vertical"
+        android:textAppearance="@android:style/TextAppearance.Medium"
+        android:background="@drawable/blue_selector"
+        android:id="@+id/sourceDefaultButton" />
+
+</LinearLayout>

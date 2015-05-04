@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources.Theme;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -15,19 +16,9 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
 public class PreferencesManager {
-	
-	private static int WELCOME_VERSION = 1;
+
 	private static boolean NEW_SOURCES = true;
 	private static boolean sourcesWereMigratedRightNow = false;
-	
-	private static float defMainFontSize;
-	private static float defRecentFontSize;
-	private static float defLeftTitleTextSize;
-	
-	private static int defWebViewFontSize;
-	private static int defPtrHeaderSize;
-	private static int defPtrSubHeaderSize;
-	
 	
 	/* Settings */
 	
@@ -43,12 +34,6 @@ public class PreferencesManager {
         String startScreenCode = DDGApplication.getSharedPreferences().getString("startScreenPref", "0");
         return SCREEN.getByCode(Integer.valueOf(startScreenCode));
 	}
-
-    public static CLEAR_INTERVAL_TYPE getClearCacheCookiesInterval() {
-        String clearIntervalCode = DDGApplication.getSharedPreferences().getString("clearCacheCookiesIntervalPref", "3");
-        return CLEAR_INTERVAL_TYPE.getCodeBy(Integer.valueOf(clearIntervalCode));
-    }
-
     public static String getRegion() {
 		return DDGApplication.getSharedPreferences().getString("regionPref", "wt-wt");
 	}
@@ -65,8 +50,8 @@ public class PreferencesManager {
         return Integer.valueOf(DDGApplication.getSharedPreferences().getString("useExternalBrowserPref", "0"));
     }
 	
-	public static boolean getTurnOffAutocomplete() {
-		return DDGApplication.getSharedPreferences().getBoolean("turnOffAutocompletePref", false);
+	public static boolean getAutocomplete() {
+		return DDGApplication.getSharedPreferences().getBoolean("autocompletePref", true);
 	}
 	
 	public static boolean getRecordHistory() {
@@ -84,84 +69,7 @@ public class PreferencesManager {
 	public static boolean containsSourceSetSize() {
 		return DDGApplication.getSharedPreferences().contains("sourceset_size");
 	}
-	
-	public static boolean isWelcomeShown() {
-		return DDGApplication.getSharedPreferences().getInt("welcomeShown", 0) == WELCOME_VERSION;
-	}
-	
-	public static void setWelcomeShown() {
-		Editor editor = DDGApplication.getSharedPreferences().edit();
-		editor.putInt("welcomeShown", WELCOME_VERSION);
-		editor.commit();
-	}
-	
-	public static boolean isFontSliderVisible() {
-		return DDGApplication.getSharedPreferences().getBoolean("fontSliderVisible", false);
-	}
-	
-	public static void setFontSliderVisibility(boolean visible) {
-		Editor editor = DDGApplication.getSharedPreferences().edit();
-		editor.putBoolean("fontSliderVisible", visible);
-		editor.commit();
-	}
-	
-	public static int getFontPrevProgress(int defaultValue) {
-		return DDGApplication.getSharedPreferences().getInt("fontPrevProgress", defaultValue);
-	}
-	
-	/* Text sizes */
-	public static float getMainFontSize() {
-		return DDGApplication.getSharedPreferences().getFloat("mainFontSize", defMainFontSize);
-	}
-	
-	public static float getRecentFontSize() {
-		return DDGApplication.getSharedPreferences().getFloat("recentFontSize", defRecentFontSize);
-	}
-	
-	public static int getWebviewFontSize() {
-		return DDGApplication.getSharedPreferences().getInt("webViewFontSize", defWebViewFontSize);
-	}
-	
-	public static float getLeftTitleTextSize() {
-		return DDGApplication.getSharedPreferences().getFloat("leftTitleTextSize", defLeftTitleTextSize);
-	}
-	
-	public static int getPtrHeaderTextSize() {
-		return DDGApplication.getSharedPreferences().getInt("ptrHeaderTextSize", defPtrHeaderSize);
-	}
-	
-	public static int getPtrHeaderSubTextSize() {
-		return DDGApplication.getSharedPreferences().getInt("ptrHeaderSubTextSize", defPtrSubHeaderSize);
-	}
-	
-	public static void setWebViewFontDefault(int fontSize) {
-		defWebViewFontSize = fontSize;
-	}
-	
-	public static void setPtrHeaderFontDefaults(int headerFontSize, int subHeaderFontSize) {
-		defPtrHeaderSize = headerFontSize;
-		defPtrSubHeaderSize = subHeaderFontSize;
-	}
-	
-    /*
-     * Sets default font sizes from current theme attributes
-     */
-    public static void setFontDefaultsFromTheme(Context context) {
-    	Theme theme = context.getTheme();
-    	DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-    	
-    	TypedValue tmpTypedValue = new TypedValue(); 
-    	theme.resolveAttribute(R.attr.leftButtonTextSize, tmpTypedValue, true);
-    	// XXX getDimension returns in PIXELS !
-    	defLeftTitleTextSize = tmpTypedValue.getDimension(displayMetrics);
-    	
-    	theme.resolveAttribute(R.attr.mainTextSize, tmpTypedValue, true);
-    	defMainFontSize = tmpTypedValue.getDimension(displayMetrics);
-    	
-    	theme.resolveAttribute(R.attr.recentTextSize, tmpTypedValue, true);
-    	defRecentFontSize = tmpTypedValue.getDimension(displayMetrics);
-    }
-	
+
 	public static int getAppVersionCode() {
 		return DDGApplication.getSharedPreferences().getInt("appVersionCode", 0);
 	}
@@ -178,18 +86,6 @@ public class PreferencesManager {
 	
 	public static Set<String> getDefaultSources() {
 		return DDGUtils.loadSet(DDGApplication.getSharedPreferences(), "defaultsources");
-	}
-	
-	public static void saveAdjustedTextSizes() {
-		Editor editor = DDGApplication.getSharedPreferences().edit();
-		editor.putInt("fontPrevProgress", DDGControlVar.fontPrevProgress);
-		editor.putFloat("mainFontSize", DDGControlVar.mainTextSize);
-		editor.putFloat("recentFontSize", DDGControlVar.recentTextSize);
-		editor.putInt("webViewFontSize", DDGControlVar.webViewTextSize);
-		editor.putInt("ptrHeaderTextSize", DDGControlVar.ptrHeaderSize);
-		editor.putInt("ptrHeaderSubTextSize", DDGControlVar.ptrSubHeaderSize);
-		editor.putFloat("leftTitleTextSize", DDGControlVar.leftTitleTextSize);
-		editor.commit();
 	}
 	
 	public static void clearValues() {
@@ -237,11 +133,15 @@ public class PreferencesManager {
 	
 	/* Events */
     public static void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.e("aaa", "Preference manager on shared preference changed");
     	if(key.equals("startScreenPref")){
     		DDGControlVar.START_SCREEN = getActiveStartScreen();
+            Log.e("aaa", "start screen: "+DDGControlVar.START_SCREEN);
         }
     	else if(key.equals("regionPref")){
+            Log.e("aaa", "preferences manager, region pref");
             DDGControlVar.regionString = sharedPreferences.getString(key, "wt-wt");
+            Log.e("aaa", "control var is: "+DDGControlVar.regionString);
         }
         else if(key.equals("appSearchPref")){
             DDGControlVar.includeAppsInSearch = sharedPreferences.getBoolean(key, false);
@@ -249,17 +149,16 @@ public class PreferencesManager {
         else if(key.equals("useExternalBrowserPref")){
             DDGControlVar.useExternalBrowser = Integer.valueOf(sharedPreferences.getString(key, "0"));
         }
-        else if(key.equals("turnOffAutocompletePref")){
-            DDGControlVar.isAutocompleteActive = !sharedPreferences.getBoolean(key, false);
+        else if(key.equals("autocompletePref")){
+            Log.e("aaa", "turn off autocomplete");
+            DDGControlVar.isAutocompleteActive = sharedPreferences.getBoolean(key, true);
+            Log.e("aaa", "is autocomplete active: "+DDGControlVar.isAutocompleteActive);
         }
         else if(key.equals("autoUpdatePref")){
             DDGControlVar.automaticFeedUpdate = sharedPreferences.getBoolean(key, true);
         }
         else if(key.equals("recordCookiesPref")) {
             DDGWebView.recordCookies(sharedPreferences.getBoolean(key, true));
-        }
-        else if(key.equals("clearCacheCookiesIntervalPref")){
-            DDGControlVar.CLEAR_INTERVAL = getClearCacheCookiesInterval();
         }
     }
     
@@ -303,14 +202,4 @@ public class PreferencesManager {
 			editor.putBoolean("autoUpdatePref", automaticFeedUpdate);
 			editor.commit();
   }
-
-    public static void setLastClearCacheAndCookies(long currentTime) {
-        Editor editor = DDGApplication.getSharedPreferences().edit();
-        editor.putLong("lastClearCacheAndCookies", currentTime);
-        editor.commit();
-    }
-
-    public static long getLastClearCacheAndCookies() {
-        return DDGApplication.getSharedPreferences().getLong("lastClearCacheAndCookies", 0l);
-    }
 }

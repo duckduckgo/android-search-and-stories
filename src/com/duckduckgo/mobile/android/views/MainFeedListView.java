@@ -3,12 +3,13 @@ package com.duckduckgo.mobile.android.views;
 import android.content.Context;
 import android.database.sqlite.SQLiteCursor;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.SavedFeedCursorAdapter;
+import com.duckduckgo.mobile.android.adapters.FavoriteFeedCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
@@ -27,7 +28,8 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 	}
 
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		Object item = getAdapter().getItem(position);
+        Log.e("aaa", "main feed list view on click");
+        Object item = getAdapter().getItem(position);
 		FeedObject obj = null;
 		if(item instanceof FeedObject) {
 			obj = (FeedObject) item;
@@ -36,12 +38,13 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 			obj = new FeedObject(((SQLiteCursor) item));
 		}
 		
-		if (obj != null) {			
+		if (obj != null) {
 			BusProvider.getInstance().post(new MainFeedItemSelectedEvent(obj));
 		}
 	}
 
 	public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+        Log.e("aaa", "main feed long click");
 		Object item = getAdapter().getItem(position);
 		FeedObject obj = null;
 		if(item instanceof FeedObject) {
@@ -52,10 +55,12 @@ public class MainFeedListView extends ListView implements android.widget.Adapter
 		}
 
 		if (obj != null) {
-			if(getAdapter().getClass() == SavedFeedCursorAdapter.class) {
+			if(getAdapter().getClass() == FavoriteFeedCursorAdapter.class) {
+                Log.e("aaa", "saved feed item long click event");
 				BusProvider.getInstance().post(new SavedFeedItemLongClickEvent(obj));
 			}
 			else {
+                Log.e("aaa", "main feed item long click event");
 				BusProvider.getInstance().post(new MainFeedItemLongClickEvent(obj));
 			}
 		}

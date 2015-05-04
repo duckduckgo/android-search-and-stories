@@ -17,16 +17,11 @@ android {
     mavenCentral()
   }
 
-  defaultConfig {
-    versionName "2.1.2"
-    versionCode 53
-    minSdkVersion 9
-    targetSdkVersion 22
-  }
-
   dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':libs:OnionKit:libnetcipher')
+    compile project(':libs:appcompat')
+    compile project(':libs:android-support-v4-preferencefragment')
   }
 
   sourceSets {

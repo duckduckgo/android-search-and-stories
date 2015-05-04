@@ -2,7 +2,7 @@ package com.duckduckgo.mobile.android.objects.history;
 
 import android.database.Cursor;
 
-public class HistoryObject {
+public class    HistoryObject {
 	protected String type;
 	protected String data;
 	protected String url;

@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,8 +12,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,40 +26,54 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
+import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
+import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
+import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.squareup.picasso.Picasso;
 
 
-public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
+public class MainFeedAdapter extends ArrayAdapter<FeedObject>/* implements Filterable */{
 	private static final String TAG = "MainFeedAdapter";
 	
 	private Context context;
 	private final LayoutInflater inflater;
+
+    private ArrayList<FeedObject> feedObjects;
 		
 	public OnClickListener sourceClickListener;
+    public OnClickListener categoryClickListener;
 	
 	private SimpleDateFormat dateFormat;
 	private Date lastFeedDate = null;
 	
 	private String markedItem = null;
+    private String markedSource = null;
+    private String markedCategory = null;
 	
 	private AlphaAnimation blinkanimation = null;
 	
 	//TODO: Should share this image downloader with the autocompleteresults adapter instead of creating a second one...
 				
-	public MainFeedAdapter(Context context, OnClickListener sourceClickListener) {
+	public MainFeedAdapter(Context context, OnClickListener sourceClickListener, OnClickListener categoryClickListener) {
 		super(context, 0);
 		this.context = context; 
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        feedObjects = new ArrayList<FeedObject>();
 		this.sourceClickListener = sourceClickListener;
+        this.categoryClickListener = categoryClickListener;
 		this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 		
 		// animation to use for blinking cue
@@ -67,19 +86,26 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	
 	@Override
 	public View getView(int position, View cv, ViewGroup parent) {
-		if (cv == null) {
-			cv = inflater.inflate(R.layout.main_feed_layout, null);
-			cv.setTag(new Holder((TextView)cv.findViewById(R.id.feedTitleTextView),
-					             (AsyncImageView)cv.findViewById(R.id.feedItemBackground),
-					             (AsyncImageView)cv.findViewById(R.id.feedItemSourceIcon)));
+        View view = cv;
+		if (view == null) {
+			view = inflater.inflate(R.layout.temp_main_feed_layout, null);
+			Holder holder = new Holder(/*(Toolbar) cv.findViewById(R.id.feedWrapper),*/
+					(TextView)view.findViewById(R.id.feedTitleTextView),
+					(TextView)view.findViewById(R.id.feedCategoryTextView),
+					(AsyncImageView)view.findViewById(R.id.feedItemBackground),
+					(AsyncImageView)view.findViewById(R.id.feedItemSourceIcon));
+			//holder.toolbar.inflateMenu(R.menu.feed);
+			view.setTag(holder);
 		}
 		
-		FeedObject feed = getItem(position);
+		final FeedObject feed = getItem(position);
 		
-		final Holder holder = (Holder) cv.getTag();
+		final Holder holder = (Holder) view.getTag();
 		URL feedUrl = null;
 
-		if (feed != null) {			
+		if (feed != null) {
+
+            final String feedId = feed.getId();
 			
 			//Download the background image
 			
@@ -91,13 +117,27 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 		    	.placeholder(android.R.color.transparent)
 		    	.into(holder.imageViewBackground);
 			}
-			
-			String feedType = feed.getType();
+
+			final String feedType = feed.getType();
 			
 			holder.imageViewFeedIcon.setType(feedType);	// stored source id in imageview
-			holder.imageViewFeedIcon.setOnClickListener(sourceClickListener);
-			
-			final View iconParent = (View) cv.findViewById(R.id.feedWrapper);
+			holder.imageViewFeedIcon.setOnClickListener(sourceClickListener);/*
+            holder.imageViewFeedIcon.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(DDGControlVar.targetSource!=null) {
+                        DDGControlVar.targetSource=null;
+                        unmarkSource();
+                        getFilter().filter(feedType);
+                    } else {
+                        DDGControlVar.targetSource=feedType;
+                        markSource(feedId);
+                        getFilter().filter(feedType);
+                    }
+                }
+            });*/
+
+			final View iconParent = (View) view.findViewById(R.id.feedWrapper);
 			iconParent.post(new Runnable() {
 	            public void run() {
 	                // Post in the parent's message queue to make sure the parent
@@ -122,15 +162,92 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	        });
 
 			//Set the Title
-			holder.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
+			//holder.textViewTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.mainTextSize);
 			holder.textViewTitle.setText(feed.getTitle());
-			
+			/*
 			String feedId = feed.getId();
-			// FIXME : it'd be good to reset color to default color for textview in layout XML
-			holder.textViewTitle.setTextColor(Color.WHITE);
+
 			if(DDGControlVar.readArticles.contains(feedId)){
 				holder.textViewTitle.setTextColor(Color.GRAY);
-			}
+			}*/
+
+            // FIXME : it'd be good to reset color to default color for textview in layout XML
+            holder.textViewTitle.setTextColor(context.getResources().getColor(R.color.feed_title));
+            if(DDGControlVar.readArticles.contains(feedId)){
+                holder.textViewTitle.setTextColor(context.getResources().getColor(R.color.feed_title_viewed));
+            }
+
+			//set the category
+			//todo insert size
+            final String category = feed.getCategory();
+			holder.textViewCategory.setText(category.toUpperCase());/*
+            holder.textViewCategory.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.e("aaa", "catgory clicked: "+category);
+                }
+            });*/
+            holder.textViewCategory.setOnClickListener(categoryClickListener);
+            /*
+            final View view = cv;
+            holder.textViewCategory.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(DDGControlVar.targetCategory!=null) {
+                        Log.e("aaa", "should remove filter: "+category);
+                        DDGControlVar.targetCategory = null;
+                        unmarkCategory();
+                        //getFilter().filter(category);
+                    } else if(DDGControlVar.targetSource!=null) {
+                        Log.e("aaa", "must add filter: "+category);
+                        //DDGControlVar.targetCategory = category;
+                        //markCategory(feedId);
+                        //getFilter().filter(category);
+
+                    }
+                    view.animate().setDuration(1000).alpha(0)
+                }
+            });*/
+/*
+			//set the toolbar Menu
+            if(DDGApplication.getDB().isSaved(feedId)) {
+                holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
+                holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(true);
+            } else {
+                holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(true);
+                holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(false);
+            }
+			holder.toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(MenuItem menuItem) {
+					switch(menuItem.getItemId()) {
+						case R.id.action_add_favorite:
+							Log.e("aaa", "action add favourites");
+                            BusProvider.getInstance().post(new SaveStoryEvent(feed));
+                            holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
+                            holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(true);
+							//add to favourites
+							return true;
+                        case R.id.action_remove_favorite:
+                            BusProvider.getInstance().post(new UnSaveStoryEvent(feed.getId()));
+                            holder.toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(true);
+                            holder.toolbar.getMenu().findItem(R.id.action_remove_favorite).setVisible(false);
+                            return true;
+						case R.id.action_share:
+							Log.e("aaa", "action share");
+                            BusProvider.getInstance().post(new ShareFeedEvent(feed.getTitle(), feed.getUrl()));
+							//action share
+							return true;
+						case R.id.action_external:
+							Log.e("aaa", "action external view in chrome");
+                            BusProvider.getInstance().post(new SendToExternalBrowserEvent(getContext(), feed.getUrl()));
+							//view in chrome
+							return true;
+						default:
+							return false;
+					}
+				}
+			});*/
 			
 			if (feed.getFeed() != null && !feed.getFeed().equals("null")) {
 				try {
@@ -154,26 +271,114 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 			}
 		}
 		
-		if(cv != null) {
-			if(markedItem != null && markedItem.equals(feed.getId())) {			
+		if(view != null) {
+			//if((markedItem != null && markedItem.equals(feed.getId())) || (markedSource!=null && markedSource.equals(feed.getId()) || markedCategory!=null && markedCategory.equals(feed.getId()))) {
+            if((markedItem != null && markedItem.equals(feed.getId())) || (markedSource!=null && markedSource.equals(feed.getId()))) {
 				blinkanimation.reset();
 				cv.startAnimation(blinkanimation);
-			}
+			}/*
+            if(markedCategory!=null && markedCategory.equals(feed.getId())) {
+                blinkanimation.reset();
+                cv.startAnimation(blinkanimation);
+            }*/
 			else {
-				cv.setAnimation(null);
+				view.setAnimation(null);
 			}
 		}
 		
-		return cv;
+		return view;
 	}
-	
+/*
+    @Override
+    public Filter getFilter() {
+        Filter feedFilter = new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                ArrayList<FeedObject> newResults = new ArrayList<FeedObject>();
+                ArrayList<Integer> newResults2 = new ArrayList<Integer>();
+                if(DDGControlVar.targetCategory==null) {
+                    newResults = feedObjects;
+                } else {
+                    for (FeedObject feed : feedObjects) {
+                        if (feed != null) {
+                            if(DDGControlVar.targetCategory!=null && DDGControlVar.targetCategory.equals(feed.getCategory()))
+                                newResults.add(feed);*//*
+                            if(DDGControlVar.targetSource!=null && DDGControlVar.targetSource.equals(feed.getType())) {
+                                newResults.add(feed);
+                            }*//*
+                        }
+                    }
+                }
+                results.values = newResults;
+                results.count = newResults.size();
+                return results;
+            }
 
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                //clear();
+
+                if(results!=null && results.count>0) {
+                    ArrayList<FeedObject> newResults = (ArrayList<FeedObject>) results.values;
+
+*//*
+                    for(FeedObject feed : feedObjects) {
+                        if(newResults.)
+                    }
+*//*
+                    if(Build.VERSION.SDK_INT>+Build.VERSION_CODES.HONEYCOMB) {
+                        addAll((ArrayList<FeedObject>)results.values);
+                    } else {
+                        ArrayList<FeedObject> list = (ArrayList<FeedObject>) results.values;
+                        for (int i = 0; i < list.size(); i++) {
+                            add(list.get(i));
+                        }
+                    }
+                    notifyDataSetChanged();
+                } else {
+                    clear();
+                    notifyDataSetChanged();
+                }
+            }
+        };
+
+        return feedFilter;
+    }
+*/
+    /*
+    @Override
+    public boolean hasStableIds() {
+        return true;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        String id = getItem(position).getId();
+        return Long.parseLong(id);
+    }
+*/
 	public void setList(List<FeedObject> feed) {
 		this.clear();
+        //feedObjects.clear();
+        //getFilter().filter("");
 		for (FeedObject next : feed) {
 			this.add(next);
+            //feedObjects.add(next);
 		}
 	}
+
+    @Override
+    public void clear() {
+        super.clear();
+        //feedObjects.clear();
+    }
+
+    @Override
+    public void add(FeedObject feed) {
+        super.add(feed);
+        //feedObjects.add(feed);
+    }
 	
 	public void addData(List<FeedObject> feed) {
 		if(this.lastFeedDate == null) {
@@ -209,5 +414,21 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject> {
 	public void unmark() {
 		markedItem = null;
 	}
+
+    public void markSource(String itemId) {
+        markedSource = itemId;
+    }
+
+    public void unmarkSource() {
+        markedSource = null;
+    }
+
+    public void markCategory(String itemId) {
+        markedCategory = itemId;
+    }
+
+    public void unmarkCategory() {
+        markedCategory = null;
+    }
 
 }

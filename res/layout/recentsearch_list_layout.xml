@@ -2,9 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     style="@style/RecentListRoot">
-    
+    <!--
     <ImageView style="@style/LeftDivTop" />
-
+-->
     <LinearLayout
 	    android:layout_width="fill_parent"
 	    android:layout_height="wrap_content"
@@ -20,18 +20,20 @@
 			    	   android:id="@+id/recentSearchImage" />
 	    
 	    <TextView
+            android:textColor="#ff0000"
 		    style="@style/RecentItemText"
 		    android:id="@+id/recentSearchText" 
 		    android:layout_weight="1"
 		    android:text="This is test Text" />
-	    
+
 	    <ImageView android:layout_width="20dp"
 	        android:layout_height="20dp"
 	        android:src="?attr/leftDrawablePlusIcon"
 	        android:background="?attr/leftDrawablePlusBackground"
 	        android:layout_gravity="center_vertical"
+            android:visibility="gone"
 	        android:id="@+id/recentSearchPaste" />
-    
+
     </LinearLayout>
     
     <ImageView style="@style/LeftDivBottom" />

@@ -22,6 +22,17 @@ public class ScaleWidthTransformation implements Transformation {
 		targetWidth = params.width;
 		targetHeight = params.height;
 	}
+
+    public void setTarget(AsyncImageView target, double scaleRatio) {
+        ViewGroup.LayoutParams params =  target.getLayoutParams();
+        targetWidth = (int) (params.width * scaleRatio);
+        targetHeight = (int) (params.height * scaleRatio);
+    }
+
+    public void setTarget(int target) {
+        targetWidth = target;
+        targetHeight = target;
+    }
 	
   @Override public Bitmap transform(Bitmap source) {
 		

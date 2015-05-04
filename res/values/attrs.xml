@@ -6,10 +6,11 @@
     <declare-styleable name="AsyncImageView">
         <attr name="cornerRadius" format="dimension" />
         <attr name="usePicasso" format="boolean" />
+        <attr name="heightRatio" format="float" />
     </declare-styleable>
     
     
-        <declare-styleable name="PullToRefresh">
+        <declare-styleable name="PullToRefresh"><!--to delete-->
         <attr name="ptrHeaderSize" format="dimension" />
         <attr name="ptrAdapterViewBackground" format="reference|color" />
         <attr name="ptrHeaderBackground" format="reference|color" />
@@ -75,4 +76,5 @@
         <attr name="emptyListSubTitleColor" format="color" />
         <attr name="searchBarBackground" format="reference|color"/>
         <attr name="duckModeLogo" format="reference" />
+    <attr name="popUp" format="reference|color" />
 </resources>

@@ -1,16 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="DDGTheme" parent="android:Theme.NoTitleBar">
+    <style name="DDGTheme" parent="DDGTheme.Base">
+
+    </style>
+
+    <style name="DDGTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
         <item name="leftButtonTextSize">18sp</item>
         <item name="leftTitleTextSize">12sp</item>
         <item name="mainTextSize">14sp</item>
         <item name="recentTextSize">14sp</item>
+
+        <item name="android:windowBackground">@drawable/launcher_window_background</item>
+
+        <item name="actionModeBackground">@color/action_mode_background</item><!--
+        <item name="android:textColorSecondary">@color/white</item>-->
+<!--
+        <item name="actionModeStyle">@style/DDGActionMode</item>
+-->
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+
+        <item name="actionOverflowButtonStyle">@style/OverflowButton</item>
+
+        <item name="popUp">@style/DDGPopup</item>
+
+        <item name="topDropShadow">@drawable/dropshadow_up_light</item>
+
+<!--
+        <item name="android:preferenceCategoryStyle">@style/DDGPreferenceCategory</item>
+-->
+<!--
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>
+-->
+
+        <!--
+
+        <item name="actionOverflowMenuStyle">@style/OverflowMenuStyle</item>-->
+
+        <!--
+        <item name="actionOverflowMenuStyle">@style/WidgetPopup</item>-->
+
+
+        <!--
+        <item name="android:textColorSecondary">#ffffff</item>
+        -->
+        <!--
+        <item name="android:textColorPrimary">#ffffff</item>-->
+
     </style>
 
-    <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView">
-        <item name="android:popupBackground">@drawable/new_spinner_dropdown_background</item>
+    <style name="DDGPopup" parent="Widget.AppCompat.PopupMenu"><!--PopupMenu-->
+    </style>
+
+    <style name="DDGActionMode" parent="Theme.AppCompat">
+        <item name="actionModeBackground">@color/action_mode_background</item>
+        <item name="android:textColorSecondary">@color/white</item>
+    </style>
+
+    <style name="DDGThemeRed" parent="DDGLight"><!--
+        <item name="colorPrimary">@color/colorPrimaryRed</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDarkRed</item>
+        <item name="colorAccent">@color/colorPrimaryRed</item>-->
+
+        <item name="android:preferenceCategoryStyle">@style/DDGPreferenceCategory</item>
+    </style>
+
+    <style name="OverflowMenu" parent="Widget.AppCompat.Spinner.DropDown">
+
+    </style>
+
+    <style name="OverflowMenu2" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+    </style>
+<!--
+    <style name="OverflowMenu" parent="Widget.AppCompat.PopupMenu.Overflow">
+        <item name="android:popupBackground">@drawable/temp_popup</item>
+        <item name="android:tint">#ffffff</item>
+    </style>-->
+
+    <style name="DDGWhiteOverflow" parent="DDGTheme.Base">
+        <item name="android:tint">#ffffff</item>
+    </style>
+
+    <style name="OverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
+        <item name="android:minWidth">@dimen/actionbar_overflow_width</item>
+        <item name="android:layout_width">@dimen/actionbar_overflow_width</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="Test" parent="Widget.AppCompat.ActionButton.Overflow">
+
+    </style>
+
+    <style name="DDGAutoCompleteTextViewStyle" parent="@android:style/Widget.AutoCompleteTextView"><!--
+        <item name="android:popupBackground">@drawable/new_spinner_dropdown_background</item>-->
+        <item name="android:popupBackground">@color/background</item>
     </style>
 	
 	<style name="DDGTabText">
@@ -28,11 +115,11 @@
 	</style>
 
     
-    <style name="DDGLight" parent="@style/DDGTheme">
-        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
-        <item name="android:tabWidgetStyle">@style/DDGTabWidget</item>
+    <style name="DDGLight" parent="@style/DDGTheme"><!--
+        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>--><!--
+        <item name="android:tabWidgetStyle">@style/DDGTabWidget</item>--><!--
 
-        <item name="searchBarBackground">@color/left_bg_light</item>
+        <item name="searchBarBackground">@color/left_bg_light</item>-->
         <item name="leftLayoutRootBackground">@color/left_bg_light</item>
         <item name="leftDivTopBackground">@drawable/div_top_light</item>
         <item name="leftDivBottomBackground">@drawable/div_bottom_light</item>
@@ -71,12 +158,12 @@
         <item name="duckModeLogo">@drawable/ddg_text_logo_light</item>
     </style>
     
-    <style name="DDGDark" parent="@style/DDGTheme">
-        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>
+    <style name="DDGDark" parent="@style/DDGTheme"><!--
+        <item name="android:autoCompleteTextViewStyle">@style/DDGAutoCompleteTextViewStyle</item>-->
         <item name="android:tabWidgetStyle">@style/DDGTabWidget</item> 
 
-        <item name="searchBarBackground">@color/search_bar_background</item>
-        <item name="leftLayoutRootBackground">@color/search_bar_background</item>
+        <item name="searchBarBackground">@color/search_bar_background</item><!--
+        <item name="leftLayoutRootBackground">@color/search_bar_background</item>-->
         <item name="leftDivTopBackground">@drawable/div_top_dark</item>
         <item name="leftDivBottomBackground">@drawable/div_bottom_dark</item>
         
@@ -113,5 +200,15 @@
         <item name="emptyListSubTitleColor">#b8bfcc</item>
         <item name="duckModeLogo">@drawable/ddg_text_logo_dark</item>
     </style>
-    
+
+    <style name="ToolbarStyle" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:textColorSecondary">@android:color/white</item>
+    </style>
+
+    <style name="DDGPopupAnimation" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/test_menu_open</item>
+        <item name="android:windowExitAnimation">@anim/test_menu_close</item>
+    </style>
+
 </resources>
