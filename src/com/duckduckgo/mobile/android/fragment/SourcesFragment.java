@@ -55,20 +55,11 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
 
         DDGControlVar.changedSources = true;
 
-        SourcePreferencesContainer sourcePrefContainer = null;//(SourcePreferencesContainer) getLastNonConfigurationInstance();
-        //if(sourcePrefContainer == null){
-            sourcesAdapter = new SourcesAdapter(getActivity());
-        //}
-        //else{
-            //sourcesAdapter = sourcePrefContainer.sourcesAdapter;
-        //}
+        SourcePreferencesContainer sourcePrefContainer = null;
+        sourcesAdapter = new SourcesAdapter(getActivity());
 
         sourcesView = (ListView) fragmentView.findViewById(R.id.sourceItems);
-        //sourcesView.addHeaderView(createHeaderView());
-
-        //sourcesView.addFooterView(createDividerView());
         sourcesView.addFooterView(createFooterView());
-        //sourcesView.addFooterView(createSuggestSourceButton());
 
         sourcesView.setAdapter(sourcesAdapter);
 
@@ -115,12 +106,7 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
         View dividerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.search_divider, null, false);
         return dividerView;
     }
-/*
-    private View createFooterView() {
-        View footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_default_button_layout, null, false);
-        return footerView;
-    }
-  */
+
     private View createFooterView() {
         View footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_sources_footer, null, false);
         return footerView;
@@ -161,26 +147,5 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
                 sourcesTask.execute();
             }
         }, 200);
-        //sourcesTask = new SourcesTask(getActivity(), this);
-        //sourcesTask.execute();
     }
-/*
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-
-        if(!hidden) {
-            sourcesTask = new SourcesTask(getActivity(), this);
-            sourcesTask.execute();
-        }
-    }*/
-/*
-    @Override
-    public Object onRetainNonConfigurationInstance() {
-        // return page container, holding all non-view data
-        SourcePreferencesContainer sourcePreferencesContainer = new SourcePreferencesContainer();
-        sourcePreferencesContainer.sourcesAdapter = sourcesAdapter;
-        sourcePreferencesContainer.sourcesTask = sourcesTask;
-        return sourcePreferencesContainer;
-    }*/
 }

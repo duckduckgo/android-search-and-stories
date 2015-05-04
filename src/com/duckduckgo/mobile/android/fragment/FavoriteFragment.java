@@ -40,16 +40,11 @@ public class FavoriteFragment extends Fragment {
 
     private DDGPagerAdapter pagerAdapter;
     private ViewPager viewPager;
-    private SlidingTabLayout slidingTabLayout;
-
-    //private DDGActionBarManager
 
 	private View fragmentView;
 
     private Menu favoriteMenu = null;
     private DDGOverflowMenu overflowMenu = null;
-
-    private boolean isVisible = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -95,31 +90,13 @@ public class FavoriteFragment extends Fragment {
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
 
-        //slidingTabLayout = (SlidingTabLayout) fragmentView.findViewById(R.id.sliding_tabs);
-        //slidingTabLayout = DDGActionBarManager.getInstance().getSlidingTabLayout();
-        //slidingTabLayout.setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
         DDGActionBarManager.getInstance().getSlidingTabLayout().setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
 
-        //slidingTabLayout.setViewPager(viewPager);
         DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
-
-        //slidingTabLayout.setVisibility(View.VISIBLE);
 
         favoriteMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.main, favoriteMenu);
-
-		if(savedInstanceState!=null) {
-			//savedTabHost.setCurrentTabByTag(savedInstanceState.getString("tag"));
-		}
 	}
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        //viewPager.setAdapter(pagerAdapter);
-        //DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
-        //setHasOptionsMenu(DDGControlVar.START_SCREEN==SCREEN.SCR_FAVORITE && DDGControlVar.homeScreenShowing);//aaa
-    }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
@@ -133,8 +110,6 @@ public class FavoriteFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.e("aaa", "configuration changed");
-        //slidingTabLayout.setViewPager(viewPager);
         DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
     }
 
@@ -144,12 +119,6 @@ public class FavoriteFragment extends Fragment {
         menu.findItem(R.id.action_favorites).setEnabled(false);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
-	@Override
-	public void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		//outState.putString("tag", savedTabHost.getCurrentTabTag());
-	}
 
     @Override
     public Animation onCreateAnimation(int transit, final boolean enter, int nextAnim) {
@@ -199,7 +168,6 @@ public class FavoriteFragment extends Fragment {
             }
 
             overflowMenu = new DDGOverflowMenu(getActivity());
-            //overflowMenu.setHeaderMenu(feedMenu);
             overflowMenu.setMenu(favoriteMenu);
             overflowMenu.show(event.anchor);
         }

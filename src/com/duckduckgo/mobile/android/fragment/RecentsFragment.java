@@ -87,11 +87,7 @@ public class RecentsFragment extends Fragment {
         viewPager = (ViewPager) fragmentView.findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
 
-        //slidingTabLayout = (SlidingTabLayout) fragmentView.findViewById(R.id.sliding_tabs);
-        //slidingTabLayout = DDGActionBarManager.getInstance().getSlidingTabLayout();
-        //slidingTabLayout.setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
         DDGActionBarManager.getInstance().getSlidingTabLayout().setSelectedIndicatorColors(getActivity().getResources().getColor(R.color.actionbar_tab_selected));
-        //slidingTabLayout.setViewPager(viewPager);
         DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
 
         recentMenu = new MenuBuilder(getActivity());
@@ -110,16 +106,8 @@ public class RecentsFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        //slidingTabLayout.setViewPager(viewPager);
         DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
     }
-/*
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
-        menu.findItem(R.id.action_recents).setEnabled(false);
-        super.onCreateOptionsMenu(menu, inflater);
-    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -142,7 +130,6 @@ public class RecentsFragment extends Fragment {
             @Override
             public void onAnimationStart(Animation animation) {
                 if(enter) {
-                    //DDGActionBarManager.getInstance().expandTabLayout();
                     DDGActionBarManager.getInstance().showTabLayout();
                 }
             }
@@ -172,13 +159,8 @@ public class RecentsFragment extends Fragment {
             }
 
             overflowMenu = new DDGOverflowMenu(getActivity());
-            //overflowMenu.setHeaderMenu(feedMenu);
             overflowMenu.setMenu(recentMenu);
             overflowMenu.show(event.anchor);
-
-            Log.e("aaa", "shuld open feed menu now, feed menu != null");
-        } else {
-            Log.e("aaa", "shuld open feed menu now, feed menu == null");
         }
     }
 

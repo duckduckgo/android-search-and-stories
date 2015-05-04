@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -28,7 +27,6 @@ import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
-import com.duckduckgo.mobile.android.adapters.TempAutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
@@ -109,7 +107,6 @@ import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
-import com.duckduckgo.mobile.android.widgets.BangButtonExplanationPopup;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -315,7 +312,7 @@ public class DuckDuckGo extends ActionBarActivity {
                     BusProvider.getInstance().post(new ShowAutoCompleteResultsEvent(s.length() > 0));
                 }
                 if(DDGControlVar.isAutocompleteActive) {
-                    DDGControlVar.mDuckDuckGoContainer.tempAdapter.getFilter().filter(s);
+                    DDGControlVar.mDuckDuckGoContainer.acAdapter.getFilter().filter(s);
                 } else {
                     DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.getFilter().filter(s);
                 }
@@ -376,7 +373,6 @@ public class DuckDuckGo extends ActionBarActivity {
         DDGControlVar.mDuckDuckGoContainer.historyAdapter = new MultiHistoryAdapter(this);
 
         DDGControlVar.mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
-        DDGControlVar.mDuckDuckGoContainer.tempAdapter = new TempAutoCompleteResultsAdapter(this);
         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter = new RecentResultCursorAdapter(this, DDGApplication.getDB().getCursorSearchHistory());
     }
 /*
@@ -763,8 +759,8 @@ public class DuckDuckGo extends ActionBarActivity {
     }
 
 	private void changeFragment(Fragment newFragment, String newTag, boolean displayHomeScreen) {
-        Log.d(TAG, "change fragment, new tag: "+newTag);
-        Log.d(TAG, "new tag: "+newTag+" - current tag: "+DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+        Log.d(TAG, "change fragment, new tag: " + newTag);
+        Log.d(TAG, "new tag: " + newTag + " - current tag: " + DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
         if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(newTag) && !displayHomeScreen) {
             return;
         }
@@ -1142,7 +1138,7 @@ public class DuckDuckGo extends ActionBarActivity {
 */
     @Subscribe
     public void onAutoCompleteResultClickEvent(AutoCompleteResultClickEvent event) {
-        SuggestObject suggestObject = DDGControlVar.mDuckDuckGoContainer.tempAdapter.getItem(event.position );
+        SuggestObject suggestObject = DDGControlVar.mDuckDuckGoContainer.acAdapter.getItem(event.position );
         if (suggestObject != null) {
             SuggestType suggestType = suggestObject.getType();
             if(suggestType == SuggestType.TEXT) {

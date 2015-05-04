@@ -29,7 +29,7 @@ import com.duckduckgo.mobile.android.views.FavoriteFeedListView;
 import com.squareup.otto.Subscribe;
 
 
-public class FavoriteFeedTabFragment extends /*ListFragment*/Fragment {
+public class FavoriteFeedTabFragment extends Fragment {
 	public static final String TAG = "saved_feed_tab_fragment";
 	FavoriteFeedListView favoriteFeedListView;
 	FavoriteFeedCursorAdapter favoriteFeedAdapter;
@@ -60,30 +60,9 @@ public class FavoriteFeedTabFragment extends /*ListFragment*/Fragment {
         return fragmentView;
     }
 
-
-    /** (non-Javadoc)
-	 * @see android.support.v4.app.Fragment#onCreateView(android.view.LayoutInflater, android.view.ViewGroup, android.os.Bundle)
-	 *//*
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		LinearLayout fragmentLayout = (LinearLayout)inflater.inflate(R.layout.fragment_tab_favoritefeed, container, false);
-		//setRetainInstance(true);
-		BusProvider.getInstance().register(this);
-		return fragmentLayout;
-	}*/
-/*
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		BusProvider.getInstance().unregister(this);
-	}
-*/
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		/*
-		favoriteFeedListView = (FavoriteFeedListView) getListView();
-		favoriteFeedAdapter = new FavoriteFeedCursorAdapter(getActivity(), getActivity(), DDGApplication.getDB().getCursorStoryFeed());
-		favoriteFeedListView.setAdapter(favoriteFeedAdapter);*/
 
         favoriteFeedRecyclerView = (DDGRecyclerView) fragmentView.findViewById(R.id.list);
         favoriteFeedRecyclerView.setEmptyView(fragmentView.findViewById(R.id.empty));
@@ -119,13 +98,7 @@ public class FavoriteFeedTabFragment extends /*ListFragment*/Fragment {
         });
 
 	}
-/*
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        Log.e("aaa", "new config");
-    }
-*/
+
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
@@ -134,7 +107,6 @@ public class FavoriteFeedTabFragment extends /*ListFragment*/Fragment {
     }
 
     private void cancelCategoryFilter() {
-        //recyclerFavoriteFeedAdapter.resetFilterCategory();
         DDGControlVar.targetCategory = null;
         recyclerFavoriteFeedAdapter.changeData(DDGApplication.getDB().getAllFavoriteFeed());
 
@@ -154,16 +126,9 @@ public class FavoriteFeedTabFragment extends /*ListFragment*/Fragment {
     public void onFeedCancelSourceFilterEvent(FeedCancelSourceFilterEvent event) {
         cancelSourceFilter();
     }
-/*
-	@Override
-	public void onListItemClick(ListView l, View v, int position, long id) {
-        favoriteFeedListView.onItemClick(l, v, position, id);
-	}
-*/
+
 	@Subscribe
 	public void onSyncAdapters(SyncAdaptersEvent event) {
-		//favoriteFeedAdapter.changeCursor(DDGApplication.getDB().getCursorStoryFeed());
-		//favoriteFeedAdapter.notifyDataSetChanged();
         recyclerFavoriteFeedAdapter.changeData(DDGApplication.getDB().getAllFavoriteFeed());
 	}
 }

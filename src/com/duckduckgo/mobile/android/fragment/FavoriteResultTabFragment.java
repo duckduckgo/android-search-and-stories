@@ -74,7 +74,6 @@ public class FavoriteResultTabFragment extends ListFragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Log.e("aaa", "is visible to user");
         DDGActionBarManager.getInstance().tryToShowTab();
     }
 

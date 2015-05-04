@@ -100,7 +100,6 @@ public class WebFragment extends Fragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-        Log.e("web fragment", "on create");
 		BusProvider.getInstance().register(this);
 	}
 
@@ -122,7 +121,6 @@ public class WebFragment extends Fragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-        Log.e("web fragment", "on activity created");
 
 		setRetainInstance(true);
         context = getActivity();
@@ -138,16 +136,13 @@ public class WebFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //setHasOptionsMenu(true);//aaa temp
         setHasOptionsMenu(false);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        //setHasOptionsMenu(!hidden);
         setHasOptionsMenu(false);
-        Log.e("aaa", "WEB fragment on hidden changed, HIDDEN: "+hidden+" - url: "+mainWebView.getUrl());
         if(!hidden) {
             BusProvider.getInstance().post(new SearchBarSetTextEvent(mainWebView.getUrl()));
         }
@@ -243,32 +238,18 @@ public class WebFragment extends Fragment {
                 actionExternalBrowser();
                 return true;
             case R.id.action_back:
-                Log.e("aaa web", "actionbar, before press action, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
                 mainWebView.backPressAction(false);
-                Log.e("aaa web", "actionbar, after press action, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
-                //if(!mainWebView.canGoBack()) {
-                    //newStates.put(R.id.action_back, mainwebvi)
-                    //BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(R.id.action_back, R.id.action_forward));
-                //}
                 newStates = new HashMap<Integer, Boolean>();
                 newStates.put(R.id.action_back, mainWebView.canGoBack());
                 newStates.put(R.id.action_forward, mainWebView.canGoForward());
                 BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(newStates));
-                Log.e("aaa web", "actionbar, after can go back, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
                 return true;
             case R.id.action_forward:
-                Log.e("aaa web", "actionbar, before press action, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
                 mainWebView.forwardPressAction();
-                Log.e("aaa web", "actionbar, after press action, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
-                //if(!mainWebView.canGoForward()) {
-                    ///BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(R.id.action_forward, R.id.action_back));
-                //}
                 newStates = new HashMap<Integer, Boolean>();
                 newStates.put(R.id.action_back, mainWebView.canGoBack());
                 newStates.put(R.id.action_forward, mainWebView.canGoForward());
                 BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(newStates));
-                Log.e("aaa web", "actionbar, after can go back, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
-                Log.e("aaa web", "actionbar, after can go forward, can go back: "+mainWebView.canGoBack()+" - can go forward: "+ mainWebView.canGoForward());
                 return true;
             case R.id.action_close:
                 overflowMenu.dismiss();
@@ -291,24 +272,7 @@ public class WebFragment extends Fragment {
 		mainWebView.setWebViewClient(new DDGWebViewClient(this));
 		View container = getActivity().findViewById(R.id.activityContainer);
 		mainWebView.setWebChromeClient(new DDGWebChromeClient(this, container));
-/*
-		mainWebView.setOnLongClickListener(new View.OnLongClickListener() {
 
-			@Override
-			public boolean onLongClick(View v) {
-				WebView.HitTestResult hitTestResult = ((DDGWebView) v).getHitTestResult();
-				if(hitTestResult != null && hitTestResult.getExtra() != null) {
-					Log.i(TAG, "LONG getExtra = " + hitTestResult.getExtra() + "\t\t Type=" + hitTestResult.getType());
-					final String touchedUrl = hitTestResult.getExtra();
-
-					new OpenInExternalDialogBuilder(getActivity(), touchedUrl).show();
-                    //new
-				}
-
-				return false;
-			}
-		});
-*/
 		contentDownloader = new ContentDownloader(getActivity());
 
 		mainWebView.setDownloadListener(new DownloadListener() {
@@ -332,21 +296,13 @@ public class WebFragment extends Fragment {
 		return savedState;
 	}
 
-    //public static String get
-
 	public void searchOrGoToUrl(String text) {
 		searchOrGoToUrl(text, SESSIONTYPE.SESSION_BROWSE);
 	}
 
 	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
-        Log.e("web fragment", "search or go to url");
-		//keyboardService.hideKeyboard(mainWebView);//aaa keyboard
-
-        //DDGControlVar.newPageLoading = true;
         DDGControlVar.mCleanSearchBar = false;
 		savedState = false;
-
-		//BusProvider.getInstance().post(new DismissBangPopupEvent());
 
 		DDGControlVar.mDuckDuckGoContainer.sessionType = sessionType;
 
@@ -404,19 +360,7 @@ public class WebFragment extends Fragment {
 			}
 		}
 	}
-/*
-	public void searchExternal(String term) {
-		String url;
-		if(DDGControlVar.regionString == "wt-wt"){	// default
-			url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term);
-		}
-		else {
-			url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
-		}
-		Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-		startActivity(browserIntent);
-	}
-*/
+
 	public void searchWebTerm(String term) {
 		DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_SEARCH;
 
@@ -461,8 +405,7 @@ public class WebFragment extends Fragment {
 	}
 
 	public void showWebUrl(String url) {
-		if(/*DDGControlVar.useExternalBrowser == DDGConstants.EXTERNAL_EXCEPT_SEARCHES
-				|| */DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
+		if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
 			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
 			DDGUtils.execIntentIfSafe(context, browserIntent);
 			return;
@@ -516,8 +459,6 @@ public class WebFragment extends Fragment {
 	}
 
 	private void handleShareButtonClick() {
-		//keyboardService.hideKeyboard(mainWebView);//aaa keyboard
-
 		// XXX should make Page Options button disabled if the page is not loaded yet
 		// url = null case
 		String webViewUrl = mainWebView.getUrl();
@@ -613,9 +554,7 @@ public class WebFragment extends Fragment {
 
 	@Subscribe
 	public void onWebViewClearBrowserStateEvent(WebViewClearBrowserStateEvent event) {
-		//if(mainWebView!=null) {
-			mainWebView.clearBrowserState();
-		//}
+        mainWebView.clearBrowserState();
 	}
 
 	@Subscribe
@@ -632,12 +571,7 @@ public class WebFragment extends Fragment {
 	public void onWebViewBackPressActionEvent(WebViewBackPressActionEvent event) {
 		mainWebView.backPressAction(true);
 	}
-/*
-	@Subscribe
-	public void onSearchExternalEvent(SearchExternalEvent event) {
-		searchExternal(event.query);
-	}
-*/
+
 	@Subscribe
 	public void onTurnReadabilityOffEvent(TurnReadabilityOffEvent event) {
 		mainWebView.forceOriginal();
@@ -687,7 +621,6 @@ public class WebFragment extends Fragment {
 
     @Subscribe
     public void onWebViewItemMenuClickEvent(WebViewItemMenuClickEvent event) {
-        Log.e("aaa web", "on web view item menu clicked: "+event.item.getTitle());
         onOptionsItemSelected(event.item);
     }
 
@@ -713,7 +646,6 @@ public class WebFragment extends Fragment {
     @Subscribe
     public void onOverflowButtonClickEvent(OverflowButtonClickEvent event) {
         if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(getTag()) && webMenu!=null) {
-            //feedMenu.findItem(R.id.action_stories).setEnabled(false);
             if(overflowMenu!=null && overflowMenu.isShowing()) {
                 return;
             }
@@ -725,10 +657,6 @@ public class WebFragment extends Fragment {
             overflowMenu.setFooterButton(footerMenu);
             overflowMenu.setMenu(webMenu);
             overflowMenu.show(event.anchor);
-
-            Log.e("aaa", "shuld open feed menu now, feed menu != null");
-        } else {
-            Log.e("aaa", "shuld open feed menu now, feed menu == null");
         }
     }
 

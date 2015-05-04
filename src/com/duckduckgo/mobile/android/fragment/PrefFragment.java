@@ -34,9 +34,6 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
 
     public static final String TAG = "preferences_fragment";
 
-    //private final TorIntegration torIntegration;
-
-    //private Preference
     private ListPreference startScreenPref;
     private ListPreference regionPref;
     private Preference sourcesPref;
@@ -92,8 +89,6 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        //torIntegration = new TorIntegration(getActivity());
-
         if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP) {
             getListView().setPadding(0, 0, 0, getListView().getPaddingBottom());
         }
@@ -107,8 +102,6 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
     @Override
     public boolean onPreferenceClick(Preference preference) {
         if(preference==sourcesPref) {
-            //Intent intent = new Intent(getActivity(), SourcePreferences.class);
-            //startActivity(intent);
             BusProvider.getInstance().post(new DisplayScreenEvent(SCREEN.SCR_SOURCES, false));
             return true;
         } else if(preference==clearHistoryPref) {
@@ -160,8 +153,6 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
                     TorIntegrationProvider.getInstance(getActivity()).prepareTorSettings();
                 }
                 else{
-                    //result_startOrbotCheck = true;
-                    //finish();
                     ((DuckDuckGo)getActivity()).searchOrGoToUrl(getString(R.string.OrbotCheckSite));
                 }
                 return true;

@@ -32,9 +32,6 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
 
     public static final String TAG = "recent_feed_tab_fragment";
 
-    //RecentFeedListView recentFeedListView;
-    //RecentFeedCursorAdapter recentFeedAdapter;
-
     private RecyclerRecentFeedAdapter recyclerRecentFeedAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private DDGRecyclerView recentFeedRecyclerView;
@@ -67,9 +64,7 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
 
         recentFeedRecyclerView = (DDGRecyclerView) fragmentView.findViewById(R.id.list);
 
-        //recentFeedRecyclerView = (DDGRecyclerView) fragmentView.findViewById(R.id.list);
         recentFeedRecyclerView.setEmptyView(fragmentView.findViewById(R.id.empty));
-        //recyclerRecentFeedCursorAdapter = new RecyclerRecentFeedCursorAdapter(getActivity(), DDGApplication.getDB().getCursorRecentFeed());
         recyclerRecentFeedAdapter = new RecyclerRecentFeedAdapter(getActivity(), DDGApplication.getDB().getAllRecentFeed());
 
         layoutManager = new LinearLayoutManager(getActivity());
@@ -104,7 +99,6 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
     @Override
     public void onResume() {
         super.onResume();
-        //Log.e("aaa", "recent feed tab on resume");
         checkIfRecordHistory();
     }
 
@@ -113,29 +107,9 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
         super.setUserVisibleHint(isVisibleToUser);
         DDGActionBarManager.getInstance().tryToShowTab();
     }
-/*
-    @Override
-    public void onListItemClick(ListView l, View v, int position, long id) {
-        Log.e("aaa", "on click");
-        recentFeedListView.onItemClick(l, v, position, id);
-    }
-
-    @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View v, int position, long id) {
-        Log.e("aaa", "on long click");
-        recentFeedListView.onItemLongClick(parent, v, position, id);
-        return true;
-    }
-*/
 
     public void checkIfRecordHistory() {
         if(!PreferencesManager.getRecordHistory()) {
-
-            //getListView().setVisibility(View.GONE);
-            //recentFeedRecyclerView.setVisibility(View.GONE);
-
-            //fragmentView.findViewById(R.id.empty).setVisibility(View.VISIBLE);
-            //recyclerRecentFeedCursorAdapter.clear();
 
             TextView title = (TextView) fragmentView.findViewById(R.id.empty_title);
             title.setText(getResources().getString(R.string.disabled_recents_title));
@@ -147,7 +121,6 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
     }
 
     private void cancelCategoryFilter() {
-        //recyclerRecentFeedAdapter.resetFilterCategory();
         DDGControlVar.targetCategory = null;
         recyclerRecentFeedAdapter.changeData(DDGApplication.getDB().getAllRecentFeed());
 
@@ -170,15 +143,6 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
 
     @Subscribe
     public void onSyncAdaptersEvent(SyncAdaptersEvent event) {
-        Log.e("aaa", "on sync adapters event, record history: " + PreferencesManager.getRecordHistory());
-
-        //recentFeedAdapter.changeCursor(DDGApplication.getDB().getCursorRecentFeed());
-        //recentFeedAdapter.notifyDataSetChanged();
-        //if(PreferencesManager.getRecordHistory()) {
-            recyclerRecentFeedAdapter.changeData(DDGApplication.getDB().getAllRecentFeed());
-        //} else {
-            //recyclerRecentFeedCursorAdapter.changeData(new ArrayList<FeedObject>());
-        //}
-        //checkIfRecordHistory();
+        recyclerRecentFeedAdapter.changeData(DDGApplication.getDB().getAllRecentFeed());
     }
 }

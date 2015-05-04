@@ -46,7 +46,6 @@ public class AboutFragment extends Fragment {
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        Log.e("aaa", "new config");
         ViewGroup container = (ViewGroup) getView();
         container.removeAllViewsInLayout();
         fragmentView = onCreateView(getActivity().getLayoutInflater(), container, null);
