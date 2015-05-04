@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.activity.SourcePreferences;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.ConfirmDialogOkEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;

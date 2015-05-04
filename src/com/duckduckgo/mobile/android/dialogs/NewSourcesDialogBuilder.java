@@ -1,7 +1,9 @@
 package com.duckduckgo.mobile.android.dialogs;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.SourcePreferences;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
+import com.duckduckgo.mobile.android.util.SCREEN;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -18,8 +20,7 @@ public final class NewSourcesDialogBuilder extends AlertDialog.Builder{
 		setTitle(R.string.NewSources);
 		setPositiveButton(R.string.NewSourcesOk, new DialogInterface.OnClickListener() {
 	           public void onClick(DialogInterface dialog, int id) {
-	        	   Intent intent = new Intent(context, SourcePreferences.class);
-	        	   context.startActivity(intent);
+                   BusProvider.getInstance().post(new DisplayScreenEvent(SCREEN.SCR_SOURCES, false));
 	           }
 	       });
 		setNegativeButton(R.string.NewSourcesNoThx, new DialogInterface.OnClickListener() {

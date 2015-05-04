@@ -3,7 +3,6 @@ package com.duckduckgo.mobile.android.views.webview;
 import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarAddClearTextDrawable;
 import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetProgressEvent;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -48,7 +47,6 @@ public class DDGWebChromeClient extends WebChromeClient {
         Log.e("aaa", "new progress: "+newProgress);
 
         if(newProgress == 100){
-			BusProvider.getInstance().post(new SearchBarAddClearTextDrawable());
 			//activity.getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable);
 		}
 		else {

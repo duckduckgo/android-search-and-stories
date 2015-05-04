@@ -23,7 +23,6 @@ import android.webkit.WebViewClient;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.SSLCertificateDialog;
-import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarAddClearTextDrawable;
 import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarClearEvent;
 import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetTextEvent;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
@@ -194,7 +193,6 @@ public class DDGWebViewClient extends WebViewClient {
 		}
 		
 		//((DuckDuckGo)activity).getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable);//aaa
-		BusProvider.getInstance().post(new SearchBarAddClearTextDrawable());
 		
 //		// This makes a little (X) to clear the search bar.
 //		mDuckDuckGoContainer.reloadDrawable.setBounds(0, 0, (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicWidth()/1.5), (int)Math.floor(mDuckDuckGoContainer.reloadDrawable.getIntrinsicHeight()/1.5));
