@@ -380,7 +380,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 	@Subscribe
 	public void onFeedRetrieveErrorEvent(FeedRetrieveErrorEvent event) {
-        if (activity!=null && DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_FAVORITE && mainFeedTask != null) {
+        if (activity!=null && !activity.isFinishing() && DDGControlVar.mDuckDuckGoContainer.currentScreen != SCREEN.SCR_FAVORITE && mainFeedTask != null) {
 			new FeedRequestFailureDialogBuilder(activity).show();
 		}
         swipeRefreshLayout.setRefreshing(false);

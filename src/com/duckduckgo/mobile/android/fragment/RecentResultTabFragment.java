@@ -104,8 +104,10 @@ public class RecentResultTabFragment extends ListFragment {
 
     @Subscribe
     public void onSyncAdaptersEvent(SyncAdaptersEvent event) {
-        recentResultAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
-        recentResultAdapter.notifyDataSetChanged();
+        if(recentResultAdapter!=null) {
+            recentResultAdapter.changeCursor(DDGApplication.getDB().getCursorSearchHistory());
+            recentResultAdapter.notifyDataSetChanged();
+        }
 
     }
 }

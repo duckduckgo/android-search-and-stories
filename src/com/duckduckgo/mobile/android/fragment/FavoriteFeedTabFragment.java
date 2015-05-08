@@ -129,6 +129,8 @@ public class FavoriteFeedTabFragment extends Fragment {
 
 	@Subscribe
 	public void onSyncAdapters(SyncAdaptersEvent event) {
-        recyclerFavoriteFeedAdapter.changeData(DDGApplication.getDB().getAllFavoriteFeed());
+        if(recyclerFavoriteFeedAdapter!=null) {
+            recyclerFavoriteFeedAdapter.changeData(DDGApplication.getDB().getAllFavoriteFeed());
+        }
 	}
 }

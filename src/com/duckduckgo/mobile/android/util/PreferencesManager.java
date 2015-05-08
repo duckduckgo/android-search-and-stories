@@ -97,6 +97,7 @@ public class PreferencesManager {
 		editor.remove("ptrHeaderTextSize");
 		editor.remove("ptrHeaderSubTextSize");
 		editor.remove("leftTitleTextSize");
+        editor.remove("useExternalBrowserPref");
 		editor.commit();
 	}
 	

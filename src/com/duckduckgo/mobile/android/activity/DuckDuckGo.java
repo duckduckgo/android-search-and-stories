@@ -244,7 +244,9 @@ public class DuckDuckGo extends ActionBarActivity {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent event) {
                 if(textView == getSearchField() && actionId != EditorInfo.IME_NULL) {
-                    searchOrGoToUrl(getSearchField().getTrimmedText());
+                    if(getSearchField().getTrimmedText()!=null && getSearchField().getTrimmedText().length()!=0) {
+                        searchOrGoToUrl(getSearchField().getTrimmedText());
+                    }
                 }
                 return false;
             }
@@ -733,6 +735,8 @@ public class DuckDuckGo extends ActionBarActivity {
             if(webFragment==null) {
                 webFragment = new WebFragment();
                 ((WebFragment)webFragment).setContext(this);
+                //fragmentManager.beginTransaction().add(fragmentContainer.getId(), webFragment, WebFragment.TAG).hide(webFragment).commit();
+                //fragmentManager.executePendingTransactions();
             }
             ((WebFragment)webFragment).searchOrGoToUrl(text, sessionType);
         }

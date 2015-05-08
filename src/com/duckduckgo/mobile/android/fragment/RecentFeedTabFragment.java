@@ -143,6 +143,8 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
 
     @Subscribe
     public void onSyncAdaptersEvent(SyncAdaptersEvent event) {
-        recyclerRecentFeedAdapter.changeData(DDGApplication.getDB().getAllRecentFeed());
+        if(recyclerRecentFeedAdapter!=null) {
+            recyclerRecentFeedAdapter.changeData(DDGApplication.getDB().getAllRecentFeed());
+        }
     }
 }

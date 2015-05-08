@@ -84,7 +84,9 @@ public class FavoriteResultTabFragment extends ListFragment {
 
 	@Subscribe
 	public void onSyncAdapters(SyncAdaptersEvent event) {
-		savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
-		savedSearchAdapter.notifyDataSetChanged();
+        if(savedSearchAdapter!=null) {
+            savedSearchAdapter.changeCursor(DDGApplication.getDB().getCursorSavedSearch());
+            savedSearchAdapter.notifyDataSetChanged();
+        }
 	}
 }
