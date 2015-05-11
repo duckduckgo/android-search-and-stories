@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -34,6 +35,8 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
 
     public static final String TAG = "preferences_fragment";
 
+    private Activity activity;
+
     private ListPreference startScreenPref;
     private ListPreference regionPref;
     private Preference sourcesPref;
@@ -42,6 +45,12 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
     private Preference clearWebCachePref;
     private Preference aboutPref;
     private Preference sendFeedbackPref;
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
+    }
 
 
     @Override
@@ -93,6 +102,7 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
             getListView().setPadding(0, 0, 0, getListView().getPaddingBottom());
         }
 
+        activity = getActivity();
 
         whenChangingTorChecksForOrbot();
         whenCheckingOrbotStatusStartsOrbotAndSetsProxy();
@@ -119,8 +129,8 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
             BusProvider.getInstance().post(new DisplayScreenEvent(SCREEN.SCR_ABOUT, false));
             return true;
         } else if(preference==sendFeedbackPref) {
-            Intent intent = DDGUtils.newEmailIntent(getActivity().getResources().getString(R.string.FeedbackTo),
-                    getActivity().getResources().getString(R.string.FeedbackSubject), DDGUtils.getBuildInfo(getActivity()), "");
+            Intent intent = DDGUtils.newEmailIntent(activity.getResources().getString(R.string.FeedbackTo),
+                    getActivity().getResources().getString(R.string.FeedbackSubject), DDGUtils.getBuildInfo(activity), "");
             startActivity(Intent.createChooser(intent, getResources().getString(R.string.select_application)));
             return true;
         }
@@ -149,11 +159,11 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
         checkOrbotPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if(!TorIntegrationProvider.getInstance(getActivity()).isOrbotRunningAccordingToSettings()){
-                    TorIntegrationProvider.getInstance(getActivity()).prepareTorSettings();
+                if(!TorIntegrationProvider.getInstance(activity).isOrbotRunningAccordingToSettings()){
+                    TorIntegrationProvider.getInstance(activity).prepareTorSettings();
                 }
                 else{
-                    ((DuckDuckGo)getActivity()).searchOrGoToUrl(getString(R.string.OrbotCheckSite));
+                    ((DuckDuckGo)activity).searchOrGoToUrl(getString(R.string.OrbotCheckSite));
                 }
                 return true;
             }
@@ -162,12 +172,12 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
 
     private void whenChangingTorChecksForOrbot() {
         Preference enableTorPreference = findPreference("enableTor");
-        if(!TorIntegrationProvider.getInstance(getActivity()).isTorSupported()){
+        if(!TorIntegrationProvider.getInstance(activity).isTorSupported()){
             setTorNotSupportedInfo(enableTorPreference);
         }else{
             enableTorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    return TorIntegrationProvider.getInstance(getActivity()).prepareTorSettings((Boolean) newValue);
+                    return TorIntegrationProvider.getInstance(activity).prepareTorSettings((Boolean) newValue);
                 }
             });
         }

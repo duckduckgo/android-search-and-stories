@@ -84,6 +84,12 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private Menu feedMenu = null;
     private DDGOverflowMenu overflowMenu = null;
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.activity = activity;
+    }
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -156,8 +162,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 		SourceClickListener sourceClickListener = new SourceClickListener();
         CategoryClickListener categoryClickListener = new CategoryClickListener();
-		feedAdapter = new MainFeedAdapter(getActivity(), sourceClickListener, categoryClickListener);
-        recyclerAdapter = new RecyclerMainFeedAdapter(getActivity(), sourceClickListener, categoryClickListener);
+		feedAdapter = new MainFeedAdapter(activity, sourceClickListener, categoryClickListener);
+        recyclerAdapter = new RecyclerMainFeedAdapter(activity, sourceClickListener, categoryClickListener);
 
 		mainFeedTask = null;
 
@@ -167,13 +173,13 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         recyclerView = (RecyclerView) fragmentView.findViewById(R.id.feed_list_view);
 
-        layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager = new LinearLayoutManager(activity);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(recyclerAdapter);
 
 
-        feedMenu = new MenuBuilder(getActivity());
-        getActivity().getMenuInflater().inflate(R.menu.main, feedMenu);
+        feedMenu = new MenuBuilder(activity);
+        activity.getMenuInflater().inflate(R.menu.main, feedMenu);
 
 	}
 
@@ -299,7 +305,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	 */
 	@SuppressLint("NewApi")
 	public void keepFeedUpdated(){
-		if(TorIntegrationProvider.getInstance(getActivity()).isOrbotRunningAccordingToSettings()) {
+		if(TorIntegrationProvider.getInstance(activity).isOrbotRunningAccordingToSettings()) {
 			if (!DDGControlVar.hasUpdatedFeed) {
 				if (DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
 					// respect user choice of empty source list: show nothing
@@ -307,7 +313,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 							REQUEST_TYPE.FROM_CACHE));
 				} else {
 					// cache
-					CacheFeedTask cacheTask = new CacheFeedTask(getActivity());
+					CacheFeedTask cacheTask = new CacheFeedTask(activity);
 
 					// for HTTP request
 					mainFeedTask = new MainFeedTask(feedView);
@@ -433,7 +439,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 return;
             }
 
-            overflowMenu = new DDGOverflowMenu(getActivity());
+            overflowMenu = new DDGOverflowMenu(activity);
             overflowMenu.setMenu(feedMenu);
             overflowMenu.show(event.anchor);
         }
