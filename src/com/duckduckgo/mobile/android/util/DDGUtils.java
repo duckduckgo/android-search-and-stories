@@ -209,12 +209,8 @@ public final class DDGUtils {
 	}
 	  
 	  public static Intent newEmailIntent(String toAddress, String subject, String body, String cc) {
-	      Intent intent = new Intent(Intent.ACTION_SEND);
-	      intent.putExtra(Intent.EXTRA_EMAIL, new String[] { toAddress });
-	      intent.putExtra(Intent.EXTRA_TEXT, body);
-	      intent.putExtra(Intent.EXTRA_SUBJECT, subject);
-	      intent.putExtra(Intent.EXTRA_CC, cc);
-	      intent.setType("message/rfc822");
+          Intent intent = new Intent(Intent.ACTION_SENDTO);
+          intent.setData(Uri.parse("mailto:" + Uri.encode(toAddress) + "?subject=" + Uri.encode(subject) + "&body=" + Uri.encode(body) + "&cc=" + Uri.encode(cc)));
 	      return intent;
 	  }
 	  
