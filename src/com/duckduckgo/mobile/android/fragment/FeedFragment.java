@@ -99,7 +99,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		BusProvider.getInstance().register(this);
+		BusProvider.getInstance().unregister(this);
 	}
 
 	@Override
