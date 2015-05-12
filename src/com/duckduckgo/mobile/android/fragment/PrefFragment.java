@@ -156,6 +156,7 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
 
     private void whenCheckingOrbotStatusStartsOrbotAndSetsProxy() {
         Preference checkOrbotPreference = findPreference("checkOrbotStatus");
+        if(activity!=null && !activity.isFinishing())
         checkOrbotPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -172,14 +173,16 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
 
     private void whenChangingTorChecksForOrbot() {
         Preference enableTorPreference = findPreference("enableTor");
-        if(!TorIntegrationProvider.getInstance(activity).isTorSupported()){
-            setTorNotSupportedInfo(enableTorPreference);
-        }else{
-            enableTorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                public boolean onPreferenceChange(Preference preference, Object newValue) {
-                    return TorIntegrationProvider.getInstance(activity).prepareTorSettings((Boolean) newValue);
-                }
-            });
+        if(activity!=null && !activity.isFinishing()) {
+            if (!TorIntegrationProvider.getInstance(activity).isTorSupported()) {
+                setTorNotSupportedInfo(enableTorPreference);
+            } else {
+                enableTorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        return TorIntegrationProvider.getInstance(activity).prepareTorSettings((Boolean) newValue);
+                    }
+                });
+            }
         }
     }
 

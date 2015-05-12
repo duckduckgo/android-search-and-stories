@@ -168,6 +168,7 @@ public class DuckDuckGo extends ActionBarActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "on create");
 
         keyboardService = new KeyboardService(this);
 
@@ -504,6 +505,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
+        Log.d(TAG, "on resume");
 		BusProvider.getInstance().register(this);
 		
         DDGUtils.displayStats.refreshStats(this);
@@ -517,22 +519,28 @@ public class DuckDuckGo extends ActionBarActivity {
 			new ScanAppsTask(getApplicationContext()).execute();
 			DDGControlVar.hasAppsIndexed = true;
 		}
+	}
 
-		// global search intent
+    @Override
+    public void onPostResume() {
+        super.onPostResume();
+        Log.d(TAG, "on post resume");
+
+        // global search intent
         Intent intent = getIntent();
-        
-		if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-			intent.setAction(Intent.ACTION_MAIN);
-			String query = intent.getStringExtra(SearchManager.QUERY);
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            intent.setAction(Intent.ACTION_MAIN);
+            String query = intent.getStringExtra(SearchManager.QUERY);
             DDGActionBarManager.getInstance().setSearchBarText(query);
-			BusProvider.getInstance().post(new WebViewSearchWebTermEvent(query));
-		}
-		else if(intent.getBooleanExtra("widget", false)) {
+            BusProvider.getInstance().post(new WebViewSearchWebTermEvent(query));
+        }
+        else if(intent.getBooleanExtra("widget", false)) {
             if(!getSearchField().getText().toString().equals("")) {
                 DDGActionBarManager.getInstance().clearSearchBar();
             }
             displayScreen(SCREEN.SCR_SEARCH, true);
-		}
+        }
         else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
             searchOrGoToUrl(intent.getDataString());
         }
@@ -544,17 +552,18 @@ public class DuckDuckGo extends ActionBarActivity {
             assistAction = true;
             keyboardService.showKeyboard(getSearchField());
         }
-		else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
+        else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
             Fragment fragment = fragmentManager.findFragmentByTag(WebFragment.TAG);
             if(fragmentManager.findFragmentByTag(WebFragment.TAG)== null || !fragment.isVisible()) {
                 displayScreen(SCREEN.SCR_WEBVIEW, false);
             }
-		}
-	}
+        }
+    }
 
 	@Override
 	public void onPause() {
 		super.onPause();
+        Log.d(TAG, "on pause");
 		
 		BusProvider.getInstance().unregister(this);
 
@@ -568,6 +577,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	protected void onStop() {
 		PreferencesManager.saveReadArticles();
 		super.onStop();
+        Log.d(TAG, "on stop");
 	}
 	
 	@Override
