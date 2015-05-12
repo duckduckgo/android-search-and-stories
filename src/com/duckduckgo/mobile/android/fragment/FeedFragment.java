@@ -305,7 +305,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	 */
 	@SuppressLint("NewApi")
 	public void keepFeedUpdated(){
-		if(TorIntegrationProvider.getInstance(activity).isOrbotRunningAccordingToSettings()) {
+		//if(TorIntegrationProvider.getInstance(activity).isOrbotRunningAccordingToSettings()) {
+        if(DDGControlVar.mDuckDuckGoContainer.torIntegration.isOrbotRunningAccordingToSettings()) {
 			if (!DDGControlVar.hasUpdatedFeed) {
 				if (DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
 					// respect user choice of empty source list: show nothing

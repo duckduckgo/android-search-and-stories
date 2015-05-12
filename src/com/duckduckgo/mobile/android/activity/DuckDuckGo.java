@@ -103,6 +103,7 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
 import com.duckduckgo.mobile.android.util.SuggestType;
+import com.duckduckgo.mobile.android.util.TorIntegration;
 import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
@@ -162,7 +163,8 @@ public class DuckDuckGo extends ActionBarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-		TorIntegrationProvider.getInstance(this).prepareTorSettings();
+		//TorIntegrationProvider.getInstance(this).prepareTorSettings();
+        DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings();
     }
 
     @Override
@@ -377,6 +379,8 @@ public class DuckDuckGo extends ActionBarActivity {
 
         DDGControlVar.mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter = new RecentResultCursorAdapter(this, DDGApplication.getDB().getCursorSearchHistory());
+
+        DDGControlVar.mDuckDuckGoContainer.torIntegration = new TorIntegration(this);
     }
 /*
     // Assist action is better known as Google Now gesture

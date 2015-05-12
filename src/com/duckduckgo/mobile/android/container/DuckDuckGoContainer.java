@@ -7,6 +7,7 @@ import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.util.TorIntegration;
 
 public class DuckDuckGoContainer {
 	
@@ -30,4 +31,6 @@ public class DuckDuckGoContainer {
 
     public AutoCompleteResultsAdapter acAdapter = null;
     public RecentResultCursorAdapter recentResultCursorAdapter = null;
+
+    public TorIntegration torIntegration = null;
 }

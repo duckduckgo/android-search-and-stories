@@ -25,6 +25,7 @@ import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.ConfirmDialogOkEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
 import com.duckduckgo.mobile.android.util.DDGConstants;
+import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
@@ -160,8 +161,10 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
         checkOrbotPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                if(!TorIntegrationProvider.getInstance(activity).isOrbotRunningAccordingToSettings()){
-                    TorIntegrationProvider.getInstance(activity).prepareTorSettings();
+                //if(!TorIntegrationProvider.getInstance(activity).isOrbotRunningAccordingToSettings()){
+                if(!DDGControlVar.mDuckDuckGoContainer.torIntegration.isOrbotRunningAccordingToSettings()){
+                    //TorIntegrationProvider.getInstance(activity).prepareTorSettings();
+                    DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings();
                 }
                 else{
                     ((DuckDuckGo)activity).searchOrGoToUrl(getString(R.string.OrbotCheckSite));
@@ -174,12 +177,14 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
     private void whenChangingTorChecksForOrbot() {
         Preference enableTorPreference = findPreference("enableTor");
         if(activity!=null && !activity.isFinishing()) {
-            if (!TorIntegrationProvider.getInstance(activity).isTorSupported()) {
+            //if (!TorIntegrationProvider.getInstance(activity).isTorSupported()) {
+            if (!DDGControlVar.mDuckDuckGoContainer.torIntegration.isTorSupported()) {
                 setTorNotSupportedInfo(enableTorPreference);
             } else {
                 enableTorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
-                        return TorIntegrationProvider.getInstance(activity).prepareTorSettings((Boolean) newValue);
+                        //return TorIntegrationProvider.getInstance(activity).prepareTorSettings((Boolean) newValue);
+                        return DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings((Boolean) newValue);
                     }
                 });
             }
