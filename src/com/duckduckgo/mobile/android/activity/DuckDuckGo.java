@@ -260,7 +260,7 @@ public class DuckDuckGo extends ActionBarActivity {
             public void onFocusChange(View v, boolean hasFocus) {
                 if(hasFocus) {
                     int stackSize= fragmentManager.getBackStackEntryCount();
-                    String tag = stackSize > 0? fragmentManager.getBackStackEntryAt(stackSize - 1).getName() : "";////check tag = ""
+                    String tag = stackSize > 0? fragmentManager.getBackStackEntryAt(stackSize - 1).getName() : "";
                     Fragment f = fragmentManager.findFragmentByTag(tag);
                     if(f!= null && (f.getTag().equals(SearchFragment.TAG) || f.getTag().equals(SearchFragment.TAG_HOME_PAGE))) {
                         Log.d(TAG, "on focus change listener, DO NOT display search");

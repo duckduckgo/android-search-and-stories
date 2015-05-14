@@ -37,7 +37,7 @@ public class Widget extends AppWidgetProvider {
             // Tell the AppWidgetManager to perform an update on the current App Widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
 
-            updateAppWidget(context, appWidgetManager, appWidgetIds[i]);
+            updateAppWidget(context, appWidgetManager, appWidgetIds[i], pendingIntent);
         }
     }
 
@@ -53,11 +53,12 @@ public class Widget extends AppWidgetProvider {
     }
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+                                int appWidgetId, PendingIntent pendingIntent) {
 
         //CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.temp_widget);
+        views.setOnClickPendingIntent(R.id.search_widget, pendingIntent);
         //views.setTextViewText(R.id.appwidget_text, widgetText);
 
         // Instruct the widget manager to update the widget
