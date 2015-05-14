@@ -19,10 +19,6 @@
     <string name="PrefSavedItems">Gespeicherte Einträge</string>
     <string name="PrefDuckMode">Entenmodus</string>
     <string name="PrefRecentSearch">Letzte Suchen</string>
-    <string name="PrefRecordHistory">Aktuelle speichern</string>
-    <string name="PrefClearHistory">Aktuelle entfernen</string>
-    <string name="PrefSources">Quellen ändern</string>
-    <string name="PrefResetSources">Quellen zurücksetzen</string>
     <string name="PrefRecordHistory">Verlauf speichern</string>
     <string name="PrefClearHistory">Verlauf löschen</string>
     <string name="PrefRecordCookies">Cookies speichern</string>
@@ -38,13 +34,7 @@
     <string name="PrefRate">App bewerten</string>
     <string name="PrefAppSearch">Apps einbeziehen</string>
     <string name="PrefMainFontSize">Schriftgröße</string>
-    <string name="PrefEnableAcra">Automatisch Abstürze melden</string>
-    <string name="PrefAcraDisabled">Automatische Absturzmeldungen deaktiviert</string>
-    <string name="PrefAcraEnabled">Automatische Absturzmeldungen aktiviert</string>
     <string name="PrefAbout">Über</string>
-    <string name="PrefRate">App bewerten</string>
-    <string name="PrefAppSearch">Apps einbeziehen</string>
-    <string name="PrefMainFontSize">Schriftgröße</string>
     <string name="PrefEnableAcra">Automatische Absturzberichte</string>
     <string name="PrefAcraDisabled">Automatische Berichte deaktiviert</string>
     <string name="PrefAcraEnabled">Automatische Berichte aktiviert</string>
@@ -129,11 +119,8 @@
     <string name="ErrorDownloadFailed">Herunterladen fehlgeschlagen!</string>
     <string name="ErrorDownloadOpenFail">Heruntergeladene Datei konnte nicht geöffnet werden!</string>
     
-    <string name="InfoReadStoriesFromCache">Verbindung fehlgeschlagen! Geschichten aus dem Zwischenspeicher abgerufen&#8230;</string>
     <string name="DefaultsSetToast">Quellen auf Vorgabe zurückgesetzt.</string>
-    <string name="SuggestSourceToast">Zu implementieren.</string>    
     <string name="InfoReadStoriesFromCache">Verbinden fehlgeschlagen! Zeige Geschichten aus dem Zwischenspeicher&#8230;</string>
-    <string name="DefaultsSetToast">Quellen auf Standard zurückgesetzt.</string>
     <string name="SuggestSourceToast">Noch nicht implementiert.</string>
     <string name="Loading">Lädt&#8230;</string>
     
