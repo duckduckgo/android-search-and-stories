@@ -19,9 +19,13 @@
     <string name="PrefSavedItems">Gespeicherte Einträge</string>
     <string name="PrefDuckMode">Entenmodus</string>
     <string name="PrefRecentSearch">Letzte Suchen</string>
-    <string name="PrefRecordHistory">Aktuelle speichern</string>
-    <string name="PrefClearHistory">Aktuelle entfernen</string>
-    <string name="PrefSources">Quellen ändern</string>
+    <string name="PrefRecordHistory">Verlauf speichern</string>
+    <string name="PrefClearHistory">Verlauf löschen</string>
+    <string name="PrefRecordCookies">Cookies speichern</string>
+    <string name="PrefClearCookies">Cookies löschen</string>
+    <string name="PrefClearBrowserCache">Browser Cache leeren</string>
+    <string name="PrefClearCacheAndCookies">Cookies und Cache löschen</string>
+    <string name="PrefSources">Quellen bearbeiten</string>
     <string name="PrefResetSources">Quellen zurücksetzen</string>
     <string name="PrefRegion">Region</string>
     <string name="PrefDirectQuery">Suchen während des Tippens</string>
@@ -30,16 +34,20 @@
     <string name="PrefRate">App bewerten</string>
     <string name="PrefAppSearch">Apps einbeziehen</string>
     <string name="PrefMainFontSize">Schriftgröße</string>
-    <string name="PrefEnableAcra">Automatisch Abstürze melden</string>
-    <string name="PrefAcraDisabled">Automatische Absturzmeldungen deaktiviert</string>
-    <string name="PrefAcraEnabled">Automatische Absturzmeldungen aktiviert</string>
+    <string name="PrefAbout">Über</string>
+    <string name="PrefEnableAcra">Automatische Absturzberichte</string>
+    <string name="PrefAcraDisabled">Automatische Berichte deaktiviert</string>
+    <string name="PrefAcraEnabled">Automatische Berichte aktiviert</string>
     
     <string name="PrefWaterCooler">Geschichten</string>
     <string name="PrefAutocomplete">Autovervollständigung</string>
     <string name="PrefSearchResults">Suchergebnisse</string>
     <string name="PrefTurnOffAutocomplete">Deaktiviert</string>
     
+    <string name="PrefAutoUpdate">Feeds automatisch erneuern</string>
+
     <string name="PrefReadable">Lesbarkeit</string>
+    <string name="PrefReadableSummary">Eingeschaltet, wenn verfügbar</string>
     <string name="PrefGroupTor">Tor</string>
     <string name="PrefEnableTor">Tor aktivieren</string>
     <string name="PrefCheckOrbotStatus">Orbot-Status prüfen</string>
@@ -71,6 +79,8 @@
     
     <string name="Confirm">Bestätigen</string>
     <string name="ConfirmClearHistory">Die gesamte Suchhistorie wird gelöscht. Sind Sie sicher?</string>
+    <string name="ConfirmClearCookies">Alle Cookies werden gelöscht. Bist du sicher?</string>
+    <string name="ConfirmClearCacheAndCookies">Zwischenspeicher wird gelöscht. Bist du sicher?</string>
     
     <string name="Default">Vorgabe</string>
     <string name="Defaults">Vorgaben</string>
@@ -109,9 +119,10 @@
     <string name="ErrorDownloadFailed">Herunterladen fehlgeschlagen!</string>
     <string name="ErrorDownloadOpenFail">Heruntergeladene Datei konnte nicht geöffnet werden!</string>
     
-    <string name="InfoReadStoriesFromCache">Verbindung fehlgeschlagen! Geschichten aus dem Zwischenspeicher abgerufen&#8230;</string>
     <string name="DefaultsSetToast">Quellen auf Vorgabe zurückgesetzt.</string>
-    <string name="SuggestSourceToast">Zu implementieren.</string>    
+    <string name="InfoReadStoriesFromCache">Verbinden fehlgeschlagen! Zeige Geschichten aus dem Zwischenspeicher&#8230;</string>
+    <string name="SuggestSourceToast">Noch nicht implementiert.</string>
+    <string name="Loading">Lädt&#8230;</string>
     
     <string name="SummaryWaterCooler">
 	Diese Quellen erzeugen einen Strom von interessanten Geschichten, die Sie in regulären Apps nicht finden werden.
@@ -140,7 +151,7 @@
     <string name="ReadabilityOn">Lesbarkeit an</string>
     <string name="ReadabilityOff">Lesbarkeit aus</string>
     
-    <string name="SavedSearches">Gespeicherte Suchen</string>
+    <string name="SavedSearches">Gespeicherte Suchbegriffe</string>
     <string name="SavedStories">Gespeicherte Geschichten</string>
     <string name="StoryOptionsTitle">Geschichteneinstellungen</string>
     <string name="SearchOptionsTitle">Sucheinstellungen</string>
@@ -166,6 +177,72 @@
     <string name="NewSources">Wir haben einige interessante neue Geschichten zu den Quellen hinzugefügt!</string>
     <string name="NewSourcesOk">Zeigen</string>
     <string name="NewSourcesNoThx">Später</string>
+    <string name="WorldTraveler">Weltenbummler (none)</string>
+
+
+    <!--new strings--><!--
+    <string name="add_favourites">Add to Favourites</string>
+    <string name="remove_favourites">Remove from Favourites</string>
+    <string name="share">Share this</string>
+    <string name="view_external">View in Browser</string>
+    <string name="reload">Reload</string>-->
+    <string name="stories">Geschichten</string>
+    <string name="help_feedback">Hilfe &amp; Feedback</string>
+    <string name="settings">Einstellungen</string>
+
+    <!--favorites fragment -->
+    <string name="favorites">Favoriten</string>
+    <string name="favorite_stories">Favorisierte Geschichten</string>
+    <string name="favorite_stories_narrow">@string/stories</string>
+    <string name="favorite_search">Favorisierte Suchbegriffe</string>
+    <string name="favorite_search_narrow">Suchbegriffe</string>
+    <string name="empty_favorites_title">Keine Favoriten</string>
+    <string name="empty_favorites_text">Favorisierte Geschichten\nund Suchbegriffe\nwerden hier angezeigt.</string>
+
+    <!--recents fragment-->
+    <string name="recents">Verlauf</string>
+    <string name="recent_stories">Letzte Geschichten</string>
+    <string name="recent_stories_narrow">@string/stories</string>
+    <string name="recent_searches">Letzte Suchbegriffe</string>
+    <string name="recent_searches_narrow">Suchebegriffe</string>
+    <string name="empty_recents_title">Kein Verlauf</string>
+    <string name="empty_recents_text">Sobald du suchst\noder Geschichten liest, tauchen\ndeine Aktivitäten hier auf.</string>
+    <string name="disabled_recents_title">Verlauf deaktiviert</string>
+    <string name="disabled_recents_text">Du kannst den Verlauf in den Einstellungen aktivieren.</string>
+
+    <!--about fragment-->
+    <string name="about">Über</string>
+    <string name="about_text">Die Suchmaschine, die dich nicht verfolgt.</string>
+    <string name="version">Version</string>
+    <string name="select_application">Wähle eine Anwendung</string>
+
+    <!--help feedback fragment-->
+    <string name="help">Hilfe</string>
+    <string name="android_help_center">Android Help Center</string>
+    <string name="feedback">Feedback</string>
+    <string name="leave_feedback">Gib Feedback</string>
+    <string name="rate">Bewerte die App</string>
+
+    <!-- change sources fragment-->
+    <string name="change_sources">Verwalte Quellen</string>
+
+    <!-- menus -->
+    <string name="action_stories">@string/stories</string>
+    <string name="action_recents">@string/recents</string>
+    <string name="action_favorites">@string/favorites</string>
+    <string name="action_settings">@string/settings</string>
+    <string name="action_help_feedback">Hilfe &amp; Feedback</string>
+    <string name="action_reload">Seite aktualisieren</string>
+    <string name="action_add_favorite">Zu Favoriten hinzufügen</string>
+    <string name="action_remove_favorite">Aus Favoriten entfernen</string>
+    <string name="action_share">Teilen</string>
+    <string name="action_view_external">Im Browser öffnen</string>
+    <string name="action_back">Zurück</string>
+    <string name="action_forward">Weiter</string>
+    <string name="action_close">Schließen</string>
+
+
+
 
     
     <!-- SSL Certificate dialogs -->
