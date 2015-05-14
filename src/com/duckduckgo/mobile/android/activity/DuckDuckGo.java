@@ -212,6 +212,7 @@ public class DuckDuckGo extends ActionBarActivity {
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     String tag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
                     if (tag != null) {
+                        DDGControlVar.mDuckDuckGoContainer.prevFragmentTag = DDGControlVar.mDuckDuckGoContainer.currentFragmentTag;
                         DDGControlVar.mDuckDuckGoContainer.currentFragmentTag = tag;
                         if (!tag.equals(WebFragment.TAG) && !DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
                             DDGControlVar.mDuckDuckGoContainer.prevScreen = DDGControlVar.mDuckDuckGoContainer.currentScreen;
@@ -220,11 +221,11 @@ public class DuckDuckGo extends ActionBarActivity {
                         DDGControlVar.mDuckDuckGoContainer.webviewShowing = tag.equals(WebFragment.TAG);
                         DDGControlVar.homeScreenShowing = DDGControlVar.mDuckDuckGoContainer.currentScreen == DDGControlVar.START_SCREEN;
 
-                        DDGActionBarManager.getInstance().updateActionBar(fragmentManager, tag);
+                        DDGActionBarManager.getInstance().updateActionBar(fragmentManager, tag, backPressed);
                         if ((tag.equals(SearchFragment.TAG) || tag.equals(SearchFragment.TAG_HOME_PAGE)) && !backPressed) {
-                            keyboardService.showKeyboard(getSearchField());
+                            //keyboardService.showKeyboard(getSearchField());
                         } else if(!assistAction) {
-                            keyboardService.hideKeyboard(getSearchField());
+                            //keyboardService.hideKeyboard(getSearchField());
                         } else if(assistAction) {;
                             assistAction = false;
                         }
@@ -240,6 +241,41 @@ public class DuckDuckGo extends ActionBarActivity {
 		if(savedInstanceState==null) {
 			displayHomeScreen();
 		}
+
+        // global search intent
+        Intent intent = getIntent();
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            intent.setAction(Intent.ACTION_MAIN);
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            DDGActionBarManager.getInstance().setSearchBarText(query);
+            BusProvider.getInstance().post(new WebViewSearchWebTermEvent(query));
+        }
+        else if(intent.getBooleanExtra("widget", false)) {
+            if(!getSearchField().getText().toString().equals("")) {
+                DDGActionBarManager.getInstance().clearSearchBar();
+            }
+            displayScreen(SCREEN.SCR_SEARCH, true);
+        }
+        else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
+            searchOrGoToUrl(intent.getDataString());
+        }
+        else if(intent.getBooleanExtra("assist", false)) {
+            assistAction = true;
+            //keyboardService.showKeyboard(getSearchField());
+            displayScreen(SCREEN.SCR_SEARCH, true);
+        }
+        else if(Intent.ACTION_ASSIST.equals(intent.getAction())){
+            assistAction = true;
+            //keyboardService.showKeyboard(getSearchField());
+            displayScreen(SCREEN.SCR_SEARCH, true);
+        }
+        else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
+            Fragment fragment = fragmentManager.findFragmentByTag(WebFragment.TAG);
+            if(fragmentManager.findFragmentByTag(WebFragment.TAG)== null || !fragment.isVisible()) {
+                displayScreen(SCREEN.SCR_WEBVIEW, false);
+            }
+        }
     }
 
     private void initSearchField() {
@@ -524,45 +560,6 @@ public class DuckDuckGo extends ActionBarActivity {
 			DDGControlVar.hasAppsIndexed = true;
 		}
 	}
-
-    @Override
-    public void onPostResume() {
-        super.onPostResume();
-        Log.d(TAG, "on post resume");
-
-        // global search intent
-        Intent intent = getIntent();
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            intent.setAction(Intent.ACTION_MAIN);
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            DDGActionBarManager.getInstance().setSearchBarText(query);
-            BusProvider.getInstance().post(new WebViewSearchWebTermEvent(query));
-        }
-        else if(intent.getBooleanExtra("widget", false)) {
-            if(!getSearchField().getText().toString().equals("")) {
-                DDGActionBarManager.getInstance().clearSearchBar();
-            }
-            displayScreen(SCREEN.SCR_SEARCH, true);
-        }
-        else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
-            searchOrGoToUrl(intent.getDataString());
-        }
-        else if(intent.getBooleanExtra("assist", false)) {
-            assistAction = true;
-            keyboardService.showKeyboard(getSearchField());
-        }
-        else if(Intent.ACTION_ASSIST.equals(intent.getAction())){
-            assistAction = true;
-            keyboardService.showKeyboard(getSearchField());
-        }
-        else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
-            Fragment fragment = fragmentManager.findFragmentByTag(WebFragment.TAG);
-            if(fragmentManager.findFragmentByTag(WebFragment.TAG)== null || !fragment.isVisible()) {
-                displayScreen(SCREEN.SCR_WEBVIEW, false);
-            }
-        }
-    }
 
 	@Override
 	public void onPause() {
@@ -907,7 +904,7 @@ public class DuckDuckGo extends ActionBarActivity {
             fragmentManager.beginTransaction().hide(fragmentManager.findFragmentByTag(tag)).commit();
         }
 
-        DDGActionBarManager.getInstance().updateActionBar(fragmentManager, DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+        DDGActionBarManager.getInstance().updateActionBar(fragmentManager, DDGControlVar.mDuckDuckGoContainer.currentFragmentTag, false);
 	}
 
 

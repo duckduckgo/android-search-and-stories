@@ -161,7 +161,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         }
     }
 
-    public void updateActionBar(FragmentManager fragmentManager, String tag) {
+    public void updateActionBar(FragmentManager fragmentManager, String tag, boolean backPressed) {
         Log.e("action bar manager", "update actionbar: "+tag);
 
         SCREEN screen = DDGUtils.getScreenByTag(tag);
@@ -325,8 +325,16 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 break;
         }
 
+        /*
         if(!tag.equals(SearchFragment.TAG) && !tag.equals(SearchFragment.TAG_HOME_PAGE)) {
             keyboardService.hideKeyboardDelayed(searchField);
+        }*/
+        if(backPressed || DDGControlVar.mDuckDuckGoContainer.prevFragmentTag.equals(SearchFragment.TAG)
+                || DDGControlVar.mDuckDuckGoContainer.prevFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
+            Log.e("aaa", "prev screen == search, hide keyboard");
+            keyboardService.hideKeyboardDelayed(searchField);
+        } else if((tag.equals(SearchFragment.TAG) || tag.equals(SearchFragment.TAG_HOME_PAGE))) {
+            keyboardService.showKeyboard(searchField);
         }
     }
 
