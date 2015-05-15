@@ -13,7 +13,7 @@
     <string name="PrefGroupOther">Altro</string>
     <string name="PrefGroupAppFlow">Applicazione</string>
     <string name="PrefGroupPrivacy">Privacy</string>
-    <string name="PrefGroupFeedback">Feedback</string>
+    <string name="PrefGroupFeedback">Feedback</string>se
     <string name="PrefTheme">Tema</string>
     <string name="PrefThemeLight">Chiaro</string>
     <string name="PrefThemeDark">Scuro</string>
@@ -158,7 +158,7 @@
     <string name="NoChange">Nessuna modifica</string>
     
     <string name="OnlyOnPhone">Solo sul Telefono</string>
-    <string name="SelectAppToSend">Seleziona Applicazione da Inviare</string>
+    <string name="SelectAppToSend">Seleziona Applicazione per Inviare</string>
     
     <string name="ReadabilityOn">Leggibilità On</string>
     <string name="ReadabilityOff">Leggibilità Off</string>
