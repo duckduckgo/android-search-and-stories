@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.internal.view.menu.MenuBuilder;
@@ -283,6 +284,18 @@ public class WebFragment extends Fragment {
 				contentDownloader.downloadContent(url, mimetype);
 			}
 		});
+
+        //temporary fix until next appcompat release
+        //https://code.google.com/p/android/issues/detail?id=80434
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB && Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            mainWebView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    return true;
+                }
+            });
+            mainWebView.setLongClickable(false);
+        }
 
         webMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.feed, webMenu);
