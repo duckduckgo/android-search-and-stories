@@ -88,8 +88,12 @@ public class DDGWebChromeClient extends WebChromeClient {
 			return;
 		} else {
 			if (customView!=null) {
+                try {
+                    customViewContainer.removeView(customView);
+                } catch(NullPointerException e) {
+                    e.printStackTrace();
+                }
 				customView.setVisibility(View.GONE);
-				customViewContainer.removeView(customView);
 				customView = null;
 				customViewContainer.setVisibility(View.GONE);
 				customViewCallback.onCustomViewHidden();

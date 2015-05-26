@@ -324,7 +324,7 @@ public class WebFragment extends Fragment {
 			return;
 		}
 
-		if (text.length() > 0) {
+		if (text!=null && text.length() > 0) {
 			java.net.URL searchAsUrl = null;
 			String modifiedText = null;
 			try {

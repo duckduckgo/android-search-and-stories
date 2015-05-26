@@ -11,6 +11,8 @@ import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.graphics.Typeface;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.webkit.CookieSyncManager;
+
 import com.duckduckgo.mobile.android.db.DdgDB;
 import com.duckduckgo.mobile.android.download.FileCache;
 import com.duckduckgo.mobile.android.download.ImageCache;
@@ -77,6 +79,7 @@ public class DDGApplication extends Application {
         db = new DdgDB(this);
 		fileCache = new FileCache(this.getApplicationContext());
 		imageCache.setFileCache(fileCache);
+        CookieSyncManager.createInstance(this);
 
         try {
             ApplicationInfo aInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);

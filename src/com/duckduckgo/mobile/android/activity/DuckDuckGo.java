@@ -161,13 +161,6 @@ public class DuckDuckGo extends ActionBarActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-		//TorIntegrationProvider.getInstance(this).prepareTorSettings();
-        DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings();
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "on create");
@@ -212,7 +205,9 @@ public class DuckDuckGo extends ActionBarActivity {
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     String tag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
                     if (tag != null) {
-                        DDGControlVar.mDuckDuckGoContainer.prevFragmentTag = DDGControlVar.mDuckDuckGoContainer.currentFragmentTag;
+                        if(!DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(tag)) {
+                            DDGControlVar.mDuckDuckGoContainer.prevFragmentTag = DDGControlVar.mDuckDuckGoContainer.currentFragmentTag;
+                        }
                         DDGControlVar.mDuckDuckGoContainer.currentFragmentTag = tag;
                         if (!tag.equals(WebFragment.TAG) && !DDGControlVar.mDuckDuckGoContainer.webviewShowing) {
                             DDGControlVar.mDuckDuckGoContainer.prevScreen = DDGControlVar.mDuckDuckGoContainer.currentScreen;
@@ -255,20 +250,29 @@ public class DuckDuckGo extends ActionBarActivity {
             if(!getSearchField().getText().toString().equals("")) {
                 DDGActionBarManager.getInstance().clearSearchBar();
             }
-            displayScreen(SCREEN.SCR_SEARCH, true);
+            if(!DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG)
+                    && !DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
+                displayScreen(SCREEN.SCR_SEARCH, true);
+            }
         }
         else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
             searchOrGoToUrl(intent.getDataString());
         }
-        else if(intent.getBooleanExtra("assist", false)) {
+        else if(false && intent.getBooleanExtra("assist", false)) {
             assistAction = true;
             //keyboardService.showKeyboard(getSearchField());
-            displayScreen(SCREEN.SCR_SEARCH, true);
+            if(!DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG)
+                    && !DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
+                displayScreen(SCREEN.SCR_SEARCH, true);
+            }
         }
         else if(Intent.ACTION_ASSIST.equals(intent.getAction())){
             assistAction = true;
             //keyboardService.showKeyboard(getSearchField());
-            displayScreen(SCREEN.SCR_SEARCH, true);
+            if(!DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG)
+                    && !DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
+                displayScreen(SCREEN.SCR_SEARCH, true);
+            }
         }
         else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
             Fragment fragment = fragmentManager.findFragmentByTag(WebFragment.TAG);
@@ -542,11 +546,18 @@ public class DuckDuckGo extends ActionBarActivity {
         DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //TorIntegrationProvider.getInstance(this).prepareTorSettings();
+        DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings();
+        BusProvider.getInstance().register(this);
+    }
+
 	@Override
 	public void onResume() {
 		super.onResume();
         Log.d(TAG, "on resume");
-		BusProvider.getInstance().register(this);
 		
         DDGUtils.displayStats.refreshStats(this);
 
@@ -565,8 +576,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	public void onPause() {
 		super.onPause();
         Log.d(TAG, "on pause");
-		
-		BusProvider.getInstance().unregister(this);
+
 
 		PreferencesManager.saveReadArticles();
 		
@@ -578,6 +588,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	protected void onStop() {
 		PreferencesManager.saveReadArticles();
 		super.onStop();
+        BusProvider.getInstance().unregister(this);
         Log.d(TAG, "on stop");
 	}
 	

@@ -331,10 +331,13 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         }*/
         if(backPressed || DDGControlVar.mDuckDuckGoContainer.prevFragmentTag.equals(SearchFragment.TAG)
                 || DDGControlVar.mDuckDuckGoContainer.prevFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
-            Log.e("aaa", "prev screen == search, hide keyboard");
+            Log.e("search DDGactionbar", "prev screen == search, hide keyboard");
             keyboardService.hideKeyboardDelayed(searchField);
         } else if((tag.equals(SearchFragment.TAG) || tag.equals(SearchFragment.TAG_HOME_PAGE))) {
+            Log.e("search DDGactionbar", "show keyboard");
             keyboardService.showKeyboard(searchField);
+        } else {
+            Log.e("search DDGactionbar", "do not show keyboard");
         }
     }
 

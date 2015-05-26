@@ -191,7 +191,9 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
 
     @Subscribe
     public void onShowAutoCompleteResultsEvent(ShowAutoCompleteResultsEvent event) {
-        showAutoCompleteResults(event.isVisible);
+        if(getActivity()!=null) {
+            showAutoCompleteResults(event.isVisible);
+        }
 
     }
 

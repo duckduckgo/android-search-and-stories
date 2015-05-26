@@ -414,7 +414,7 @@ public final class DDGUtils {
             url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
         }
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-        context.startActivity(browserIntent);
+        execIntentIfSafe(context, browserIntent);
     }
 
     public static String getUrlToDisplay(String url) {

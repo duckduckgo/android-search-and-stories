@@ -340,7 +340,7 @@ public class RecyclerRecentFeedAdapter extends RecyclerView.Adapter<RecyclerRece
     }
 
     public void resetFilterCategory() {
-        Log.e("aaa", "inside reset filter");
+        //Log.e("aaa", "inside reset filter");
         //for(HashMap.Entry<Integer, FeedObject> entry : filteredCategory.entrySet()) {
             //Log.e("aaa", "key: "+entry.getKey()+" - value: "+entry.getValue().getTitle());
             //filteredData.add(entry.getKey(), entry.getValue());
@@ -422,13 +422,8 @@ public class RecyclerRecentFeedAdapter extends RecyclerView.Adapter<RecyclerRece
 
 
     private void cancelSourceFilter() {
-        for(HashMap.Entry<Integer, FeedObject> entry : filterData.entrySet()) {
-            Log.e("aaa", "entry key: "+entry.getKey()+" - value: "+entry.getValue().getTitle());
-        }
-        Log.e("aaa", "---");
         SortedSet<Integer> keys = new TreeSet<Integer>(filterData.keySet());
         for(Integer key : keys) {
-            Log.e("aaa", "entry value: "+key+" - value: "+filterData.get(key).getTitle().substring(0, 5));
             FeedObject feed = filterData.get(key);
             boolean removeItem = false;
             if(!data.contains(feed) && (DDGControlVar.targetCategory==null || DDGControlVar.targetCategory.equals(feed.getType()))) {
