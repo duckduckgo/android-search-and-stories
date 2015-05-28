@@ -616,7 +616,7 @@ public class DuckDuckGo extends ActionBarActivity {
         else if(fragmentManager.getBackStackEntryCount()==1) {
             finish();
         }
-		else {
+		else if(!isFinishing()) {
             DDGControlVar.hasUpdatedFeed = false;
             super.onBackPressed();
 		}
@@ -840,9 +840,10 @@ public class DuckDuckGo extends ActionBarActivity {
             }
             transaction.addToBackStack(newTag);
             transaction.commit();
+            fragmentManager.executePendingTransactions();
 
             if(newTag.equals(WebFragment.TAG)) {
-                fragmentManager.executePendingTransactions();
+                //fragmentManager.executePendingTransactions();
             }
 
         }
@@ -1144,7 +1145,9 @@ public class DuckDuckGo extends ActionBarActivity {
     @Subscribe
     public void onRemoveWebFragmentEvent(RemoveWebFragmentEvent event) {
         //Log.e("aaa", "remove web fragment");
-        fragmentManager.popBackStackImmediate();
+        if(!isFinishing()) {
+            fragmentManager.popBackStackImmediate();
+        }
     }
 
     @Subscribe

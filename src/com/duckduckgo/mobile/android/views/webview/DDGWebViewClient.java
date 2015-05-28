@@ -6,6 +6,7 @@ import java.net.URLDecoder;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.MailTo;
@@ -33,10 +34,12 @@ import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 
 public class DDGWebViewClient extends WebViewClient {
 	private boolean mLoaded = false;
-	
+
+    Context context;
 	WebFragment fragment;
 	
-	public DDGWebViewClient(WebFragment fragment) {
+	public DDGWebViewClient(Context context, WebFragment fragment) {
+    this.context = context;
 		this.fragment = fragment;
 	}
 	 	
@@ -52,12 +55,12 @@ public class DDGWebViewClient extends WebViewClient {
 			if(url.startsWith("mailto:")){
                 MailTo mt = MailTo.parse(url);
                 Intent i = DDGUtils.newEmailIntent(mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
-                fragment.startActivity(i);
+                context.startActivity(i);
                 return true;
             }
 			else if(url.startsWith("tel:")){
                 Intent i = DDGUtils.newTelIntent(url);
-                fragment.startActivity(i);
+                context.startActivity(i);
                 return true;
 			}
 			else if(url.startsWith("file:///android_asset/webkit/")){
@@ -66,7 +69,7 @@ public class DDGWebViewClient extends WebViewClient {
 			else if(!(url.startsWith("http:") || url.startsWith("https:"))) {
                 // custom handling, there can be a related app
 				Intent customIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-				DDGUtils.execIntentIfSafe(fragment.getActivity(), customIntent);
+				DDGUtils.execIntentIfSafe(context, customIntent);
 				return true;
 			}
 			else {

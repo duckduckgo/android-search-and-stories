@@ -270,7 +270,7 @@ public class WebFragment extends Fragment {
 		// get default User-Agent string for reuse later
 		mWebViewDefaultUA = mainWebView.getSettings().getUserAgentString();
 
-		mainWebView.setWebViewClient(new DDGWebViewClient(this));
+		mainWebView.setWebViewClient(new DDGWebViewClient(getActivity(), this));
 		View container = getActivity().findViewById(R.id.activityContainer);
 		mainWebView.setWebChromeClient(new DDGWebChromeClient(this, container));
 
