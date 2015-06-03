@@ -839,8 +839,14 @@ public class DuckDuckGo extends ActionBarActivity {
                 transaction.hide(currentFragment);
             }
             transaction.addToBackStack(newTag);
-            transaction.commit();
-            fragmentManager.executePendingTransactions();
+            if(!isFinishing()) {
+                transaction.commit();
+                fragmentManager.executePendingTransactions();
+            }
+
+          if(newTag.equals(SearchFragment.TAG)) {
+            //finish();
+          }
 
             if(newTag.equals(WebFragment.TAG)) {
                 //fragmentManager.executePendingTransactions();

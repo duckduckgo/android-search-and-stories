@@ -280,11 +280,8 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
                 String body = null;
                 try {
                     String query = URLEncoder.encode(constraint.toString());
-                    Log.e("aaa", "auto complete query: "+query);
                     body = DDGNetworkConstants.mainClient.doGetString(DDGConstants.AUTO_COMPLETE_URL + query);
-                    Log.e("aaa", "body: "+body.toString());
                     json = new JSONArray(body);
-                    Log.e("aaa", "json: "+json);
                 } catch (JSONException jex) {
                     Log.e(TAG, jex.getMessage(), jex);
                 } catch (DDGHttpException conException) {

@@ -169,11 +169,13 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
                             DDGControlVar.userAllowedSources.add(holder.id);
                             DDGControlVar.userDisallowedSources.remove(holder.id);
                             PreferencesManager.saveUserAllowedSources(DDGControlVar.userAllowedSources);
+                            PreferencesManager.saveUserDisallowedSources(DDGControlVar.userDisallowedSources);
                         }
                         else {
                             DDGControlVar.userDisallowedSources.add(holder.id);
                             DDGControlVar.userAllowedSources.remove(holder.id);
                             PreferencesManager.saveUserDisallowedSources(DDGControlVar.userDisallowedSources);
+                            PreferencesManager.saveUserAllowedSources(DDGControlVar.userAllowedSources);
                         }
 
                         DDGControlVar.hasUpdatedFeed = false;
