@@ -123,6 +123,8 @@ public class WebFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+        //setHasOptionsMenu(true);
+
 		setRetainInstance(true);
         context = getActivity();
         init();
@@ -137,13 +139,13 @@ public class WebFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        setHasOptionsMenu(false);
+        //setHasOptionsMenu(false);
     }
 
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        setHasOptionsMenu(false);
+        //setHasOptionsMenu(false);
         if(!hidden) {
             BusProvider.getInstance().post(new SearchBarSetTextEvent(mainWebView.getUrl()));
         }

@@ -26,8 +26,9 @@ public class TorIntegration {
         if(!isTorSupported()){
             return false;
         }
-        DDGNetworkConstants.initializeMainClient(context.getApplication(), enableTor);
+        //DDGNetworkConstants.initializeMainClient(context.getApplication(), enableTor);
         if(enableTor){
+            DDGNetworkConstants.initializeMainClient(context.getApplication(), enableTor);
             enableOrbotProxy();
             requestOrbotInstallAndStart();
         }
@@ -56,7 +57,7 @@ public class TorIntegration {
 
     private void enableOrbotProxy() {
         try {
-            WebkitProxy.setProxy("com.duckduckgo.mobile.android.DDGApplication", DDGNetworkConstants.getWebView().getContext().getApplicationContext(), DDGNetworkConstants.PROXY_HOST, DDGNetworkConstants.PROXY_HTTP_PORT);
+            WebkitProxy.setProxy("com.duckduckgo.mobile.android.DDGApplication", DDGNetworkConstants.getWebView().getContext().getApplicationContext(), DDGNetworkConstants.getWebView(), DDGNetworkConstants.PROXY_HOST, DDGNetworkConstants.PROXY_HTTP_PORT);
         } catch (Exception e) {
             // what should we do here? Discuss!
             e.printStackTrace();
@@ -65,7 +66,7 @@ public class TorIntegration {
 
     public void enableOrbotProxy(WebView webView) {
         try {
-            WebkitProxy.setProxy("com.duckduckgo.mobile.android.DDGApplication", webView.getContext().getApplicationContext(), DDGNetworkConstants.PROXY_HOST, DDGNetworkConstants.PROXY_HTTP_PORT);
+            WebkitProxy.setProxy("com.duckduckgo.mobile.android.DDGApplication", webView.getContext().getApplicationContext(), webView, DDGNetworkConstants.PROXY_HOST, DDGNetworkConstants.PROXY_HTTP_PORT);
         } catch (Exception e) {
             // what should we do here? Discuss!
             e.printStackTrace();

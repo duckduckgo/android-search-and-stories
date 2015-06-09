@@ -22,7 +22,7 @@ public class DDGControlVar {
 	public static String targetSource = null;
     public static String targetCategory = null;
 		
-	public static Set<String> readArticles = new HashSet<String>(); 
+	public static Set<String> readArticles = new HashSet<String>();
 	
 	public static boolean homeScreenShowing = true;
 	

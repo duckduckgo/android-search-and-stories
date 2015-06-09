@@ -80,7 +80,7 @@ public class DDGApplication extends Application {
 		fileCache = new FileCache(this.getApplicationContext());
 		imageCache.setFileCache(fileCache);
         CookieSyncManager.createInstance(this);
-
+/*
         try {
             ApplicationInfo aInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
             if (aInfo.metaData != null) {
@@ -92,7 +92,7 @@ public class DDGApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-		
+*/
 		try {
 			PackageInfo pInfo;
 			pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
@@ -115,9 +115,9 @@ public class DDGApplication extends Application {
 
 		// set Helvetica Neue Medium
 //		DDGConstants.TTF_HELVETICA_NEUE_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/HelveticaNeue_Medium.ttf");
-		DDGConstants.TTF_ROBOTO_BOLD = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Bold.ttf");		
-		DDGConstants.TTF_ROBOTO_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Medium.ttf");	
-		
+		//DDGConstants.TTF_ROBOTO_BOLD = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Bold.ttf");
+		//DDGConstants.TTF_ROBOTO_MEDIUM = Typeface.createFromAsset(getAssets(), "fonts/Roboto_Medium.ttf");
+
 		DDGControlVar.START_SCREEN = PreferencesManager.getActiveStartScreen();
 		DDGControlVar.regionString = PreferencesManager.getRegion();
         DDGControlVar.useExternalBrowser = PreferencesManager.getUseExternalBrowser();
@@ -136,7 +136,7 @@ public class DDGApplication extends Application {
 				}
 			}
 		}
-     
+
 	}
 
 

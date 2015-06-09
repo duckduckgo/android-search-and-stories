@@ -12,8 +12,11 @@ import android.view.ViewParent;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.Toast;
 
-public class DDGAutoCompleteTextView extends AutoCompleteTextView implements View.OnLongClickListener {
+import com.squareup.otto.Subscribe;
+
+public class DDGAutoCompleteTextView extends EditText implements View.OnLongClickListener {
 
     private android.view.ActionMode actionMode;
     private android.view.ActionMode.Callback actionModeCallback;
@@ -56,7 +59,7 @@ public class DDGAutoCompleteTextView extends AutoCompleteTextView implements Vie
 		return super.dispatchKeyEvent(event);
 	}
 
-	public void addBang() {
+    public void addBang() {
 		if(isCursorAtEnd() && !lastCharIsSpaceOrNull()){
             Log.e("aaa", "add bang 1");
             getText().insert(getSelectionStart(), " !");
@@ -70,7 +73,7 @@ public class DDGAutoCompleteTextView extends AutoCompleteTextView implements Vie
 
     @Override
     public boolean onLongClick(View v) {
-        return false;
+        return true;
     }
 
 	private boolean lastCharIsSpaceOrNull(){

@@ -15,6 +15,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -112,7 +113,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		setRetainInstance(true);
-        setHasOptionsMenu(false);
+        //setHasOptionsMenu(true);
         activity = getActivity();
 		init();
 	}
@@ -145,13 +146,20 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 			mainFeedTask = null;
 		}
 	}
+/*
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_stories).setEnabled(false);
+        super.onCreateOptionsMenu(menu, inflater);
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
 
-        @Override
+    @Override
     public void onRefresh() {
         // refresh the list
         DDGControlVar.hasUpdatedFeed = false;

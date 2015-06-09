@@ -332,6 +332,7 @@ public class RecyclerRecentFeedAdapter extends RecyclerView.Adapter<RecyclerRece
                 menu.findItem(R.id.action_add_favorite).setVisible(true);
                 menu.findItem(R.id.action_remove_favorite).setVisible(false);
             }
+            menu.findItem(R.id.action_remove_recent).setVisible(true);
             feedMenu.setFeed(feed);
             feedMenu.setMenu(menu);
             feedMenu.showFeedMenu(anchor);

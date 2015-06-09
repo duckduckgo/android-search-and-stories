@@ -9,11 +9,15 @@ import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBar;
+import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,10 +43,12 @@ import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.fragment.SearchFragment;
 import com.duckduckgo.mobile.android.fragment.SourcesFragment;
+import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
+import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.SlidingTabLayout;
 import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
@@ -70,12 +76,21 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
     private boolean isTabAnimating = false;
 
+    private DDGOverflowMenu overflowMenu = null;
+    private Menu mainMenu;
+    //private Menu webMenu = null;
+    //private Menu webHeaderMenu = null;
+    //private Menu webFooterMenu = null;
+    private MenuInflater inflater;
+
     private Toolbar toolbar;
     private ActionBar actionBar;
 
     private View searchBar;
 
     private SCREEN screen;
+
+    private String tag;
 
     private static final DDGActionBarManager DDG_ACTION_BAR_MANAGER = new DDGActionBarManager();
 
@@ -92,6 +107,9 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         this.activity = activity;
         this.context = context;
         this.toolbar = toolbar;
+        this.inflater = activity.getMenuInflater();
+
+        //toolbar = (Toolbar) toolbarContainer.findViewById(R.id.toolbar);
 
         searchBar = toolbar.findViewById(R.id.searchBar);
         searchFieldContainer = (RelativeLayout) toolbar.findViewById(R.id.search_container);
@@ -116,6 +134,18 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         overflowButton.setOnLongClickListener(this);
 
         keyboardService = new KeyboardService(activity);
+
+        mainMenu = new MenuBuilder(activity);
+        inflater.inflate(R.menu.main, mainMenu);
+
+        /*
+        webMenu = new MenuBuilder(activity);
+        inflater.inflate(R.menu.feed, webMenu);
+        webHeaderMenu = new MenuBuilder(activity);
+        inflater.inflate(R.menu.web_navigation, webHeaderMenu);
+        webFooterMenu = new MenuBuilder(activity);
+        inflater.inflate(R.menu.web_settings, webFooterMenu);
+        */
     }
 
     public DDGAutoCompleteTextView getSearchField() {
@@ -124,6 +154,10 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
     public SlidingTabLayout getSlidingTabLayout() {
         return this.slidingTabLayout;
+    }
+
+    public Toolbar getToolbar() {
+        return this.toolbar;
     }
 
     @Override
@@ -140,7 +174,12 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 getSearchField().addBang();
                 break;
             case R.id.overflow:
-                BusProvider.getInstance().post(new OverflowButtonClickEvent(toolbar));
+                if(tag.equals(WebFragment.TAG)) {
+                    BusProvider.getInstance().post(new OverflowButtonClickEvent(toolbar));
+                } else {
+                    showMenu(tag);
+                }
+                //BusProvider.getInstance().post(new OverflowButtonClickEvent(toolbar));
             default:
                 break;
         }
@@ -164,6 +203,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
     public void updateActionBar(FragmentManager fragmentManager, String tag, boolean backPressed) {
         Log.e("action bar manager", "update actionbar: "+tag);
 
+        this.tag = tag;
         SCREEN screen = DDGUtils.getScreenByTag(tag);
         this.screen = screen;
 
@@ -185,6 +225,10 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         overflowVisibleRightMargin = actionButtonVisibleLeftMargin;
         int leftMargin , rightMargin;
 
+        for(int i=0; i<mainMenu.size(); i++) {
+            mainMenu.getItem(i).setEnabled(true);
+        }
+
         switch(screen) {
             case SCR_STORIES:
                 clearSearchBar();
@@ -193,6 +237,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 leftMargin = isStartingScreen ? standardMargin : actionButtonVisibleLeftMargin;
                 rightMargin = overflowVisibleRightMargin;
 
+                //setActionBarMargins(leftMargin, standardMargin, rightMargin, standardMargin);
                 setActionBarMargins(leftMargin, standardMargin, rightMargin, standardMargin);
 
                 setHomeButton(!isStartingScreen);
@@ -205,6 +250,11 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setTabLayout(false);
 
                 setProgressBarVisible(false);
+
+                MenuItem feedItem = mainMenu.findItem(R.id.action_stories);
+                if(feedItem!=null) {
+                    feedItem.setEnabled(false);
+                }
                 break;
             case SCR_RECENTS:
 
@@ -226,6 +276,11 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setHomeButtonMarginTop(false);
 
                 setProgressBarVisible(false);
+
+                MenuItem recentItem = mainMenu.findItem(R.id.action_recents);
+                if(recentItem!=null) {
+                    recentItem.setEnabled(false);
+                }
                 break;
             case SCR_FAVORITE:
                 clearSearchBar();
@@ -246,6 +301,11 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 setHomeButtonMarginTop(false);
 
                 setProgressBarVisible(false);
+
+                MenuItem favoriteItem = mainMenu.findItem(R.id.action_favorites);
+                if(favoriteItem!=null) {
+                    favoriteItem.setEnabled(false);
+                }
                 break;
             case SCR_WEBVIEW:
                 showSearchField();
@@ -331,8 +391,12 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         }*/
         if(backPressed || DDGControlVar.mDuckDuckGoContainer.prevFragmentTag.equals(SearchFragment.TAG)
                 || DDGControlVar.mDuckDuckGoContainer.prevFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
-            Log.e("search DDGactionbar", "prev screen == search, hide keyboard");
+            //Log.e("search DDGactionbar", "prev screen == search, hide keyboard");
             keyboardService.hideKeyboardDelayed(searchField);
+
+            //keyboardService.hideKeyboardB(searchField);
+
+            //keyboardService.hideKeyboard(searchField);
         } else if((tag.equals(SearchFragment.TAG) || tag.equals(SearchFragment.TAG_HOME_PAGE))) {
             Log.e("search DDGactionbar", "show keyboard");
             keyboardService.showKeyboard(searchField);
@@ -518,6 +582,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
             if(overflowButton.getVisibility()==View.GONE) {
                 overflowButton.setAnimation(fadeIn);
                 overflowButton.setVisibility(View.VISIBLE);
+                //overflowButton.setVisibility(View.GONE);
             }
         } else {
             if(overflowButton.getVisibility()==View.VISIBLE) {
@@ -681,8 +746,35 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         resetSearchBar();
     }
 
+    public void showKeyboard() {
+        keyboardService.showKeyboard(searchField);
+    }
+
+    public void hideKeyboard() {
+        keyboardService.hideKeyboard(searchField);
+    }
+
+    public void hideKeyboardDelayed() {
+        keyboardService.hideKeyboardDelayed(searchField);
+    }
+
     public void resetSearchBar() {
         //dropShadowDivider.setVisibility(View.VISIBLE);
+    }
+
+    public void showMenu(String tag) {
+        overflowMenu = new DDGOverflowMenu(activity);
+        //Menu menu;
+        /*
+        if(tag.equals(WebFragment.TAG)) {
+            overflowMenu.setHeaderMenu(webHeaderMenu);
+            overflowMenu.setFooterButton(webFooterMenu);
+            overflowMenu.setMenu(webMenu);
+        } else {*/
+        overflowMenu.setMenu(mainMenu);
+        //}
+
+        overflowMenu.show(overflowButton);
     }
 
     public class ProgressBarAnimation extends Animation {

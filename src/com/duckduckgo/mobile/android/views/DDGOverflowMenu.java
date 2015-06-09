@@ -323,11 +323,9 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     @Override
     public void dismiss() {
+        Log.e("DDG OVERFLOW", "inside dismiss");
         if(headerItems!=null) {
             BusProvider.getInstance().unregister(this);
-        }
-        if(backgroundDimmed) {
-            BusProvider.getInstance().post(new DimBackgroundEvent(false));
         }
         super.dismiss();
     }
@@ -340,7 +338,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.e("aaa", "on item clicked: "+menuItems.get(position));
+        Log.e("DDG OVERFLOW", "on item clicked: "+menuItems.get(position));
         if(feed==null) {
             BusProvider.getInstance().post(new WebViewItemMenuClickEvent(menuItems.get(position)));
         } else {
@@ -351,6 +349,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        dismiss();
     }
 
     @Override

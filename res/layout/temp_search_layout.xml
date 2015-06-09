@@ -34,8 +34,9 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/searchlistview_item_text_margin"
-        android:layout_toRightOf="@id/item_icon"/><!--
-        android:layout_toLeftOf="@id/item_paste"/>-->
+        android:layout_marginRight="@dimen/searchlistview_item_text_margin"
+        android:layout_toRightOf="@id/item_icon"
+        android:layout_toLeftOf="@id/item_paste"/>
 
     <TextView
         android:id="@+id/item_text2"

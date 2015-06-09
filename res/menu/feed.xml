@@ -18,14 +18,20 @@
           android:orderInCategory="30"
           android:showAsAction="never" />
 
+    <item android:id="@+id/action_remove_recent"
+          android:title="Remove"
+          android:visible="false"
+          android:orderInCategory="40"
+          android:showAsAction="never"/>
+
     <item android:id="@+id/action_share"
           android:title="@string/action_share"
-          android:orderInCategory="40"
+          android:orderInCategory="50"
           android:showAsAction="never" />
 
     <item android:id="@+id/action_external"
           android:title="@string/action_view_external"
-          android:orderInCategory="50"
+          android:orderInCategory="60"
           android:showAsAction="never" />
 
 </menu>

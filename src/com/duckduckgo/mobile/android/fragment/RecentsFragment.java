@@ -67,6 +67,8 @@ public class RecentsFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        //setHasOptionsMenu(true);
+
         int width;
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
@@ -107,6 +109,13 @@ public class RecentsFragment extends Fragment {
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         DDGActionBarManager.getInstance().getSlidingTabLayout().setViewPager(viewPager);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        menu.findItem(R.id.action_recents).setEnabled(false);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override

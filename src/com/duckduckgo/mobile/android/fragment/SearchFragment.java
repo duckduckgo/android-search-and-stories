@@ -24,6 +24,7 @@ import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.adapters.FavoriteResultCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.adapters.SearchAdapter;
@@ -81,6 +82,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //setHasOptionsMenu(true);
 
         search_container = (LinearLayout) fragmentView.findViewById(R.id.search_container);
 
@@ -116,7 +118,6 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     @Override
     public void onResume() {
         super.onResume();
-        setHasOptionsMenu(false);
         syncAdapters();
 
         if(DDGControlVar.isAutocompleteActive) {
@@ -153,6 +154,12 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
                 autoCompleteResultListView.setAdapter(DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter);
                 DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
             }
+        } else {
+            Log.e("DDG OVERFLOW", "search hidden");
+            if(overflowMenu!=null && overflowMenu.isShowing()) {
+                overflowMenu.dismiss();
+            }
+            //DDGActionBarManager.getInstance().hideKeyboardDelayed();
         }
     }
 

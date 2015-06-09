@@ -47,7 +47,8 @@ public class PreferencesManager {
 	}
 
     public static int getUseExternalBrowser() {
-        return Integer.valueOf(DDGApplication.getSharedPreferences().getString("useExternalBrowserPref", "0"));
+        int useExternalBrowser = Integer.valueOf(DDGApplication.getSharedPreferences().getString("useExternalBrowserPref", "0"));
+        return useExternalBrowser<=1 ? useExternalBrowser : 0;
     }
 	
 	public static boolean getAutocomplete() {
@@ -97,7 +98,7 @@ public class PreferencesManager {
 		editor.remove("ptrHeaderTextSize");
 		editor.remove("ptrHeaderSubTextSize");
 		editor.remove("leftTitleTextSize");
-        editor.remove("useExternalBrowserPref");
+        //editor.remove("useExternalBrowserPref");
 		editor.commit();
 	}
 	

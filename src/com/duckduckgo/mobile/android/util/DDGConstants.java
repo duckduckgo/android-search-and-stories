@@ -18,8 +18,8 @@ public class DDGConstants {
     public static final String HOCKEY_APP_ID = "857ca81e2cd05ac6075c2d7c7fefe053";
 
 //	public static Typeface TTF_HELVETICA_NEUE_MEDIUM = null;
-	public static Typeface TTF_ROBOTO_BOLD = null;	
-	public static Typeface TTF_ROBOTO_MEDIUM = null;	
+	//public static Typeface TTF_ROBOTO_BOLD = null;
+	//public static Typeface TTF_ROBOTO_MEDIUM = null;
 	
 	public static final int FONT_SEEKBAR_MID = 5;
 

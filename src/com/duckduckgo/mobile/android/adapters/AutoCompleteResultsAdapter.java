@@ -143,7 +143,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 
             //Drawable acDrawable = suggestion.getDrawable();
             String imageUrl = suggestion.getImageUrl();
-            if(imageUrl != null && imageUrl.length() != 0 && !imageUrl.contains("search-suggestions_default.png")) {
+            if(imageUrl != null && imageUrl.length() != 0){// && !imageUrl.contains("search-suggestions_default.png")) {
                 Log.e("aaa", "image url: " + imageUrl);
                 roundTransform.setRadius(holder.icon.getCornerRadius());
                 //scaleTransform.setTarget(holder.icon, 0.6);

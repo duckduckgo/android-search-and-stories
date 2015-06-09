@@ -21,7 +21,16 @@ public class KeyboardService {
             public void run() {
                 hideKeyboard(view);
             }
-        }, 200);
+        }, 100);
+    }
+
+    public void hideKeyboardB(final View view) {
+        view.post(new Runnable() {
+            @Override
+            public void run() {
+                hideKeyboard(view);
+            }
+        });
     }
 
     public void hideKeyboard(final View view) {

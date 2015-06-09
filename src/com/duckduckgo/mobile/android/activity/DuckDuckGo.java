@@ -162,6 +162,7 @@ public class DuckDuckGo extends ActionBarActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.e("DDG loading", "activity on create");
         super.onCreate(savedInstanceState);
         Log.d(TAG, "on create");
 
@@ -178,7 +179,7 @@ public class DuckDuckGo extends ActionBarActivity {
 
         if(savedInstanceState != null)
         	savedState = true;
-        
+
         DDGControlVar.isAutocompleteActive = PreferencesManager.getAutocomplete();
         // always refresh on start
         DDGControlVar.hasUpdatedFeed = false;
@@ -190,9 +191,16 @@ public class DuckDuckGo extends ActionBarActivity {
         activityContainer = (FrameLayout) findViewById(R.id.activityContainer);
 		fragmentContainer = (FrameLayout) findViewById(R.id.fragmentContainer);
 
+        //View toolbarContainer = findViewById(R.id.toolbar_container);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         DDGActionBarManager.getInstance().init(this, this, toolbar);
+
+        //toolbar = DDGActionBarManager.getInstance().getToolbar();
+        //boolean tIsNull = toolbar == null;x
+        //Log.e("aaa", "toolbar == null: "+tIsNull);
+
         initSearchField();
 
 		fragmentManager = getSupportFragmentManager();
@@ -525,9 +533,17 @@ public class DuckDuckGo extends ActionBarActivity {
 				break;
 		}
 
+        /*
+        if(backPressed || DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG) || DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
+            Log.e(TAG+"displayscr", "change fragment, should hide keyboard");
+            DDGActionBarManager.getInstance().hideKeyboardDelayed();
+        } else {
+            Log.e(TAG+"displayscr", "change fragment, should NOT hide keyboard");
+        }*/
+
         if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag==SearchFragment.TAG_HOME_PAGE
                 && (!tag.equals(SearchFragment.TAG) && !tag.equals(SearchFragment.TAG_HOME_PAGE))) {
-            keyboardService.hideKeyboardDelayed(getSearchField());
+            //keyboardService.hideKeyboardDelayed(getSearchField());
         }
         if(!tag.equals("")) {
             changeFragment(fragment, tag, displayHomeScreen);
@@ -556,8 +572,9 @@ public class DuckDuckGo extends ActionBarActivity {
 
 	@Override
 	public void onResume() {
+        Log.e("DDG loading", "activity on resume");
 		super.onResume();
-        Log.d(TAG, "on resume");
+        Log.d(TAG, "on resume");//DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings();
 		
         DDGUtils.displayStats.refreshStats(this);
 
@@ -570,7 +587,32 @@ public class DuckDuckGo extends ActionBarActivity {
 			new ScanAppsTask(getApplicationContext()).execute();
 			DDGControlVar.hasAppsIndexed = true;
 		}
+        Log.e("DDG loading", "intent get action: "+getIntent().getAction());
+        Log.e("DDG loading", "activity on resume end");
 	}
+/*
+    @Override
+    public void onPostResume() {
+        super.onPostResume();
+        Log.e("DDG loading", "on post resume");
+        Intent intent = getIntent();
+        boolean isnull = intent==null;
+        Log.e("DDG loading", "intent==null: "+isnull);
+        Log.e("DDG loading", "intent action: "+intent.getAction());
+        if(intent!=null && Intent.ACTION_ASSIST.equals(intent.getAction())) {
+            Log.e("DDG loading", "if 1");
+            assistAction = true;
+            if (!DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG)
+                    && !DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
+                Log.e("DDG loading", "if 2");
+                displayScreen(SCREEN.SCR_SEARCH, true);
+            } else {
+                Log.e("DDG loading", "else 2");
+            }
+        } else {
+            Log.e("DDG loading", "else 1");
+        }
+    }*/
 
 	@Override
 	public void onPause() {
@@ -785,11 +827,19 @@ public class DuckDuckGo extends ActionBarActivity {
     }
 
 	private void changeFragment(Fragment newFragment, String newTag, boolean displayHomeScreen) {
-        Log.d(TAG, "change fragment, new tag: " + newTag);
-        Log.d(TAG, "new tag: " + newTag + " - current tag: " + DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+        Log.e(TAG, "change fragment, new tag: " + newTag);
+        Log.e(TAG, "new tag: " + newTag + " - current tag: " + DDGControlVar.mDuckDuckGoContainer.currentFragmentTag+" - prev tag: "+DDGControlVar.mDuckDuckGoContainer.prevFragmentTag);
         if(DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(newTag) && !displayHomeScreen) {
             return;
         }
+
+        /*
+        if(backPressed || DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG) || DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
+            Log.e(TAG, "change fragment, should hide keyboard");
+            //DDGActionBarManager.getInstance().hideKeyboardDelayed();
+        } else {
+            Log.e(TAG, "change fragment, should NOT hide keyboard");
+        }*/
 
         Fragment searchFragment = fragmentManager.findFragmentByTag(SearchFragment.TAG);
 
@@ -807,8 +857,10 @@ public class DuckDuckGo extends ActionBarActivity {
                         fragmentManager.popBackStack();
                     }
                 }
-                removeTransaction.commit();
-                fragmentManager.executePendingTransactions();
+                if(!isFinishing()) {
+                    removeTransaction.commit();
+                    fragmentManager.executePendingTransactions();
+                }
             }
         }
 
@@ -842,15 +894,23 @@ public class DuckDuckGo extends ActionBarActivity {
             if(!isFinishing()) {
                 transaction.commit();
                 fragmentManager.executePendingTransactions();
-            }
-
-          if(newTag.equals(SearchFragment.TAG)) {
-            //finish();
-          }
-
-            if(newTag.equals(WebFragment.TAG)) {
-                //fragmentManager.executePendingTransactions();
-            }
+            }/*
+            if(backPressed || DDGControlVar.mDuckDuckGoContainer.prevFragmentTag.equals(SearchFragment.TAG)
+                    || DDGControlVar.mDuckDuckGoContainer.prevFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
+                Log.e("DuckDuckGo search", "prev screen == search, hide keyboard");
+                Log.e("DuckDuckGo search", "back pressed: "+backPressed);
+                Log.e("DuckDuckGo search", "current fragment tag: "+DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+                Log.e("DuckDuckGo search", "prev fragment tag: "+DDGControlVar.mDuckDuckGoContainer.prevFragmentTag);
+                //keyboardService.hideKeyboardDelayed(searchField);
+                //DDGActionBarManager.getInstance().hideKeyboard();
+                //DDGActionBarManager.getInstance().hideKeyboardDelayed();
+                //Log.e("search DDGactionbar", "don't hide");
+            } else {
+                Log.e("DuckDuckGo search", "don't hide");
+                Log.e("DuckDuckGo search", "back pressed: "+backPressed);
+                Log.e("DuckDuckGo search", "current fragment tag: "+DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+                Log.e("DuckDuckGo search", "prev fragment tag: "+DDGControlVar.mDuckDuckGoContainer.prevFragmentTag);
+            }*/
 
         }
 	}
@@ -1205,11 +1265,18 @@ public class DuckDuckGo extends ActionBarActivity {
                     Toast.makeText(this, R.string.ToastSaveStory, Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.action_remove_favorite:
-                    final long delResult = DDGApplication.getDB().makeItemUnfavorite(event.feed.getId());
-                    if(delResult != 0) {
+                    final long delFavResult = DDGApplication.getDB().makeItemUnfavorite(event.feed.getId());
+                    if(delFavResult != 0) {
                         syncAdapters();
                     }
                     Toast.makeText(this, R.string.ToastUnSaveStory, Toast.LENGTH_SHORT).show();
+                    break;
+                case R.id.action_remove_recent:
+                    final long delRecResult = DDGApplication.getDB().deleteHistoryByFeedId(event.feed.getId());
+                    if(delRecResult != 0) {
+                        syncAdapters();
+                    }
+                    Toast.makeText(this, R.string.ToastDeleteStoryInHistory, Toast.LENGTH_SHORT).show();
                     break;
                 case R.id.action_share:
                     Sharer.shareStory(this, event.feed.getTitle(), event.feed.getUrl());

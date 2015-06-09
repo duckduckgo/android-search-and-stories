@@ -69,6 +69,8 @@ public class FavoriteFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
+        //setHasOptionsMenu(true);
+
         int width;
 
         Display display = getActivity().getWindowManager().getDefaultDisplay();
