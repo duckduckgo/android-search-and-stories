@@ -137,6 +137,12 @@ public class WebFragment extends Fragment {
 	}
 
     @Override
+    public void onStart() {
+        super.onStart();
+        DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         //setHasOptionsMenu(false);
