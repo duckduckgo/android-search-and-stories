@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.AsyncTask;

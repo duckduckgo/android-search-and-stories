@@ -377,30 +377,6 @@ public class DuckDuckGo extends ActionBarActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
         });
-
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            getSearchField().setCustomSelectionActionModeCallback(new android.view.ActionMode.Callback() {
-                @Override
-                public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
-                    return false;
-                }
-
-                @Override
-                public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
-                    return false;
-                }
-
-                @Override
-                public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
-                    return false;
-                }
-
-                @Override
-                public void onDestroyActionMode(android.view.ActionMode mode) {
-
-                }
-            });
-        }
     }
 
 
@@ -620,6 +596,7 @@ public class DuckDuckGo extends ActionBarActivity {
         Log.d(TAG, "on pause");
 
 
+        DDGActionBarManager.getInstance().dismissMenu();
 		PreferencesManager.saveReadArticles();
 		
 		// XXX keep these for low memory conditions
@@ -990,6 +967,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	public void onConfigurationChanged(Configuration newConfig) {
 		DDGUtils.displayStats.refreshStats(this);
 		super.onConfigurationChanged(newConfig);
+        DDGActionBarManager.getInstance().dismissMenu();
 	}
 	
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

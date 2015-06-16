@@ -46,6 +46,56 @@
             android:paddingRight="?attr/listPreferredItemPaddingRight"
             android:minHeight="@dimen/web_settings_button_height"
             android:background="?attr/selectableItemBackground"/>
+<!--
+        <ListView
+            android:visibility="gone"
+            android:id="@+id/footer_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:fadingEdgeLength="0dp"
+            android:fadingEdge="none"
+            android:requiresFadingEdge="none"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:listSelector="?attr/selectableItemBackground"/>-->
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/footer_container_2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/overflow_menu_divider"/>
+<!--
+        <Button
+            android:id="@+id/footer_button"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/web_settings_button_height"
+            android:textAppearance="?attr/textAppearanceListItemSmall"
+            android:gravity="center_vertical"
+            android:paddingLeft="?attr/listPreferredItemPaddingLeft"
+            android:paddingRight="?attr/listPreferredItemPaddingRight"
+            android:minHeight="@dimen/web_settings_button_height"
+            android:background="?attr/selectableItemBackground"/>-->
+
+        <ListView
+            android:id="@+id/footer_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@null"
+            android:fadingEdgeLength="0dp"
+            android:fadingEdge="none"
+            android:requiresFadingEdge="none"
+            android:overScrollMode="never"
+            android:scrollbars="none"
+            android:listSelector="?attr/selectableItemBackground"/>
 
     </LinearLayout>
 

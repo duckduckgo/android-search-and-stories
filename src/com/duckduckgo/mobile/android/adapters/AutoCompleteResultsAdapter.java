@@ -147,7 +147,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
                 Log.e("aaa", "image url: " + imageUrl);
                 roundTransform.setRadius(holder.icon.getCornerRadius());
                 //scaleTransform.setTarget(holder.icon, 0.6);
-                scaleTransform.setTarget((int) getContext().getResources().getDimension(R.dimen.source_icon_dimen));
+                scaleTransform.setTarget((int) getContext().getResources().getDimension(R.dimen.bang_icon_dimen));
 
                 Picasso.with(getContext())
                         .load(suggestion.getImageUrl())

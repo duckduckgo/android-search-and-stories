@@ -39,6 +39,7 @@ import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewUpdateMenuNavig
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.Action;
+import com.duckduckgo.mobile.android.util.Item;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -52,22 +53,13 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     private View container;
 
     private ListView menuListView = null;
-    //private ArrayAdapter adapter;
     private DDGOverflowAdapter overflowAdapter;
-    private List<MenuItem> menuItems;
 
     private LinearLayout header = null;
-    private List<ImageButton> headerButtons;
     private HashMap<Integer, MenuItem> headerItems = null;
-
-    private LinearLayout footerContainer;
-    private Button footerButton;
+    private boolean isBusRegistered = false;
 
     private FeedObject feed = null;
-
-    private ImageView closeView = null;
-
-    private boolean backgroundDimmed = false;
 
     public DDGOverflowMenu(Context context) {
         //super(context, null, android.R.attr.listPopupWindowStyle);
@@ -95,45 +87,57 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         setContentView(container);
         setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
-        //setWindowLayoutMode(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         ListPopupWindow temp = new ListPopupWindow(context);
-        //setBackgroundDrawable(temp.getBackground());
 
         menuListView = (ListView) container.findViewById(R.id.menu_listview);
-        header = (LinearLayout) container.findViewById(R.id.header_container);
-        footerContainer = (LinearLayout) container.findViewById(R.id.footer_container);
+        menuListView.setOnItemClickListener(this);
+        menuListView.setOnItemSelectedListener(this);
 
-        //menuListView.setOnTouchListener(this);
+        header = (LinearLayout) container.findViewById(R.id.header_container);
+    }
+
+    public void registerBus() {
+        isBusRegistered = true;
+        BusProvider.getInstance().register(this);
+    }
+
+    public void unregisterBus() {
+        if(isBusRegistered) {
+            isBusRegistered = false;
+            BusProvider.getInstance().unregister(this);
+        }
     }
 
     public void setMenu(Menu menu) {
-        menuListView.setVisibility(View.VISIBLE);
-        menuItems = new ArrayList<MenuItem>();
-        for(int i=0; i<menu.size(); i++) {
-            if(menu.getItem(i).isVisible()) {
-                menuItems.add(menu.getItem(i));
-            }
-        }
-        //adapter = new ArrayAdapter(context, R.layout.temp_menuitem, R.id.text1, menuItems);
-        overflowAdapter = new DDGOverflowAdapter(context, R.layout.temp_menuitem, menuItems);
-        //menuListView.setAdapter(adapter);
+        overflowAdapter = new DDGOverflowAdapter(context, R.layout.temp_menuitem);
         menuListView.setAdapter(overflowAdapter);
-        /*
-        for(int i=0; i<adapter.getCount(); i++) {
-            MenuItem item = (MenuItem) adapter.getItem(i);
-            Log.e("aaa", "item: "+item.getTitle()+" - enabled: "+item.isEnabled());
-            //menuListView.getChildAt(i).setEnabled(item.isEnabled());
-        }*/
-        menuListView.setOnItemClickListener(this);
-        menuListView.setOnItemSelectedListener(this);
+        setMenu(menu, false);
+    }
+
+    public void setMenu(Menu menu, boolean newSection) {
+        Log.e("ddgmenu", "inside set menu");
+        menuListView.setVisibility(View.VISIBLE);
+
+        List<MenuItem> newMenuItems = new ArrayList<>();
+
+        for(int i=0; i<menu.size(); i++) {
+            boolean added = false;
+            if(menu.getItem(i).isVisible()) {
+                newMenuItems.add(menu.getItem(i));
+                added = true;
+            }
+            Log.e("ddgmenu", "item title: "+menu.getItem(i).getTitle()+" - added: "+added);
+        }
+        overflowAdapter.addItems(newMenuItems, newSection);
+        overflowAdapter.notifyDataSetChanged();
+
     }
 
     public void setHeaderMenu(Menu menu) {
-        BusProvider.getInstance().register(this);
+        registerBus();
 
         header.setVisibility(View.VISIBLE);
-        //headerButtons = new ArrayList<ImageButton>();
         headerItems = new HashMap<Integer, MenuItem>();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for(int i=0; i<menu.size(); i++) {
@@ -149,68 +153,10 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
                 imageButton.setOnClickListener(this);
             }
 
-            //headerButtons.add(imageButton);
             headerItems.put(imageButton.getId(), menu.getItem(i));
             header.addView(imageButton);
         }
-/*
-        header.setVisibility(View.VISIBLE);
-        headerItems = new HashMap<Integer, MenuItem>();
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        for(int i=0; i<menu.size(); i++) {
-            RelativeLayout headerButton = (RelativeLayout) inflater.inflate(R.layout.temp_header_item2, header, false);
-            ImageView image = (ImageView) headerButton.findViewById(R.id.button_header_image);
-            final String title = ""+menu.getItem(i).getTitle();
-            final int actionId = menu.getItem(i).getItemId();
-            headerButton.setId(actionId);
-            headerButton.setEnabled(menu.getItem(i).isEnabled());
-            image.setImageDrawable(menu.getItem(i).getIcon());
-            image.setEnabled(menu.getItem(i).isEnabled());
-            if(i==menu.size()-1) {
-                closeView = image;*//*
-                ((RelativeLayout.LayoutParams)image.getLayoutParams()).addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-                int actionBarButtonWidth = (int) context.getResources().getDimension(R.dimen.actionbar_button_width);
-                int halfWidth = (int) (actionBarButtonWidth * 0.5);
-                int menuMargin = (int) context.getResources().getDimension(R.dimen.menu_outer_margin);;
-                Log.e("aaa", "button width: "+actionBarButtonWidth);
-                Log.e("aaa", "button width/2: "+halfWidth);
-                Log.e("aaa", "menu margin: "+menuMargin);
-                int imageWidth = image.getWidth();
-                int imageMeasuredWidth = image.getMeasuredWidth();
-                Log.e("aaa", "image width: "+imageWidth);
-                Log.e("aaa", "image meas width: "+imageMeasuredWidth);
-                int totalWidth = getWidth();
-                int totalWidthThird = totalWidth / 3;
-                int halfTotalWidthThird = (int) (totalWidthThird * 0.5);
-                Log.e("aaa", "total width: "+totalWidth);
-                Log.e("aaa", "total width third: "+totalWidthThird);
-                Log.e("aaa", "half total width: "+halfTotalWidthThird);
 
-                //rightPadding -= (int) context.getResources().getDimension(R.dimen.menu_outer_margin);
-                //Log.e("aaa", "right padding: "+rightPadding);
-                image.setPadding(0,0,25,0);*//*
-            }
-            headerButton.setOnClickListener(this);
-
-            //headerButtons.add(imageButton);
-            headerItems.put(headerButton.getId(), menu.getItem(i));
-            header.addView(headerButton);
-        }*/
-
-    }
-
-    public void setFooterButton(Menu menu) {
-        footerContainer.setVisibility(View.VISIBLE);
-        footerButton = (Button) footerContainer.findViewById(R.id.footer_button);
-        final MenuItem item = menu.getItem(0);
-        footerButton.setText(item.getTitle());
-        footerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BusProvider.getInstance().post(new WebViewItemMenuClickEvent(item));
-                dismiss();
-            }
-        });
     }
 
     public void setFeed(FeedObject feed) {
@@ -247,24 +193,32 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         //setWidth(54*3*3);
         //int height = ((int) context.getResources().getDimension(R.dimen.listview_item_height)) * (menuItems.size() + 1);
         int headerMenu = headerItems!=null ? 1 : 0;
-        int height = ((int) context.getResources().getDimension(R.dimen.listview_item_height)) * (menuItems.size() + headerMenu);
+        int itemCount = overflowAdapter.getItemCount();
+        Log.e("ddgshowmenu", "item count: "+itemCount);
+        int height = ((int) context.getResources().getDimension(R.dimen.listview_item_height)) * (overflowAdapter.getItemCount() + headerMenu);
+        int divider = (int) context.getResources().getDimension(R.dimen.simple_divider_height);
+        height += divider;
+
         //int height = ((int)item) * (menuItems.size() + headerMenu);
         //setHeight(height);
 
         Rect rect = new Rect();
         anchor.getGlobalVisibleRect(rect);
-        Log.e("aaa", "rect: "+rect.toString());
-        Log.e("aaa", "rect h: "+rect.height());
-        Log.e("aaa", "rect w: "+rect.width());
+        Log.e("ddgshowmenu", "rect: "+rect.toString());
+        Log.e("ddgshowmenu", "rect h: "+rect.height());
+        Log.e("ddgshowmenu", "rect w: "+rect.width());
 
-        Log.e("aaa", "rect bottom: "+rect.top);
-        Log.e("aaa", "display height: "+displayMetrics.heightPixels);
-        Log.e("aaa", "menu calc height: "+height);
-        Log.e("aaa", "item listpreferreditemheight: "+item);
+        Log.e("ddgshowmenu", "rect bottom: "+rect.top);
+        Log.e("ddgshowmenu", "display height: "+displayMetrics.heightPixels);
+        Log.e("ddgshowmenu", "menu calc height: "+height);
+        Log.e("ddgshowmenu", "item listpreferreditemheight: "+item);
 
         boolean reverseMenu = false;
-        if((displayMetrics.heightPixels-rect.top)<=height) {
-            reverseMenu = true;
+        if(displayMetrics.heightPixels>height) {
+            setHeight(height);
+            if((displayMetrics.heightPixels-rect.top)<=height) {
+                reverseMenu = true;
+            }
         }
         Log.e("aaa", "should reverse menu: "+reverseMenu);
 
@@ -275,8 +229,8 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
             xOffset = anchor.getMeasuredWidth() - getWidth();
             yOffset = reverseMenu ? height : anchor.getMeasuredHeight();// - getHeight();
 
-            Log.e("aaa", "X - xOffset: " + xOffset + " - anchor width: " + anchor.getMeasuredWidth() + " - get width: " + getWidth());
-            Log.e("aaa", "Y - yOffset: " + yOffset + " - anchor height: " + anchor.getMeasuredHeight() + " - get height: " + getHeight());
+            Log.e("ddgshowmenu", "X - xOffset: " + xOffset + " - anchor width: " + anchor.getMeasuredWidth() + " - get width: " + getWidth());
+            Log.e("ddgshowmenu", "Y - yOffset: " + yOffset + " - anchor height: " + anchor.getMeasuredHeight() + " - get height: " + getHeight());
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 if (withMarginOnAnchor) {
@@ -290,7 +244,6 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
                 //yOffset += screenMargin;
             }
         }
-
         //setHeight(height);
 
         if(coverAnchor) {
@@ -299,9 +252,8 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
             View background = ((Activity)context).findViewById(android.R.id.content);
             boolean backgroundIsNull = background==null;
-            Log.e("aaa", "backgroundview is null: "+backgroundIsNull);
+            Log.e("ddgshowmenu", "backgroundview is null: "+backgroundIsNull);
             BusProvider.getInstance().post(new DimBackgroundEvent(true));
-            backgroundDimmed = true;
             showAtLocation(anchor, Gravity.CENTER, 0, 0);
         }
         //showAsDropDown(anchor);
@@ -323,26 +275,22 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     @Override
     public void dismiss() {
-        Log.e("DDG OVERFLOW", "inside dismiss");
-        if(headerItems!=null) {
-            BusProvider.getInstance().unregister(this);
-        }
+        unregisterBus();
         super.dismiss();
     }
 
     @Override
     public void onClick(View view) {
-        Log.e("aaa", "/////////////// - event sent");
         BusProvider.getInstance().post(new WebViewItemMenuClickEvent(headerItems.get(view.getId())));
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Log.e("DDG OVERFLOW", "on item clicked: "+menuItems.get(position));
         if(feed==null) {
-            BusProvider.getInstance().post(new WebViewItemMenuClickEvent(menuItems.get(position)));
+            //BusProvider.getInstance().post(new WebViewItemMenuClickEvent(menuItems.get(position)));
+            BusProvider.getInstance().post(new WebViewItemMenuClickEvent(overflowAdapter.getMenuItem(position)));//menuItems.get(position))
         } else {
-            BusProvider.getInstance().post(new WebViewItemMenuClickEvent(menuItems.get(position), feed));
+            BusProvider.getInstance().post(new WebViewItemMenuClickEvent(overflowAdapter.getMenuItem(position), feed));//menuItems.get(position)
         }
         dismiss();
     }
@@ -359,17 +307,15 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     private void setCloseButtonPadding() {
         int maxWith = getWidth();
-        Log.e("aaa", "max width: "+maxWith);
         int widthThird = maxWith / 3;
-        Log.e("aaa", "max width: "+widthThird);
 
     }
 
-    public static int getMaxWidth(Context context, Adapter adapter) {
+    public static int getMaxWidth(Context context, DDGOverflowAdapter adapter) {
         //Log.e("aaa", "-------------get max width");
         int maxLength = 0;
         for(int i=0; i<adapter.getCount(); i++) {
-            int newLength = ((MenuItem)adapter.getItem(i)).getTitle().length();
+            int newLength = adapter.getMenuItemTitle(i).length();//(MenuItem)adapter.getItem(i)).getTitle().length();
             //Log.e("aaa", "new length: "+newLength);
             maxLength = newLength>maxLength ? newLength : maxLength;
             //Log.e("aaa", "max length: "+maxLength);
@@ -436,43 +382,155 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
 
     public class DDGOverflowAdapter extends ArrayAdapter<MenuItem> {
 
+        private static final int TYPE_ITEM = 0;
+        private static final int TYPE_DIVIDER = 1;
+
         private Context context;
         private int layoutResId;
-        private List<MenuItem> menuItems;
+        //private List<MenuItem> menuItems;
+        private List<Item> items;
 
-        public DDGOverflowAdapter(Context context, int layoutResId, List<MenuItem> menuItems) {
-            super(context, layoutResId, menuItems);
+        public DDGOverflowAdapter(Context context, int layoutResId) {
+            super(context, layoutResId);
             this.context = context;
             this.layoutResId = layoutResId;
-            this.menuItems = menuItems;
+            //this.menuItems = menuItems;
+            items = new ArrayList<>();
+            //addItems(menuItems);
+            //initMenuItems(menuItems);
+        }
+/*
+        public void initMenuItems(List<MenuItem> menuItems) {
+            items = new ArrayList<>();
+
+            for(MenuItem menuItem : menuItems) {
+                items.add(new Item(menuItem));
+            }
+        }*/
+        /*
+        public void addItems(List<MenuItem> menuItems) {
+            addItems(menuItems, false);
+        }*/
+
+        public void addItems(List<MenuItem> menuItems, boolean newSection) {
+            if(newSection) {
+                items.add(new Item(true));
+            }
+            for(MenuItem menuItem : menuItems) {
+                items.add(new Item(menuItem));
+            }
+            Log.e("ddgmenu", "print menu, size is: "+items.size());
+            printItems();
+        }
+
+        public void printItems() {
+            for(Item item : items) {
+                String text = item.isDivider ? "divider" : item.item.getTitle().toString();
+                Log.e("ddgitems", "item: "+text);
+            }
         }
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             View root = convertView;
             Holder holder = null;
+            int itemType = getItemViewType(position);
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             if(root==null) {
-                LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                root = inflater.inflate(layoutResId, parent, false);
-
-                holder = new Holder();
-                holder.text = (TextView) root.findViewById(R.id.text1);
-                root.setTag(holder);
+                if(itemType==TYPE_ITEM) {
+                    root = inflater.inflate(layoutResId, parent, false);
+                    holder = new Holder();
+                    holder.text = (TextView) root.findViewById(R.id.text1);
+                    root.setTag(holder);
+                } else {
+                    root = inflater.inflate(R.layout.overflowmenu_divier, parent, false);
+                }
             } else {
-                holder = (Holder) root.getTag();
+                if(itemType==TYPE_ITEM) {
+                    holder = (Holder) root.getTag();
+                }
             }
 
-            MenuItem item = menuItems.get(position);
-            holder.text.setText(item.getTitle());
-            holder.text.setEnabled(item.isEnabled());
-            //Log.e("aaa", "get view position: "+position+" - text: "+item.getTitle()+" - enabled: "+item.isEnabled());
+            if(itemType==TYPE_ITEM) {
+                MenuItem item = items.get(position).item;//menuItems.get(position);
+                holder.text.setText(item.getTitle());
+                holder.text.setEnabled(item.isEnabled());
+                //Log.e("aaa", "get view position: "+position+" - text: "+item.getTitle()+" - enabled: "+item.isEnabled());
+            }
 
             return root;
         }
 
+        public int getItemCount() {
+            int out = 0;
+            for(Item item : items) {
+                if(!item.isDivider) {
+                    out++;
+                }
+            }
+            return out;
+        }
+
+        @Override
+        public int getCount() {
+            return items.size();
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            Item item = items.get(position);
+            if(item.isDivider) {
+                return TYPE_DIVIDER;
+            }
+            return TYPE_ITEM;
+        }
+
+        @Override
+        public boolean isEnabled(int position) {
+            return !items.get(position).isDivider;
+        }
+
+        public MenuItem getMenuItem(int position) {
+            Item item = items.get(position);
+            if(item.isDivider) {
+                return null;
+            }
+            return item.item;
+        }
+
+        public String getMenuItemTitle(int position) {
+            Item item = items.get(position);
+            if(item.isDivider) {
+                return "";
+            }
+            return item.item.getTitle().toString();
+        }
+
         class Holder {
             TextView text;
+        }
+
+        class Item {
+            public boolean isDivider = false;
+            public MenuItem item;
+
+            public Item(boolean isDivider) {
+                this.isDivider = isDivider;
+            }
+
+            public Item(MenuItem item) {
+                this.item = item;
+            }
+
+            /*
+            public static Item createNewDivider() {
+                return new Item(true);
+            }
+
+            public Item createNewItem(MenuItem item) {
+                return  new Item(item);
+            }*/
         }
 
 

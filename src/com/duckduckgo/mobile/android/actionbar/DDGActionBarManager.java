@@ -777,6 +777,12 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         overflowMenu.show(overflowButton);
     }
 
+    public void dismissMenu() {
+        if(overflowMenu!=null && overflowMenu.isShowing()) {
+            overflowMenu.dismiss();
+        }
+    }
+
     public class ProgressBarAnimation extends Animation {
         private ProgressBar progressBar;
         private float from;

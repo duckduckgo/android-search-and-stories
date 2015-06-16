@@ -35,10 +35,11 @@ public class HistorySearchMenuAdapter extends PageMenuContextAdapter {
         }else{
             add(new SaveSearchMenuItem(context, historyObject.getData()));
         }
-        add(new DeleteUrlInHistoryMenuItem(context, historyObject.getData(), historyObject.getUrl()));
+
 		add(new ShareSearchMenuItem(context, historyObject.getData()));
 		//add(new SendToExternalBrowserMenuItem(context, historyObject.getUrl()));
         add(new SearchExternalMenuItem(context, historyObject.getData()));
 		//add(new DeleteUrlInHistoryMenuItem(context, historyObject.getData(), historyObject.getUrl()));
+        add(new DeleteUrlInHistoryMenuItem(context, historyObject.getData(), historyObject.getUrl()));
 	}
 }

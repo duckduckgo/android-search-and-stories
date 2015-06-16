@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -95,7 +96,7 @@ public class WebFragment extends Fragment {
 
     private Menu webMenu = null;
     private Menu headerMenu = null;
-    private Menu footerMenu = null;
+    private Menu mainMenu = null;
     private DDGOverflowMenu overflowMenu = null;
 
 	@Override
@@ -149,12 +150,24 @@ public class WebFragment extends Fragment {
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        dismissMenu();
+    }
+
+    @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         //setHasOptionsMenu(false);
         if(!hidden) {
             BusProvider.getInstance().post(new SearchBarSetTextEvent(mainWebView.getUrl()));
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        dismissMenu();
     }
 
 	@Override
@@ -185,8 +198,8 @@ public class WebFragment extends Fragment {
         if(menu==null) {
             return;
         }
-        MenuItem reloadItem = menu.findItem(R.id.action_reload);
-        reloadItem.setVisible(true);
+        //MenuItem reloadItem = menu.findItem(R.id.action_reload);
+        //reloadItem.setVisible(true);
         MenuItem saveItem = menu.findItem(R.id.action_add_favorite);
         MenuItem deleteItem = menu.findItem(R.id.action_remove_favorite);
         switch(urlType) {
@@ -233,6 +246,7 @@ public class WebFragment extends Fragment {
 		switch(item.getItemId()) {
             case R.id.action_reload:
                 actionReload();
+                overflowMenu.dismiss();
                 return true;
             case R.id.action_add_favorite:
                 actionSave();
@@ -259,9 +273,9 @@ public class WebFragment extends Fragment {
                 newStates.put(R.id.action_back, mainWebView.canGoBack());
                 newStates.put(R.id.action_forward, mainWebView.canGoForward());
                 BusProvider.getInstance().post(new WebViewUpdateMenuNavigationEvent(newStates));
-                return true;
+                return true;/*
             case R.id.action_close:
-                overflowMenu.dismiss();
+                overflowMenu.dismiss();*/
 			default:
 				return super.onOptionsItemSelected(item);
 		}
@@ -309,8 +323,8 @@ public class WebFragment extends Fragment {
         getActivity().getMenuInflater().inflate(R.menu.feed, webMenu);
         headerMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.web_navigation, headerMenu);
-        footerMenu = new MenuBuilder(getActivity());
-        getActivity().getMenuInflater().inflate(R.menu.web_settings, footerMenu);
+        mainMenu = new MenuBuilder(getActivity());
+        getActivity().getMenuInflater().inflate(R.menu.main, mainMenu);
 	}
 
 	public boolean getSavedState() {
@@ -573,6 +587,12 @@ public class WebFragment extends Fragment {
 		new ReadableFeedTask(DDGControlVar.currentFeedObject);
 	}
 
+    private void dismissMenu() {
+        if(overflowMenu!=null && overflowMenu.isShowing()) {
+            overflowMenu.dismiss();
+        }
+    }
+
 	@Subscribe
 	public void onWebViewClearBrowserStateEvent(WebViewClearBrowserStateEvent event) {
         mainWebView.clearBrowserState();
@@ -657,8 +677,8 @@ public class WebFragment extends Fragment {
 
             overflowMenu = new DDGOverflowMenu(getActivity());
             overflowMenu.setHeaderMenu(headerMenu);
-            overflowMenu.setFooterButton(footerMenu);
             overflowMenu.setMenu(webMenu);
+            overflowMenu.setMenu(mainMenu, true);
             overflowMenu.show(event.anchorView);
 
         }
@@ -675,8 +695,8 @@ public class WebFragment extends Fragment {
 
             overflowMenu = new DDGOverflowMenu(getActivity());
             overflowMenu.setHeaderMenu(headerMenu);
-            overflowMenu.setFooterButton(footerMenu);
             overflowMenu.setMenu(webMenu);
+            overflowMenu.setMenu(mainMenu, true);
             overflowMenu.show(event.anchor);
         }
     }

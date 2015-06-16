@@ -14,10 +14,16 @@
           android:orderInCategory="20"
           android:showAsAction="never"/>
 
+    <item android:id="@+id/action_reload"
+          android:title="@string/action_reload"
+          android:icon="@drawable/refresh"
+          android:orderInCategory="30"
+          android:showAsAction="never"/>
+<!--
     <item android:id="@+id/action_close"
           android:title="@string/action_close"
           android:icon="@null"
           android:orderInCategory="30"
-          android:showAsAction="never"/><!--android:icon="@drawable/menu_red"-->
+          android:showAsAction="never"/>--><!--android:icon="@drawable/menu_red"-->
 
 </menu>

@@ -3,14 +3,28 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:background="@android:color/transparent"
+              android:descendantFocusability="blocksDescendants">
+<!--
               android:paddingTop="10dp"
               android:paddingBottom="10dp"
-              android:descendantFocusability="blocksDescendants">
-
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="#55a4a4a4" />
+        android:layout_marginBottom="16dip"
+        -->
+
+    <TextView android:id="@+id/title"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+
+              android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+              android:textColor="@color/colorPrimary"
+              android:text="@string/options"
+              android:paddingLeft="?attr/listPreferredItemPaddingLeft"
+              android:paddingRight="?attr/listPreferredItemPaddingRight"
+              android:paddingTop="16dip" />
 
     <Button
         android:layout_width="fill_parent"
@@ -20,11 +34,16 @@
         android:textColor="@color/search_dark"
         android:textStyle="normal"
         android:textAllCaps="false"
-            android:paddingLeft="60dp"
+        android:paddingLeft="?attr/listPreferredItemPaddingLeft"
         android:gravity="left|center_vertical"
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:background="?attr/selectableItemBackground"
         android:id="@+id/sourceDefaultButton" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#55a4a4a4" />
 
     <Button
         android:layout_width="fill_parent"
@@ -34,7 +53,7 @@
         android:textColor="@color/search_dark"
         android:textStyle="normal"
         android:textAllCaps="false"
-        android:paddingLeft="60dp"
+        android:paddingLeft="?attr/listPreferredItemPaddingLeft"
         android:gravity="left|center_vertical"
         android:textAppearance="@android:style/TextAppearance.Medium"
         android:background="?attr/selectableItemBackground"

@@ -59,7 +59,7 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
         sourcesAdapter = new SourcesAdapter(getActivity());
 
         sourcesView = (ListView) fragmentView.findViewById(R.id.sourceItems);
-        sourcesView.addFooterView(createFooterView());
+        sourcesView.addHeaderView(createHeaderView());
 
         sourcesView.setAdapter(sourcesAdapter);
 
@@ -94,30 +94,7 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
     }
 
     private View createHeaderView() {
-        View headerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.preference_category_summary, null, false);
-        TextView titleTv = ((TextView) headerView.findViewById(android.R.id.title));
-        titleTv.setText(R.string.WaterCoolerSources);
-        TextView summaryTv = ((TextView) headerView.findViewById(android.R.id.summary));
-        summaryTv.setText(R.string.SummaryWaterCooler);
-        return headerView;
-    }
-
-    private View createDividerView() {
-        View dividerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.search_divider, null, false);
-        return dividerView;
-    }
-
-    private View createFooterView() {
         View footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_sources_footer, null, false);
-        return footerView;
-    }
-
-    private View createSuggestSourceButton() {
-        View footerView;
-        footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_default_button_layout, null, false);
-        footerView.findViewById(R.id.sourceDefaultButton).setId(R.id.suggestSourceButton);
-        suggestSourceButton = (Button) footerView.findViewById(R.id.suggestSourceButton);
-        suggestSourceButton.setText(R.string.SuggestSource);
         return footerView;
     }
 
