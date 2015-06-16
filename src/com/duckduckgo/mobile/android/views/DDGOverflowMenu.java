@@ -119,8 +119,8 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         Log.e("ddgmenu", "inside set menu");
         menuListView.setVisibility(View.VISIBLE);
 
-        List<MenuItem> newMenuItems = new ArrayList<>();
-
+        List<MenuItem> newMenuItems = new ArrayList<MenuItem>();
+        
         for(int i=0; i<menu.size(); i++) {
             boolean added = false;
             if(menu.getItem(i).isVisible()) {
