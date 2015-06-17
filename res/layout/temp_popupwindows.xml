@@ -21,7 +21,6 @@
         android:fadingEdge="none"
         android:requiresFadingEdge="none"
         android:overScrollMode="never"
-        android:scrollbars="none"
         android:listSelector="?attr/selectableItemBackground"/>
 
     <LinearLayout

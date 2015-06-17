@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
 import android.support.v7.widget.ListPopupWindow;
+import android.text.Layout;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Adapter;
@@ -84,9 +86,23 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         setOutsideTouchable(true);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         container = inflater.inflate(R.layout.temp_popupwindows, null);
+        container.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                int width = container.getWidth();
+                int height = container.getHeight();
+                Log.e("ddgmenu", "width: "+width);
+                Log.e("ddgmenu", "height: "+height);
+                if(android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                    container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                } else {
+                    container.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+                }
+            }
+        });
         setContentView(container);
         setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        //setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
 
         ListPopupWindow temp = new ListPopupWindow(context);
 
@@ -195,9 +211,14 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         int headerMenu = headerItems!=null ? 1 : 0;
         int itemCount = overflowAdapter.getItemCount();
         Log.e("ddgshowmenu", "item count: "+itemCount);
-        int height = ((int) context.getResources().getDimension(R.dimen.listview_item_height)) * (overflowAdapter.getItemCount() + headerMenu);
+        int height = ((int) context.getResources().getDimension(R.dimen.listview_item_height)) * (overflowAdapter.getItemCount()/* + headerMenu*/);
         int divider = (int) context.getResources().getDimension(R.dimen.simple_divider_height);
         height += divider;
+        //LinearLayout.LayoutParams menuParams = (LinearLayout.LayoutParams) menuListView.getLayoutParams();
+        //menuParams.height = height;
+        //menuListView.setLayoutParams(menuParams);
+        menuListView.getLayoutParams().height = height;
+
 
         //int height = ((int)item) * (menuItems.size() + headerMenu);
         //setHeight(height);
@@ -212,13 +233,22 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         Log.e("ddgshowmenu", "display height: "+displayMetrics.heightPixels);
         Log.e("ddgshowmenu", "menu calc height: "+height);
         Log.e("ddgshowmenu", "item listpreferreditemheight: "+item);
+        Log.e("ddgshowmenu", "height: : "+height);
+        Log.e("ddgshowmenu", "item count: "+itemCount);
 
         boolean reverseMenu = false;
+        //setHeight(height);
         if(displayMetrics.heightPixels>height) {
-            setHeight(height);
+            //setHeight(height);
+            menuListView.getLayoutParams().height = height;
+            Log.e("ddgshowmenu", "get height: "+getHeight());
             if((displayMetrics.heightPixels-rect.top)<=height) {
                 reverseMenu = true;
             }
+        } else {
+            setHeight(WindowManager.LayoutParams.MATCH_PARENT);
+            menuListView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+            //menuListView.set
         }
         Log.e("aaa", "should reverse menu: "+reverseMenu);
 
