@@ -82,6 +82,7 @@ public class WebFragment extends Fragment {
 
 	public static final String TAG = "web_fragment";
 	public static final String URL = "url";
+    public static final String SESSION_TYPE = "session_type";
 
     private Context context = null;
 
@@ -98,6 +99,15 @@ public class WebFragment extends Fragment {
     private Menu headerMenu = null;
     private Menu mainMenu = null;
     private DDGOverflowMenu overflowMenu = null;
+
+    public static WebFragment newInstance(String url, SESSIONTYPE sessionType) {
+        WebFragment fragment = new WebFragment();
+        Bundle args = new Bundle();
+        args.putString(URL, url);
+        args.putInt(SESSION_TYPE, sessionType.getCode());
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -325,6 +335,19 @@ public class WebFragment extends Fragment {
         getActivity().getMenuInflater().inflate(R.menu.web_navigation, headerMenu);
         mainMenu = new MenuBuilder(getActivity());
         getActivity().getMenuInflater().inflate(R.menu.main, mainMenu);
+
+        Bundle args = getArguments();
+
+        if(args!=null) {
+            String url = null;
+            if(args.containsKey(URL)) url = args.getString(URL);
+            SESSIONTYPE sessionType = SESSIONTYPE.SESSION_BROWSE;
+            if(args.containsKey(SESSION_TYPE)) sessionType = SESSIONTYPE.getByCode(args.getInt(SESSION_TYPE));
+
+            if(url!=null) {
+                searchOrGoToUrl(url, sessionType);
+            }
+        }
 	}
 
 	public boolean getSavedState() {

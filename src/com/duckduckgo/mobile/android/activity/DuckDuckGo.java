@@ -40,6 +40,7 @@ import com.duckduckgo.mobile.android.events.ConfirmDialogOkEvent;
 import com.duckduckgo.mobile.android.events.DismissBangPopupEvent;
 import com.duckduckgo.mobile.android.events.DisplayHomeScreenEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
+import com.duckduckgo.mobile.android.events.Event;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.ReloadEvent;
@@ -530,6 +531,16 @@ public class DuckDuckGo extends ActionBarActivity {
     public void displayScreen(SCREEN screenToDisplay, boolean clean) {
         displayScreen(screenToDisplay, clean, false);
     }
+
+    public void displayFirstWebScreen(String url, SESSIONTYPE sessionType) {
+        if(url==null || url.length()<1) {
+            return;
+        }
+        if(sessionType==null) sessionType = SESSIONTYPE.SESSION_BROWSE;
+        Fragment fragment = WebFragment.newInstance(url, sessionType);
+        String tag = WebFragment.TAG;
+        changeFragment(fragment, tag);
+    }
 	
 	private void displayHomeScreen() {
         Log.e(TAG, "display home screen");
@@ -769,16 +780,15 @@ public class DuckDuckGo extends ActionBarActivity {
 	}
 
 	public void searchOrGoToUrl(final String text, final SESSIONTYPE sessionType) {
+        Log.e("searchorgotourl", "url: "+text+" - session type: "+sessionType);
         if(DDGControlVar.useExternalBrowser==DDGConstants.ALWAYS_INTERNAL) {
-            displayScreen(SCREEN.SCR_WEBVIEW, false);
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    BusProvider.getInstance().post(new WebViewSearchOrGoToUrlEvent(text, sessionType));
-                }
-            }, 100);
-            //BusProvider.getInstance().post(new WebViewSearchOrGoToUrlEvent(text, sessionType));
+            if(fragmentManager.findFragmentByTag(WebFragment.TAG)==null) {
+                displayFirstWebScreen(text, sessionType);
+            } else {
+                displayScreen(SCREEN.SCR_WEBVIEW, false);
+                BusProvider.getInstance().post(new WebViewSearchOrGoToUrlEvent(text, sessionType));
+            }
+
         } else {
             Fragment webFragment = fragmentManager.findFragmentByTag(WebFragment.TAG);
             if(webFragment==null) {
@@ -1088,6 +1098,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
         displayScreen(SCREEN.SCR_WEBVIEW, false);
 		BusProvider.getInstance().post(new WebViewShowHistoryObjectEvent(event.historyObject));
+
 	}
 	
 	@Subscribe
