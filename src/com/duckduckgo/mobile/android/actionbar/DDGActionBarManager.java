@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.actionbar;
 
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
@@ -8,28 +7,19 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.internal.view.menu.MenuBuilder;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Transformation;
-import android.view.animation.TranslateAnimation;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -40,9 +30,7 @@ import com.duckduckgo.mobile.android.activity.KeyboardService;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.DisplayHomeScreenEvent;
 import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
-import com.duckduckgo.mobile.android.events.ShowAutoCompleteResultsEvent;
 import com.duckduckgo.mobile.android.fragment.SearchFragment;
-import com.duckduckgo.mobile.android.fragment.SourcesFragment;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -50,11 +38,11 @@ import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.SlidingTabLayout;
-import com.duckduckgo.mobile.android.views.autocomplete.BackButtonPressedEventListener;
 import com.duckduckgo.mobile.android.views.autocomplete.DDGAutoCompleteTextView;
-import com.squareup.otto.Bus;
 
 public final class DDGActionBarManager implements View.OnClickListener, View.OnLongClickListener {
+
+    public static final String TAG = "ddg_actionbar_manager";
 
     private Activity activity;
     private Context context;
@@ -78,17 +66,9 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
     private DDGOverflowMenu overflowMenu = null;
     private Menu mainMenu;
-    //private Menu webMenu = null;
-    //private Menu webHeaderMenu = null;
-    //private Menu webFooterMenu = null;
     private MenuInflater inflater;
 
     private Toolbar toolbar;
-    private ActionBar actionBar;
-
-    private View searchBar;
-
-    private SCREEN screen;
 
     private String tag;
 
@@ -109,15 +89,11 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         this.toolbar = toolbar;
         this.inflater = activity.getMenuInflater();
 
-        //toolbar = (Toolbar) toolbarContainer.findViewById(R.id.toolbar);
-
-        searchBar = toolbar.findViewById(R.id.searchBar);
         searchFieldContainer = (RelativeLayout) toolbar.findViewById(R.id.search_container);
         actionBarTitle = (TextView) toolbar.findViewById(R.id.actionbar_title);
         Typeface typeface = Typeface.createFromAsset(context.getAssets(), "fonts/Roboto_Medium.ttf");
         actionBarTitle.setTypeface(typeface);
         slidingTabLayout = (SlidingTabLayout) toolbar.findViewById(R.id.sliding_tabs);
-        boolean slidingIsNull = slidingTabLayout == null;
 
         progressBar = (ProgressBar) toolbar.findViewById(R.id.progress_bar);
 
@@ -137,15 +113,6 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
         mainMenu = new MenuBuilder(activity);
         inflater.inflate(R.menu.main, mainMenu);
-
-        /*
-        webMenu = new MenuBuilder(activity);
-        inflater.inflate(R.menu.feed, webMenu);
-        webHeaderMenu = new MenuBuilder(activity);
-        inflater.inflate(R.menu.web_navigation, webHeaderMenu);
-        webFooterMenu = new MenuBuilder(activity);
-        inflater.inflate(R.menu.web_settings, webFooterMenu);
-        */
     }
 
     public DDGAutoCompleteTextView getSearchField() {
@@ -179,7 +146,6 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 } else {
                     showMenu(tag);
                 }
-                //BusProvider.getInstance().post(new OverflowButtonClickEvent(toolbar));
             default:
                 break;
         }
@@ -201,11 +167,10 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
     }
 
     public void updateActionBar(FragmentManager fragmentManager, String tag, boolean backPressed) {
-        Log.e("action bar manager", "update actionbar: "+tag);
+        Log.d(TAG, "update actionbar: "+tag);
 
         this.tag = tag;
         SCREEN screen = DDGUtils.getScreenByTag(tag);
-        this.screen = screen;
 
         boolean isStartingScreen = DDGControlVar.START_SCREEN==screen;
         if(!tag.equals(SearchFragment.TAG)) {
@@ -237,7 +202,6 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 leftMargin = isStartingScreen ? standardMargin : actionButtonVisibleLeftMargin;
                 rightMargin = overflowVisibleRightMargin;
 
-                //setActionBarMargins(leftMargin, standardMargin, rightMargin, standardMargin);
                 setActionBarMargins(leftMargin, standardMargin, rightMargin, standardMargin);
 
                 setHomeButton(!isStartingScreen);
@@ -385,23 +349,11 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
                 break;
         }
 
-        /*
-        if(!tag.equals(SearchFragment.TAG) && !tag.equals(SearchFragment.TAG_HOME_PAGE)) {
-            keyboardService.hideKeyboardDelayed(searchField);
-        }*/
         if(backPressed || DDGControlVar.mDuckDuckGoContainer.prevFragmentTag.equals(SearchFragment.TAG)
                 || DDGControlVar.mDuckDuckGoContainer.prevFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
-            //Log.e("search DDGactionbar", "prev screen == search, hide keyboard");
             keyboardService.hideKeyboardDelayed(searchField);
-
-            //keyboardService.hideKeyboardB(searchField);
-
-            //keyboardService.hideKeyboard(searchField);
         } else if((tag.equals(SearchFragment.TAG) || tag.equals(SearchFragment.TAG_HOME_PAGE))) {
-            Log.e("search DDGactionbar", "show keyboard");
             keyboardService.showKeyboard(searchField);
-        } else {
-            Log.e("search DDGactionbar", "do not show keyboard");
         }
     }
 
@@ -563,13 +515,11 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         Animation fadeOut = AnimationUtils.loadAnimation(context, R.anim.actionbar_button_fade_out);
 
         if(homeButton.getVisibility()==View.VISIBLE) {
-            Log.e("aaa", "set bang button: home -> gone");
             homeButton.setAnimation(fadeOut);
             homeButton.setVisibility(View.GONE);
         }
 
         if(bangButton.getVisibility()==View.GONE) {
-            Log.e("aaa", "set bang button: bang -> visible");
             bangButton.setAnimation(fadeIn);
             bangButton.setVisibility(View.VISIBLE);
         }
@@ -582,7 +532,6 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
             if(overflowButton.getVisibility()==View.GONE) {
                 overflowButton.setAnimation(fadeIn);
                 overflowButton.setVisibility(View.VISIBLE);
-                //overflowButton.setVisibility(View.GONE);
             }
         } else {
             if(overflowButton.getVisibility()==View.VISIBLE) {
@@ -636,7 +585,7 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
 
         final int standardMargin = (int) context.getResources().getDimension(R.dimen.actionbar_height);
         final int tabHeight = (int) context.getResources().getDimension(R.dimen.actionbar_tab_height2);
-        final int actualMargin = (int) standardMargin - tabHeight;
+        final int actualMargin = standardMargin - tabHeight;
 
         view.setVisibility(View.VISIBLE);
         Animation a = new Animation()
@@ -676,7 +625,6 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
     }
 
     public void collapseView(final View view) {
-        final int initialHeight = view.getMeasuredHeight();
         final int standardMargin = (int) context.getResources().getDimension(R.dimen.actionbar_height);
         final int tabHeight = (int) context.getResources().getDimension(R.dimen.actionbar_tab_height2);
 
@@ -743,37 +691,11 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
         clearSearchBar();
         DDGControlVar.currentFeedObject = null;
         DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
-        resetSearchBar();
-    }
-
-    public void showKeyboard() {
-        keyboardService.showKeyboard(searchField);
-    }
-
-    public void hideKeyboard() {
-        keyboardService.hideKeyboard(searchField);
-    }
-
-    public void hideKeyboardDelayed() {
-        keyboardService.hideKeyboardDelayed(searchField);
-    }
-
-    public void resetSearchBar() {
-        //dropShadowDivider.setVisibility(View.VISIBLE);
     }
 
     public void showMenu(String tag) {
         overflowMenu = new DDGOverflowMenu(activity);
-        //Menu menu;
-        /*
-        if(tag.equals(WebFragment.TAG)) {
-            overflowMenu.setHeaderMenu(webHeaderMenu);
-            overflowMenu.setFooterButton(webFooterMenu);
-            overflowMenu.setMenu(webMenu);
-        } else {*/
         overflowMenu.setMenu(mainMenu);
-        //}
-
         overflowMenu.show(overflowButton);
     }
 

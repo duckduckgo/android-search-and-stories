@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.internal.view.menu.MenuBuilder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,18 +15,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
-import android.webkit.WebView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.KeyboardService;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.dialogs.OpenInExternalDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewQueryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
-import com.duckduckgo.mobile.android.events.DismissBangPopupEvent;
 import com.duckduckgo.mobile.android.events.HandleShareButtonClickEvent;
 import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
@@ -41,9 +37,7 @@ import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewReloadActionEve
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewSearchOrGoToUrlEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewSearchWebTermEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewShowHistoryObjectEvent;
-import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.leftMenuEvents.LeftMenuHomeClickEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOffEvent;
 import com.duckduckgo.mobile.android.events.readabilityEvents.TurnReadabilityOnEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveSearchEvent;
@@ -99,6 +93,10 @@ public class WebFragment extends Fragment {
     private Menu headerMenu = null;
     private Menu mainMenu = null;
     private DDGOverflowMenu overflowMenu = null;
+
+    //
+    //mainWebView.clearHistory();
+    //mainWebView.clearView();
 
     public static WebFragment newInstance(String url, SESSIONTYPE sessionType) {
         WebFragment fragment = new WebFragment();
@@ -660,12 +658,6 @@ public class WebFragment extends Fragment {
 	@Subscribe
 	public void onWebViewShowHistoryObjectEvent(WebViewShowHistoryObjectEvent event) {
 		showHistoryObject(event.historyObject);
-	}
-
-	@Subscribe
-	public void onLeftMenuHomeClickEvent(LeftMenuHomeClickEvent event) {
-		mainWebView.clearHistory();
-		mainWebView.clearView();
 	}
 
 	@Subscribe

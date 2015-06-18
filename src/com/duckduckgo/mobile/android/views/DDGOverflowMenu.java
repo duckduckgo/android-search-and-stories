@@ -4,18 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
-import android.support.v7.widget.ListPopupWindow;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Adapter;
@@ -31,7 +28,6 @@ import android.widget.TextView;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.DimBackgroundEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewUpdateMenuNavigationEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
@@ -170,27 +166,16 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         setWidth(getMaxWidth(context, overflowAdapter));
 
         int itemCount = overflowAdapter.getItemCount();
-        Log.e("ddgshowmenu", "item count: "+itemCount);
         int height = ((int) context.getResources().getDimension(R.dimen.listview_item_height)) * (overflowAdapter.getItemCount());
         int divider = (int) context.getResources().getDimension(R.dimen.simple_divider_height);
         height += divider;
 
         Rect rect = new Rect();
         anchor.getGlobalVisibleRect(rect);
-        Log.e("ddgshowmenu", "rect: "+rect.toString());
-        Log.e("ddgshowmenu", "rect h: "+rect.height());
-        Log.e("ddgshowmenu", "rect w: "+rect.width());
-
-        Log.e("ddgshowmenu", "rect bottom: "+rect.top);
-        Log.e("ddgshowmenu", "display height: "+displayMetrics.heightPixels);
-        Log.e("ddgshowmenu", "menu calc height: "+height);
-        Log.e("ddgshowmenu", "height: : "+height);
-        Log.e("ddgshowmenu", "item count: "+itemCount);
 
         boolean reverseMenu = false;
         if(displayMetrics.heightPixels>height) {
             menuListView.getLayoutParams().height = height;
-            Log.e("ddgshowmenu", "get height: "+getHeight());
             if((displayMetrics.heightPixels-rect.top)<=height) {
                 reverseMenu = true;
             }
@@ -198,17 +183,13 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
             setHeight(WindowManager.LayoutParams.MATCH_PARENT);
             menuListView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
         }
-        Log.e("aaa", "should reverse menu: "+reverseMenu);
 
         int xOffset = 0;
         int yOffset = 0;
 
         if(coverAnchor) {
             xOffset = anchor.getMeasuredWidth() - getWidth();
-            yOffset = reverseMenu ? height : anchor.getMeasuredHeight();// - getHeight();
-
-            Log.e("ddgshowmenu", "X - xOffset: " + xOffset + " - anchor width: " + anchor.getMeasuredWidth() + " - get width: " + getWidth());
-            Log.e("ddgshowmenu", "Y - yOffset: " + yOffset + " - anchor height: " + anchor.getMeasuredHeight() + " - get height: " + getHeight());
+            yOffset = reverseMenu ? height : anchor.getMeasuredHeight();
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 if (withMarginOnAnchor) {
@@ -216,34 +197,12 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
                     xOffset -= screenMargin;
                     yOffset -= screenMargin;
                 }
-            } else {
-                //int screenMargin = (int) context.getResources().getDimension(R.dimen.menu_outer_margin_2);
-                //xOffset += (screenMargin * 20);
-                //yOffset += screenMargin;
             }
         }
-        //setHeight(height);
 
         if(coverAnchor) {
-            showAsDropDown(anchor, xOffset, yOffset * -1);//aaa ----- temp
-        } else {
-
-            View background = ((Activity)context).findViewById(android.R.id.content);
-            boolean backgroundIsNull = background==null;
-            Log.e("ddgshowmenu", "backgroundview is null: "+backgroundIsNull);
-            BusProvider.getInstance().post(new DimBackgroundEvent(true));
-            showAtLocation(anchor, Gravity.CENTER, 0, 0);
+            showAsDropDown(anchor, xOffset, yOffset * -1);
         }
-        //showAsDropDown(anchor);
-
-        //int dpTest = (int) context.getResources().getDimension(R.dimen.menu_outer_margin_2);
-        //yOffset = getStatusBarHeight() - (dpTest * 10);
-
-
-        //showAtLocation(anchor, Gravity.CENTER|Gravity.RIGHT, (-1*yOffset), 0);
-
-        //showAtLocation(anchor, Gravity.TOP|Gravity.RIGHT, (int)context.getResources().getDimension(R.dimen.menu_outer_margin), (int)context.getResources().getDimension(R.dimen.menu_outer_margin)+getStatusBarHeight());
-        //showAtLocation(anchor, Gravity.CENTER, 0, 0);
     }
 
     public void showCentered(View anchor) {
@@ -444,9 +403,5 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
                 this.item = item;
             }
         }
-
-
     }
-
-
 }
