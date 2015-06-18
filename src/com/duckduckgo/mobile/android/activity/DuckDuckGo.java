@@ -7,6 +7,7 @@ import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -164,7 +165,7 @@ public class DuckDuckGo extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         Log.e("DDG loading", "activity on create");
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "on create");
+        Log.e(TAG, "on create");
 
         keyboardService = new KeyboardService(this);
 
@@ -208,7 +209,7 @@ public class DuckDuckGo extends ActionBarActivity {
         fragmentManager.addOnBackStackChangedListener(new FragmentManager.OnBackStackChangedListener() {
             @Override
             public void onBackStackChanged() {
-                Log.d(TAG, "Fragment Back Stack count: " + fragmentManager.getBackStackEntryCount());
+                Log.e(TAG, "Fragment Back Stack count: " + fragmentManager.getBackStackEntryCount());
                 showAllFragments();
                 if (fragmentManager.getBackStackEntryCount() > 0) {
                     String tag = fragmentManager.getBackStackEntryAt(fragmentManager.getBackStackEntryCount() - 1).getName();
@@ -235,7 +236,7 @@ public class DuckDuckGo extends ActionBarActivity {
                         assistAction = false;
                         backPressed = false;
                     }
-                    Log.d(TAG, "Fragment Back Stack current tag: " + DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+                    Log.e(TAG, "Fragment Back Stack current tag: " + DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
                     showAllFragments();
                 }
             }
@@ -311,9 +312,9 @@ public class DuckDuckGo extends ActionBarActivity {
                     String tag = stackSize > 0? fragmentManager.getBackStackEntryAt(stackSize - 1).getName() : "";
                     Fragment f = fragmentManager.findFragmentByTag(tag);
                     if(f!= null && (f.getTag().equals(SearchFragment.TAG) || f.getTag().equals(SearchFragment.TAG_HOME_PAGE))) {
-                        Log.d(TAG, "on focus change listener, DO NOT display search");
+                        Log.e(TAG, "on focus change listener, DO NOT display search");
                     } else {
-                        Log.d(TAG, "on focus change listener, MUST display search");
+                        Log.e(TAG, "on focus change listener, MUST display search");
                         displayScreen(SCREEN.SCR_SEARCH, true);
                     }
                 }
@@ -421,15 +422,15 @@ public class DuckDuckGo extends ActionBarActivity {
     }
 
     public void showAllFragments() {
-        Log.d(TAG, "show all fragments");
+        Log.e(TAG, "show all fragments");
         if(fragmentManager.getFragments()!=null && fragmentManager.getFragments().size()!=0) {
             for (Fragment fragment : fragmentManager.getFragments()) {
                 if(fragment!=null) {
-                    Log.d(TAG, "fragment: " + fragment.getTag() + " - visible: " + fragment.isVisible());
+                    Log.e(TAG, "fragment: " + fragment.getTag() + " - visible: " + fragment.isVisible());
                 }
             }
         } else {
-            Log.d("aaa", "all fragments == null");
+            Log.e("aaa", "all fragments == null");
         }
     }
 	
@@ -440,7 +441,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	 * @param clean Whether screen state (searchbar, browser etc.) states will get cleaned
 	 */
 	public void displayScreen(SCREEN screenToDisplay, boolean clean, boolean displayHomeScreen) {
-        Log.d(TAG, "display screen: "+screenToDisplay);
+        Log.e(TAG, "display screen: "+screenToDisplay);
 
         Fragment fragment = null;
         String tag = "";
@@ -531,7 +532,7 @@ public class DuckDuckGo extends ActionBarActivity {
     }
 	
 	private void displayHomeScreen() {
-        Log.d(TAG, "display home screen");
+        Log.e(TAG, "display home screen");
 
         DDGControlVar.mDuckDuckGoContainer.currentUrl = "";
         displayScreen(DDGControlVar.START_SCREEN, true, true);
@@ -550,7 +551,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	public void onResume() {
         Log.e("DDG loading", "activity on resume");
 		super.onResume();
-        Log.d(TAG, "on resume");//DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings();
+        Log.e(TAG, "on resume");//DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings();
 		
         DDGUtils.displayStats.refreshStats(this);
 
@@ -593,7 +594,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	@Override
 	public void onPause() {
 		super.onPause();
-        Log.d(TAG, "on pause");
+        Log.e(TAG, "on pause");
 
 
         DDGActionBarManager.getInstance().dismissMenu();
@@ -608,7 +609,7 @@ public class DuckDuckGo extends ActionBarActivity {
 		PreferencesManager.saveReadArticles();
 		super.onStop();
         BusProvider.getInstance().unregister(this);
-        Log.d(TAG, "on stop");
+        Log.e(TAG, "on stop");
 	}
 	
 	@Override
@@ -767,10 +768,17 @@ public class DuckDuckGo extends ActionBarActivity {
     	getSearchField().setCompoundDrawables(null, null, null, null);
 	}
 
-	public void searchOrGoToUrl(String text, SESSIONTYPE sessionType) {
+	public void searchOrGoToUrl(final String text, final SESSIONTYPE sessionType) {
         if(DDGControlVar.useExternalBrowser==DDGConstants.ALWAYS_INTERNAL) {
             displayScreen(SCREEN.SCR_WEBVIEW, false);
-            BusProvider.getInstance().post(new WebViewSearchOrGoToUrlEvent(text, sessionType));
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    BusProvider.getInstance().post(new WebViewSearchOrGoToUrlEvent(text, sessionType));
+                }
+            }, 100);
+            //BusProvider.getInstance().post(new WebViewSearchOrGoToUrlEvent(text, sessionType));
         } else {
             Fragment webFragment = fragmentManager.findFragmentByTag(WebFragment.TAG);
             if(webFragment==null) {
@@ -858,10 +866,10 @@ public class DuckDuckGo extends ActionBarActivity {
                 transaction.setCustomAnimations(R.anim.empty_immediate, R.anim.empty, R.anim.empty_immediate, R.anim.empty_immediate);
             }
             if(true || f==null) {
-                Log.d(TAG, "f==null, adding new fragment");
+                Log.e(TAG, "f==null, adding new fragment");
                 transaction.add(fragmentContainer.getId(), newFragment, newTag);
             } else {
-                Log.d(TAG, "f!=null, showing new fragment");
+                Log.e(TAG, "f!=null, showing new fragment");
                 transaction.show(f);
             }
             if(currentFragment!=null && currentFragment.isAdded()) {
