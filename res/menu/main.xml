@@ -29,7 +29,6 @@
 
     <item android:id="@+id/action_test" android:visible="false"
           android:title="test"
-          android:icon="@drawable/test_overflow"
           style="@style/Test"
           android:orderInCategory="60"
           android:showAsAction="always" />

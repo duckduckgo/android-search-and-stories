@@ -2,12 +2,10 @@ package com.duckduckgo.mobile.android.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -84,7 +81,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
     @Override
     public View getView(int position, View view, ViewGroup parent) {
         if (view == null) {
-            view = inflater.inflate(R.layout.temp_autocomplete_list_layout, null);
+            view = inflater.inflate(R.layout.item_autocomplete, null);
             view.setTag(new Holder(
                     (TextView)view.findViewById(R.id.item_text),
                     (TextView)view.findViewById(R.id.item_text_detail),

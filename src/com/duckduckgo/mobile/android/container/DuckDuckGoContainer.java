@@ -22,13 +22,10 @@ public class DuckDuckGoContainer {
 	public SCREEN currentScreen = SCREEN.SCR_STORIES;
 	public SCREEN prevScreen = SCREEN.SCR_STORIES;
 	
-	public Drawable progressDrawable, searchFieldDrawable;
+	public Drawable /*progressDrawable, */searchFieldDrawable;
 	public Drawable stopDrawable;
 	
-	public MultiHistoryAdapter historyAdapter = null;
-	
-	//public MainFeedAdapter feedAdapter = null;
-	//public MainFeedTask mainFeedTask = null;
+	//public MultiHistoryAdapter historyAdapter = null;
 
     public AutoCompleteResultsAdapter acAdapter = null;
     public RecentResultCursorAdapter recentResultCursorAdapter = null;

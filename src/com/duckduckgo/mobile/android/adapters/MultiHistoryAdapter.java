@@ -11,7 +11,7 @@ public class MultiHistoryAdapter extends SeparatedListAdapter {
 	HistoryCursorAdapter recentStoryAdapter;
 
 	public MultiHistoryAdapter(Context context) {
-		super(context, R.layout.history_section_header);	
+		super(context);//, R.layout.history_section_header);
 		recentSearchAdapter = new HistoryCursorAdapter(context, DDGApplication.getDB().getCursorSearchHistory());    		
 		recentStoryAdapter = new HistoryCursorAdapter(context, DDGApplication.getDB().getCursorStoryHistory());
 

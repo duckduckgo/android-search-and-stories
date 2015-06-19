@@ -10,9 +10,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,7 +21,6 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.SourceFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
-import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -107,7 +103,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = inflater.inflate(R.layout.temp_main_feed_layout, parent, false);
+        View v = inflater.inflate(R.layout.item_main_feed, parent, false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
     }

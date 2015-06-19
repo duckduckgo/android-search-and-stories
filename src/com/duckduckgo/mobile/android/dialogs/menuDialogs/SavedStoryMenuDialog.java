@@ -17,7 +17,7 @@ public final class SavedStoryMenuDialog extends AlertDialog.Builder{
 	public SavedStoryMenuDialog(final Context context, FeedObject feedObject) {
 		super(context);
 
-        final PageMenuContextAdapter contextAdapter = new SavedStoryMenuAdapter(context, R.layout.temp_dialog_item/*android.R.layout.select_dialog_item*/, android.R.id.text1, feedObject);
+        final PageMenuContextAdapter contextAdapter = new SavedStoryMenuAdapter(context, R.layout.item_dialog/*android.R.layout.select_dialog_item*/, android.R.id.text1, feedObject);
         //setTitle(R.string.StoryOptionsTitle);
         setAdapter(contextAdapter, new ExecuteActionOnClickListener(contextAdapter));
 	}

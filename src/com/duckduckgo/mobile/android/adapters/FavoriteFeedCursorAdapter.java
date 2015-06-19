@@ -10,11 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.support.v7.internal.view.menu.MenuBuilder;
-import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,14 +22,9 @@ import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
-import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
-import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -58,7 +50,7 @@ public class FavoriteFeedCursorAdapter extends CursorAdapter {
         // when the view will be created for first time,
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View retView = inflater.inflate(R.layout.temp_main_feed_layout, parent, false);
+        View retView = inflater.inflate(R.layout.item_main_feed, parent, false);
 
         return retView;
     }

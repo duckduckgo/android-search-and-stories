@@ -1,21 +1,14 @@
 package com.duckduckgo.mobile.android.adapters;
 import android.content.Context;
 import android.database.Cursor;
-import android.text.InputType;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.events.pasteEvents.SavedSearchPasteEvent;
-import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 public class FavoriteResultCursorAdapter extends CursorAdapter {
 	
@@ -29,7 +22,7 @@ public class FavoriteResultCursorAdapter extends CursorAdapter {
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         //View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
-        View retView = inflater.inflate(R.layout.temp_search_layout, parent, false);
+        View retView = inflater.inflate(R.layout.item_search, parent, false);
         //View retView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
         return retView;

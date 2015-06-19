@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -43,7 +44,7 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        fragmentView = inflater.inflate(R.layout.sources, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_sources, container, false);
         return fragmentView;
     }
 
@@ -92,8 +93,10 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
     }
 
     private View createHeaderView() {
-        View footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_sources_header, null, false);
-        return footerView;
+        View headerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.sources_header, null, false);
+        TextView title = (TextView) headerView.findViewById(R.id.list_item_section_text);
+        title.setText(getActivity().getResources().getString(R.string.options));
+        return headerView;
     }
 
     public void onSourcesRetrieved(List<SourcesObject> feed) {

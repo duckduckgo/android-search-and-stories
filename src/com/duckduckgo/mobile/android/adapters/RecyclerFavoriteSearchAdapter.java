@@ -8,15 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
-
-import java.util.ArrayList;
 
 public class RecyclerFavoriteSearchAdapter extends RecyclerView.Adapter<RecyclerFavoriteSearchAdapter.ViewHolder> {
 
@@ -46,7 +42,7 @@ public class RecyclerFavoriteSearchAdapter extends RecyclerView.Adapter<Recycler
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int ViewType) {
-        View v = inflater.inflate(R.layout.temp_search_layout, parent, false);
+        View v = inflater.inflate(R.layout.item_search, parent, false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
     }

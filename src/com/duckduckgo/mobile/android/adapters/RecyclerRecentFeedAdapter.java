@@ -100,7 +100,7 @@ public class RecyclerRecentFeedAdapter extends RecyclerView.Adapter<RecyclerRece
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int ViewType) {
-        View v = inflater.inflate(R.layout.temp_main_feed_layout, parent, false);
+        View v = inflater.inflate(R.layout.item_main_feed, parent, false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
     }

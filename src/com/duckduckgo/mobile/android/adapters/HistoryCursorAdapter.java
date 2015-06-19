@@ -34,10 +34,10 @@ public class HistoryCursorAdapter extends CursorAdapter {
         // when the view will be created for first time,
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
+        //View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
         //View retView = inflater.inflate(R.layout.temp_search_layout, parent, false);
 
-        return retView;
+        return null;//return retView;
     }
 
     @Override
@@ -47,13 +47,13 @@ public class HistoryCursorAdapter extends CursorAdapter {
 
     	final String data = cursor.getString(cursor.getColumnIndex("data"));
     	final String type = cursor.getString(cursor.getColumnIndex("type"));
-    	
-        TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
-        textViewHistory.setText(data);
+    	/*
+        //TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
+        //textViewHistory.setText(data);
         
         String strUrl = cursor.getString(cursor.getColumnIndex("url"));
         String extraType = cursor.getString(cursor.getColumnIndex("extraType"));
-        AsyncImageView imageViewHistory = (AsyncImageView) view.findViewById(R.id.recentSearchImage);
+        //AsyncImageView imageViewHistory = (AsyncImageView) view.findViewById(R.id.recentSearchImage);
         if(extraType.length() != 0) {
           imageViewHistory.setType(extraType);
           
@@ -106,7 +106,7 @@ public class HistoryCursorAdapter extends CursorAdapter {
         else {
         	buttonHistory.setVisibility(View.GONE);
         	buttonHistory.setOnClickListener(null);
-        }
+        }*/
 
     }
 }

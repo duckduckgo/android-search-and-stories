@@ -3,24 +3,19 @@ package com.duckduckgo.mobile.android.views;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 
 import java.util.ArrayList;
@@ -47,10 +42,10 @@ public class DDGDialogMenu extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        fragmentView = inflater.inflate(R.layout.temp_popupwindows, null);
+        fragmentView = inflater.inflate(R.layout.overflow_menu, null);
         menuListView = (ListView) fragmentView.findViewById(R.id.menu_listview);
         menuListView.setVisibility(View.VISIBLE);
-        menuAdapter = new DDGMenuAdapter(getActivity(), R.layout.temp_menuitem, menuItems);
+        menuAdapter = new DDGMenuAdapter(getActivity(), R.layout.item_overflow_menu, menuItems);
         Log.e("aaa", "menu adapter count: "+menuAdapter.getCount());
         menuListView.setAdapter(menuAdapter);
 

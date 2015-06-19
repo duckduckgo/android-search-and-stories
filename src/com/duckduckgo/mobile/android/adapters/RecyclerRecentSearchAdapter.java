@@ -14,8 +14,6 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemLongClickEvent;
-import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 
 public class RecyclerRecentSearchAdapter extends RecyclerView.Adapter<RecyclerRecentSearchAdapter.ViewHolder> {
@@ -46,7 +44,7 @@ public class RecyclerRecentSearchAdapter extends RecyclerView.Adapter<RecyclerRe
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int ViewType) {
-        View v = inflater.inflate(R.layout.temp_search_layout, parent, false);
+        View v = inflater.inflate(R.layout.item_search, parent, false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
     }

@@ -5,9 +5,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +14,7 @@ import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
-import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
-import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
-import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -43,7 +37,7 @@ public class RecentFeedCursorAdapter extends CursorAdapter {
         //View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
         //View retView = inflater.inflate(R.layout.temp_search_layout, parent, false);
         //View retView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
-        View retView = inflater.inflate(R.layout.temp_main_feed_layout, parent, false);
+        View retView = inflater.inflate(R.layout.item_main_feed, parent, false);
 
         return retView;
     }

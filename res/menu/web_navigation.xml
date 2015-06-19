@@ -4,13 +4,13 @@
 
     <item android:id="@+id/action_back"
           android:title="@string/action_back"
-          android:icon="@drawable/temp_back_button_selector"
+          android:icon="@drawable/back_button_selector"
           android:orderInCategory="10"
           android:showAsAction="never"/>
 
     <item android:id="@+id/action_forward"
           android:title="@string/action_forward"
-          android:icon="@drawable/temp_forward_button_selector"
+          android:icon="@drawable/forward_button_selector"
           android:orderInCategory="20"
           android:showAsAction="never"/>
 
@@ -19,11 +19,5 @@
           android:icon="@drawable/refresh"
           android:orderInCategory="30"
           android:showAsAction="never"/>
-<!--
-    <item android:id="@+id/action_close"
-          android:title="@string/action_close"
-          android:icon="@null"
-          android:orderInCategory="30"
-          android:showAsAction="never"/>--><!--android:icon="@drawable/menu_red"-->
 
 </menu>

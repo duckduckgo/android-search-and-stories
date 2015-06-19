@@ -8,16 +8,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.preference.PreferenceFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
@@ -29,8 +26,6 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
-import com.duckduckgo.mobile.android.util.TorIntegration;
-import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
 
 public class PrefFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
 
@@ -57,7 +52,7 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.temp_preferences);
+        addPreferencesFromResource(R.xml.preferences);
         getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
 
         startScreenPref = (ListPreference) findPreference("startScreenPref");

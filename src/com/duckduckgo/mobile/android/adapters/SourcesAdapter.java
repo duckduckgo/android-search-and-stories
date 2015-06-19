@@ -11,8 +11,6 @@ import java.util.TreeMap;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Build;
-import android.preference.CheckBoxPreference;
-import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,7 +19,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -94,8 +91,7 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 		if(!item.isSection()) {
 			
 			if (cv == null || cv.getTag() == null) {
-				//cv = inflater.inflate(R.layout.sourcepref_layout, null);
-                cv = inflater.inflate(R.layout.temp_sourcepref_layout, null);
+                cv = inflater.inflate(R.layout.item_sourcepref_layout, null);
 				cv.setTag(new SourceHolder((TextView)cv.findViewById(R.id.sourceTitleTextView),
 									 (TextView)cv.findViewById(R.id.sourceTitleSubTextView),
 						             (AsyncImageView)cv.findViewById(R.id.sourceItemBackground),

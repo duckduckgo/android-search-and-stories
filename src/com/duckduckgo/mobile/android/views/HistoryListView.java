@@ -26,7 +26,7 @@ public class HistoryListView extends ListView implements android.widget.AdapterV
 	public HistoryListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		
-		leftRecentHeaderView = LayoutInflater.from(context).inflate(R.layout.recentsearch_notrecording_layout, null, false);
+		//leftRecentHeaderView = LayoutInflater.from(context).inflate(R.layout.recentsearch_notrecording_layout, null, false);
 		
 		this.setOnItemClickListener(this);
 		this.setOnItemLongClickListener(this);

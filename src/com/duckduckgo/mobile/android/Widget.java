@@ -28,7 +28,7 @@ public class Widget extends AppWidgetProvider {
             PendingIntent pendingIntent = PendingIntent.getActivity(context, appWidgetId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
             // Get the layout for the App Widget and attach an on-click listener to the button
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.temp_widget);
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
             views.setOnClickPendingIntent(R.id.search_widget, pendingIntent);
             //views.setOnClickPendingIntent(R.id.widget_go_btn, pendingIntent);
             //views.setOnClickPendingIntent(R.id.widget_search_text, pendingIntent);
@@ -57,7 +57,7 @@ public class Widget extends AppWidgetProvider {
 
         //CharSequence widgetText = context.getString(R.string.appwidget_text);
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.temp_widget);
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget);
         views.setOnClickPendingIntent(R.id.search_widget, pendingIntent);
         //views.setTextViewText(R.id.appwidget_text, widgetText);
 

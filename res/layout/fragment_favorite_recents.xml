@@ -27,7 +27,7 @@
             android:layout_width="fill_parent"
             android:layout_height="2dp"
             android:layout_alignParentTop="true"
-            android:background="?attr/topDropShadow"/>
+            android:background="@drawable/dropshadow_up_light"/>
 
     </FrameLayout>
 

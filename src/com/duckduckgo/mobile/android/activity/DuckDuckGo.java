@@ -25,7 +25,6 @@ import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
-import com.duckduckgo.mobile.android.adapters.MultiHistoryAdapter;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
@@ -72,9 +71,6 @@ import com.duckduckgo.mobile.android.events.saveEvents.UnSaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
 import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.savedSearchEvents.SavedSearchItemSelectedEvent;
-import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarClearEvent;
-import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetProgressEvent;
-import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetTextEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
@@ -150,7 +146,7 @@ public class DuckDuckGo extends ActionBarActivity {
     }
     
     public void syncAdapters() {
-    	DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
+    	//DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
     	BusProvider.getInstance().post(new SyncAdaptersEvent());
     }
 
@@ -165,7 +161,7 @@ public class DuckDuckGo extends ActionBarActivity {
 
         sharedPreferences = DDGApplication.getSharedPreferences();
 
-		setContentView(R.layout.temp_main);
+		setContentView(R.layout.main);
         getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.background));
         
         DDGUtils.displayStats = new DisplayStats(this);
@@ -360,16 +356,16 @@ public class DuckDuckGo extends ActionBarActivity {
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             DDGControlVar.mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.cross, getTheme());
-            DDGControlVar.mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress, getTheme());
+            //DDGControlVar.mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress, getTheme());
             DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield, getTheme());
         } else {
             DDGControlVar.mDuckDuckGoContainer.stopDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.cross);
-            DDGControlVar.mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
+            //DDGControlVar.mDuckDuckGoContainer.progressDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.page_progress);
             DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable = DuckDuckGo.this.getResources().getDrawable(R.drawable.searchfield);
         }
         DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable.setAlpha(150);
 
-        DDGControlVar.mDuckDuckGoContainer.historyAdapter = new MultiHistoryAdapter(this);
+        //DDGControlVar.mDuckDuckGoContainer.historyAdapter = new MultiHistoryAdapter(this);
 
         DDGControlVar.mDuckDuckGoContainer.acAdapter = new AutoCompleteResultsAdapter(this);
         DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter = new RecentResultCursorAdapter(this, DDGApplication.getDB().getCursorSearchHistory());
@@ -1038,22 +1034,6 @@ public class DuckDuckGo extends ActionBarActivity {
 	@Subscribe
 	public void onDisplayScreenEvent(DisplayScreenEvent event) {
         displayScreen(event.screenToDisplay, event.clean);
-	}
-
-	@Subscribe
-	public void onSearchBarClearEvent(SearchBarClearEvent event) {
-        DDGActionBarManager.getInstance().clearSearchBar();
-	}
-
-	@Subscribe
-	public void onSearchBarSetTextEvent(SearchBarSetTextEvent event) {
-        DDGActionBarManager.getInstance().setSearchBarText(event.text);
-	}
-
-	@Subscribe
-	public void onSearchBarSetProgressEvent(SearchBarSetProgressEvent event) {
-		DDGControlVar.mDuckDuckGoContainer.progressDrawable.setLevel(event.newProgress);
-		getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.progressDrawable);
 	}
 
 	@Subscribe

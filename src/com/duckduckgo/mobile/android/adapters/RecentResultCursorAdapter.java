@@ -2,12 +2,10 @@ package com.duckduckgo.mobile.android.adapters;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import android.widget.TextView;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.pasteEvents.PasteEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
 
 public class RecentResultCursorAdapter extends CursorAdapter {
@@ -45,7 +42,7 @@ public class RecentResultCursorAdapter extends CursorAdapter {
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         //View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
-        View retView = inflater.inflate(R.layout.temp_search_layout, parent, false);
+        View retView = inflater.inflate(R.layout.item_search, parent, false);
         //View retView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
         return retView;

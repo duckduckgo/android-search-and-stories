@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:toolbar="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
+    <!--android:layout_height="@dimen/feed_item_height"-->
+
+    <com.duckduckgo.mobile.android.download.AsyncImageView android:layout_width="match_parent"
+                                                           android:layout_height="@dimen/feed_item_height"
+                                                           android:scaleType="centerCrop"
+                                                           android:id="@+id/feedItemBackground" />
+
+    <FrameLayout
+        android:id="@+id/feedMenuContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:padding="8dp">
+
+        <ImageView
+            android:id="@+id/feedMenuImage"
+            android:layout_width="@dimen/toolbar_menu_width"
+            android:layout_height="@dimen/toolbar_category_height"
+            android:background="@drawable/feed_category_background"
+            android:src="@drawable/menu_white_horizontal"
+            android:scaleType="center"/>
+
+    </FrameLayout>
+    
+    <FrameLayout
+        android:id="@+id/feedCategoryContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/feedMenuContainer"
+        android:paddingTop="@dimen/toolbar_category_margin"
+        android:paddingLeft="@dimen/toolbar_category_margin"
+        android:paddingBottom="@dimen/toolbar_category_margin">
+
+        <TextView
+            android:id="@+id/feedCategoryTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/toolbar_category_height"
+            android:background="@drawable/feed_category_background"
+            style="@style/FeedCategory"/>
+
+    </FrameLayout>
+<!--
+    <TextView
+        android:id="@+id/feedCategoryTextView"
+        android:layout_marginTop="@dimen/toolbar_category_margin"
+        android:layout_marginRight="@dimen/actionbar_overflow_width"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/toolbar_category_height"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/temp_feed_category_background"
+        style="@style/FeedCategory"/>-->
+<!--
+    <ImageButton
+        android:id="@+id/feedMenuButton"
+        android:layout_width="@dimen/toolbar_menu_width"
+        android:layout_height="@dimen/toolbar_category_height"
+        android:layout_marginTop="@dimen/toolbar_category_margin"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:background="@drawable/temp_feed_category_background"
+        android:src="@drawable/menu_white_horizontal"
+        android:scaleType="center"/>-->
+<!--
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_height"
+        android:minHeight="@dimen/toolbar_height"
+        android:background="@color/feed_toolbar_background"
+        android:layout_below="@id/feedItemBackground"
+        android:id="@+id/feedWrapper"
+        toolbar:contentInsetStart="0dp"
+        toolbar:theme="@style/FeedToolbar"
+        toolbar:popupTheme="@style/ThemeOverlay.AppCompat.Light">--><!--
+        app:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_height"
+            android:minHeight="@dimen/toolbar_height"
+            android:background="@color/feed_toolbar_background"
+            android:layout_below="@id/feedItemBackground"
+            android:id="@+id/feedWrapper"><!--
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:background="#00ffff">-->
+
+            <com.duckduckgo.mobile.android.download.AsyncImageView
+                style="@style/MainFeedText"
+                android:layout_width="@dimen/toolbar_icon_size"
+                android:layout_height="@dimen/toolbar_icon_size"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/toolbar_icon_margin"
+                android:scaleType="fitCenter"
+                app:usePicasso="false"
+                android:id="@+id/feedItemSourceIcon" />
+
+            <TextView android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_gravity="center_vertical"
+                      android:layout_marginLeft="@dimen/toolbar_title_left_margin"
+                      android:layout_marginRight="8dp"
+                      android:ellipsize="end"
+                      android:id="@+id/feedTitleTextView"
+                      style="@style/FeedTitle" /><!--
+                      android:layout_marginLeft="@dimen/toolbar_title_left_margin"-->
+            <!--
+                      android:text="This is a Test String!"-->
+
+        </LinearLayout>
+        <!--
+                      android:paddingLeft="5dp"
+                      android:paddingTop="5dp"
+                      android:paddingBottom="5dp"--><!--
+    </android.support.v7.widget.Toolbar>-->
+    <View
+        android:id="@+id/divider_1"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/feedWrapper"
+        android:background="@color/feed_divider_shadow"/>
+    <View
+        android:id="@+id/divider_2"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_divider_height"
+        android:layout_below="@id/divider_1"
+        android:background="@color/feed_divider"/>
+    <View
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/divider_2"
+        android:background="@color/feed_divider_shadow"/>
+
+    <RelativeLayout
+        android:layout_below="@id/feedWrapper"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/toolbar_divider_height"
+        android:background="@color/feed_divider">
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.33dp"
+            android:layout_alignParentTop="true"
+            android:background="@color/feed_divider_shadow"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.33dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/feed_divider_shadow"/>
+        </RelativeLayout>
+</RelativeLayout>

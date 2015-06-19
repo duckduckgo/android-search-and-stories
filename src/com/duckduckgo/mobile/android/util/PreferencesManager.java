@@ -91,7 +91,6 @@ public class PreferencesManager {
 	
 	public static void clearValues() {
 		Editor editor = DDGApplication.getSharedPreferences().edit();
-		editor.putInt("fontPrevProgress", DDGConstants.FONT_SEEKBAR_MID);
 		editor.remove("mainFontSize");
 		editor.remove("recentFontSize");
 		editor.remove("webViewFontSize");

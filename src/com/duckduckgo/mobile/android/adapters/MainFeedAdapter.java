@@ -10,14 +10,8 @@ import java.util.List;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Rect;
-import android.os.Build;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,19 +20,12 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.widget.ArrayAdapter;
-import android.widget.Filter;
-import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.download.Holder;
-import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
-import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
-import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
-import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -88,7 +75,7 @@ public class MainFeedAdapter extends ArrayAdapter<FeedObject>/* implements Filte
 	public View getView(int position, View cv, ViewGroup parent) {
         View view = cv;
 		if (view == null) {
-			view = inflater.inflate(R.layout.temp_main_feed_layout, null);
+			view = inflater.inflate(R.layout.item_main_feed, null);
 			Holder holder = new Holder(/*(Toolbar) cv.findViewById(R.id.feedWrapper),*/
 					(TextView)view.findViewById(R.id.feedTitleTextView),
 					(TextView)view.findViewById(R.id.feedCategoryTextView),

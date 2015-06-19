@@ -1,6 +1,5 @@
 package com.duckduckgo.mobile.android.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
@@ -73,7 +72,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         setFocusable(true);
         setOutsideTouchable(true);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        container = inflater.inflate(R.layout.temp_popupwindows, null);
+        container = inflater.inflate(R.layout.overflow_menu, null);
         setContentView(container);
         setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
         //setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -98,7 +97,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     }
 
     public void setMenu(Menu menu) {
-        overflowAdapter = new DDGOverflowAdapter(context, R.layout.temp_menuitem);
+        overflowAdapter = new DDGOverflowAdapter(context, R.layout.item_overflow_menu);
         menuListView.setAdapter(overflowAdapter);
         setMenu(menu, false);
     }
@@ -125,7 +124,7 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         headerItems = new HashMap<Integer, MenuItem>();
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         for(int i=0; i<menu.size(); i++) {
-            ImageButton imageButton = (ImageButton) inflater.inflate(R.layout.temp_header_item, header, false);
+            ImageButton imageButton = (ImageButton) inflater.inflate(R.layout.web_navigation_button, header, false);
             final String title = ""+menu.getItem(i).getTitle();
             final int actionId = menu.getItem(i).getItemId();
             imageButton.setId(actionId);

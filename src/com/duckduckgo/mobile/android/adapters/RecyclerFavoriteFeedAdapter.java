@@ -2,7 +2,6 @@ package com.duckduckgo.mobile.android.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
@@ -86,7 +85,7 @@ public class RecyclerFavoriteFeedAdapter extends RecyclerView.Adapter<RecyclerFa
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int ViewType) {
-        View v = inflater.inflate(R.layout.temp_main_feed_layout, parent, false);
+        View v = inflater.inflate(R.layout.item_main_feed, parent, false);
         ViewHolder holder = new ViewHolder(v);
         return holder;
     }

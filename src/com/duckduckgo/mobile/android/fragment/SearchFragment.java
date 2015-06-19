@@ -54,7 +54,7 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
     private FavoriteResultCursorAdapter savedSearchAdapter;
     private RecentResultCursorAdapter recentAdapter;
 
-    View headerPadding;
+    //View headerPadding;
     private LinearLayout search_container;
     private View fragmentView = null;
 
@@ -95,14 +95,14 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         adapter.addSection("recents", recentAdapter);
         adapter.addSection("favorites", savedSearchAdapter);
 
-        headerPadding = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_fake_header, searchListView, false);
+        //headerPadding = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_fake_header, searchListView, false);
 
         searchListView.setAdapter(adapter);
 
         autoCompleteResultListView = (ListView) fragmentView.findViewById(R.id.autocomplete_list);
         autoCompleteResultListView.setDivider(null);
 
-        headerPadding = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_fake_header, autoCompleteResultListView, false);
+        //headerPadding = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.temp_fake_header, autoCompleteResultListView, false);
 
         autoCompleteResultListView.setOnItemClickListener(this);
         autoCompleteResultListView.setOnItemLongClickListener(this);

@@ -5,7 +5,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,7 +12,6 @@ import android.net.MailTo;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
-import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
@@ -21,11 +19,8 @@ import android.webkit.WebSettings.PluginState;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.dialogs.SSLCertificateDialog;
-import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarClearEvent;
-import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetTextEvent;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -83,14 +78,11 @@ public class DDGWebViewClient extends WebViewClient {
 	@SuppressLint("NewApi")
 	public void onPageStarted(WebView view, String url, Bitmap favicon) {
 		super.onPageStarted(view, url, favicon);
-        Log.e("aaa", "on page started: "+url);
         if(url.equals(DDGWebView.ABOUT_BLANK)){
-            //activity.clearSearchBar();//to delete
-			BusProvider.getInstance().post(new SearchBarClearEvent());
+            DDGActionBarManager.getInstance().clearSearchBar();
             return;
         }
 		mLoaded = false;
-        //DDGControlVar.newPageLoading = true;
         view.getSettings().setDomStorageEnabled(true);
         view.getSettings().setPluginState(PluginState.ON_DEMAND);
 		
@@ -186,7 +178,6 @@ public class DDGWebViewClient extends WebViewClient {
 	
 	public void onPageFinished (WebView view, String url) {
 		super.onPageFinished(view, url);
-		Log.e("aaa", "on page finished: "+url);
 		mLoaded = true;
 
 		DDGControlVar.mCleanSearchBar = false;
@@ -246,7 +237,7 @@ public class DDGWebViewClient extends WebViewClient {
 	}
 
 	private void setSearchBarText(String text) {
-		BusProvider.getInstance().post(new SearchBarSetTextEvent(text));
+        DDGActionBarManager.getInstance().setSearchBarText(text);
 	}
 
 }

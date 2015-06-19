@@ -1,81 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/com.duckduckgo.mobile.android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:baselineAligned="false"
-    android:orientation="vertical"
-    android:id="@+id/mainLayout" >
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activityContainer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!-- Main Search View -->
+    <RelativeLayout
+        android:id="@+id/main_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true">
 
-	<include android:id="@+id/searchBar" layout="@layout/searchbar" />
-    
-    <ProgressBar android:layout_width="fill_parent"
-    		 	 android:layout_height="5dp"
-    		 	 android:visibility="gone"
-    		 	 style="@android:style/Widget.ProgressBar.Horizontal"
-    		 	 android:id="@+id/pageLoadingProgress" />
+        <include android:id="@+id/toolbar" layout="@layout/appbar" />
 
-    <!-- Main View Area -->
-    <RelativeLayout android:layout_width="fill_parent"
-        		    android:layout_height="0dip"
-        		    android:layout_weight="1"
-        		    android:background="?attr/leftLayoutRootBackground"	 
-        		    android:id="@+id/mainViewArea">
-        		    
-        <com.duckduckgo.mobile.android.widgets.SafeViewFlipper android:id="@+id/ViewFlipperMain"
-        android:layout_width="wrap_content"
-        android:layout_height="fill_parent">
-        
-        <com.duckduckgo.mobile.android.views.webview.DDGWebView android:layout_width="match_parent"
-            	 android:layout_height="match_parent"
-            	 android:id="@+id/mainWebView" />
-        
-        <com.handmark.pulltorefresh.library.PullToRefreshMainFeedListView
-            	  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:divider="@android:color/white"
-                  android:dividerHeight="1dp"
-                  
-                  app:ptrAnimationStyle="flip"
-                  app:ptrHeaderTextColor="?attr/leftItemTextColor"
-                  app:ptrHeaderSubTextColor="@color/left_secondary_text"
-                  app:ptrDrawableTop="?attr/ptrDrawable"
-                  app:ptrHeaderSize="10dp"
-                  
-                  android:fadingEdge="none"
-        		  android:fastScrollEnabled="false"
-        		  android:footerDividersEnabled="false"
-        		  android:headerDividersEnabled="false"
-        		  android:smoothScrollbar="true"
-        		  
-                  android:id="@+id/mainFeedItems" />
-        
-<!--         <com.duckduckgo.mobile.android.views.SavedSearchListView -->
-<!--             	  android:layout_width="match_parent" -->
-<!--                   android:layout_height="match_parent" -->
-<!--                   android:background="@android:color/transparent" -->
-<!--                   android:id="@+id/recentSearchItems" /> -->
-        
-        <include android:id="@+id/recentSearchLayout" layout="@layout/recentsearch" />
-<!--
-        <include android:id="@+id/duckModeLayout" layout="@layout/duckmode" />      
--->
-        <include android:id="@android:id/tabhost" layout="@layout/tab_saved_view" />
+        <FrameLayout
+            android:id="@+id/fragmentContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/toolbar"
+            android:background="@color/background"/>
 
-    </com.duckduckgo.mobile.android.widgets.SafeViewFlipper>
-
-        
-        <include android:id="@+id/fontSeekLayout" layout="@layout/font_seekbar" />
-        
         <View
-        android:id="@+id/dropshadow_top"
-        android:layout_width="fill_parent"
-        android:layout_height="2dp"
-        android:layout_alignParentTop="true"
-        android:background="?attr/topDropShadow"/>
-        
+            android:visibility="visible"
+            android:id="@+id/dropshadow_top"
+            android:layout_width="fill_parent"
+            android:layout_height="4dp"
+            android:layout_below="@id/toolbar"
+            android:background="@drawable/dropshadow_up_light"/>
+
     </RelativeLayout>
-        		  
-</LinearLayout>
+
+</FrameLayout>

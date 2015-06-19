@@ -1,21 +1,16 @@
 package com.duckduckgo.mobile.android.views.webview;
 
 import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
-import com.duckduckgo.mobile.android.activity.DuckDuckGo;
-import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetProgressEvent;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 
 public class DDGWebChromeClient extends WebChromeClient {
 	
@@ -44,21 +39,8 @@ public class DDGWebChromeClient extends WebChromeClient {
 		if(view.getVisibility() != View.VISIBLE) {
 			return;
 		}
-        Log.e("aaa", "new progress: "+newProgress);
 
-        if(newProgress == 100){
-			//activity.getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.searchFieldDrawable);
-		}
-		else {
-			if(!DDGControlVar.mCleanSearchBar) {
-				//DDGControlVar.mDuckDuckGoContainer.progressDrawable.setLevel(newProgress*100);
-				//BusProvider.getInstance().post(new SearchBarSetProgressEvent(newProgress*100));//aaa - blue bar loading page
-				//activity.getSearchField().setBackgroundDrawable(DDGControlVar.mDuckDuckGoContainer.progressDrawable);
-			}
-		}
-
-        if(!DDGControlVar.mCleanSearchBar/* && !DDGControlVar.pageLoaded*/) {
-
+        if(!DDGControlVar.mCleanSearchBar) {
             DDGActionBarManager.getInstance().setProgress(newProgress);
         }
 	}

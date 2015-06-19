@@ -14,14 +14,12 @@
     <item>3</item>
 </string-array>
 <string-array name="useExternalBrowserArray">
-    <item>@string/PrefNever</item><!--
-    <item>@string/PrefExternalBrowserExceptSearches</item>-->
+    <item>@string/PrefNever</item>
     <item>@string/PrefExternalBrowserAlways</item>
 </string-array>
 <string-array name="useExternalBrowserValues">
     <item>0</item>
-    <item>1</item><!--
-    <item>2</item>-->
+    <item>1</item>
 </string-array>
 <string-array name="themeArray">
    <item>@string/PrefThemeDark</item>
@@ -190,11 +188,11 @@
     <item>vn-vi</item>
 </string-array>
 
-
+<!--
 <string-array name="leftMenuDefault">
    <item>@string/LeftStories</item>
    <item>@string/LeftSaved</item>
    <item>@string/LeftSettings</item>
 </string-array>
-
+-->
 </resources>

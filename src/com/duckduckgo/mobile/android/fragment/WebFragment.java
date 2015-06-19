@@ -18,6 +18,7 @@ import android.webkit.DownloadListener;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.activity.KeyboardService;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewQueryMenuDialog;
@@ -44,7 +45,6 @@ import com.duckduckgo.mobile.android.events.saveEvents.SaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.SaveStoryEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveSearchEvent;
 import com.duckduckgo.mobile.android.events.saveEvents.UnSaveStoryEvent;
-import com.duckduckgo.mobile.android.events.searchBarEvents.SearchBarSetTextEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareFeedEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareSearchEvent;
 import com.duckduckgo.mobile.android.events.shareEvents.ShareWebPageEvent;
@@ -132,8 +132,6 @@ public class WebFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-        //setHasOptionsMenu(true);
-
 		setRetainInstance(true);
         context = getActivity();
         init();
@@ -166,9 +164,8 @@ public class WebFragment extends Fragment {
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        //setHasOptionsMenu(false);
         if(!hidden) {
-            BusProvider.getInstance().post(new SearchBarSetTextEvent(mainWebView.getUrl()));
+            DDGActionBarManager.getInstance().setSearchBarText(mainWebView.getUrl());
         }
     }
 
@@ -421,7 +418,7 @@ public class WebFragment extends Fragment {
 		DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_SEARCH;
 
 		DDGApplication.getDB().insertRecentSearch(term);
-		DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
+		//DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
 
 		if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
 			DDGUtils.searchExternal(context, term);
@@ -446,7 +443,7 @@ public class WebFragment extends Fragment {
 		}
 		else if(historyObject.isFeedObject()) {
 			DDGApplication.getDB().insertHistoryObject(historyObject);
-			DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
+			//DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
 			String feedId = historyObject.getFeedId();
 			if(feedId != null) {
 				BusProvider.getInstance().post(new FeedItemSelectedEvent(feedId));
@@ -454,7 +451,7 @@ public class WebFragment extends Fragment {
 		}
 		else {
 			DDGApplication.getDB().insertHistoryObject(historyObject);
-			DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
+			//DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
 
 			showWebUrl(historyObject.getUrl());
 		}
