@@ -118,6 +118,7 @@ public class DuckDuckGo extends ActionBarActivity {
 		
 	public boolean savedState = false;
     private boolean backPressed = false;
+    private boolean canCommitFragmentSafely = true;
 		
 	private final int PREFERENCES_RESULT = 0;
 
@@ -154,6 +155,7 @@ public class DuckDuckGo extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "on create");
+        canCommitFragmentSafely = true;
 
         keyboardService = new KeyboardService(this);
 
@@ -506,6 +508,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	public void onResume() {
 		super.onResume();
         Log.d(TAG, "on resume");
+        canCommitFragmentSafely = true;
 		
         DDGUtils.displayStats.refreshStats(this);
 
@@ -524,6 +527,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	public void onPause() {
 		super.onPause();
         Log.d(TAG, "on pause");
+        canCommitFragmentSafely = false;
 
 
         DDGActionBarManager.getInstance().dismissMenu();
@@ -795,7 +799,7 @@ public class DuckDuckGo extends ActionBarActivity {
                 transaction.hide(currentFragment);
             }
             transaction.addToBackStack(newTag);
-            if(!isFinishing()) {
+            if(canCommitFragmentSafely && !isFinishing()) {
                 transaction.commit();
                 fragmentManager.executePendingTransactions();
             }
@@ -848,6 +852,7 @@ public class DuckDuckGo extends ActionBarActivity {
 	protected void onSaveInstanceState(Bundle outState)	{
 		AppStateManager.saveAppState(outState, DDGControlVar.mDuckDuckGoContainer, DDGControlVar.currentFeedObject);
 		super.onSaveInstanceState(outState);
+        canCommitFragmentSafely = false;
 	}
 	
 	@Override

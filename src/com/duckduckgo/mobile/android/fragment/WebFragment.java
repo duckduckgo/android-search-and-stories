@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -105,6 +106,12 @@ public class WebFragment extends Fragment {
         args.putInt(SESSION_TYPE, sessionType.getCode());
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        this.context = activity;
     }
 
 	@Override
@@ -525,7 +532,7 @@ public class WebFragment extends Fragment {
 		if(isStorySessionOrStoryUrl()) {
 			DDGControlVar.mDuckDuckGoContainer.lastFeedUrl = webViewUrl;
 			if(DDGControlVar.currentFeedObject != null) {
-				new WebViewStoryMenuDialog(context, DDGControlVar.currentFeedObject, mainWebView.isReadable).show();
+				new WebViewStoryMenuDialog(context, DDGControlVar.currentFeedObject, mainWebView.isReadable).show();//
 			}
 		}
 		else if(DDGUtils.isSerpUrl(webViewUrl)) {
