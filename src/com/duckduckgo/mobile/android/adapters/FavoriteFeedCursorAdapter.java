@@ -73,9 +73,6 @@ public class FavoriteFeedCursorAdapter extends CursorAdapter {
         final ImageView imageViewMenu = (ImageView) view.findViewById(R.id.feedMenuImage);
     	final AsyncImageView imageViewBackground = (AsyncImageView) view.findViewById(R.id.feedItemBackground);
     	final AsyncImageView imageViewFeedIcon = (AsyncImageView) view.findViewById(R.id.feedItemSourceIcon);
-        //final Toolbar toolbar = (Toolbar) view.findViewById(R.id.feedWrapper);
-        //toolbar.getMenu().clear();
-        //toolbar.inflateMenu(R.menu.feed);
 
     	URL feedUrl = null;
 
@@ -90,7 +87,6 @@ public class FavoriteFeedCursorAdapter extends CursorAdapter {
     	}
 
     	imageViewFeedIcon.setType(feedType);	// stored source id in imageview
-//    	imageViewFeedIcon.setOnClickListener(sourceClickListener);
 
     	final View iconParent = (View) imageViewBackground.getParent();//view.findViewById(R.id.feedWrapper);
     	iconParent.post(new Runnable() {
@@ -163,7 +159,6 @@ public class FavoriteFeedCursorAdapter extends CursorAdapter {
             @Override
             public void onClick(View v) {
                 if(feedMenu.isShowing()) {
-                    //feedMenu.dismiss();
                     return;
                 } else {
                     feedMenu.setFeed(DDGApplication.getDB().selectFeedById(feedId));
@@ -172,35 +167,7 @@ public class FavoriteFeedCursorAdapter extends CursorAdapter {
                 }
             }
         });
-/*
-        toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
-        //aaa todo check why removing a feed inflate more items in other menus
-        //aaaa solved!
 
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch(item.getItemId()) {
-                    case R.id.action_remove_favorite:
-                        BusProvider.getInstance().post(new UnSaveStoryEvent(feedId));
-                        //toolbar.
-                        return true;
-                    case R.id.action_share:
-                        if(url!=null) {
-                            BusProvider.getInstance().post(new ShareFeedEvent(title, url));
-                        }
-                        return true;
-                    case R.id.action_external:
-                        if(url!=null) {
-                            BusProvider.getInstance().post(new SendToExternalBrowserEvent(null, url));
-                        }
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-*/
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,7 +179,6 @@ public class FavoriteFeedCursorAdapter extends CursorAdapter {
             @Override
             public boolean onLongClick(View v) {
                 if(!feedMenu.isShowing()) {
-                    //feedMenu.setFeed(DDGApplication.getDB().selectFeedById(feedId));
                     feedMenu.setFeed(new FeedObject((SQLiteCursor)cursor));
                     feedMenu.setMenu(menu);
                     feedMenu.showFeedMenu(imageViewMenu);

@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.adapters;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
@@ -39,20 +40,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> implements Filterable {
-    private final LayoutInflater inflater;
+/**
+ * Created by fgei on 6/19/15.
+ */
+public class RecyclerAutoCompleteResultsAdapter extends RecyclerView.Adapter<RecyclerAutoCompleteResultsAdapter.ViewHolder> implements Filterable {
 
-    protected final String TAG = "ACResultsAdapter";
-    public List<SuggestObject> mResultList = Collections.synchronizedList(new ArrayList<SuggestObject>());
+    public static final String TAG = "recycler_autocomplete_results_adapter";
+
+    public Context context;
+    private LayoutInflater inflater;
+    private List<SuggestObject> data = Collections.synchronizedList(new ArrayList<SuggestObject>());
 
     RoundCornersTransformation roundTransform;
     ScaleWidthTransformation scaleTransform;
 
     private CharSequence userInput = "";
 
-    public AutoCompleteResultsAdapter(Context context) {
-        super(context, 0);
-        inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public RecyclerAutoCompleteResultsAdapter(Context context) {
+        this.context = context;
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         // Picasso transformations
         roundTransform = new RoundCornersTransformation();
@@ -60,39 +66,13 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
     }
 
     @Override
-    public int getCount() {
-        return mResultList.size();
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int ViewType) {
+        return new ViewHolder(inflater.inflate(R.layout.item_autocomplete, parent, false));
     }
 
     @Override
-    public SuggestObject getItem(int index) {
-        SuggestObject suggestObject = getSuggestionObject(index);
-        if (suggestObject != null) {
-            return suggestObject;
-        } else {
-            return null;
-        }
-    }
-
-    public SuggestObject getSuggestionObject(int index) {
-        return mResultList.get(index);
-    }
-
-    @Override
-    public View getView(int position, View view, ViewGroup parent) {
-        if (view == null) {
-            view = inflater.inflate(R.layout.item_autocomplete, null);
-            view.setTag(new Holder(
-                    (TextView)view.findViewById(R.id.item_text),
-                    (TextView)view.findViewById(R.id.item_text_detail),
-                    (AsyncImageView)view.findViewById(R.id.item_icon),
-                    (ImageButton)view.findViewById(R.id.item_paste)));
-        }
-
+    public void onBindViewHolder(ViewHolder holder, int position) {
         final SuggestObject suggestion = getSuggestionObject(position);
-
-        final Holder holder = (Holder) view.getTag();
-
         if (suggestion != null) {
 
 
@@ -144,9 +124,9 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
                 Log.e("aaa", "image url: " + imageUrl);
                 roundTransform.setRadius(holder.icon.getCornerRadius());
                 //scaleTransform.setTarget(holder.icon, 0.6);
-                scaleTransform.setTarget((int) getContext().getResources().getDimension(R.dimen.bang_icon_dimen));
+                scaleTransform.setTarget((int) context.getResources().getDimension(R.dimen.bang_icon_dimen));
 
-                Picasso.with(getContext())
+                Picasso.with(context)
                         .load(suggestion.getImageUrl())
                         .placeholder(null)
                         .transform(scaleTransform)
@@ -157,19 +137,37 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
                 holder.icon.setImageDrawable(null);
             }
         }
-        return view;
     }
 
-    class Holder {
+    @Override
+    public int getItemCount() {
+        return data.size();
+    }
+
+    public SuggestObject getItem(int index) {
+        SuggestObject suggestObject = getSuggestionObject(index);
+        if (suggestObject != null) {
+            return suggestObject;
+        } else {
+            return null;
+        }
+    }
+
+    public SuggestObject getSuggestionObject(int index) {
+        return data.get(index);
+    }
+
+    class ViewHolder extends RecyclerView.ViewHolder {
         final TextView result;
         final TextView detail;
         final AsyncImageView icon;
         final ImageButton plus;
-        public Holder(final TextView result, final TextView detail, final AsyncImageView icon, final ImageButton plus) {
-            this.result = result;
-            this.detail = detail;
-            this.icon = icon;
-            this.plus = plus;
+        public ViewHolder(View v) {
+            super(v);
+            this.result = (TextView) v.findViewById(R.id.item_text);
+            this.detail = (TextView) v.findViewById(R.id.item_text_detail);
+            this.icon = (AsyncImageView) v.findViewById(R.id.item_icon);
+            this.plus = (ImageButton) v.findViewById(R.id.item_paste);
         }
     }
 
@@ -188,7 +186,7 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
                     JSONArray json = getJSONResultForConstraint(constraint);
                     // also search in apps
                     if(DDGControlVar.includeAppsInSearch) {
-                        Context context = getContext();
+                        //Context context = constraint;
                         ArrayList<AppShortInfo> appResults = DDGApplication.getDB().selectApps(constraint.toString());
                         if(appResults != null) {
                             for(AppShortInfo appInfo : appResults) {
@@ -222,15 +220,16 @@ public class AutoCompleteResultsAdapter extends ArrayAdapter<SuggestObject> impl
 
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
-                mResultList.clear();
+                data.clear();
                 if (results != null && results.count > 0) {
                     @SuppressWarnings("unchecked")
                     ArrayList<SuggestObject> newResults = (ArrayList<SuggestObject>)results.values;
-                    mResultList.addAll(newResults);
+                    data.addAll(newResults);
                     notifyDataSetChanged();
                 } else {
-                    mResultList.clear();
-                    notifyDataSetInvalidated();
+                    data.clear();
+                    //notifyDataSetInvalidated();
+                    notifyDataSetChanged();
                 }
             }
 

@@ -21,9 +21,7 @@ public class FavoriteResultCursorAdapter extends CursorAdapter {
         // when the view will be created for first time,
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        //View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
         View retView = inflater.inflate(R.layout.item_search, parent, false);
-        //View retView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
         return retView;
     }
@@ -34,31 +32,10 @@ public class FavoriteResultCursorAdapter extends CursorAdapter {
         // that means, take the data from the cursor and put it in views
 
     	final String data = cursor.getString(cursor.getColumnIndex("query"));
-    	/*
-        TextView textViewHistory = (TextView) view.findViewById(R.id.recentSearchText);
-        textViewHistory.setText(data);
-        textViewHistory.setTextSize(TypedValue.COMPLEX_UNIT_PX, DDGControlVar.recentTextSize);
-        
-        AsyncImageView imageViewHistory = (AsyncImageView) view.findViewById(R.id.recentSearchImage);
-        imageViewHistory.setImageResource(R.drawable.icon_history_search);
-
-
-        // query use button
-        ImageView buttonHistory = (ImageView) view.findViewById(R.id.recentSearchPaste);
-        buttonHistory.setOnClickListener(new OnClickListener() {
-
-        	@Override
-        	public void onClick(View v) {
-        		BusProvider.getInstance().post(new SavedSearchPasteEvent(data));
-        	}
-        });*/
         TextView title = (TextView) view.findViewById(R.id.item_text);
-        //TextView textViewTitle = (TextView) view.findViewById(android.R.id.text1);
         if(title!=null ) {
             title.setText(capitalizeWords(data));
         }
-        //title.setText(data.substring(0,1).toUpperCase()+data.substring(1));
-
         ImageView icon = (ImageView) view.findViewById(R.id.item_icon);
         if(icon!=null) {
             icon.setImageDrawable(context.getResources().getDrawable(R.drawable.favorite));

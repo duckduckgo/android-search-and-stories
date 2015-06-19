@@ -32,7 +32,6 @@ public class RecentResultCursorAdapter extends CursorAdapter {
 
     public RecentResultCursorAdapter(Context context, Cursor c, boolean hidePasteButton) {
         super(context, c);
-        //this.hideIcon = hideIcon;
         this.hidePasteButton = hidePasteButton;
     }
 
@@ -41,9 +40,7 @@ public class RecentResultCursorAdapter extends CursorAdapter {
         // when the view will be created for first time,
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        //View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
         View retView = inflater.inflate(R.layout.item_search, parent, false);
-        //View retView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
 
         return retView;
     }
@@ -64,9 +61,6 @@ public class RecentResultCursorAdapter extends CursorAdapter {
         }
         Spannable word;
 
-        //final String type = cursor.getString(cursor.getColumnIndex("type"));
-
-        //TextView textViewTitle = (TextView) view.findViewById(android.R.id.text1);
         TextView title = (TextView) view.findViewById(R.id.item_text);
         if(title!=null) {
 
@@ -75,7 +69,7 @@ public class RecentResultCursorAdapter extends CursorAdapter {
                 word.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.search_dark)), 0, word.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 title.setText(word);
 
-                word = new SpannableString(data.substring(userInput.length()));//data.replace(userInput.toString(), ""));
+                word = new SpannableString(data.substring(userInput.length()));
                 word.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.search_light)), 0, word.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 title.append(word);
             } else {

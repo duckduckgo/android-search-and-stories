@@ -24,12 +24,7 @@ public class DDGPagerAdapter extends FragmentPagerAdapter{
         if(fragments==null) return 0;
         return fragments.length;
     }
-/*
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return object==view;
-    }
-*/
+
     @Override
     public CharSequence getPageTitle(int position) {
         if(titles==null || titles.length<position)

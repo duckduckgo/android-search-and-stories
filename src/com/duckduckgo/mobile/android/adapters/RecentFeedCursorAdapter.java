@@ -34,9 +34,6 @@ public class RecentFeedCursorAdapter extends CursorAdapter {
         // when the view will be created for first time,
         // we need to tell the adapters, how each item will look
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        //View retView = inflater.inflate(R.layout.recentsearch_list_layout, parent, false);
-        //View retView = inflater.inflate(R.layout.temp_search_layout, parent, false);
-        //View retView = inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
         View retView = inflater.inflate(R.layout.item_main_feed, parent, false);
 
         return retView;
@@ -63,9 +60,6 @@ public class RecentFeedCursorAdapter extends CursorAdapter {
         final TextView textViewCategory = (TextView) view.findViewById(R.id.feedCategoryTextView);
         final AsyncImageView imageViewBackground = (AsyncImageView) view.findViewById(R.id.feedItemBackground);
         final AsyncImageView imageViewFeedIcon = (AsyncImageView) view.findViewById(R.id.feedItemSourceIcon);
-        //final Toolbar toolbar = (Toolbar) view.findViewById(R.id.feedWrapper);
-        //toolbar.getMenu().clear();
-        //toolbar.inflateMenu(R.menu.feed);
 
         URL feedUrl = null;
 
@@ -80,9 +74,8 @@ public class RecentFeedCursorAdapter extends CursorAdapter {
         }
 
         imageViewFeedIcon.setType(feedType);	// stored source id in imageview
-//    	imageViewFeedIcon.setOnClickListener(sourceClickListener);
 
-        final View iconParent = (View) imageViewBackground.getParent();//view.findViewById(R.id.feedWrapper);
+        final View iconParent = (View) imageViewBackground.getParent();
         iconParent.post(new Runnable() {
             public void run() {
                 // Post in the parent's message queue to make sure the parent
@@ -142,41 +135,6 @@ public class RecentFeedCursorAdapter extends CursorAdapter {
                 }
             }
         }
-        //final String url;
-        //if(feedUrl==null) {
-            //url = null;
-        //} else {
-            //url = feedUrl.toString();
-        //}
-/*
-        toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
-        //aaa todo check why removing a feed inflate more items in other menus
-        //aaaa solved!
-
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch(item.getItemId()) {
-                    case R.id.action_remove_favorite:
-                        BusProvider.getInstance().post(new UnSaveStoryEvent(feedId));
-                        //toolbar.
-                        return true;
-                    case R.id.action_share:
-                        if(url!=null) {
-                            BusProvider.getInstance().post(new ShareFeedEvent(title, url));
-                        }
-                        return true;
-                    case R.id.action_external:
-                        if(url!=null) {
-                            BusProvider.getInstance().post(new SendToExternalBrowserEvent(null, url));
-                        }
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-*/
 
     }
 }

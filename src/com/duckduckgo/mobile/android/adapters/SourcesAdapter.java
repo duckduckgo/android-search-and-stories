@@ -53,7 +53,6 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
                     ((CheckBox)checkBox).setChecked(!((CheckBox)checkBox).isChecked());
                 }
             }
-			//switchCompat.setChecked(!switchCompat.isChecked());
 		}
 	}
 
@@ -140,7 +139,6 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
                     } else {
                         ((CheckBox)holder.checkBox).setChecked(true);
                     }
-					//holder.switchCompat.setChecked(true);
 				}
 				else {
                     if(isBuildLollipop) {
@@ -148,10 +146,8 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
                     } else {
                         ((CheckBox)holder.checkBox).setChecked(false);
                     }
-					//holder.switchCompat.setChecked(false);
 				}
-				
-				//OnClickListener toggleCheckBoxOnClickListener = new ToggleCheckBoxOnClickListener(holder.switchCompat);
+
                 OnClickListener toggleCheckBoxOnClickListener = new ToggleCheckBoxOnClickListener(holder.checkBox);
 				holder.textViewTitle.setOnClickListener(toggleCheckBoxOnClickListener);
 				holder.textViewDescription.setOnClickListener(toggleCheckBoxOnClickListener);
@@ -186,29 +182,6 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
                 } else {
                     ((CheckBox)holder.checkBox).setOnCheckedChangeListener(onCheckedChangeListener);
                 }
-
-                        /*
-				holder.switchCompat.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-					
-					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-																						
-						if(isChecked){
-							DDGControlVar.userAllowedSources.add(holder.id);
-							DDGControlVar.userDisallowedSources.remove(holder.id);
-							PreferencesManager.saveUserAllowedSources(DDGControlVar.userAllowedSources);
-						}
-						else {
-							DDGControlVar.userDisallowedSources.add(holder.id);
-							DDGControlVar.userAllowedSources.remove(holder.id);
-							PreferencesManager.saveUserDisallowedSources(DDGControlVar.userDisallowedSources);
-						}
-						
-						DDGControlVar.hasUpdatedFeed = false;
-						
-						// reset temporary filter before going back
-						DDGControlVar.targetSource = null;
-					}
-				});*/
 			}
 		
 		}
@@ -222,9 +195,6 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 			final TextView sectionView = (TextView) cv.findViewById(R.id.list_item_section_text);
 			sectionView.setText(si.getTitle());
 		}
-
-//        ListView.LayoutParams params = (ListView.LayoutParams) cv.getLayoutParams();
-//        params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
 
 		return cv;
 	}

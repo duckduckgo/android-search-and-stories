@@ -51,13 +51,6 @@ public class RecyclerRecentFeedAdapter extends RecyclerView.Adapter<RecyclerRece
 
     private HashMap<Integer, FeedObject> filterData;
 
-    //public ArrayList<FeedObject> filteredData;
-    //public HashMap<Integer, FeedObject> filteredData;
-    //public HashMap<Integer, FeedObject> filteredCategory;
-    //public HashMap<Integer, FeedObject> filteredSource;
-
-    //public HashMap<Integer, FeedObject> filter;
-
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         public final TextView textViewTitle;
@@ -80,17 +73,10 @@ public class RecyclerRecentFeedAdapter extends RecyclerView.Adapter<RecyclerRece
         }
     }
 
-    //public RecyclerRecentFeedCursorAdapter(Context context, Cursor cursor) {
     public RecyclerRecentFeedAdapter(Context context, ArrayList<FeedObject> data) {
         this.context = context;
-        //this.cursor = cursor;
         this.data = data;
         filterData = new HashMap<Integer, FeedObject>();
-        //this.filteredData = new HashMap<Integer, FeedObject>();
-        //filteredData = data;
-        //filteredCategory = new HashMap<Integer, FeedObject>();
-        //filteredSource = new HashMap<Integer, FeedObject>();
-        //filter = new HashMap<Integer, FeedObject>();
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         menu = new MenuBuilder(context);
@@ -107,34 +93,7 @@ public class RecyclerRecentFeedAdapter extends RecyclerView.Adapter<RecyclerRece
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        //cursor.moveToPosition(position);
-        //final FeedObject feedObject = new FeedObject((SQLiteCursor)cursor);
-        //final FeedObject feed = filteredData.get(position);
         final FeedObject feed = data.get(position);
-        //Log.e("aaa", "feed title: "+feed.getTitle()+"\nfeed type: "+feed.getType());
-        /*
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                Log.e("aaa", "on bind view holder, position: "+position+" - feed: "+feedObject.toString());
-                return true;
-            }
-        });*/
-/*
-        final String id = cursor.getString(cursor.getColumnIndex("_id"));
-        final String type = cursor.getString(cursor.getColumnIndex("type"));
-        final String data = cursor.getString(cursor.getColumnIndex("data"));
-        final String url = cursor.getString(cursor.getColumnIndex("url"));
-        final String extraType = cursor.getString(cursor.getColumnIndex("extraType"));
-        final String feedId = cursor.getString(cursor.getColumnIndex("feedId"));
-
-//        final String feedId = cursor.getString(cursor.getColumnIndex("_id"));
-        final String title = cursor.getString(cursor.getColumnIndex("title"));
-        final String feedType = cursor.getString(cursor.getColumnIndex("type"));
-        final String imageUrl = cursor.getString(cursor.getColumnIndex("imageurl"));
-        final String feedContent = cursor.getString(cursor.getColumnIndex("feed"));
-        final String category = cursor.getString(cursor.getColumnIndex("category"));
-*/
         URL feedUrl = null;
 
         //Download the background image
@@ -258,42 +217,6 @@ public class RecyclerRecentFeedAdapter extends RecyclerView.Adapter<RecyclerRece
             }
         });
 
-
-        //final String url;
-        //if(feedUrl==null) {
-        //url = null;
-        //} else {
-        //url = feedUrl.toString();
-        //}
-/*
-        toolbar.getMenu().findItem(R.id.action_add_favorite).setVisible(false);
-        //aaa todo check why removing a feed inflate more items in other menus
-        //aaaa solved!
-
-        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch(item.getItemId()) {
-                    case R.id.action_remove_favorite:
-                        BusProvider.getInstance().post(new UnSaveStoryEvent(feedId));
-                        //toolbar.
-                        return true;
-                    case R.id.action_share:
-                        if(url!=null) {
-                            BusProvider.getInstance().post(new ShareFeedEvent(title, url));
-                        }
-                        return true;
-                    case R.id.action_external:
-                        if(url!=null) {
-                            BusProvider.getInstance().post(new SendToExternalBrowserEvent(null, url));
-                        }
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-*/
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -304,7 +227,6 @@ public class RecyclerRecentFeedAdapter extends RecyclerView.Adapter<RecyclerRece
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                //BusProvider.getInstance().post(new MainFeedItemLongClickEvent(feed));
                 showMenu(holder.imageViewMenu, feed);
                 return true;
             }
@@ -315,8 +237,6 @@ public class RecyclerRecentFeedAdapter extends RecyclerView.Adapter<RecyclerRece
 
     @Override
     public int getItemCount() {
-        //return cursor.getCount();
-        //return filteredData.size();
         return data.size();
     }
 
