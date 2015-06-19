@@ -73,8 +73,8 @@ public class DDGApplication extends Application {
 	
 	@Override
 	public void onCreate() {
-		ACRA.init(this);
 		super.onCreate();
+        ACRA.init(this);
 		sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         db = new DdgDB(this);
 		fileCache = new FileCache(this.getApplicationContext());
