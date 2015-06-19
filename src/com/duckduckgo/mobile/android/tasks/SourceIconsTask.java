@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.tasks;
 import java.util.Set;
 
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.widget.ListView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -14,12 +15,14 @@ public class SourceIconsTask extends AsyncTask<Void, Void, Void> {
 
 	private static String TAG = "SourceIconsTask";
 			
-	ListView mainFeedView;
+	//ListView mainFeedView;
+    RecyclerView mainFeedRecyclerView;
 	ImageCache cache;	
 	Set<SourceInfoPair> sourceInfoPairs;
 		
-	public SourceIconsTask(ListView mainFeedView, Set<SourceInfoPair> sourceInfoPairs) {
-		this.mainFeedView = mainFeedView;
+	public SourceIconsTask(RecyclerView mainFeedRecyclerView /*ListView mainFeedView*/, Set<SourceInfoPair> sourceInfoPairs) {
+		//this.mainFeedView = mainFeedView;
+        this.mainFeedRecyclerView = mainFeedRecyclerView;
 		this.cache = DDGApplication.getImageCache();
 		this.sourceInfoPairs = sourceInfoPairs;
 	}	
@@ -48,9 +51,12 @@ public class SourceIconsTask extends AsyncTask<Void, Void, Void> {
 	
 	@Override
 	protected void onPostExecute(Void result) {
-		if(mainFeedView != null) {
-			mainFeedView.invalidateViews();
-		}
+		//if(mainFeedView != null) {
+			//mainFeedView.invalidateViews();
+		//}
+        if(mainFeedRecyclerView!=null) {
+            mainFeedRecyclerView.invalidate();
+        }
 		super.onPostExecute(result);
 	}
 	

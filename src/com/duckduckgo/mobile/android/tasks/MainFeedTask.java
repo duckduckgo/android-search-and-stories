@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
 import com.duckduckgo.mobile.android.DDGApplication;
@@ -37,12 +38,14 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 	private FileCache fileCache = null;
 	
 	DuckDuckGo activity;
-	private MainFeedListView feedListView;
+	//private MainFeedListView feedListView;
+    private RecyclerView feedRecyclerView;
 	
 	private boolean requestFailed = false;
 	
-	public MainFeedTask(MainFeedListView feedListView) {
-		this.feedListView = feedListView;
+	public MainFeedTask(RecyclerView feedRecyclerView/*MainFeedListView feedListView*/) {
+        this.feedRecyclerView = feedRecyclerView;
+		//this.feedListView = feedListView;
 		this.cache = DDGApplication.getImageCache();
 		this.fileCache = DDGApplication.getFileCache();
 	}
@@ -141,7 +144,8 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		
 		if(!DDGControlVar.isDefaultsChecked) {
 			Set<SourceInfoPair> sourceInfoPairs = initializeSources();
-			new SourceIconsTask(feedListView, sourceInfoPairs).execute();
+			//new SourceIconsTask(feedListView, sourceInfoPairs).execute();
+            new SourceIconsTask(feedRecyclerView, sourceInfoPairs).execute();
 			DDGControlVar.isDefaultsChecked = true;
 		}
 		

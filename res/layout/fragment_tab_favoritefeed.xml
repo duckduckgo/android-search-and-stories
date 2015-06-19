@@ -5,8 +5,6 @@
   android:background="@color/background"
   android:orientation="vertical">
 
-    <!--
-    <com.duckduckgo.mobile.android.views.FavoriteFeedListView-->
     <com.duckduckgo.mobile.android.views.DDGRecyclerView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -17,35 +15,11 @@
         	android:footerDividersEnabled="false"
         	android:headerDividersEnabled="false"
         	android:smoothScrollbar="true"
-            android:id="@+id/list"/><!--
-            android:id="@android:id/list"/>-->
-	<!--
-	<LinearLayout android:id="@android:id/empty"
-   	    		  android:layout_width="match_parent"
-   	    		  android:layout_height="match_parent"
-   	    		  android:orientation="vertical"
-   	    		  android:gravity="center"
-   	    		  android:layout_margin="40dp"
-   	    		  android:paddingBottom="50dp">
-   	    <ImageView android:layout_width="wrap_content"
-   	        	   android:layout_height="wrap_content"
-   	        	   android:src="@drawable/favorite_large" />
-   	    <TextView android:layout_width="wrap_content"
-   	        	  android:layout_height="wrap_content"
-   	        	  android:layout_marginBottom="20dp"
-   	        	  android:textSize="21sp"
-   	        	  android:textColor="@color/search_dark"
-   	        	  android:text="@string/no_favorites_title" />
-   	    <TextView android:layout_width="wrap_content"
-   	        	  android:layout_height="wrap_content"
-   	        	  android:gravity="center_horizontal"
-   	        	  android:textSize="14sp"
-   	        	  android:textColor="@color/search_light"
-   	        	  android:text="@string/no_favorites_text" />
-   	</LinearLayout>-->
+            android:id="@+id/list"/>
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"><!-- aaa this it the almost right one -->
+        android:layout_height="match_parent">
 
         <RelativeLayout
             android:id="@+id/empty"
@@ -72,9 +46,7 @@
                 android:layout_marginBottom="10dp"
                 android:text="@string/empty_favorites_title"
                 android:textColor="@color/search_dark"
-                android:textSize="21sp"/><!--
-                android:layout_marginTop="18.3dp"
-                android:layout_marginBottom="24dp"-->
+                android:textSize="21sp"/>
 
             <TextView
                 android:layout_width="wrap_content"

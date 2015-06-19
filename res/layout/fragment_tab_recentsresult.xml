@@ -15,33 +15,6 @@
         android:clipToPadding="false"
         style="@style/SavedResultListView"
         android:id="@android:id/list"/>
-<!--
-    <LinearLayout android:id="@android:id/empty"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:orientation="vertical"
-                  android:gravity="center"
-                  android:layout_margin="40dp"
-                  android:paddingBottom="50dp">
-        <ImageView android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/time_large"/>
-                   android:src="?attr/emptyListIcon" />
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="20dp"
-                  android:textSize="8.94pt"
-                  android:textColor="?attr/emptyListTitleColor"
-                  android:text="No Recents"/>
-                  android:text="@string/SavedResultsEmptyTitle" />
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:gravity="center_horizontal"
-                  android:textSize="6.59pt"
-                  android:textColor="?attr/emptyListSubTitleColor"
-                  android:text="Once you start searching\nor browsing stories, you activity\nwill be shown here."/>
-                  android:text="@string/SavedResultsEmptySubTitle" />
-    </LinearLayout>-->
 
     <ScrollView
         android:layout_width="match_parent"

@@ -5,8 +5,7 @@
     android:layout_height="fill_parent"
     android:background="@android:color/transparent"
     android:orientation="vertical">
-<!--
-    <com.duckduckgo.mobile.android.views.RecentFeedListView-->
+
     <com.duckduckgo.mobile.android.views.DDGRecyclerView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
@@ -18,32 +17,7 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:smoothScrollbar="true"
-        android:id="@+id/list"/><!--
-        android:id="@android:id/list"/>-->
-<!--
-    <LinearLayout android:id="@android:id/empty"
-                  android:layout_width="match_parent"
-                  android:layout_height="match_parent"
-                  android:orientation="vertical"
-                  android:gravity="center"
-                  android:layout_margin="40dp"
-                  android:paddingBottom="50dp">
-        <ImageView android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:src="@drawable/time_large" />
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:layout_marginBottom="20dp"
-                  android:textSize="8.94pt"
-                  android:textColor="?attr/emptyListTitleColor"
-                  android:text="No Recents" />
-        <TextView android:layout_width="wrap_content"
-                  android:layout_height="wrap_content"
-                  android:gravity="center_horizontal"
-                  android:textSize="6.59pt"
-                  android:textColor="?attr/emptyListSubTitleColor"
-                  android:text="Once you start searching\nor browsing stories, you activity\nwill be shown here." />
-    </LinearLayout>-->
+        android:id="@+id/list"/>
 
     <ScrollView
         android:layout_width="match_parent"

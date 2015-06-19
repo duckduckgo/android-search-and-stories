@@ -41,8 +41,8 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
     private Context context;
     private final LayoutInflater inflater;
 
-    public View.OnClickListener sourceClickListener;
-    public View.OnClickListener categoryClickListener;
+    //public View.OnClickListener sourceClickListener;
+    //public View.OnClickListener categoryClickListener;
 
     private SimpleDateFormat dateFormat;
     private Date lastFeedDate = null;
@@ -80,13 +80,13 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
         }
     }
 
-    public RecyclerMainFeedAdapter(Context context, View.OnClickListener sourceClickListener, View.OnClickListener categoryClickListener) {
+    public RecyclerMainFeedAdapter(Context context/*, View.OnClickListener sourceClickListener, View.OnClickListener categoryClickListener*/) {
         this.context = context;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         data = new ArrayList<FeedObject>();
 
-        this.sourceClickListener = sourceClickListener;
-        this.categoryClickListener = categoryClickListener;
+        //this.sourceClickListener = sourceClickListener;
+        //this.categoryClickListener = categoryClickListener;
         this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
         // animation to use for blinking cue
@@ -381,6 +381,11 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
             feedMenu.showFeedMenu(anchor);
         }
 
+    }
+
+    public void clear() {
+        data.clear();
+        notifyDataSetChanged();
     }
 
     public void addData(List<FeedObject> newData) {

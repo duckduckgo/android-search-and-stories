@@ -52,6 +52,7 @@ import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,12 +64,12 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private Activity activity = null;
 
     private RecyclerView recyclerView = null;
-	private MainFeedListView feedView = null;
+	//private MainFeedListView feedView = null;
     private SwipeRefreshLayout swipeRefreshLayout = null;
 	private View fragmentView;
 
     private RecyclerMainFeedAdapter recyclerAdapter = null;
-	private MainFeedAdapter feedAdapter = null;
+	//private MainFeedAdapter feedAdapter = null;
 	private MainFeedTask mainFeedTask = null;
 
     private RecyclerView.LayoutManager layoutManager;
@@ -169,10 +170,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 	public void init() {
 
-		SourceClickListener sourceClickListener = new SourceClickListener();
-        CategoryClickListener categoryClickListener = new CategoryClickListener();
-		feedAdapter = new MainFeedAdapter(activity, sourceClickListener, categoryClickListener);
-        recyclerAdapter = new RecyclerMainFeedAdapter(activity, sourceClickListener, categoryClickListener);
+		//SourceClickListener sourceClickListener = new SourceClickListener();
+        //CategoryClickListener categoryClickListener = new CategoryClickListener();
+		//feedAdapter = new MainFeedAdapter(activity, sourceClickListener, categoryClickListener);
+        //recyclerAdapter = new RecyclerMainFeedAdapter(activity, sourceClickListener, categoryClickListener);
+        recyclerAdapter = new RecyclerMainFeedAdapter(activity);
 
 		mainFeedTask = null;
 
@@ -191,7 +193,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         activity.getMenuInflater().inflate(R.menu.main, feedMenu);
 
 	}
-
+/*
     class SourceClickListener implements View.OnClickListener {
 		public void onClick(View v) {
 			// source filtering
@@ -220,8 +222,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 			}
 
 		}
-	}
-
+	}*/
+/*
     class CategoryClickListener implements View.OnClickListener {
         public void onClick(final View v) {
             // category filtering
@@ -258,7 +260,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
 
         }
-    }
+    }*/
 
 	public void feedItemSelected(FeedObject feedObject) {
 		// keep a reference, so that we can reuse details while saving
@@ -280,7 +282,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		}
 
 		if(ReadArticlesManager.addReadArticle(feedObject)){
-			feedAdapter.notifyDataSetChanged();
+			//feedAdapter.notifyDataSetChanged();
+            recyclerAdapter.notifyDataSetChanged();
 		}
 	}
 
@@ -295,7 +298,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 	public void cancelSourceFilter() {
 		DDGControlVar.targetSource = null;
 		DDGControlVar.hasUpdatedFeed = false;
-		feedAdapter.unmark();
+		//feedAdapter.unmark();
 		keepFeedUpdated();
 	}
 
@@ -305,7 +308,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void cancelCategoryFilter() {
         DDGControlVar.targetCategory = null;
         DDGControlVar.hasUpdatedFeed = false;
-        feedAdapter.unmarkCategory();
+        //feedAdapter.unmarkCategory();
         keepFeedUpdated();
     }
 
@@ -326,7 +329,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 					CacheFeedTask cacheTask = new CacheFeedTask(activity);
 
 					// for HTTP request
-					mainFeedTask = new MainFeedTask(feedView);
+					//mainFeedTask = new MainFeedTask(feedView);
+                    mainFeedTask = new MainFeedTask(recyclerView);
 
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 						cacheTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
@@ -351,6 +355,19 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		}
 	}
 
+    public void cleanImageTasks() {
+        int count = recyclerView.getChildCount();
+        for(int i=0;i<count;i++) {
+            View v = recyclerView.getChildAt(i);
+            if(v != null) {
+                AsyncImageView iv = (AsyncImageView) v.findViewById(R.id.feedItemBackground);
+                if(activity!=null) {
+                    Picasso.with(activity).cancelRequest(iv);
+                }
+            }
+        }
+    }
+
 	@Subscribe
 	public void onFeedRetrieveSuccessEvent(FeedRetrieveSuccessEvent event) {
         if(DDGControlVar.targetSource!=null) {
@@ -360,8 +377,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
         } else {
             if (event.requestType == REQUEST_TYPE.FROM_NETWORK) {
-                synchronized (feedAdapter) {
-                    feedAdapter.clear();
+                //synchronized (feedAdapter) {
+                    //feedAdapter.clear();
+                //}
+                synchronized (recyclerAdapter) {
+                    recyclerAdapter.clear();
                 }
             }
 
@@ -438,7 +458,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
 	@Subscribe
 	public void onFeedCleanImageTaskEvent(FeedCleanImageTaskEvent event) {
-		feedView.cleanImageTasks();
+		cleanImageTasks();
 	}
 
     @Subscribe
