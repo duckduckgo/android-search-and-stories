@@ -72,16 +72,14 @@ public class SourcesAdapter extends ArrayAdapter<SectionedListItem> {
 		inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         isBuildLollipop = Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP;
 	}
-	
-	 public boolean areAllItemsEnabled() 
-     { 
+
+	 public boolean areAllItemsEnabled() {
              return false; 
      } 
 
-     public boolean isEnabled(int position) 
-     { 
-             return false; 
-     } 
+     public boolean isEnabled(int position) {
+             return false;
+     }
 	
 	@Override
 	public View getView(int position, View cv, ViewGroup parent) {

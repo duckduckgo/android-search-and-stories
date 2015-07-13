@@ -62,6 +62,10 @@ public class PreferencesManager {
     public static boolean getRecordCookies() {
         return DDGApplication.getSharedPreferences().getBoolean("recordCookiesPref", true);
     }
+
+    public static boolean getEnableJavascript() {
+        return DDGApplication.getSharedPreferences().getBoolean("enableJavascriptPref", true);
+    }
 	
 	public static boolean getDirectQuery() {
 		return DDGApplication.getSharedPreferences().getBoolean("directQueryPref", true);

@@ -320,7 +320,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		//if(TorIntegrationProvider.getInstance(activity).isOrbotRunningAccordingToSettings()) {
         if(DDGControlVar.mDuckDuckGoContainer.torIntegration.isOrbotRunningAccordingToSettings()) {
 			if (!DDGControlVar.hasUpdatedFeed) {
-				if (DDGControlVar.userAllowedSources.isEmpty() && !DDGControlVar.userDisallowedSources.isEmpty()) {
+                if(!canUpdateFeed()) {
 					// respect user choice of empty source list: show nothing
 					BusProvider.getInstance().post(new FeedRetrieveSuccessEvent(new ArrayList<FeedObject>(),
 							REQUEST_TYPE.FROM_CACHE));
@@ -366,6 +366,21 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 }
             }
         }
+    }
+
+    public boolean canUpdateFeed() {
+        if(!DDGControlVar.userAllowedSources.isEmpty()) {
+            return true;
+        }
+        if(DDGControlVar.defaultSources.isEmpty()) {
+            return true;
+        }
+        for(String source : DDGControlVar.defaultSources) {
+            if(!DDGControlVar.userDisallowedSources.contains(source)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 	@Subscribe

@@ -63,6 +63,11 @@
     <PreferenceCategory android:title="@string/PrefGroupPrivacy">
 
         <CheckBoxPreference
+            android:title="@string/PrefEnableJavascript"
+            android:key="enableJavascriptPref"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
             android:title="@string/PrefRecordHistory"
             android:key="recordHistoryPref"
             android:defaultValue="true" />

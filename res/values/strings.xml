@@ -48,6 +48,7 @@
     <string name="PrefEnableAcra">Automatic Crash Report</string>
     <string name="PrefAcraDisabled">Automatic Reporting Disabled</string>
     <string name="PrefAcraEnabled">Automatic Reporting Enabled</string>
+    <string name="PrefEnableJavascript">Enable Javascript</string>
     
     <string name="PrefWaterCooler">Stories</string>
     <string name="PrefAutocomplete">Autocomplete</string>

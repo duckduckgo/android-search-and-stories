@@ -12,6 +12,7 @@ import android.net.MailTo;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
+import android.util.Log;
 import android.view.View;
 import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
@@ -178,7 +179,8 @@ public class DDGWebViewClient extends WebViewClient {
 	
 	public void onPageFinished (WebView view, String url) {
 		super.onPageFinished(view, url);
-		mLoaded = true;
+        Log.e("onpagefinished", "url: "+url);
+        mLoaded = true;
 
 		DDGControlVar.mCleanSearchBar = false;
 		

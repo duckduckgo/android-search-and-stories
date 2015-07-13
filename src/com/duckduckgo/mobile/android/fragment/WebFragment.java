@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.internal.view.menu.MenuBuilder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -173,6 +174,7 @@ public class WebFragment extends Fragment {
         super.onHiddenChanged(hidden);
         if(!hidden) {
             DDGActionBarManager.getInstance().setSearchBarText(mainWebView.getUrl());
+            mainWebView.getSettings().setJavaScriptEnabled(PreferencesManager.getEnableJavascript());
         }
     }
 
@@ -297,8 +299,9 @@ public class WebFragment extends Fragment {
 		keyboardService = new KeyboardService(getActivity());
 		mainWebView = (DDGWebView) fragmentView.findViewById(R.id.fragmentMainWebView);
 		mainWebView.setParentActivity(getActivity());
-		mainWebView.getSettings().setJavaScriptEnabled(true);
-		DDGWebView.recordCookies(PreferencesManager.getRecordCookies());
+		mainWebView.getSettings().setJavaScriptEnabled(PreferencesManager.getEnableJavascript());
+        Log.e("javascript_enabled", PreferencesManager.getEnableJavascript()+"");
+        DDGWebView.recordCookies(PreferencesManager.getRecordCookies());
 		DDGNetworkConstants.setWebView(mainWebView);
 
 		// get default User-Agent string for reuse later
@@ -435,11 +438,22 @@ public class WebFragment extends Fragment {
 		urlType = URLTYPE.SERP;
 
 		if(!savedState){
+            String baseUrl;
 			if(DDGControlVar.regionString.equals("wt-wt")){	// default
-				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term));
+                if(PreferencesManager.getEnableJavascript()) {
+                    baseUrl = DDGConstants.SEARCH_URL;
+                } else {
+                    baseUrl = DDGConstants.SEARCH_URL_JAVASCRIPT_DISABLED;
+                }
+                mainWebView.loadUrl(baseUrl + URLEncoder.encode(term));
 			}
 			else {
-				mainWebView.loadUrl(DDGConstants.SEARCH_URL + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString));
+                if(PreferencesManager.getEnableJavascript()) {
+                    baseUrl = DDGConstants.SEARCH_URL;
+                } else {
+                    baseUrl = DDGConstants.SEARCH_URL_JAVASCRIPT_DISABLED;
+                }
+                mainWebView.loadUrl(baseUrl + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString));
 			}
 		}
 	}
