@@ -55,6 +55,16 @@ android {
     }
   }
 
+  signingConfigs {
+    release
+  }
+
+  buildTypes {
+    release {
+      signingConfig signingConfigs.release
+    }
+  }
+
   applicationVariants.all { variant ->
     variant.outputs.each { output ->
       def alignedOutputFile = output.outputFile
@@ -68,4 +78,14 @@ android {
       }
     }
   }
+}
+
+
+def props = new Properties()
+if(rootProject.file("release.properties").exists()) {
+  props.load(new FileInputStream(rootProject.file("release.properties")))
+  android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
+  android.signingConfigs.release.storePassword props.keyStorePassword
+  android.signingConfigs.release.keyAlias props.keyAlias
+  android.signingConfigs.release.keyPassword props.keyAliasPassword
 }
