@@ -54,4 +54,18 @@ android {
       assets.srcDirs = ['assets']
     }
   }
+
+  applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+      def alignedOutputFile = output.outputFile
+
+      if (variant.buildType.zipAlignEnabled) {
+        if(variant.buildType.name.contains("release")) {
+          output.outputFile = new File(alignedOutputFile.parent, "DuckDuckGo-release.apk")
+        } else if(variant.buildType.name.contains("debug")) {
+          output.outputFile = new File(alignedOutputFile.parent, "DuckDuckGo-debug.apk")
+        }
+      }
+    }
+  }
 }
