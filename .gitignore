@@ -22,3 +22,4 @@ out/
 
 .gradle
 build
+release.properties

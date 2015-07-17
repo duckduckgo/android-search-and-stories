@@ -4,24 +4,43 @@ buildscript {
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:1.1.3'
+    classpath files ('libs/gradle-witness.jar')
   }
 }
 
 apply plugin: 'com.android.application'
+apply plugin: 'witness'
 
 android {
   compileSdkVersion 22
-  buildToolsVersion "22"
+  buildToolsVersion "22.0.1"
 
   repositories {
     mavenCentral()
   }
 
   dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
+    compile 'ch.acra:acra:4.4.0'
+    compile ('com.android.support:recyclerview-v7:21.0.0') {
+      exclude module: 'support-v4'
+    }
+    compile 'com.squareup:otto:1.3.4'
+    compile 'com.squareup.picasso:picasso:2.5.2'
     compile project(':libs:OnionKit:libnetcipher')
-    compile project(':libs:appcompat')
+    compile ('com.android.support:appcompat-v7:21.0.0') {
+      exclude module: 'support-v4'
+    }
     compile project(':libs:android-support-v4-preferencefragment')
+  }
+
+  dependencyVerification {
+    verify = [
+            'ch.acra:acra:05a5a316bd3b913430f74388b552e1d3bccce623e949647d932047f48ff3f935',
+            'com.android.support:recyclerview-v7:ab2390d688601b65e2f3a0718b3d25487e61546c4e20f81eb0b033f30ca15b31',
+            'com.squareup:otto:cfeffe473932405e65c13231aebcbe3a414604f9c4dd4755b49c160efb111ce2',
+            'com.squareup.picasso:picasso:233e18f59d25b6aff475df1e01a0661677f88af73838a27eb23aa21b96a3ac6e',
+            'com.android.support:appcompat-v7:45e999dda55fe81d9cc1c7342b7b70480ff3f307baa8da0df767f92fc5c52cd1',
+    ]
   }
 
   sourceSets {
@@ -35,4 +54,38 @@ android {
       assets.srcDirs = ['assets']
     }
   }
+
+  signingConfigs {
+    release
+  }
+
+  buildTypes {
+    release {
+      signingConfig signingConfigs.release
+    }
+  }
+
+  applicationVariants.all { variant ->
+    variant.outputs.each { output ->
+      def alignedOutputFile = output.outputFile
+
+      if (variant.buildType.zipAlignEnabled) {
+        if(variant.buildType.name.contains("release")) {
+          output.outputFile = new File(alignedOutputFile.parent, "DuckDuckGo-release.apk")
+        } else if(variant.buildType.name.contains("debug")) {
+          output.outputFile = new File(alignedOutputFile.parent, "DuckDuckGo-debug.apk")
+        }
+      }
+    }
+  }
+}
+
+
+def props = new Properties()
+if(rootProject.file("release.properties").exists()) {
+  props.load(new FileInputStream(rootProject.file("release.properties")))
+  android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
+  android.signingConfigs.release.storePassword props.keyStorePassword
+  android.signingConfigs.release.keyAlias props.keyAlias
+  android.signingConfigs.release.keyPassword props.keyAliasPassword
 }
