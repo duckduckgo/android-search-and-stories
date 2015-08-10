@@ -155,11 +155,9 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
                 DDGControlVar.mDuckDuckGoContainer.recentResultCursorAdapter.notifyDataSetChanged();
             }
         } else {
-            Log.e("DDG OVERFLOW", "search hidden");
             if(overflowMenu!=null && overflowMenu.isShowing()) {
                 overflowMenu.dismiss();
             }
-            //DDGActionBarManager.getInstance().hideKeyboardDelayed();
         }
     }
 

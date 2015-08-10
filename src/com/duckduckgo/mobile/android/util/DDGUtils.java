@@ -406,12 +406,12 @@ public final class DDGUtils {
 	}
 
     public static void searchExternal(Context context, String term) {
-        String url;
-        if(DDGControlVar.regionString == "wt-wt"){	// default
-            url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term);
+        String url = DDGControlVar.mDuckDuckGoContainer.torIntegration.isTorSettingEnabled() ? DDGConstants.SEARCH_URL_ONION : DDGConstants.SEARCH_URL;
+        if(DDGControlVar.regionString.equals("wt-wt")){	// default
+            url = url.replace("ko=-1&", "") + URLEncoder.encode(term);
         }
         else {
-            url = DDGConstants.SEARCH_URL.replace("ko=-1&", "") + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
+            url = url.replace("ko=-1&", "") + URLEncoder.encode(term) + "&kl=" + URLEncoder.encode(DDGControlVar.regionString);
         }
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         execIntentIfSafe(context, browserIntent);

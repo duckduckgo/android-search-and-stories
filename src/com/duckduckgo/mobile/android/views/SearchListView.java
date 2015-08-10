@@ -39,12 +39,8 @@ public class SearchListView extends ListView implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String s = position < recentLimit ? "Recents" : "Favorites";
-        Log.e("aaa", "search view on item click position: "+position+" - limit: "+recentLimit+" - type: "+s);
         if(recentLimit>0) {
             if (position < recentLimit) {
-                Log.e("aaa", "RECENT click, position: " + position + " - limit: " + recentLimit);
-                Log.e("aaa", "recent search list view - on item click");
                 Object adapter = getAdapter();
                 Cursor c = null;
                 HistoryObject obj = null;
@@ -56,29 +52,20 @@ public class SearchListView extends ListView implements AdapterView.OnItemClickL
                 }
 
                 if (obj != null) {
-                    Log.e("aaa", "object: " + obj.toString());
                     BusProvider.getInstance().post(new HistoryItemSelectedEvent(obj));
                 }
             } else {
-                //position = position - recentLimit - 1;
-                Log.e("aaa", "FAVORITE click, position: " + position + " - limit: " + recentLimit);
                 Object adapter = getAdapter();
                 Cursor c = null;
                 String query = null;
 
                 if (adapter instanceof SearchAdapter) {
-                    Log.e("aaa", "adapter instanceof SavedResultCursorAdapter");
                     c = (Cursor) ((SearchAdapter) adapter).getItem(position);
                     query = c.getString(c.getColumnIndex("query"));
-                } else {
-                    Log.e("aaa", "adapter NOT instanceof SavedResultCursorAdapter");
                 }
 
                 if (query != null) {
-                    Log.e("aaa", "query != null");
                     BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));
-                } else {
-                    Log.e("aaa", "query == null");
                 }
             }
         }
@@ -87,9 +74,6 @@ public class SearchListView extends ListView implements AdapterView.OnItemClickL
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         if(position<recentLimit) {
-            Log.e("aaa", "RECENT long click, position: "+position+" - limit: "+recentLimit);
-            Log.e("aaa", "recent search list view - on item long click");
-
             Object adapter = getAdapter();
             Cursor c = null;
             HistoryObject obj = null;
@@ -104,13 +88,7 @@ public class SearchListView extends ListView implements AdapterView.OnItemClickL
                 BusProvider.getInstance().post(new HistoryItemLongClickEvent(obj));
                 return true;
             }
-
-            //return true;
         } else {
-            //position = position - recentLimit - 1;
-            Log.e("aaa", "FAVORITE longclick, position: "+position+" - limit: "+recentLimit);
-
-
             Object adapter = getAdapter();
             Cursor c = null;
             String query = null;
@@ -124,7 +102,6 @@ public class SearchListView extends ListView implements AdapterView.OnItemClickL
                 BusProvider.getInstance().post(new SavedSearchItemLongClickEvent(query));
                 return true;
             }
-            //return true;
         }
         return false;
     }

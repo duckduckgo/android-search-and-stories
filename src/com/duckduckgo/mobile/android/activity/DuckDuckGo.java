@@ -390,8 +390,6 @@ public class DuckDuckGo extends ActionBarActivity {
                     Log.d(TAG, "fragment: " + fragment.getTag() + " - visible: " + fragment.isVisible());
                 }
             }
-        } else {
-            Log.e(TAG, "all fragments == null");
         }
     }
 	
@@ -941,7 +939,7 @@ public class DuckDuckGo extends ActionBarActivity {
 
     @Subscribe
     public void onSearchExternalEvent(SearchExternalEvent event) {
-        DDGUtils.searchExternal(this, event.query );
+        DDGUtils.searchExternal(this, event.query);
     }
 
 	@Subscribe
@@ -993,8 +991,17 @@ public class DuckDuckGo extends ActionBarActivity {
 	
 	@Subscribe
 	public void onHistoryItemSelected(HistoryItemSelectedEvent event) {
-        displayScreen(SCREEN.SCR_WEBVIEW, false);
-		BusProvider.getInstance().post(new WebViewShowHistoryObjectEvent(event.historyObject));
+        if( DDGControlVar.useExternalBrowser==DDGConstants.ALWAYS_INTERNAL) {
+            displayScreen(SCREEN.SCR_WEBVIEW, false);
+            BusProvider.getInstance().post(new WebViewShowHistoryObjectEvent(event.historyObject));
+        } else {
+            WebFragment webFragment = (WebFragment) fragmentManager.findFragmentByTag(WebFragment.TAG);
+            if(webFragment==null) {
+                webFragment = new WebFragment();
+            }
+            webFragment.setContext(this);
+            webFragment.showHistoryObject(event.historyObject);
+        }
 
 	}
 	
