@@ -11,6 +11,10 @@ buildscript {
 apply plugin: 'com.android.application'
 apply plugin: 'witness'
 
+if(project.hasProperty("duckduckgo.signing") && new File(project.property("duckduckgo.signing")).exists()) {
+    apply from: project.property("duckduckgo.signing");
+}
+
 android {
   compileSdkVersion 22
   buildToolsVersion "22.0.1"
@@ -55,13 +59,12 @@ android {
     }
   }
 
-  signingConfigs {
-    release
-  }
-
   buildTypes {
-    release {
-      signingConfig signingConfigs.release
+    debug {
+      debuggable true
+      jniDebuggable true
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
     }
   }
 
@@ -78,14 +81,4 @@ android {
       }
     }
   }
-}
-
-
-def props = new Properties()
-if(rootProject.file("release.properties").exists()) {
-  props.load(new FileInputStream(rootProject.file("release.properties")))
-  android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
-  android.signingConfigs.release.storePassword props.keyStorePassword
-  android.signingConfigs.release.keyAlias props.keyAlias
-  android.signingConfigs.release.keyPassword props.keyAliasPassword
 }
