@@ -222,40 +222,6 @@ public class DuckDuckGo extends ActionBarActivity {
 		if(savedInstanceState==null) {
 			displayHomeScreen();
 		}
-
-        // global search intent
-        Intent intent = getIntent();
-
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            intent.setAction(Intent.ACTION_MAIN);
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            DDGActionBarManager.getInstance().setSearchBarText(query);
-            BusProvider.getInstance().post(new WebViewSearchWebTermEvent(query));
-        }
-        else if(intent.getBooleanExtra("widget", false)) {
-            if(!getSearchField().getText().toString().equals("")) {
-                DDGActionBarManager.getInstance().clearSearchBar();
-            }
-            if(!DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG)
-                    && !DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
-                displayScreen(SCREEN.SCR_SEARCH, true);
-            }
-        }
-        else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
-            searchOrGoToUrl(intent.getDataString());
-        }
-        else if(Intent.ACTION_ASSIST.equals(intent.getAction())){
-            if(!DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG)
-                    && !DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
-                displayScreen(SCREEN.SCR_SEARCH, true);
-            }
-        }
-        else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
-            Fragment fragment = fragmentManager.findFragmentByTag(WebFragment.TAG);
-            if(fragmentManager.findFragmentByTag(WebFragment.TAG)== null || !fragment.isVisible()) {
-                displayScreen(SCREEN.SCR_WEBVIEW, false);
-            }
-        }
     }
 
     private void initSearchField() {
@@ -495,6 +461,13 @@ public class DuckDuckGo extends ActionBarActivity {
 	}
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Log.d(TAG, "on new intent: " + intent.toString());
+        setIntent(intent);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         //TorIntegrationProvider.getInstance(this).prepareTorSettings();
@@ -519,7 +492,41 @@ public class DuckDuckGo extends ActionBarActivity {
 			new ScanAppsTask(getApplicationContext()).execute();
 			DDGControlVar.hasAppsIndexed = true;
 		}
-	}
+
+        // global search intent
+        Intent intent = getIntent();
+
+        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            intent.setAction(Intent.ACTION_MAIN);
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            DDGActionBarManager.getInstance().setSearchBarText(query);
+            BusProvider.getInstance().post(new WebViewSearchWebTermEvent(query));
+        }
+        else if(intent.getBooleanExtra("widget", false)) {
+            if(!getSearchField().getText().toString().equals("")) {
+                DDGActionBarManager.getInstance().clearSearchBar();
+            }
+            if(!DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG)
+                    && !DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
+                displayScreen(SCREEN.SCR_SEARCH, true);
+            }
+        }
+        else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
+            searchOrGoToUrl(intent.getDataString());
+        }
+        else if(Intent.ACTION_ASSIST.equals(intent.getAction())){
+            if(!DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG)
+                    && !DDGControlVar.mDuckDuckGoContainer.currentFragmentTag.equals(SearchFragment.TAG_HOME_PAGE)) {
+                displayScreen(SCREEN.SCR_SEARCH, true);
+            }
+        }
+        else if(DDGControlVar.mDuckDuckGoContainer.webviewShowing){
+            Fragment fragment = fragmentManager.findFragmentByTag(WebFragment.TAG);
+            if(fragmentManager.findFragmentByTag(WebFragment.TAG)== null || !fragment.isVisible()) {
+                displayScreen(SCREEN.SCR_WEBVIEW, false);
+            }
+        }
+    }
 
 	@Override
 	public void onPause() {
