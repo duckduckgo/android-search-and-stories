@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -104,7 +105,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
-public class DuckDuckGo extends ActionBarActivity {
+public class DuckDuckGo extends AppCompatActivity {
 	protected final String TAG = "DuckDuckGo";
     private KeyboardService keyboardService;
 	private FrameLayout activityContainer;
