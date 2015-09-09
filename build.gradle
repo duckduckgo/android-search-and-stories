@@ -24,7 +24,7 @@ android {
   }
 
   dependencies {
-    compile 'ch.acra:acra:4.4.0'
+    compile 'ch.acra:acra:4.5.0'
     compile ('com.android.support:recyclerview-v7:21.0.0') {
       exclude module: 'support-v4'
     }
@@ -39,7 +39,7 @@ android {
 
   dependencyVerification {
     verify = [
-            'ch.acra:acra:05a5a316bd3b913430f74388b552e1d3bccce623e949647d932047f48ff3f935',
+            'ch.acra:acra:b46be215fefd703fe91bd8c2a9f59ba87f28924316c556468c5e6141d1fc87a7',
             'com.android.support:recyclerview-v7:ab2390d688601b65e2f3a0718b3d25487e61546c4e20f81eb0b033f30ca15b31',
             'com.squareup:otto:cfeffe473932405e65c13231aebcbe3a414604f9c4dd4755b49c160efb111ce2',
             'com.squareup.picasso:picasso:233e18f59d25b6aff475df1e01a0661677f88af73838a27eb23aa21b96a3ac6e',

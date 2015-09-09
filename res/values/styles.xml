@@ -182,4 +182,6 @@
     <style name="OverflowMenuStyle" parent="Widget.AppCompat.PopupMenu.Overflow">
     </style>
 
+    <style name="Theme.Dialog" parent="@android:style/Theme.Dialog" />
+
 </resources>

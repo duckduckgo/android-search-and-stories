@@ -71,13 +71,13 @@
                 android:name="android.appwidget.provider"
                     android:resource="@xml/widget" />
         </receiver>
-        
+
         <activity android:name="org.acra.CrashReportDialog"
-	        android:theme="@android:style/Theme.Dialog"
+	        android:theme="@style/Theme.Dialog"
 	        android:launchMode="singleInstance"
 	        android:excludeFromRecents="true"
 	        android:finishOnTaskLaunch="true" />
-        
+
 		<provider android:name=".providers.DuckDuckGoProvider"
 				android:authorities="com.duckduckgo.mobile.android.providers.DuckDuckGoProvider" />
         
