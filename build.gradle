@@ -16,8 +16,8 @@ if(project.hasProperty("duckduckgo.signing") && new File(project.property("duckd
 }
 
 android {
-  compileSdkVersion 22
-  buildToolsVersion "22.0.1"
+  compileSdkVersion 23
+  buildToolsVersion "23.0.1"
 
   repositories {
     mavenCentral()

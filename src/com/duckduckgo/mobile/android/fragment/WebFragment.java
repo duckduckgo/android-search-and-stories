@@ -66,8 +66,6 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.duckduckgo.mobile.android.views.webview.DDGWebViewClient;
 import com.squareup.otto.Subscribe;
 
-import org.apache.http.conn.util.InetAddressUtils;
-
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -387,7 +385,7 @@ public class WebFragment extends Fragment {
 				searchAsUrl = null;
 			}
 
-			if (searchAsUrl == null && !InetAddressUtils.isIPv4Address(text) && !InetAddressUtils.isIPv6Address(text)) {
+			if (searchAsUrl == null && !DDGUtils.isValidIpAddress(text)) {
 				modifiedText = "http://" + text;
 				try {
 					searchAsUrl = new URL(modifiedText);

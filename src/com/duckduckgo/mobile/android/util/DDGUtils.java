@@ -9,8 +9,9 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.apache.http.conn.util.InetAddressUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -497,6 +498,18 @@ public final class DDGUtils {
             return context.getResources().getDimensionPixelSize(id);
         }
         return 0;
+    }
+
+    public static boolean isValidIpAddress(String input) {
+        String ipv4Regex = "(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])";
+        String ipv6Regex = "([0-9a-f]{1,4}:){7}([0-9a-f]){1,4}";
+        Pattern ipv4Pattern = Pattern.compile(ipv4Regex);
+        Pattern ipv6Pattern = Pattern.compile(ipv6Regex);
+
+        Matcher ipv4Matcher = ipv4Pattern.matcher(input);
+        if(ipv4Matcher.matches()) return true;
+        Matcher ipv6Matcher = ipv6Pattern.matcher(input);
+        return ipv6Matcher.matches();
     }
 	
 }
