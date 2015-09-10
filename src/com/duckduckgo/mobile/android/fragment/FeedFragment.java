@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -88,9 +89,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private DDGOverflowMenu overflowMenu = null;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.activity = (Activity) context;
     }
 
 	@Override

@@ -3,6 +3,7 @@ package com.duckduckgo.mobile.android.fragment;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,9 +44,9 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
     private Preference sendFeedbackPref;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.activity = (Activity) context;
     }
 
 
@@ -86,7 +87,8 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        rootView.setBackgroundColor(getResources().getColor(R.color.background));
+        int color = getResources().getColor(R.color.background);
+        rootView.setBackgroundColor(color);
         return rootView;
     }
 
