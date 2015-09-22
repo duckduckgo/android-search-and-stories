@@ -760,7 +760,9 @@ public class DuckDuckGo extends AppCompatActivity {
         boolean backState = true;
 
         if(!newTag.equals(SearchFragment.TAG)) {
-            backState = fragmentManager.popBackStackImmediate(newTag, 0);
+            if(!isFinishing() && canCommitFragmentSafely) {
+                backState = fragmentManager.popBackStackImmediate(newTag, 0);
+            }
 
             if (displayHomeScreen && fragmentManager.getBackStackEntryCount() > 1) {
                 List<Fragment> fragments = fragmentManager.getFragments();
@@ -1091,7 +1093,7 @@ public class DuckDuckGo extends AppCompatActivity {
 
     @Subscribe
     public void onRemoveWebFragmentEvent(RemoveWebFragmentEvent event) {
-        if(!isFinishing()) {
+        if(!isFinishing() && canCommitFragmentSafely) {
             fragmentManager.popBackStackImmediate();
         }
     }
