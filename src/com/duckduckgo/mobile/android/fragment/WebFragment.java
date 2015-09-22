@@ -501,10 +501,18 @@ public class WebFragment extends Fragment {
 	}
 
 	public void showFeed(FeedObject feedObject) {
+        Log.e("show_feed", "DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_INTERNAL: "+(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_INTERNAL));
+        Log.e("show_feed", "PreferencesManager.getReadable(): "+(PreferencesManager.getReadable()));
+        Log.e("show_feed", "mainWebView != null: "+(mainWebView!=null));
+        Log.e("show_feed", "!mainWebView.isOriginalRequired(): "+((mainWebView==null)?"null":!mainWebView.isOriginalRequired()));
+        Log.e("show_feed", "feedObject != null: "+(feedObject!=null));
+        Log.e("show_feed", "feedObject.getArticleUrl() != null: "+((feedObject!=null)?feedObject.getArticleUrl():"null"));
+        if(feedObject==null) return;
 		if(!savedState) {
 			if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_INTERNAL
 					&& PreferencesManager.getReadable()
 					&& !mainWebView.isOriginalRequired()
+                    && feedObject.getArticleUrl()!=null
 					&& feedObject.getArticleUrl().length() != 0) {
 				urlType = URLTYPE.FEED;
 				new ReadableFeedTask(feedObject).execute();
