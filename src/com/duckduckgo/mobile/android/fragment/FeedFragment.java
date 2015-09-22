@@ -330,7 +330,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 					CacheFeedTask cacheTask = new CacheFeedTask(activity);
 
 					// for HTTP request
-					//mainFeedTask = new MainFeedTask(feedView);
+					if(mainFeedTask!=null) {
+                        mainFeedTask.cancel(true);
+                    }
                     mainFeedTask = new MainFeedTask(recyclerView);
 
 					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
