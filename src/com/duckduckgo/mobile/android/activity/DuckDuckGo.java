@@ -461,14 +461,14 @@ public class DuckDuckGo extends AppCompatActivity {
         displayScreen(DDGControlVar.START_SCREEN, true, true);
         DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_BROWSE;
 	}
-
+/*
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Log.d(TAG, "on new intent: " + intent.toString());
         setIntent(intent);
     }
-
+*/
     @Override
     protected void onStart() {
         super.onStart();
