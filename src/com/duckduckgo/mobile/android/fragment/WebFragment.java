@@ -570,7 +570,9 @@ public class WebFragment extends Fragment {
 		}
 		switch(urlType) {
 			case FEED:
-				BusProvider.getInstance().post(new ShareFeedEvent(DDGControlVar.currentFeedObject.getTitle(), DDGControlVar.currentFeedObject.getUrl()));
+                if(DDGControlVar.currentFeedObject!=null &&DDGControlVar.currentFeedObject.getTitle()!=null && DDGControlVar.currentFeedObject.getUrl()!=null) {
+                    BusProvider.getInstance().post(new ShareFeedEvent(DDGControlVar.currentFeedObject.getTitle(), DDGControlVar.currentFeedObject.getUrl()));
+                }
 				break;
 			case SERP:
 				BusProvider.getInstance().post(new ShareSearchEvent(webViewUrl));
