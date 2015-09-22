@@ -2,6 +2,8 @@ package com.duckduckgo.mobile.android.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -109,7 +111,11 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
         //Otherwise, we can try again
         if (sourcesTask != null) {
             sourcesTask = new SourcesTask(getActivity(), this);
-            sourcesTask.execute();
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                sourcesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                sourcesTask.execute();
+            }
         }
     }
 
@@ -122,7 +128,11 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
             @Override
             public void run() {
                 sourcesTask = new SourcesTask(getActivity(), SourcesFragment.this);
-                sourcesTask.execute();
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    sourcesTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    sourcesTask.execute();
+                }
             }
         }, 200);
     }

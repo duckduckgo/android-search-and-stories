@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.widget.Toast;
 
@@ -90,7 +91,11 @@ public class ContentDownloader {
 			};
 
 			MimeDownloadTask mimeTask = new MimeDownloadTask(mimeListener, url, fileName);
-			mimeTask.execute();
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                mimeTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                mimeTask.execute();
+            }
 		}
 	}
 

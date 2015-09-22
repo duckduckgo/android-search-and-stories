@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.AsyncTask;
+import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 
@@ -145,7 +146,11 @@ public class MainFeedTask extends AsyncTask<Void, Void, List<FeedObject>> {
 		if(!DDGControlVar.isDefaultsChecked) {
 			Set<SourceInfoPair> sourceInfoPairs = initializeSources();
 			//new SourceIconsTask(feedListView, sourceInfoPairs).execute();
-            new SourceIconsTask(feedRecyclerView, sourceInfoPairs).execute();
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                new SourceIconsTask(feedRecyclerView, sourceInfoPairs).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                new SourceIconsTask(feedRecyclerView, sourceInfoPairs).execute();
+            }
 			DDGControlVar.isDefaultsChecked = true;
 		}
 		

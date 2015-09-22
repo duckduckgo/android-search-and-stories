@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -94,9 +95,7 @@ public class WebFragment extends Fragment {
     private Menu mainMenu = null;
     private DDGOverflowMenu overflowMenu = null;
 
-    //
-    //mainWebView.clearHistory();
-    //mainWebView.clearView();
+    private ReadableFeedTask readableFeedTask;
 
     public static WebFragment newInstance(String url, SESSIONTYPE sessionType) {
         WebFragment fragment = new WebFragment();
@@ -165,6 +164,10 @@ public class WebFragment extends Fragment {
     public void onPause() {
         super.onPause();
         dismissMenu();
+        if(readableFeedTask!=null) {
+            readableFeedTask.cancel(true);
+            readableFeedTask = null;
+        }
     }
 
     @Override
@@ -515,7 +518,17 @@ public class WebFragment extends Fragment {
                     && feedObject.getArticleUrl()!=null
 					&& feedObject.getArticleUrl().length() != 0) {
 				urlType = URLTYPE.FEED;
-				new ReadableFeedTask(feedObject).execute();
+
+                if(readableFeedTask!=null) {
+                    readableFeedTask.cancel(true);
+                    readableFeedTask = null;
+                }
+                readableFeedTask = new ReadableFeedTask(feedObject);
+                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                    readableFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+                } else {
+                    readableFeedTask.execute();
+                }
 			}
 			else {
 				showWebUrl(feedObject.getUrl());
@@ -598,7 +611,16 @@ public class WebFragment extends Fragment {
 		if(!mainWebView.isReadable)
 			mainWebView.reload();
 		else {
-			new ReadableFeedTask(DDGControlVar.currentFeedObject).execute();
+            if(readableFeedTask!=null) {
+                readableFeedTask.cancel(true);
+                readableFeedTask=null;
+            }
+            readableFeedTask = new ReadableFeedTask(DDGControlVar.currentFeedObject);
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+                readableFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            } else {
+                readableFeedTask.execute();
+            }
 		}
 	}
 
@@ -631,7 +653,11 @@ public class WebFragment extends Fragment {
     }
 
 	private void actionTurnReadabilityOn() {
-		new ReadableFeedTask(DDGControlVar.currentFeedObject);
+        if(readableFeedTask!=null) {
+            readableFeedTask.cancel(true);
+            readableFeedTask=null;
+        }
+        readableFeedTask = new ReadableFeedTask(DDGControlVar.currentFeedObject);
 	}
 
     private void dismissMenu() {
@@ -668,7 +694,15 @@ public class WebFragment extends Fragment {
 
 	@Subscribe
 	public void onTurnReadabilityOnEvent(TurnReadabilityOnEvent event) {
-		new ReadableFeedTask(event.feedObject).execute();
+        if(readableFeedTask!=null) {
+            readableFeedTask.cancel(true);
+        }
+        readableFeedTask = new ReadableFeedTask(event.feedObject);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            readableFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            readableFeedTask.execute();
+        }
 	}
 
 
