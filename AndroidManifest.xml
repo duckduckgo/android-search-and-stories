@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.duckduckgo.mobile.android"
     android:installLocation="auto"
-    android:versionCode="71"
-    android:versionName="3.0.9">
+    android:versionCode="72"
+    android:versionName="3.0.10">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="23" />
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -41,7 +41,7 @@
                 <action android:name="android.intent.action.SEARCH_LONG_PRESS" />
                 <category android:name="android.intent.category.DEFAULT" />\
             </intent-filter>-->
-
+<!--
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="http" />
@@ -57,7 +57,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
-            
+-->
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
@@ -91,9 +91,9 @@
             android:configChanges="locale|orientation"
             android:theme="@android:style/Theme.Dialog"
             android:taskAffinity="" />
-
+<!--
         <service android:name="com.duckduckgo.mobile.android.subscribers.MainSubscriber" />
-		
+	-->
     </application>
 
 </manifest>
