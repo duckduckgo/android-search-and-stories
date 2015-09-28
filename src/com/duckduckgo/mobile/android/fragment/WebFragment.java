@@ -613,10 +613,7 @@ public class WebFragment extends Fragment {
 		if(!mainWebView.isReadable)
 			mainWebView.reload();
 		else {
-            if(readableFeedTask!=null) {
-                readableFeedTask.cancel(true);
-                readableFeedTask=null;
-            }
+            if(DDGControlVar.currentFeedObject==null) return;
             readableFeedTask = new ReadableFeedTask(DDGControlVar.currentFeedObject);
             if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 readableFeedTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
