@@ -309,8 +309,10 @@ public class WebFragment extends Fragment {
 		mWebViewDefaultUA = mainWebView.getSettings().getUserAgentString();
 
 		mainWebView.setWebViewClient(new DDGWebViewClient(getActivity(), this));
-		View container = getActivity().findViewById(R.id.activityContainer);
-		mainWebView.setWebChromeClient(new DDGWebChromeClient(this, container));
+
+        View hideContent = getActivity().findViewById(R.id.main_container);
+        ViewGroup showContent = (ViewGroup) getActivity().findViewById(R.id.fullscreen_video_container);
+        mainWebView.setWebChromeClient(new DDGWebChromeClient(getActivity(), hideContent, showContent));
 
 		contentDownloader = new ContentDownloader(getActivity());
 

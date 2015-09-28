@@ -223,7 +223,7 @@ public class DDGWebView extends WebView {
         if(lastIndex > 0) {
 			WebHistoryItem prevItem = history.getItemAtIndex(lastIndex-1);
 
-			if(webChromeClient.isVideoPlayingFullscreen) {
+            if(webChromeClient.isVideoFullscreen()) {
 				hideCustomView();
 			} else if(prevItem != null) {
 				String prevUrl = prevItem.getUrl();
@@ -302,8 +302,8 @@ public class DDGWebView extends WebView {
 		webChromeClient.onHideCustomView();
 	}
 
-	public boolean isVideoPlayingFullscreen() {
-		return webChromeClient.isVideoPlayingFullscreen;
+	public boolean isVideoFullscreen() {
+        return webChromeClient.isVideoFullscreen();
 	}
 
 }
