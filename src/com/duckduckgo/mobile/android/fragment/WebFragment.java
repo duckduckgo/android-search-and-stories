@@ -626,14 +626,18 @@ public class WebFragment extends Fragment {
 
 	private void actionSave() {
 		if(urlType==URLTYPE.FEED) {
+            if(DDGControlVar.currentFeedObject==null) return;
 			BusProvider.getInstance().post(new SaveStoryEvent(DDGControlVar.currentFeedObject));
 		} else if(urlType==URLTYPE.SERP) {
-			BusProvider.getInstance().post(new SaveSearchEvent(DDGUtils.getQueryIfSerp(mainWebView.getUrl())));
+            String query = mainWebView.getUrl();
+            if(query==null) return;
+			BusProvider.getInstance().post(new SaveSearchEvent(DDGUtils.getQueryIfSerp(query)));
 		}
 	}
 
 	private void actionDelete() {
 		if(urlType==URLTYPE.FEED) {
+            if(DDGControlVar.currentFeedObject==null) return;
 			BusProvider.getInstance().post(new UnSaveStoryEvent(DDGControlVar.currentFeedObject.getId()));
 		} else if(urlType==URLTYPE.SERP) {
 			BusProvider.getInstance().post(new UnSaveSearchEvent(DDGUtils.getQueryIfSerp(mainWebView.getUrl())));
