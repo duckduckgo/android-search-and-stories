@@ -62,6 +62,7 @@ import com.duckduckgo.mobile.android.events.externalEvents.SearchExternalEvent;
 import com.duckduckgo.mobile.android.events.externalEvents.SendToExternalBrowserEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
+import com.duckduckgo.mobile.android.events.feedEvents.FeedItemSelectedEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.SavedFeedItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.pasteEvents.RecentSearchPasteEvent;
@@ -94,6 +95,7 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DisplayStats;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
+import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
 import com.duckduckgo.mobile.android.util.SESSIONTYPE;
 import com.duckduckgo.mobile.android.util.Sharer;
@@ -823,6 +825,34 @@ public class DuckDuckGo extends AppCompatActivity {
         return fragmentManager.findFragmentByTag(tag)!=null && fragmentManager.findFragmentByTag(tag).isVisible();
     }
 
+    public void feedItemSelected(FeedObject feedObject) {
+        // keep a reference, so that we can reuse details while saving
+        DDGControlVar.currentFeedObject = feedObject;
+        DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
+
+        String url = feedObject.getUrl();
+        if (url != null) {
+            //if(!DDGApplication.getDB().existsVisibleFeedById(feedObject.getId())) {
+            if(!DDGApplication.getDB().existsFavoriteFeedById(feedObject.getId())) {
+                DDGApplication.getDB().insertFeedItem(feedObject);
+                //BusProvider.getInstance().post(new RequestSyncAdaptersEvent());
+                syncAdapters();
+
+            } else {
+                DDGApplication.getDB().insertFeedItemToHistory(feedObject.getTitle(), feedObject.getUrl(), feedObject.getType(), feedObject.getId());
+                //BusProvider.getInstance().post(new RequestSyncAdaptersEvent());
+                syncAdapters();
+            }
+            //BusProvider.getInstance().post(new RequestOpenWebPageEvent(url, SESSIONTYPE.SESSION_FEED));
+            searchOrGoToUrl(url, SESSIONTYPE.SESSION_FEED);
+        }
+    }
+
+    public void feedItemSelected(String feedId) {
+        FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
+        feedItemSelected(feedObject);
+    }
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {//aaa to remove
 		super.onActivityResult(requestCode, resultCode, data);
@@ -908,6 +938,20 @@ public class DuckDuckGo extends AppCompatActivity {
 	public DDGAutoCompleteTextView getSearchField() {
         return DDGActionBarManager.getInstance().getSearchField();
 	}
+
+    /**
+     * Handling both MainFeedItemSelectedEvent and SavedFeedItemSelectedEvent.
+     * (modify to handle independently when necessary)
+     * @param event
+     */
+    @Subscribe
+    public void onFeedItemSelected(FeedItemSelectedEvent event) {
+        if(event.feedObject==null) {
+            feedItemSelected(event.feedId);
+        } else {
+            feedItemSelected(event.feedObject);
+        }
+    }
 
 	@Subscribe
 	public void onDeleteStoryInHistoryEvent(DeleteStoryInHistoryEvent event) {//left menu

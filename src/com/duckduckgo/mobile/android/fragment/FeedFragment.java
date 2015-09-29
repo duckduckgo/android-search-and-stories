@@ -263,35 +263,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }*/
 
-	public void feedItemSelected(FeedObject feedObject) {
-		// keep a reference, so that we can reuse details while saving
-		DDGControlVar.currentFeedObject = feedObject;
-		DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
-
-		String url = feedObject.getUrl();
-		if (url != null) {
-			//if(!DDGApplication.getDB().existsVisibleFeedById(feedObject.getId())) {
-            if(!DDGApplication.getDB().existsFavoriteFeedById(feedObject.getId())) {
-				DDGApplication.getDB().insertFeedItem(feedObject);
-				BusProvider.getInstance().post(new RequestSyncAdaptersEvent());
-
-			} else {
-                DDGApplication.getDB().insertFeedItemToHistory(feedObject.getTitle(), feedObject.getUrl(), feedObject.getType(), feedObject.getId());
-                BusProvider.getInstance().post(new RequestSyncAdaptersEvent());
-            }
-			BusProvider.getInstance().post(new RequestOpenWebPageEvent(url, SESSIONTYPE.SESSION_FEED));
-		}
-
-		if(ReadArticlesManager.addReadArticle(feedObject)){
-			//feedAdapter.notifyDataSetChanged();
+    public void feedItemSelected(FeedObject feedObject) {
+        if(ReadArticlesManager.addReadArticle(feedObject)){
             recyclerAdapter.notifyDataSetChanged();
-		}
-	}
-
-	public void feedItemSelected(String feedId) {
-		FeedObject feedObject = DDGApplication.getDB().selectFeedById(feedId);
-		feedItemSelected(feedObject);
-	}
+        }
+    }
 
 	/**
 	 * Cancels source filter applied with source icon click from feed item
@@ -436,18 +412,10 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		}
         swipeRefreshLayout.setRefreshing(false);
 	}
-
-	/**
-	 * Handling both MainFeedItemSelectedEvent and SavedFeedItemSelectedEvent.
-	 * (modify to handle independently when necessary)
-	 * @param event
-	 */
 	@Subscribe
 	public void onFeedItemSelected(FeedItemSelectedEvent event) {
-		if(event.feedObject==null) {
-			feedItemSelected(event.feedId);
-		} else {
-			feedItemSelected(event.feedObject);
+		if(event.feedObject!=null) {
+            feedItemSelected(event.feedObject);
 		}
 	}
 
