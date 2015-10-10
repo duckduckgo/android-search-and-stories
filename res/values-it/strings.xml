@@ -17,44 +17,45 @@
     <string name="PrefTheme">Tema</string>
     <string name="PrefThemeLight">Chiaro</string>
     <string name="PrefThemeDark">Scuro</string>
-    <string name="PrefStartScreen">Schermata Iniziale</string>
+    <string name="PrefStartScreen">Schermata iniziale</string>
     <string name="PrefStories">Storie</string>
     <string name="PrefWaterCoolerStories">Storie</string>
     <string name="PrefSavedItems">@string/favorites</string>
     <string name="PrefDuckMode">Cerca</string>
     <string name="PrefRecentSearch">@string/recents</string>
-    <string name="PrefRecordHistory">Salva Recenti</string>
-    <string name="PrefClearHistory">Elimina Recenti</string>
-    <string name="PrefRecordCookies">Salva Cookie</string>
-    <string name="PrefClearCookies">Elimina Cookie</string>
-    <string name="PrefClearBrowserCache">Elimina Cache Browser</string>
-    <string name="PrefClearCacheAndCookies">Elimina Cache e Cookie</string>
-    <string name="PrefSources">Modifica Fonti</string>
-    <string name="PrefResetSources">Ripristina Fonti</string>
+    <string name="PrefRecordHistory">Salva recenti</string>
+    <string name="PrefClearHistory">Elimina recenti</string>
+    <string name="PrefRecordCookies">Salva cookie</string>
+    <string name="PrefClearCookies">Elimina cookie</string>
+    <string name="PrefClearBrowserCache">Elimina cache browser</string>
+    <string name="PrefClearCacheAndCookies">Elimina cache e cookie</string>
+    <string name="PrefSources">Modifica fonti</string>
+    <string name="PrefResetSources">Ripristina fonti</string>
     <string name="PrefRegion">Regione</string>
-    <string name="PrefDirectQuery">Cerca al Tocco</string>
-    <string name="PrefExternalBrowser">Usa Browser Esterno</string>
+    <string name="PrefDirectQuery">Cerca al tocco</string>
+    <string name="PrefExternalBrowser">Usa browser esterno</string>
     <string name="PrefNever">Mai</string>
-    <string name="PrefExternalBrowserExceptSearches">Escluse Ricerche</string><!--aaa-->
+    <string name="PrefExternalBrowserExceptSearches">Escluse ricerche</string><!--aaa-->
     <string name="PrefExternalBrowserAlways">Sempre</string>
-    <string name="PrefClearCacheCookiesEveryLaunch">Ad Ogni Avvio</string>
+    <string name="PrefClearCacheCookiesEveryLaunch">Ad ogni avvio</string>
     <string name="PrefClearCacheCookiesWeekly">Settimanalmente</string>
     <string name="PrefClearCacheCookiesMonthly">Mensilmente</string>
-    <string name="PrefSendFeedback">Invia Feedback</string>
+    <string name="PrefSendFeedback">Invia feedback</string>
     <string name="PrefAbout">Informazioni</string>
-    <string name="PrefRate">Valuta l\'Applicazione</string>
-    <string name="PrefAppSearch">Includi le Applicazioni</string>
-    <string name="PrefMainFontSize">Dimensione Caratteri</string>
-    <string name="PrefEnableAcra">Autosegnalazione Crash</string>
-    <string name="PrefAcraDisabled">Segnalazione Automatica Disabilitata</string>
-    <string name="PrefAcraEnabled">Segnalazione Automatica Abilitata</string>
+    <string name="PrefRate">Valuta l\'applicazione</string>
+    <string name="PrefAppSearch">Includi le applicazioni</string>
+    <string name="PrefMainFontSize">Dimensione caratteri</string>
+    <string name="PrefEnableAcra">Autosegnalazione crash</string>
+    <string name="PrefAcraDisabled">Segnalazione automatica disabilitata</string>
+    <string name="PrefAcraEnabled">Segnalazione automatica abilitata</string>
+    <string name="PrefEnableJavascript">Attiva Javascript</string>
     
     <string name="PrefWaterCooler">Storie</string>
     <string name="PrefAutocomplete">Autocompletamento</string>
-    <string name="PrefSearchResults">Risultati di Ricerca</string>
+    <string name="PrefSearchResults">Risultati di ricerca</string>
     <string name="PrefTurnOffAutocomplete">Disabilitato</string>
 
-    <string name="PrefAutoUpdate">Update Automatico</string>
+    <string name="PrefAutoUpdate">Update automatico</string>
     <string name="PrefReadable">Leggibilità</string>
     <string name="PrefReadableSummary">Attiva quando disponibile</string>
     <string name="PrefGroupTor">Tor</string>
@@ -64,9 +65,9 @@
     <string name="OrbotStatusOkMessage">Pare che Orbot funzioni correttamente!</string>
     <string name="OrbotCheckSite">https://check.torproject.org</string>
     
-    <string name="ShareStory">Condividi Storia</string>
-    <string name="ShareSearch">Condividi Ricerca</string>
-    <string name="SharePage">Condividi Pagina</string>
+    <string name="ShareStory">Condividi storia</string>
+    <string name="ShareSearch">Condividi ricerca</string>
+    <string name="SharePage">Condividi pagina</string>
 
     <string name="RegularShareFormat">%1$s via DuckDuckGo per Android</string>
     <string name="TwitterShareFormat">%1$s via @duckduckgo per Android</string>
@@ -84,7 +85,7 @@
     <string name="LeftSaved">Salvati</string>
     <string name="LeftSettings">Impostazioni</string>
     <string name="LeftRecent">Recenti</string>
-    <string name="LeftRecentQueries">Ricerche Recenti</string>
+    <string name="LeftRecentQueries">Ricerche recenti</string>
     
     <string name="Confirm">Conferma</string>
     <string name="ConfirmClearHistory">Tutta la cronologia di ricerca verrà eliminata. Sei sicuro?</string>
@@ -92,8 +93,8 @@
     <string name="ConfirmClearCacheAndCookies">La cache del browser verrà eliminata. Sei sicuro?</string>
     
     <string name="Default">Predefinito</string>
-    <string name="Defaults">Ripristina ai Predefiniti</string><!-- new -->
-    <string name="SuggestSource">Proponi una Fonte</string>
+    <string name="Defaults">Ripristina ai predefiniti</string><!-- new -->
+    <string name="SuggestSource">Proponi una fonte</string>
     <string name="SuggestedSources">Per favore, includete queste fonti:</string>
     
     <string name="FeedbackTo">Feedback DuckDuckGo &lt;help@duckduckgo.com&gt;</string>
@@ -104,12 +105,12 @@
     <string name="SavedResultsEmptyTitle">Non hai risultati salvati</string>
     <string name="SavedResultsEmptySubTitle">Puoi salvare i risultati di ricerca nel menu azioni della barra di ricerca.</string>
     
-    <string name="MoreMenuTitle">Opzioni Pagina</string>
+    <string name="MoreMenuTitle">Opzioni pagina</string>
     
-    <string name="OpenInExternalBrowser">Apri in un Browser Esterno</string>
-    <string name="ConfirmExternalBrowser">Conferma Richiesta</string>
+    <string name="OpenInExternalBrowser">Apri in un browser esterno</string>
+    <string name="ConfirmExternalBrowser">Conferma richiesta</string>
     
-    <string name="ChangingFontSize">Modifica Dimensione Caratteri&#8230;</string>
+    <string name="ChangingFontSize">Modifica dimensione caratteri&#8230;</string>
 
 
     <string name="crash_toast_text">Applicazione crashata! I dati relativi al crash vengono collezionati e segnalati previa conferma.</string>
@@ -123,7 +124,7 @@
     <string name="crash_dialog_comment_prompt">Tuoi commenti: </string>
     <string name="crash_dialog_ok_toast">Grazie per l\'aiuto!</string>
     
-    <string name="ErrorAppNotFound">Applicazione Non Trovata</string>
+    <string name="ErrorAppNotFound">Applicazione non trovata</string>
     <string name="ErrorActivityNotFound">Nessuna attività correlata trovata!</string>
     <string name="ErrorDownloadFailed">Scaricamento fallito!</string>
     <string name="ErrorDownloadOpenFail">Impossibile aprire il file scaricato!</string>
@@ -140,7 +141,7 @@
         Queste fonti creano un flusso di storie interessanti che non trovi nelle normali app di notizie.
         Tutte le fonti provengono da feed speciali tra cui le \"più condivise\" o le \"più votate.\"
         Dacci un\'occhiata quando hai cinque minuti liberi.
-        Nota: puoi rimuovere le Storie dalla tua pagina iniziale usando l\'impostazione \"Schermata Iniziale\".
+        Nota: puoi rimuovere le Storie dalla tua pagina iniziale usando l\'impostazione \"Schermata iniziale\".
     </string>
 
     <string name="WaterCoolerSources">Storie</string>
@@ -157,17 +158,17 @@
     <string name="Cancel">Annulla</string>
     <string name="NoChange">Nessuna modifica</string>
     
-    <string name="OnlyOnPhone">Solo sul Telefono</string>
-    <string name="SelectAppToSend">Seleziona Applicazione per Inviare</string>
+    <string name="OnlyOnPhone">Solo sul telefono</string>
+    <string name="SelectAppToSend">Seleziona applicazione per l\'invio</string>
     
-    <string name="ReadabilityOn">Leggibilità On</string>
-    <string name="ReadabilityOff">Leggibilità Off</string>
+    <string name="ReadabilityOn">Leggibilità on</string>
+    <string name="ReadabilityOff">Leggibilità off</string>
     
-    <string name="SavedSearches">Ricerche Salvate</string>
-    <string name="SavedStories">Storie Salvate</string>
-    <string name="StoryOptionsTitle">Opzioni Storia</string>
-    <string name="SearchOptionsTitle">Opzioni Ricerca</string>
-    <string name="PageOptionsTitle">Opzioni Pagina</string>
+    <string name="SavedSearches">Ricerche salvate</string>
+    <string name="SavedStories">Storie salvate</string>
+    <string name="StoryOptionsTitle">Opzioni storia</string>
+    <string name="SearchOptionsTitle">Opzioni ricerca</string>
+    <string name="PageOptionsTitle">Opzioni pagina</string>
     
     <string name="ToastUnSaveStory">La storia è stata rimossa dalle tue storie salvate.</string>
     <string name="ToastUnSaveSearch">La ricerca è stata rimossa dalle tue ricerche salvate.</string>
@@ -179,13 +180,13 @@
     <string name="WelcomeHeader">Ti presentiamo</string>
     <string name="WelcomeTitle">DuckDuckGo Search &amp; Stories</string>
     <string name="WelcomeDescription">
-        Cerca Anonimamente.\nTrova Immediatamente.\nResta Informato.</string>
+        Cerca anonimamente.\nTrova immediatamente.\nResta informato.</string>
     <string name="GetStarted">Inizia</string>
     
     <string name="BangButtonExplanation">Cercare sugli altri siti è facile con i comandi !bang.</string>
     
-    <string name="LeftRecentSearches">Ricerche Recenti</string>
-    <string name="LeftRecentStories">Storie Recenti</string>
+    <string name="LeftRecentSearches">Ricerche recenti</string>
+    <string name="LeftRecentStories">Storie recenti</string>
     <string name="NewSources">Abbiamo aggiunto alcune nuove fonti interessanti!</string>
     <string name="NewSourcesOk">Vediamo</string>
     <string name="NewSourcesNoThx">Più tardi</string>
@@ -194,33 +195,33 @@
 
 
     <!--new strings--><!--
-    <string name="add_favourites">Aggiungi ai Preferiti</string>
-    <string name="remove_favourites">Rimuovi dai Preferiti</string>
+    <string name="add_favourites">Aggiungi ai preferiti</string>
+    <string name="remove_favourites">Rimuovi dai preferiti</string>
     <string name="share">Condividilo</string>
-    <string name="view_external">Vedi nel Browser</string>
+    <string name="view_external">Vedi nel browser</string>
     <string name="reload">Ricarica</string>-->
     <string name="stories">Storie</string>
-    <string name="help_feedback">Aiuto &amp; Feedback</string>
+    <string name="help_feedback">Aiuto &amp; feedback</string>
     <string name="settings">Impostazioni</string>
 
     <!--favorites fragment -->
     <string name="favorites">Preferiti</string>
-    <string name="favorite_stories">Storie Preferite</string>
+    <string name="favorite_stories">Storie preferite</string>
     <string name="favorite_stories_narrow">@string/stories</string>
-    <string name="favorite_search">Ricerche Preferite</string>
+    <string name="favorite_search">Ricerche preferite</string>
     <string name="favorite_search_narrow">Ricerche</string>
-    <string name="empty_favorites_title">Nessun Preferito</string>
+    <string name="empty_favorites_title">Nessun preferito</string>
     <string name="empty_favorites_text">Aggiungi ricerche e storie\nnei tuoi preferiti che verranno\nmostrati qui.</string>
 
     <!--recents fragment-->
     <string name="recents">Recenti</string>
-    <string name="recent_stories">Storie Recenti</string>
+    <string name="recent_stories">Storie recenti</string>
     <string name="recent_stories_narrow">@string/stories</string>
-    <string name="recent_searches">Ricerche Recenti</string>
+    <string name="recent_searches">Ricerche recenti</string>
     <string name="recent_searches_narrow">Ricerche</string>
-    <string name="empty_recents_title">Nessun Recente</string>
+    <string name="empty_recents_title">Nessun recente</string>
     <string name="empty_recents_text">Quando inizi a cercare\no a sfogliare storie, la tua attività\nverrà mostrata qui.</string>
-    <string name="disabled_recents_title">Recenti Disabilitato</string>
+    <string name="disabled_recents_title">Recenti disabilitato</string>
     <string name="disabled_recents_text">Puoi attivare i recenti nelle Impostazioni.</string>
 
     <!--about fragment-->
@@ -231,28 +232,30 @@
 
     <!--help feedback fragment-->
     <string name="help">Aiuto</string>
-    <string name="android_help_center">Centro di Aiuto Android</string>
+    <string name="android_help_center">Centro di aiuto Android</string>
     <string name="feedback">Feedback</string>
-    <string name="leave_feedback">Invia Feedback</string>
-    <string name="rate">Valuta questa App</string>
+    <string name="leave_feedback">Invia feedback</string>
+    <string name="rate">Valuta questa app</string>
 
     <!-- change sources fragment-->
-    <string name="change_sources">Modifica Fonti</string>
+    <string name="change_sources">Fonti</string>
+    <string name="options">Opzioni</string>
 
     <!-- menus -->
     <string name="action_stories">@string/stories</string>
     <string name="action_recents">@string/recents</string>
     <string name="action_favorites">@string/favorites</string>
     <string name="action_settings">@string/settings</string>
-    <string name="action_help_feedback">Aiuto &amp; Feedback</string>
-    <string name="action_reload">Ricarica Pagina</string>
-    <string name="action_add_favorite">Aggiungi ai Preferiti</string>
+    <string name="action_help_feedback">Aiuto &amp; feedback</string>
+    <string name="action_reload">Ricarica pagina</string>
+    <string name="action_add_favorite">Aggiungi ai preferiti</string>
     <string name="action_remove_favorite">Rimuovi</string>
     <string name="action_share">Condividi</string>
-    <string name="action_view_external">Vedi nel Browser</string>
+    <string name="action_view_external">Vedi nel browser</string>
     <string name="action_back">Indietro</string>
     <string name="action_forward">Avanti</string>
     <string name="action_close">Chiudi</string>
+    <string name="remove">Rimuovi</string>
     
 
 
