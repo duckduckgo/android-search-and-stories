@@ -240,6 +240,10 @@ public class DuckDuckGo extends AppCompatActivity {
                 if(textView == getSearchField() && actionId != EditorInfo.IME_NULL) {
                     if(getSearchField().getTrimmedText()!=null && getSearchField().getTrimmedText().length()!=0) {
                         searchOrGoToUrl(getSearchField().getTrimmedText());
+
+                        if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
+                            DDGActionBarManager.getInstance().clearSearchBar();
+                        }
                     }
                 }
                 return false;
