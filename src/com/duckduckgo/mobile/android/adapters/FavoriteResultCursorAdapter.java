@@ -31,7 +31,7 @@ public class FavoriteResultCursorAdapter extends CursorAdapter {
         // here we are setting our data
         // that means, take the data from the cursor and put it in views
 
-    	final String data = cursor.getString(cursor.getColumnIndex("query"));
+    	final String data = cursor.getString(cursor.getColumnIndex("title"));
         TextView title = (TextView) view.findViewById(R.id.item_text);
         if(title!=null ) {
             title.setText(capitalizeWords(data));

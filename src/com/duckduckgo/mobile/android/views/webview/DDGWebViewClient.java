@@ -21,7 +21,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
+import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.SSLCertificateDialog;
+import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewOnPageStarted;
 import com.duckduckgo.mobile.android.fragment.WebFragment;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
@@ -83,6 +85,7 @@ public class DDGWebViewClient extends WebViewClient {
             DDGActionBarManager.getInstance().clearSearchBar();
             return;
         }
+		BusProvider.getInstance().post(new WebViewOnPageStarted(url));
 		mLoaded = false;
         view.getSettings().setDomStorageEnabled(true);
         view.getSettings().setPluginState(PluginState.ON_DEMAND);
@@ -179,7 +182,7 @@ public class DDGWebViewClient extends WebViewClient {
 	
 	public void onPageFinished (WebView view, String url) {
 		super.onPageFinished(view, url);
-        Log.e("onpagefinished", "url: "+url);
+        Log.e("onpagefinished", "url: " + url);
         mLoaded = true;
 
 		DDGControlVar.mCleanSearchBar = false;

@@ -26,7 +26,7 @@ import com.duckduckgo.mobile.android.util.PreferencesManager;
 public class DdgDB {
 
 	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 15;
+	private static final int DATABASE_VERSION = 16;
 	private static final String FEED_TABLE = "feed";
 	private static final String APP_TABLE = "apps";
 	private static final String HISTORY_TABLE = "history";
@@ -49,13 +49,18 @@ public class DdgDB {
 	      this.db = openHelper.getWritableDatabase();
 	      this.insertStmtApp = this.db.compileStatement(APP_INSERT);
 	}
-	
+
 	public long insertSavedSearch(String query) {
+		return insertSavedSearch(null, query);
+	}
+	
+	public long insertSavedSearch(String title, String query) {
 		if(query == null)
 			return -1L;
 		
 		ContentValues contentValues = new ContentValues();				 
 		contentValues.put("query", query);
+		contentValues.put("title", (title==null)?query:title);
 		// delete old record if exists
 		this.db.delete(SAVED_SEARCH_TABLE, "query=?", new String[]{query});
 		return this.db.insert(SAVED_SEARCH_TABLE, null, contentValues);
@@ -753,18 +758,18 @@ public class DdgDB {
 	      	
 	      	private void createHistoryTable(SQLiteDatabase db) {
 	      		db.execSQL("CREATE TABLE " + HISTORY_TABLE + "("
-	  					+"_id INTEGER PRIMARY KEY, "
-		  			    +"type VARCHAR(300), "
-		  			    +"data VARCHAR(300), "
-		  			    +"url VARCHAR(300), "
-		  			    +"extraType VARCHAR(300), "
-		  			    +"feedId VARCHAR(300)"
-		  			    +")"
-		  			    );
+								+ "_id INTEGER PRIMARY KEY, "
+								+ "type VARCHAR(300), "
+								+ "data VARCHAR(300), "
+								+ "url VARCHAR(300), "
+								+ "extraType VARCHAR(300), "
+								+ "feedId VARCHAR(300)"
+								+ ")"
+				);
 	      	}
 	      	
 	      	private void createSavedSearchTable(SQLiteDatabase db) {
-	  			  db.execSQL("CREATE TABLE " + SAVED_SEARCH_TABLE + "(_id INTEGER PRIMARY KEY, query VARCHAR(300) UNIQUE)");  
+	  			  db.execSQL("CREATE TABLE " + SAVED_SEARCH_TABLE + "(_id INTEGER PRIMARY KEY, title VARCHAR(300), query VARCHAR(300) UNIQUE)");
 	      	}
 
 		    @Override
@@ -860,6 +865,13 @@ public class DdgDB {
                     db.execSQL("UPDATE " + FEED_TABLE + " SET favorite="+newFavoriteValue+" WHERE hidden='F'");
                     // ****************************
                 }
+				else if(oldVersion == 15 && newVersion >= 16) {
+					db.execSQL("ALTER TABLE " + SAVED_SEARCH_TABLE+ " RENAME TO " + SAVED_SEARCH_TABLE + "_old");
+					db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE);
+					createSavedSearchTable(db);
+					db.execSQL("INSERT INTO " + SAVED_SEARCH_TABLE + " SELECT _id, query, query FROM " + SAVED_SEARCH_TABLE + "_old");
+					db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE+ "_old");
+				}
 		  		else {
 		  			dropTables(db);
 			  		onCreate(db);

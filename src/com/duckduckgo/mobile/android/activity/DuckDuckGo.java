@@ -147,8 +147,8 @@ public class DuckDuckGo extends AppCompatActivity {
     	}
     }
     
-    public void itemSaveSearch(String query) {
-    	DDGApplication.getDB().insertSavedSearch(query);
+    public void itemSaveSearch(String title, String url) {
+    	DDGApplication.getDB().insertSavedSearch(title, url);
     }
     
     public void syncAdapters() {
@@ -992,7 +992,7 @@ public class DuckDuckGo extends AppCompatActivity {
 	
 	@Subscribe
 	public void onSaveSearchEvent(SaveSearchEvent event) {
-		itemSaveSearch(event.pageData);
+		itemSaveSearch(event.pageTitle, event.pageData);
 		syncAdapters();
 		Toast.makeText(this, R.string.ToastSaveSearch, Toast.LENGTH_SHORT).show();
 	}

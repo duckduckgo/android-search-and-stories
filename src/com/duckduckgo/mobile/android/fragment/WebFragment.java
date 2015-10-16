@@ -34,6 +34,7 @@ import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewBackPressActionEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearBrowserStateEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewClearCacheEvent;
+import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewOnPageStarted;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewUpdateMenuNavigationEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewOpenMenuEvent;
@@ -247,6 +248,18 @@ public class WebFragment extends Fragment {
                 }
                 break;
             case WEBPAGE:
+				String url = mainWebView.getUrl();
+				if(url==null) {
+					url = "";
+				}
+				if(DDGApplication.getDB().isSavedSearch(url)) {
+					saveItem.setVisible(false);
+					deleteItem.setVisible(true);
+				} else {
+					saveItem.setVisible(true);
+					deleteItem.setVisible(false);
+				}
+				break;
             default:
                 saveItem.setVisible(false);
                 deleteItem.setVisible(false);
@@ -624,22 +637,41 @@ public class WebFragment extends Fragment {
 	}
 
 	private void actionSave() {
-		if(urlType==URLTYPE.FEED) {
-            if(DDGControlVar.currentFeedObject==null) return;
-			BusProvider.getInstance().post(new SaveStoryEvent(DDGControlVar.currentFeedObject));
-		} else if(urlType==URLTYPE.SERP) {
-            String query = mainWebView.getUrl();
-            if(query==null) return;
-			BusProvider.getInstance().post(new SaveSearchEvent(DDGUtils.getQueryIfSerp(query)));
+		switch(urlType) {
+			case FEED:
+				if(DDGControlVar.currentFeedObject==null) return;
+				BusProvider.getInstance().post(new SaveStoryEvent(DDGControlVar.currentFeedObject));
+				break;
+			case SERP:
+				String query = mainWebView.getUrl();
+				if(query==null) return;
+				BusProvider.getInstance().post(new SaveSearchEvent(DDGUtils.getQueryIfSerp(query)));
+				break;
+			case WEBPAGE:
+				String url = mainWebView.getUrl();
+				String title = mainWebView.getTitle();
+				if(url==null || url.equals("")) return;
+				if(title==null || title.equals("")) title = url;
+				BusProvider.getInstance().post(new SaveSearchEvent(title, url));
+				break;
 		}
 	}
 
 	private void actionDelete() {
+		switch(urlType) {
+			case FEED:
+				if(DDGControlVar.currentFeedObject==null) return;
+				BusProvider.getInstance().post(new UnSaveStoryEvent(DDGControlVar.currentFeedObject.getId()));
+				break;
+			case SERP:
+				BusProvider.getInstance().post(new UnSaveSearchEvent(DDGUtils.getQueryIfSerp(mainWebView.getUrl())));
+				break;
+			case WEBPAGE:
+				BusProvider.getInstance().post(new UnSaveSearchEvent(mainWebView.getUrl()));
+				break;
+		}
 		if(urlType==URLTYPE.FEED) {
-            if(DDGControlVar.currentFeedObject==null) return;
-			BusProvider.getInstance().post(new UnSaveStoryEvent(DDGControlVar.currentFeedObject.getId()));
 		} else if(urlType==URLTYPE.SERP) {
-			BusProvider.getInstance().post(new UnSaveSearchEvent(DDGUtils.getQueryIfSerp(mainWebView.getUrl())));
 		}
 	}
 
@@ -778,5 +810,17 @@ public class WebFragment extends Fragment {
             overflowMenu.show(event.anchor);
         }
     }
+
+	@Subscribe
+	public void onWebViewOnPageStarted(WebViewOnPageStarted event) {
+		if(DDGControlVar.currentFeedObject!=null && DDGControlVar.currentFeedObject.getUrl()!=null
+				&& DDGControlVar.currentFeedObject.getUrl().equals(event.url)) {
+			urlType = URLTYPE.FEED;
+		} else if(DDGUtils.isSerpUrl(event.url)) {
+			urlType = URLTYPE.SERP;
+		} else {
+			urlType = URLTYPE.WEBPAGE;
+		}
+	}
 
 }
