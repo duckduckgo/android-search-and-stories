@@ -326,33 +326,41 @@ public class DdgDB {
 	}
 	
 	public ArrayList<AppShortInfo> selectApps(String title){
-		Cursor c = this.db.query(APP_TABLE, null, "title MATCH ?", new String[]{title+"*"} , null, null, null);
-		if(c.moveToFirst()) {
-			ArrayList<AppShortInfo> apps = new ArrayList<AppShortInfo>(20);
-			do {
-				apps.add(getAppShortInfo(c));
-			} while(c.moveToNext());
-
-			return apps;
+		ArrayList<AppShortInfo> apps = null;
+		Cursor c = null;
+		try {
+			c = this.db.query(APP_TABLE, null, "title MATCH ?", new String[]{title+"*"} , null, null, null);
+			if(c.moveToFirst()) {
+				apps = new ArrayList<AppShortInfo>(20);
+				do {
+					apps.add(getAppShortInfo(c));
+				} while(c.moveToNext());
+			}
+		} finally {
+			if(c!=null) {
+				c.close();
+			}
 		}
-        c.close();
-		
-		return null;
+		return apps;
 	}
 	
 	public ArrayList<FeedObject> selectAll(){
-		Cursor c = this.db.query(FEED_TABLE, null, null, null , null, null, null);
-		if(c.moveToFirst()) {
-			ArrayList<FeedObject> feeds = new ArrayList<FeedObject>(30);
-			do {
-				feeds.add(getFeedObject(c));
-			} while(c.moveToNext());
-
-			return feeds;
+		ArrayList<FeedObject> feeds = null;
+		Cursor c = null;
+		try {
+			c = this.db.query(FEED_TABLE, null, null, null , null, null, null);
+			if(c.moveToFirst()) {
+				feeds = new ArrayList<FeedObject>(30);
+				do {
+					feeds.add(getFeedObject(c));
+				} while(c.moveToNext());
+			}
+		} finally {
+			if(c!=null) {
+				c.close();
+			}
 		}
-        c.close();
-		
-		return null;
+		return feeds;
 	}
 	
 	/**
