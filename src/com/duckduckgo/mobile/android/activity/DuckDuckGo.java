@@ -840,6 +840,7 @@ public class DuckDuckGo extends AppCompatActivity {
     }
 
     public void feedItemSelected(FeedObject feedObject) {
+        if(feedObject==null) return;
         // keep a reference, so that we can reuse details while saving
         DDGControlVar.currentFeedObject = feedObject;
         DDGControlVar.mDuckDuckGoContainer.sessionType = SESSIONTYPE.SESSION_FEED;
