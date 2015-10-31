@@ -4,6 +4,8 @@
 
 We are excited to engage the community in the development of our new [apps](https://duckduckgo.com/app)! If you are trying to contribute in other ways, that happens over at [DuckDuckHack](http://duckduckhack.com) or on [GitHub](http://github.com/duckduckgo).
 
+The Android app is avaliable via. Google Play here: https://play.google.com/store/apps/details?id=com.duckduckgo.mobile.android&hl=en_GB
+
 ## Discuss
 
 Contact us at android@duckduckgo.com if you want to get more involved, have questions or want to chat.
