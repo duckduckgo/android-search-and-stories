@@ -1,11 +1,12 @@
 package com.duckduckgo.mobile.android.views;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.Build;
+import android.transition.Fade;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -39,7 +40,6 @@ import java.util.List;
 public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener, AdapterView.OnItemClickListener, AdapterView.OnItemSelectedListener {
 
     private Context context;
-    private View container;
 
     private ListView menuListView = null;
     private DDGOverflowAdapter overflowAdapter;
@@ -51,19 +51,13 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     private FeedObject feed = null;
 
     public DDGOverflowMenu(Context context) {
-        //super(context, null, android.R.attr.listPopupWindowStyle);
         super(context, null, R.attr.popUp);
-
-        //super(context, null, android.R.attr.popupMenuStyle);
-        //super(context, null, android.R.attr.actionOverflowMenuStyle);
-        //super(context);
-        //super(context, null, android.R.attr.spinnerStyle);
         this.context = context;
         init();
     }
 
     public DDGOverflowMenu(Context context, AttributeSet attrs) {
-        super(context, attrs, android.R.attr.listPopupWindowStyle);
+        super(context, attrs, R.attr.popUp);
         this.context = context;
         init();
     }
@@ -72,10 +66,12 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         setFocusable(true);
         setOutsideTouchable(true);
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        container = inflater.inflate(R.layout.overflow_menu, null);
+        View container = inflater.inflate(R.layout.overflow_menu, null);
         setContentView(container);
         setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
-        //setWidth(WindowManager.LayoutParams.WRAP_CONTENT);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            setTransitions();
+        }
 
         menuListView = (ListView) container.findViewById(R.id.menu_listview);
         menuListView.setOnItemClickListener(this);
@@ -240,6 +236,16 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
         dismiss();
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
+    private void setTransitions() {
+        Fade fadeIn = new Fade(Fade.IN);
+        fadeIn.setDuration(100);
+        Fade fadeOut = new Fade(Fade.OUT);
+        fadeOut.setDuration(100);
+        setEnterTransition(fadeIn);
+        setExitTransition(fadeOut);
+    }
+
     public static int getMaxWidth(Context context, DDGOverflowAdapter adapter) {
         int maxLength = 0;
         for(int i=0; i<adapter.getCount(); i++) {
@@ -277,7 +283,6 @@ public class DDGOverflowMenu extends PopupWindow implements View.OnClickListener
     @Subscribe
     public void onWebViewDisableMenuNavigationButtonEvent(WebViewUpdateMenuNavigationEvent event) {
         for(HashMap.Entry<Integer, Boolean> entry : event.newStates.entrySet()) {
-            Log.e("aaa web", "key: "+entry.getKey()+" - key:"+entry.getValue());
             ImageButton imageButton = (ImageButton) header.findViewById(entry.getKey());
             if(imageButton!=null) {
                 imageButton.setEnabled(entry.getValue() );
