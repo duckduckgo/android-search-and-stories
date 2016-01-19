@@ -21,13 +21,13 @@ public class Sharer {
 	public static void shareWebPage(Context context, String title, String url) {
 		String actionName = (String) context.getResources().getText(R.string.SharePage);
 		Intent shareIntent = createTargetedShareIntent(context, url, title, actionName);
-		context.startActivity(Intent.createChooser(shareIntent, actionName));
+		context.startActivity(shareIntent);
 	}
 
 	public static void shareStory(Context context, String title, String url) {
 		String actionName = (String) context.getResources().getText(R.string.ShareStory);
 		Intent shareIntent = createTargetedShareIntent(context, String.format("%s %s", title, url), title, actionName);
-		context.startActivity(Intent.createChooser(shareIntent, actionName));
+		context.startActivity(shareIntent);
 	}
 
 	public static void shareSearch(Context context, String query) {
@@ -35,7 +35,7 @@ public class Sharer {
 		String url = "https://duckduckgo.com/?q=" + query;
 		Intent shareIntent = createTargetedShareIntent(context, String.format("%s %s", query, url),
 				String.format("DuckDuckGo Search for \"%s\"", query), actionName);
-		context.startActivity(Intent.createChooser(shareIntent, actionName));
+		context.startActivity(shareIntent);
 	}
 	
 	private static Intent createTargetedShareIntent(Context context, String text, String subject, String actionName) {
