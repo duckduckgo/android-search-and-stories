@@ -7,7 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.internal.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuBuilder;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;

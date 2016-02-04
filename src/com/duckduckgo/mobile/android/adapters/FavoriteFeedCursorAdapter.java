@@ -9,7 +9,7 @@ import android.database.sqlite.SQLiteCursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Rect;
-import android.support.v7.internal.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuBuilder;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.TouchDelegate;

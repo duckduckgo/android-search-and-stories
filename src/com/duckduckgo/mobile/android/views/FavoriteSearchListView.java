@@ -3,7 +3,7 @@ package com.duckduckgo.mobile.android.views;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v7.internal.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuBuilder;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.Menu;

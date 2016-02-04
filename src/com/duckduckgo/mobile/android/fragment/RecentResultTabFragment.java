@@ -2,8 +2,6 @@ package com.duckduckgo.mobile.android.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.support.v7.internal.view.menu.MenuBuilder;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,9 +17,7 @@ import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.SyncAdaptersEvent;
-import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewItemMenuClickEvent;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
-import com.duckduckgo.mobile.android.views.DDGDialogMenu;
 import com.duckduckgo.mobile.android.views.RecentSearchListView;
 import com.squareup.otto.Subscribe;
 

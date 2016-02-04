@@ -1,21 +1,14 @@
 package com.duckduckgo.mobile.android.views;
 
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.internal.view.menu.MenuBuilder;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.duckduckgo.mobile.android.DDGApplication;
-import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.events.HistoryItemLongClickEvent;
 import com.duckduckgo.mobile.android.events.HistoryItemSelectedEvent;
