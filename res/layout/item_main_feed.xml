@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:layout_marginRight="@dimen/feed_overflow_menu_right_margin">
 
         <ImageView
             android:id="@+id/feedMenuImage"

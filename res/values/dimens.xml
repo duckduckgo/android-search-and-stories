@@ -56,6 +56,8 @@
 
     <dimen name="widget_margin">8dp</dimen>
 
+    <dimen name="feed_overflow_menu_right_margin">0dp</dimen>
+
     <!-- old dimen -->
     
     <dimen name="default_margin">8dp</dimen>
