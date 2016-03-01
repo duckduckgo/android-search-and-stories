@@ -241,7 +241,7 @@ public class DuckDuckGo extends AppCompatActivity {
                     if(getSearchField().getTrimmedText()!=null && getSearchField().getTrimmedText().length()!=0) {
                         searchOrGoToUrl(getSearchField().getTrimmedText());
 
-                        if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
+                        if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL && !PreferencesManager.getRecordHistory()) {
                             DDGActionBarManager.getInstance().clearSearchBar();
                         }
                     }
