@@ -256,6 +256,7 @@
     <string name="action_forward">Forward</string>
     <string name="action_close">Close</string>
     <string name="remove">Remove</string>
+    <string name="save_image_context_menu_action">Save Image</string>
 
 
 

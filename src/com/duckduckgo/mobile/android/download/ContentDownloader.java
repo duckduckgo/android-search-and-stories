@@ -1,8 +1,10 @@
 package com.duckduckgo.mobile.android.download;
 
 import java.io.File;
+import java.util.UUID;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Environment;
 import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
@@ -31,6 +34,31 @@ public class ContentDownloader {
 	}
 
 	@SuppressLint("NewApi")
+	public boolean isDownloadManagerEnabled() {
+		int downloadManagerState = context.getPackageManager().getApplicationEnabledSetting("com.android.providers.downloads");
+		return downloadManagerState != PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+				&& downloadManagerState != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
+				&& downloadManagerState != PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED;
+	}
+
+	@TargetApi(Build.VERSION_CODES.GINGERBREAD)
+	public void downloadImage(final String imageUrl) {
+		if (isDownloadManagerEnabled()) {
+			DownloadManager.Request request = new DownloadManager.Request(Uri.parse(imageUrl));
+			request.setTitle(imageUrl)
+					.setVisibleInDownloadsUi(false)
+					.setDestinationInExternalPublicDir(Environment.DIRECTORY_PICTURES, UUID.randomUUID().toString())
+					.setDescription(imageUrl);
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+				request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+				request.allowScanningByMediaScanner();
+			}
+			DownloadManager downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+			downloadManager.enqueue(request);
+		}
+	}
+
+	@SuppressLint("NewApi")
 	public void downloadContent(final String url, final String mimeType) {
 		// use mimeType to figure out an extension for temporary file
 		String extension = decideExtension(mimeType);
@@ -46,10 +74,7 @@ public class ContentDownloader {
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
 
-            int downloadManagerState = context.getPackageManager().getApplicationEnabledSetting("com.android.providers.downloads");
-            if(downloadManagerState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-                    || downloadManagerState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER
-                    || downloadManagerState == PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED) {
+            if (!isDownloadManagerEnabled()) {
                 Toast.makeText(context, R.string.ToastSchemeNotSupported, Toast.LENGTH_SHORT).show();
                 return;
             }
