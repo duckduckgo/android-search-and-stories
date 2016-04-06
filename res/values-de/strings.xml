@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">DuckDuckGo</string>
-    <string name="SearchString">DuckDuckGo Suche</string>
+    <string name="SearchString">DuckDuckGo-Suche</string>
     <string name="SettingsButtonContentDescription">Einstellungen</string>
     <string name="HomeButtonContentDescription">Hauptansicht</string>
     
@@ -23,8 +23,8 @@
     <string name="PrefClearHistory">Verlauf löschen</string>
     <string name="PrefRecordCookies">Cookies speichern</string>
     <string name="PrefClearCookies">Cookies löschen</string>
-    <string name="PrefClearBrowserCache">Browser Cache leeren</string>
-    <string name="PrefClearCacheAndCookies">Cookies und Cache löschen</string>
+    <string name="PrefClearBrowserCache">Browser-Zwischenspeicher leeren</string>
+    <string name="PrefClearCacheAndCookies">Cookies und Zwischenspeicher leeren</string>
     <string name="PrefSources">Quellen bearbeiten</string>
     <string name="PrefResetSources">Quellen zurücksetzen</string>
     <string name="PrefRegion">Region</string>
@@ -78,9 +78,9 @@
     <string name="LeftRecentQueries">Letzte Suchen</string>
     
     <string name="Confirm">Bestätigen</string>
-    <string name="ConfirmClearHistory">Die gesamte Suchhistorie wird gelöscht. Sind Sie sicher?</string>
-    <string name="ConfirmClearCookies">Alle Cookies werden gelöscht. Bist du sicher?</string>
-    <string name="ConfirmClearCacheAndCookies">Zwischenspeicher wird gelöscht. Bist du sicher?</string>
+    <string name="ConfirmClearHistory">Der gesamte Suchverlauf wird gelöscht. Sind Sie sicher?</string>
+    <string name="ConfirmClearCookies">Alle Cookies werden gelöscht. Sind Sie sicher?</string>
+    <string name="ConfirmClearCacheAndCookies">Zwischenspeicher wird gelöscht. Sind Sie sicher?</string>
     
     <string name="Default">Vorgabe</string>
     <string name="Defaults">Vorgaben</string>
@@ -177,7 +177,7 @@
     <string name="NewSources">Wir haben einige interessante neue Geschichten zu den Quellen hinzugefügt!</string>
     <string name="NewSourcesOk">Zeigen</string>
     <string name="NewSourcesNoThx">Später</string>
-    <string name="WorldTraveler">Weltenbummler (none)</string>
+    <string name="WorldTraveler">Weltenbummler (keine)</string>
 
 
     <!--new strings--><!--
@@ -187,7 +187,7 @@
     <string name="view_external">View in Browser</string>
     <string name="reload">Reload</string>-->
     <string name="stories">Geschichten</string>
-    <string name="help_feedback">Hilfe &amp; Feedback</string>
+    <string name="help_feedback">Hilfe &amp; Rückmeldung</string>
     <string name="settings">Einstellungen</string>
 
     <!--favorites fragment -->
@@ -212,26 +212,26 @@
 
     <!--about fragment-->
     <string name="about">Über</string>
-    <string name="about_text">Die Suchmaschine, die dich nicht verfolgt.</string>
+    <string name="about_text">Die Suchmaschine, die Sie nicht verfolgt.</string>
     <string name="version">Version</string>
-    <string name="select_application">Wähle eine Anwendung</string>
+    <string name="select_application">Anwendung auswählen</string>
 
     <!--help feedback fragment-->
     <string name="help">Hilfe</string>
-    <string name="android_help_center">Android Help Center</string>
-    <string name="feedback">Feedback</string>
-    <string name="leave_feedback">Gib Feedback</string>
-    <string name="rate">Bewerte die App</string>
+    <string name="android_help_center">Android-Hilfezentrale</string>
+    <string name="feedback">Rückmeldung</string>
+    <string name="leave_feedback">Rückmeldung geben</string>
+    <string name="rate">Die App bewerten</string>
 
     <!-- change sources fragment-->
-    <string name="change_sources">Verwalte Quellen</string>
+    <string name="change_sources">Quellen verwalten</string>
 
     <!-- menus -->
     <string name="action_stories">@string/stories</string>
     <string name="action_recents">@string/recents</string>
     <string name="action_favorites">@string/favorites</string>
     <string name="action_settings">@string/settings</string>
-    <string name="action_help_feedback">Hilfe &amp; Feedback</string>
+    <string name="action_help_feedback">Hilfe &amp; Rückmeldung</string>
     <string name="action_reload">Seite aktualisieren</string>
     <string name="action_add_favorite">Zu Favoriten hinzufügen</string>
     <string name="action_remove_favorite">Aus Favoriten entfernen</string>
