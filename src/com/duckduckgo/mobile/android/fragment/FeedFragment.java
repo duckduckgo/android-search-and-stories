@@ -263,6 +263,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }*/
 
+    /**
+     * Changes the article to read and notifies listeners of the event
+     *
+     * @param feedObject
+     */
     public void feedItemSelected(FeedObject feedObject) {
         if(ReadArticlesManager.addReadArticle(feedObject)){
             recyclerAdapter.notifyDataSetChanged();
@@ -331,6 +336,9 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		}
 	}
 
+    /**
+     * Cleans all views stored in the RecyclerView object
+     */
     public void cleanImageTasks() {
         int count = recyclerView.getChildCount();
         for(int i=0;i<count;i++) {
@@ -344,6 +352,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
     }
 
+    /**
+     * Checks all default and user allowed sources
+     *
+     * @return whether the user can update any of the feed sources
+     */
     public boolean canUpdateFeed() {
         if(!DDGControlVar.userAllowedSources.isEmpty()) {
             return true;

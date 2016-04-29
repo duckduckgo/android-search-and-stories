@@ -18,18 +18,38 @@ import com.duckduckgo.mobile.android.R;
  */
 public class Sharer {
 
+	/**
+	 * Initializes an intent for share web page action name and sends it to the context parameter to start of an activity
+	 *
+	 * @param context
+	 * @param title
+	 * @param url
+     */
 	public static void shareWebPage(Context context, String title, String url) {
 		String actionName = (String) context.getResources().getText(R.string.SharePage);
 		Intent shareIntent = createTargetedShareIntent(context, url, title, actionName);
 		context.startActivity(shareIntent);
 	}
 
+	/**
+	 * Initializes an intent for share story action name and sends it to the context parameter to start of an activity
+	 *
+	 * @param context
+	 * @param title
+	 * @param url
+     */
 	public static void shareStory(Context context, String title, String url) {
 		String actionName = (String) context.getResources().getText(R.string.ShareStory);
 		Intent shareIntent = createTargetedShareIntent(context, String.format("%s %s", title, url), title, actionName);
 		context.startActivity(shareIntent);
 	}
 
+	/**
+	 * Initializes an intent for share search action name and sends it to the context parameter to start of an activity
+	 *
+	 * @param context
+	 * @param query
+     */
 	public static void shareSearch(Context context, String query) {
 		String actionName = (String) context.getResources().getText(R.string.ShareSearch);
 		String url = "https://duckduckgo.com/?q=" + query;

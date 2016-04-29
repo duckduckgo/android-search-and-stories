@@ -120,12 +120,18 @@ public class RecentFeedTabFragment extends Fragment/*ListFragment*/ /*implements
 
     }
 
+    /**
+     * Cancels category filter and sets feed data to all for recent feeds
+     */
     private void cancelCategoryFilter() {
         DDGControlVar.targetCategory = null;
         recyclerRecentFeedAdapter.changeData(DDGApplication.getDB().getAllRecentFeed());
 
     }
 
+    /**
+     * Cancels category filter and sets feed data to all for recent feeds
+     */
     private void cancelSourceFilter() {
         DDGControlVar.targetSource = null;
         recyclerRecentFeedAdapter.changeData(DDGApplication.getDB().getAllRecentFeed());

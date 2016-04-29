@@ -106,12 +106,18 @@ public class FavoriteFeedTabFragment extends Fragment {
         DDGActionBarManager.getInstance().tryToShowTab();
     }
 
+    /**
+     * Cancels category filter and sets feed data to all for favorite feeds
+     */
     private void cancelCategoryFilter() {
         DDGControlVar.targetCategory = null;
         recyclerFavoriteFeedAdapter.changeData(DDGApplication.getDB().getAllFavoriteFeed());
 
     }
 
+    /**
+     * Cancels source filter and sets feed data to all for favorite feeds
+     */
     private void cancelSourceFilter() {
         DDGControlVar.targetSource = null;
         recyclerFavoriteFeedAdapter.changeData(DDGApplication.getDB().getAllFavoriteFeed());

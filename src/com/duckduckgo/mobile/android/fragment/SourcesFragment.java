@@ -106,6 +106,9 @@ public class SourcesFragment extends Fragment implements SourcesTask.SourcesList
         sourcesAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Retry to retrieve sources. It only retries when a source task is set.
+     */
     public void onSourcesRetrievalFailed() {
         //If the sourcesTask is null, we are currently paused
         //Otherwise, we can try again

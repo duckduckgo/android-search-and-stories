@@ -5,6 +5,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+/**
+ * Utility class whose instance is used to memorize state in SourcesAdapter.
+ */
 public class SourceHolder {
 	public final TextView textViewTitle;
 	public final TextView textViewDescription;
