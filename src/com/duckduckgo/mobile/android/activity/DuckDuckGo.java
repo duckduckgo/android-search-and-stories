@@ -377,6 +377,7 @@ public class DuckDuckGo extends AppCompatActivity {
 	 * 
 	 * @param screenToDisplay Screen to display
 	 * @param clean Whether screen state (searchbar, browser etc.) states will get cleaned
+     * @param displayHomeScreen Whether to display home screen
 	 */
 	public void displayScreen(SCREEN screenToDisplay, boolean clean, boolean displayHomeScreen) {
         Log.d(TAG, "display screen: "+screenToDisplay);

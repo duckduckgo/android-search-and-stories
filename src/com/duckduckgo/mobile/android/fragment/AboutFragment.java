@@ -53,6 +53,9 @@ public class AboutFragment extends Fragment {
         init();
     }
 
+    /**
+     * Makes sure to retrieve the view.
+     */
     private void init() {
         versionTextView = (TextView) fragmentView.findViewById(R.id.textview_version);
         versionTextView.setText(versionTextView.getText() + getVersion());

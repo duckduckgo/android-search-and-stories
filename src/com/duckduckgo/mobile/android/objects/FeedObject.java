@@ -22,7 +22,10 @@ public class FeedObject {
 	private final String html;
 	
 	private final String hidden;
-		
+
+	/**
+	 * No argument constructor, to be called by ORM layer
+	 */
 	public FeedObject() {
 		// no-arg constructor for ORMlite
 		this.feed = "";

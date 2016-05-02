@@ -7,6 +7,9 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import info.guardianproject.onionkit.ui.OrbotHelper;
 import info.guardianproject.onionkit.web.WebkitProxy;
 
+/**
+ * This class implements methods for Tor integration, such as setting and resetting proxy.
+ */
 public class TorIntegration {
 
     public static final int JELLY_BEAN_MR2 = 18;
