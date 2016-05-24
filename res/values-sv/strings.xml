@@ -11,8 +11,8 @@
     <string name="PrefGroupPrivacy">Sekretess</string>
     <string name="PrefGroupFeedback">Återkoppling</string>
     <string name="PrefTheme">Tema</string>
-    <string name="PrefThemeLight">Ljus</string>
-    <string name="PrefThemeDark">Mörk</string>
+    <string name="PrefThemeLight">Ljust</string>
+    <string name="PrefThemeDark">Mörkt</string>
     <string name="PrefStartScreen">Hemskärm</string>
     <string name="PrefStories">Berättelser</string>
     <string name="PrefWaterCoolerStories">Berättelser</string>
@@ -39,7 +39,7 @@
     <string name="PrefClearCacheCookiesMonthly">Månatlig</string>
     <string name="PrefSendFeedback">Skicka feedback</string>
     <string name="PrefRate">Betygsätt app</string>
-    <string name="PrefAppSearch">Inkludera apps</string>
+    <string name="PrefAppSearch">Inkludera appar</string>
     <string name="PrefMainFontSize">Fontstorlek</string>
     <string name="PrefEnableAcra">Automatisk kraschrapportering</string>
     <string name="PrefAcraDisabled">Automatisk kraschrapportering Inaktiverad</string>
@@ -57,10 +57,10 @@
     <string name="PrefCheckOrbotStatus">Kontrollera Orbot-status</string>
     <string name="OrbotStatusOkTitle">Orbot-status</string>
     <string name="OrbotStatusOkMessage">Orbot verkar fungera bra!</string>
-    <string name="OrbotCheckSite">https://check.torproject.org/string>
+    <string name="OrbotCheckSite">https://check.torproject.org</string>
     
     <string name="ShareStory">Dela berättelse</string>
-    <string name="ShareSearch">Dela sök</string>
+    <string name="ShareSearch">Dela sökning</string>
     <string name="SharePage">Dela sida</string>
     
     <string name="RegularShareFormat">%1$s via DuckDuckGo för Android</string>
