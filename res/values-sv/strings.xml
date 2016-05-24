@@ -91,7 +91,7 @@
     <string name="SuggestSource">Föreslå en källa</string>
     <string name="SuggestedSources">Inkludera dessa källor:</string>
     
-    <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
+    <string name="FeedbackTo">DuckDuckGo feedback &lt;help@duckduckgo.com&gt;</string>
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
     
     <string name="SavedFeedEmptyTitle">Du har inga sparade berättelser.</string>
