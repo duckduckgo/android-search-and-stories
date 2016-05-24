@@ -40,7 +40,7 @@
     <string name="PrefSendFeedback">Skicka feedback</string>
     <string name="PrefRate">Betygsätt app</string>
     <string name="PrefAppSearch">Inkludera appar</string>
-    <string name="PrefMainFontSize">Fontstorlek</string>
+    <string name="PrefMainFontSize">Storlek på typsnittet</string>
     <string name="PrefEnableAcra">Automatisk kraschrapportering</string>
     <string name="PrefAcraDisabled">Automatisk kraschrapportering Inaktiverad</string>
     <string name="PrefAcraEnabled">Automatisk kraschrapportering Aktiverad</string>
