@@ -114,18 +114,6 @@ public class WebFragment extends Fragment {
     }
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		BusProvider.getInstance().register(this);
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		BusProvider.getInstance().unregister(this);
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		if(savedInstanceState!=null) {
 			savedState = true;
@@ -152,24 +140,46 @@ public class WebFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+		BusProvider.getInstance().register(this);
         DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //setHasOptionsMenu(false);
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			mainWebView.onResume();
+		}
     }
 
     @Override
     public void onPause() {
+		dismissMenu();
+		if(readableFeedTask!=null) {
+			readableFeedTask.cancel(true);
+			readableFeedTask = null;
+		}
+		if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+			mainWebView.onPause();
+		}
         super.onPause();
-        dismissMenu();
-        if(readableFeedTask!=null) {
-            readableFeedTask.cancel(true);
-            readableFeedTask = null;
-        }
     }
+
+	@Override
+	public void onStop() {
+		BusProvider.getInstance().unregister(this);
+		super.onStop();
+	}
+
+	@Override
+	public void onDestroy() {
+		mainWebView.loadUrl(DDGWebView.ABOUT_BLANK);
+		mainWebView.stopView();
+		mainWebView.setWebViewClient(null);
+		mainWebView.setWebChromeClient(null);
+		mainWebView = null;
+		super.onDestroy();
+	}
 
     @Override
     public void onHiddenChanged(boolean hidden) {
