@@ -25,23 +25,18 @@ import com.duckduckgo.mobile.android.util.PreferencesManager;
 
 public class DdgDB {
 
-	private static final String DATABASE_NAME = "ddg.db";
-	private static final int DATABASE_VERSION = 16;
-	private static final String FEED_TABLE = "feed";
-	private static final String APP_TABLE = "apps";
-	private static final String HISTORY_TABLE = "history";
-	private static final String SAVED_SEARCH_TABLE = "saved_search";
-	
-	
 	private SQLiteDatabase db;
 
 	private SQLiteStatement insertStmtApp;
 	
-	private static final String APP_INSERT = "insert or replace into " + APP_TABLE + " (title,package) values (?,?)";
+	private static final String APP_INSERT = "insert or replace into " +
+			DdgDBContracts.APP_TABLE.TABLE_NAME + " (" +
+			DdgDBContracts.APP_TABLE.COLUMN_TITLE + "," + DdgDBContracts.APP_TABLE.COLUMN_PACKAGE +
+			") values (?,?)";
 	
 	// if type = recent search, data = query.  if type = web page / feed item, data = title, url is target
 	// extraType is for feed source
-//	private static final String HISTORY_INSERT = "insert or replace into " + HISTORY_TABLE + " (type, data, url, extraType) values (?,?,?,?)";
+//	private static final String HISTORY_INSERT = "insert or replace into " + DdgDBContracts.HISTORY_TABLE.TABLE_NAME + " (type, data, url, extraType) values (?,?,?,?)";
 
 	
 	public DdgDB(Context context) {
@@ -59,11 +54,11 @@ public class DdgDB {
 			return -1L;
 		
 		ContentValues contentValues = new ContentValues();				 
-		contentValues.put("query", query);
-		contentValues.put("title", (title==null)?query:title);
+		contentValues.put(DdgDBContracts.SAVED_SEARCH_TABLE.COLUMN_QUERY, query);
+		contentValues.put(DdgDBContracts.SAVED_SEARCH_TABLE.COLUMN_TITLE, (title==null)?query:title);
 		// delete old record if exists
-		this.db.delete(SAVED_SEARCH_TABLE, "query=?", new String[]{query});
-		return this.db.insert(SAVED_SEARCH_TABLE, null, contentValues);
+		this.db.delete(DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME, DdgDBContracts.SAVED_SEARCH_TABLE.COLUMN_QUERY + "=?", new String[]{query});
+		return this.db.insert(DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME, null, contentValues);
 	}
 	
 	/**
@@ -89,33 +84,33 @@ public class DdgDB {
 		}
 		
 		ContentValues contentValues = new ContentValues();
-		contentValues.put("_id", e.getId());
+		contentValues.put(DdgDBContracts.FEED_TABLE._ID, e.getId());
 		Log.v("insert", e.getId());
-		contentValues.put("title", title);
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_TITLE, title);
 		Log.v("insert", title);
-		contentValues.put("description", e.getDescription());
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_DESCRIPTION, e.getDescription());
 		Log.v("insert", e.getDescription());
-		contentValues.put("feed", e.getFeed());
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_FEED, e.getFeed());
 		Log.v("insert", e.getFeed());
-		contentValues.put("url", e.getUrl());
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_URL, e.getUrl());
 		Log.v("insert", e.getUrl());
-		contentValues.put("imageurl", e.getImageUrl());
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_IMAGE_URL, e.getImageUrl());
 		Log.v("insert", e.getImageUrl());
-		contentValues.put("favicon", e.getFavicon());
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_FAVICON, e.getFavicon());
 		Log.v("insert", e.getFavicon());
-		contentValues.put("timestamp", e.getTimestamp());
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_TIMESTAMP, e.getTimestamp());
 		Log.v("insert", e.getTimestamp());
-		contentValues.put("category", e.getCategory());
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_CATEGORY, e.getCategory());
 		Log.v("insert", e.getCategory());
-		contentValues.put("type", e.getType());
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_TYPE, e.getType());
 		Log.v("insert", e.getType());
-		contentValues.put("articleurl", e.getArticleUrl());
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_ARTICLE_URL, e.getArticleUrl());
 		Log.v("insert", e.getArticleUrl());
-		contentValues.put("hidden", hidden);
+		contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_HIDDEN, hidden);
 		Log.v("insert", hidden);
-        contentValues.put("favorite", favorite);
+        contentValues.put(DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE, favorite);
         Log.v("insert", favorite);
-		long result = this.db.insert(FEED_TABLE, null, contentValues);
+		long result = this.db.insert(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, contentValues);
 		return result;
 	}
 	
@@ -168,14 +163,14 @@ public class DdgDB {
 	public long insertRecentSearch(String query) {
 		if(PreferencesManager.getRecordHistory()) {
 			ContentValues contentValues = new ContentValues();
-			contentValues.put("type", "R");
-			contentValues.put("data", query);
-			contentValues.put("url", "");
-			contentValues.put("extraType", "");
-			contentValues.put("feedId", "");
+			contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE, "R");
+			contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_DATA, query);
+			contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_URL, "");
+			contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_EXTRA_TYPE, "");
+			contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_FEED_ID, "");
 			// delete old record if exists
-			this.db.delete(HISTORY_TABLE, "type='R' AND data=?", new String[]{query});
-			return this.db.insert(HISTORY_TABLE, null, contentValues);
+			this.db.delete(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE + "='R' AND " + DdgDBContracts.HISTORY_TABLE.COLUMN_DATA + "=?", new String[]{query});
+			return this.db.insert(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, contentValues);
 		}
 		return -1l;
 	}
@@ -202,8 +197,8 @@ public class DdgDB {
 			contentValues.put("extraType", "");
 			contentValues.put("feedId", "");
 			// delete old record if exists
-			this.db.delete(HISTORY_TABLE, "type='W' AND data=? AND url=?", new String[]{title, url});
-			return this.db.insert(HISTORY_TABLE, null, contentValues);
+			this.db.delete(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, "type='W' AND data=? AND url=?", new String[]{title, url});
+			return this.db.insert(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, contentValues);
 		}
 		return -1l;
 	}
@@ -211,14 +206,14 @@ public class DdgDB {
 	public long insertFeedItemToHistory(String title, String url, String extraType, String feedId) {		
 		if(PreferencesManager.getRecordHistory()) {
 	        ContentValues contentValues = new ContentValues();
-	        contentValues.put("type", "F");
-	        contentValues.put("data", title);
-	        contentValues.put("url", url);
-	        contentValues.put("extraType", extraType);
-	        contentValues.put("feedId", feedId);
+	        contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE, "F");
+	        contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_DATA, title);
+	        contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_URL, url);
+	        contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_EXTRA_TYPE, extraType);
+	        contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_FEED_ID, feedId);
 	        // delete old record if exists
-	     	this.db.delete(HISTORY_TABLE, "type='F' AND feedId=?", new String[]{feedId});
-	        long res = this.db.insertOrThrow(HISTORY_TABLE, null, contentValues);        
+			this.db.delete(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE + "='F' AND " + DdgDBContracts.HISTORY_TABLE.COLUMN_FEED_ID + "=?", new String[]{feedId});
+			long res = this.db.insertOrThrow(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, contentValues);
 	        return res;
 		}
 		return -1l;
@@ -241,14 +236,14 @@ public class DdgDB {
 	public long makeItemVisible(String id) {
 	      ContentValues args = new ContentValues();
 	      args.put("hidden", "F");
-		return this.db.update(FEED_TABLE, args, "_id=?", new String[]{id});
+		return this.db.update(DdgDBContracts.FEED_TABLE.TABLE_NAME, args, "_id=?", new String[]{id});
 	}*/
 
     public long makeItemFavorite(String id) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("favorite", String.valueOf(System.currentTimeMillis()));
-        return this.db.update(FEED_TABLE, contentValues, "_id=?", new String[]{id});
-    }
+		return this.db.update(DdgDBContracts.FEED_TABLE.TABLE_NAME, contentValues, DdgDBContracts.FEED_TABLE._ID + "=?", new String[]{id});
+	}
 	
 	/**
 	 * make a hidden feed item VISIBLE
@@ -258,62 +253,62 @@ public class DdgDB {
 	public long makeItemHidden(String id) {
 	      ContentValues args = new ContentValues();
 	      args.put("hidden", "T");
-		return this.db.update(FEED_TABLE, args, "_id=?", new String[]{id});
+		return this.db.update(DdgDBContracts.FEED_TABLE.TABLE_NAME, args, "_id=?", new String[]{id});
 	}*/
 
     public long makeItemUnfavorite(String id) {
         ContentValues contentValues = new ContentValues();
         contentValues.put("favorite", "F");
-        return this.db.update(FEED_TABLE, contentValues, "_id=?", new String[]{id});
-    }
+		return this.db.update(DdgDBContracts.FEED_TABLE.TABLE_NAME, contentValues, DdgDBContracts.FEED_TABLE._ID + "=?", new String[]{id});
+	}
 	
 	public void deleteApps() {
-	      this.db.delete(APP_TABLE, null, null);
+	      this.db.delete(DdgDBContracts.APP_TABLE.TABLE_NAME, null, null);
 	}
 	
 	public void deleteHistory() {
-	      this.db.delete(HISTORY_TABLE, null, null);
+	      this.db.delete(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, null);
 	}
 	
 //	public long update(FeedObject e) {
 //	      ContentValues args = new ContentValues();
 //	      args.put("text", e.text);
-//	      return this.db.update(FEED_TABLE, args, "id=" + String.valueOf(e.id), null);
+//	      return this.db.update(DdgDBContracts.FEED_TABLE.TABLE_NAME, args, "id=" + String.valueOf(e.id), null);
 //	}
 
 	public void deleteAll() {
-	      this.db.delete(FEED_TABLE, null, null);
+	      this.db.delete(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, null);
 	}
 	
 	public int deleteFeedObject(FeedObject object) {
-		  return this.db.delete(FEED_TABLE, "_id=?", new String[]{object.getId()});
+		return this.db.delete(DdgDBContracts.FEED_TABLE.TABLE_NAME, DdgDBContracts.FEED_TABLE._ID + "=?", new String[]{object.getId()});
 	}
 	
 	public int deleteSavedSearch(String query) {
-		  return this.db.delete(SAVED_SEARCH_TABLE, "query=?", new String[]{query});
+		return this.db.delete(DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME, DdgDBContracts.SAVED_SEARCH_TABLE.COLUMN_QUERY + "=?", new String[]{query});
 	}
 	
 	public int deleteHistoryByDataUrl(String data, String url) {
-	      return this.db.delete(HISTORY_TABLE, "data=? AND url=?", new String[]{data, url});
+		return this.db.delete(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, DdgDBContracts.HISTORY_TABLE.COLUMN_DATA + "=? AND " + DdgDBContracts.HISTORY_TABLE.COLUMN_URL + "=?", new String[]{data, url});
 	}
 	
 	public int deleteHistoryByFeedId(String feedId) {
-	      return this.db.delete(HISTORY_TABLE, "feedId=?", new String[]{feedId});
+		return this.db.delete(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, DdgDBContracts.HISTORY_TABLE.COLUMN_FEED_ID + "=?", new String[]{feedId});
 	}
 	
 	private FeedObject getFeedObject(Cursor c) {
-		final String id = c.getString(c.getColumnIndex("_id"));
-		final String title = c.getString(c.getColumnIndex("title"));
-		final String description = c.getString(c.getColumnIndex("description"));
-		final String feed = c.getString(c.getColumnIndex("feed"));
-		final String url = c.getString(c.getColumnIndex("url"));
-		final String imageurl = c.getString(c.getColumnIndex("imageurl"));
-		final String favicon = c.getString(c.getColumnIndex("favicon"));
-		final String timestamp = c.getString(c.getColumnIndex("timestamp"));
-		final String category = c.getString(c.getColumnIndex("category"));
-		final String type = c.getString(c.getColumnIndex("type"));
-		final String articleurl = c.getString(c.getColumnIndex("articleurl"));
-		final String hidden = c.getString(c.getColumnIndex("hidden"));
+		final String id = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE._ID));
+		final String title = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_TITLE));
+		final String description = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_DESCRIPTION));
+		final String feed = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_FEED));
+		final String url = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_URL));
+		final String imageurl = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_IMAGE_URL));
+		final String favicon = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_FAVICON));
+		final String timestamp = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_TIMESTAMP));
+		final String category = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_CATEGORY));
+		final String type = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_TYPE));
+		final String articleurl = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_ARTICLE_URL));
+		final String hidden = c.getString(c.getColumnIndex(DdgDBContracts.FEED_TABLE.COLUMN_HIDDEN));
 		return new FeedObject(id, title, description, feed, url, imageurl, favicon, timestamp, category, type, articleurl, "", hidden);
 	}
 	
@@ -329,7 +324,7 @@ public class DdgDB {
 		ArrayList<AppShortInfo> apps = null;
 		Cursor c = null;
 		try {
-			c = this.db.query(APP_TABLE, null, "title MATCH ?", new String[]{title+"*"} , null, null, null);
+			c = this.db.query(DdgDBContracts.APP_TABLE.TABLE_NAME, null, DdgDBContracts.APP_TABLE.COLUMN_TITLE + " MATCH ?", new String[]{title + "*"}, null, null, null);
 			if(c.moveToFirst()) {
 				apps = new ArrayList<AppShortInfo>(20);
 				do {
@@ -348,7 +343,7 @@ public class DdgDB {
 		ArrayList<FeedObject> feeds = null;
 		Cursor c = null;
 		try {
-			c = this.db.query(FEED_TABLE, null, null, null , null, null, null);
+			c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, null, null , null, null, null);
 			if(c.moveToFirst()) {
 				feeds = new ArrayList<FeedObject>(30);
 				do {
@@ -372,9 +367,9 @@ public class DdgDB {
         boolean out = false;
         Cursor c = null;
         try {
-            //Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
-            c = this.db.query(FEED_TABLE, null, "_id=? AND favorite!='F'", new String[]{id}, null, null, null);
-            out = c.moveToFirst();
+            //Cursor c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
+			c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, DdgDBContracts.FEED_TABLE._ID + "=? AND " + DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE + "!='F'", new String[]{id}, null, null, null);
+			out = c.moveToFirst();
         } finally {
             if(c!=null) {
                 c.close();
@@ -395,8 +390,8 @@ public class DdgDB {
 		boolean out = false;
         Cursor c = null;
         try {
-            c = this.db.query(SAVED_SEARCH_TABLE, null, "query=?", new String[]{query}, null, null, null);
-            out = c.moveToFirst();
+			c = this.db.query(DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME, null, DdgDBContracts.SAVED_SEARCH_TABLE.COLUMN_QUERY + "=?", new String[]{query}, null, null, null);
+			out = c.moveToFirst();
         } finally {
             if(c!=null) {
                 c.close();
@@ -423,9 +418,9 @@ public class DdgDB {
         boolean out = false;
         Cursor c = null;
         try {
-            //Cursor c = this.db.query(FEED_TABLE, null, "title=? AND url=? AND hidden='F'", new String[]{pageTitle, pageUrl} , null, null, null);
-            c = this.db.query(FEED_TABLE, null, "title=? AND url=? AND favorite!='F'", new String[]{pageTitle, pageUrl}, null, null, null);
-            out = c.moveToFirst();
+            //Cursor c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, "title=? AND url=? AND hidden='F'", new String[]{pageTitle, pageUrl} , null, null, null);
+			c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, DdgDBContracts.FEED_TABLE.COLUMN_TITLE + "=? AND " + DdgDBContracts.FEED_TABLE.COLUMN_URL + "=? AND " + DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE + "!='F'", new String[]{pageTitle, pageUrl}, null, null, null);
+			out = c.moveToFirst();
         } finally {
             if(c!=null) {
                 c.close();
@@ -452,8 +447,8 @@ public class DdgDB {
         boolean out = false;
         Cursor c = null;
         try {
-            c = this.db.query(HISTORY_TABLE, null, "data=? AND url=?", new String[]{data, url}, null, null, null);
-            out = c.moveToFirst();
+			c = this.db.query(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, DdgDBContracts.HISTORY_TABLE.COLUMN_DATA + "=? AND " + DdgDBContracts.HISTORY_TABLE.COLUMN_URL + "=?", new String[]{data, url}, null, null, null);
+			out = c.moveToFirst();
         } finally {
             if(c!=null) {
                 c.close();
@@ -470,8 +465,8 @@ public class DdgDB {
         boolean out = false;
         Cursor c = null;
         try {
-            c = this.db.query(HISTORY_TABLE, null, "data=? AND url='' AND type='R'", new String[]{query}, null, null, null);
-            out = c.moveToFirst();
+			c = this.db.query(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, DdgDBContracts.HISTORY_TABLE.COLUMN_DATA + "=? AND " + DdgDBContracts.HISTORY_TABLE.COLUMN_URL + "='' AND " + DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE + "='R'", new String[]{query}, null, null, null);
+			out = c.moveToFirst();
         } finally {
             if(c!=null) {
                 c.close();
@@ -484,8 +479,8 @@ public class DdgDB {
         FeedObject out = null;
         Cursor c = null;
         try {
-            c = this.db.query(FEED_TABLE, null, "_id=?", new String[]{id}, null, null, null);
-            if (c.moveToFirst()) {
+			c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, DdgDBContracts.FEED_TABLE._ID + "=?", new String[]{id}, null, null, null);
+			if (c.moveToFirst()) {
                 out = getFeedObject(c);
             }
         } finally {
@@ -497,7 +492,7 @@ public class DdgDB {
 	}
 	/*
 	public boolean existsVisibleFeedById(String id){
-		Cursor c = this.db.query(FEED_TABLE, new String[]{"_id"}, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
+		Cursor c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, new String[]{"_id"}, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
 		if(c.moveToFirst()) {
 			return true;
 		}
@@ -508,8 +503,8 @@ public class DdgDB {
         boolean out = false;
         Cursor c = null;
         try {
-            c = this.db.query(FEED_TABLE, new String[]{"_id"}, "_id=? AND favorite!='F'", new String[]{id}, null, null, null);
-            out = c.moveToFirst();
+			c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, new String[]{DdgDBContracts.FEED_TABLE._ID}, DdgDBContracts.FEED_TABLE._ID + "=? AND " + DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE + "!='F'", new String[]{id}, null, null, null);
+			out = c.moveToFirst();
         } finally {
             if(c!=null) {
                 c.close();
@@ -522,8 +517,8 @@ public class DdgDB {
         boolean out = false;
         Cursor c = null;
         try {
-            c = this.db.query(FEED_TABLE, new String[]{"_id"}, "_id=?", new String[]{id}, null, null, null);
-            out = c.moveToFirst();
+			c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, new String[]{DdgDBContracts.FEED_TABLE._ID}, DdgDBContracts.FEED_TABLE._ID + "=?", new String[]{id}, null, null, null);
+			out = c.moveToFirst();
         } finally {
             if(c!=null) {
                 c.close();
@@ -536,9 +531,9 @@ public class DdgDB {
         FeedObject out = null;
         Cursor c = null;
         try {
-            //Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
-            c = this.db.query(FEED_TABLE, null, "_id=? AND favorite!='F'", new String[]{id}, null, null, null);
-            if (c.moveToFirst()) {
+            //Cursor c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, "_id=? AND hidden='F'", new String[]{id} , null, null, null);
+			c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, DdgDBContracts.FEED_TABLE._ID + "=? AND " + DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE + "!='F'", new String[]{id}, null, null, null);
+			if (c.moveToFirst()) {
                 out = getFeedObject(c);
             }
         } finally {
@@ -553,8 +548,8 @@ public class DdgDB {
         FeedObject out = null;
         Cursor c = null;
         try {
-            c = this.db.query(FEED_TABLE, null, "_id=? AND hidden='T'", new String[]{id}, null, null, null);
-            if (c.moveToFirst()) {
+			c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, DdgDBContracts.FEED_TABLE._ID + "=? AND " + DdgDBContracts.FEED_TABLE.COLUMN_HIDDEN + "='T'", new String[]{id}, null, null, null);
+			if (c.moveToFirst()) {
                 out = getFeedObject(c);
             }
         } finally {
@@ -569,9 +564,9 @@ public class DdgDB {
         FeedObject out = null;
         Cursor c = null;
         try {
-            //Cursor c = this.db.query(FEED_TABLE, null, "_id=? AND type = ? AND hidden='F'", new String[]{id,type} , null, null, null);
-            c = this.db.query(FEED_TABLE, null, "_id=? AND type = ? AND favorite!='F'", new String[]{id, type}, null, null, null);
-            if (c.moveToFirst()) {
+            //Cursor c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, "_id=? AND type = ? AND hidden='F'", new String[]{id,type} , null, null, null);
+			c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, DdgDBContracts.FEED_TABLE._ID + "=? AND " + DdgDBContracts.FEED_TABLE.COLUMN_TYPE + " = ? AND " + DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE + "!='F'", new String[]{id, type}, null, null, null);
+			if (c.moveToFirst()) {
                 out = getFeedObject(c);
             }
         } finally {
@@ -588,8 +583,8 @@ public class DdgDB {
 		}
 		
 		ArrayList<FeedObject> feeds = new ArrayList<FeedObject>(20);
-		//Cursor c = this.db.query(FEED_TABLE, null, "type = ? AND hidden='F'", new String[]{type}, null, null, null, null);
-        Cursor c = this.db.query(FEED_TABLE, null, "type = ? AND favorite!='F'", new String[]{type}, null, null, null, null);
+		//Cursor c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, "type = ? AND hidden='F'", new String[]{type}, null, null, null, null);
+		Cursor c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, DdgDBContracts.FEED_TABLE.COLUMN_TYPE + " = ? AND " + DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE + "!='F'", new String[]{type}, null, null, null, null);
 		if (c.moveToFirst()) {
 			do {
 				FeedObject e = getFeedObject(c);
@@ -617,14 +612,14 @@ public class DdgDB {
 		String query = "";
 		if(types.size() > 1) {
 			for(int i=0;i<types.size()-1;i++) {
-				query += "type = ? OR ";
+				query += DdgDBContracts.FEED_TABLE.COLUMN_TYPE + " = ? OR ";
 			}
 		}
-		query += "type = ?";
+		query += DdgDBContracts.FEED_TABLE.COLUMN_TYPE + " = ?";
 		
 		String[] typeArray = (String[]) types.toArray(new String[types.size()]);
 		
-		Cursor c = this.db.query(FEED_TABLE, null, query, typeArray, null, null, null, null);
+		Cursor c = this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, query, typeArray, null, null, null, null);
 		if (c.moveToFirst()) {
 			do {
 				FeedObject e = getFeedObject(c);
@@ -643,7 +638,7 @@ public class DdgDB {
 	}
 	
 	public ArrayList<HistoryObject> selectHistory(){
-		Cursor c = this.db.query(HISTORY_TABLE, null, null, null , null, null, null);
+		Cursor c = this.db.query(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, null, null , null, null, null);
         ArrayList<HistoryObject> historyItems = null;
 		if(c.moveToFirst()) {
 			historyItems = new ArrayList<HistoryObject>(30);
@@ -683,102 +678,105 @@ public class DdgDB {
     }
 	
 	public Cursor getCursorSearchHistory() {
-		return this.db.query(HISTORY_TABLE, null, "type='R'", null , null, null, "_id DESC");
+		return this.db.query(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE + "='R'", null, null, null, DdgDBContracts.HISTORY_TABLE._ID + " DESC");
 	}
 
     public Cursor getCursorSearchHistory(int limit) {
-        return this.db.query(HISTORY_TABLE, null, "type='R'", null , null, null, "_id DESC", ""+(limit>=0?limit:1));
-    }
+		return this.db.query(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE + "='R'", null, null, null, DdgDBContracts.HISTORY_TABLE._ID + " DESC", "" + (limit >= 0 ? limit : 1));
+	}
 	
 	public Cursor getCursorStoryHistory() {
-		return this.db.query(HISTORY_TABLE, null, "type='F'", null , null, null, "_id DESC");
+		return this.db.query(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE + "='F'", null, null, null, DdgDBContracts.HISTORY_TABLE._ID + " DESC");
 	}
 
     public Cursor getCursorSearchHistory(String input) {
-        return this.db.query(HISTORY_TABLE, null, "type='R' AND data LIKE '"+input+"%'", null , null, null, "_id DESC");
-    }
+		return this.db.query(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE + "='R' AND " + DdgDBContracts.HISTORY_TABLE.COLUMN_DATA + " LIKE '" + input + "%'", null, null, null, DdgDBContracts.HISTORY_TABLE._ID + " DESC");
+	}
 	
 	public Cursor getCursorHistory() {
-		return this.db.query(HISTORY_TABLE, null, null, null , null, null, "_id DESC");
+		return this.db.query(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, null, null, null, null, DdgDBContracts.HISTORY_TABLE._ID + " DESC");
 	}
 	
 	public Cursor getCursorSavedSearch() {
-		return this.db.query(SAVED_SEARCH_TABLE, null, null, null , null, null, "_id DESC");
+		return this.db.query(DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME, null, null, null, null, null, DdgDBContracts.SAVED_SEARCH_TABLE._ID + " DESC");
 	}
 	
 	public Cursor getCursorStoryFeed() {
-		//return this.db.query(FEED_TABLE, null, "NOT feed='' AND hidden='F'", null , null, null, null);
-        return this.db.query(FEED_TABLE, null, "NOT feed='' AND favorite!='F'", null , null, null, "favorite DESC");
+		//return this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, "NOT feed='' AND hidden='F'", null , null, null, null);
+		return this.db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME, null, "NOT " + DdgDBContracts.FEED_TABLE.COLUMN_FEED + "='' AND " + DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE + "!='F'", null, null, null, DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE + " DESC");
 	}
 
     public Cursor getCursorRecentFeed() {
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
-        builder.setTables(HISTORY_TABLE + " inner join " + FEED_TABLE + " ON " + HISTORY_TABLE + ".feedId = " + FEED_TABLE + "._id");
-        return builder.query(this.db, null, null, null, null, null, HISTORY_TABLE+"._id DESC");
+		builder.setTables(DdgDBContracts.HISTORY_TABLE.TABLE_NAME + " inner join " + DdgDBContracts.FEED_TABLE.TABLE_NAME + " ON " + DdgDBContracts.HISTORY_TABLE.TABLE_NAME + "." + DdgDBContracts.HISTORY_TABLE.COLUMN_FEED_ID + " = " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "." + DdgDBContracts.FEED_TABLE._ID);
+		return builder.query(this.db, null, null, null, null, null, DdgDBContracts.HISTORY_TABLE.TABLE_NAME + "." + DdgDBContracts.HISTORY_TABLE._ID + " DESC");
 
-        //return this.db.rawQuery("select * from "+FEED_TABLE+", "+HISTORY_TABLE+" where "+HISTORY_TABLE+".feedId = "+FEED_TABLE+"._id order by "+HISTORY_TABLE+"._id DESC", null);
+        //return this.db.rawQuery("select * from "+DdgDBContracts.FEED_TABLE.TABLE_NAME+", "+DdgDBContracts.HISTORY_TABLE.TABLE_NAME+" where "+DdgDBContracts.HISTORY_TABLE.TABLE_NAME+".feedId = "+DdgDBContracts.FEED_TABLE.TABLE_NAME+"._id order by "+DdgDBContracts.HISTORY_TABLE.TABLE_NAME+"._id DESC", null);
     }
 	
 	
 	private static class OpenHelper extends SQLiteOpenHelper {
 
 	      OpenHelper(Context context) {
-	         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	         super(context, DdgDBContracts.DATABASE_NAME, null, DdgDBContracts.DATABASE_VERSION);
 	      }
 	      
 	      	private void dropTables(SQLiteDatabase db) {
-	      		db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
-		  		db.execSQL("DROP TABLE IF EXISTS " + APP_TABLE);
-		  		db.execSQL("DROP TABLE IF EXISTS " + HISTORY_TABLE);
-		  		db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE);
+	      		db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.FEED_TABLE.TABLE_NAME);
+		  		db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.APP_TABLE.TABLE_NAME);
+		  		db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.HISTORY_TABLE.TABLE_NAME);
+		  		db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME);
 	      	}
 	      	
 	      	private void createFeedTable(SQLiteDatabase db) {
-	      		db.execSQL("CREATE TABLE " + FEED_TABLE + "(" 
-		  			    +"_id VARCHAR(300) UNIQUE, "
-		  			    +"title VARCHAR(300), "
-		  			    +"description VARCHAR(300), "
-		  			    +"feed VARCHAR(300), "
-		  			    +"url VARCHAR(300), "
-		  			    +"imageurl VARCHAR(300), "
-		  			    +"favicon VARCHAR(300), "
-		  			    +"timestamp VARCHAR(300), "
-		  			    +"category VARCHAR(300), "
-		  			    +"type VARCHAR(300), "
-		  			    +"articleurl VARCHAR(300), "
-		  			    //+"hidden CHAR(1)"
-                        +"hidden CHAR(1), "
-                        +"favorite VARCHAR(300)"
-		  			    +")"
-		  			    );
-		  			  
-		  			  db.execSQL("CREATE INDEX idx_id ON " + FEED_TABLE + " (_id) ");
-		  			  db.execSQL("CREATE INDEX idx_idtype ON " + FEED_TABLE + " (_id, type) ");
-	      	}
+				db.execSQL("CREATE TABLE " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "("
+						+ DdgDBContracts.FEED_TABLE._ID + " VARCHAR(300) UNIQUE, "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_TITLE + " VARCHAR(300), "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_DESCRIPTION + " VARCHAR(300), "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_FEED + " VARCHAR(300), "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_URL + " VARCHAR(300), "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_IMAGE_URL + " VARCHAR(300), "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_FAVICON + " VARCHAR(300), "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_TIMESTAMP + " VARCHAR(300), "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_CATEGORY + " VARCHAR(300), "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_TYPE + " VARCHAR(300), "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_ARTICLE_URL + " VARCHAR(300), "
+						//+"hidden CHAR(1)"
+						+ DdgDBContracts.FEED_TABLE.COLUMN_HIDDEN + " CHAR(1), "
+						+ DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE + " VARCHAR(300)"
+						+ ")"
+				);
+
+				db.execSQL("CREATE INDEX idx_id ON " + DdgDBContracts.FEED_TABLE.TABLE_NAME + " (" + DdgDBContracts.FEED_TABLE._ID + ") ");
+				db.execSQL("CREATE INDEX idx_idtype ON " + DdgDBContracts.FEED_TABLE.TABLE_NAME + " (" + DdgDBContracts.FEED_TABLE._ID + ", " + DdgDBContracts.FEED_TABLE.COLUMN_TYPE + ") ");
+			}
 	      	
 	      	private void createAppTable(SQLiteDatabase db) {
-	      		db.execSQL("CREATE VIRTUAL TABLE " + APP_TABLE + " USING FTS3 (" 
-		  			    +"title VARCHAR(300), "
-		  			    +"package VARCHAR(300) "
-		  			    +")"
-		  			    );
-	      	}
+				db.execSQL("CREATE VIRTUAL TABLE " + DdgDBContracts.APP_TABLE.TABLE_NAME + " USING FTS3 ("
+						+ DdgDBContracts.APP_TABLE.COLUMN_TITLE + " VARCHAR(300), "
+						+ DdgDBContracts.APP_TABLE.COLUMN_PACKAGE + " VARCHAR(300) "
+						+ ")"
+				);
+			}
 	      	
 	      	private void createHistoryTable(SQLiteDatabase db) {
-	      		db.execSQL("CREATE TABLE " + HISTORY_TABLE + "("
-								+ "_id INTEGER PRIMARY KEY, "
-								+ "type VARCHAR(300), "
-								+ "data VARCHAR(300), "
-								+ "url VARCHAR(300), "
-								+ "extraType VARCHAR(300), "
-								+ "feedId VARCHAR(300)"
-								+ ")"
+				db.execSQL("CREATE TABLE " + DdgDBContracts.HISTORY_TABLE.TABLE_NAME + "("
+						+ DdgDBContracts.HISTORY_TABLE._ID + " INTEGER PRIMARY KEY, "
+						+ DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE + " VARCHAR(300), "
+						+ DdgDBContracts.HISTORY_TABLE.COLUMN_DATA + " VARCHAR(300), "
+						+ DdgDBContracts.HISTORY_TABLE.COLUMN_URL + " VARCHAR(300), "
+						+ DdgDBContracts.HISTORY_TABLE.COLUMN_EXTRA_TYPE + " VARCHAR(300), "
+						+ DdgDBContracts.HISTORY_TABLE.COLUMN_FEED_ID + " VARCHAR(300)"
+						+ ")"
 				);
-	      	}
+			}
 	      	
 	      	private void createSavedSearchTable(SQLiteDatabase db) {
-	  			  db.execSQL("CREATE TABLE " + SAVED_SEARCH_TABLE + "(_id INTEGER PRIMARY KEY, title VARCHAR(300), query VARCHAR(300) UNIQUE)");
-	      	}
+				db.execSQL("CREATE TABLE " + DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME + "(" +
+						DdgDBContracts.SAVED_SEARCH_TABLE._ID + " INTEGER PRIMARY KEY, " +
+						DdgDBContracts.SAVED_SEARCH_TABLE.COLUMN_TITLE + " VARCHAR(300), " +
+						DdgDBContracts.SAVED_SEARCH_TABLE.COLUMN_QUERY + " VARCHAR(300) UNIQUE)");
+			}
 
 		    @Override
 		  	public void onCreate(SQLiteDatabase db) {		  			  
@@ -796,7 +794,7 @@ public class DdgDB {
 		  			// shape old FEED_TABLE like the new, and rename it as FEED_TABLE_old
 		  			db.execSQL("DROP INDEX IF EXISTS idx_id");
 		      		db.execSQL("DROP INDEX IF EXISTS idx_idtype");
-		  			db.execSQL("ALTER TABLE " + FEED_TABLE + " RENAME TO " + FEED_TABLE + "_old");
+		  			db.execSQL("ALTER TABLE " + DdgDBContracts.FEED_TABLE.TABLE_NAME + " RENAME TO " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old");
 		  			
 		  			dropTables(db);
 		  			onCreate(db);
@@ -809,32 +807,32 @@ public class DdgDB {
 		  			for(String query : recentQueries) {
 		  				// insertRecentSearch
 		  				contentValues.clear();
-		  				contentValues.put("type", "R");
-		  				contentValues.put("data", query);
-		  				contentValues.put("url", "");
-		  				contentValues.put("extraType", "");
-		  				contentValues.put("feedId", "");
-		  				db.insert(HISTORY_TABLE, null, contentValues);		  				
+						contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_TYPE, "R");
+						contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_DATA, query);
+						contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_URL, "");
+						contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_EXTRA_TYPE, "");
+						contentValues.put(DdgDBContracts.HISTORY_TABLE.COLUMN_FEED_ID, "");
+		  				db.insert(DdgDBContracts.HISTORY_TABLE.TABLE_NAME, null, contentValues);
 		  			}
 		  			// ****************************
 		  			
 		  			// ****** saved search ********
-		  			Cursor c = db.query(FEED_TABLE + "_old", new String[]{"url"}, "feed=''", null, null, null, null);
+					Cursor c = db.query(DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old", new String[]{"url"}, DdgDBContracts.FEED_TABLE.COLUMN_FEED + "=''", null, null, null, null);
 		  			while(c.moveToNext()) {
 		  				final String url = c.getString(0);
 		  				final String query = DDGUtils.getQueryIfSerp(url);
 		  				if(query == null)
 		  					continue;
 		  				contentValues.clear();
-		  				contentValues.put("query", query);
-		  				db.insert(SAVED_SEARCH_TABLE, null, contentValues);		  				
+		  				contentValues.put(DdgDBContracts.SAVED_SEARCH_TABLE.COLUMN_QUERY, query);
+		  				db.insert(DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME, null, contentValues);
 		  			}
 		  			// *****************************
 		  					  					  					  			
 		  			// ***** saved feed items *****
-		  			db.execSQL("DELETE FROM " + FEED_TABLE + "_old WHERE feed='' ");
-		  			db.execSQL("INSERT INTO " + FEED_TABLE + " SELECT *,'','F' FROM " + FEED_TABLE + "_old");
-		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
+		  			db.execSQL("DELETE FROM " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old WHERE "+ DdgDBContracts.FEED_TABLE.COLUMN_FEED+"='' ");
+		  			db.execSQL("INSERT INTO " + DdgDBContracts.FEED_TABLE.TABLE_NAME + " SELECT *,'','F' FROM " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old");
+		  			db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old");
 		  			// ****************************
 		  					  					  		
 		  		}
@@ -842,43 +840,69 @@ public class DdgDB {
 		  			// shape old FEED_TABLE like the new, and rename it as FEED_TABLE_old
 		  			db.execSQL("DROP INDEX IF EXISTS idx_id");
 		      		db.execSQL("DROP INDEX IF EXISTS idx_idtype");
-		  			db.execSQL("ALTER TABLE " + FEED_TABLE + " RENAME TO " + FEED_TABLE + "_old");
+		  			db.execSQL("ALTER TABLE " + DdgDBContracts.FEED_TABLE.TABLE_NAME + " RENAME TO " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old");
 		  			
-		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
+		  			db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.FEED_TABLE.TABLE_NAME);
 		  			createFeedTable(db);
 		  			
 		  			// ***** saved feed items *****
-		  			db.execSQL("DELETE FROM " + FEED_TABLE + "_old WHERE feed='' ");
-		  			db.execSQL("INSERT INTO " + FEED_TABLE + " SELECT _id, title, description, feed, url, imageurl," +
-		  					"favicon, timestamp, category, type, '' AS articleurl, hidden FROM " + FEED_TABLE + "_old");
-		  			db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
+					db.execSQL("DELETE FROM " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old WHERE " + DdgDBContracts.FEED_TABLE.COLUMN_FEED + "='' ");
+					db.execSQL("INSERT INTO " + DdgDBContracts.FEED_TABLE.TABLE_NAME + " SELECT " +
+							DdgDBContracts.FEED_TABLE._ID + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_TITLE + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_DESCRIPTION + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_FEED + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_URL + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_IMAGE_URL + "," +
+							DdgDBContracts.FEED_TABLE.COLUMN_FAVICON + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_TIMESTAMP + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_CATEGORY + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_TYPE + ", " +
+							"'' AS " + DdgDBContracts.FEED_TABLE.COLUMN_ARTICLE_URL + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_HIDDEN + " FROM " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old");
+		  			db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old");
 		  			// ****************************
 		  		}
                 else if(oldVersion == 14 && newVersion >=15) {
                     // shape old FEED_TABLE like the new, and rename it as FEED_TABLE_old
                     db.execSQL("DROP INDEX IF EXISTS idx_id");
                     db.execSQL("DROP INDEX IF EXISTS idx_idtype");
-                    db.execSQL("ALTER TABLE " + FEED_TABLE + " RENAME TO " + FEED_TABLE + "_old");
+                    db.execSQL("ALTER TABLE " + DdgDBContracts.FEED_TABLE.TABLE_NAME + " RENAME TO " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old");
 
-                    db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE);
+                    db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.FEED_TABLE.TABLE_NAME);
                     createFeedTable(db);
 
                     // ***** saved feed items *****
-                    db.execSQL("DELETE FROM " + FEED_TABLE + "_old WHERE feed='' ");
-                    db.execSQL("INSERT INTO " + FEED_TABLE + " SELECT _id, title, description, feed, url, imageurl," +
-                            "favicon, timestamp, category, type, articleurl, hidden, 'F' FROM " + FEED_TABLE + "_old");
-                    db.execSQL("DROP TABLE IF EXISTS " + FEED_TABLE + "_old");
+					db.execSQL("DELETE FROM " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old WHERE " + DdgDBContracts.FEED_TABLE.COLUMN_FEED + "='' ");
+					db.execSQL("INSERT INTO " + DdgDBContracts.FEED_TABLE.TABLE_NAME + " SELECT " +
+							DdgDBContracts.FEED_TABLE._ID + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_TITLE + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_DESCRIPTION + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_FEED + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_URL + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_IMAGE_URL + "," +
+							DdgDBContracts.FEED_TABLE.COLUMN_FAVICON + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_TIMESTAMP + ", " + "" +
+							DdgDBContracts.FEED_TABLE.COLUMN_CATEGORY + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_TYPE + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_ARTICLE_URL + ", " +
+							DdgDBContracts.FEED_TABLE.COLUMN_HIDDEN + ", " +
+							"'F' FROM " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old");
+					db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.FEED_TABLE.TABLE_NAME + "_old");
                     //***** set new favlue for favorite *****
                     String newFavoriteValue = String.valueOf(System.currentTimeMillis());
-                    db.execSQL("UPDATE " + FEED_TABLE + " SET favorite="+newFavoriteValue+" WHERE hidden='F'");
-                    // ****************************
+					db.execSQL("UPDATE " + DdgDBContracts.FEED_TABLE.TABLE_NAME + " SET " + DdgDBContracts.FEED_TABLE.COLUMN_FAVORITE + "=" + newFavoriteValue + " WHERE " + DdgDBContracts.FEED_TABLE.COLUMN_HIDDEN + "='F'");
+					// ****************************
                 }
 				else if(oldVersion == 15 && newVersion >= 16) {
-					db.execSQL("ALTER TABLE " + SAVED_SEARCH_TABLE+ " RENAME TO " + SAVED_SEARCH_TABLE + "_old");
-					db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE);
+					db.execSQL("ALTER TABLE " + DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME+ " RENAME TO " + DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME + "_old");
+					db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME);
 					createSavedSearchTable(db);
-					db.execSQL("INSERT INTO " + SAVED_SEARCH_TABLE + " SELECT _id, query, query FROM " + SAVED_SEARCH_TABLE + "_old");
-					db.execSQL("DROP TABLE IF EXISTS " + SAVED_SEARCH_TABLE+ "_old");
+					db.execSQL("INSERT INTO " + DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME + " SELECT " +
+							DdgDBContracts.SAVED_SEARCH_TABLE._ID + ", " +
+							DdgDBContracts.SAVED_SEARCH_TABLE.COLUMN_QUERY + ", " +
+							DdgDBContracts.SAVED_SEARCH_TABLE.COLUMN_QUERY + " FROM " + DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME + "_old");
+					db.execSQL("DROP TABLE IF EXISTS " + DdgDBContracts.SAVED_SEARCH_TABLE.TABLE_NAME+ "_old");
 				}
 		  		else {
 		  			dropTables(db);
