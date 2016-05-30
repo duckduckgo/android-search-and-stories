@@ -84,7 +84,7 @@
     <string name="Confirm">Bekräfta</string>
     <string name="ConfirmClearHistory">All sökhistorik kommer tas bort. Är du säker?</string>
     <string name="ConfirmClearCookies">Alla cookies kommer tas bort. Är du säker?</string>
-    <string name="ConfirmClearCacheAndCookies">Webbläsarcache kommer rensa. Är du säker?</string>
+    <string name="ConfirmClearCacheAndCookies">Webbläsarcache kommer rensas. Är du säker?</string>
 
     <string name="Default">Standard</string>
     <string name="Defaults">Standard</string>
