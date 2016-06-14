@@ -19,6 +19,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebStorage;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -1158,6 +1159,11 @@ public class DuckDuckGo extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    @Subscribe
+    public void onWebViewClearCacheEvent(WebViewClearCacheEvent event){
+        WebStorage.getInstance().deleteAllData();
     }
 
     @Subscribe
