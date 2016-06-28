@@ -575,6 +575,7 @@ public class DuckDuckGo extends AppCompatActivity {
 		PreferencesManager.saveReadArticles();
 		super.onStop();
         BusProvider.getInstance().unregister(this);
+        DDGControlVar.mDuckDuckGoContainer.torIntegration.dismissDialogs();
         Log.d(TAG, "on stop");
 	}
 	
