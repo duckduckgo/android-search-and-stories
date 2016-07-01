@@ -8,7 +8,7 @@ public class DDGConstants {
 	public static final String AUTO_COMPLETE_URL = "https://duckduckgo.com/ac/?q=";
 	public static final String SEARCH_URL = "https://www.duckduckgo.com/?ko=-1&q=";
     public static final String SEARCH_URL_JAVASCRIPT_DISABLED = "https://duckduckgo.com/html/?q=";
-    public static final String SEARCH_URL_ONION = "https://3g2upl4pq6kufc4m.onion.cab/?ko=-1&q=";
+    	public static final String SEARCH_URL_ONION = "http://3g2upl4pq6kufc4m.onion/?ko=-1&q=";
 	public static final String MAIN_FEED_URL = "https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json";
 	public static final String SOURCES_URL = "https://watrcoolr.duckduckgo.com/watrcoolr.js?o=json&type_info=1";
 	public static final String ICON_LOOKUP_URL = "http://i2.duck.co/i/";
