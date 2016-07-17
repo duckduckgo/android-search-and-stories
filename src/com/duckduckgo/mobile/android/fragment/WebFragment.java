@@ -56,6 +56,7 @@ import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.objects.history.HistoryObject;
 import com.duckduckgo.mobile.android.tasks.ReadableFeedTask;
+import com.duckduckgo.mobile.android.util.AppLaunchUtils;
 import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
@@ -456,7 +457,18 @@ public class WebFragment extends Fragment {
 		DDGApplication.getDB().insertRecentSearch(term);
 		//DDGControlVar.mDuckDuckGoContainer.historyAdapter.sync();
 
-		if(DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
+		if (DDGControlVar.useExternalBrowser == DDGConstants.ALWAYS_EXTERNAL) {
+
+			if (DDGControlVar.useExternalApp == DDGConstants.USE_EXTERNAL_APP) {
+
+				final Intent intent = AppLaunchUtils.getBangLaunchIntent(term);
+
+				if (intent != null && DDGUtils.isIntentSafe(context, intent)) {
+					DDGUtils.execIntentIfSafe(context, intent);
+					return;
+				}
+			}
+
 			DDGUtils.searchExternal(context, term);
 			return;
 		}

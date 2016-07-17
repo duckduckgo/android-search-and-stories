@@ -21,6 +21,14 @@
     <item>0</item>
     <item>1</item>
 </string-array>
+    <string-array name="useExternalAppArray">
+        <item>@string/PrefNever</item>
+        <item>@string/PrefExternalAppAlways</item>
+    </string-array>
+    <string-array name="useExternalAppValues">
+        <item>0</item>
+        <item>1</item>
+    </string-array>
 <string-array name="themeArray">
    <item>@string/PrefThemeDark</item>
    <item>@string/PrefThemeLight</item>
@@ -29,8 +37,8 @@
 <string-array name="themeValues">
    <item>DDGDark</item>
    <item>DDGLight</item>
-</string-array>    
-    
+</string-array>
+
 <string-array name="startScreenArray">
    <item>@string/PrefWaterCoolerStories</item>
    <item>@string/PrefRecentSearch</item>
@@ -110,7 +118,7 @@
 	<item>Thailand</item>
     <item>Turkey</item>
     <item>Ukraine</item>
-    <item>United Kingdom</item>  
+    <item>United Kingdom</item>
     <item>United States (es)</item>
     <item>Venezuela</item>
     <item>Vietnam</item>
@@ -182,7 +190,7 @@
     <item>th-th</item>
     <item>tr-tr</item>
     <item>ua-uk</item>
-    <item>uk-en</item>  
+    <item>uk-en</item>
     <item>ue-es</item>
     <item>ve-es</item>
     <item>vn-vi</item>
