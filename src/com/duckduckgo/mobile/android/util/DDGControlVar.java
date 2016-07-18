@@ -31,6 +31,8 @@ public class DDGControlVar {
 	
 	public static boolean includeAppsInSearch = false;
     public static int useExternalBrowser = DDGConstants.ALWAYS_INTERNAL;
+	public static int useExternalApp = DDGConstants.DONT_USE_EXTERNAL_APP;
+
 	public static boolean isAutocompleteActive = true;
 	public static boolean automaticFeedUpdate = true;
 	public static boolean changedSources = false;
