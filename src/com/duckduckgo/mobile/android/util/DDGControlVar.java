@@ -6,6 +6,9 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * This class contains public objects and primitives accessed and modified all throughout the app.
+ */
 public class DDGControlVar {
 	
 	public static SCREEN START_SCREEN = SCREEN.SCR_STORIES;	// stories

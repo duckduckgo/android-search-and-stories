@@ -39,34 +39,32 @@ public class SearchListView extends ListView implements AdapterView.OnItemClickL
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if(recentLimit>0) {
-            if (position < recentLimit) {
-                Object adapter = getAdapter();
-                Cursor c = null;
-                HistoryObject obj = null;
+        if (position < recentLimit) {
+            Object adapter = getAdapter();
+            Cursor c = null;
+            HistoryObject obj = null;
 
-                Object itemClicked = ((Adapter) adapter).getItem(position);
-                if (itemClicked instanceof Cursor) {
-                    c = (Cursor) itemClicked;
-                    obj = new HistoryObject(c);
-                }
+            Object itemClicked = ((Adapter) adapter).getItem(position);
+            if (itemClicked instanceof Cursor) {
+                c = (Cursor) itemClicked;
+                obj = new HistoryObject(c);
+            }
 
-                if (obj != null) {
-                    BusProvider.getInstance().post(new HistoryItemSelectedEvent(obj));
-                }
-            } else {
-                Object adapter = getAdapter();
-                Cursor c = null;
-                String query = null;
+            if (obj != null) {
+                BusProvider.getInstance().post(new HistoryItemSelectedEvent(obj));
+            }
+        } else {
+            Object adapter = getAdapter();
+            Cursor c = null;
+            String query = null;
 
-                if (adapter instanceof SearchAdapter) {
-                    c = (Cursor) ((SearchAdapter) adapter).getItem(position);
-                    query = c.getString(c.getColumnIndex("query"));
-                }
+            if (adapter instanceof SearchAdapter) {
+                c = (Cursor) ((SearchAdapter) adapter).getItem(position);
+                query = c.getString(c.getColumnIndex("query"));
+            }
 
-                if (query != null) {
-                    BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));
-                }
+            if (query != null) {
+                BusProvider.getInstance().post(new SavedSearchItemSelectedEvent(query));
             }
         }
     }

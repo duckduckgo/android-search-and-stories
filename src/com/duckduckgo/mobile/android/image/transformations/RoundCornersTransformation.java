@@ -6,7 +6,7 @@ import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.squareup.picasso.Transformation;
 
 /**
- * Custom transformation class that crops an image to make it square.
+ * Custom transformation class that makes an image with round corners.
  */
 public class RoundCornersTransformation implements Transformation {
 	
@@ -16,7 +16,8 @@ public class RoundCornersTransformation implements Transformation {
 		this.radius = radius;
 	}
 	
-  @Override public Bitmap transform(Bitmap source) {
+  @Override
+  public Bitmap transform(Bitmap source) {
 
 	Bitmap rounded = DDGUtils.roundCorners(source, radius);
 	if(rounded != null) {
@@ -26,7 +27,8 @@ public class RoundCornersTransformation implements Transformation {
 	return source;
   }
 
-  @Override public String key() {
-    return "roundCorners()";
+  @Override
+  public String key() {
+	  return "roundCorners()";
   }
 }

@@ -188,6 +188,11 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
         }
     }
 
+    /**
+     * Disables Tor preference and sets a summary informing the user
+     *
+     * @param enableTorPreference
+     */
     private void setTorNotSupportedInfo(Preference enableTorPreference) {
         enableTorPreference.setEnabled(false);
         enableTorPreference.setSummary("Tor is currently not supported in Android 4.4 due to changes in the WebView implementation.");

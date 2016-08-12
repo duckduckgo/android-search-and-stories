@@ -19,6 +19,7 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
+import android.webkit.WebStorage;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -377,6 +378,7 @@ public class DuckDuckGo extends AppCompatActivity {
 	 * 
 	 * @param screenToDisplay Screen to display
 	 * @param clean Whether screen state (searchbar, browser etc.) states will get cleaned
+     * @param displayHomeScreen Whether to display home screen
 	 */
 	public void displayScreen(SCREEN screenToDisplay, boolean clean, boolean displayHomeScreen) {
         Log.d(TAG, "display screen: "+screenToDisplay);
@@ -573,6 +575,7 @@ public class DuckDuckGo extends AppCompatActivity {
 		PreferencesManager.saveReadArticles();
 		super.onStop();
         BusProvider.getInstance().unregister(this);
+        DDGControlVar.mDuckDuckGoContainer.torIntegration.dismissDialogs();
         Log.d(TAG, "on stop");
 	}
 	
@@ -1157,6 +1160,11 @@ public class DuckDuckGo extends AppCompatActivity {
             default:
                 break;
         }
+    }
+
+    @Subscribe
+    public void onWebViewClearCacheEvent(WebViewClearCacheEvent event){
+        WebStorage.getInstance().deleteAllData();
     }
 
     @Subscribe

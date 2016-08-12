@@ -18,6 +18,11 @@ import com.duckduckgo.mobile.android.listener.MimeDownloadListener;
 import com.duckduckgo.mobile.android.tasks.MimeDownloadTask;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 
+/**
+ * This class handles downloading of music, video, etc. Some options like downloading from a secure URL are supported only for some the Android versions.
+ *
+ * It contains an anonymous class inherited from MimeDownloadListener to implement manual downloads for older Android versions.
+ */
 public class ContentDownloader {
 
 	private DownloadManager downloadManager;
@@ -99,6 +104,12 @@ public class ContentDownloader {
 		}
 	}
 
+	/**
+	 * Read the extension from the minetype string, e.g. for 'content/html' it retrieves 'html'
+	 *
+	 * @param mimeType
+	 * @return
+     */
 	private String decideExtension(final String mimeType) {
 		int idxSlash = mimeType.indexOf('/') + 1;
 		String ext = "tmp";

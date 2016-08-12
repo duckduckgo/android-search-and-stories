@@ -59,6 +59,9 @@ import com.duckduckgo.mobile.android.network.DDGHttpException;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
 import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 
+/**
+ * This class contains utility static methods, such as loading preferences as an array or decoding bitmaps.
+ */
 public final class DDGUtils {
 	
 	public static DisplayStats displayStats;

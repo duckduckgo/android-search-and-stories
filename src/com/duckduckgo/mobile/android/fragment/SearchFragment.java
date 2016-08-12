@@ -301,6 +301,11 @@ public class SearchFragment extends Fragment implements ViewTreeObserver.OnGloba
         toggleSearchView(false);
     }
 
+    /**
+     * Toggle view between search results view and recent and saved view
+     *
+     * @param openSearch whether the search results view should be visible or recent saved view
+     */
     private void toggleSearchView(boolean openSearch) {
         if(openSearch) {
             fragmentView.findViewById(R.id.recent_saved_container).setVisibility(View.GONE);

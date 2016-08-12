@@ -53,6 +53,7 @@ public class SearchAdapter extends BaseAdapter {
     }
 
     public Object getItem(int position) {
+        boolean previousSectionEmpty = true;
         int sectionCounter = 0;
         for(Object section : this.sections.keySet()) {
             Adapter adapter = sections.get(section);
@@ -62,8 +63,8 @@ public class SearchAdapter extends BaseAdapter {
 
                 if(sectionCounter==0 && position < size) return adapter.getItem(position);
                 else {
-                    if(position == 0) return inflater.inflate(resId, null, false);
-                    if(position < size) return adapter.getItem(position - 1);
+                    if(position == 0 && !previousSectionEmpty) return inflater.inflate(resId, null, false);
+                    if(position < size) return adapter.getItem(position - (previousSectionEmpty ? 0 : 1));
                 }
 
                 // check if position inside this section
@@ -72,6 +73,9 @@ public class SearchAdapter extends BaseAdapter {
 
                 // otherwise jump into next section
                 position -= size;
+                previousSectionEmpty = false;
+            } else {
+                previousSectionEmpty = true;
             }
             sectionCounter++;
         }
@@ -97,6 +101,7 @@ public class SearchAdapter extends BaseAdapter {
     }
 
     public int getItemViewType(int position) {
+        boolean previousSectionEmpty = true;
         int type = 1;
         int sectionCounter = 0;
         for(Object section : this.sections.keySet()) {
@@ -107,8 +112,8 @@ public class SearchAdapter extends BaseAdapter {
 
                 if(sectionCounter==0 && position < size) return type + adapter.getItemViewType(position);
                 else {
-                    if(position == 0) return TYPE_SECTION_DIVIDER;
-                    if(position < size) return type + adapter.getItemViewType(position - 1);
+                    if(position == 0 && !previousSectionEmpty) return TYPE_SECTION_DIVIDER;
+                    if(position < size) return type + adapter.getItemViewType(position - (previousSectionEmpty ? 0 : 1));
                 }
 
                 // check if position inside this section
@@ -118,6 +123,9 @@ public class SearchAdapter extends BaseAdapter {
                 // otherwise jump into next section
                 position -= size;
                 type += adapter.getViewTypeCount();
+                previousSectionEmpty = false;
+            } else {
+                previousSectionEmpty = true;
             }
             sectionCounter++;
         }
@@ -134,6 +142,7 @@ public class SearchAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        boolean previousSectionEmpty = true;
         int sectionnum = 0;
         for(Object section : this.sections.keySet()) {
             Adapter adapter = sections.get(section);
@@ -143,8 +152,8 @@ public class SearchAdapter extends BaseAdapter {
 
                 if(sectionnum==0 && position < size) return adapter.getView(position, convertView, parent);
                 else {
-                    if(position == 0 && !adapter.isEmpty()) return inflater.inflate(resId, parent, false);//)headers.getView(sectionnum, convertView, parent);
-                    if(position < size) return adapter.getView(position - 1, convertView, parent);
+                    if(position == 0 && !adapter.isEmpty() && !previousSectionEmpty) return inflater.inflate(resId, parent, false);//)headers.getView(sectionnum, convertView, parent);
+                    if(position < size) return adapter.getView(position - (previousSectionEmpty ? 0 : 1), convertView, parent);
                 }
                 // check if position inside this section
                 //if(position == 0 && !adapter.isEmpty()) return inflater.inflate(resId, parent, false);//)headers.getView(sectionnum, convertView, parent);
@@ -152,6 +161,9 @@ public class SearchAdapter extends BaseAdapter {
 
                 // otherwise jump into next section
                 position -= size;
+                previousSectionEmpty = false;
+            } else {
+                previousSectionEmpty = true;
             }
             sectionnum++;
         }
