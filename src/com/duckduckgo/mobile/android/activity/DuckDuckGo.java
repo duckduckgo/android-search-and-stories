@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.*;
 import android.view.inputmethod.EditorInfo;
@@ -118,6 +119,7 @@ public class DuckDuckGo extends AppCompatActivity {
 	private FragmentManager fragmentManager;
 
     private Toolbar toolbar;
+    private DDGAutoCompleteTextView searchEditText;
 
 	private SharedPreferences sharedPreferences;
 		
@@ -173,6 +175,18 @@ public class DuckDuckGo extends AppCompatActivity {
         getWindow().getDecorView().setBackgroundColor(getResources().getColor(R.color.background));
         
         DDGUtils.displayStats = new DisplayStats(this);
+
+        //Dynamic Search Hint based on screen width
+        //Get Search box
+        searchEditText = (DDGAutoCompleteTextView) findViewById(R.id.searchEditText);
+        //Get screen width in pixels
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        //Set Search Hint
+        if (displaymetrics.widthPixels < 480)   //Minimum size for full display
+            searchEditText.setHint(R.string.SearchStringSmall); //DDG
+        else
+            searchEditText.setHint(R.string.SearchStringBig);   //DuckDuckGo
 
         if(savedInstanceState != null)
         	savedState = true;
