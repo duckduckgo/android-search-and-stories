@@ -44,7 +44,7 @@
                 <action android:name="android.intent.action.SEARCH_LONG_PRESS" />
                 <category android:name="android.intent.category.DEFAULT" />\
             </intent-filter>-->
-<!--
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <data android:scheme="http" />
@@ -60,7 +60,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
             </intent-filter>
--->
+
             <meta-data android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
