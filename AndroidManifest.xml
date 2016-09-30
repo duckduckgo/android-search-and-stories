@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.duckduckgo.mobile.android"
     android:installLocation="auto"
-    android:versionCode="74"
-    android:versionName="3.0.12">
+    android:versionCode="75"
+    android:versionName="3.0.13">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="23" />
     <uses-permission android:name="android.permission.INTERNET"/>
