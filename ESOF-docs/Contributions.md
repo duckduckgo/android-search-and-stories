@@ -10,5 +10,5 @@ Luís Cruz ( @Luis-bcruz ) has contributed in:
 Shivam Agrawal ( @shivam-agr ) has contributed in:
 * Brief description of the development process
       
-Vinicius Ferretti Agrawal ( @ViniciusFerretti ) has contributed in:
+Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
 * Alternatives to the development process
