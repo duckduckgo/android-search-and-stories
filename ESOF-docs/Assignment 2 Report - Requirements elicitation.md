@@ -4,8 +4,7 @@ Introduction:
 
 -> This work will be addressing some issues, as requirements engineering, use case and domain model. First, it must be understood as a requirement the assembly needs to be explained by the customer and user must be attended to solve the determined business problem in which the customer part. During the project, these are going to be addressed on the types of requirements (functional and nonfunctional) of the duckduckgo application.
 
--> With the understanding of these issues, will be done raising the requirements, as example in functional requirements show past search queries, favorites and in nonfunctional capacity, usability, response time, among others, that have as a goal identifying and defining the product development strategy, thus the same uses a lot of technical to your lifting, like interviews, meetings, questionnaires, etc.
-
+-> With the understanding of these issues, will be done requirement elicitation, which is one of the most important parts of the project that results in the development of a project, thus will be obtained some requirements, as example in functional requirements show past search queries, favorites and in nonfunctional capacity, usability, response time, among others, that have as a goal identifying and defining the product development strategy, thus the same uses a lot of technical to your lifting, like interviews, meetings, questionnaires, etc.
 
 Functional Requirements :-
 
