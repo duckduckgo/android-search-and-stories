@@ -12,7 +12,7 @@ Functional requirements can be divided in diferent levels such as Business requi
 
 Business requirements:
 
--> Have a search engine that works in anonymity.
+//maneira como eles vao ganhar dinheiro com o search engine. 
 
 User requirements:
 
@@ -33,19 +33,16 @@ User requirements:
 -> Enable search through tor (requires orbot) when selected by the user.
 
 
-Software requirements:
-
--> Search through tor. Using orbot.
-
+NonFunctional Requirements :-
 
 System requirements:
 
+-> Carrega interface gráfica caso não haja internet. ??
+
 -> Android version 2.2 and later.
 
--> Available memory of 3.5MB
+-> Available memory of 3.5MB.
 
-
-
-NonFunctional Requirements :-
+-> Run application in anonymity.
 
 ->capacity, usability, response time, manageability, security...
