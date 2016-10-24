@@ -37,12 +37,22 @@ NonFunctional Requirements :-
 
 System requirements:
 
--> Carrega interface gráfica caso não haja internet. ??
+-> Load Error feed request messasge with last story backgound.
+
+-> Add possibility of loading cached storys. 
 
 -> Android version 2.2 and later.
 
 -> Available memory of 3.5MB.
 
 -> Run application in anonymity.
+
+-> Pass all unit test.
+
+-> Take a minimum of 6s for search.
+
+-> Take a maximum of 80MB of memory during a search. 
+
+-> Take a maximum of 80% of CPU processment during a search.
 
 ->capacity, usability, response time, manageability, security...
