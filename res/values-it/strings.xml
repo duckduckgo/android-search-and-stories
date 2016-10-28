@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">DuckDuckGo</string>
-    <string name="SearchString">Ricerca DuckDuckGo</string>
+    <string name="SearchStringSmall">Ricerca DDG o digita URL</string>
+    <string name="SearchStringBig">Ricerca DuckDuckGo o digita URL</string>
     <string name="SettingsButtonContentDescription">Impostazioni</string>
     <string name="HomeButtonContentDescription">Home</string>
     
