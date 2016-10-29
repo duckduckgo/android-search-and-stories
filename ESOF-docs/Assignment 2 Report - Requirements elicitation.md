@@ -2,17 +2,17 @@ ESOF 2016/2017 - Assignment 2 Report - Requirements elicitation
 
 Introduction:
 
--> This work will be addressing some issues, as requirements engineering, use case and domain model. First, it must be understood as a requirement the assembly needs to be explained by the customer and user must be attended to solve the determined business problem in which the customer part. During the project, these are going to be addressed on the types of requirements (functional and nonfunctional) of the duckduckgo application.
+-> This work will be addressing some issues such as requirements engineering, use case and domain model. First, it must be understood that a requirements need to be explained by the customer and user must be attended to solve the determined business problem in which the customer is a part of. During the project, these are going to be addressed on the types of requirements (functional and nonfunctional) of the duckduckgo Android application.
 
--> With the understanding of these issues, will be done requirement elicitation, which is one of the most important parts of the project that results in the development of a project, thus will be obtained some requirements, as example in functional requirements show past search queries, favorites and in nonfunctional capacity, usability, response time, among others, that have as a goal identifying and defining the product development strategy, thus the same uses a lot of technical to your lifting, like interviews, meetings, questionnaires, etc.
+-> With the understanding of these issues, there will be done requirement elicitation, which is one of the most important parts of the project that results in the development of a project, thus some requirements will be obtained, as example in functional requirements show past search queries, favorites and in nonfunctional capacity, usability, response time, among others, that have as a goal identifying and defining the product development strategy, thus the same uses a lot of technical to your lifting, like interviews, meetings, questionnaires, etc.
 
 Functional Requirements :-
 
-Functional requirements can be divided in diferent levels such as Business requirements, User requirements, system requirements and software requirements. Here are some requirements divided by diferent levels:
+Functional requirements can be divided in different levels such as Business requirements, User requirements, system requirements and software requirements. Here are some requirements divided by diferent levels:
 
 Business requirements:
 
-//maneira como eles vao ganhar dinheiro com o search engine. 
+-> Make DuckDuckGo Android a referece search engine to users, so that if can develope into a bigger project and combat user data collection.
 
 User requirements:
 
@@ -54,5 +54,3 @@ System requirements:
 -> Take a maximum of 80MB of memory during a search. 
 
 -> Take a maximum of 80% of CPU processment during a search.
-
-->capacity, usability, response time, manageability, security...
