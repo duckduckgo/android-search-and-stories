@@ -17,14 +17,16 @@ Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
 ## Contributions (in alphabetical order):
 
 Filipe Coelho ( @Fr0sk ) has contributed in:
+* Domain model diagram
 
 Luís Cruz ( @Luis-bcruz ) has contributed in:
 * List of funtional and non-funcional requirements
-* Use case Diagram
+* Use case diagram
 
 Shivam Agrawal ( @shivam-agr ) has contributed in:
-
+* Domain model diagram
+* List of funtional and non-funcional requirements
 
 Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
 * Generic introduction to requirements and requirements elicitation 
-* Use case Diagram
+* Use case diagram
