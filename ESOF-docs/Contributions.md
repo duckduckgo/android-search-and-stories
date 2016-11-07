@@ -30,3 +30,17 @@ Shivam Agrawal ( @shivam-agr ) has contributed in:
 Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
 * Generic introduction to requirements and requirements elicitation 
 * Use case diagram
+
+# Assignment 3 Report - Software Design
+## Contributions (in alphabetical order):
+
+Filipe Coelho ( @Fr0sk ) has contributed in:
+
+
+Luís Cruz ( @Luis-bcruz ) has contributed in:
+
+
+Shivam Agrawal ( @shivam-agr ) has contributed in:
+
+
+Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
