@@ -41,6 +41,6 @@ Luís Cruz ( @Luis-bcruz ) has contributed in:
 * Deployment Diagram
 
 Shivam Agrawal ( @shivam-agr ) has contributed in:
-
+* Development View
 
 Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
