@@ -40,6 +40,7 @@ Filipe Coelho ( @Fr0sk ) has contributed in:
 
 Luís Cruz ( @Luis-bcruz ) has contributed in:
 * Deployment Diagram
+* Definition of the 4+1 Architectural View Model
 
 Shivam Agrawal ( @shivam-agr ) has contributed in:
 * Development View
