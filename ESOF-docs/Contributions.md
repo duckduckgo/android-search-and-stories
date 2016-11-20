@@ -38,7 +38,7 @@ Filipe Coelho ( @Fr0sk ) has contributed in:
 
 
 Luís Cruz ( @Luis-bcruz ) has contributed in:
-
+* Deployment Diagram
 
 Shivam Agrawal ( @shivam-agr ) has contributed in:
 
