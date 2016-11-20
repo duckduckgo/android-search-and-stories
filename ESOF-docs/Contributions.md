@@ -44,3 +44,4 @@ Shivam Agrawal ( @shivam-agr ) has contributed in:
 * Development View
 
 Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
+* Package Diagram
