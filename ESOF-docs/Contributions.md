@@ -35,7 +35,8 @@ Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
 ## Contributions (in alphabetical order):
 
 Filipe Coelho ( @Fr0sk ) has contributed in:
-
+* Introduction to Software Architecture
+* Process View Diagram
 
 Luís Cruz ( @Luis-bcruz ) has contributed in:
 * Deployment Diagram
