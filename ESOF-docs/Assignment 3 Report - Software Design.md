@@ -20,3 +20,8 @@ Shows how the system processes interact, showing how processes communicate, and 
 
 * Use Case View (+1):
 Joins the other views and show how they interact. It is used to identify the architecture design and is useful for tests of an architecture prototype.
+
+  
+The architecture partterns is a general solution that has as standards dealing with various issues in software engineering, such as computer hardware performance limitations, high availability and minimization of a business risk among others. In this project the architectural pattern followed is data modeling, a process used to define and analyze data requirements needed to support business processes within the corresponding information systems in organizations.
+  
+However, this process contains professional modelers who work in partnership with the business stakeholders, such as potential users of the information system.
