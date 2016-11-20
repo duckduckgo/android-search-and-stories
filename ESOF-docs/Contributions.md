@@ -47,3 +47,4 @@ Shivam Agrawal ( @shivam-agr ) has contributed in:
 
 Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
 * Package Diagram
+* Introduction - architectural patterns
