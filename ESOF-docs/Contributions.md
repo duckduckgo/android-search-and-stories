@@ -48,3 +48,15 @@ Shivam Agrawal ( @shivam-agr ) has contributed in:
 Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
 * Package Diagram
 * Introduction - architectural patterns
+
+
+# Assignment 4: Verification and Validation
+## Contributions (in alphabetical order):
+
+Filipe Coelho ( @Fr0sk ) has contributed in:
+
+Luís Cruz ( @Luis-bcruz ) has contributed in:
+
+Shivam Agrawal ( @shivam-agr ) has contributed in:
+
+Vinicius Ferretti ( @ViniciusFerretti ) has contributed in:
