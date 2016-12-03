@@ -49,11 +49,12 @@ Analyzing the issue severity graphic, we can see the percentage of infos (27.2%)
 
 ![issue severity graphic] (https://github.com/Fr0sk/ESOF-DuckDuckGo-Android-App/blob/master/ESOF-docs/resources/code_severity.png)
 
-Analyzing the project graphic, see the number of files with the respective grade. As we can see there are a very low percentage of E and D files, and a very high percentage of A graded files (83,3%) which is a very good sign, showing organization and discipline.
+Analyzing the project graphic, see the number of files with the respective grade. As we can see there are a very low percentage of C and D files, and a very high percentage of A graded files (83,3%) which is a very good sign, showing organization and discipline.
 
 ![project quality graphic] (https://github.com/Fr0sk/ESOF-DuckDuckGo-Android-App/blob/master/ESOF-docs/resources/project_quality.png)
-##Bug Report:
 
+##Bug Report:
+The bug we those to resolve the *bug* [#258](https://github.com/duckduckgo/android/issues/258) listed in the issues, and consists in the app crashing when trying to navigate using the arrow keys on a keyboard or on a device with physical keys.
 
 ##Contributions:
 Filipe Coelho ( @Fr0sk ) has contributed in:
