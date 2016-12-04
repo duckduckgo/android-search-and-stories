@@ -1,6 +1,6 @@
 # Verification and Validation
 
-##Intoduction:
+##Introduction:
 Throughout this report, we will be analysing the software testing of our project.
 
 Firstly, we will report to the software Testability and reviews. That is, the controllability, observability, isolateability, separation of concerns, understandability, heterogeneity.
@@ -66,7 +66,8 @@ The bug we those to resolve the *bug* [#258](https://github.com/duckduckgo/andro
 Filipe Coelho ( @Fr0sk ) has contributed in:
 
 Luís Cruz ( @Luis-bcruz ) has contributed in:
-Test Statistics and analytics.
+->Introduction of verification and validation
+->Test Statistics and analytics.
 
 Shivam Agrawal ( @shivam-agr ) has contributed in:
 
