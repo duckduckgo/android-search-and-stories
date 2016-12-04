@@ -66,8 +66,8 @@ The bug we those to resolve the *bug* [#258](https://github.com/duckduckgo/andro
 Filipe Coelho ( @Fr0sk ) has contributed in:
 
 Luís Cruz ( @Luis-bcruz ) has contributed in:
-->Introduction of verification and validation
-->Test Statistics and analytics.
+* Introduction of verification and validation
+* Test Statistics and analytics.
 
 Shivam Agrawal ( @shivam-agr ) has contributed in:
 
