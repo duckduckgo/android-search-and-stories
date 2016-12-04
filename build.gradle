@@ -21,14 +21,14 @@ android {
 
   dependencies {
     compile 'ch.acra:acra:4.5.0'
-    compile ('com.android.support:recyclerview-v7:23.4.0') {
+    compile ('com.android.support:recyclerview-v7:23.1.1') {
       exclude module: 'support-v4'
       exclude module: 'support-annotations'
     }
     compile 'com.squareup:otto:1.3.8'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile project(':libs:OnionKit:libnetcipher')
-    compile ('com.android.support:appcompat-v7:23.4.0') {
+    compile ('com.android.support:appcompat-v7:23.1.1') {
       exclude module: 'support-v4'
     }
     compile project(':libs:android-support-v4-preferencefragment')
@@ -37,10 +37,10 @@ android {
   dependencyVerification {
     verify = [
             'ch.acra:acra:b46be215fefd703fe91bd8c2a9f59ba87f28924316c556468c5e6141d1fc87a7',
-            'com.android.support:recyclerview-v7:24465b2ba90dc5ed7e2c05f1c87fe4256c27df6d3cd69b6177f3cb447b05c021',
+            'com.android.support:recyclerview-v7:7606373da0931a1e62588335465a0e390cd676c98117edab29220317495faefd',
             'com.squareup:otto:13e2c8f5782de514cb161a1e03cdf394a6933431ce1aa2391f6289005b5a250c',
             'com.squareup.picasso:picasso:233e18f59d25b6aff475df1e01a0661677f88af73838a27eb23aa21b96a3ac6e',
-            'com.android.support:appcompat-v7:d3d96637b0e8e61046567b8c87b667dcf3cd31c7447f651cb58d6e6e744adfba',
+            'com.android.support:appcompat-v7:0a8762214382b7e8d4b989b4ac10b5c846b957d767ccb7bccbc6be5afa885a82',
     ]
   }
 
