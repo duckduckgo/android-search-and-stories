@@ -110,7 +110,10 @@
     
     <string name="OpenInExternalBrowser">Open in External Browser</string>
     <string name="ConfirmExternalBrowser">Please Confirm</string>
-    
+
+    <string name="RestartApplication">Restart Application</string>
+    <string name="RestartApplicationReasonTor">The application needs to be restarted in order to disable Tor. Restart now?</string>
+
     <string name="ChangingFontSize">Changing Font Size&#8230;</string>
 
 

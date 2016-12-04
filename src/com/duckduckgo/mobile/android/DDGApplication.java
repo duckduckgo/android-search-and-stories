@@ -56,6 +56,8 @@ public class DDGApplication extends Application {
 	private static String DB_FOLDER_NAME = "database";
 
     private static boolean isReleaseBuild = false;
+
+	private static DDGApplication instance = null;
 	
 	/**
 	 * Changes after application upgrade
@@ -136,7 +138,7 @@ public class DDGApplication extends Application {
 				}
 			}
 		}
-
+		DDGApplication.instance = this;
 	}
 
 
@@ -159,7 +161,9 @@ public class DDGApplication extends Application {
     public static boolean isIsReleaseBuild() {
         return isReleaseBuild;
     }
-	
+
+	public static DDGApplication getInstance() { return instance; }
+
 	// method overridden to put DB in database folder cleanable upon uninstall
 	@Override
 	public SQLiteDatabase openOrCreateDatabase(String name, int mode,

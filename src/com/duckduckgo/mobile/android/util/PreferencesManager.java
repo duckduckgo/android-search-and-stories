@@ -46,6 +46,12 @@ public class PreferencesManager {
 		return DDGApplication.getSharedPreferences().getBoolean("enableTor", false);
 	}
 
+	public static void setEnableTor(boolean enableTor) {
+		Editor editor = DDGApplication.getSharedPreferences().edit();
+		editor.putBoolean("enableTor", enableTor);
+		editor.commit();
+	}
+
     public static int getUseExternalBrowser() {
         int useExternalBrowser = Integer.valueOf(DDGApplication.getSharedPreferences().getString("useExternalBrowserPref", "0"));
         return useExternalBrowser<=1 ? useExternalBrowser : 0;
