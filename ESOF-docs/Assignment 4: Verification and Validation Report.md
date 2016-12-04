@@ -1,7 +1,13 @@
 # Verification and Validation
 
 ##Intoduction:
+Throughout this report, we will be analysing the software testing of our project.
 
+Firstly, we will report to the software Testability and reviews. That is, the controllability, observability, isolateability, separation of concerns, understandability, heterogeneity.
+
+Secondly, we will analyze code statistics about this project, based on a codacy report.
+
+Finally, we will show the process of correcting a bug in our project, followed by the contributions of each member of this group.
 
 ##Software Testability and Reviews:
 
