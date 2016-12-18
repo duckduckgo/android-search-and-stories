@@ -37,7 +37,12 @@ public class PreferencesManager {
     public static String getRegion() {
 		return DDGApplication.getSharedPreferences().getString("regionPref", "wt-wt");
 	}
-	
+
+	public static boolean getSearchInApp() {
+		return DDGApplication.getSharedPreferences().getBoolean("searchInApp", true);
+	}
+
+
 	public static boolean getReadable() {
 		return DDGApplication.getSharedPreferences().getBoolean("readablePref", true);
 	}
@@ -165,6 +170,10 @@ public class PreferencesManager {
         else if(key.equals("recordCookiesPref")) {
             DDGWebView.recordCookies(sharedPreferences.getBoolean(key, true));
         }
+		else if(key.equals("searchInApp")) {
+			DDGControlVar.searchInApp = sharedPreferences.getBoolean((key), false);
+
+		}
     }
     
     /* Collections */

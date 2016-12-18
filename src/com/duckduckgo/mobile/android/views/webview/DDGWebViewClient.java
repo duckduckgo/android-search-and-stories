@@ -185,8 +185,12 @@ public class DDGWebViewClient extends WebViewClient {
         Log.e("onpagefinished", "url: " + url);
         mLoaded = true;
 
-		DDGControlVar.mCleanSearchBar = false;
-		
+		if(DDGControlVar.searchInApp && url.contains(DDGConstants.REDIRECT_URL)) {
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+			DDGUtils.execIntentIfSafe(context, browserIntent);
+			return;
+		}
+
 		if(view.getVisibility() != View.VISIBLE) {
 			return;
 		}

@@ -57,6 +57,8 @@
     <string name="PrefTurnOffAutocomplete">Disabled</string>
 
     <string name="PrefAutoUpdate">Automatic Feed Refresh</string>
+    <string name="PrefSearchInApp">Keep searching in app</string>
+    <string name="PrefSearchInAppSummary">Only affects when using external browser</string>
     <string name="PrefReadable">Readability</string>
     <string name="PrefReadableSummary">On, when available</string>
     <string name="PrefGroupTor">Tor</string>
