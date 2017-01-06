@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">DuckDuckGo</string>
-    <string name="SearchString">DuckDuckGo-Suche</string>
+    <string name="SearchString">DuckDuckGo Suche</string>
+    <string name="SearchStringSmall">DDG Suche oder URL</string>
+    <string name="SearchStringBig">DuckDuckGo Suche oder URL eingeben</string>
 
     <string name="SettingsButtonContentDescription">Einstellungen</string>
     <string name="HomeButtonContentDescription">Hauptansicht</string>
