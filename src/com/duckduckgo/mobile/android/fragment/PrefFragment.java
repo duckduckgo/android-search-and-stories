@@ -1,8 +1,10 @@
 package com.duckduckgo.mobile.android.fragment;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,6 +22,7 @@ import android.view.ViewGroup;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.dialogs.RestartApplicationDialogBuilder;
 import com.duckduckgo.mobile.android.events.ConfirmDialogOkEvent;
 import com.duckduckgo.mobile.android.events.DisplayScreenEvent;
 import com.duckduckgo.mobile.android.util.DDGConstants;
@@ -181,6 +184,9 @@ public class PrefFragment extends PreferenceFragment implements SharedPreference
                 enableTorPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                     public boolean onPreferenceChange(Preference preference, Object newValue) {
                         //return TorIntegrationProvider.getInstance(activity).prepareTorSettings((Boolean) newValue);
+                        PreferencesManager.setEnableTor((Boolean) newValue);
+                        if (!(Boolean) newValue)
+                            new RestartApplicationDialogBuilder(getContext(), activity.getIntent()).show();
                         return DDGControlVar.mDuckDuckGoContainer.torIntegration.prepareTorSettings((Boolean) newValue);
                     }
                 });
