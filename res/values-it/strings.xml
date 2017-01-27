@@ -5,9 +5,9 @@
     <string name="SearchStringBig">Ricerca DuckDuckGo o digita URL</string>
     <string name="SettingsButtonContentDescription">Impostazioni</string>
     <string name="HomeButtonContentDescription">Home</string>
-    
+
     <string name="search_hint">Cerca&#8230;</string>
-    
+
     <string name="PrefGroupGeneral">Generale</string>
     <string name="PrefGroupStories">Storie</string>
     <string name="PrefGroupSearch">Ricerca</string>
@@ -49,8 +49,8 @@
     <string name="PrefEnableAcra">Autosegnalazione crash</string>
     <string name="PrefAcraDisabled">Segnalazione automatica disabilitata</string>
     <string name="PrefAcraEnabled">Segnalazione automatica abilitata</string>
-    <string name="PrefEnableJavascript">Attiva Javascript</string>
-    
+    <string name="PrefEnableJavascript">Attiva JavaScript</string>
+
     <string name="PrefWaterCooler">Storie</string>
     <string name="PrefAutocomplete">Autocompletamento</string>
     <string name="PrefSearchResults">Risultati di ricerca</string>
@@ -65,52 +65,52 @@
     <string name="OrbotStatusOkTitle">Stato di Orbot</string>
     <string name="OrbotStatusOkMessage">Pare che Orbot funzioni correttamente!</string>
     <string name="OrbotCheckSite">https://check.torproject.org</string>
-    
+
     <string name="ShareStory">Condividi storia</string>
     <string name="ShareSearch">Condividi ricerca</string>
     <string name="SharePage">Condividi pagina</string>
 
     <string name="RegularShareFormat">%1$s via DuckDuckGo per Android</string>
     <string name="TwitterShareFormat">%1$s via @duckduckgo per Android</string>
-    
+
     <string name="Yes">Sì</string>
     <string name="No">No</string>
-    
+
     <string name="Save">Salva</string>
     <string name="Unsave">Elimina</string>
     <string name="Share">Condividi</string>
     <string name="Refresh">Ricarica</string>
     <string name="Delete">Elimina</string>
-    
+
     <string name="LeftStories">Storie</string>
     <string name="LeftSaved">Salvati</string>
     <string name="LeftSettings">Impostazioni</string>
     <string name="LeftRecent">Recenti</string>
     <string name="LeftRecentQueries">Ricerche recenti</string>
-    
+
     <string name="Confirm">Conferma</string>
     <string name="ConfirmClearHistory">Tutta la cronologia di ricerca verrà eliminata. Sei sicuro?</string>
     <string name="ConfirmClearCookies">Tutti i cookie verranno eliminati. Sei sicuro?</string>
     <string name="ConfirmClearCacheAndCookies">La cache del browser verrà eliminata. Sei sicuro?</string>
-    
+
     <string name="Default">Predefinito</string>
     <string name="Defaults">Ripristina ai predefiniti</string><!-- new -->
     <string name="SuggestSource">Proponi una fonte</string>
     <string name="SuggestedSources">Per favore, includete queste fonti:</string>
-    
+
     <string name="FeedbackTo">Feedback DuckDuckGo &lt;help@duckduckgo.com&gt;</string>
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
-    
+
     <string name="SavedFeedEmptyTitle">Non hai storie salvate</string>
     <string name="SavedFeedEmptySubTitle">Puoi salvare le storie nel menu azioni della barra di ricerca.</string>
     <string name="SavedResultsEmptyTitle">Non hai risultati salvati</string>
     <string name="SavedResultsEmptySubTitle">Puoi salvare i risultati di ricerca nel menu azioni della barra di ricerca.</string>
-    
+
     <string name="MoreMenuTitle">Opzioni pagina</string>
-    
+
     <string name="OpenInExternalBrowser">Apri in un browser esterno</string>
     <string name="ConfirmExternalBrowser">Conferma richiesta</string>
-    
+
     <string name="ChangingFontSize">Modifica dimensione caratteri&#8230;</string>
 
 
@@ -124,7 +124,7 @@
         AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
     <string name="crash_dialog_comment_prompt">Tuoi commenti: </string>
     <string name="crash_dialog_ok_toast">Grazie per l\'aiuto!</string>
-    
+
     <string name="ErrorAppNotFound">Applicazione non trovata</string>
     <string name="ErrorActivityNotFound">Nessuna attività correlata trovata!</string>
     <string name="ErrorDownloadFailed">Scaricamento fallito!</string>
@@ -132,12 +132,12 @@
 
     <string name="ToastSchemeNotSupported">Impossibile scaricare il file</string>
     <string name="ToastDownloadManagerUnavailable">Impossibile scaricare il file</string>
-    
+
     <string name="InfoReadStoriesFromCache">Connessione fallita! Storie recuperate dalla cache&#8230;</string>
     <string name="DefaultsSetToast">Fonti predefinite ripristinate.</string>
     <string name="SuggestSourceToast">Da implementare.</string>
     <string name="Loading">Caricamento&#8230;</string>
-    
+
     <string name="SummaryWaterCooler">
         Queste fonti creano un flusso di storie interessanti che non trovi nelle normali app di notizie.
         Tutte le fonti provengono da feed speciali tra cui le \"più condivise\" o le \"più votate.\"
@@ -146,9 +146,9 @@
     </string>
 
     <string name="WaterCoolerSources">Storie</string>
-    
+
     <string name="InformHistory"><i>Salva recenti</i> è disabilitato. Puoi attivarlo in <i>Impostazioni</i>.</string>
-    
+
     <string name="Continue">Continua</string>
     <string name="Retry">Riprova</string>
     <string name="ErrorFeedTitle">Errore: richiesta feed</string>
@@ -158,34 +158,34 @@
     <string name="Apply">Applica</string>
     <string name="Cancel">Annulla</string>
     <string name="NoChange">Nessuna modifica</string>
-    
+
     <string name="OnlyOnPhone">Solo sul telefono</string>
     <string name="SelectAppToSend">Seleziona applicazione per l\'invio</string>
-    
+
     <string name="ReadabilityOn">Leggibilità on</string>
     <string name="ReadabilityOff">Leggibilità off</string>
-    
+
     <string name="SavedSearches">Ricerche salvate</string>
     <string name="SavedStories">Storie salvate</string>
     <string name="StoryOptionsTitle">Opzioni storia</string>
     <string name="SearchOptionsTitle">Opzioni ricerca</string>
     <string name="PageOptionsTitle">Opzioni pagina</string>
-    
+
     <string name="ToastUnSaveStory">La storia è stata rimossa dalle tue storie salvate.</string>
     <string name="ToastUnSaveSearch">La ricerca è stata rimossa dalle tue ricerche salvate.</string>
     <string name="ToastSaveStory">La storia è stata salvata.</string>
     <string name="ToastSaveSearch">La ricerca è stata salvata.</string>
     <string name="ToastDeleteStoryInHistory">La storia è stata rimossa dalla tua cronologia.</string>
     <string name="ToastDeleteUrlInHistory">L\'url è stato rimosso dalla tua cronologia.</string>
-    
+
     <string name="WelcomeHeader">Ti presentiamo</string>
     <string name="WelcomeTitle">DuckDuckGo Search &amp; Stories</string>
     <string name="WelcomeDescription">
         Cerca anonimamente.\nTrova immediatamente.\nResta informato.</string>
     <string name="GetStarted">Inizia</string>
-    
+
     <string name="BangButtonExplanation">Cercare sugli altri siti è facile con i comandi !bang.</string>
-    
+
     <string name="LeftRecentSearches">Ricerche recenti</string>
     <string name="LeftRecentStories">Storie recenti</string>
     <string name="NewSources">Abbiamo aggiunto alcune nuove fonti interessanti!</string>
@@ -257,7 +257,7 @@
     <string name="action_forward">Avanti</string>
     <string name="action_close">Chiudi</string>
     <string name="remove">Rimuovi</string>
-    
+
 
 
 
@@ -291,9 +291,9 @@
     <string name="sha256_fingerprint">Impronta digitale SHA-256:</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
     <string name="sha1_fingerprint">Impronta digitale SHA-1:</string>
-    
+
     <string name="WarnSSLTitle">Attenzione: certificato SSL</string>
     <string name="WarnSSLDetail">Il certificato SSL del server non è nella lista fidata. 
         Puoi scegliere se continuare o annullare la richiesta.</string>
-    
+
 </resources>
