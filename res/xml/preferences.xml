@@ -19,6 +19,13 @@
             android:entries="@array/useExternalBrowserArray"
             android:entryValues="@array/useExternalBrowserValues"/>
 
+        <CheckBoxPreference
+            android:title="@string/PrefSearchInApp"
+            android:summaryOn="@string/PrefSearchInAppSummary"
+            android:summaryOff="@string/PrefSearchInAppSummary"
+            android:key="searchInApp"
+            android:defaultValue="false" />
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/PrefGroupStories">
