@@ -258,9 +258,11 @@
     <string name="action_close">Close</string>
     <string name="remove">Remove</string>
 
-
-
-
+    <string name="orbot_install_title">Install Orbot</string>
+    <string name="orbot_install_message">You must have Orbot installed and activated to proxy traffic through it. Would you like to install it?</string>
+    <string name="orbot_start_title">Start Orbot</string>
+    <string name="orbot_start_message">Orbot doesn\'t appear to be running. Would you like to start it up and connect to Tor?</string>
+    <string name="orbot_connected">Connected to Tor</string>
     
     <!-- SSL Certificate dialogs -->
     <!-- Title for an SSL Certificate dialog -->

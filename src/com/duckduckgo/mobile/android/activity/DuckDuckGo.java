@@ -2,6 +2,7 @@ package com.duckduckgo.mobile.android.activity;
 
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
@@ -109,6 +110,8 @@ import com.duckduckgo.mobile.android.views.webview.DDGWebView;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
+
+import info.guardianproject.netcipher.proxy.OrbotHelper;
 
 public class DuckDuckGo extends AppCompatActivity {
 	protected final String TAG = "DuckDuckGo";
@@ -542,6 +545,7 @@ public class DuckDuckGo extends AppCompatActivity {
 	public void onResume() {
 		super.onResume();
         Log.d(TAG, "on resume");
+        registerReceiver(DDGControlVar.mDuckDuckGoContainer.torIntegration.orbotReceiver, new IntentFilter(OrbotHelper.ACTION_STATUS));
 		
         DDGUtils.displayStats.refreshStats(this);
 
@@ -574,6 +578,7 @@ public class DuckDuckGo extends AppCompatActivity {
 	public void onPause() {
 		super.onPause();
         Log.d(TAG, "on pause");
+        unregisterReceiver(DDGControlVar.mDuckDuckGoContainer.torIntegration.orbotReceiver);
         canCommitFragmentSafely = false;
 
 

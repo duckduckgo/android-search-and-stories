@@ -3,14 +3,22 @@ package com.duckduckgo.mobile.android.util;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.webkit.WebView;
+import android.widget.Toast;
+
+import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.events.OrbotConnectedEvent;
 import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
-import info.guardianproject.onionkit.ui.OrbotHelper;
-import info.guardianproject.onionkit.web.WebkitProxy;
+
+import info.guardianproject.netcipher.proxy.OrbotHelper;
+import info.guardianproject.netcipher.web.WebkitProxy;
 
 /**
  * This class implements methods for Tor integration, such as setting and resetting proxy.
@@ -19,14 +27,24 @@ public class TorIntegration {
 
     public static final int JELLY_BEAN_MR2 = 18;
     private final Activity context;
-    private final OrbotHelper orbotHelper;
     private Dialog dialogOrbotInstall = null;
     private Dialog dialogOrbotStart = null;
 
+    private String orbotStatus = OrbotHelper.STATUS_OFF;
+
+    public BroadcastReceiver orbotReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            orbotStatus = intent.getStringExtra(OrbotHelper.EXTRA_STATUS);
+            if(isOrbotRunning()) {
+                Toast.makeText(context, R.string.orbot_connected, Toast.LENGTH_SHORT).show();
+                BusProvider.getInstance().post(new OrbotConnectedEvent());
+            }
+        }
+    };
 
     public TorIntegration(Activity context){
         this.context = context;
-        orbotHelper = new OrbotHelper(this.context);
     }
 
     public boolean prepareTorSettings(){
@@ -44,6 +62,7 @@ public class TorIntegration {
             requestOrbotInstallAndStart();
         }
         else{
+            orbotStatus = OrbotHelper.STATUS_OFF;
             resetProxy();
         }
         return true;
@@ -85,10 +104,10 @@ public class TorIntegration {
     }
 
     private void requestOrbotInstallAndStart() {
-        if (!orbotHelper.isOrbotInstalled()){
+        if (!OrbotHelper.isOrbotInstalled(context)){
             promptToInstall();
         }
-        else if (!orbotHelper.isOrbotRunning()){
+        else if (!isOrbotRunning()){
             requestOrbotStart();
         }
     }
@@ -113,13 +132,11 @@ public class TorIntegration {
     /**
      * This method is same as OrbotHelper.promptToInstall except dismisses the previous dialogs and stores the reference of new one.
      */
-    public void promptToInstall()
-    {
-        String uriMarket = context.getString(info.guardianproject.onionkit.R.string.market_orbot);
+    public void promptToInstall() {
         // show dialog - install from market, f-droid or direct APK
-        dialogOrbotInstall = showDownloadDialog(context.getString(info.guardianproject.onionkit.R.string.install_orbot_),
-                context.getString(info.guardianproject.onionkit.R.string.you_must_have_orbot),
-                context.getString(info.guardianproject.onionkit.R.string.yes), context.getString(info.guardianproject.onionkit.R.string.no), uriMarket);
+        dialogOrbotInstall = showDownloadDialog(context.getString(R.string.orbot_install_title),
+                context.getString(R.string.orbot_install_message),
+                context.getString(R.string.Yes), context.getString(R.string.No));
     }
 
     /**
@@ -127,16 +144,14 @@ public class TorIntegration {
      * @return AlertDialog instance which can be used later to dismiss when activity is destroying
      */
     private AlertDialog showDownloadDialog(CharSequence stringTitle, CharSequence stringMessage, CharSequence stringButtonYes,
-                                           CharSequence stringButtonNo, final String uriString) {
+                                           CharSequence stringButtonNo) {
         AlertDialog.Builder downloadDialog = new AlertDialog.Builder(context);
         downloadDialog.setTitle(stringTitle);
         downloadDialog.setMessage(stringMessage);
         downloadDialog.setPositiveButton(stringButtonYes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Uri uri = Uri.parse(uriString);
-                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-                context.startActivity(intent);
+                OrbotHelper.get(context).installOrbot(context);
             }
         });
         downloadDialog.setNegativeButton(stringButtonNo, new DialogInterface.OnClickListener() {
@@ -155,25 +170,35 @@ public class TorIntegration {
             dialogOrbotStart = null;
         }
     }
-    public void requestOrbotStart()
-    {
+    public void requestOrbotStart() {
         dismissOrbotStartDialog();
         AlertDialog.Builder downloadDialog = new AlertDialog.Builder(context);
-        downloadDialog.setTitle(info.guardianproject.onionkit.R.string.start_orbot_);
+        downloadDialog.setTitle(R.string.orbot_start_title);
         downloadDialog
-                .setMessage(info.guardianproject.onionkit.R.string.orbot_doesn_t_appear_to_be_running_would_you_like_to_start_it_up_and_connect_to_tor_);
-        downloadDialog.setPositiveButton(info.guardianproject.onionkit.R.string.yes, new DialogInterface.OnClickListener() {
+                .setMessage(R.string.orbot_start_message);
+        downloadDialog.setPositiveButton(R.string.Yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                context.startActivityForResult(orbotHelper.getOrbotStartIntent(), 1);
+                startOrbot();
             }
         });
-        downloadDialog.setNegativeButton(info.guardianproject.onionkit.R.string.no, new DialogInterface.OnClickListener() {
+        downloadDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
             }
         });
         dialogOrbotStart = downloadDialog.show();
+    }
+
+    private void startOrbot() {
+        boolean result = OrbotHelper.get(context).init();
+        if(!result) {
+            promptToInstall();
+        }
+    }
+
+    private boolean isOrbotRunning() {
+        return orbotStatus.equals(OrbotHelper.STATUS_ON);
     }
     public boolean isTorSettingEnabled() {
         return PreferencesManager.getEnableTor();
@@ -185,8 +210,8 @@ public class TorIntegration {
 
     private boolean isTorEnabledAndOrbotRunning(){
         return isTorSettingEnabled() &&
-                orbotHelper.isOrbotInstalled() &&
-                orbotHelper.isOrbotRunning();
+                OrbotHelper.isOrbotInstalled(context) &&
+                (OrbotHelper.isOrbotRunning(context) || isOrbotRunning());
     }
 
     public boolean isTorSupported() {
