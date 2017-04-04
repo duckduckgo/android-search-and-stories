@@ -14,4 +14,9 @@
         <item name="android:alertDialogTheme">@style/DDGDialog</item>
         <item name="android:dialogTheme">@style/DDGDialog</item>
     </style>
+
+    <style name="DDGTheme.ClearStatusBar" parent="DDGTheme">
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
 </resources>

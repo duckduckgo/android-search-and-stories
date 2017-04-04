@@ -662,6 +662,8 @@ public class DuckDuckGo extends AppCompatActivity {
             case R.id.action_help_feedback:
                 actionHelpFeedback();
                 return true;
+            case R.id.action_onboarding:
+                startActivity(new Intent(this, OnboardingActivity.class));
             default:
                 return super.onOptionsItemSelected(item);
         }

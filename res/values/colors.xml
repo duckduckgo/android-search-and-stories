@@ -51,6 +51,11 @@
 
     <color name="overflow_menu_divider">#dddddd</color>
 
+    <color name="onboarding_privacy_background">#93c04c</color>
+    <color name="onboarding_no_ads_background">#9b6cd3</color>
+    <color name="onboarding_no_tracking_background">#f58b6b</color>
+    <color name="onboarding_right_background">#6bbbe0</color>
+
     <!-- old colors -->
 
     <color name="welcome_button">#d24e25</color>

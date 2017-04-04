@@ -33,4 +33,9 @@
           android:orderInCategory="60"
           android:showAsAction="always" />
 
+    <item android:id="@+id/action_onboarding"
+          android:title="Onboarding"
+          android:orderInCategory="70"
+          android:showAsAction="never"/>
+
 </menu>
