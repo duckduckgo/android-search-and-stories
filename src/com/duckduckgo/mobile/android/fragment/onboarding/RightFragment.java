@@ -15,12 +15,16 @@ public class RightFragment extends BaseOnboardingFragment {
 
     public static final int TITLE = R.string.right_title;
     public static final int SUBTITLE = R.string.right_subtitle;
-    public static final int IMG = R.drawable.right;
+    public static final int IMG = R.drawable.right3;
     public static final int BACKGROUND_COLOR = R.color.onboarding_right_background;
 
     public static RightFragment newInstance(int indexPosition) {
+        return newInstance(indexPosition, false);
+    }
+
+    public static RightFragment newInstance(int indexPosition, boolean isHeader) {
         RightFragment f = new RightFragment();
-        f.setArguments(createArgs(indexPosition));
+        f.setArguments(createArgs(indexPosition, isHeader));
         return f;
     }
 

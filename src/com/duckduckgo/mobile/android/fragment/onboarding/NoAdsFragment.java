@@ -15,12 +15,16 @@ public class NoAdsFragment extends BaseOnboardingFragment {
 
     public static final int TITLE = R.string.no_ads_title;
     public static final int SUBTITLE = R.string.no_ads_subtitle;
-    public static final int IMG = R.drawable.noads;
+    public static final int IMG = R.drawable.noads3;
     public static final int BACKGROUND_COLOR = R.color.onboarding_no_ads_background;
 
     public static NoAdsFragment newInstance(int indexPosition) {
+        return newInstance(indexPosition, false);
+    }
+
+    public static NoAdsFragment newInstance(int indexPosition, boolean isHeader) {
         NoAdsFragment f = new NoAdsFragment();
-        f.setArguments(createArgs(indexPosition));
+        f.setArguments(createArgs(indexPosition, isHeader));
         return f;
     }
 

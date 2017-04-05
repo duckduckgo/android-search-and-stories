@@ -20,6 +20,7 @@ import com.duckduckgo.mobile.android.R;
 public abstract class BaseOnboardingFragment extends Fragment {
 
     private static final String EXTRA_INDEX_POSITION = "index_position";
+    private static final String EXTRA_MINI_LAYOUT = "mini_layout";
 
     private FrameLayout backgroundFrameLayout;
     private TextView titleTextView;
@@ -34,7 +35,10 @@ public abstract class BaseOnboardingFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_onboarding, container, false);
+        View rootView = inflater.inflate(
+                useMiniLayout() ? R.layout.viewholder_onboarding : R.layout.fragment_onboarding,
+                container,
+                false);
         backgroundFrameLayout = (FrameLayout) rootView;
         titleTextView = (TextView) rootView.findViewById(R.id.title_text_view);
         subtitleTextView = (TextView) rootView.findViewById(R.id.subtitle_text_view);
@@ -51,10 +55,16 @@ public abstract class BaseOnboardingFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        backgroundFrameLayout.setBackgroundColor(getBackgroundColor());
+        if(!useMiniLayout()) {
+            backgroundFrameLayout.setBackgroundColor(getBackgroundColor());
+        }
         titleTextView.setText(getTitle());
         subtitleTextView.setText(getSubtitle());
         iconImageView.setImageResource(getIcon());
+    }
+
+    private boolean useMiniLayout() {
+        return getArguments().getBoolean(EXTRA_MINI_LAYOUT);
     }
 
     private int getIndexPosition() {
@@ -62,8 +72,16 @@ public abstract class BaseOnboardingFragment extends Fragment {
     }
 
     protected static Bundle createArgs(int indexPosition) {
+        return createArgs(indexPosition, false);/*
         Bundle args = new Bundle();
         args.putInt(EXTRA_INDEX_POSITION, indexPosition);
+        return args;*/
+    }
+
+    protected static Bundle createArgs(int indexPosition, boolean miniLayout) {
+        Bundle args = new Bundle();
+        args.putInt(EXTRA_INDEX_POSITION, indexPosition);
+        args.putBoolean(EXTRA_MINI_LAYOUT, miniLayout);
         return args;
     }
 }

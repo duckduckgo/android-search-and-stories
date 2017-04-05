@@ -21,21 +21,27 @@ import com.duckduckgo.mobile.android.fragment.onboarding.RightFragment;
 public class OnboardingAdapter extends FragmentPagerAdapter {
 
     private static final int NUM_PAGES = 4;
+    private boolean useMiniLayout = false;
     public OnboardingAdapter(FragmentManager fm) {
         super(fm);
+    }
+
+    public OnboardingAdapter(FragmentManager fm, boolean useMiniLayout) {
+        super(fm);
+        this.useMiniLayout = useMiniLayout;
     }
 
     @Override
     public Fragment getItem(int position) {
         switch(position) {
             case 0:
-                return PrivacyFragment.newInstance(position);
+                return PrivacyFragment.newInstance(position, useMiniLayout);
             case 1:
-                return NoAdsFragment.newInstance(position);
+                return NoAdsFragment.newInstance(position, useMiniLayout);
             case 2:
-                return NoTrackingFragment.newInstance(position);
+                return NoTrackingFragment.newInstance(position, useMiniLayout);
             case 3:
-                return RightFragment.newInstance(position);
+                return RightFragment.newInstance(position, useMiniLayout);
             default:
                 throw new IllegalArgumentException("Wrong position for Onboarding adapter: "+position);
         }

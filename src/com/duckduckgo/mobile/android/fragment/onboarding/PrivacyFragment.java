@@ -16,12 +16,16 @@ public class PrivacyFragment extends BaseOnboardingFragment {
 
     public static final int TITLE = R.string.privacy_title;
     public static final int SUBTITLE = R.string.privacy_subtitle;
-    public static final int IMG = R.drawable.privacy;
+    public static final int IMG = R.drawable.privacy3;
     public static final int BACKGROUND_COLOR = R.color.onboarding_privacy_background;
 
     public static PrivacyFragment newInstance(int indexPosition) {
+        return newInstance(indexPosition, false);
+    }
+
+    public static PrivacyFragment newInstance(int indexPosition, boolean isHeader) {
         PrivacyFragment f = new PrivacyFragment();
-        f.setArguments(createArgs(indexPosition));
+        f.setArguments(createArgs(indexPosition, isHeader));
         return f;
     }
 

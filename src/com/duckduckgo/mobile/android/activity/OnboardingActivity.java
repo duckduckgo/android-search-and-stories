@@ -3,8 +3,11 @@ package com.duckduckgo.mobile.android.activity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.OnboardingAdapter;
@@ -49,5 +52,16 @@ public class OnboardingActivity extends AppCompatActivity {
         pageIndicator = (PageIndicator) findViewById(R.id.page_indicator);
         pageIndicator.setViewPager(viewPager);
         viewPager.setPageTransformer(false, new OnboardingTransformer(backgroundColors, pageIndicator));
+        Button instructionButton = (Button) findViewById(R.id.instruction_button);
+        instructionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(OnboardingActivity.this)
+                        .setTitle("Instruction")
+                        .setMessage("Placeholder text")
+                        .setPositiveButton("Done", null);
+                builder.create().show();
+            }
+        });
     }
 }

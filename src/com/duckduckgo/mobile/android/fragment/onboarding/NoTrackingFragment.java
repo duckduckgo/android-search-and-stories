@@ -15,12 +15,16 @@ public class NoTrackingFragment extends BaseOnboardingFragment {
 
     public static final int TITLE = R.string.no_tracking_title;
     public static final int SUBTITLE = R.string.no_tracking_subtitle;
-    public static final int IMG = R.drawable.notrack;
+    public static final int IMG = R.drawable.notrack3;
     public static final int BACKGROUND_COLOR = R.color.onboarding_no_tracking_background;
 
     public static NoTrackingFragment newInstance(int indexPosition) {
+        return newInstance(indexPosition, false);
+    }
+
+    public static NoTrackingFragment newInstance(int indexPosition, boolean isHeader) {
         NoTrackingFragment f = new NoTrackingFragment();
-        f.setArguments(createArgs(indexPosition));
+        f.setArguments(createArgs(indexPosition, isHeader));
         return f;
     }
 
