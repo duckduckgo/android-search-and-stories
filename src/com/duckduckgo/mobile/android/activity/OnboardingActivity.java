@@ -13,17 +13,28 @@ import com.duckduckgo.mobile.android.fragment.onboarding.NoTrackingFragment;
 import com.duckduckgo.mobile.android.fragment.onboarding.PrivacyFragment;
 import com.duckduckgo.mobile.android.fragment.onboarding.RightFragment;
 import com.duckduckgo.mobile.android.util.OnboardingTransformer;
+import com.duckduckgo.mobile.android.views.PageIndicator;
 
 public class OnboardingActivity extends AppCompatActivity {
 
     private ViewPager viewPager;
     private FragmentPagerAdapter adapter;
+    private PageIndicator pageIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
         initUI();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(viewPager.getCurrentItem() > 0) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+            return;
+        }
+        super.onBackPressed();
     }
 
     private void initUI() {
@@ -35,6 +46,8 @@ public class OnboardingActivity extends AppCompatActivity {
                 ContextCompat.getColor(this, NoAdsFragment.BACKGROUND_COLOR),
                 ContextCompat.getColor(this, NoTrackingFragment.BACKGROUND_COLOR),
                 ContextCompat.getColor(this, RightFragment.BACKGROUND_COLOR)};
-        viewPager.setPageTransformer(false, new OnboardingTransformer(backgroundColors));
+        pageIndicator = (PageIndicator) findViewById(R.id.page_indicator);
+        pageIndicator.setViewPager(viewPager);
+        viewPager.setPageTransformer(false, new OnboardingTransformer(backgroundColors, pageIndicator));
     }
 }

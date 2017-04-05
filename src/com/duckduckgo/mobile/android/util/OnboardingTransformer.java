@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.views.PageIndicator;
 
 /**
  * Created by fgei on 4/4/17.
@@ -18,9 +19,11 @@ import com.duckduckgo.mobile.android.R;
 public class OnboardingTransformer implements ViewPager.PageTransformer {
 
     private int[] backgroundColors;
+    private PageIndicator pageIndicator;
 
-    public OnboardingTransformer(int[] backgroundColors) {
+    public OnboardingTransformer(int[] backgroundColors, PageIndicator pageIndicator) {
         this.backgroundColors = backgroundColors;
+        this.pageIndicator = pageIndicator;
     }
 
     @Override
@@ -40,6 +43,8 @@ public class OnboardingTransformer implements ViewPager.PageTransformer {
                     image.setScaleX(1 - absolutePosition);
                     image.setScaleY(1 - absolutePosition);
                 }
+                pageIndicator.setPositionSelected(pageIndex - 1, 1 -absolutePosition);
+                pageIndicator.setPositionSelected(pageIndex, absolutePosition);
             } else if(position < 0) {
                 int leftColor = backgroundColors[pageIndex];
                 int rightColor = backgroundColors[pageIndex + 1];
@@ -50,6 +55,8 @@ public class OnboardingTransformer implements ViewPager.PageTransformer {
                     image.setScaleX(1 - absolutePosition);
                     image.setScaleY(1 - absolutePosition);
                 }
+                pageIndicator.setPositionSelected(pageIndex, absolutePosition);
+                pageIndicator.setPositionSelected(pageIndex + 1, 1 - absolutePosition);
             } else {
                 page.setBackgroundColor(backgroundColors[pageIndex]);
             }

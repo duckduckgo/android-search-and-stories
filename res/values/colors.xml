@@ -56,6 +56,9 @@
     <color name="onboarding_no_tracking_background">#f58b6b</color>
     <color name="onboarding_right_background">#6bbbe0</color>
 
+    <color name="page_indicator_selected">#ffffff</color>
+    <color name="page_indicator_unselected">#64000000</color>
+
     <!-- old colors -->
 
     <color name="welcome_button">#d24e25</color>
