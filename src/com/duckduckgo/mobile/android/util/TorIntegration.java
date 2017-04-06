@@ -171,11 +171,12 @@ public class TorIntegration {
         }
     }
     public void requestOrbotStart() {
+        boolean dialogIsAlreadyShown = dialogOrbotStart != null;
         dismissOrbotStartDialog();
         AlertDialog.Builder downloadDialog = new AlertDialog.Builder(context);
         downloadDialog.setTitle(R.string.orbot_start_title);
         downloadDialog
-                .setMessage(R.string.orbot_start_message);
+                .setMessage(dialogIsAlreadyShown ? R.string.orbot_start_message_manually : R.string.orbot_start_message);
         downloadDialog.setPositiveButton(R.string.Yes, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -185,20 +186,23 @@ public class TorIntegration {
         downloadDialog.setNegativeButton(R.string.No, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                dialogOrbotStart = null;
             }
         });
         dialogOrbotStart = downloadDialog.show();
     }
 
     private void startOrbot() {
+        OrbotHelper.requestStartTor(context);
+        /*
         boolean result = OrbotHelper.get(context).init();
         if(!result) {
             promptToInstall();
-        }
+        }*/
     }
 
     private boolean isOrbotRunning() {
-        return orbotStatus.equals(OrbotHelper.STATUS_ON);
+        return OrbotHelper.isOrbotRunning(context) || orbotStatus.equals(OrbotHelper.STATUS_ON);
     }
     public boolean isTorSettingEnabled() {
         return PreferencesManager.getEnableTor();
@@ -211,7 +215,7 @@ public class TorIntegration {
     private boolean isTorEnabledAndOrbotRunning(){
         return isTorSettingEnabled() &&
                 OrbotHelper.isOrbotInstalled(context) &&
-                (OrbotHelper.isOrbotRunning(context) || isOrbotRunning());
+                isOrbotRunning();
     }
 
     public boolean isTorSupported() {
