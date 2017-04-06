@@ -15,6 +15,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
+        <com.duckduckgo.mobile.android.views.PageIndicator
+            android:id="@+id/page_indicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="19dp"
+            android:layout_marginStart="275dp"
+            android:layout_marginLeft="275dp"/>
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/instruction_button"
             android:layout_width="match_parent"

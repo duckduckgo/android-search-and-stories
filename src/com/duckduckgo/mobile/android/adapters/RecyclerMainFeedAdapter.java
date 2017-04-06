@@ -31,6 +31,7 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
+import com.duckduckgo.mobile.android.views.PageIndicator;
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
@@ -79,6 +80,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         public final ViewPager viewPager;
         public final FragmentPagerAdapter adapter;
+        public final PageIndicator pageIndicator;
         public final Button button;
 
         public HeaderViewHolder(View itemView) {
@@ -87,6 +89,9 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
             viewPager = (ViewPager) itemView.findViewById(R.id.view_pager);
             adapter = new OnboardingAdapter(fragmentManager, true);
             viewPager.setAdapter(adapter);
+            pageIndicator = (PageIndicator) itemView.findViewById(R.id.page_indicator);
+            pageIndicator.setViewPager(viewPager);
+            pageIndicator.setVisibility(View.GONE);
         }
     }
 
