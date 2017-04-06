@@ -493,11 +493,12 @@ public class DuckDuckGo extends AppCompatActivity {
 	}
 
     private void processIntent(Intent intent) {
-        if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+        if (Intent.ACTION_WEB_SEARCH.equals(intent.getAction())) {
             intent.setAction(Intent.ACTION_MAIN);
             String query = intent.getStringExtra(SearchManager.QUERY);
             DDGActionBarManager.getInstance().setSearchBarText(query);
-            BusProvider.getInstance().post(new WebViewSearchWebTermEvent(query));
+            // BusProvider.getInstance().post(new WebViewSearchWebTermEvent(query));
+            searchOrGoToUrl(query);
         }
         else if(intent.getBooleanExtra("widget", false)) {
             if(!getSearchField().getText().toString().equals("")) {

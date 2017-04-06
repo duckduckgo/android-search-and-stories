@@ -4,9 +4,9 @@
     <string name="SearchString">Søk DuckDuckGo&#8230;</string>
     <string name="SettingsButtonContentDescription">Instillingar</string>
     <string name="HomeButtonContentDescription">Heim</string>
-    
+
     <string name="search_hint">Søk&#8230;</string>
-    
+
     <string name="PrefGroupGeneral">Generelt</string>
     <string name="PrefGroupStories">Historier</string>
     <string name="PrefGroupSearch">Søk</string>
@@ -20,9 +20,9 @@
     <string name="PrefStartScreen">Heimeskjerm</string>
     <string name="PrefStories">Historier</string>
     <string name="PrefWaterCoolerStories">Historier</string>
-	<string name="PrefSavedItems">@string/favorites</string>
+    <string name="PrefSavedItems">@string/favorites</string>
     <string name="PrefDuckMode">Søk</string>
-	<string name="PrefRecentSearch">@string/recents</string>
+    <string name="PrefRecentSearch">@string/recents</string>
     <string name="PrefRecordHistory">Lagre Nylege</string>
     <string name="PrefClearHistory">Fjern Nylege</string>
     <string name="PrefRecordCookies">Lagre Cookies</string>
@@ -41,15 +41,15 @@
     <string name="PrefClearCacheCookiesWeekly">Vekeleg</string>
     <string name="PrefClearCacheCookiesMonthly">Månadleg</string>
     <string name="PrefSendFeedback">Gje Tilbakemelding</string>
-	<string name="PrefAbout">Om</string>
+    <string name="PrefAbout">Om</string>
     <string name="PrefRate">Vurder App</string>
     <string name="PrefAppSearch">Inkluder Appar</string>
     <string name="PrefMainFontSize">Skriftstorlei</string>
     <string name="PrefEnableAcra">Automatisk kræsjrapportering</string>
     <string name="PrefAcraDisabled">Automatisk kræsjrapportering deaktivert</string>
     <string name="PrefAcraEnabled">Automatisk kræsjrapportering aktivert</string>
-	<string name="PrefEnableJavascript">Aktiver Javascript</string>
-    
+    <string name="PrefEnableJavascript">Aktiver JavaScript</string>
+
     <string name="PrefWaterCooler">Historier</string>
     <string name="PrefAutocomplete">Autofullfør</string>
     <string name="PrefSearchResults">Søkeresultat</string>
@@ -57,59 +57,59 @@
 
     <string name="PrefAutoUpdate">Automatisk Oppdatering</string>
     <string name="PrefReadable">Lesbarheit</string>
-	<string name="PrefReadableSummary">På, når tilgjengeleg</string>
+    <string name="PrefReadableSummary">På, når tilgjengeleg</string>
     <string name="PrefGroupTor">Tor</string>
     <string name="PrefEnableTor">Aktiver Tor</string>
     <string name="PrefCheckOrbotStatus">Kontroller Orbot-status</string>
     <string name="OrbotStatusOkTitle">Orbot-status</string>
     <string name="OrbotStatusOkMessage">Orbot ser ut til å fungere fint!</string>
     <string name="OrbotCheckSite">https://check.torproject.org</string>
-    
+
     <string name="ShareStory">Del Historie</string>
     <string name="ShareSearch">Del Søk</string>
     <string name="SharePage">Del Side</string>
-    
+
     <string name="RegularShareFormat">%1$s via DuckDuckGo for Android</string>
     <string name="TwitterShareFormat">%1$s via @duckduckgo for Android</string>
-    
+
     <string name="Yes">Ja</string>
     <string name="No">Nei</string>
-    
+
     <string name="Save">Lagre</string>
     <string name="Unsave">Angre</string>
     <string name="Share">Del</string>
     <string name="Refresh">Oppdater</string>
     <string name="Delete">Slett</string>
-    
+
     <string name="LeftStories">Historier</string>
     <string name="LeftSaved">Lagra</string>
     <string name="LeftSettings">Instillingar</string>
     <string name="LeftRecent">Nylege</string>
     <string name="LeftRecentQueries">Nylege Førespurnadar</string>
-    
+
     <string name="Confirm">Bekreft</string>
     <string name="ConfirmClearHistory">All søkehistorikk vil bli sletta. Er du sikker?</string>
     <string name="ConfirmClearCookies">Alle cookies vil bli sletta. Er du sikker?</string>
     <string name="ConfirmClearCacheAndCookies">Nettlesarmellomlager vil bli sletta. Er du sikker?</string>
-    
+
     <string name="Default">Standard</string>
     <string name="Defaults">Standard</string>
     <string name="SuggestSource">Føreslå ei kjelde</string>
     <string name="SuggestedSources">Inkluder desse kjeldene:</string>
-    
+
     <string name="FeedbackTo">DuckDuckGo Tilbakemelding &lt;help@duckduckgo.com&gt;</string>
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
-    
+
     <string name="SavedFeedEmptyTitle">Du har ingen lagra historier.</string>
     <string name="SavedFeedEmptySubTitle">I søkefeltets meny kan du lagre historier.</string>
     <string name="SavedResultsEmptyTitle">Du har ingen lagra resultat.</string>
     <string name="SavedResultsEmptySubTitle">I søkefeltets meny kan du lagre resultat.</string>
-    
+
     <string name="MoreMenuTitle">Sideval</string>
-    
+
     <string name="OpenInExternalBrowser">Opne i Ekstern Nettlesar</string>
     <string name="ConfirmExternalBrowser">Bekreft</string>
-    
+
     <string name="ChangingFontSize">Endre Skriftstorleik&#8230;</string>
 
 
@@ -123,31 +123,31 @@
         AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
     <string name="crash_dialog_comment_prompt">Kommentar: </string>
     <string name="crash_dialog_ok_toast">Takk for hjelpa!</string>
-    
+
     <string name="ErrorAppNotFound">Applikasjon ikkje funne</string>
     <string name="ErrorActivityNotFound">Ingen relatert aktivitet funne!</string>
     <string name="ErrorDownloadFailed">Nedlasting feila!</string>
     <string name="ErrorDownloadOpenFail">Nedlasta fil kunne ikkje opnast!</string>
 
     <string name="ToastSchemeNotSupported">Kunne ikkje laste ned fil</string>
-	<string name="ToastDownloadManagerUnavailable">Kunne ikkje laste ned fil</string>
-    
+    <string name="ToastDownloadManagerUnavailable">Kunne ikkje laste ned fil</string>
+
     <string name="InfoReadStoriesFromCache">Tilkopling feila! Historier henta frå mellomlager&#8230;</string>
     <string name="DefaultsSetToast">Kjelder tilbakestilt til standard.</string>
     <string name="SuggestSourceToast">Vil bli implementert.</string>
     <string name="Loading">Lastar&#8230;</string>
-    
+
     <string name="SummaryWaterCooler">
         Desse kjeldene lagar ein straum av interessante historier som du ikkje vil finne i vanlege nyhende applikasjonar. 
-		Alle desse kjeldene er spesielle straumar som \"mest delt\" eller \"mest oppvotert\".
+        Alle desse kjeldene er spesielle straumar som \"mest delt\" eller \"mest oppvotert\".
         Ta ein kikk når du har litt tid til overs!
         Merk: Du kan fjerne Historier frå heimeskjermen via \"Heimeskjerm\" instillinga.
     </string>
 
     <string name="WaterCoolerSources">Historier</string>
-    
+
     <string name="InformHistory"><i>Lagre nylege</i> er deaktivert. Du kan aktivere det i <i>Instillingar.</i></string>
-    
+
     <string name="Continue">Fortsett</string>
     <string name="Retry">Prøv igjen</string>
     <string name="ErrorFeedTitle">Feil: Straumførespurnad</string>
@@ -157,34 +157,34 @@
     <string name="Apply">Bruk Endringar</string>
     <string name="Cancel">Avbryt</string>
     <string name="NoChange">Ingen Forandring</string>
-    
+
     <string name="OnlyOnPhone">Berre på Telefon</string>
     <string name="SelectAppToSend">Velg applikasjon å sende</string>
-    
+
     <string name="ReadabilityOn">Lesbarheit På</string>
     <string name="ReadabilityOff">Lesbarheit Av</string>
-    
+
     <string name="SavedSearches">Lagra Søk</string>
     <string name="SavedStories">Lagra Historier</string>
     <string name="StoryOptionsTitle">Historieval</string>
     <string name="SearchOptionsTitle">Søkeval</string>
     <string name="PageOptionsTitle">Sideval</string>
-    
+
     <string name="ToastUnSaveStory">Historia er fjerna frå dine lagra historier.</string>
     <string name="ToastUnSaveSearch">Søket har blitt fjerna frå dine lagra søk.</string>
     <string name="ToastSaveStory">Historia di er lagra.</string>
     <string name="ToastSaveSearch">Søket ditt er lagra.</string>
     <string name="ToastDeleteStoryInHistory">Historia er fjerna frå historikken din.</string>
     <string name="ToastDeleteUrlInHistory">URLen er fjerna frå historikken din.</string>
-    
+
     <string name="WelcomeHeader">Introduserer</string>
     <string name="WelcomeTitle">DuckDuckGo Søk &amp; Historier</string>
     <string name="WelcomeDescription">
         Søk Anonymt.\nFinn umiddelbart.\nHald deg Oppdatert.</string>
     <string name="GetStarted">Kom i gang</string>
-    
+
     <string name="BangButtonExplanation">Søking på andre sider er enkelt med !bang kommandoar.</string>
-    
+
     <string name="LeftRecentSearches">Nylege Søk</string>
     <string name="LeftRecentStories">Nylege Historier</string>
     <string name="NewSources">Vi har lagt til nokre kule nye historiekjelder!</string>
@@ -197,7 +197,7 @@
     <string name="pull_to_refresh_release_label">Slepp for å oppdatere</string>
     <string name="pull_to_refresh_refreshing_label">Laddar&#8230;</string>
 
-    
+
     <!--new strings--><!--
     <string name="add_favourites">Legg til i Favorittar</string>
     <string name="remove_favourites">Fjern frå Favorittar</string>
@@ -264,7 +264,7 @@
 
 
 
-    
+
     <!-- SSL Certificate dialogs -->
     <!-- Title for an SSL Certificate dialog -->
     <string name="ssl_certificate">Tryggleikssertifikat</string>
@@ -294,9 +294,9 @@
     <string name="sha256_fingerprint">SHA-256 fingeravtrykk:</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
     <string name="sha1_fingerprint">SHA-1 fingeravtrykk:</string>
-    
+
     <string name="WarnSSLTitle">Åtvaring: SSL sertifikat</string>
     <string name="WarnSSLDetail">SSL sertifikatet til serveren er ikkje lista som tiltrudd. 
         Du kan framleis velge å fortsette eller avbryte førespurnaden.</string>
-    
+
 </resources>

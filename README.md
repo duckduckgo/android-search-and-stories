@@ -18,7 +18,7 @@ We're currently evaluating a variety of CI systems and suggested development env
 - security fixes
 - improving the test suite
 
-Please check out the [issue tracker](https://github.com/duckduckgo/android/issues) and [contributing](https://github.com/duckduckgo/android/blob/master/CONTRIBUTING.md) guidelines.
+Please check out the [issue tracker](https://github.com/duckduckgo/android-search-and-stories/issues) and [contributing](https://github.com/duckduckgo/android-search-and-stories/blob/master/CONTRIBUTING.md) guidelines.
 
 ## License
 DuckDuckGo Search & Stories is distributed under the Apache 2.0 [license](https://github.com/duckduckgo/android/blob/master/LICENSE).

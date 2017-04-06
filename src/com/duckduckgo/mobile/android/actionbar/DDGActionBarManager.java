@@ -672,10 +672,12 @@ public final class DDGActionBarManager implements View.OnClickListener, View.OnL
             text = "";
         }
 
+        /* Disabled because it interferes with ACTION_WEB_SEARCH intent
         if(DDGControlVar.homeScreenShowing) {
             DDGControlVar.mDuckDuckGoContainer.currentUrl = "";
             return;
         }
+        */
 
         DDGControlVar.mDuckDuckGoContainer.currentUrl = text;
 
