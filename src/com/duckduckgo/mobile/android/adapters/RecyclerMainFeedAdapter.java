@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -16,12 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.bus.BusProvider;
+import com.duckduckgo.mobile.android.dialogs.InstructionDialogFragment;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.SourceFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
@@ -30,8 +32,10 @@ import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemSelectedEvent
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.OnboardingTransformer;
+import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
-import com.duckduckgo.mobile.android.views.PageIndicator;
+import com.duckduckgo.mobile.android.views.pageindicator.BannerOnboardingPageIndicator;
 import com.squareup.picasso.Picasso;
 
 import java.net.MalformedURLException;
@@ -45,6 +49,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
     private static final int ITEM_TYPE_FEED = 0;
     private static final int ITEM_TYPE_HEADER = 1;
 
+    private boolean isOnboardingBannerVisible = true;
     private Context context;
     private final LayoutInflater inflater;
     private FragmentManager fragmentManager;
@@ -80,24 +85,27 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         public final ViewPager viewPager;
         public final FragmentPagerAdapter adapter;
-        public final PageIndicator pageIndicator;
-        public final Button button;
+        public final BannerOnboardingPageIndicator pageIndicator;
+        public final Button instructionbutton;
+        public final ImageButton dismissImageButton;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
-            button = (Button) itemView.findViewById(R.id.instruction_button);
+            instructionbutton = (Button) itemView.findViewById(R.id.instruction_button);
+            dismissImageButton = (ImageButton) itemView.findViewById(R.id.dismiss_image_button);
             viewPager = (ViewPager) itemView.findViewById(R.id.view_pager);
-            adapter = new OnboardingAdapter(fragmentManager, true);
+            adapter = new BannerOnboardingAdapter(fragmentManager);
             viewPager.setAdapter(adapter);
-            pageIndicator = (PageIndicator) itemView.findViewById(R.id.page_indicator);
+            viewPager.setPageTransformer(false, new OnboardingTransformer());
+            pageIndicator = (BannerOnboardingPageIndicator) itemView.findViewById(R.id.page_indicator);
             pageIndicator.setViewPager(viewPager);
-            pageIndicator.setVisibility(View.GONE);
         }
     }
 
     public RecyclerMainFeedAdapter(Context context, FragmentManager fragmentManager) {
         this.context = context;
         this.fragmentManager = fragmentManager;
+        //isOnboardingBannerVisible = !PreferencesManager.isOnboardingBannerDismissed();
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         data = new ArrayList<>();
 
@@ -114,22 +122,24 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        if(position == 0) {
+        if(position == 0 && isOnboardingBannerVisible) {
             //that's the header;
             final HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-            headerHolder.button.setOnClickListener(new View.OnClickListener() {
+            headerHolder.instructionbutton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context)
-                            .setTitle("Use DuckDucko")
-                            .setMessage("to do")
-                            .setPositiveButton("Done", null);
-                    builder.create().show();
+                    InstructionDialogFragment.newInstance().show(fragmentManager, InstructionDialogFragment.TAG);
+                }
+            });
+            headerHolder.dismissImageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismissOnboardingBanner();
                 }
             });
             return;
         }
-        final FeedObject feed = data.get(position);
+        final FeedObject feed = getItem(position);//data.get(position - 1); //header
 
         final FeedViewHolder feedHolder = (FeedViewHolder) holder;
 
@@ -244,19 +254,32 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     public FeedObject getItem(int position) {
-        return data.get(position);
+        int index = position;
+        if(isOnboardingBannerVisible) index -= 1;
+        return data.get(index);
+        //return data.get(position - 1);//header
     }
 
     @Override
     public int getItemCount() {
-        return data.size() + 1; //header
+        int size = data.size();
+        if(isOnboardingBannerVisible) return size+ 1;
+        return size;
+        //return data.size() + 1; //header
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0) return ITEM_TYPE_HEADER;
+        if(position == 0 && isOnboardingBannerVisible) return ITEM_TYPE_HEADER;
         return ITEM_TYPE_FEED;
         //return super.getItemViewType(position);
+    }
+
+    private void dismissOnboardingBanner() {
+        //PreferencesManager.setOnboardingBannerDismissed();
+        isOnboardingBannerVisible = false;
+        notifyItemRemoved(0);
+
     }
 
     private void showMenu(View anchor, FeedObject feed) {

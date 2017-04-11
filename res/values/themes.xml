@@ -5,14 +5,18 @@
 
     </style>
 
-    <style name="DDGTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:windowBackground">@drawable/launcher_window_background</item>
+    <style name="DDGTheme.Base" parent="Theme.AppCompat.Light.NoActionBar"><!--
+        <item name="android:windowBackground">@drawable/launcher_window_background</item>-->
         <item name="actionModeBackground">@color/action_mode_background</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorPrimary</item>
         <item name="actionOverflowButtonStyle">@style/OverflowButton</item>
         <item name="popUp">@style/DDGPopup</item>
+    </style>
+
+    <style name="DDGTheme.Launcher" parent="DDGTheme">
+        <item name="android:windowBackground">@drawable/launcher_window_background</item>
     </style>
 
     <style name="DDGPopup" parent="Widget.AppCompat.PopupMenu"><!--PopupMenu-->

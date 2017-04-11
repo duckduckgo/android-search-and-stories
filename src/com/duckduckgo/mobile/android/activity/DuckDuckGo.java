@@ -162,6 +162,10 @@ public class DuckDuckGo extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.DDGTheme);
+        if(!PreferencesManager.getHasShownOnboarding()) {
+            startActivity(OnboardingActivity.getStartIntent(this));
+        }
         Log.d(TAG, "on create");
         canCommitFragmentSafely = true;
 

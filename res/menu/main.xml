@@ -5,37 +5,38 @@
     <item android:id="@+id/action_stories"
           android:title="@string/action_stories"
           android:orderInCategory="10"
-          android:showAsAction="never" />
+          app:showAsAction="never" />
 
     <item android:id="@+id/action_favorites"
           android:title="@string/action_favorites"
           android:orderInCategory="20"
-          android:showAsAction="never" />
+          app:showAsAction="never" />
 
     <item android:id="@+id/action_recents"
           android:title="@string/action_recents"
           android:orderInCategory="30"
-          android:showAsAction="never" />
+          app:showAsAction="never" />
 
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"
           android:orderInCategory="40"
-          android:showAsAction="never" />
+          app:showAsAction="never" />
 
     <item android:id="@+id/action_help_feedback"
           android:title="@string/action_help_feedback"
           android:orderInCategory="50"
-          android:showAsAction="never" />
+          app:showAsAction="never" />
 
     <item android:id="@+id/action_test" android:visible="false"
           android:title="test"
           style="@style/Test"
           android:orderInCategory="60"
-          android:showAsAction="always" />
+          app:showAsAction="always" />
 
     <item android:id="@+id/action_onboarding"
           android:title="Onboarding"
           android:orderInCategory="70"
-          android:showAsAction="never"/>
+          android:visible="false"
+          app:showAsAction="never"/>
 
 </menu>

@@ -15,14 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <com.duckduckgo.mobile.android.views.PageIndicator
-            android:id="@+id/page_indicator"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="19dp"
-            android:layout_marginStart="275dp"
-            android:layout_marginLeft="275dp"/>
-
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/instruction_button"
             android:layout_width="match_parent"
@@ -34,7 +26,33 @@
             android:layout_marginRight="32dp"
             android:text="Add to Chrome"
             android:textColor="#ffffff"
-            app:backgroundTint="#66b3ef"/>
+            app:backgroundTint="@color/onboarding_accent"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_gravity="top|end"
+            android:gravity="center_vertical">
+
+            <com.duckduckgo.mobile.android.views.pageindicator.BannerOnboardingPageIndicator
+                android:id="@+id/page_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/><!--
+                android:layout_gravity="top|end"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="30dp"
+                android:layout_marginRight="30dp"-->
+
+            <android.support.v7.widget.AppCompatImageButton
+                android:id="@+id/dismiss_image_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:tint="@color/mini_page_indicator_unselected"
+                android:src="@drawable/ic_close_black_18dp"
+                style="@style/Widget.AppCompat.ActionButton"/><!--
+                android:layout_gravity="end|top"
+               --></LinearLayout>
 
     </FrameLayout>
 

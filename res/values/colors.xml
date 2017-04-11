@@ -56,8 +56,16 @@
     <color name="onboarding_no_tracking_background">#f58b6b</color>
     <color name="onboarding_right_background">#6bbbe0</color>
 
+    <color name="onboarding_button_background">#48000000</color>
+    <color name="onboarding_accent">#66b3ef</color>
+
+    <color name="onboarding_primary_text">#333333</color>
+    <color name="onboarding_secondary_text">#666666</color>
+
     <color name="page_indicator_selected">#ffffff</color>
     <color name="page_indicator_unselected">#64000000</color>
+    <color name="mini_page_indicator_selected">#333333</color>
+    <color name="mini_page_indicator_unselected">#999999</color>
 
     <!-- old colors -->
 

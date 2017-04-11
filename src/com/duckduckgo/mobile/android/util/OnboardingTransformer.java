@@ -4,13 +4,13 @@ import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
-import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.views.PageIndicator;
+import com.duckduckgo.mobile.android.views.pageindicator.OnboardingPageIndicator;
+
+import java.util.List;
 
 /**
  * Created by fgei on 4/4/17.
@@ -18,12 +18,24 @@ import com.duckduckgo.mobile.android.views.PageIndicator;
 
 public class OnboardingTransformer implements ViewPager.PageTransformer {
 
+    private boolean doFullTrasformation = true;
     private int[] backgroundColors;
-    private PageIndicator pageIndicator;
+    private OnboardingPageIndicator pageIndicator;
+    private List<View> fadeViews;
 
-    public OnboardingTransformer(int[] backgroundColors, PageIndicator pageIndicator) {
+    public OnboardingTransformer() {
+        doFullTrasformation = false;
+    }
+
+    private OnboardingTransformer(int[] backgroundColors, OnboardingPageIndicator pageIndicator) {
         this.backgroundColors = backgroundColors;
         this.pageIndicator = pageIndicator;
+    }
+
+    public OnboardingTransformer(int[] backgroundColors, OnboardingPageIndicator pageIndicator, List<View> fadeViews) {
+        this.backgroundColors = backgroundColors;
+        this.pageIndicator = pageIndicator;
+        this.fadeViews = fadeViews;
     }
 
     @Override
@@ -33,6 +45,7 @@ public class OnboardingTransformer implements ViewPager.PageTransformer {
         int pageIndex = (Integer) page.getTag();
 
         if(position >= -1.0 && position <= 1.0) {
+            if(!doFullTrasformation) return;
             if(position > 0) {
                 int leftColor = backgroundColors[pageIndex - 1];
                 int rightColor = backgroundColors[pageIndex];
@@ -42,18 +55,29 @@ public class OnboardingTransformer implements ViewPager.PageTransformer {
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     image.setScaleX(1 - absolutePosition);
                     image.setScaleY(1 - absolutePosition);
+                    if(pageIndex == (backgroundColors.length - 1)) {
+                        for(View v : fadeViews) {
+                            v.setAlpha(absolutePosition);
+                        }
+                    }
                 }
-                pageIndicator.setPositionSelected(pageIndex - 1, 1 -absolutePosition);
+                pageIndicator.setPositionSelected(pageIndex - 1, 1 - absolutePosition);
                 pageIndicator.setPositionSelected(pageIndex, absolutePosition);
             } else if(position < 0) {
+                int nextIndex = pageIndex + 1;
                 int leftColor = backgroundColors[pageIndex];
-                int rightColor = backgroundColors[pageIndex + 1];
+                int rightColor = backgroundColors[nextIndex];
 
                 int color = blendARGB(rightColor, leftColor, 1 - absolutePosition);
                 page.setBackgroundColor(color);
                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                     image.setScaleX(1 - absolutePosition);
                     image.setScaleY(1 - absolutePosition);
+                    if(nextIndex == (backgroundColors.length - 1)) {
+                        for(View v : fadeViews) {
+                            v.setAlpha(1 - absolutePosition);
+                        }
+                    }
                 }
                 pageIndicator.setPositionSelected(pageIndex, absolutePosition);
                 pageIndicator.setPositionSelected(pageIndex + 1, 1 - absolutePosition);
@@ -61,7 +85,9 @@ public class OnboardingTransformer implements ViewPager.PageTransformer {
                 page.setBackgroundColor(backgroundColors[pageIndex]);
             }
         } else {
-            page.setBackgroundColor(backgroundColors[pageIndex]);
+            if(doFullTrasformation) {
+                page.setBackgroundColor(backgroundColors[pageIndex]);
+            }
         }
     }
 

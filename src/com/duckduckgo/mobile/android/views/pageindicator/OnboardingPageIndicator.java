@@ -1,4 +1,4 @@
-package com.duckduckgo.mobile.android.views;
+package com.duckduckgo.mobile.android.views.pageindicator;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -6,6 +6,8 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.ColorInt;
 import android.support.annotation.FloatRange;
 import android.support.v4.content.ContextCompat;
@@ -17,12 +19,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.util.ColorUtils;
+import com.duckduckgo.mobile.android.util.DimenUtils;
 
 /**
  * Created by fgei on 4/4/17.
  */
 
-public class PageIndicator extends LinearLayout {
+public class OnboardingPageIndicator extends LinearLayout {
 
     private static final int SELECTED_COLOR = R.color.page_indicator_selected;
     private static final int UNSELECTED_COLOR = R.color.page_indicator_unselected;
@@ -31,50 +35,40 @@ public class PageIndicator extends LinearLayout {
     private int selectedItem = 0;
     private ViewPager viewPager;
 
-    public PageIndicator(Context context) {
+    public OnboardingPageIndicator(Context context) {
         super(context);
     }
 
-    public PageIndicator(Context context, AttributeSet attrs) {
+    public OnboardingPageIndicator(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
     @TargetApi(11)
-    public PageIndicator(Context context, AttributeSet attrs, int defStyleAttr) {
+    public OnboardingPageIndicator(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(21)
-    public PageIndicator(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public OnboardingPageIndicator(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+    }
+
+    public void setViewPager(ViewPager viewPager, int count) {
+        this.viewPager = viewPager;
+        setNumIndicator(count);
+        setPositionSelected(selectedItem);
     }
 
     public void setViewPager(ViewPager viewPager) {
         this.viewPager = viewPager;
         setNumIndicator(viewPager.getAdapter().getCount());
-        setPositionSelected(selectedItem);/*
-        this.viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int i, float v, int i1) {
-
-            }
-
-            @Override
-            public void onPageSelected(int i) {
-                setPositionSelected(i);
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int i) {
-
-            }
-        });*/
+        setPositionSelected(selectedItem);
     }
 
     private void setNumIndicator(int numIndicator) {
         this.numIndicator = numIndicator;
         LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(0, 0, (int)convertDpToPixel(3.75f, getContext()), 0);
+        params.setMargins(0, 0, (int)DimenUtils.convertDpToPixel(3.75f, getContext()), 0);
         for(int i=0; i<numIndicator; i++) {
             ImageView imageView = new ImageView(getContext());
             imageView.setLayoutParams(params);
@@ -85,8 +79,9 @@ public class PageIndicator extends LinearLayout {
 
     public void setPositionSelected(int position, float percentage) {
         if(percentage == 1) selectedItem = position;
-        int color = blendARGB(getSelectedColor(), getUnselectedColor(), percentage);
+        int color = ColorUtils.blendARGB(getSelectedColor(), getUnselectedColor(), percentage);
         ImageView child = (ImageView) getChildAt(position);
+        if(child == null) return;
         ((Indicator)child.getDrawable()).setColor(color);
     }
 
@@ -94,8 +89,8 @@ public class PageIndicator extends LinearLayout {
         float inversePercentage = 1 - percentage;
         //ImageView prevSelected = (ImageView) getChildAt(selectedItem);
         //ImageView nextSelected = (ImageView) getChildAt(position);
-        int prevColor = blendARGB(getSelectedColor(), getUnselectedColor(), inversePercentage);
-        int nextColor = blendARGB(getSelectedColor(), getUnselectedColor(), percentage);
+        int prevColor = ColorUtils.blendARGB(getSelectedColor(), getUnselectedColor(), inversePercentage);
+        int nextColor = ColorUtils.blendARGB(getSelectedColor(), getUnselectedColor(), percentage);
         //((Indicator)prevSelected.getDrawable()).setColor(prevColor);
         //((Indicator)nextSelected.getDrawable()).setColor(nextColor);
         for(int i=0; i<getChildCount(); i++) {
@@ -132,46 +127,51 @@ public class PageIndicator extends LinearLayout {
     private class Indicator extends GradientDrawable {
         public Indicator() {
             setShape(OVAL);
-            setSize((int)convertDpToPixel(10, getContext()), (int)convertDpToPixel(10, getContext()));
+            setSize((int)DimenUtils.convertDpToPixel(10, getContext()), (int) DimenUtils.convertDpToPixel(10, getContext()));
             setColor(getUnselectedColor());
         }
     }
 
-    public static int blendARGB(@ColorInt int color1, @ColorInt int color2,
-                                @FloatRange(from = 0.0, to = 1.0) float ratio) {
-        final float inverseRatio = 1 - ratio;
-        float a = Color.alpha(color1) * inverseRatio + Color.alpha(color2) * ratio;
-        float r = Color.red(color1) * inverseRatio + Color.red(color2) * ratio;
-        float g = Color.green(color1) * inverseRatio + Color.green(color2) * ratio;
-        float b = Color.blue(color1) * inverseRatio + Color.blue(color2) * ratio;
-        return Color.argb((int) a, (int) r, (int) g, (int) b);
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        Parcelable superState = super.onSaveInstanceState();
+        SavedState savedState = new SavedState(superState);
+        savedState.selectedItem = selectedItem;
+        return savedState;
     }
 
-    /**
-     * This method converts dp unit to equivalent pixels, depending on device density.
-     *
-     * @param dp A value in dp (density independent pixels) unit. Which we need to convert into pixels
-     * @param context Context to get resources and device specific display metrics
-     * @return A float value to represent px equivalent to dp depending on device density
-     */
-    public static float convertDpToPixel(float dp, Context context){
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float px = dp * ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return px;
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        SavedState savedState = (SavedState) state;
+        super.onRestoreInstanceState(savedState.getSuperState());
+        setPositionSelected(savedState.selectedItem);
     }
 
-    /**
-     * This method converts device specific pixels to density independent pixels.
-     *
-     * @param px A value in px (pixels) unit. Which we need to convert into db
-     * @param context Context to get resources and device specific display metrics
-     * @return A float value to represent dp equivalent to px value
-     */
-    public static float convertPixelsToDp(float px, Context context){
-        Resources resources = context.getResources();
-        DisplayMetrics metrics = resources.getDisplayMetrics();
-        float dp = px / ((float)metrics.densityDpi / DisplayMetrics.DENSITY_DEFAULT);
-        return dp;
+    private static class SavedState extends BaseSavedState {
+        int selectedItem;
+
+        public SavedState(Parcelable superState) {
+            super(superState);
+        }
+
+        public SavedState(Parcel source) {
+            super(source);
+            selectedItem = source.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel out, int flags) {
+            super.writeToParcel(out, flags);
+            out.writeInt(selectedItem);
+        }
+
+        public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            public SavedState createFromParcel(Parcel source) {
+                return new SavedState(source);
+            }
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }

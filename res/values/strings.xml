@@ -268,6 +268,17 @@
     <string name="right_title">Privacy is a Right!</string>
     <string name="right_subtitle">Use DuckDuckGo and take\nback your privacy!</string>
 
+    <!-- Instruction -->
+    <string name="instruction_title">Use DuckDuckGo in Chrome</string>
+    <string name="instruction_message">Other search engines track your searches even when you\’re in private browsing mode. We don\’t track you — period.</string>
+    <string name="instruction_1_a">Open</string>
+    <string name="instruction_1_b">Chrome</string>
+    <string name="instruction_2_a">Open</string>
+    <string name="instruction_2_b">3-dot menu</string>
+    <string name="instruction_3_a">Tap</string>
+    <string name="instruction_3_b">Add to Home screen</string>
+    <string name="instruction_done">Done</string>
+
 
     <!-- SSL Certificate dialogs -->
     <!-- Title for an SSL Certificate dialog -->
