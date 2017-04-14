@@ -15,7 +15,7 @@ public class RightFragment extends BaseOnboardingFragment {
 
     public static final int TITLE = R.string.right_title;
     public static final int SUBTITLE = R.string.right_subtitle;
-    public static final int IMG = R.drawable.right3;
+    public static final int IMG = R.drawable.illustration_4;
     public static final int BACKGROUND_COLOR = R.color.onboarding_right_background;
 
     public static RightFragment newInstance(int indexPosition) {

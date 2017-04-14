@@ -22,7 +22,7 @@ public abstract class BaseOnboardingFragment extends Fragment {
     private static final String EXTRA_INDEX_POSITION = "index_position";
     private static final String EXTRA_MINI_LAYOUT = "mini_layout";
 
-    private FrameLayout backgroundFrameLayout;
+    private ViewGroup backgroundFrameLayout;
     private TextView titleTextView;
     private TextView subtitleTextView;
     private ImageView iconImageView;
@@ -39,7 +39,7 @@ public abstract class BaseOnboardingFragment extends Fragment {
                 useMiniLayout() ? R.layout.viewholder_onboarding : R.layout.fragment_onboarding,
                 container,
                 false);
-        backgroundFrameLayout = (FrameLayout) rootView;
+        backgroundFrameLayout = (ViewGroup) rootView;
         titleTextView = (TextView) rootView.findViewById(R.id.title_text_view);
         subtitleTextView = (TextView) rootView.findViewById(R.id.subtitle_text_view);
         iconImageView = (ImageView) rootView.findViewById(R.id.icon_image_view);
@@ -58,12 +58,16 @@ public abstract class BaseOnboardingFragment extends Fragment {
         if(!useMiniLayout()) {
             backgroundFrameLayout.setBackgroundColor(getBackgroundColor());
         }
-        titleTextView.setText(getTitle());
-        subtitleTextView.setText(getSubtitle());
+        String title = getTitle();
+        if(useMiniLayout()) title = title.replaceAll("\\n", " ");
+        titleTextView.setText(title);
+        String subtitle = getSubtitle();
+        if(useMiniLayout()) subtitle = subtitle.replaceAll("\\n", " ");
+        subtitleTextView.setText(subtitle);
         iconImageView.setImageResource(getIcon());
     }
 
-    private boolean useMiniLayout() {
+    protected boolean useMiniLayout() {
         return getArguments().getBoolean(EXTRA_MINI_LAYOUT);
     }
 

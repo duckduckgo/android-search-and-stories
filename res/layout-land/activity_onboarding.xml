@@ -17,18 +17,34 @@
         android:layout_gravity="bottom|center_horizontal"
         android:gravity="center_horizontal"
         android:layout_marginBottom="24dp">
-        <Button
-            android:id="@+id/instruction_button"
+        <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:text="Add to Chrome"
-            android:textAllCaps="true"
-            android:textColor="#ffffff"
-            android:background="@drawable/onboarding_button_background"
-            android:paddingEnd="24dp"
-            android:paddingStart="24dp"
-            android:textSize="16sp"/>
+            android:gravity="center_horizontal">
+            <Button
+                android:id="@+id/add_to_home_screen_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/add_to_homescreen"
+                android:textColor="#ffffff"
+                android:background="@drawable/onboarding_button_background"
+                android:paddingEnd="24dp"
+                android:paddingStart="24dp"
+                android:textSize="16sp"/>
+            <Button
+                android:visibility="gone"
+                android:id="@+id/next_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Next"
+                android:textAllCaps="true"
+                android:textColor="#ffffff"
+                android:background="@drawable/onboarding_button_background"
+                android:paddingEnd="24dp"
+                android:paddingStart="24dp"
+                android:textSize="16sp"/>
+        </FrameLayout>
         <com.duckduckgo.mobile.android.views.pageindicator.OnboardingPageIndicator
             android:id="@+id/page_indicator"
             android:layout_width="wrap_content"

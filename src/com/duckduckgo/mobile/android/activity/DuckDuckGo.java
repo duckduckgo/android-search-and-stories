@@ -164,7 +164,7 @@ public class DuckDuckGo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setTheme(R.style.DDGTheme);
         if(!PreferencesManager.getHasShownOnboarding()) {
-            startActivity(OnboardingActivity.getStartIntent(this));
+            //startActivity(OnboardingActivity.getStartIntent(this));
         }
         Log.d(TAG, "on create");
         canCommitFragmentSafely = true;
@@ -668,6 +668,19 @@ public class DuckDuckGo extends AppCompatActivity {
                 return true;
             case R.id.action_onboarding:
                 startActivity(new Intent(this, OnboardingActivity.class));
+            case R.id.action_add_to_homescreen:
+                Intent shortcutIntent = new Intent(Intent.ACTION_VIEW);
+                //shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //shortcutIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                shortcutIntent.setData(Uri.parse("https://duckduckgo.com"));
+
+                Intent addIntent = new Intent();
+                addIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, shortcutIntent);
+                addIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "DuckDuckGo Home Screen");
+                addIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(getApplicationContext(), R.drawable.icon));
+                addIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
+                getApplicationContext().sendBroadcast(addIntent);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

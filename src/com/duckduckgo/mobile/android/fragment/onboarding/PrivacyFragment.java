@@ -16,7 +16,7 @@ public class PrivacyFragment extends BaseOnboardingFragment {
 
     public static final int TITLE = R.string.privacy_title;
     public static final int SUBTITLE = R.string.privacy_subtitle;
-    public static final int IMG = R.drawable.privacy3;
+    public static final int IMG = R.drawable.illustration_1;
     public static final int BACKGROUND_COLOR = R.color.onboarding_privacy_background;
 
     public static PrivacyFragment newInstance(int indexPosition) {

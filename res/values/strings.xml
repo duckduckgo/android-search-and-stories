@@ -267,6 +267,7 @@
     <string name="no_tracking_subtitle">Other search engines track you even\nwhen you’re in ‘private browsing mode’.\nWe don’t track you — period.</string>
     <string name="right_title">Privacy is a Right!</string>
     <string name="right_subtitle">Use DuckDuckGo and take\nback your privacy!</string>
+    <string name="add_to_homescreen">Add to Homescreen</string>
 
     <!-- Instruction -->
     <string name="instruction_title">Use DuckDuckGo in Chrome</string>

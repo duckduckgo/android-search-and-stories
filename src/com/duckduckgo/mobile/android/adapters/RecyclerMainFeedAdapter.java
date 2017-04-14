@@ -3,12 +3,14 @@ package com.duckduckgo.mobile.android.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -33,6 +35,7 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.OnboardingTransformer;
+import com.duckduckgo.mobile.android.util.OnboardingUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.pageindicator.BannerOnboardingPageIndicator;
@@ -83,11 +86,17 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
+        private final int SLIDE_TIME = 5000;
+
         public final ViewPager viewPager;
         public final FragmentPagerAdapter adapter;
         public final BannerOnboardingPageIndicator pageIndicator;
         public final Button instructionbutton;
         public final ImageButton dismissImageButton;
+        final Handler handler;
+        final Runnable slideRunnable;
+
+        private boolean isRunning = false;
 
         public HeaderViewHolder(View itemView) {
             super(itemView);
@@ -97,8 +106,47 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
             adapter = new BannerOnboardingAdapter(fragmentManager);
             viewPager.setAdapter(adapter);
             viewPager.setPageTransformer(false, new OnboardingTransformer());
+            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int i, float v, int i1) {
+                }
+
+                @Override
+                public void onPageSelected(int i) {
+                    if(!isRunning) {
+                        startSlidingViewPager();
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int i) {
+                    if(isRunning && i == ViewPager.SCROLL_STATE_DRAGGING) {
+                        stopSlidingViewPager();
+                    }
+                }
+            });
             pageIndicator = (BannerOnboardingPageIndicator) itemView.findViewById(R.id.page_indicator);
             pageIndicator.setViewPager(viewPager);
+            handler = new Handler();
+            slideRunnable = new Runnable() {
+                @Override
+                public void run() {
+                    int nextItem = viewPager.getCurrentItem() + 1;
+                    if(nextItem == viewPager.getAdapter().getCount()) nextItem = 0;
+                    viewPager.setCurrentItem(nextItem, true);
+                    handler.postDelayed(this, 5000);
+                }
+            };
+            startSlidingViewPager();
+        }
+
+        private void startSlidingViewPager() {
+            isRunning = true;
+            handler.postDelayed(slideRunnable, 5000);
+        }
+        private void stopSlidingViewPager() {
+            isRunning = false;
+            handler.removeCallbacks(slideRunnable);
         }
     }
 
@@ -128,7 +176,8 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
             headerHolder.instructionbutton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    InstructionDialogFragment.newInstance().show(fragmentManager, InstructionDialogFragment.TAG);
+                    //InstructionDialogFragment.newInstance().show(fragmentManager, InstructionDialogFragment.TAG);
+                    //OnboardingUtils.addDDGToHomescreen(context);
                 }
             });
             headerHolder.dismissImageButton.setOnClickListener(new View.OnClickListener() {
