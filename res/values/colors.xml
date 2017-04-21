@@ -58,6 +58,8 @@
 
     <color name="onboarding_button_background">#48000000</color>
     <color name="onboarding_accent">#66b3ef</color>
+    <color name="onboarding_banner_button_background">#66b3ef</color>
+    <color name="onboarding_instruction_accent">#2da1e4</color>
 
     <color name="onboarding_primary_text">#333333</color>
     <color name="onboarding_secondary_text">#666666</color>

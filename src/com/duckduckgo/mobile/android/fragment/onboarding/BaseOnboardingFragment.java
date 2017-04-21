@@ -1,17 +1,34 @@
 package com.duckduckgo.mobile.android.fragment.onboarding;
 
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.util.CompatUtils;
+import com.duckduckgo.mobile.android.util.DimenUtils;
+
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Created by fgei on 4/4/17.
@@ -22,15 +39,18 @@ public abstract class BaseOnboardingFragment extends Fragment {
     private static final String EXTRA_INDEX_POSITION = "index_position";
     private static final String EXTRA_MINI_LAYOUT = "mini_layout";
 
-    private ViewGroup backgroundFrameLayout;
-    private TextView titleTextView;
-    private TextView subtitleTextView;
-    private ImageView iconImageView;
+    private static final float BOTTOM_MARGIN_CONSTRAINT_PORTRAIT = 3.819f;
+    private static final float BOTTOM_MARGIN_CONSTRAINT_LANDSCAPE = 4.228f;
 
     protected abstract int getBackgroundColor();
     protected abstract int getIcon();
     protected abstract String getTitle();
     protected abstract String getSubtitle();
+
+    private ViewGroup backgroundFrameLayout;
+    private TextView titleTextView;
+    private TextView subtitleTextView;
+    private ImageView iconImageView;
 
     @Nullable
     @Override
@@ -65,6 +85,8 @@ public abstract class BaseOnboardingFragment extends Fragment {
         if(useMiniLayout()) subtitle = subtitle.replaceAll("\\n", " ");
         subtitleTextView.setText(subtitle);
         iconImageView.setImageResource(getIcon());
+
+        initLayout();
     }
 
     protected boolean useMiniLayout() {
@@ -73,6 +95,33 @@ public abstract class BaseOnboardingFragment extends Fragment {
 
     private int getIndexPosition() {
         return getArguments().getInt(EXTRA_INDEX_POSITION);
+    }
+
+    private void initLayout() {
+        if(!useMiniLayout()) {
+            Display display = getActivity().getWindowManager().getDefaultDisplay();
+            Point size = new Point();
+            CompatUtils.getDisplaySize(display, size);
+            int width = size.x;
+            int height = size.y;
+            final FrameLayout containerLayout = (FrameLayout) backgroundFrameLayout.findViewById(R.id.container_layout);
+            final FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) containerLayout.getLayoutParams();
+
+            boolean isPortrait = width < height;
+            //float portraitBottomRatio = 3.819f;
+            //float landscapeBottomRatio = 4.228f;
+            float bottomMarginConstraint = isPortrait ? BOTTOM_MARGIN_CONSTRAINT_PORTRAIT : BOTTOM_MARGIN_CONSTRAINT_LANDSCAPE;
+            final int bottomMargin = (int) (height / bottomMarginConstraint);
+            final int topMargin = height - (int) (height / 1.278);
+            containerLayout.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    CompatUtils.removeOnGlobalLayoutListener(containerLayout.getViewTreeObserver(), this);
+                    params.bottomMargin = bottomMargin;
+                    containerLayout.setLayoutParams(params);
+                }
+            });
+        }
     }
 
     protected static Bundle createArgs(int indexPosition) {

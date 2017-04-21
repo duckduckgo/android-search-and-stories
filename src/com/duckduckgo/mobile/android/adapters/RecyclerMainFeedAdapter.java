@@ -20,7 +20,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
@@ -34,8 +33,8 @@ import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemSelectedEvent
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
+import com.duckduckgo.mobile.android.util.OnboardingHelper;
 import com.duckduckgo.mobile.android.util.OnboardingTransformer;
-import com.duckduckgo.mobile.android.util.OnboardingUtils;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.pageindicator.BannerOnboardingPageIndicator;
@@ -86,7 +85,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
-        private final int SLIDE_TIME = 5000;
+        private final int SLIDE_TIME = 10000;
 
         public final ViewPager viewPager;
         public final FragmentPagerAdapter adapter;
@@ -134,7 +133,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
                     int nextItem = viewPager.getCurrentItem() + 1;
                     if(nextItem == viewPager.getAdapter().getCount()) nextItem = 0;
                     viewPager.setCurrentItem(nextItem, true);
-                    handler.postDelayed(this, 5000);
+                    handler.postDelayed(this, SLIDE_TIME);
                 }
             };
             startSlidingViewPager();
@@ -142,7 +141,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         private void startSlidingViewPager() {
             isRunning = true;
-            handler.postDelayed(slideRunnable, 5000);
+            handler.postDelayed(slideRunnable, SLIDE_TIME);
         }
         private void stopSlidingViewPager() {
             isRunning = false;
@@ -153,7 +152,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
     public RecyclerMainFeedAdapter(Context context, FragmentManager fragmentManager) {
         this.context = context;
         this.fragmentManager = fragmentManager;
-        //isOnboardingBannerVisible = !PreferencesManager.isOnboardingBannerDismissed();
+        isOnboardingBannerVisible = !PreferencesManager.isOnboardingBannerDismissed();
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         data = new ArrayList<>();
 
@@ -173,11 +172,20 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
         if(position == 0 && isOnboardingBannerVisible) {
             //that's the header;
             final HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
+            final OnboardingHelper helper = new OnboardingHelper(context);
+            boolean isFirefoxDefault = helper.isDefaultBrowserFirefox();
+            final boolean showFirefoxInstruction = isFirefoxDefault || PreferencesManager.isDDGAddedToHomeScreen();
+            Log.e("instruction_example", "isFirefoxDefault: "+isFirefoxDefault+" isDDGAddedToHomeScreen: "+PreferencesManager.isDDGAddedToHomeScreen()+" showFirefoxInstruction: "+showFirefoxInstruction);
+            headerHolder.instructionbutton.setText(
+                    String.format(context.getString(R.string.add_to),
+                            context.getString(showFirefoxInstruction ? R.string.browser_firefox : R.string.browser_chrome))
+            );
             headerHolder.instructionbutton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //InstructionDialogFragment.newInstance().show(fragmentManager, InstructionDialogFragment.TAG);
-                    //OnboardingUtils.addDDGToHomescreen(context);
+                    InstructionDialogFragment.newInstance(
+                            showFirefoxInstruction ? InstructionDialogFragment.EXTRA_INSTRUCTION_FIREFOX : InstructionDialogFragment.EXTRA_INSTRUCTION_CHROME)
+                            .show(fragmentManager, InstructionDialogFragment.TAG);
                 }
             });
             headerHolder.dismissImageButton.setOnClickListener(new View.OnClickListener() {
@@ -325,7 +333,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     private void dismissOnboardingBanner() {
-        //PreferencesManager.setOnboardingBannerDismissed();
+        PreferencesManager.setOnboardingBannerDismissed();
         isOnboardingBannerVisible = false;
         notifyItemRemoved(0);
 

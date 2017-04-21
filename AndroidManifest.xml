@@ -9,6 +9,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
     <application
         android:hardwareAccelerated="true"
@@ -32,6 +33,10 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.ASSIST"/>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.CREATE_SHORTCUT" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
             <meta-data
@@ -82,6 +87,7 @@
 	        android:finishOnTaskLaunch="true" />
 
         <activity android:name=".activity.OnboardingActivity"
+            android:screenOrientation="sensorPortrait"
             android:theme="@style/DDGTheme.ClearStatusBar"/>
 
 		<provider android:name=".providers.DuckDuckGoProvider"

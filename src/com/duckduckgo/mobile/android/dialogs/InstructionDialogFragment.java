@@ -1,50 +1,71 @@
 package com.duckduckgo.mobile.android.dialogs;
 
-import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AlertDialog;
-import android.text.Html;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
-import android.text.style.TypefaceSpan;
-import android.util.Log;
+import android.transition.TransitionManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.network.DDGNetworkConstants;
-import com.duckduckgo.mobile.android.util.OnboardingUtils;
+import com.duckduckgo.mobile.android.util.OnboardingHelper;
 
 /**
  * Created by fgei on 4/7/17.
  */
 
-public class InstructionDialogFragment extends DialogFragment {
+public class InstructionDialogFragment extends AppCompatDialogFragment {
 
     public static final String TAG = "instruction_dialog_fragment";
 
+    public static InstructionDialogFragment newInstance(int instructionType) {
+        InstructionDialogFragment fragment = new InstructionDialogFragment();
+        Bundle args = new Bundle();
+        args.putInt(EXTRA_INSTRUCTION_TYPE, instructionType);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-    public static InstructionDialogFragment newInstance() {
-        return new InstructionDialogFragment();
+    public static final int EXTRA_INSTRUCTION_FIREFOX = 0;
+    public static final int EXTRA_INSTRUCTION_CHROME = 1;
+
+    private static final String EXTRA_INSTRUCTION_TYPE = "instruction_type";
+
+    private View firefoxInstructionContainer, chromeInstructionContainer;
+    private View toggleInstructionContainer;
+    private TextView toggleInstructionTextView;
+    private ImageView toggleInstructionImageView;
+    private TextView titleTextView;
+    private ViewGroup transitionRoot;
+
+    private OnboardingHelper onboardingHelper;
+
+    private boolean isInstructionChromeType = true;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NO_TITLE, 0);
+        Bundle args = getArguments();
+        if(args.containsKey(EXTRA_INSTRUCTION_TYPE)) {
+            isInstructionChromeType = args.getInt(EXTRA_INSTRUCTION_TYPE) == EXTRA_INSTRUCTION_CHROME;
+        }
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.dialog_instruction_2, container, false);
+        View rootView = inflater.inflate(R.layout.dialog_onboarding_instruction, container, false);
         init(getContext(), rootView);
         return rootView;
     }
@@ -53,29 +74,72 @@ public class InstructionDialogFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         if(getDialog() != null) {
-            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
     }
 
-    private void init(Context context, View rootView) {
+    private void init(Context context, final View rootView) {
+        onboardingHelper = new OnboardingHelper(context);
+        transitionRoot = (ViewGroup) rootView;
         TextView instruction1TextView = (TextView) rootView.findViewById(R.id.instruction_1_text_view);
-        instruction1TextView.setText(getStyledString(context, R.string.instruction_1_a, R.string.instruction_1_b));
+        instruction1TextView.setText(getStyledString(getContext(), R.string.instruction_firefox_1_a, R.string.instruction_firefox_1_b));
 
         TextView instruction2TextView = (TextView) rootView.findViewById(R.id.instruction_2_text_view);
-        instruction2TextView.setText(getStyledString(context, R.string.instruction_2_a, R.string.instruction_2_b));
+        instruction2TextView.setText(getStyledString(getContext(), R.string.instruction_firefox_2_a, R.string.instruction_firefox_2_b));
 
         TextView instruction3TextView = (TextView) rootView.findViewById(R.id.instruction_3_text_view);
-        instruction3TextView.setText(getStyledString(context, R.string.instruction_3_a, R.string.instruction_3_b));
+        instruction3TextView.setText(getStyledString(getContext(), R.string.instruction_firefox_3_a, R.string.instruction_firefox_3_b));
 
-        Button doneButton = (Button) rootView.findViewById(R.id.done_button);
+        TextView instruction4TextView = (TextView) rootView.findViewById(R.id.instruction_4_text_view);
+        instruction4TextView.setText(getStyledString(getContext(), R.string.instruction_firefox_4_a, R.string.instruction_firefox_4_b));
+
+        TextView doneButton = (TextView) rootView.findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                OnboardingUtils.launchDDG(getContext());
                 dismiss();
             }
         });
+        firefoxInstructionContainer = rootView.findViewById(R.id.instruction_container);
+        chromeInstructionContainer = rootView.findViewById(R.id.add_to_home_screen_button);
+        chromeInstructionContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onboardingHelper.addToHomeScreen();
+                dismiss();
+            }
+        });
+        toggleInstructionImageView = (ImageView) rootView.findViewById(R.id.add_to_image_view);
+        toggleInstructionTextView = (TextView) rootView.findViewById(R.id.add_to_text_view);
+        toggleInstructionContainer = rootView.findViewById(R.id.add_to_container);
+        toggleInstructionContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isInstructionChromeType = !isInstructionChromeType;
+                initInstructionType(isInstructionChromeType, true);
+            }
+        });
+        titleTextView = (TextView) rootView.findViewById(R.id.instruction_title_text_view);
+        initInstructionType(isInstructionChromeType, false);
+    }
+
+    private void initInstructionType(boolean isChromeType, boolean withAnimation) {
+        if(withAnimation) {
+            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                TransitionManager.beginDelayedTransition(transitionRoot);
+            }
+        }
+        chromeInstructionContainer.setVisibility(isChromeType ? View.VISIBLE : View.GONE);
+        firefoxInstructionContainer.setVisibility(isChromeType ? View.GONE : View.VISIBLE);
+        toggleInstructionImageView.setImageResource(isChromeType ? R.drawable.firefox: R.drawable.chrome);
+        toggleInstructionTextView.setText(
+                String.format(
+                        getString(R.string.add_to),
+                        getString(isChromeType ? R.string.browser_firefox : R.string.browser_chrome)));
+        titleTextView.setText(
+                String.format(getString(R.string.add_to),
+                        getString(isChromeType ? R.string.browser_chrome : R.string.browser_firefox)));
     }
 
     private static SpannableStringBuilder getStyledString(Context context, int textResId, int textBoldResId) {

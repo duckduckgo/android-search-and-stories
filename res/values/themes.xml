@@ -19,6 +19,9 @@
         <item name="android:windowBackground">@drawable/launcher_window_background</item>
     </style>
 
+    <style name="DDGTheme.ClearStatusBar" parent="DDGTheme">
+    </style>
+
     <style name="DDGPopup" parent="Widget.AppCompat.PopupMenu"><!--PopupMenu-->
     </style>
 

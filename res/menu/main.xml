@@ -33,15 +33,4 @@
           android:orderInCategory="60"
           app:showAsAction="always" />
 
-    <item android:id="@+id/action_onboarding"
-          android:title="Onboarding"
-          android:orderInCategory="70"
-          android:visible="true"
-          app:showAsAction="never"/>
-
-    <item android:id="@+id/action_add_to_homescreen"
-          android:title="Add to Homescreen"
-          android:orderInCategory="80"
-          app:showAsAction="never"/>
-
 </menu>

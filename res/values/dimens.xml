@@ -58,6 +58,14 @@
 
     <dimen name="feed_overflow_menu_right_margin">0dp</dimen>
 
+    <dimen name="onboarding_fragment_bottom_margin">129dp</dimen>
+    <dimen name="onboarding_screen_bottom_margin">43.5dp</dimen>
+    <dimen name="onboarding_screen_bottom_margin_landscape">24dp</dimen>
+
+    <dimen name="onboarding_icon_size">200dp</dimen>
+    <dimen name="onboarding_top_margin">19dp</dimen>
+    <dimen name="onboarding_bottom_margin">10dp</dimen>
+
     <!-- old dimen -->
 
     <dimen name="default_margin">8dp</dimen>

@@ -209,8 +209,7 @@ public class PreferencesManager {
   }
 
 	public static boolean getHasShownOnboarding() {
-		//return DDGApplication.getSharedPreferences().getBoolean("hasShownOnboarding", false);
-        return false;
+		return DDGApplication.getSharedPreferences().getBoolean("hasShownOnboarding", false);
 	}
 
 	public static void setHasShownOnboarding() {
@@ -226,6 +225,16 @@ public class PreferencesManager {
 	public static void setOnboardingBannerDismissed() {
 		Editor editor = DDGApplication.getSharedPreferences().edit();
 		editor.putBoolean("isOnboardingBannerDismissed", true);
+		editor.commit();
+	}
+
+	public static boolean isDDGAddedToHomeScreen() {
+		return DDGApplication.getSharedPreferences().getBoolean("ddgAddedToHomeScreen", false);
+	}
+
+	public static void setDDGAddedToHomeScreen() {
+		Editor editor = DDGApplication.getSharedPreferences().edit();
+		editor.putBoolean("ddgAddedToHomeScreen", true);
 		editor.commit();
 	}
 }
