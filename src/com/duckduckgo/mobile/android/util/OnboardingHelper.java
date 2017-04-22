@@ -69,7 +69,6 @@ public class OnboardingHelper {
         shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, "Search DDG");
         shortcutIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, Intent.ShortcutIconResource.fromContext(context, R.drawable.icon));
         shortcutIntent.setAction("com.android.launcher.action.INSTALL_SHORTCUT");
-        //shortcutIntent.putExtra("duplicate", true);
         shortcutIntent.putExtra("duplicate", false);
         return shortcutIntent;
     }

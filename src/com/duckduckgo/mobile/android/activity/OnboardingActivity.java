@@ -49,13 +49,14 @@ public class OnboardingActivity extends AppCompatActivity {
     private Button addToHomeScreenButton;
 
     private OnboardingHelper onboardingHelper;
+    private InstructionDialogFragment instructionDialogFragment = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Fade fade = new Fade();
-            fade.setDuration(5000);
+            fade.setDuration(400);
             getWindow().setReturnTransition(fade);
         }
         setContentView(R.layout.activity_onboarding);
@@ -142,6 +143,13 @@ public class OnboardingActivity extends AppCompatActivity {
                 CompatUtils.removeOnGlobalLayoutListener(containerLayout.getViewTreeObserver(), this);
             }
         });
+        if(instructionDialogFragment == null) {
+            instructionDialogFragment = InstructionDialogFragment.newInstance(
+                    onboardingHelper.isDefaultBrowserFirefox()
+                            ? InstructionDialogFragment.EXTRA_INSTRUCTION_FIREFOX
+                            : InstructionDialogFragment.EXTRA_INSTRUCTION_CHROME);
+            instructionDialogFragment.show(getSupportFragmentManager(), InstructionDialogFragment.TAG);
+        }
     }
 
     private void addTo() {

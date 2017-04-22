@@ -1,9 +1,11 @@
 package com.duckduckgo.mobile.android.dialogs;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -41,11 +43,14 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
 
     private static final String EXTRA_INSTRUCTION_TYPE = "instruction_type";
 
+    private static final int INITIAL_DISABLE_TIME = 5000;
+
     private View firefoxInstructionContainer, chromeInstructionContainer;
     private View toggleInstructionContainer;
     private TextView toggleInstructionTextView;
     private ImageView toggleInstructionImageView;
     private TextView titleTextView;
+    private TextView doneButton;
     private ViewGroup transitionRoot;
 
     private OnboardingHelper onboardingHelper;
@@ -68,6 +73,14 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
         View rootView = inflater.inflate(R.layout.dialog_onboarding_instruction, container, false);
         init(getContext(), rootView);
         return rootView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if(savedInstanceState == null) {
+            disableViewForTime(doneButton, INITIAL_DISABLE_TIME );
+        }
     }
 
     @Override
@@ -94,7 +107,7 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
         TextView instruction4TextView = (TextView) rootView.findViewById(R.id.instruction_4_text_view);
         instruction4TextView.setText(getStyledString(getContext(), R.string.instruction_firefox_4_a, R.string.instruction_firefox_4_b));
 
-        TextView doneButton = (TextView) rootView.findViewById(R.id.done_button);
+        doneButton = (TextView) rootView.findViewById(R.id.done_button);
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,6 +153,19 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
         titleTextView.setText(
                 String.format(getString(R.string.add_to),
                         getString(isChromeType ? R.string.browser_chrome : R.string.browser_firefox)));
+    }
+
+    private void disableViewForTime(final TextView textView, int millis) {
+        final int textColor = textView.getCurrentTextColor();
+        textView.setEnabled(false);
+        textView.setTextColor(Color.GRAY);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                textView.setEnabled(true);
+                textView.setTextColor(textColor);
+            }
+        }, millis);
     }
 
     private static SpannableStringBuilder getStyledString(Context context, int textResId, int textBoldResId) {
