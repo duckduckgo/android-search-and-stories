@@ -66,7 +66,7 @@ public class OnboardingActivity extends AppCompatActivity {
     @Override
     public void finish() {
         if(viewPager.getCurrentItem() >= adapter.getCount() -1)
-        PreferencesManager.setHasShownOnboarding();
+        onboardingHelper.setOnboardingDismissed();
         super.finish();
     }
 
@@ -147,7 +147,8 @@ public class OnboardingActivity extends AppCompatActivity {
             instructionDialogFragment = InstructionDialogFragment.newInstance(
                     onboardingHelper.isDefaultBrowserFirefox()
                             ? InstructionDialogFragment.EXTRA_INSTRUCTION_FIREFOX
-                            : InstructionDialogFragment.EXTRA_INSTRUCTION_CHROME);
+                            : InstructionDialogFragment.EXTRA_INSTRUCTION_CHROME,
+                    true);
             instructionDialogFragment.show(getSupportFragmentManager(), InstructionDialogFragment.TAG);
         }
     }

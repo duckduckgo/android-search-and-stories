@@ -31,9 +31,14 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
     public static final String TAG = "instruction_dialog_fragment";
 
     public static InstructionDialogFragment newInstance(int instructionType) {
+        return newInstance(instructionType, false);
+    }
+
+    public static InstructionDialogFragment newInstance(int instructionType, boolean disableDismissButton) {
         InstructionDialogFragment fragment = new InstructionDialogFragment();
         Bundle args = new Bundle();
         args.putInt(EXTRA_INSTRUCTION_TYPE, instructionType);
+        args.putBoolean(EXTRA_DISABLE_DISMISS_BUTTON, disableDismissButton);
         fragment.setArguments(args);
         return fragment;
     }
@@ -42,6 +47,7 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
     public static final int EXTRA_INSTRUCTION_CHROME = 1;
 
     private static final String EXTRA_INSTRUCTION_TYPE = "instruction_type";
+    private static final String EXTRA_DISABLE_DISMISS_BUTTON = "disable_dismiss_button";
 
     private static final int INITIAL_DISABLE_TIME = 5000;
 
@@ -56,6 +62,7 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
     private OnboardingHelper onboardingHelper;
 
     private boolean isInstructionChromeType = true;
+    private boolean disableDismissButton = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +71,9 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
         Bundle args = getArguments();
         if(args.containsKey(EXTRA_INSTRUCTION_TYPE)) {
             isInstructionChromeType = args.getInt(EXTRA_INSTRUCTION_TYPE) == EXTRA_INSTRUCTION_CHROME;
+        }
+        if(args.containsKey(EXTRA_DISABLE_DISMISS_BUTTON)) {
+            disableDismissButton = args.getBoolean(EXTRA_DISABLE_DISMISS_BUTTON);
         }
     }
 
@@ -78,7 +88,7 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(savedInstanceState == null) {
+        if(disableDismissButton && savedInstanceState == null) {
             disableViewForTime(doneButton, INITIAL_DISABLE_TIME );
         }
     }

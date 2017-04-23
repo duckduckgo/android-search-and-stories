@@ -55,6 +55,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
     private Context context;
     private final LayoutInflater inflater;
     private FragmentManager fragmentManager;
+    private OnboardingHelper onboardingHelper;
 
     private DDGOverflowMenu feedMenu = null;
     private Menu menu = null;
@@ -152,7 +153,8 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
     public RecyclerMainFeedAdapter(Context context, FragmentManager fragmentManager) {
         this.context = context;
         this.fragmentManager = fragmentManager;
-        isOnboardingBannerVisible = !PreferencesManager.isOnboardingBannerDismissed();
+        onboardingHelper = new OnboardingHelper(context);
+        isOnboardingBannerVisible = onboardingHelper.shouldShowOnboardingBanner();
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         data = new ArrayList<>();
 
@@ -172,10 +174,8 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
         if(position == 0 && isOnboardingBannerVisible) {
             //that's the header;
             final HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-            final OnboardingHelper helper = new OnboardingHelper(context);
-            boolean isFirefoxDefault = helper.isDefaultBrowserFirefox();
+            boolean isFirefoxDefault = onboardingHelper.isDefaultBrowserFirefox();
             final boolean showFirefoxInstruction = isFirefoxDefault || PreferencesManager.isDDGAddedToHomeScreen();
-            Log.e("instruction_example", "isFirefoxDefault: "+isFirefoxDefault+" isDDGAddedToHomeScreen: "+PreferencesManager.isDDGAddedToHomeScreen()+" showFirefoxInstruction: "+showFirefoxInstruction);
             headerHolder.instructionbutton.setText(
                     String.format(context.getString(R.string.add_to),
                             context.getString(showFirefoxInstruction ? R.string.browser_firefox : R.string.browser_chrome))
@@ -333,7 +333,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     private void dismissOnboardingBanner() {
-        PreferencesManager.setOnboardingBannerDismissed();
+        onboardingHelper.setOnboardingBannerDismissed();
         isOnboardingBannerVisible = false;
         notifyItemRemoved(0);
 

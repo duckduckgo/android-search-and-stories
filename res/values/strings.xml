@@ -270,6 +270,7 @@
     <string name="add_to_homescreen">Add to Home Screen</string>
     <string name="add_to">Add to %s</string>
     <string name="ddg_added_to_home_page">DuckDuckGo was added to your home screen</string>
+    <string name="ddg_homescreen_label">Search DDG</string>
 
     <!-- Instruction -->
     <string name="browser_duckduckgo">DuckDuckGo</string>
