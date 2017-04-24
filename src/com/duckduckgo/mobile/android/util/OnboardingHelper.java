@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.widget.Toast;
 
 import com.duckduckgo.mobile.android.R;
@@ -25,19 +26,21 @@ public class OnboardingHelper {
     private Context context;
     private PackageManager packageManager;
     private boolean isTablet = false;
+    private boolean isApi14;
 
     public OnboardingHelper(Context context) {
         this.context = context.getApplicationContext();
         packageManager = context.getPackageManager();
         isTablet = context.getResources().getBoolean(R.bool.isTablet);
+        isApi14 = Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH;
     }
 
     public boolean shouldShowOnboarding() {
-        return !PreferencesManager.getHasShownOnboarding() && !isTablet;
+        return !PreferencesManager.getHasShownOnboarding() && !isTablet && isApi14;
     }
 
     public boolean shouldShowOnboardingBanner() {
-        return !PreferencesManager.isOnboardingBannerDismissed() && !isTablet;
+        return !PreferencesManager.isOnboardingBannerDismissed() && !isTablet && isApi14;
     }
 
     public void setOnboardingDismissed() {
