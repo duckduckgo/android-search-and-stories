@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/activity_onboarding"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.duckduckgo.mobile.android.activity.OnboardingActivity">
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <Button
+        android:id="@+id/add_to_home_screen_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/onboarding_screen_bottom_margin_landscape"
+        android:layout_gravity="bottom|center_horizontal"
+        android:text="@string/add_to"
+        android:textColor="#ffffff"
+        android:background="@drawable/onboarding_button_background"
+        android:paddingEnd="24dp"
+        android:paddingStart="24dp"
+        android:textSize="16sp"/>
+    <com.duckduckgo.mobile.android.views.pageindicator.OnboardingPageIndicator
+        android:id="@+id/page_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="38dp"
+        android:layout_marginEnd="14dp"
+        android:layout_marginRight="14dp"
+        android:layout_gravity="top|end"/>
+</FrameLayout>

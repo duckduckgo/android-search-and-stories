@@ -96,6 +96,7 @@ import com.duckduckgo.mobile.android.util.DDGConstants;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.DisplayStats;
+import com.duckduckgo.mobile.android.util.OnboardingHelper;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
@@ -122,6 +123,7 @@ public class DuckDuckGo extends AppCompatActivity {
 	private DDGAutoCompleteTextView searchEditText;
 
 	private SharedPreferences sharedPreferences;
+    private OnboardingHelper onboardingHelper;
 		
 	public boolean savedState = false;
     private boolean backPressed = false;
@@ -162,6 +164,11 @@ public class DuckDuckGo extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTheme(R.style.DDGTheme);
+        onboardingHelper = new OnboardingHelper(this);
+        if(onboardingHelper.shouldShowOnboarding()) {
+            startActivity(OnboardingActivity.getStartIntent(this));
+        }
         Log.d(TAG, "on create");
         canCommitFragmentSafely = true;
 
