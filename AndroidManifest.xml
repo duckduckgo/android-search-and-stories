@@ -2,18 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.duckduckgo.mobile.android"
     android:installLocation="auto"
-    android:versionCode="76"
-    android:versionName="3.0.14">
+    android:versionCode="77"
+    android:versionName="3.0.15">
 
     <uses-sdk android:minSdkVersion="8" android:targetSdkVersion="23" />
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
 
     <application
         android:hardwareAccelerated="true"
         android:icon="@drawable/icon"
-        android:theme="@style/DDGTheme"
+        android:theme="@style/DDGTheme.Launcher"
         android:label="@string/AppName"
         android:name="DDGApplication">
 
@@ -84,6 +85,10 @@
 	        android:launchMode="singleInstance"
 	        android:excludeFromRecents="true"
 	        android:finishOnTaskLaunch="true" />
+
+        <activity android:name=".activity.OnboardingActivity"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/DDGTheme.ClearStatusBar"/>
 
 		<provider android:name=".providers.DuckDuckGoProvider"
 				android:authorities="com.duckduckgo.mobile.android.providers.DuckDuckGoProvider" />

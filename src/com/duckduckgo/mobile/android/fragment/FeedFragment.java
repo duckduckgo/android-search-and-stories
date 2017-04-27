@@ -176,7 +176,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         //CategoryClickListener categoryClickListener = new CategoryClickListener();
 		//feedAdapter = new MainFeedAdapter(activity, sourceClickListener, categoryClickListener);
         //recyclerAdapter = new RecyclerMainFeedAdapter(activity, sourceClickListener, categoryClickListener);
-        recyclerAdapter = new RecyclerMainFeedAdapter(activity);
+        recyclerAdapter = new RecyclerMainFeedAdapter(activity, getFragmentManager());
 
 		mainFeedTask = null;
 
