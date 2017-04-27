@@ -36,7 +36,7 @@ public class TorIntegration {
         @Override
         public void onReceive(Context context, Intent intent) {
             orbotStatus = intent.getStringExtra(OrbotHelper.EXTRA_STATUS);
-            if(isOrbotRunning()) {
+            if(isTorSettingEnabled() && isOrbotRunning()) {
                 Toast.makeText(context, R.string.orbot_connected, Toast.LENGTH_SHORT).show();
                 BusProvider.getInstance().post(new OrbotConnectedEvent());
             }
