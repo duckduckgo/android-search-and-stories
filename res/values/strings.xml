@@ -303,7 +303,7 @@
     <string name="instruction_2_b">3-dot menu</string>
     <string name="instruction_3_a">Tap</string>
     <string name="instruction_3_b">Add to Home screen</string>
-    <string name="instruction_done">I’ve done this!</string>
+    <string name="instruction_done">Done!</string>
 
     <!-- SSL Certificate dialogs -->
     <!-- Title for an SSL Certificate dialog -->

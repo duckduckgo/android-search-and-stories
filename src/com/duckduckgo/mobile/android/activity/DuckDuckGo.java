@@ -33,6 +33,7 @@ import com.duckduckgo.mobile.android.adapters.AutoCompleteResultsAdapter;
 import com.duckduckgo.mobile.android.adapters.RecentResultCursorAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.container.DuckDuckGoContainer;
+import com.duckduckgo.mobile.android.dialogs.InstructionDialogFragment;
 import com.duckduckgo.mobile.android.dialogs.NewSourcesDialogBuilder;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistorySearchMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.HistoryStoryMenuDialog;
@@ -170,7 +171,7 @@ public class DuckDuckGo extends AppCompatActivity {
         setTheme(R.style.DDGTheme);
         onboardingHelper = new OnboardingHelper(this);
         if(onboardingHelper.shouldShowOnboarding()) {
-            startActivity(OnboardingActivity.getStartIntent(this));
+            showOnboardingInstruction();
         }
         Log.d(TAG, "on create");
         canCommitFragmentSafely = true;
@@ -761,6 +762,14 @@ public class DuckDuckGo extends AppCompatActivity {
     	// This makes a little (X) to clear the search bar.
     	getSearchField().setCompoundDrawables(null, null, null, null);
 	}
+
+    private void showOnboardingInstruction() {
+        InstructionDialogFragment.newInstance(
+                onboardingHelper.isDefaultBrowserFirefox()
+                        ? InstructionDialogFragment.EXTRA_INSTRUCTION_FIREFOX
+                        : InstructionDialogFragment.EXTRA_INSTRUCTION_CHROME,
+                true).show(getSupportFragmentManager(), InstructionDialogFragment.TAG);
+    }
 
 	public void searchOrGoToUrl(final String text, final SESSIONTYPE sessionType) {
         if(DDGControlVar.useExternalBrowser==DDGConstants.ALWAYS_INTERNAL) {
