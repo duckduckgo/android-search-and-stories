@@ -31,7 +31,7 @@ import org.acra.annotation.ReportsCrashes;
 import java.io.File;
 
 @ReportsCrashes(formKey="",
-formUri = "https://collect.duckduckgo.com/collect.js?type=crash",
+formUri = "https://duckduckgo.com/crash.js",
 mode = ReportingInteractionMode.DIALOG,
 customReportContent = {
         ReportField.APP_VERSION_CODE, ReportField.APP_VERSION_NAME, ReportField.ANDROID_VERSION, ReportField.STACK_TRACE,
