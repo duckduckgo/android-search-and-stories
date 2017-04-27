@@ -29,6 +29,7 @@ import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewStoryMenuDialog;
 import com.duckduckgo.mobile.android.dialogs.menuDialogs.WebViewWebPageMenuDialog;
 import com.duckduckgo.mobile.android.download.ContentDownloader;
 import com.duckduckgo.mobile.android.events.HandleShareButtonClickEvent;
+import com.duckduckgo.mobile.android.events.OrbotConnectedEvent;
 import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.events.ReadabilityFeedRetrieveSuccessEvent;
 import com.duckduckgo.mobile.android.events.WebViewEvents.WebViewBackPressActionEvent;
@@ -831,6 +832,11 @@ public class WebFragment extends Fragment {
 		} else {
 			urlType = URLTYPE.WEBPAGE;
 		}
+	}
+
+	@Subscribe
+	public void onOrbotConnectedEvent(OrbotConnectedEvent event) {
+		actionReload();
 	}
 
 }

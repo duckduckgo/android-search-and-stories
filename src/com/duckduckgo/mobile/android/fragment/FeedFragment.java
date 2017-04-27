@@ -30,6 +30,7 @@ import com.duckduckgo.mobile.android.adapters.RecyclerMainFeedAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
+import com.duckduckgo.mobile.android.events.OrbotConnectedEvent;
 import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.events.RequestKeepFeedUpdatedEvent;
 import com.duckduckgo.mobile.android.events.RequestOpenWebPageEvent;
@@ -469,6 +470,11 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             overflowMenu.setMenu(feedMenu);
             overflowMenu.show(event.anchor);
         }
+    }
+
+    @Subscribe
+    public void onOrbotConnectedEvent(OrbotConnectedEvent event) {
+        keepFeedUpdated();
     }
 
 }

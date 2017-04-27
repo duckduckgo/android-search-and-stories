@@ -1,7 +1,5 @@
 package com.duckduckgo.mobile.android.network;
 
-import info.guardianproject.onionkit.trust.StrongHttpsClient;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -32,6 +30,7 @@ import ch.boye.httpclientandroidlib.params.HttpProtocolParams;
 import ch.boye.httpclientandroidlib.protocol.HTTP;
 import ch.boye.httpclientandroidlib.protocol.HttpContext;
 import ch.boye.httpclientandroidlib.util.EntityUtils;
+import info.guardianproject.netcipher.client.StrongHttpsClient;
 
 import com.duckduckgo.mobile.android.activity.DuckDuckGo;
 import com.duckduckgo.mobile.android.util.DDGConstants;
