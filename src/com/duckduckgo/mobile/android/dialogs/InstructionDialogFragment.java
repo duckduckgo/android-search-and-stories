@@ -1,11 +1,13 @@
 package com.duckduckgo.mobile.android.dialogs;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -13,6 +15,7 @@ import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,7 +52,7 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
     private static final String EXTRA_INSTRUCTION_TYPE = "instruction_type";
     private static final String EXTRA_DISABLE_DISMISS_BUTTON = "disable_dismiss_button";
 
-    private static final int INITIAL_DISABLE_TIME = 5000;
+    private static final int INITIAL_DISABLE_TIME = 1000;
 
     private View firefoxInstructionContainer, chromeInstructionContainer;
     private View toggleInstructionContainer;
@@ -100,6 +103,24 @@ public class InstructionDialogFragment extends AppCompatDialogFragment {
             getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
             getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
+    }
+
+    @Override
+    public void dismiss() {
+        onboardingHelper.setOnboardingDismissed();
+        super.dismiss();
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        return new Dialog(getContext(), getTheme()) {
+            @Override
+            public void onBackPressed() {
+                onboardingHelper.setOnboardingDismissed();
+                super.onBackPressed();
+            }
+        };
     }
 
     private void init(Context context, final View rootView) {
