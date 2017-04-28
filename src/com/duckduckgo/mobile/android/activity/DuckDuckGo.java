@@ -764,11 +764,11 @@ public class DuckDuckGo extends AppCompatActivity {
 	}
 
     private void showOnboardingInstruction() {
-        InstructionDialogFragment.newInstance(
-                onboardingHelper.isDefaultBrowserFirefox()
-                        ? InstructionDialogFragment.EXTRA_INSTRUCTION_FIREFOX
-                        : InstructionDialogFragment.EXTRA_INSTRUCTION_CHROME,
-                true).show(getSupportFragmentManager(), InstructionDialogFragment.TAG);
+        int instructionType = onboardingHelper.isDefaultBrowserFirefox()
+                ? InstructionDialogFragment.EXTRA_INSTRUCTION_FIREFOX
+                : InstructionDialogFragment.EXTRA_INSTRUCTION_CHROME;
+        InstructionDialogFragment.newInstance(instructionType, true)
+                .show(getSupportFragmentManager(), InstructionDialogFragment.TAG);
     }
 
 	public void searchOrGoToUrl(final String text, final SESSIONTYPE sessionType) {
