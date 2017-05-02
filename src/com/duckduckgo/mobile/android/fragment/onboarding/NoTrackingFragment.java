@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 
 import com.duckduckgo.mobile.android.R;
+import com.duckduckgo.mobile.android.util.Onboarding;
 
 /**
  * Created by fgei on 4/4/17.
@@ -12,11 +13,6 @@ import com.duckduckgo.mobile.android.R;
 public class NoTrackingFragment extends BaseOnboardingFragment {
 
     public static final String TAG = "no_tracking_fragment";
-
-    public static final int TITLE = R.string.no_tracking_title;
-    public static final int SUBTITLE = R.string.no_tracking_subtitle;
-    public static final int IMG = R.drawable.illustration_3;
-    public static final int BACKGROUND_COLOR = R.color.onboarding_no_tracking_background;
 
     public static NoTrackingFragment newInstance(int indexPosition) {
         return newInstance(indexPosition, false);
@@ -29,22 +25,7 @@ public class NoTrackingFragment extends BaseOnboardingFragment {
     }
 
     @Override
-    protected int getBackgroundColor() {
-        return ContextCompat.getColor(getContext(), BACKGROUND_COLOR);
-    }
-
-    @Override
-    protected int getIcon() {
-        return IMG;
-    }
-
-    @Override
-    protected String getTitle() {
-        return getString(TITLE);
-    }
-
-    @Override
-    protected String getSubtitle() {
-        return getString(SUBTITLE);
+    protected Onboarding.OnboardingValue getOnboardingValue() {
+        return Onboarding.getNoTracking();
     }
 }

@@ -6,7 +6,6 @@ import android.graphics.Point;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -22,15 +21,10 @@ import android.widget.LinearLayout;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.OnboardingAdapter;
 import com.duckduckgo.mobile.android.dialogs.InstructionDialogFragment;
-import com.duckduckgo.mobile.android.fragment.onboarding.EndOnboardingFragment;
-import com.duckduckgo.mobile.android.fragment.onboarding.NoAdsFragment;
-import com.duckduckgo.mobile.android.fragment.onboarding.NoTrackingFragment;
-import com.duckduckgo.mobile.android.fragment.onboarding.PrivacyFragment;
-import com.duckduckgo.mobile.android.fragment.onboarding.RightFragment;
 import com.duckduckgo.mobile.android.util.CompatUtils;
+import com.duckduckgo.mobile.android.util.Onboarding;
 import com.duckduckgo.mobile.android.util.OnboardingHelper;
 import com.duckduckgo.mobile.android.util.OnboardingTransformer;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.pageindicator.OnboardingPageIndicator;
 
 import java.util.Arrays;
@@ -115,12 +109,7 @@ public class OnboardingActivity extends AppCompatActivity {
         });
         viewPager.setAdapter(adapter);
 
-        int[] backgroundColors = new int[] {
-                ContextCompat.getColor(this, PrivacyFragment.BACKGROUND_COLOR),
-                ContextCompat.getColor(this, NoAdsFragment.BACKGROUND_COLOR),
-                ContextCompat.getColor(this, NoTrackingFragment.BACKGROUND_COLOR),
-                ContextCompat.getColor(this, RightFragment.BACKGROUND_COLOR),
-                ContextCompat.getColor(this, EndOnboardingFragment.BACKGROUND_COLOR)};
+        int[] backgroundColors = Onboarding.getBackgroundColors(this);
         pageIndicator = (OnboardingPageIndicator) findViewById(R.id.page_indicator);
         pageIndicator.setViewPager(viewPager, adapter.getCount() - 1);
 

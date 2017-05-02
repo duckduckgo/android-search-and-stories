@@ -45,7 +45,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFeedAdapter.BaseViewHolder> {
     private static final String TAG = "MainFeedAdapter";
 
     private static final int ITEM_TYPE_FEED = 0;
@@ -62,7 +62,15 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     public List<FeedObject> data;
 
-    public class FeedViewHolder extends RecyclerView.ViewHolder {
+    public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
+        public BaseViewHolder(View itemView) {
+            super(itemView);
+        }
+        public abstract void attach();
+        public abstract void detach();
+    }
+
+    public class FeedViewHolder extends BaseViewHolder {
 
         public final TextView textViewTitle;
         public final FrameLayout frameCategoryContainer;
@@ -82,14 +90,23 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
             this.imageViewBackground = (AsyncImageView) v.findViewById(R.id.feedItemBackground);
             this.imageViewFeedIcon = (AsyncImageView) v.findViewById(R.id.feedItemSourceIcon);
         }
+
+        @Override
+        public void attach() {
+
+        }
+
+        @Override
+        public void detach() {
+
+        }
     }
 
-    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+    public class HeaderViewHolder extends BaseViewHolder {
 
         private final int SLIDE_TIME = 10000;
 
         public final ViewPager viewPager;
-        public final FragmentPagerAdapter adapter;
         public final BannerOnboardingPageIndicator pageIndicator;
         public final Button instructionbutton;
         public final ImageButton dismissImageButton;
@@ -103,9 +120,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
             instructionbutton = (Button) itemView.findViewById(R.id.instruction_button);
             dismissImageButton = (ImageButton) itemView.findViewById(R.id.dismiss_image_button);
             viewPager = (ViewPager) itemView.findViewById(R.id.view_pager);
-            adapter = new BannerOnboardingAdapter(fragmentManager);
-            viewPager.setAdapter(adapter);
-            viewPager.setPageTransformer(false, new OnboardingTransformer());
+            viewPager.setAdapter(new BannerOnboardingAdapter());
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int i, float v, int i1) {
@@ -126,6 +141,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
                 }
             });
             pageIndicator = (BannerOnboardingPageIndicator) itemView.findViewById(R.id.page_indicator);
+            //initViewPager();
             pageIndicator.setViewPager(viewPager);
             handler = new Handler();
             slideRunnable = new Runnable() {
@@ -137,7 +153,16 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
                     handler.postDelayed(this, SLIDE_TIME);
                 }
             };
+        }
+
+        @Override
+        public void attach() {
             startSlidingViewPager();
+        }
+
+        @Override
+        public void detach() {
+            stopSlidingViewPager();
         }
 
         private void startSlidingViewPager() {
@@ -164,13 +189,13 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if(viewType == ITEM_TYPE_HEADER) return new HeaderViewHolder(inflater.inflate(R.layout.viewholder_feed_header, parent, false));
         return new FeedViewHolder(inflater.inflate(R.layout.item_main_feed, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final BaseViewHolder holder, int position) {
         if(position == 0 && isOnboardingBannerVisible) {
             //that's the header;
             final HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
@@ -314,7 +339,6 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
         int index = position;
         if(isOnboardingBannerVisible) index -= 1;
         return data.get(index);
-        //return data.get(position - 1);//header
     }
 
     @Override
@@ -322,14 +346,24 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<ViewHolder> {
         int size = data.size();
         if(isOnboardingBannerVisible) return size+ 1;
         return size;
-        //return data.size() + 1; //header
     }
 
     @Override
     public int getItemViewType(int position) {
         if(position == 0 && isOnboardingBannerVisible) return ITEM_TYPE_HEADER;
         return ITEM_TYPE_FEED;
-        //return super.getItemViewType(position);
+    }
+
+    @Override
+    public void onViewAttachedToWindow(BaseViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        holder.attach();
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(BaseViewHolder holder) {
+        holder.detach();
+        super.onViewDetachedFromWindow(holder);
     }
 
     private void dismissOnboardingBanner() {

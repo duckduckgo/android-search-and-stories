@@ -7,8 +7,12 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
@@ -26,6 +30,8 @@ import android.widget.TextView;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.util.CompatUtils;
 import com.duckduckgo.mobile.android.util.DimenUtils;
+import com.duckduckgo.mobile.android.util.Onboarding;
+import com.squareup.picasso.Picasso;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,15 +48,21 @@ public abstract class BaseOnboardingFragment extends Fragment {
     private static final float BOTTOM_MARGIN_CONSTRAINT_PORTRAIT = 3.819f;
     private static final float BOTTOM_MARGIN_CONSTRAINT_LANDSCAPE = 4.228f;
 
-    protected abstract int getBackgroundColor();
-    protected abstract int getIcon();
-    protected abstract String getTitle();
-    protected abstract String getSubtitle();
+    protected abstract Onboarding.OnboardingValue getOnboardingValue();
+
+    private Onboarding.OnboardingValue onboardingValue;
+    private boolean hasContent = true;
 
     private ViewGroup backgroundFrameLayout;
     private TextView titleTextView;
     private TextView subtitleTextView;
     private ImageView iconImageView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        onboardingValue = getOnboardingValue();
+    }
 
     @Nullable
     @Override
@@ -78,6 +90,7 @@ public abstract class BaseOnboardingFragment extends Fragment {
         if(!useMiniLayout()) {
             backgroundFrameLayout.setBackgroundColor(getBackgroundColor());
         }
+        if(!hasContent) return;
         String title = getTitle();
         if(useMiniLayout()) title = title.replaceAll("\\n", " ");
         titleTextView.setText(title);
@@ -91,6 +104,10 @@ public abstract class BaseOnboardingFragment extends Fragment {
 
     protected boolean useMiniLayout() {
         return getArguments().getBoolean(EXTRA_MINI_LAYOUT);
+    }
+
+    protected void setHasContent(boolean hasContent) {
+        this.hasContent = hasContent;
     }
 
     private int getIndexPosition() {
@@ -124,11 +141,29 @@ public abstract class BaseOnboardingFragment extends Fragment {
         }
     }
 
+    private String getTitle() {
+        if(!hasContent) return "";
+        return getString(onboardingValue.title);
+    }
+
+    private String getSubtitle() {
+        if(!hasContent) return "";
+        return getString(onboardingValue.subtitle);
+    }
+
+    @DrawableRes
+    private int getIcon() {
+        if(!hasContent) return 0;
+        return onboardingValue.icon;
+    }
+
+    @ColorInt
+    private int getBackgroundColor() {
+        return onboardingValue.backgroundColor;
+    }
+
     protected static Bundle createArgs(int indexPosition) {
-        return createArgs(indexPosition, false);/*
-        Bundle args = new Bundle();
-        args.putInt(EXTRA_INDEX_POSITION, indexPosition);
-        return args;*/
+        return createArgs(indexPosition, false);
     }
 
     protected static Bundle createArgs(int indexPosition, boolean miniLayout) {
