@@ -1,7 +1,7 @@
 package com.duckduckgo.mobile.android.util;
 
-import android.content.Context;
-import android.support.v4.content.ContextCompat;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.duckduckgo.mobile.android.R;
 
@@ -9,7 +9,7 @@ import com.duckduckgo.mobile.android.R;
  * Created by fgei on 4/30/17.
  */
 
-public class OnboardingPageConfiguration {
+public class OnboardingPageConfiguration implements Parcelable {
 
     private static final int PRIVACY_TITLE = R.string.privacy_title;
     private static final int PRIVACY_SUBTITLE = R.string.privacy_subtitle;
@@ -30,6 +30,8 @@ public class OnboardingPageConfiguration {
     private static final int RIGHT_SUBTITLE = R.string.right_subtitle;
     private static final int RIGHT_ICON = R.drawable.illustration_4;
     private static final int RIGHT_BACKGROUND_COLOR = R.color.onboarding_right_background;
+
+    private static final int INVALID_RES_ID = -1;
 
     public static OnboardingPageConfiguration getPrivacy() {
         return new OnboardingPageConfiguration(
@@ -68,28 +70,62 @@ public class OnboardingPageConfiguration {
     }
 
     public static OnboardingPageConfiguration getFadeOnboarding() {
-        return new OnboardingPageConfiguration(0, 0, 0, RIGHT_BACKGROUND_COLOR);
-    }
-
-    public static int[] getBackgroundColors(Context context) {
-        return new int[] {
-                ContextCompat.getColor(context, PRIVACY_BACKGROUND_COLOR),
-                ContextCompat.getColor(context, NO_ADS_BACKGROUND_COLOR),
-                ContextCompat.getColor(context, NO_TRACKING_BACKGROUND_COLOR),
-                ContextCompat.getColor(context, RIGHT_BACKGROUND_COLOR),
-                ContextCompat.getColor(context, RIGHT_BACKGROUND_COLOR)
-        };
+        return new OnboardingPageConfiguration(RIGHT_BACKGROUND_COLOR);
     }
 
     public final int title;
     public final int subtitle;
     public final int icon;
     public final int backgroundColor;
+    public final boolean hasContent;
 
     public OnboardingPageConfiguration(int title, int subtitle, int icon, int backgroundColor) {
         this.title = title;
         this.subtitle = subtitle;
         this.icon = icon;
         this.backgroundColor = backgroundColor;
+        this.hasContent = true;
     }
+
+    public OnboardingPageConfiguration(int backgroundColor) {
+        this.title = INVALID_RES_ID;
+        this.subtitle = INVALID_RES_ID;
+        this.icon = INVALID_RES_ID;
+        this.backgroundColor = backgroundColor;
+        this.hasContent = false;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.title);
+        dest.writeInt(this.subtitle);
+        dest.writeInt(this.icon);
+        dest.writeInt(this.backgroundColor);
+        dest.writeByte(this.hasContent ? (byte) 1 : (byte) 0);
+    }
+
+    protected OnboardingPageConfiguration(Parcel in) {
+        this.title = in.readInt();
+        this.subtitle = in.readInt();
+        this.icon = in.readInt();
+        this.backgroundColor = in.readInt();
+        this.hasContent = in.readByte() != 0;
+    }
+
+    public static final Creator<OnboardingPageConfiguration> CREATOR = new Creator<OnboardingPageConfiguration>() {
+        @Override
+        public OnboardingPageConfiguration createFromParcel(Parcel source) {
+            return new OnboardingPageConfiguration(source);
+        }
+
+        @Override
+        public OnboardingPageConfiguration[] newArray(int size) {
+            return new OnboardingPageConfiguration[size];
+        }
+    };
 }

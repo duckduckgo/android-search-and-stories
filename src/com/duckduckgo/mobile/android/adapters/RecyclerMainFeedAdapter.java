@@ -116,7 +116,7 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
             instructionbutton = (Button) itemView.findViewById(R.id.instruction_button);
             dismissImageButton = (ImageButton) itemView.findViewById(R.id.dismiss_image_button);
             viewPager = (ViewPager) itemView.findViewById(R.id.view_pager);
-            viewPager.setAdapter(new BannerOnboardingAdapter());
+            viewPager.setAdapter(new OnboardingBannerAdapter());
             viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(int i, float v, int i1) {

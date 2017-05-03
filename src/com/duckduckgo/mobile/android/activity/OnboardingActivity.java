@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,10 +17,9 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.OnboardingAdapter;
+import com.duckduckgo.mobile.android.adapters.OnboardingPageAdapter;
 import com.duckduckgo.mobile.android.dialogs.InstructionDialogFragment;
 import com.duckduckgo.mobile.android.util.CompatUtils;
-import com.duckduckgo.mobile.android.util.OnboardingPageConfiguration;
 import com.duckduckgo.mobile.android.util.OnboardingHelper;
 import com.duckduckgo.mobile.android.util.OnboardingTransformer;
 import com.duckduckgo.mobile.android.views.pageindicator.OnboardingPageIndicator;
@@ -37,7 +35,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private FrameLayout activityContainer;
     private LinearLayout containerLayout;
     private ViewPager viewPager;
-    private OnboardingAdapter adapter;
+    private OnboardingPageAdapter adapter;
     private OnboardingPageIndicator pageIndicator;
     private Button addToHomeScreenButton;
 
@@ -87,7 +85,7 @@ public class OnboardingActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new OnboardingAdapter(getSupportFragmentManager());
+        adapter = new OnboardingPageAdapter(this, getSupportFragmentManager());
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -108,11 +106,10 @@ public class OnboardingActivity extends AppCompatActivity {
         });
         viewPager.setAdapter(adapter);
 
-        int[] backgroundColors = OnboardingPageConfiguration.getBackgroundColors(this);
         pageIndicator = (OnboardingPageIndicator) findViewById(R.id.page_indicator);
         pageIndicator.setViewPager(viewPager, adapter.getCount() - 1);
 
-        viewPager.setPageTransformer(false, new OnboardingTransformer(backgroundColors, pageIndicator, Arrays.asList(pageIndicator, addToHomeScreenButton)));
+        viewPager.setPageTransformer(false, new OnboardingTransformer(adapter, pageIndicator, Arrays.asList(pageIndicator, addToHomeScreenButton)));
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();

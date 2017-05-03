@@ -1,5 +1,6 @@
 package com.duckduckgo.mobile.android.adapters;
 
+import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +15,11 @@ import com.duckduckgo.mobile.android.util.OnboardingPageConfiguration;
  * Created by fgei on 4/11/17.
  */
 
-public class BannerOnboardingAdapter extends PagerAdapter {
+public class OnboardingBannerAdapter extends PagerAdapter {
 
     private final OnboardingPageConfiguration[] items;
 
-    public BannerOnboardingAdapter() {
+    public OnboardingBannerAdapter() {
         items = new OnboardingPageConfiguration[] {
                 OnboardingPageConfiguration.getPrivacy(),
                 OnboardingPageConfiguration.getNoAds(),
@@ -57,11 +58,14 @@ public class BannerOnboardingAdapter extends PagerAdapter {
     }
 
     private void populate(View rootView, OnboardingPageConfiguration onboardingPageConfiguration) {
-        TextView title = (TextView) rootView.findViewById(R.id.title_text_view);
-        title.setText(onboardingPageConfiguration.title);
-        TextView subtitle = (TextView) rootView.findViewById(R.id.subtitle_text_view);
-        subtitle.setText(onboardingPageConfiguration.subtitle);
-        ImageView icon = (ImageView) rootView.findViewById(R.id.icon_image_view);
-        icon.setImageResource(onboardingPageConfiguration.icon);
+        Context context = rootView.getContext();
+        TextView titleTextView = (TextView) rootView.findViewById(R.id.title_text_view);
+        String title = context.getString(onboardingPageConfiguration.title).replaceAll("\\n", " ");
+        titleTextView.setText(title);
+        TextView subtitleTextView = (TextView) rootView.findViewById(R.id.subtitle_text_view);
+        String subtitle = context.getString(onboardingPageConfiguration.subtitle).replaceAll("\\n", " ");
+        subtitleTextView.setText(subtitle);
+        ImageView iconImageView = (ImageView) rootView.findViewById(R.id.icon_image_view);
+        iconImageView.setImageResource(onboardingPageConfiguration.icon);
     }
 }
