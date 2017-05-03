@@ -1,11 +1,6 @@
 package com.duckduckgo.mobile.android.fragment.onboarding;
 
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
 import android.support.annotation.ColorRes;
@@ -13,10 +8,6 @@ import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.text.Layout;
-import android.text.StaticLayout;
-import android.text.TextPaint;
-import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,17 +15,11 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.util.CompatUtils;
-import com.duckduckgo.mobile.android.util.DimenUtils;
-import com.duckduckgo.mobile.android.util.Onboarding;
-import com.squareup.picasso.Picasso;
-
-import java.util.Arrays;
-import java.util.List;
+import com.duckduckgo.mobile.android.util.OnboardingPageConfiguration;
 
 /**
  * Created by fgei on 4/4/17.
@@ -48,21 +33,15 @@ public abstract class BaseOnboardingFragment extends Fragment {
     private static final float BOTTOM_MARGIN_CONSTRAINT_PORTRAIT = 3.819f;
     private static final float BOTTOM_MARGIN_CONSTRAINT_LANDSCAPE = 4.228f;
 
-    protected abstract Onboarding.OnboardingValue getOnboardingValue();
+    protected abstract OnboardingPageConfiguration getOnboardingPageConfiguration();
 
-    private Onboarding.OnboardingValue onboardingValue;
+    private OnboardingPageConfiguration onboardingPageConfiguration = getOnboardingPageConfiguration();
     private boolean hasContent = true;
 
     private ViewGroup backgroundFrameLayout;
     private TextView titleTextView;
     private TextView subtitleTextView;
     private ImageView iconImageView;
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        onboardingValue = getOnboardingValue();
-    }
 
     @Nullable
     @Override
@@ -88,7 +67,7 @@ public abstract class BaseOnboardingFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         if(!useMiniLayout()) {
-            backgroundFrameLayout.setBackgroundColor(getBackgroundColor());
+            backgroundFrameLayout.setBackgroundColor(ContextCompat.getColor(getContext(), getBackgroundColor()));
         }
         if(!hasContent) return;
         String title = getTitle();
@@ -141,25 +120,25 @@ public abstract class BaseOnboardingFragment extends Fragment {
         }
     }
 
-    private String getTitle() {
+    public String getTitle() {
         if(!hasContent) return "";
-        return getString(onboardingValue.title);
+        return getString(onboardingPageConfiguration.title);
     }
 
-    private String getSubtitle() {
+    public String getSubtitle() {
         if(!hasContent) return "";
-        return getString(onboardingValue.subtitle);
+        return getString(onboardingPageConfiguration.subtitle);
     }
 
     @DrawableRes
-    private int getIcon() {
+    public int getIcon() {
         if(!hasContent) return 0;
-        return onboardingValue.icon;
+        return onboardingPageConfiguration.icon;
     }
 
     @ColorInt
-    private int getBackgroundColor() {
-        return onboardingValue.backgroundColor;
+    public int getBackgroundColor() {
+        return ContextCompat.getColor(getContext(), onboardingPageConfiguration.backgroundColor);
     }
 
     protected static Bundle createArgs(int indexPosition) {

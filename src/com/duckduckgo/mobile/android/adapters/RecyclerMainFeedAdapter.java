@@ -5,12 +5,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -34,7 +31,6 @@ import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
 import com.duckduckgo.mobile.android.util.OnboardingHelper;
-import com.duckduckgo.mobile.android.util.OnboardingTransformer;
 import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.pageindicator.BannerOnboardingPageIndicator;
@@ -141,7 +137,6 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
                 }
             });
             pageIndicator = (BannerOnboardingPageIndicator) itemView.findViewById(R.id.page_indicator);
-            //initViewPager();
             pageIndicator.setViewPager(viewPager);
             handler = new Handler();
             slideRunnable = new Runnable() {

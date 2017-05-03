@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Fade;
-import android.transition.TransitionManager;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -22,7 +21,7 @@ import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.adapters.OnboardingAdapter;
 import com.duckduckgo.mobile.android.dialogs.InstructionDialogFragment;
 import com.duckduckgo.mobile.android.util.CompatUtils;
-import com.duckduckgo.mobile.android.util.Onboarding;
+import com.duckduckgo.mobile.android.util.OnboardingPageConfiguration;
 import com.duckduckgo.mobile.android.util.OnboardingHelper;
 import com.duckduckgo.mobile.android.util.OnboardingTransformer;
 import com.duckduckgo.mobile.android.views.pageindicator.OnboardingPageIndicator;
@@ -38,7 +37,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private FrameLayout activityContainer;
     private LinearLayout containerLayout;
     private ViewPager viewPager;
-    private FragmentPagerAdapter adapter;
+    private OnboardingAdapter adapter;
     private OnboardingPageIndicator pageIndicator;
     private Button addToHomeScreenButton;
 
@@ -109,7 +108,7 @@ public class OnboardingActivity extends AppCompatActivity {
         });
         viewPager.setAdapter(adapter);
 
-        int[] backgroundColors = Onboarding.getBackgroundColors(this);
+        int[] backgroundColors = OnboardingPageConfiguration.getBackgroundColors(this);
         pageIndicator = (OnboardingPageIndicator) findViewById(R.id.page_indicator);
         pageIndicator.setViewPager(viewPager, adapter.getCount() - 1);
 

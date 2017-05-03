@@ -1,7 +1,6 @@
 package com.duckduckgo.mobile.android.util;
 
 import android.content.Context;
-import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 
 import com.duckduckgo.mobile.android.R;
@@ -10,7 +9,7 @@ import com.duckduckgo.mobile.android.R;
  * Created by fgei on 4/30/17.
  */
 
-public class Onboarding {
+public class OnboardingPageConfiguration {
 
     private static final int PRIVACY_TITLE = R.string.privacy_title;
     private static final int PRIVACY_SUBTITLE = R.string.privacy_subtitle;
@@ -32,8 +31,8 @@ public class Onboarding {
     private static final int RIGHT_ICON = R.drawable.illustration_4;
     private static final int RIGHT_BACKGROUND_COLOR = R.color.onboarding_right_background;
 
-    public static OnboardingValue getPrivacy() {
-        return new OnboardingValue(
+    public static OnboardingPageConfiguration getPrivacy() {
+        return new OnboardingPageConfiguration(
                 PRIVACY_TITLE,
                 PRIVACY_SUBTITLE,
                 PRIVACY_ICON,
@@ -41,8 +40,8 @@ public class Onboarding {
         );
     }
 
-    public static OnboardingValue getNoAds() {
-        return new OnboardingValue(
+    public static OnboardingPageConfiguration getNoAds() {
+        return new OnboardingPageConfiguration(
                 NO_ADS_TITLE,
                 NO_ADS_SUBTITLE,
                 NO_ADS_ICON,
@@ -50,8 +49,8 @@ public class Onboarding {
         );
     }
 
-    public static OnboardingValue getNoTracking() {
-        return new OnboardingValue(
+    public static OnboardingPageConfiguration getNoTracking() {
+        return new OnboardingPageConfiguration(
                 NO_TRACKING_TITLE,
                 NO_TRACKING_SUBTITLE,
                 NO_TRACKING_ICON,
@@ -59,8 +58,8 @@ public class Onboarding {
         );
     }
 
-    public static OnboardingValue getRight() {
-        return new OnboardingValue(
+    public static OnboardingPageConfiguration getRight() {
+        return new OnboardingPageConfiguration(
                 RIGHT_TITLE,
                 RIGHT_SUBTITLE,
                 RIGHT_ICON,
@@ -68,8 +67,8 @@ public class Onboarding {
         );
     }
 
-    public static OnboardingValue getFadeOnboarding() {
-        return new OnboardingValue(0, 0, 0, RIGHT_BACKGROUND_COLOR);
+    public static OnboardingPageConfiguration getFadeOnboarding() {
+        return new OnboardingPageConfiguration(0, 0, 0, RIGHT_BACKGROUND_COLOR);
     }
 
     public static int[] getBackgroundColors(Context context) {
@@ -82,17 +81,15 @@ public class Onboarding {
         };
     }
 
-    public static class OnboardingValue {
-        public int title;
-        public int subtitle;
-        public int icon;
-        public int backgroundColor;
+    public final int title;
+    public final int subtitle;
+    public final int icon;
+    public final int backgroundColor;
 
-        public OnboardingValue(int title, int subtitle, int icon, int backgroundColor) {
-            this.title = title;
-            this.subtitle = subtitle;
-            this.icon = icon;
-            this.backgroundColor = backgroundColor;
-        }
+    public OnboardingPageConfiguration(int title, int subtitle, int icon, int backgroundColor) {
+        this.title = title;
+        this.subtitle = subtitle;
+        this.icon = icon;
+        this.backgroundColor = backgroundColor;
     }
 }

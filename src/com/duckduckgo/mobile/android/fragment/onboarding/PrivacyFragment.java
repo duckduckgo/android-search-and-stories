@@ -1,11 +1,6 @@
 package com.duckduckgo.mobile.android.fragment.onboarding;
 
-import android.graphics.Color;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.ColorUtils;
-
-import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.util.Onboarding;
+import com.duckduckgo.mobile.android.util.OnboardingPageConfiguration;
 
 /**
  * Created by fgei on 4/4/17.
@@ -26,7 +21,7 @@ public class PrivacyFragment extends BaseOnboardingFragment {
     }
 
     @Override
-    protected Onboarding.OnboardingValue getOnboardingValue() {
-        return Onboarding.getPrivacy();
+    protected OnboardingPageConfiguration getOnboardingPageConfiguration() {
+        return OnboardingPageConfiguration.getPrivacy();
     }
 }

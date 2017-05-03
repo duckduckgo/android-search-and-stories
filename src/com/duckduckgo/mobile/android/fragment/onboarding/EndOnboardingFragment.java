@@ -3,8 +3,7 @@ package com.duckduckgo.mobile.android.fragment.onboarding;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
-import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.util.Onboarding;
+import com.duckduckgo.mobile.android.util.OnboardingPageConfiguration;
 
 /**
  * Created by fgei on 4/10/17.
@@ -25,7 +24,7 @@ public class EndOnboardingFragment extends BaseOnboardingFragment {
     }
 
     @Override
-    protected Onboarding.OnboardingValue getOnboardingValue() {
-        return Onboarding.getFadeOnboarding();
+    protected OnboardingPageConfiguration getOnboardingPageConfiguration() {
+        return OnboardingPageConfiguration.getFadeOnboarding();
     }
 }
