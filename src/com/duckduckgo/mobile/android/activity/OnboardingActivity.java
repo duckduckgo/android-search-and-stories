@@ -5,13 +5,10 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.Fade;
-import android.transition.TransitionManager;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -20,17 +17,11 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.adapters.OnboardingAdapter;
+import com.duckduckgo.mobile.android.adapters.OnboardingPageAdapter;
 import com.duckduckgo.mobile.android.dialogs.InstructionDialogFragment;
-import com.duckduckgo.mobile.android.fragment.onboarding.EndOnboardingFragment;
-import com.duckduckgo.mobile.android.fragment.onboarding.NoAdsFragment;
-import com.duckduckgo.mobile.android.fragment.onboarding.NoTrackingFragment;
-import com.duckduckgo.mobile.android.fragment.onboarding.PrivacyFragment;
-import com.duckduckgo.mobile.android.fragment.onboarding.RightFragment;
 import com.duckduckgo.mobile.android.util.CompatUtils;
 import com.duckduckgo.mobile.android.util.OnboardingHelper;
 import com.duckduckgo.mobile.android.util.OnboardingTransformer;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.pageindicator.OnboardingPageIndicator;
 
 import java.util.Arrays;
@@ -44,7 +35,7 @@ public class OnboardingActivity extends AppCompatActivity {
     private FrameLayout activityContainer;
     private LinearLayout containerLayout;
     private ViewPager viewPager;
-    private FragmentPagerAdapter adapter;
+    private OnboardingPageAdapter adapter;
     private OnboardingPageIndicator pageIndicator;
     private Button addToHomeScreenButton;
 
@@ -94,7 +85,7 @@ public class OnboardingActivity extends AppCompatActivity {
             }
         });
 
-        adapter = new OnboardingAdapter(getSupportFragmentManager());
+        adapter = new OnboardingPageAdapter(this, getSupportFragmentManager());
 
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -115,16 +106,10 @@ public class OnboardingActivity extends AppCompatActivity {
         });
         viewPager.setAdapter(adapter);
 
-        int[] backgroundColors = new int[] {
-                ContextCompat.getColor(this, PrivacyFragment.BACKGROUND_COLOR),
-                ContextCompat.getColor(this, NoAdsFragment.BACKGROUND_COLOR),
-                ContextCompat.getColor(this, NoTrackingFragment.BACKGROUND_COLOR),
-                ContextCompat.getColor(this, RightFragment.BACKGROUND_COLOR),
-                ContextCompat.getColor(this, EndOnboardingFragment.BACKGROUND_COLOR)};
         pageIndicator = (OnboardingPageIndicator) findViewById(R.id.page_indicator);
         pageIndicator.setViewPager(viewPager, adapter.getCount() - 1);
 
-        viewPager.setPageTransformer(false, new OnboardingTransformer(backgroundColors, pageIndicator, Arrays.asList(pageIndicator, addToHomeScreenButton)));
+        viewPager.setPageTransformer(false, new OnboardingTransformer(adapter, pageIndicator, Arrays.asList(pageIndicator, addToHomeScreenButton)));
 
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();

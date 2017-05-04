@@ -244,7 +244,7 @@ public class DuckDuckGo extends AppCompatActivity {
                         DDGActionBarManager.getInstance().updateActionBar(fragmentManager, tag, backPressed);
                         backPressed = false;
                     }
-                    Log.e(TAG, "Fragment Back Stack current tag: " + DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
+                    Log.d(TAG, "Fragment Back Stack current tag: " + DDGControlVar.mDuckDuckGoContainer.currentFragmentTag);
                     showAllFragments();
                 }
             }
