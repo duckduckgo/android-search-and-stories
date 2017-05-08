@@ -19,8 +19,8 @@ android {
     applicationId "com.duckduckgo.mobile.android"
     minSdkVersion 16
     targetSdkVersion 23
-    versionCode 79
-    versionName "3.0.17"
+    versionCode 100
+    versionName "3.1.0"
   }
 
   repositories {
