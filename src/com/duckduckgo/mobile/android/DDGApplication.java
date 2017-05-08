@@ -121,6 +121,7 @@ public class DDGApplication extends Application {
 		DDGControlVar.START_SCREEN = PreferencesManager.getActiveStartScreen();
 		DDGControlVar.regionString = PreferencesManager.getRegion();
         DDGControlVar.useExternalBrowser = PreferencesManager.getUseExternalBrowser();
+		DDGControlVar.useExternalApp = PreferencesManager.getUseExternalApp();
 		
 		DDGControlVar.defaultSources = PreferencesManager.getDefaultSources();
 		DDGControlVar.userAllowedSources = PreferencesManager.getUserAllowedSources();

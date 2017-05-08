@@ -35,9 +35,11 @@
     <string name="PrefRegion">Region</string>
     <string name="PrefDirectQuery">Search on Tap</string>
     <string name="PrefExternalBrowser">Use External Browser</string>
+    <string name="PrefExternalApp">Use External App</string>
     <string name="PrefNever">Never</string>
     <string name="PrefExternalBrowserExceptSearches">For non-search results</string>
     <string name="PrefExternalBrowserAlways">Always</string>
+    <string name="PrefExternalAppAlways">Always</string>
     <string name="PrefClearCacheCookiesEveryLaunch">Every Launch</string>
     <string name="PrefClearCacheCookiesWeekly">Weekly</string>
     <string name="PrefClearCacheCookiesMonthly">Monthly</string>
