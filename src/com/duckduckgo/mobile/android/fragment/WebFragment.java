@@ -1,16 +1,20 @@
 package com.duckduckgo.mobile.android.fragment;
 
-import android.app.Activity;
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuBuilder;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +22,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.DownloadListener;
+import android.webkit.WebView;
 
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
@@ -80,6 +85,8 @@ public class WebFragment extends Fragment {
 	public static final String TAG = "web_fragment";
 	public static final String URL = "url";
     public static final String SESSION_TYPE = "session_type";
+	private static final int ITEM_ID_SAVE_IMAGE = 0;
+	private static final int REQUEST_WRITE_EXTERNAL_STORAGE = 0;
 
     private Context context = null;
 
@@ -136,9 +143,65 @@ public class WebFragment extends Fragment {
 			mainWebView.restoreState(savedInstanceState);
 			urlType = URLTYPE.getByCode(savedInstanceState.getInt("url_type"));
 		}
+		if (isDownloadImagesSupported()) {
+			registerForContextMenu(mainWebView);
+		}
 	}
 
-    @Override
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+		super.onCreateContextMenu(menu, v, menuInfo);
+		WebView.HitTestResult hitTestResult = mainWebView.getHitTestResult();
+		if (isDownloadImagesSupported() && isImage(hitTestResult)) {
+			menu.setHeaderTitle(hitTestResult.getExtra());
+			menu.add(0, ITEM_ID_SAVE_IMAGE, 0, R.string.save_image_context_menu_action);
+		}
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		if (item.getItemId() == ITEM_ID_SAVE_IMAGE && isDownloadImagesSupported()) {
+			if (hasWriteExternalStoragePermission()) {
+				scheduleImageDownload();
+			} else {
+				requestPermissions(new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+						REQUEST_WRITE_EXTERNAL_STORAGE);
+			}
+			return true;
+		}
+		return super.onContextItemSelected(item);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		if (requestCode == REQUEST_WRITE_EXTERNAL_STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+			scheduleImageDownload();
+		} else {
+			super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		}
+	}
+
+	private void scheduleImageDownload() {
+		String imageUrl = mainWebView.getHitTestResult().getExtra();
+		contentDownloader.downloadImage(imageUrl);
+	}
+
+	private boolean hasWriteExternalStoragePermission() {
+		int permission = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE);
+		return permission == PackageManager.PERMISSION_GRANTED;
+	}
+
+	private boolean isImage(WebView.HitTestResult hitTestResult) {
+		int type = hitTestResult.getType();
+		return type == WebView.HitTestResult.IMAGE_TYPE || type == WebView.HitTestResult.SRC_IMAGE_ANCHOR_TYPE;
+	}
+
+	private boolean isDownloadImagesSupported() {
+		return Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD
+				&& contentDownloader.isDownloadManagerEnabled();
+	}
+
+	@Override
     public void onStart() {
         super.onStart();
 		BusProvider.getInstance().register(this);
