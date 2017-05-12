@@ -15,6 +15,14 @@ android {
   compileSdkVersion 23
   buildToolsVersion "23.0.3"
 
+  defaultConfig {
+    applicationId "com.duckduckgo.mobile.android"
+    minSdkVersion 16
+    targetSdkVersion 23
+    versionCode 100
+    versionName "3.1.0"
+  }
+
   repositories {
     mavenCentral()
   }

@@ -157,7 +157,7 @@ Autors: m4sk1n <m4sk1n at vivaldi dot net> -->
 	<string name="PrefCheckOrbotStatus">Sprawdź status Orbot</string>
 	<string name="PrefEnableTor">Włącz Tor</string>
 	<string name="PrefGroupTor">Tor</string>
-	<string name="PrefReadableSummary">Włączony, kiedy dostępny</string>
+	<string name="PrefReadableSummary">Włączona, gdy dostępna</string>
 	<string name="PrefReadable">Czytelność</string>
 	<string name="PrefAutoUpdate">Automatyczne odświeżanie kanałów</string>
 	<string name="PrefTurnOffAutocomplete">Wyłączone</string>
@@ -187,9 +187,9 @@ Autors: m4sk1n <m4sk1n at vivaldi dot net> -->
 	<string name="PrefClearCacheAndCookies">Wyczyść pliki cookies i pamięć podręczną</string>
 	<string name="PrefClearBrowserCache">Wyczyść pamięć podręczną</string>
 	<string name="PrefClearCookies">Wyczyszczono pliki cookies</string>
-	<string name="PrefRecordCookies">Zapisz pliki cookies</string>
+	<string name="PrefRecordCookies">Zapisuj pliki cookies</string>
 	<string name="PrefClearHistory">Wyczyść ostatnie</string>
-	<string name="PrefRecordHistory">Zapisz ostatnie</string>
+	<string name="PrefRecordHistory">Zapisuj ostatnie wyszukiwania</string>
 	<string name="PrefRecentSearch">@string/recents</string>
 	<string name="PrefDuckMode">Szukaj</string>
 	<string name="PrefSavedItems">@string/favorites</string>

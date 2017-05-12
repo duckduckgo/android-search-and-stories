@@ -257,6 +257,7 @@
     <string name="action_forward">Forward</string>
     <string name="action_close">Close</string>
     <string name="remove">Remove</string>
+    <string name="save_image_context_menu_action">Save Image</string>
 
     <string name="orbot_install_title">Install Orbot</string>
     <string name="orbot_install_message">You must have Orbot installed and activated to proxy traffic through it. Would you like to install it?</string>
