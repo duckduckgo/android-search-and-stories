@@ -67,7 +67,7 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private Menu feedMenu = null;
     private DDGOverflowMenu overflowMenu = null;
 
-    private int lastFirstVisiblePosition = 0;
+    private int lastFeedVisiblePosition = 0;
 
     @Override
     public void onAttach(Context context) {
@@ -117,14 +117,14 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
-        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(lastFirstVisiblePosition);
+        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(lastFeedVisiblePosition);
 		keepFeedUpdated();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-        lastFirstVisiblePosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
+        lastFeedVisiblePosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
         recyclerView.setAdapter(null);
         swipeRefreshLayout.setRefreshing(false);
 		if (mainFeedTask != null) {
