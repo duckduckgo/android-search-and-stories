@@ -3,9 +3,6 @@ package com.duckduckgo.mobile.android.fragment;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,18 +11,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
-import com.duckduckgo.mobile.android.actionbar.DDGActionBarManager;
-import com.duckduckgo.mobile.android.adapters.MainFeedAdapter;
 import com.duckduckgo.mobile.android.adapters.RecyclerMainFeedAdapter;
 import com.duckduckgo.mobile.android.bus.BusProvider;
 import com.duckduckgo.mobile.android.dialogs.FeedRequestFailureDialogBuilder;
@@ -33,8 +24,6 @@ import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.OrbotConnectedEvent;
 import com.duckduckgo.mobile.android.events.OverflowButtonClickEvent;
 import com.duckduckgo.mobile.android.events.RequestKeepFeedUpdatedEvent;
-import com.duckduckgo.mobile.android.events.RequestOpenWebPageEvent;
-import com.duckduckgo.mobile.android.events.RequestSyncAdaptersEvent;
 import com.duckduckgo.mobile.android.events.SourceFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelSourceFilterEvent;
@@ -49,15 +38,11 @@ import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.REQUEST_TYPE;
 import com.duckduckgo.mobile.android.util.ReadArticlesManager;
 import com.duckduckgo.mobile.android.util.SCREEN;
-import com.duckduckgo.mobile.android.util.SESSIONTYPE;
-import com.duckduckgo.mobile.android.util.TorIntegrationProvider;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
-import com.duckduckgo.mobile.android.views.MainFeedListView;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
-import java.util.HashMap;
+
 
 public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -81,6 +66,8 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
     private Menu feedMenu = null;
     private DDGOverflowMenu overflowMenu = null;
+
+    private int lastFeedVisiblePosition = 0;
 
     @Override
     public void onAttach(Context context) {
@@ -130,13 +117,14 @@ public class FeedFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 		// lock button etc. can cause MainFeedTask results to be useless for the Activity
 		// which is restarted (onPostExecute becomes invalid for the new Activity instance)
 		// ensure we refresh in such cases
-
+        ((LinearLayoutManager) recyclerView.getLayoutManager()).scrollToPosition(lastFeedVisiblePosition);
 		keepFeedUpdated();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
+        lastFeedVisiblePosition = ((LinearLayoutManager)recyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition();
         recyclerView.setAdapter(null);
         swipeRefreshLayout.setRefreshing(false);
 		if (mainFeedTask != null) {
