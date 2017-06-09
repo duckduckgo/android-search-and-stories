@@ -316,12 +316,12 @@
     <string name="instruction_done">Ferdig!</string>
     <string name="add_to">Legg til %s</string>
     <string name="instruction_1_a">Opne</string>
-    <string name="instruction_firefox_1_a">\@string/instruction_open</string>
-    <string name="instruction_firefox_1_b">\@string/browser_firefox</string>
-    <string name="instruction_firefox_2_a">\@string/instruction_open</string>
+    <string name="instruction_firefox_1_a">@string/instruction_open</string>
+    <string name="instruction_firefox_1_b">@string/browser_firefox</string>
+    <string name="instruction_firefox_2_a">@string/instruction_open</string>
     <string name="instruction_firefox_2_b">Meny</string>
     <string name="instruction_firefox_3_a">Gå til</string>
-    <string name="instruction_firefox_4_b">\@string/browser_duckduckgo</string>
+    <string name="instruction_firefox_4_b">@string/browser_duckduckgo</string>
     <string name="instruction_message">\"Andre søkemotorar sporar søka dine til og med når du er i privat nettlesarmodus. Vi sporar deg ikkje - punktum.\"</string>
     <string name="instruction_open">Opne</string>
     <string name="instruction_title">Bruk DuckDuckGo i %s</string>
