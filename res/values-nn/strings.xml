@@ -298,5 +298,53 @@
     <string name="WarnSSLTitle">Åtvaring: SSL sertifikat</string>
     <string name="WarnSSLDetail">SSL sertifikatet til serveren er ikkje lista som tiltrudd. 
         Du kan framleis velge å fortsette eller avbryte førespurnaden.</string>
+    <string name="LinkToApp_Amazon">http://www.amazon.com/gp/mas/dl/android?p=com.duckduckgo.mobile.android</string>
+    <string name="LinkToApp_Google">https://play.google.com/store/apps/details?id=com.duckduckgo.mobile.android</string>
+    <string name="LinkToApp_GoogleStore">market://details?id=com.duckduckgo.mobile.android</string>
+    <string name="SearchStringBig">Søk DuckDuckGo eller skriv URL</string>
+    <string name="SearchStringSmall">Søk DDG eller skriv URL</string>
+    <string name="browser_chrome">Chrome</string>
+    <string name="browser_duckduckgo">DuckDuckGo</string>
+    <string name="browser_firefox">Firefox</string>
+    <string name="ddg_homescreen_label">Søk DDG</string>
+    <string name="help_link">https://duck.co/help/mobile/android</string>
+    <string name="instruction_1_b">Chrome</string>
+    <string name="instruction_2_a">Opne</string>
+    <string name="instruction_bullet_point_1">1</string>
+    <string name="instruction_bullet_point_2">2</string>
+    <string name="instruction_bullet_point_3">3</string>
+    <string name="instruction_done">Ferdig!</string>
+    <string name="add_to">Legg til %s</string>
+    <string name="instruction_1_a">Opne</string>
+    <string name="instruction_firefox_1_a">@string/instruction_open</string>
+    <string name="instruction_firefox_1_b">@string/browser_firefox</string>
+    <string name="instruction_firefox_2_a">@string/instruction_open</string>
+    <string name="instruction_firefox_2_b">Meny</string>
+    <string name="instruction_firefox_3_a">Gå til</string>
+    <string name="instruction_firefox_4_b">@string/browser_duckduckgo</string>
+    <string name="instruction_message">\"Andre søkemotorar sporar søka dine til og med når du er i privat nettlesarmodus. Vi sporar deg ikkje - punktum.\"</string>
+    <string name="instruction_open">Opne</string>
+    <string name="instruction_title">Bruk DuckDuckGo i %s</string>
+    <string name="no_ads_subtitle">Sidan vi ikkje lagrar personleg informasjon om deg, har vi ikkje noko å dele med annoonsørar.</string>
+    <string name="orbot_start_title">Start Orbot</string>
+    <string name="orbot_install_title">Installer Orbot</string>
+    <string name="no_tracking_subtitle">Andre søkemotorar sporar søka dine til og med når du er i \'privat nettlesarmodus\'. Vi sporar deg ikkje - punktum.</string>
+    <string name="orbot_connected">Kopla til Tor</string>
+    <string name="instruction_firefox_3_b">Innstillingar -> Søk</string>
+    <string name="instruction_firefox_4_a">Vel</string>
+    <string name="add_to_homescreen">Legg til på Heimeskjerm</string>
+    <string name="ddg_added_to_home_page">DuckDuckGo vart lagt til på heimeskjermen din</string>
+    <string name="instruction_2_b">3-punkt meny</string>
+    <string name="instruction_3_a">Trykk</string>
+    <string name="instruction_3_b">Legg til på Heimeskjerm</string>
+    <string name="no_tracking_title">Inga sporing</string>
+    <string name="orbot_start_message">Det ser ikkje ut som om Orbot køyrer. Vil du starte han opp og kople til Tor?</string>
+    <string name="orbot_start_message_manually">Det ser ikkje ut som om Orbot køyrer. Vil du starte han opp og kople til Tor? Ver venleg å start Orbot manuelt viss han ikkje startar automatisk</string>
+    <string name="privacy_subtitle">Vi lagrar eller deler aldri din personlege informasjon. Nokonsinne.</string>
+    <string name="right_subtitle">Bruk DuckDuckGo og ta tilbake ditt personvern!</string>
+    <string name="privacy_title">Ekte personvern</string>
+    <string name="right_title">Personvern er ein rett!</string>
+    <string name="no_ads_title">Vi forfølgjer deg ikkje med reklame.</string>
+    <string name="orbot_install_message">Du må ha Orbot installert og aktivert for å bruke den som ein proxytenar. Vill du installere han?</string>
 
 </resources>
