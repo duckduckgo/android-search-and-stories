@@ -224,6 +224,12 @@ public final class DDGUtils {
 	      intent.setData(Uri.parse(telurl));
 	      return intent;
 	  }
+
+      public static Intent newMarketIntent(String marketUrl) {
+          Intent intent = new Intent(Intent.ACTION_VIEW);
+          intent.setData(Uri.parse(marketUrl));
+          return intent;
+      }
 	  
 	  public static String getBuildInfo(Context context) {		  
 		  // get app version info

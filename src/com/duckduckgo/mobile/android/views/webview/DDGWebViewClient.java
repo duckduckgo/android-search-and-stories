@@ -1,6 +1,7 @@
 package com.duckduckgo.mobile.android.views.webview;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 
@@ -48,7 +49,17 @@ public class DDGWebViewClient extends WebViewClient {
 		// Log.i(TAG, "shouldOverrideUrl  " + url);
 		
 		if(!fragment.getSavedState() && mLoaded) {
-			// handle mailto: and tel: links with native apps
+			// handle mailto:, tel:, and market: links with native apps
+
+			URL u = null;
+			String host = "";
+			try {
+				u = new URL(url);
+				host = u.getHost();
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			}
+
 			if(url.startsWith("mailto:")){
                 MailTo mt = MailTo.parse(url);
                 Intent i = DDGUtils.newEmailIntent(mt.getTo(), mt.getSubject(), mt.getBody(), mt.getCc());
@@ -59,6 +70,11 @@ public class DDGWebViewClient extends WebViewClient {
                 Intent i = DDGUtils.newTelIntent(url);
                 context.startActivity(i);
                 return true;
+			}
+			else if(url.startsWith("market:") || host.contains("play.google.com")) {
+				Intent i = DDGUtils.newMarketIntent(url);
+				context.startActivity(i);;
+				return true;
 			}
 			else if(url.startsWith("file:///android_asset/webkit/")){
 				return false;
