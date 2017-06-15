@@ -25,6 +25,9 @@ public class DDGConstants {
     public static final int ALWAYS_INTERNAL = 0;
     public static final int ALWAYS_EXTERNAL = 1;
 
+	public static final int DONT_USE_EXTERNAL_APP = 0;
+	public static final int USE_EXTERNAL_APP = 1;
+
     public static final int CONFIRM_CLEAR_HISTORY = 100;
     public static final int CONFIRM_CLEAR_COOKIES = 200;
     public static final int CONFIRM_CLEAR_WEB_CACHE = 300;

@@ -371,7 +371,7 @@ public final class DDGUtils {
 			}
 		}
 		
-	private static boolean isIntentSafe(Context context, Intent intent) {
+	public static boolean isIntentSafe(Context context, Intent intent) {
 		// Verify it resolves
 		PackageManager packageManager = context.getPackageManager();
 		List<ResolveInfo> activities = packageManager.queryIntentActivities(intent, 0);

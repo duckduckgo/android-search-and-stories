@@ -50,6 +50,11 @@ public class PreferencesManager {
         int useExternalBrowser = Integer.valueOf(DDGApplication.getSharedPreferences().getString("useExternalBrowserPref", "0"));
         return useExternalBrowser<=1 ? useExternalBrowser : 0;
     }
+
+	public static int getUseExternalApp() {
+		int useExternalBrowser = Integer.valueOf(DDGApplication.getSharedPreferences().getString("useExternalAppPref", "0"));
+		return useExternalBrowser<=1 ? useExternalBrowser : 0;
+	}
 	
 	public static boolean getAutocomplete() {
 		return DDGApplication.getSharedPreferences().getBoolean("autocompletePref", true);
@@ -154,6 +159,9 @@ public class PreferencesManager {
         else if(key.equals("useExternalBrowserPref")){
             DDGControlVar.useExternalBrowser = Integer.valueOf(sharedPreferences.getString(key, "0"));
         }
+		else if(key.equals("useExternalAppPref")){
+			DDGControlVar.useExternalApp = Integer.valueOf(sharedPreferences.getString(key, "0"));
+		}
         else if(key.equals("autocompletePref")){
             Log.e("aaa", "turn off autocomplete");
             DDGControlVar.isAutocompleteActive = sharedPreferences.getBoolean(key, true);

@@ -19,6 +19,14 @@
             android:entries="@array/useExternalBrowserArray"
             android:entryValues="@array/useExternalBrowserValues"/>
 
+        <ListPreference
+            android:title="@string/PrefExternalApp"
+            android:summary="%s"
+            android:key="useExternalAppPref"
+            android:defaultValue="0"
+            android:entries="@array/useExternalAppArray"
+            android:entryValues="@array/useExternalAppValues"/>
+
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/PrefGroupStories">
