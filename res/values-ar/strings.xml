@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="AppName">DuckDuckGo</string>
+    <string name="SearchString">إبحث على     DuckDuckGo</string>
+    <string name="SettingsButtonContentDescription">إعدادات</string>
+    <string name="HomeButtonContentDescription">الإستقبال</string>
+    
+    <string name="search_hint">إبحث &#8230;</string>
+    
+    <string name="PrefGroupAppFlow">التطبيقة</string>
+    <string name="PrefGroupPrivacy">الخصوصية</string>
+    <string name="PrefGroupFeedback">تقرير الخطأ</string>
+    <string name="PrefTheme">القالب</string>
+    <string name="PrefThemeLight">مضئ</string>
+    <string name="PrefThemeDark">داكن</string>
+    <string name="PrefStartScreen">شاشة الإستقبال</string>
+    <string name="PrefStories">الأخبار</string>
+    <string name="PrefWaterCoolerStories">الأخبار</string>
+    <string name="PrefSavedItems">العناصر التي تم حفظها</string>
+    <string name="PrefDuckMode">إبحث</string>
+    <string name="PrefRecentSearch">البحوث الحديثة</string>
+    <string name="PrefRecordHistory">حفظ التاريخ</string>
+    <string name="PrefClearHistory">فسخ التاريخ</string>
+    <string name="PrefSources">تغيير المصادر</string>
+    <string name="PrefResetSources">إعادة تعيين المصادر</string>
+    <string name="PrefRegion">المنطقة</string>
+    <string name="PrefDirectQuery">بحث سريع</string>
+    <string name="PrefExternalBrowser">إستعمال المتصفح الخارجي</string>
+    <string name="PrefSendFeedback">إرسال رأي</string>
+    <string name="PrefRate">قيم التطبيق</string>
+    <string name="PrefAppSearch">شمل التطبيقات</string>
+    <string name="PrefMainFontSize">حجم الخط</string>
+    <string name="PrefEnableAcra">إرسال الأخطاء تلقائيا</string>
+    <string name="PrefAcraDisabled">إرسال الأخطاء تلقائيا</string>
+    <string name="PrefAcraEnabled">إرسال الأخطاء تلقائيا مفعل</string>
+    
+    <string name="PrefWaterCooler">أنشطة</string>
+    <string name="PrefAutocomplete">التكملة التلقائية</string>
+    <string name="PrefSearchResults">نتائج البحث</string>
+    <string name="PrefTurnOffAutocomplete">غير مفعل</string>
+    
+    <string name="PrefReadable">الوضوح</string>
+    <string name="PrefGroupTor">Tor</string>
+    <string name="PrefEnableTor">فعل Tor</string>
+    <string name="PrefCheckOrbotStatus">التحققOrbot</string>
+    <string name="OrbotStatusOkTitle"> حالة Orbot</string>
+    <string name="OrbotStatusOkMessage">Orbot يعمل بشكل صحيح</string>
+    <string name="OrbotCheckSite">https://check.torproject.org</string>
+    
+    <string name="ShareStory">مشاركة هذا الخبر</string>
+    <string name="ShareSearch">مشاركة هذا البحث</string>
+    <string name="SharePage">مشاركة هذه الصفحة</string>
+    
+    <string name="RegularShareFormat">%1$s عبر DuckDuckGo Android</string>
+    <string name="TwitterShareFormat">%1$s عير @duckduckgo Android</string>
+    
+    <string name="Yes">نعم</string>
+    <string name="No">لا</string>
+    
+    <string name="Save">تسجيل</string>
+    <string name="Unsave">فسخ</string>
+    <string name="Share">شارك</string>
+    <string name="Refresh">إعادة تنشيط</string>
+    <string name="Delete">فسخ</string>
+    
+    <string name="LeftStories">أخبار</string>
+    <string name="LeftSaved">مسجل</string>
+    <string name="LeftSettings">إعدادات</string>
+    <string name="LeftRecent">حديث</string>
+    <string name="LeftRecentQueries">بحوث حديثة</string>
+    
+    <string name="Confirm">تأكيد</string>
+    <string name="ConfirmClearHistory">سيتم فسخ كل تاريخ البحوث ، هل أنت متأكد ؟</string>
+    
+    <string name="Default">إفتراضي</string>
+    <string name="Defaults">إفتراضيين</string>
+    <string name="SuggestSource">إقتراح مصدر</string>
+    <string name="SuggestedSources">يرجى إدراج هذه المصادر :</string>
+    
+    <string name="FeedbackTo">إرسال رأي ل DuckDuckGo 
+ &lt;help@duckduckgo.com&gt;</string>
+    <string name="FeedbackSubject">DuckDuckGo Android v2</string>
+    
+    <string name="SavedFeedEmptyTitle">ليس هنالك أخبار مسجلة</string>
+    <string name="SavedFeedEmptySubTitle">يمكنك حفظ الأخبار في قائمة عمل شريط البحث</string>
+    <string name="SavedResultsEmptyTitle">ليس هنالك نتائج مسجلة</string>
+    <string name="SavedResultsEmptySubTitle">يمكنك حفظ نتائج البحث الخاصة بك في عمل عمل  شريط البحث.</string>
+    
+    <string name="MoreMenuTitle">خيارات</string>
+    
+    <string name="OpenInExternalBrowser">الفتح في المتصفح الخارجي</string>
+    <string name="ConfirmExternalBrowser">الرجاء التأكيد</string>
+    
+    <string name="ChangingFontSize">تغيير حجم الخط&#8230;</string>
+
+
+    <string name="crash_toast_text">التطبيقة تحطمة ! سيتم جمع البيانات عن هذه المشكلة وإرسالها بعد التأكيد.</string>
+    <string name="crash_notif_ticker_text">خطأ غير متوقع، يمكنك إرسال تقرير  لكي يتم حل المشكلة&#8230;</string>
+    <string name="crash_notif_title">تقرير التحطم DuckDuckGo</string>
+    <string name="crash_notif_text">انقر هنا للمساعدة في حل المشكلة.</string>
+    <string name="crash_dialog_text">حدث خطأ غير متوقع.
+      ساعدنا على حل المشكلة عن طريق النقر نعم لإرسال البيانات المتعلقة بالحادث.
+         سيتم فقط نقل البيانات : APP_VERSION_CODE, APP_VERSION_NAME, ANDROID_VERSION, STACK_TRACE,
+        AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
+    <string name="crash_dialog_comment_prompt">تعليق : </string>
+    <string name="crash_dialog_ok_toast">شكرا على المساعدة !</string>
+    
+    <string name="ErrorAppNotFound">تطبيق غير موجود</string>
+    <string name="ErrorActivityNotFound">لم يتم العثور على أي نشاط ذي صلة !</string>
+    <string name="ErrorDownloadFailed">خطأ في التجميل !</string>
+    <string name="ErrorDownloadOpenFail">لا يمكن فتح الملف المحمل !</string>
+    
+      <string name="InfoReadStoriesFromCache">فشل في الإتصال ! قراءة الأخبار من ذاكرة التخزين المؤقت&#8230;</string>
+    <string name="DefaultsSetToast">إعادة المصار إلى الوضع الأول.</string>
+    <string name="SuggestSourceToast">متوفر قريبا.</string>
+    
+    <string name="SummaryWaterCooler">
+        هذه المصادر لديها تدفق معلومات  مثيرة للاهتمام التي لن تجدها في تطبيقات الأخبار التقليدية.
+      إنها مصادر خاصة مثل "الأكثر مشاركة" أو "أكثر تقدير".
+      تحقق من ذلك عندما يكون لديك 5 دقائق.
+         ملاحظة: يمكنك إزالة الأخبار من صفحتك الرئيسية شاشة و ذلك بإستخدام قائمة "شاشة الإستقبال" في الإعدادات</string>
+
+    <string name="WaterCoolerSources">الأخبار</string>
+    
+    <string name="InformHistory"><i>تسجيل الحديثة</i> غبر مفعل. يمكنك تفعبله في <i>الإعدادات.</i></string>
+    
+    <string name="Continue">إستمر</string>
+    <string name="Retry">إعادة المحاولة</string>
+    <string name="ErrorFeedTitle">خطأ: الاستعلام عن تدفق</string>
+    <string name="ErrorFeedDetail">فشل الاستعلام عن التدفق، يمكن أن يكون بسبب مشكلة في الاتصال.
+         يمكنك تصفح المواد المخزنة مؤقتا أو التحقق مرة أخرى.</string>
+        
+    <string name="Apply">فعل</string>
+    <string name="Cancel">إلغاء</string>
+    <string name="NoChange">لا تغيير</string>
+    
+    <string name="OnlyOnPhone">فقط على الجهاز</string>
+    <string name="SelectAppToSend">إختر التطبيفة للإرسال</string>
+    
+    <string name="ReadabilityOn">وضع الوضوع مفعل</string>
+    <string name="ReadabilityOff">وضع الوضوح غير مفعل</string>
+    
+    <string name="SavedSearches">البحوث المسجلة</string>
+    <string name="SavedStories">الأخبار المسجلة</string>
+    <string name="StoryOptionsTitle">خيارات الأخبار</string>
+    <string name="SearchOptionsTitle">خيارات البحث</string>
+    <string name="PageOptionsTitle">خيارات الصغحة</string>
+    
+    <string name="ToastUnSaveStory">تمت إزالة الخبر من الأخبار المسجلة.</string>
+    <string name="ToastUnSaveSearch">تمت إزالة البحث من البحوث المسجلة.</string>
+    <string name="ToastSaveStory">تم حفظ الخبر</string>
+    <string name="ToastSaveSearch">بحث متفدم.</string>
+    <string name="ToastDeleteStoryInHistory">تم إزالة الخير من التاريخ.</string>
+    <string name="ToastDeleteUrlInHistory">تم إزالة الرابط من التاريخ.</string>
+    
+    <string name="WelcomeHeader">مقدمة</string>
+    <string name="WelcomeTitle">DuckDuckGo بحث &amp; أخبار</string>
+    <string name="WelcomeDescription">
+        إبحث بكل سرية.\nتلق مباشرة.\nإبقى على إطلاع.</string>
+    <string name="GetStarted">إبدأ</string>
+    
+    <string name="BangButtonExplanation">البحث في المواقع الأخرى سهل مع  !bangs.</string>
+    
+    <string name="LeftRecentSearches">بحوث حديثة</string>
+    <string name="LeftRecentStories">أخبار حديثة</string>
+    <string name="NewSources">لقد أضفنا مصادر جديدة للأخبار !</string>
+    <string name="NewSourcesOk">عرض</string>
+    <string name="NewSourcesNoThx">لاحقا</string>
+
+    
+    <!-- SSL Certificate dialogs -->
+    <!-- Title for an SSL Certificate dialog -->
+    <string name="ssl_certificate">شهادة الأمان</string>
+    <!-- Message on an SSL Certificate dialog -->
+    <string name="ssl_certificate_is_valid">هذه الشهادة صالحة.</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_to">المالك :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="common_name">الإسم :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="org_name">المنظمة :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="org_unit">وحدة المنظمة :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_by">صادرة عن :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="validity_period">فعالية :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_on">صادرة في :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="expires_on">تنتهي في :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="serial_number">رقم السلسلة :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="fingerprints">البصمات :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="sha256_fingerprint">Hash SHA-256 :</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="sha1_fingerprint">Hash SHA-1 :</string>
+    
+    <string name="WarnSSLTitle">إنتبه : شهادة  SSL</string>
+    <string name="WarnSSLDetail">لم يتم التحقق من صحة شهادة SSL  من قبل سلطة التصديق. يمكنك متابعة أو إلغاء الطلب..</string>
+    
+</resources>
