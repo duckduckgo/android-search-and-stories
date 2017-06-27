@@ -14,10 +14,10 @@
     <string name="PrefGroupOther">Άλλα</string>
     <string name="PrefGroupAppFlow">Εφαρμογή</string>
     <string name="PrefGroupPrivacy">Ιδιωτικότητα</string>
-    <string name="PrefGroupFeedback">Ανατροφοδότηση</string>        //
-    <string name="PrefTheme">Theme</string>
-    <string name="PrefThemeLight">Light</string>
-    <string name="PrefThemeDark">Dark</string>
+    <string name="PrefGroupFeedback">Σχόλια</string>        
+    <string name="PrefTheme">Θέμα</string>
+    <string name="PrefThemeLight">Φωτεινό</string>
+    <string name="PrefThemeDark">Σκούρο</string>
     <string name="PrefStartScreen">Αρχική Σελίδα</string>
     <string name="PrefStories">Ιστορίες</string>
     <string name="PrefWaterCoolerStories">Ιστορίες</string>
@@ -28,56 +28,56 @@
     <string name="PrefClearHistory">Διαγραφή Πρόσφατων</string>
     <string name="PrefRecordCookies">Αποθήκευση Cookies</string>
     <string name="PrefClearCookies">Διαγραφή Cookies</string>
-    <string name="PrefClearBrowserCache">Clear Browser Cache</string>
-    <string name="PrefClearCacheAndCookies">Clear Cookies and Cache</string>
+    <string name="PrefClearBrowserCache">Διαγραφή Browser Cache</string>
+    <string name="PrefClearCacheAndCookies">Διαγραφή Cookies και Cache</string>
     <string name="PrefSources">Πηγές</string>
     <string name="PrefResetSources">Επαναφορά Πηγών</string>
     <string name="PrefRegion">Περιοχή</string>
-    <string name="PrefDirectQuery">Search on Tap</string>
-    <string name="PrefExternalBrowser">Χρήση Εξωτερικού Φυλλομετρητή</string>
+    <string name="PrefDirectQuery">Πάτα και Αναζήτησε</string>       
+    <string name="PrefExternalBrowser">Χρήση Εξωτερικού Browser</string>
     <string name="PrefNever">Ποτέ</string>
-    <string name="PrefExternalBrowserExceptSearches">For non-search results</string>
-    <string name="PrefExternalBrowserAlways">Πάντοτε</string>
-    <string name="PrefClearCacheCookiesEveryLaunch">Every Launch</string>
+    <string name="PrefExternalBrowserExceptSearches">Αποτελέσματα μη-αναζήτησης</string>
+    <string name="PrefExternalBrowserAlways">Πάντοτε</string>       
+    <string name="PrefClearCacheCookiesEveryLaunch">Με Κάθε Εκκίνηση</string>
     <string name="PrefClearCacheCookiesWeekly">Εβδομαδιαία</string>
     <string name="PrefClearCacheCookiesMonthly">Μηνιαία</string>
-    <string name="PrefSendFeedback">Leave Feedback</string>
+    <string name="PrefSendFeedback">Άφησε Σχόλια</string>
     <string name="PrefAbout">Σχετικά</string>
     <string name="PrefRate">Αξιολογήστε την Εφαρμογή</string>
-    <string name="PrefAppSearch">Include Apps</string>
+    <string name="PrefAppSearch">Συμπεριλάμβανε Εφαρμογές</string>      
     <string name="PrefMainFontSize">Μέγεθος Γραμματοσειράς</string>
-    <string name="PrefEnableAcra">Automatic Crash Report</string>
-    <string name="PrefAcraDisabled">Automatic Reporting Disabled</string>
-    <string name="PrefAcraEnabled">Automatic Reporting Enabled</string>
+    <string name="PrefEnableAcra">Αυτόματο Crash Report</string>
+    <string name="PrefAcraDisabled">Αυτόματο Reporting Απενεργοποημένο</string>
+    <string name="PrefAcraEnabled">Αυτόματο Reporting Ενεργοποιημένο</string>
     <string name="PrefEnableJavascript">Ενεργοποίηση Javascript</string>
     
     <string name="PrefWaterCooler">Ιστορίες</string>
     <string name="PrefAutocomplete">Autocomplete</string>
     <string name="PrefSearchResults">Αποτελέσματα Αναζήτησης</string>
-    <string name="PrefTurnOffAutocomplete">Disabled</string>
+        <string name="PrefTurnOffAutocomplete">Απενεργοποιημένο</string>
 
-    <string name="PrefAutoUpdate">Automatic Feed Refresh</string>
+    <string name="PrefAutoUpdate">Αυτόμαστη Ενημέρωση Περιεχομένου</string>       
     <string name="PrefReadable">Ευαναγνωστικότητα</string>
-    <string name="PrefReadableSummary">Ανοιχτή, όταν είναι διαθέσιμη</string>
+    <string name="PrefReadableSummary">Ενεργή, όταν είναι διαθέσιμη</string>
     <string name="PrefGroupTor">Tor</string>
     <string name="PrefEnableTor">Ενεργοποίηση Tor</string>
-    <string name="PrefCheckOrbotStatus">Έλεγχος Orbot status</string>
-    <string name="OrbotStatusOkTitle">Orbot status</string>
-    <string name="OrbotStatusOkMessage">Orbot seems to be running fine!</string>
+    <string name="PrefCheckOrbotStatus">Έλεγχος Κατάστασης του Orbot</string>
+    <string name="OrbotStatusOkTitle">Κατάσταση του Orbot</string>
+    <string name="OrbotStatusOkMessage">Το Orbot λειτουργεί κανονικά!</string>
     <string name="OrbotCheckSite">https://check.torproject.org</string>
     
-    <string name="ShareStory">Μοιραστείτε την Ιστορία</string>
+    <string name="ShareStory">Μοιραστείτε την Ιστορία</string>      
     <string name="ShareSearch">Μοιραστείτε την Αναζήτηση</string>
     <string name="SharePage">Μοιραστείτε τη Σελίδα</string>
     
-    <string name="RegularShareFormat">%1$s via DuckDuckGo for Android</string>
-    <string name="TwitterShareFormat">%1$s via @duckduckgo for Android</string>
+    <string name="RegularShareFormat">%1$s μέσω του DuckDuckGo για Android</string>
+    <string name="TwitterShareFormat">%1$s μέσω του @duckduckgo για Android</string>
     
     <string name="Yes">Ναι</string>
     <string name="No">Όχι</string>
     
-    <string name="Save">Αποθήκευση</string>
-    <string name="Unsave">Διαγραφή</string>
+    <string name="Save">Αποθήκευση</string>     
+    <string name="Unsave">Απελευθέρωση</string>
     <string name="Share">Κοινοποίηση</string>
     <string name="Refresh">Επαναφόρτωση</string>
     <string name="Delete">Διαγραφή</string>
@@ -89,14 +89,14 @@
     <string name="LeftRecentQueries">Πρόσφατες Αναζητήσεις</string>
     
     <string name="Confirm">Επιβεβαίωση</string>
-    <string name="ConfirmClearHistory">Όλο το ιστορικό αναζητήσεων θα διαγραφεί. Είστε σίγουροι;</string>
-    <string name="ConfirmClearCookies">Όλα τα cookies θα διαγραφούν. Είστε σίγουροι;</string>
-    <string name="ConfirmClearCacheAndCookies">Browser cache will be deleted. Are you sure?</string>
+    <string name="ConfirmClearHistory">Όλο το ιστορικό αναζητήσεων θα διαγραφεί. Είστε βέβαιοι;</string>
+    <string name="ConfirmClearCookies">Όλα τα cookies θα διαγραφούν. Είστε βέβαιοι;</string>
+    <string name="ConfirmClearCacheAndCookies">Το Browser cache θα διαγραφεί. Είστε βέβαιοι;</string>
     
-    <string name="Default">Default</string>
-    <string name="Defaults">Reset to Default</string><!-- new -->
+    <string name="Default">Προεπιλογή</string>     
+    <string name="Defaults">Επαναφορά στην Προεπιλογή</string><!-- new -->
     <string name="SuggestSource">Προτείνετε μία Πηγή</string>
-    <string name="SuggestedSources">Please include these sources:</string>
+    <string name="SuggestedSources">Παρακαλώ συμπεριλάβετε αυτές τις πηγές:</string>    //
     
     <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
     <string name="FeedbackSubject">DuckDuckGo Android v2</string>
