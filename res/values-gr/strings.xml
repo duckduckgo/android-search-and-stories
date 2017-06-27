@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="AppName">DuckDuckGo</string>
-    <string name="SearchString">Αναζήτηση DuckDuckGo</string>
+    <string name="SearchStringSmall">Αναζήτηση DuckDuckGo ή URL</string>
+    <string name="SearchStringBig">Αναζήτηση DuckDuckGo ή URL</string>
     <string name="SettingsButtonContentDescription">Ρυθμίσεις</string>
     <string name="HomeButtonContentDescription">Αρχική Σελίδα</string>
     
@@ -13,7 +14,7 @@
     <string name="PrefGroupOther">Άλλα</string>
     <string name="PrefGroupAppFlow">Εφαρμογή</string>
     <string name="PrefGroupPrivacy">Ιδιωτικότητα</string>
-    <string name="PrefGroupFeedback">Ανατροφοδότηση</string>
+    <string name="PrefGroupFeedback">Ανατροφοδότηση</string>        //
     <string name="PrefTheme">Theme</string>
     <string name="PrefThemeLight">Light</string>
     <string name="PrefThemeDark">Dark</string>
