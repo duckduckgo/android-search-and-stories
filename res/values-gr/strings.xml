@@ -178,34 +178,34 @@
     <string name="ToastDeleteStoryInHistory">Η ιστορία έχει αφαιρεθεί από το ιστορικό σας.</string>
     <string name="ToastDeleteUrlInHistory">Το url έχει αφαιρεθεί από το ιστορικό σας.</string>
     
-    <string name="WelcomeHeader">Introducing</string>       //
-    <string name="WelcomeTitle">DuckDuckGo Search &amp; Stories</string>
+    <string name="WelcomeHeader">Παρουσιάζοντας</string>       
+    <string name="WelcomeTitle">Αναζήτηση DuckDuckGo &amp; Ιστορίες</string>
     <string name="WelcomeDescription">
-        Search Anonymously.\nFind Instantly.\nStay Informed.</string>
-    <string name="GetStarted">Get Started</string>
+        Αναζητήστε Ανώνυμα.\nΒρείτε Αμέσως.\nΜείνετε Ενημερωμένοι.</string>
+    <string name="GetStarted">Ξεκινήστε</string>
     
-    <string name="BangButtonExplanation">Searching on other sites is easy with !bang commands.</string>
-    
-    <string name="LeftRecentSearches">Πρόσφατες Αναζητήσεις</string>
+    <string name="BangButtonExplanation">Η αναζήτηση σε άλλους ιστότοπους είναι εύκολη με τις εντολές !bang.</string>
+     
+    <string name="LeftRecentSearches">Πρόσφατες Αναζητήσεις</string>        
     <string name="LeftRecentStories">Πρόσφατες Ιστορίες</string>
-    <string name="NewSources">We\'ve added some cool new story sources!</string>
+    <string name="NewSources">Έχουμε προσθέσει μερικές τέλειες νέες πηγές ιστοριών!</string>
     <string name="NewSourcesOk">Δείξε μου</string>
     <string name="NewSourcesNoThx">Αργότερα</string>
 
-    <string name="WorldTraveler">World Traveler (none)</string>
+    <string name="WorldTraveler">Παγκόσμιος Ταξιδιώτης (κανένα)</string>
 
 
     <!--new strings--><!--
-    <string name="add_favourites">Add to Favourites</string>
-    <string name="remove_favourites">Remove from Favourites</string>
-    <string name="share">Share this</string>
-    <string name="view_external">View in Browser</string>
-    <string name="reload">Reload</string>-->
+    <string name="add_favourites">Προσθήκη στα Αγαπημένα</string>
+    <string name="remove_favourites">Αφαίρεση από τα Αγαπημένα</string>
+    <string name="share">Μοιραστείτε το</string>
+    <string name="view_external">Προβολή στο Browser</string>
+    <string name="reload">Επαναφόρτωση</string>-->
     <string name="stories">Ιστορίες</string>
-    <string name="help_feedback">Help &amp; Feedback</string>
+    <string name="help_feedback">Βοήθεια &amp; Σχόλια</string>
     <string name="settings">Ρυθμίσεις</string>
 
-    <!--favorites fragment -->
+    <!--favorites fragment -->      //
     <string name="favorites">Αγαπημένα</string>
     <string name="favorite_stories">Αγαπημένες Ιστορίες</string>
     <string name="favorite_stories_narrow">@string/stories</string>
