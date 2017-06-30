@@ -116,14 +116,14 @@
 
     <string name="crash_toast_text">Η εφαρμογή κράσαρε! Δεδομένα σχετικά με το πρόβλημα θα συλλεχθούν και θα δηλωθούν με την επιβεβαίωση.</string>
     <string name="crash_notif_ticker_text">Απρόοπτο σφάλμα, παρακαλώ στείλτε έκθεση σφάλματος&#8230;</string>   
-    <string name="crash_notif_title">Έκθεση Σφάλματος του DuckDuckGo</string>   
+    <string name="crash_notif_title">Έκθεση Σφάλματος(crash report) του DuckDuckGo</string>   
     <string name="crash_notif_text">Παρακαλώ πατήστε εδώ για να βοηθήσετε να επιλυθεί το ζήτημα.</string>
     <string name="crash_dialog_text">Προέκυψε ένα απρόοπτο σφάλμα.
         Παρακαλώ βοηθήστε μας να επιλύσουμε το πρόβλημα πατώντας \'OK\' για να σταλθούν δεδομένα σχετικά με το σφάλμα. 
         Τα μόνα δεδομένα που θα συλλέξουμε είναι: APP_VERSION_CODE, APP_VERSION_NAME, ANDROID_VERSION, STACK_TRACE,
         AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
     <string name="crash_dialog_comment_prompt">Το σχόλιο σας: </string>      
-    <string name="crash_dialog_ok_toast">Ευχαριστούμε για την βοήθεια σας!</string>
+    <string name="crash_dialog_ok_toast">Ευχαριστούμε για τη βοήθειά σας!</string>
     
     <string name="ErrorAppNotFound">Δεν Βρέθηκε Εφαρμογή</string>       
     <string name="ErrorActivityNotFound">Δεν βρέθηκε σχετική δραστηριότητα!</string>
