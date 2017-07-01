@@ -44,7 +44,7 @@
     <string name="PrefSendFeedback">Άφησε Σχόλια</string>
     <string name="PrefAbout">Σχετικά</string>
     <string name="PrefRate">Αξιολογήστε την Εφαρμογή</string>
-    <string name="PrefAppSearch">Συμπεριλάμβανε Εφαρμογές</string>      
+    <string name="PrefAppSearch">Συμπεριλάβετε Εφαρμογές</string>      
     <string name="PrefMainFontSize">Μέγεθος Γραμματοσειράς</string>
     <string name="PrefEnableAcra">Αυτόματο Crash Report</string>
     <string name="PrefAcraDisabled">Αυτόματο Reporting Απενεργοποημένο</string>
