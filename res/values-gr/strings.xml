@@ -205,33 +205,33 @@
     <string name="help_feedback">Βοήθεια &amp; Σχόλια</string>
     <string name="settings">Ρυθμίσεις</string>
 
-    <!--favorites fragment -->      //
+    <!--favorites fragment -->      
     <string name="favorites">Αγαπημένα</string>
     <string name="favorite_stories">Αγαπημένες Ιστορίες</string>
     <string name="favorite_stories_narrow">@string/stories</string>
     <string name="favorite_search">Αγαπημένες Αναζητήσεις</string>
     <string name="favorite_search_narrow">Αναζητήσεις</string>
-    <string name="empty_favorites_title">No Favorites</string>
-    <string name="empty_favorites_text">Add searches and stories\nto your favourites, and they\nwill be shown here.</string>
+    <string name="empty_favorites_title">Δεν υπάρχουν Αγαπημένα</string>
+    <string name="empty_favorites_text">Προσθέστε αναζητήσεις και ιστορίες\nστα αγαπημένα σας και θα\nεμφανιστούν εδώ.</string>
 
-    <!--recents fragment-->
+    <!--recents fragment-->     
     <string name="recents">Πρόσφατα</string>
     <string name="recent_stories">Πρόσφατες Ιστορίες</string>
     <string name="recent_stories_narrow">@string/stories</string>
     <string name="recent_searches">Πρόσφατες Αναζητήσεις</string>
     <string name="recent_searches_narrow">Αναζητήσεις</string>
-    <string name="empty_recents_title">No Recents</string>
-    <string name="empty_recents_text">Once you start searching\nor browsing stories, your activity\nwill be shown here.</string>
+    <string name="empty_recents_title">Δεν υπάρχουν Πρόσφατα</string>
+    <string name="empty_recents_text">Μόλις ξεκινήσετε την αναζήτηση\nή την περιήγηση ιστοριών, η δραστηριότητά σας\nθα εμφανιστεί εδώ.</string>
     <string name="disabled_recents_title">Πρόσφατα Απενεργοποιημένα</string>
     <string name="disabled_recents_text">Μπορείτε να ενεργοποιήσετε τα πρόσφατα στις Ρυθμίσεις.</string>
 
-    <!--about fragment-->
+    <!--about fragment-->       
     <string name="about">Σχετικά</string>
-    <string name="about_text">The search engine that doesn\'t\ntrack you.</string>
+    <string name="about_text">Η μηχανή αναζήτησης που δεν\nσας παρακολουθεί.</string>
     <string name="version">Έκδοση</string>
     <string name="select_application">Επιλογή εφαρμογής</string>
 
-    <!--help feedback fragment-->
+    <!--help feedback fragment-->       //
     <string name="help">Βοήθεια</string>
     <string name="android_help_center">Κέντρο Βοήθειας για Android</string>
     <string name="feedback">Ανατροφοδότηση</string>
