@@ -54,7 +54,7 @@
     <string name="PrefWaterCooler">Ιστορίες</string>
     <string name="PrefAutocomplete">Autocomplete</string>
     <string name="PrefSearchResults">Αποτελέσματα Αναζήτησης</string>
-        <string name="PrefTurnOffAutocomplete">Απενεργοποιημένο</string>
+    <string name="PrefTurnOffAutocomplete">Απενεργοποιημένο</string>
 
     <string name="PrefAutoUpdate">Αυτόμαστη Ενημέρωση Περιεχομένου</string>       
     <string name="PrefReadable">Ευαναγνωστικότητα</string>
