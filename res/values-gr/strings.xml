@@ -147,7 +147,7 @@
 
     <string name="WaterCoolerSources">Ιστορίες</string>     
     
-    <string name="InformHistory"><i>Αποθήκευση πρόσφατων</i> είναι απενεργοποιημένη. Μπορείτε να την ενεργοποιήσετε στις <i>Ρυθμίσεις.</i></string>
+    <string name="InformHistory"><i>Η αποθήκευση πρόσφατων</i> είναι απενεργοποιημένη. Μπορείτε να την ενεργοποιήσετε στις <i>Ρυθμίσεις.</i></string>
     
     <string name="Continue">Συνέχεια</string>
     <string name="Retry">Επαναπροσπάθεια</string>
