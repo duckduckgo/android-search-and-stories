@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="AppName">DuckDuckGo</string>
+    <string name="SearchStringSmall">Αναζήτηση DuckDuckGo ή URL</string>
+    <string name="SearchStringBig">Αναζήτηση DuckDuckGo ή URL</string>
+    <string name="SettingsButtonContentDescription">Ρυθμίσεις</string>
+    <string name="HomeButtonContentDescription">Αρχική Σελίδα</string>
+    
+    <string name="search_hint">Αναζήτηση&#8230;</string>
+    
+    <string name="PrefGroupGeneral">Γενικά</string>
+    <string name="PrefGroupStories">Ιστορίες</string>
+    <string name="PrefGroupSearch">Αναζήτηση</string>
+    <string name="PrefGroupOther">Άλλα</string>
+    <string name="PrefGroupAppFlow">Εφαρμογή</string>
+    <string name="PrefGroupPrivacy">Ιδιωτικότητα</string>
+    <string name="PrefGroupFeedback">Σχόλια</string>        
+    <string name="PrefTheme">Θέμα</string>
+    <string name="PrefThemeLight">Φωτεινό</string>
+    <string name="PrefThemeDark">Σκούρο</string>
+    <string name="PrefStartScreen">Αρχική Σελίδα</string>
+    <string name="PrefStories">Ιστορίες</string>
+    <string name="PrefWaterCoolerStories">Ιστορίες</string>
+    <string name="PrefSavedItems">@string/favorites</string>
+    <string name="PrefDuckMode">Αναζήτηση</string>
+    <string name="PrefRecentSearch">@string/recents</string>
+    <string name="PrefRecordHistory">Αποθήκευση Πρόσφατων</string>
+    <string name="PrefClearHistory">Διαγραφή Πρόσφατων</string>
+    <string name="PrefRecordCookies">Αποθήκευση Cookies</string>
+    <string name="PrefClearCookies">Διαγραφή Cookies</string>
+    <string name="PrefClearBrowserCache">Διαγραφή Browser Cache</string>
+    <string name="PrefClearCacheAndCookies">Διαγραφή Cookies και Cache</string>
+    <string name="PrefSources">Πηγές</string>
+    <string name="PrefResetSources">Επαναφορά Πηγών</string>
+    <string name="PrefRegion">Περιοχή</string>
+    <string name="PrefDirectQuery">Πάτα και Αναζήτησε</string>       
+    <string name="PrefExternalBrowser">Χρήση Εξωτερικού Browser</string>
+    <string name="PrefNever">Ποτέ</string>
+    <string name="PrefExternalBrowserExceptSearches">Αποτελέσματα μη-αναζήτησης</string>
+    <string name="PrefExternalBrowserAlways">Πάντοτε</string>       
+    <string name="PrefClearCacheCookiesEveryLaunch">Με Κάθε Εκκίνηση</string>
+    <string name="PrefClearCacheCookiesWeekly">Εβδομαδιαία</string>
+    <string name="PrefClearCacheCookiesMonthly">Μηνιαία</string>
+    <string name="PrefSendFeedback">Άφησε Σχόλια</string>
+    <string name="PrefAbout">Σχετικά</string>
+    <string name="PrefRate">Αξιολογήστε την Εφαρμογή</string>
+    <string name="PrefAppSearch">Συμπεριλάβετε Εφαρμογές</string>      
+    <string name="PrefMainFontSize">Μέγεθος Γραμματοσειράς</string>
+    <string name="PrefEnableAcra">Αυτόματο Crash Report</string>
+    <string name="PrefAcraDisabled">Αυτόματο Reporting Απενεργοποημένο</string>
+    <string name="PrefAcraEnabled">Αυτόματο Reporting Ενεργοποιημένο</string>
+    <string name="PrefEnableJavascript">Ενεργοποίηση Javascript</string>
+    
+    <string name="PrefWaterCooler">Ιστορίες</string>
+    <string name="PrefAutocomplete">Autocomplete</string>
+    <string name="PrefSearchResults">Αποτελέσματα Αναζήτησης</string>
+    <string name="PrefTurnOffAutocomplete">Απενεργοποιημένο</string>
+
+    <string name="PrefAutoUpdate">Αυτόμαστη Ενημέρωση Περιεχομένου</string>       
+    <string name="PrefReadable">Ευαναγνωστικότητα</string>
+    <string name="PrefReadableSummary">Ενεργή, όταν είναι διαθέσιμη</string>
+    <string name="PrefGroupTor">Tor</string>
+    <string name="PrefEnableTor">Ενεργοποίηση Tor</string>
+    <string name="PrefCheckOrbotStatus">Έλεγχος Κατάστασης του Orbot</string>
+    <string name="OrbotStatusOkTitle">Κατάσταση του Orbot</string>
+    <string name="OrbotStatusOkMessage">Το Orbot λειτουργεί κανονικά!</string>
+    <string name="OrbotCheckSite">https://check.torproject.org</string>
+    
+    <string name="ShareStory">Μοιραστείτε την Ιστορία</string>      
+    <string name="ShareSearch">Μοιραστείτε την Αναζήτηση</string>
+    <string name="SharePage">Μοιραστείτε τη Σελίδα</string>
+    
+    <string name="RegularShareFormat">%1$s μέσω του DuckDuckGo για Android</string>
+    <string name="TwitterShareFormat">%1$s μέσω του @duckduckgo για Android</string>
+    
+    <string name="Yes">Ναι</string>
+    <string name="No">Όχι</string>
+    
+    <string name="Save">Αποθήκευση</string>     
+    <string name="Unsave">Απελευθέρωση</string>
+    <string name="Share">Κοινοποίηση</string>
+    <string name="Refresh">Επαναφόρτωση</string>
+    <string name="Delete">Διαγραφή</string>
+    
+    <string name="LeftStories">Ιστορίες</string>
+    <string name="LeftSaved">Αποθηκευμένες</string>
+    <string name="LeftSettings">Ρυθμίσεις</string>
+    <string name="LeftRecent">Πρόσφατα</string>
+    <string name="LeftRecentQueries">Πρόσφατες Αναζητήσεις</string>
+    
+    <string name="Confirm">Επιβεβαίωση</string>
+    <string name="ConfirmClearHistory">Όλο το ιστορικό αναζητήσεων θα διαγραφεί. Είστε βέβαιοι;</string>
+    <string name="ConfirmClearCookies">Όλα τα cookies θα διαγραφούν. Είστε βέβαιοι;</string>
+    <string name="ConfirmClearCacheAndCookies">Το Browser cache θα διαγραφεί. Είστε βέβαιοι;</string>
+    
+    <string name="Default">Προεπιλογή</string>     
+    <string name="Defaults">Επαναφορά στην Προεπιλογή</string><!-- new -->
+    <string name="SuggestSource">Προτείνετε μία Πηγή</string>
+    <string name="SuggestedSources">Παρακαλώ συμπεριλάβετε αυτές τις πηγές:</string>    
+    
+    <string name="FeedbackTo">DuckDuckGo Feedback &lt;help@duckduckgo.com&gt;</string>
+    <string name="FeedbackSubject">DuckDuckGo Android v2</string>
+    
+    <string name="SavedFeedEmptyTitle">Δεν έχετε αποθηκευμένες ιστορίες</string>
+    <string name="SavedFeedEmptySubTitle">Μπορείτε να αποθηκεύσετε ιστορίες στο μενού της μπάρας αναζήτησης.</string>
+    <string name="SavedResultsEmptyTitle">Δεν έχετε αποθηκευμένα αποτελέσματα.</string>
+    <string name="SavedResultsEmptySubTitle">Μπορείτε να αποθηκεύσετε τα αποτελέσματα αναζήτησής σας στο μενού της μπάρας αναζήτησης.</string>
+    
+    <string name="MoreMenuTitle">Επιλογές Σελίδας</string>      
+    
+    <string name="OpenInExternal">Άνοιγμα σε Εξωτερικό Φυλλομετρητή(Browser)</string>
+    <string name="ConfirmExternalBrowser">Παρακαλώ Επιβεβαιώστε</string>
+    
+    <string name="ChangingFontSize">Αλλαγή Μεγέθους Γραμματοσειράς&#8230;</string>
+
+
+    <string name="crash_toast_text">Η εφαρμογή κράσαρε! Δεδομένα σχετικά με το πρόβλημα θα συλλεχθούν και θα δηλωθούν με την επιβεβαίωση.</string>
+    <string name="crash_notif_ticker_text">Απρόοπτο σφάλμα, παρακαλώ στείλτε έκθεση σφάλματος&#8230;</string>   
+    <string name="crash_notif_title">Έκθεση Σφάλματος(crash report) του DuckDuckGo</string>   
+    <string name="crash_notif_text">Παρακαλώ πατήστε εδώ για να βοηθήσετε να επιλυθεί το ζήτημα.</string>
+    <string name="crash_dialog_text">Προέκυψε ένα απρόοπτο σφάλμα.
+        Παρακαλώ βοηθήστε μας να επιλύσουμε το πρόβλημα πατώντας \'OK\' για να σταλθούν δεδομένα σχετικά με το σφάλμα. 
+        Τα μόνα δεδομένα που θα συλλέξουμε είναι: APP_VERSION_CODE, APP_VERSION_NAME, ANDROID_VERSION, STACK_TRACE,
+        AVAILABLE_MEM_SIZE, ReportField.USER_COMMENT, LOGCAT.</string>
+    <string name="crash_dialog_comment_prompt">Το σχόλιο σας: </string>      
+    <string name="crash_dialog_ok_toast">Ευχαριστούμε για τη βοήθειά σας!</string>
+    
+    <string name="ErrorAppNotFound">Δεν Βρέθηκε Εφαρμογή</string>       
+    <string name="ErrorActivityNotFound">Δεν βρέθηκε σχετική δραστηριότητα!</string>
+    <string name="ErrorDownloadFailed">Λήψη απέτυχε!</string>
+    <string name="ErrorDownloadOpenFail">Το αρχείο που λήφθηκε δεν μπορούσε να ανοιχτεί!</string>
+
+    <string name="ToastSchemeNotSupported">Αδυναμία λήψης του αρχείου</string>     
+    <string name="ToastDownloadManagerUnavailable">Αδυναμία λήψης του αρχείου</string>
+    
+    <string name="InfoReadStoriesFromCache">Σύνδεση απέτυχε! Ιστορίες ανακτήθηκαν από την cache&#8230;</string>
+    <string name="DefaultsSetToast">Οι πηγές επανήλθαν στις προεπιλεγμένες.</string>
+    <string name="SuggestSourceToast">Προς εφαρμογή.</string>
+    <string name="Loading">Φορτώνει&#8230;</string>      
+    
+    <string name="SummaryWaterCooler">
+        Αυτές οι πηγές δημιουργούν μια ροή ενδιαφέροντων ιστοριών που δεν θα βρείτε σε συνηθισμένες εφαρμογές ειδήσεων.
+        Όλες οι πηγές είναι ιδιαίτερα δεδομένα όπως\"πιο κοινοποιημένα\" ή \"πιο ψηφισμένα.\"
+        Ρίξτε τα μια ματιά όσο περιμένετε τριγύρω ένα πεντάλεπτο.
+        Σημείωμα: μπορείτε να αφαιρέσετε τις Ιστορίες από την αρχική οθόνη χρησιμοποιώντας τη ρύθμιση \"Αρχική Οθόνη\".
+    </string>
+
+    <string name="WaterCoolerSources">Ιστορίες</string>     
+    
+    <string name="InformHistory"><i>Η αποθήκευση πρόσφατων</i> είναι απενεργοποιημένη. Μπορείτε να την ενεργοποιήσετε στις <i>Ρυθμίσεις.</i></string>
+    
+    <string name="Continue">Συνέχεια</string>
+    <string name="Retry">Επαναπροσπάθεια</string>
+    <string name="ErrorFeedTitle">Σφάλμα: Αίτημα δεδομένων</string>
+    <string name="ErrorFeedDetail">Αίτημα δεδομένων απέτυχε, πιθανόν λόγω προβλήματος σύνδεσης.
+        Θα μπορείτε να περιηγηθείτε στα cached αντικείμενα ή μπορείτε να επιλέξετε να επαναπροσπαθήσετε.</string>
+        
+    <string name="Apply">Εφαρμογή</string>     
+    <string name="Cancel">Ακύρωση</string>
+    <string name="NoChange">Καμία Αλλαγή</string>
+    
+    <string name="OnlyOnPhone">Μόνο στο Κινητό</string>
+    <string name="SelectAppToSend">Επιλέξτε εφαρμογή να σταλθεί</string>
+    
+    <string name="ReadabilityOn">Αναγνωσιμότητα Ανοιχτή</string>
+    <string name="ReadabilityOff">Αναγνωσιμότητα Κλειστή</string>
+    
+    <string name="SavedSearches">Αποθηκευμένες Αναζητήσεις</string>     
+    <string name="SavedStories">Αποθηκευμένες Ιστορίες</string>
+    <string name="StoryOptionsTitle">Επιλογές Ιστορίας</string>
+    <string name="SearchOptionsTitle">Επιλογές Αναζήτησης</string>
+    <string name="PageOptionsTitle">Επιλογές Σελίδας</string>
+    
+    <string name="ToastUnSaveStory">Η ιστορία έχει αφαιρεθεί από τις αποθηκευμένες ιστορίες σας.</string>
+    <string name="ToastUnSaveSearch">Η αναζήτηση έχει αφαιρεθεί από τις αποθηκευμένες αναζητήσεις σας.</string>
+    <string name="ToastSaveStory">Η ιστορία σας αποθηκεύτηκε.</string>
+    <string name="ToastSaveSearch">Η αναζήτησή σας αποθηκεύτηκε.</string>
+    <string name="ToastDeleteStoryInHistory">Η ιστορία έχει αφαιρεθεί από το ιστορικό σας.</string>
+    <string name="ToastDeleteUrlInHistory">Το url έχει αφαιρεθεί από το ιστορικό σας.</string>
+    
+    <string name="WelcomeHeader">Παρουσιάζοντας</string>       
+    <string name="WelcomeTitle">Αναζήτηση DuckDuckGo &amp; Ιστορίες</string>
+    <string name="WelcomeDescription">
+        Αναζητήστε Ανώνυμα.\nΒρείτε Αμέσως.\nΜείνετε Ενημερωμένοι.</string>
+    <string name="GetStarted">Ξεκινήστε</string>
+    
+    <string name="BangButtonExplanation">Η αναζήτηση σε άλλους ιστότοπους είναι εύκολη με τις εντολές !bang.</string>
+     
+    <string name="LeftRecentSearches">Πρόσφατες Αναζητήσεις</string>        
+    <string name="LeftRecentStories">Πρόσφατες Ιστορίες</string>
+    <string name="NewSources">Έχουμε προσθέσει μερικές τέλειες νέες πηγές ιστοριών!</string>
+    <string name="NewSourcesOk">Δείξε μου</string>
+    <string name="NewSourcesNoThx">Αργότερα</string>
+
+    <string name="WorldTraveler">Παγκόσμιος Ταξιδευτής (κανένα)</string>
+
+
+    <!--new strings--><!--
+    <string name="add_favourites">Προσθήκη στα Αγαπημένα</string>
+    <string name="remove_favourites">Αφαίρεση από τα Αγαπημένα</string>
+    <string name="share">Μοιραστείτε το</string>
+    <string name="view_external">Προβολή στο Browser</string>
+    <string name="reload">Επαναφόρτωση</string>-->
+    <string name="stories">Ιστορίες</string>
+    <string name="help_feedback">Βοήθεια &amp; Σχόλια</string>
+    <string name="settings">Ρυθμίσεις</string>
+
+    <!--favorites fragment -->      
+    <string name="favorites">Αγαπημένα</string>
+    <string name="favorite_stories">Αγαπημένες Ιστορίες</string>
+    <string name="favorite_stories_narrow">@string/stories</string>
+    <string name="favorite_search">Αγαπημένες Αναζητήσεις</string>
+    <string name="favorite_search_narrow">Αναζητήσεις</string>
+    <string name="empty_favorites_title">Δεν υπάρχουν Αγαπημένα</string>
+    <string name="empty_favorites_text">Προσθέστε αναζητήσεις και ιστορίες\nστα αγαπημένα σας και θα\nεμφανιστούν εδώ.</string>
+
+    <!--recents fragment-->     
+    <string name="recents">Πρόσφατα</string>
+    <string name="recent_stories">Πρόσφατες Ιστορίες</string>
+    <string name="recent_stories_narrow">@string/stories</string>
+    <string name="recent_searches">Πρόσφατες Αναζητήσεις</string>
+    <string name="recent_searches_narrow">Αναζητήσεις</string>
+    <string name="empty_recents_title">Δεν υπάρχουν Πρόσφατα</string>
+    <string name="empty_recents_text">Μόλις ξεκινήσετε την αναζήτηση\nή την περιήγηση ιστοριών, η δραστηριότητά σας\nθα εμφανιστεί εδώ.</string>
+    <string name="disabled_recents_title">Πρόσφατα Απενεργοποιημένα</string>
+    <string name="disabled_recents_text">Μπορείτε να ενεργοποιήσετε τα πρόσφατα στις Ρυθμίσεις.</string>
+
+    <!--about fragment-->       
+    <string name="about">Σχετικά</string>
+    <string name="about_text">Η μηχανή αναζήτησης που δεν\nσας παρακολουθεί.</string>
+    <string name="version">Έκδοση</string>
+    <string name="select_application">Επιλογή εφαρμογής</string>
+
+    <!--help feedback fragment-->       
+    <string name="help">Βοήθεια</string>
+    <string name="android_help_center">Κέντρο Βοήθειας για Android</string>
+    <string name="feedback">Σχόλια</string>
+    <string name="leave_feedback">Αφήστε Σχόλια</string>
+    <string name="rate">Βαθμολογήστε την Εφαρμογή</string>
+
+    <!-- change sources fragment-->     
+    <string name="change_sources">Πηγές</string>
+    <string name="options">Επιλογές</string>
+
+    <!-- menus -->      
+    <string name="action_stories">@string/stories</string>
+    <string name="action_recents">@string/recents</string>
+    <string name="action_favorites">@string/favorites</string>
+    <string name="action_settings">@string/settings</string>
+    <string name="action_help_feedback">Βοήθεια &amp; Σχόλια</string>
+    <string name="action_reload">Ανανέωση Σελίδας</string>
+    <string name="action_add_favorite">Προσθήκη στα Αγαπημένα</string>
+    <string name="action_remove_favorite">Αφαίρεση από τα Αγαπημένα</string>
+    <string name="action_share">Κοινοποιήστε</string>
+    <string name="action_view_external">Προβολή στο Browser</string>
+    <string name="action_back">Πίσω</string>
+    <string name="action_forward">Μπροστά</string>
+    <string name="action_close">Κλείσιμο</string>
+    <string name="remove">Αφαίρεση</string>
+    <string name="save_image_context_menu_action">Αποθήκευση Εικόνας</string>
+
+    <string name="orbot_install_title">Εγκατάσταση Orbot</string>
+    <string name="orbot_install_message">Πρέπει να έχετε εγκαταστήσει το Orbot και να το ενεργοποιήσετε για να κάνετε proxy την κίνηση μέσω αυτού. Θέλετε να το εγκαταστήσετε;</string>
+    <string name="orbot_start_title">Έναρξη Orbot</string>
+    <string name="orbot_start_message">Το Orbot δεν φαίνεται να τρέχει. Θέλετε να το ξεκινήσετε και να συνδεθείτε με το Tor;</string>
+    <string name="orbot_start_message_manually">Το Orbot δεν φαίνεται να τρέχει. Θέλετε να το ξεκινήσετε και να συνδεθείτε με το Tor;\nΞεκινήστε το Orbot χειροκίνητα αν δεν ξεκινά αυτόματα</string>
+    <string name="orbot_connected">Συνδέθηκε με το Tor</string>
+    
+    <!-- Onboarding -->     
+    <string name="privacy_title">Πραγματική Ιδιωτικότητα</string>
+    <string name="privacy_subtitle">Ποτέ δεν αποθηκεύουμε ή μοιραζόμαστε τις\nπροσωπικές πληροφορίες σας. Ποτέ.</string>
+    <string name="no_ads_title">Δεν σας ακολουθούμε\nαπό πίσω με διαφημίσεις.</string>
+    <string name="no_ads_subtitle">Δεδομένου ότι δεν αποθηκεύουμε τις προσωπικές σας πληροφορίες, δεν έχουμε κάτι να μοιραστούμε με τους διαφημιστές.</string>
+    <string name="no_tracking_title">Δεν υπάρχει Παρακολούθηση</string>
+    <string name="no_tracking_subtitle">Οι άλλες μηχανές αναζήτησης σάς παρακολουθούν ακόμα και\nόταν βρίσκεστε σε κατάσταση "ιδιωτικής περιήγησης".\nΕμείς δεν σας παρακολουθούμε - τελεία και παύλα.</string>
+    <string name="right_title">Η Ιδιωτικότητα είναι Δικαίωμα!</string>
+    <string name="right_subtitle">Χρησιμοποίησε το DuckDuckGo και πάρε πίσω την ιδιωτικότητά σου!</string>
+    <string name="add_to_homescreen">Προσθήκη στην Αρχική Οθόνη</string>
+    <string name="add_to">Προσθέστε σε %s</string>
+    <string name="ddg_added_to_home_page">Το DuckDuckGo προστέθηκε στην αρχική σας οθόνη</string>
+    <string name="ddg_homescreen_label">Αναζήτηση DDG</string>
+
+    <!-- Instruction -->
+    <string name="browser_duckduckgo">DuckDuckGo</string>
+    <string name="browser_firefox">Firefox</string>
+    <string name="browser_chrome">Chrome</string>
+    <string name="instruction_title">Χρησιμοποιήστε DuckDuckGo σε %s</string>
+    <string name="instruction_message">"Οι άλλες μηχανές αναζήτησης σάς παρακολουθούν ακόμα και\nόταν βρίσκεστε σε κατάσταση "ιδιωτικής περιήγησης".\nΕμείς δεν σας παρακολουθούμε - τελεία και παύλα."</string>
+    <string name="instruction_open">Ανοίξτε</string>
+    <string name="instruction_bullet_point_1">1</string>
+    <string name="instruction_bullet_point_2">2</string>
+    <string name="instruction_bullet_point_3">3</string>
+    <string name="instruction_firefox_1_a">@string/instruction_open</string>
+    <string name="instruction_firefox_1_b">@string/browser_firefox</string>
+    <string name="instruction_firefox_2_a">@string/instruction_open</string>
+    <string name="instruction_firefox_2_b">Μενού</string>
+    <string name="instruction_firefox_3_a">Πηγαίνετε σε</string>
+    <string name="instruction_firefox_3_b">Ρυθμίσεις -> Αναζήτηση</string>
+    <string name="instruction_firefox_4_a">Επιλέξτε</string>
+    <string name="instruction_firefox_4_b">@string/browser_duckduckgo</string>
+    <string name="instruction_1_a">Ανοίξτε</string>
+    <string name="instruction_1_b">Chrome</string>
+    <string name="instruction_2_a">Ανοίξτε</string>
+    <string name="instruction_2_b">3-dot μενού</string>
+    <string name="instruction_3_a">Πατήστε</string>
+    <string name="instruction_3_b">Προσθήκη στην Αρχική Οθόνη</string>
+    <string name="instruction_done">Τέλος!</string>
+
+    <!-- SSL Certificate dialogs -->
+    <!-- Title for an SSL Certificate dialog -->
+    <string name="ssl_certificate">Πιστοποιητικό ασφαλείας</string>
+    <!-- Message on an SSL Certificate dialog -->
+    <string name="ssl_certificate_is_valid">Αυτό το πιστοποιητικό είναι έγκυρο.</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_to">Εκδόθηκε σε:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="common_name">Κοινό όνομα:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="org_name">Οργανισμός:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="org_unit">Οργανωτική μονάδα:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_by">Εκδόθηκε από:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="validity_period">Εγκυρότητα:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="issued_on">Εκδόθηκε στις:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="expires_on">Λήγει στις:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="serial_number">Σειριακός αριθμός:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="fingerprints">Ψηφιακά αποτυπώματα:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="sha256_fingerprint">SHA-256 fingerprint:</string>
+    <!-- Label for an information field on an SSL Certificate Dialog -->
+    <string name="sha1_fingerprint">SHA-1 fingerprint:</string>
+
+    <string name="WarnSSLTitle">Προσοχή: Πιστοποιητικό SSL</string>
+    <string name="WarnSSLDetail">Το πιστοποιητικό SSL του διακομιστή δεν παρατίθεται ως αξιόπιστο. 
+         Μπορείτε ακόμα να επιλέξετε να συνεχίσετε ή να ακυρώσετε το αίτημα.</string>
+
+</resources> 
