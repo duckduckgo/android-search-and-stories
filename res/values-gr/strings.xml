@@ -312,7 +312,7 @@
     <!-- Message on an SSL Certificate dialog -->
     <string name="ssl_certificate_is_valid">Αυτό το πιστοποιητικό είναι έγκυρο.</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
-    <string name="issued_to">Issued to:</string>
+    <string name="issued_to">Εκδόθηκε σε:</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
     <string name="common_name">Κοινό όνομα:</string>
     <!-- Label for an information field on an SSL Certificate Dialog -->
