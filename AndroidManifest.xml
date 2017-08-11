@@ -59,11 +59,7 @@
 	        android:excludeFromRecents="true"
 	        android:finishOnTaskLaunch="true" />
 
-        <activity android:name=".activity.OnboardingActivity"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/DDGTheme.ClearStatusBar"/>
-
-		<provider android:name=".providers.DuckDuckGoProvider"
+        <provider android:name=".providers.DuckDuckGoProvider"
 				android:authorities="com.duckduckgo.mobile.android.providers.DuckDuckGoProvider" />
         
 		<receiver android:name=".broadcast.DownloadReceiver">
