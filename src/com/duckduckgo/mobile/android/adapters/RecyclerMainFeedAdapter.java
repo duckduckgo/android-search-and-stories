@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.view.menu.MenuBuilder;
@@ -21,7 +22,6 @@ import android.widget.TextView;
 import com.duckduckgo.mobile.android.DDGApplication;
 import com.duckduckgo.mobile.android.R;
 import com.duckduckgo.mobile.android.bus.BusProvider;
-import com.duckduckgo.mobile.android.dialogs.InstructionDialogFragment;
 import com.duckduckgo.mobile.android.download.AsyncImageView;
 import com.duckduckgo.mobile.android.events.SourceFilterEvent;
 import com.duckduckgo.mobile.android.events.feedEvents.FeedCancelCategoryFilterEvent;
@@ -30,8 +30,6 @@ import com.duckduckgo.mobile.android.events.feedEvents.MainFeedItemSelectedEvent
 import com.duckduckgo.mobile.android.objects.FeedObject;
 import com.duckduckgo.mobile.android.util.DDGControlVar;
 import com.duckduckgo.mobile.android.util.DDGUtils;
-import com.duckduckgo.mobile.android.util.OnboardingHelper;
-import com.duckduckgo.mobile.android.util.PreferencesManager;
 import com.duckduckgo.mobile.android.views.DDGOverflowMenu;
 import com.duckduckgo.mobile.android.views.pageindicator.BannerOnboardingPageIndicator;
 import com.squareup.picasso.Picasso;
@@ -41,32 +39,18 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFeedAdapter.BaseViewHolder> {
+public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFeedAdapter.FeedViewHolder> {
     private static final String TAG = "MainFeedAdapter";
 
-    private static final int ITEM_TYPE_FEED = 0;
-    private static final int ITEM_TYPE_HEADER = 1;
-
-    private boolean isOnboardingBannerVisible = true;
     private Context context;
     private final LayoutInflater inflater;
-    private FragmentManager fragmentManager;
-    private OnboardingHelper onboardingHelper;
 
     private DDGOverflowMenu feedMenu = null;
     private Menu menu = null;
 
     public List<FeedObject> data;
 
-    public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
-        public BaseViewHolder(View itemView) {
-            super(itemView);
-        }
-        public abstract void attach();
-        public abstract void detach();
-    }
-
-    public class FeedViewHolder extends BaseViewHolder {
+    public class FeedViewHolder extends RecyclerView.ViewHolder {
 
         public final TextView textViewTitle;
         public final FrameLayout frameCategoryContainer;
@@ -87,94 +71,10 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
             this.imageViewFeedIcon = (AsyncImageView) v.findViewById(R.id.feedItemSourceIcon);
         }
 
-        @Override
-        public void attach() {
-
-        }
-
-        @Override
-        public void detach() {
-
-        }
     }
 
-    public class HeaderViewHolder extends BaseViewHolder {
-
-        private final int SLIDE_TIME = 10000;
-
-        public final ViewPager viewPager;
-        public final BannerOnboardingPageIndicator pageIndicator;
-        public final Button instructionbutton;
-        public final ImageButton dismissImageButton;
-        final Handler handler;
-        final Runnable slideRunnable;
-
-        private boolean isRunning = false;
-
-        public HeaderViewHolder(View itemView) {
-            super(itemView);
-            instructionbutton = (Button) itemView.findViewById(R.id.instruction_button);
-            dismissImageButton = (ImageButton) itemView.findViewById(R.id.dismiss_image_button);
-            viewPager = (ViewPager) itemView.findViewById(R.id.view_pager);
-            viewPager.setAdapter(new OnboardingBannerAdapter());
-            viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int i, float v, int i1) {
-                }
-
-                @Override
-                public void onPageSelected(int i) {
-                    if(!isRunning) {
-                        startSlidingViewPager();
-                    }
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int i) {
-                    if(isRunning && i == ViewPager.SCROLL_STATE_DRAGGING) {
-                        stopSlidingViewPager();
-                    }
-                }
-            });
-            pageIndicator = (BannerOnboardingPageIndicator) itemView.findViewById(R.id.page_indicator);
-            pageIndicator.setViewPager(viewPager);
-            handler = new Handler();
-            slideRunnable = new Runnable() {
-                @Override
-                public void run() {
-                    int nextItem = viewPager.getCurrentItem() + 1;
-                    if(nextItem == viewPager.getAdapter().getCount()) nextItem = 0;
-                    viewPager.setCurrentItem(nextItem, true);
-                    handler.postDelayed(this, SLIDE_TIME);
-                }
-            };
-        }
-
-        @Override
-        public void attach() {
-            startSlidingViewPager();
-        }
-
-        @Override
-        public void detach() {
-            stopSlidingViewPager();
-        }
-
-        private void startSlidingViewPager() {
-            isRunning = true;
-            handler.postDelayed(slideRunnable, SLIDE_TIME);
-        }
-        private void stopSlidingViewPager() {
-            isRunning = false;
-            handler.removeCallbacks(slideRunnable);
-        }
-    }
-
-    public RecyclerMainFeedAdapter(Context context, FragmentManager fragmentManager) {
+    public RecyclerMainFeedAdapter(Context context) {
         this.context = context;
-        this.fragmentManager = fragmentManager;
-        onboardingHelper = new OnboardingHelper(context);
-        isOnboardingBannerVisible = onboardingHelper.shouldShowOnboardingBanner();
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         data = new ArrayList<>();
 
@@ -183,43 +83,18 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
         feedMenu = new DDGOverflowMenu(context);
     }
 
+    public FeedObject getItem(int position) {
+        return data.get(position);
+    }
+
     @Override
-    public BaseViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(viewType == ITEM_TYPE_HEADER) return new HeaderViewHolder(inflater.inflate(R.layout.viewholder_feed_header, parent, false));
+    public FeedViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new FeedViewHolder(inflater.inflate(R.layout.item_main_feed, parent, false));
     }
 
     @Override
-    public void onBindViewHolder(final BaseViewHolder holder, int position) {
-        if(position == 0 && isOnboardingBannerVisible) {
-            //that's the header;
-            final HeaderViewHolder headerHolder = (HeaderViewHolder) holder;
-            boolean isFirefoxDefault = onboardingHelper.isDefaultBrowserFirefox();
-            final boolean showFirefoxInstruction = isFirefoxDefault || PreferencesManager.isDDGAddedToHomeScreen();
-            headerHolder.instructionbutton.setText(
-                    String.format(context.getString(R.string.add_to),
-                            context.getString(showFirefoxInstruction ? R.string.browser_firefox : R.string.browser_chrome))
-            );
-            headerHolder.instructionbutton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    InstructionDialogFragment.newInstance(
-                            showFirefoxInstruction ? InstructionDialogFragment.EXTRA_INSTRUCTION_FIREFOX : InstructionDialogFragment.EXTRA_INSTRUCTION_CHROME)
-                            .show(fragmentManager, InstructionDialogFragment.TAG);
-                }
-            });
-            headerHolder.dismissImageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    dismissOnboardingBanner();
-                }
-            });
-            return;
-        }
-        final FeedObject feed = getItem(position);//data.get(position - 1); //header
-
-        final FeedViewHolder feedHolder = (FeedViewHolder) holder;
-
+    public void onBindViewHolder(final FeedViewHolder feedHolder, int position) {
+        final FeedObject feed = getItem(position);
         URL feedUrl = null;
 
         if (feed != null) {
@@ -330,42 +205,9 @@ public class RecyclerMainFeedAdapter extends RecyclerView.Adapter<RecyclerMainFe
         }
     }
 
-    public FeedObject getItem(int position) {
-        int index = position;
-        if(isOnboardingBannerVisible) index -= 1;
-        return data.get(index);
-    }
-
     @Override
     public int getItemCount() {
-        int size = data.size();
-        if(isOnboardingBannerVisible) return size+ 1;
-        return size;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if(position == 0 && isOnboardingBannerVisible) return ITEM_TYPE_HEADER;
-        return ITEM_TYPE_FEED;
-    }
-
-    @Override
-    public void onViewAttachedToWindow(BaseViewHolder holder) {
-        super.onViewAttachedToWindow(holder);
-        holder.attach();
-    }
-
-    @Override
-    public void onViewDetachedFromWindow(BaseViewHolder holder) {
-        holder.detach();
-        super.onViewDetachedFromWindow(holder);
-    }
-
-    private void dismissOnboardingBanner() {
-        onboardingHelper.setOnboardingBannerDismissed();
-        isOnboardingBannerVisible = false;
-        notifyItemRemoved(0);
-
+        return data.size();
     }
 
     private void showMenu(View anchor, FeedObject feed) {

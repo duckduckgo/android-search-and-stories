@@ -51,19 +51,6 @@
 
     <color name="overflow_menu_divider">#dddddd</color>
 
-    <color name="onboarding_privacy_background">#93c04c</color>
-    <color name="onboarding_no_ads_background">#9b6cd3</color>
-    <color name="onboarding_no_tracking_background">#f58b6b</color>
-    <color name="onboarding_right_background">#6bbbe0</color>
-
-    <color name="onboarding_button_background">#48000000</color>
-    <color name="onboarding_accent">#66b3ef</color>
-    <color name="onboarding_banner_button_background">#66b3ef</color>
-    <color name="onboarding_instruction_accent">#2da1e4</color>
-
-    <color name="onboarding_primary_text">#333333</color>
-    <color name="onboarding_secondary_text">#666666</color>
-
     <color name="page_indicator_selected">#ffffff</color>
     <color name="page_indicator_unselected">#64000000</color>
     <color name="mini_page_indicator_selected">#333333</color>
@@ -71,13 +58,6 @@
 
     <!-- old colors -->
 
-    <color name="welcome_button">#d24e25</color>
-    <color name="welcome_button_pressed">#b33331</color>
-    <color name="main_button">#d65420</color>
-    <color name="main_button_pressed">#bf4000</color>
-    <color name="bang_button">#fafafa</color>
-    <color name="bang_button_pressed">#d9d9d9</color>
-    <color name="bang_button_border">#c7c7c7</color>
     <color name="search_field">#ffffff</color>
     <color name="search_field_border">#cfcfcf</color>
     <color name="auto_complete_image">#fafafa</color>

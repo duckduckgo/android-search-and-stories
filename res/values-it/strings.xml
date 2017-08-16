@@ -257,10 +257,54 @@
     <string name="action_forward">Avanti</string>
     <string name="action_close">Chiudi</string>
     <string name="remove">Rimuovi</string>
+    <string name="save_image_context_menu_action">Salva immagine</string>
 
+    <string name="orbot_install_title">Installa Orbot</string>
+    <string name="orbot_install_message">Devi avere installato e avviato Orbot per redirigere il traffico. Vuoi installarlo?</string>
+    <string name="orbot_start_title">Avvia Orbot</string>
+    <string name="orbot_start_message">Sembra che Orbot non sia in esecuzione. Vuoi avviarlo e connetterti a Tor?</string>
+    <string name="orbot_start_message_manually">Sembra che Orbot non sia in esecuzione. Vuoi avviarlo e connetterti a Tor?\nSe Orbot non si attiva in modo automatico, avvialo manualmente</string>
+    <string name="orbot_connected">Connesso a Tor</string>
+    
+    <!-- Onboarding -->
+    <string name="privacy_title">Vera privacy</string>
+    <string name="privacy_subtitle">Non memorizziamo o condividiamo\nle tue informazioni personali. Mai.</string>
+    <string name="no_ads_title">Non ti seguiamo\nproponendoti pubblicità.</string>
+    <string name="no_ads_subtitle">Dato che non memorizziamo le tue informazioni personali,\nnon abbiamo nulla da vendere ai pubblicitari.</string>
+    <string name="no_tracking_title">Nessun tracciamento</string>
+    <string name="no_tracking_subtitle">Gli altri motori di ricerca tracciano le tue ricerche anche\nquando sei in modalità di navigazione in incognito.\nNoi non ti tracciamo — punto.</string>
+    <string name="right_title">La privacy è un diritto!</string>
+    <string name="right_subtitle">Usa DuckDuckGo e riprendi il\ncontrollo della tua privacy!</string>
+    <string name="add_to_homescreen">Aggiungi alla schermata iniziale</string>
+    <string name="add_to">Aggiungi a %s</string>
+    <string name="ddg_added_to_home_page">DuckDuckGo aggiunto alla schermata iniziale</string>
+    <string name="ddg_homescreen_label">Ricerca DDG</string>
 
-
-
+    <!-- Instruction -->
+    <string name="browser_duckduckgo">DuckDuckGo</string>
+    <string name="browser_firefox">Firefox</string>
+    <string name="browser_chrome">Chrome</string>
+    <string name="instruction_title">Usa DuckDuckGo in %s</string>
+    <string name="instruction_message">"Gli altri motori di ricerca tracciano le tue ricerche anche quando sei in modalità di navigazione in incognito. Noi non ti tracciamo — punto"</string>
+    <string name="instruction_open">Apri</string>
+    <string name="instruction_bullet_point_1">1</string>
+    <string name="instruction_bullet_point_2">2</string>
+    <string name="instruction_bullet_point_3">3</string>
+    <string name="instruction_firefox_1_a">@string/instruction_open</string>
+    <string name="instruction_firefox_1_b">@string/browser_firefox</string>
+    <string name="instruction_firefox_2_a">@string/instruction_open</string>
+    <string name="instruction_firefox_2_b">Menu</string>
+    <string name="instruction_firefox_3_a">Vai a</string>
+    <string name="instruction_firefox_3_b">Impostazioni -> Ricerca</string>
+    <string name="instruction_firefox_4_a">Seleziona</string>
+    <string name="instruction_firefox_4_b">@string/browser_duckduckgo</string>
+    <string name="instruction_1_a">Apri</string>
+    <string name="instruction_1_b">Chrome</string>
+    <string name="instruction_2_a">Apri</string>
+    <string name="instruction_2_b">Menu a 3 punti</string>
+    <string name="instruction_3_a">Tocca</string>
+    <string name="instruction_3_b">Aggiungi alla pagina iniziale</string>
+    <string name="instruction_done">Fatto!</string>
 
     <!-- SSL Certificate dialogs -->
     <!-- Title for an SSL Certificate dialog -->
