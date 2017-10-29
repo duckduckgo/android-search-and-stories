@@ -185,7 +185,7 @@ public class DDGWebViewClient extends WebViewClient {
 
 		DDGControlVar.mCleanSearchBar = false;
 		
-		if(view.getVisibility() != View.VISIBLE) {
+		if(view.getVisibility() != View.VISIBLE || fragment.isHidden()) {
 			return;
 		}
 		
